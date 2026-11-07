@@ -45,12 +45,12 @@ import {
   LoginPage,
   OAuthConsentPage,
   OnboardingPage,
+  OrganizationPage,
   RegisterOrganizationPage,
   RegisterPage,
   ResetPasswordPage,
   ServiceDetailPage,
   ServicesPage,
-  OrganizationPage,
   SettingsPage,
   SongEditorPage,
   SongsPage,
@@ -102,14 +102,14 @@ const RouteErrorFallback = ({
 }) => {
   const { t } = useI18n();
   return (
-    <div className="flex flex-col items-center justify-center flex-1 h-full min-h-[300px] text-center p-6 bg-m3-bg">
+    <div className="flex flex-col items-center justify-center flex-1 h-full min-h-75 text-center p-6 bg-m3-bg">
       <h2 className="text-xl font-bold mb-2">
         {t("routes.errorBoundary.title")}
       </h2>
       <p className="text-gray-500 mb-4">{t("routes.errorBoundary.desc")}</p>
       <button
         onClick={resetErrorBoundary}
-        className="px-4 py-2 min-h-10 bg-m3-primary text-white rounded-[var(--radius-md)] hover:bg-m3-primary-dark transition-colors cursor-pointer"
+        className="px-4 py-2 min-h-10 bg-m3-primary text-white rounded-md hover:bg-m3-primary-dark transition-colors cursor-pointer"
       >
         {t("routes.errorBoundary.reloadBtn")}
       </button>
@@ -131,7 +131,7 @@ const ErrorFallback = ({
       <p className="text-gray-500 mb-4">{t("routes.errorBoundary.desc")}</p>
       <button
         onClick={resetErrorBoundary}
-        className="px-4 py-2 min-h-10 bg-m3-primary text-white rounded-[var(--radius-md)] hover:bg-m3-primary-dark transition-colors cursor-pointer"
+        className="px-4 py-2 min-h-10 bg-m3-primary text-white rounded-md hover:bg-m3-primary-dark transition-colors cursor-pointer"
       >
         {t("routes.errorBoundary.reloadBtn")}
       </button>
