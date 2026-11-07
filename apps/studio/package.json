@@ -21,6 +21,7 @@
     "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/i18n": "workspace:*",
+    "@hosanna/ui": "workspace:*",
     "@preact/preset-vite": "^2.10.6",
     "@tailwindcss/vite": "^4.1.14",
     "@tanstack/markdown": "^0.0.13",

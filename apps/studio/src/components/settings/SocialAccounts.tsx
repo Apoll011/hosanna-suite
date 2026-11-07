@@ -10,7 +10,7 @@ import {
   GitHubIcon,
   GoogleIcon,
   MicrosoftIcon,
-} from "@/src/components/icons/SocialIcons";
+} from "@hosanna/ui";
 import { useSync } from "@/src/contexts/SyncContext";
 import { authClient } from "@/src/lib/authClient";
 import { useI18n } from "@/src/lib/i18n";
