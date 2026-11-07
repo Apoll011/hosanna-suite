@@ -311,11 +311,9 @@ export const es: typeof import("./pt").pt = {
         "Plantillas de culto reutilizables y duplicación de cultos",
         "Sincronización en segundo plano y resolución de conflictos más rápida",
         "Temas y branding visual de la iglesia",
-        "Estadísticas de uso e historial de cultos",
         "Afinador integrado en la app móvil",
         "Pedal Bluetooth para pasar páginas sin manos",
         "Compartir el culto rápido (WhatsApp / SMS)",
-        "Autenticación de dos factores opcional",
         "Exportación PDF de culto completo desde la app móvil",
       ],
     },
@@ -374,7 +372,8 @@ export const es: typeof import("./pt").pt = {
       ctaContact: "Habla con nosotros",
     },
     footer: {
-      tagline: "Repertorio ChordPro y planificación de alabanza para iglesias — Studio + app móvil.",
+      tagline:
+        "Repertorio ChordPro y planificación de alabanza para iglesias — Studio + app móvil.",
       colProduct: "Producto",
       colSupport: "Soporte",
       colLegal: "Legal",

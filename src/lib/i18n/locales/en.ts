@@ -306,11 +306,9 @@ export const en: typeof import("./pt").pt = {
         "Reusable service templates and service duplication",
         "Background sync and faster conflict resolution",
         "Church themes and visual branding",
-        "Usage statistics and service history",
         "Built-in tuner in the mobile app",
         "Bluetooth page-turner pedal support",
         "Quick service share (WhatsApp / SMS)",
-        "Optional two-factor authentication",
         "Full-service PDF export from the mobile app",
       ],
     },
@@ -591,8 +589,7 @@ export const en: typeof import("./pt").pt = {
     time_signature: "Alternative to {time} directive for meter (e.g. 4/4)",
     define:
       "Official ChordPro chord definitions — recognized by the formatter but not first-class in Hosanna (use instrument diagrams instead)",
-    new_page:
-      "Page break hint — recognized by the formatter; not applied by Hosanna rendering",
+    new_page: "Page break hint — recognized by the formatter; not applied by Hosanna rendering",
   },
   about: {
     eyebrow: "The Story Behind Hosanna",

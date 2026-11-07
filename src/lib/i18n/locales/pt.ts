@@ -310,11 +310,9 @@ export const pt = {
         "Modelos de culto reutilizáveis e duplicação de cultos",
         "Sincronização em segundo plano e resolução de conflitos mais rápida",
         "Temas e branding visual da igreja",
-        "Estatísticas de utilização e histórico de cultos",
         "Afinador integrado na app móvel",
         "Pedal Bluetooth para virar páginas sem mãos",
         "Partilha rápida do culto (WhatsApp / SMS)",
-        "Autenticação de dois fatores opcional",
         "Exportação PDF de culto completo a partir da app móvel",
       ],
     },
@@ -373,8 +371,7 @@ export const pt = {
       ctaContact: "Fala connosco",
     },
     footer: {
-      tagline:
-        "Repertório ChordPro e planeamento de louvor para igrejas — Studio + app móvel.",
+      tagline: "Repertório ChordPro e planeamento de louvor para igrejas — Studio + app móvel.",
       colProduct: "Produto",
       colSupport: "Suporte",
       colLegal: "Legal",
