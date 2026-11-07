@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@hosanna/db";
 import type { OrgScopedPrisma } from "../database/prisma.js";
 
 export class ServiceRepository {

@@ -58,10 +58,10 @@ src/
 docs/architecture/ Ecosystem diagrams + architecture guides
 docs/mcp/          ChordPro guide, domain docs, and AI workflow skills
                    (copied to dist/mcp/docs on build for Vercel/Docker)
-prisma/
-  schema.prisma
-  migrations/
 ```
+
+The Prisma schema, migrations, and generated client live in the
+[`@hosanna/db`](../../packages/db) workspace package.
 
 ## Running with Docker (recommended)
 
@@ -77,11 +77,11 @@ entrypoint runs `prisma migrate deploy` automatically before booting.
 ## Running locally (without Docker)
 
 ```bash
-npm install
-cp .env.example .env   # fill required vars from .env.example
-npx prisma generate
-npx prisma migrate deploy
-npm run dev             # tsx watch, http://localhost:3000
+pnpm install                       # from the monorepo root; also runs prisma generate
+cp .env.example .env               # fill required vars from .env.example
+cp ../../packages/db/.env.example ../../packages/db/.env   # DATABASE_URL / DIRECT_URL for the Prisma CLI
+pnpm run prisma:migrate
+pnpm run dev                       # tsx watch, http://localhost:3000
 ```
 
 ## Environment variables
@@ -111,9 +111,9 @@ is not required.
 
 ## Scripts
 
-- `npm run dev` — watch mode (tsx)
-- `npm run build` / `npm start` — compile to `dist/` and run
-- `npm test` — unit / contract tests
-- `npm run prisma:migrate:dev` — create/apply a migration in development
-- `npm run prisma:migrate` — apply pending migrations (production)
-- `npm run typecheck` — `tsc --noEmit`
+- `pnpm run dev` — watch mode (tsx)
+- `pnpm run build` / `pnpm start` — compile to `dist/` and run
+- `pnpm test` — unit / contract tests
+- `pnpm run prisma:migrate:dev` — create/apply a migration in development
+- `pnpm run prisma:migrate` — apply pending migrations (production)
+- `pnpm run typecheck` — `tsc --noEmit`

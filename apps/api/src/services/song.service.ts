@@ -1,4 +1,4 @@
-import { Prisma, Song } from "@prisma/client";
+import { Prisma, Song } from "@hosanna/db";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
 import type { OrgScopedPrisma } from "../database/prisma.js";

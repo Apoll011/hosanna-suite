@@ -1,5 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hosanna/db";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
