@@ -11,7 +11,7 @@
     "start": "node dist/index.mjs",
     "dev": "tsx watch src/index.mts",
     "mcp": "tsx src/mcp/stdio.ts",
-    "test": "tsx --test \"test/**/*.test.ts\"",
+    "test": "tsx --import ./test/setup-env.ts --test \"test/**/*.test.ts\"",
     "prisma:generate": "pnpm --filter @hosanna/db db:generate",
     "prisma:migrate": "pnpm --filter @hosanna/db db:migrate",
     "prisma:migrate:dev": "pnpm --filter @hosanna/db db:migrate:dev",
