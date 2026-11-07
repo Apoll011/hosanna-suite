@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "deploy:preview": "wrangler deploy --env preview",
     "cf:typegen": "wrangler types",
-    "deploy:production": "wrangler deploy --env production"
+    "deploy:production": "wrangler deploy --env production",
+    "test": "tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^3.0.0",
@@ -39,7 +40,9 @@
     "posthog-js": "^1.421.2",
     "preact": "^10.29.8",
     "qrcode.react": "^4.2.0",
+    "react": "npm:@preact/compat@^18.3.2",
     "react-ace": "^15.0.0",
+    "react-dom": "npm:@preact/compat@^18.3.2",
     "react-error-boundary": "^6.1.2",
     "react-hook-form": "^7.82.0",
     "react-router-dom": "^7.11.0",

@@ -12,5 +12,15 @@
   "files": [
     "public",
     "src"
-  ]
+  ],
+  "devDependencies": {
+    "@hosanna/config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  }
 }
