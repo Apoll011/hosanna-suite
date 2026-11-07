@@ -1,0 +1,179 @@
+/* Hosanna-branded driver.js overrides */
+
+.hosana-driver-popover.driver-popover {
+  background: var(--color-m3-card, #fff);
+  color: var(--color-m3-text, #0f172a);
+  border: 1px solid var(--color-m3-border, #e2e8f0);
+  border-radius: 1rem;
+  box-shadow:
+    0 20px 40px -16px rgb(15 23 42 / 0.25),
+    0 0 0 1px rgb(15 23 42 / 0.04);
+  max-width: 340px;
+}
+
+.hosana-driver-popover .driver-popover-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding-right: 1.5rem;
+}
+
+.hosana-driver-popover .driver-popover-description {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--color-m3-secondary, #64748b);
+  margin-top: 0.35rem;
+}
+
+.hosana-driver-popover .driver-popover-progress-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-m3-secondary, #64748b);
+}
+
+.hosana-driver-popover .driver-popover-footer {
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  text-align: left;
+}
+
+.hosana-driver-popover .driver-popover-navigation-btns {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 0 !important;
+}
+
+.hosana-driver-popover .driver-popover-prev-btn,
+.hosana-driver-popover .driver-popover-next-btn,
+.hosana-driver-popover .hosana-tour-interactive-btn,
+.hosana-driver-popover .driver-popover-footer-btn {
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.5rem 0.9rem;
+  text-shadow: none;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+.hosana-driver-popover .driver-popover-next-btn {
+  background: var(--color-m3-primary, #0ea5e9);
+  color: #fff;
+  border: 1px solid var(--color-m3-primary, #0ea5e9);
+}
+
+.hosana-driver-popover .driver-popover-prev-btn {
+  background: transparent;
+  color: var(--color-m3-secondary, #64748b);
+  border: 1px solid var(--color-m3-border, #e2e8f0);
+  text-shadow: none;
+}
+
+.hosana-driver-popover .hosana-tour-exit-btn {
+  background: transparent;
+  color: var(--color-m3-secondary, #64748b);
+  border: 1px solid var(--color-m3-border, #e2e8f0);
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  text-shadow: none;
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+.hosana-driver-popover .hosana-tour-exit-btn:hover {
+  background: color-mix(
+    in srgb,
+    var(--color-m3-secondary, #64748b) 10%,
+    transparent
+  );
+}
+
+.hosana-driver-popover .driver-popover-close-btn {
+  color: var(--color-m3-secondary, #64748b);
+}
+
+.hosana-driver-popover .hosana-tour-interactive-btn {
+  background: transparent;
+  color: var(--color-m3-primary, #0ea5e9);
+  border: 1px solid
+    color-mix(in srgb, var(--color-m3-primary, #0ea5e9) 40%, transparent);
+  cursor: pointer;
+}
+
+.hosana-driver-popover .hosana-tour-interactive-btn:hover {
+  background: color-mix(
+    in srgb,
+    var(--color-m3-primary, #0ea5e9) 10%,
+    transparent
+  );
+}
+
+.dark .hosana-driver-popover.driver-popover {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-color: #1e293b;
+}
+
+.dark .hosana-driver-popover .driver-popover-description {
+  color: #94a3b8;
+}
+
+.dark .hosana-driver-popover .driver-popover-prev-btn {
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+/*
+ * Interactive onboarding: spotlight is visual-only.
+ * JS also forces these after every highlight (driver reinlines styles).
+ */
+body:has(.hosana-interactive-tour) .driver-overlay,
+.driver-overlay {
+  /* only when interactive class present — see JS unlock for hard guarantee */
+}
+
+body:has(.hosana-interactive-tour) .driver-overlay {
+  pointer-events: none !important;
+  z-index: 30 !important;
+}
+
+body:has(.hosana-interactive-tour)
+  .hosana-driver-popover.hosana-interactive-tour {
+  pointer-events: auto !important;
+  z-index: 60 !important;
+}
+
+body:has(.hosana-interactive-tour) .hosana-driver-popover * {
+  pointer-events: auto !important;
+}
+
+[data-tour="create-menu"] {
+  z-index: 70;
+}
+
+/* Keep the + button above the dim overlay and clickable during the tour */
+body:has(.hosana-interactive-tour) [data-tour="toolbar-create"] {
+  position: relative;
+  z-index: 55;
+  pointer-events: auto !important;
+}
+
+/* Create / form modals must stay above the dim overlay and remain clickable */
+body:has(.hosana-interactive-tour) [data-tour="create-folder-modal"],
+body:has(.hosana-interactive-tour) [data-tour="create-song-modal"],
+body:has(.hosana-interactive-tour) [data-tour="create-service-modal"],
+body:has(.hosana-interactive-tour) [data-tour="create-collection-modal"],
+body:has(.hosana-interactive-tour) [data-tour="create-event-modal"],
+body:has(.hosana-interactive-tour) [data-tour="add-to-collection-modal"] {
+  position: relative;
+  z-index: 55;
+}
