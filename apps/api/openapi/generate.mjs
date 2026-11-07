@@ -848,5 +848,6 @@ const doc = {
   },
 };
 
-fs.writeFileSync('openapi/openapi.yaml', stringify(doc, { lineWidth: 0 }));
-console.log('Wrote openapi/openapi.yaml paths=', Object.keys(paths).length);
+const specPath = new URL('../../../packages/types/openapi.yaml', import.meta.url);
+fs.writeFileSync(specPath, stringify(doc, { lineWidth: 0 }));
+console.log('Wrote packages/types/openapi.yaml paths=', Object.keys(paths).length);

@@ -1,0 +1,25 @@
+{
+  "name": "@hosanna/types",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Hosanna REST API contract: OpenAPI spec and generated TypeScript types",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./openapi.yaml": "./openapi.yaml"
+  },
+  "scripts": {
+    "generate": "openapi-typescript openapi.yaml -o src/schema.ts && prettier --write src/schema.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@hosanna/config": "workspace:*",
+    "openapi-typescript": "^7.13.0",
+    "prettier": "^3.7.3",
+    "typescript": "^5.9.2"
+  }
+}

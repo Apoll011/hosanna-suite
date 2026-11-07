@@ -18,7 +18,7 @@
     "prisma:push": "prisma db push",
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
-    "openapi:generate": "node openapi/generate.mjs",
+    "openapi:generate": "node openapi/generate.mjs && pnpm --filter @hosanna/types generate",
     "db:generate": "prisma generate",
     "clean": "rm -rf dist"
   },

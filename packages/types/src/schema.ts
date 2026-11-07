@@ -91,6 +91,44 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/songs/import/jobs": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Start a Logos AI song-import job (photo/gallery/PDF)
+     * @description Accepts a sheet-music image (and optional extra page screenshots for PDFs). Returns 202 with a job id immediately; poll GET /songs/import/jobs/{id} for real step progress. Cancel with DELETE. Does not persist a song — the client reviews the draft then creates locally.
+     */
+    post: operations["createSongImportJob"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/songs/import/jobs/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Poll a Logos AI song-import job */
+    get: operations["getSongImportJob"];
+    put?: never;
+    post?: never;
+    /** Cancel a running Logos AI song-import job */
+    delete: operations["cancelSongImportJob"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/songs": {
     parameters: {
       query?: never;
@@ -758,6 +796,57 @@ export interface components {
       collectionIds?: string[];
       isDeleted?: boolean;
     };
+    SongImportJob: {
+      /** Format: uuid */
+      id?: string;
+      /** @enum {string} */
+      status?: "queued" | "running" | "completed" | "failed" | "cancelled";
+      steps?: {
+        id?: string;
+        label?: string;
+        done?: boolean;
+        active?: boolean;
+      }[];
+      result?: {
+        title?: string;
+        artist?: string;
+        content?: string;
+        key?: string;
+        tempo?: string;
+        timeSignature?: string;
+        confidence?: number;
+        warnings?: string[];
+        youtube?: string;
+        ccli?: string;
+        composer?: string;
+        copyright?: string;
+        subtitle?: string;
+        duration?: string;
+        diagnostics?: {
+          severity?: string;
+          message?: string;
+          line?: number;
+        }[];
+        possibleDuplicates?: {
+          id?: string;
+          title?: string;
+          artist?: string;
+          score?: number;
+        }[];
+      } | null;
+      errorMessage?: string | null;
+      /** @enum {string|null} */
+      cancelCode?:
+        | "not_a_song"
+        | "unreadable"
+        | "blank"
+        | "wrong_content"
+        | "multiple_unclear"
+        | null;
+      cancelReason?: string | null;
+      /** @enum {string|null} */
+      cancelledBy?: "ai" | "user" | null;
+    };
     Folder: {
       /** Format: uuid */
       id?: string;
@@ -1084,6 +1173,87 @@ export interface operations {
           "application/json": {
             [key: string]: unknown;
           };
+        };
+      };
+    };
+  };
+  createSongImportJob: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          /** @enum {string} */
+          sourceType: "photo" | "gallery" | "pdf";
+          /** @description Photo/gallery bytes, or PDF page-1 screenshot (base64) */
+          imageBase64: string;
+          /** @default image/jpeg */
+          imageMimeType?: string;
+          /** @description Extra page screenshots (pages 2+) */
+          imagesBase64?: string[];
+          imageMimeTypes?: string[];
+          /** @description Required when sourceType is pdf */
+          pdfBase64?: string;
+          fileName?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Job accepted (queued/running); poll GET for progress */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SongImportJob"];
+        };
+      };
+    };
+  };
+  getSongImportJob: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SongImportJob"];
+        };
+      };
+    };
+  };
+  cancelSongImportJob: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Job cancelled (or already terminal) */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["SongImportJob"];
         };
       };
     };

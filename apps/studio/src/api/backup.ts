@@ -1,4 +1,4 @@
-import type { components } from "./generated/schema";
+import type { components } from "@hosanna/types";
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";
 

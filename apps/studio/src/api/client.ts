@@ -1,5 +1,5 @@
 import createClient, { type Client, type Middleware } from "openapi-fetch";
-import type { paths } from "./generated/schema";
+import type { paths } from "@hosanna/types";
 
 export class ApiError extends Error {
   public status: number;

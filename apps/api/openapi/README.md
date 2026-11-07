@@ -2,11 +2,11 @@
 
 Hand-maintained OpenAPI 3.1 description of the production REST API under `/api`.
 
-- Spec: [`openapi.yaml`](./openapi.yaml)
-- Regenerator: [`generate.mjs`](./generate.mjs) (rebuilds the YAML from an in-script inventory)
+- Spec: [`packages/types/openapi.yaml`](../../../packages/types/openapi.yaml) (published to the workspace as `@hosanna/types`)
+- Regenerator: [`generate.mjs`](./generate.mjs) (rebuilds the YAML from an in-script inventory, then regenerates the TypeScript types)
 
 ```bash
-npm run openapi:generate
+pnpm run openapi:generate
 ```
 
 ## Scope
@@ -20,4 +20,4 @@ Auth: Better Auth session cookie **or** `Authorization: Bearer`. Cron routes use
 
 ## Consumers
 
-Studio and Flutter generate typed clients from this file on `feat/openapi-client` branches (`openapi-typescript` / `openapi-fetch`, Dart Dio).
+Studio imports the generated types from `@hosanna/types` (`openapi-fetch`). The Flutter app generates its Dart Dio client from the same spec.

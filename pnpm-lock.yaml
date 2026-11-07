@@ -419,6 +419,9 @@ importers:
       '@hosanna/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@hosanna/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@types/cheerio':
         specifier: ^0.22.35
         version: 0.22.35
@@ -464,9 +467,6 @@ importers:
       globals:
         specifier: ^17.8.0
         version: 17.14.0
-      openapi-typescript:
-        specifier: ^7.13.0
-        version: 7.13.0(typescript@5.8.3)
       tailwindcss:
         specifier: ^4.1.14
         version: 4.3.5
@@ -527,6 +527,21 @@ importers:
         version: 5.9.3
 
   packages/config: {}
+
+  packages/types:
+    devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../config
+      openapi-typescript:
+        specifier: ^7.13.0
+        version: 7.13.0(typescript@5.9.3)
+      prettier:
+        specifier: ^3.7.3
+        version: 3.9.10
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
 
 packages:
 
@@ -12265,14 +12280,14 @@ snapshots:
 
   openapi-typescript-helpers@0.1.0: {}
 
-  openapi-typescript@7.13.0(typescript@5.8.3):
+  openapi-typescript@7.13.0(typescript@5.9.3):
     dependencies:
       '@redocly/openapi-core': 1.34.24(supports-color@10.2.2)
       ansi-colors: 4.1.3
       change-case: 5.4.4
       parse-json: 8.3.0
       supports-color: 10.2.2
-      typescript: 5.8.3
+      typescript: 5.9.3
       yargs-parser: 21.1.1
 
   optionator@0.9.4:
