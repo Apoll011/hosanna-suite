@@ -98,4 +98,4 @@ Client ◄──snapshot── Firestore
 Client ◄──poll REST── API (fallback)
 ```
 
-Details: [../ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md).
+Details: [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md).

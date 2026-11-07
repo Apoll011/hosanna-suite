@@ -1,0 +1,16 @@
+{
+  "name": "@hosanna/brand",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Shared Hosanna brand assets (favicon, apple-touch icons, OG image) for web apps",
+  "type": "module",
+  "exports": {
+    "./vite-plugin": "./src/vite-plugin.ts",
+    "./public/*": "./public/*"
+  },
+  "files": [
+    "public",
+    "src"
+  ]
+}

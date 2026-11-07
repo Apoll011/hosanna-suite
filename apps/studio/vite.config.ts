@@ -1,3 +1,4 @@
+import { hosannaBrandPublic } from "@hosanna/brand/vite-plugin";
 import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -9,6 +10,7 @@ export default defineConfig(() => {
     plugins: [
       preact(),
       tailwindcss(),
+      hosannaBrandPublic(),
       VitePWA({
         registerType: "prompt",
         workbox: {
@@ -22,6 +24,7 @@ export default defineConfig(() => {
           globPatterns: ["**/*.{js,css,html,ico,png,svg,xml,txt}"],
         },
         includeAssets: [
+          "favicon.svg",
           "favicon.png",
           "apple-touch-icon.png",
           "apple-touch-icon-180x180.png",

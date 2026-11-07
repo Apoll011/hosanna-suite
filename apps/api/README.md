@@ -1,5 +1,7 @@
 # Hosanna Studio Backend
 
+> Part of the **hosanna-suite** monorepo (`apps/api`). Prisma lives in `@hosanna/db`. MCP docs stay in `docs/mcp/` (shipped with the build). See the [root README](../../README.md).
+
 Production REST API for Hosanna Studio and the Flutter musician app: songs,
 folders, collections, worship services, agenda, replication sync, AI, and MCP.
 Backed by PostgreSQL (Supabase) via Prisma. Auth is **Better Auth** (cookies +
@@ -12,15 +14,14 @@ This project is API-only — no frontend assets are served. Studio
 
 End-to-end system docs (Studio, Flutter, marketing, sync, auth, integrations):
 
-- **[docs/architecture/](docs/architecture/README.md)** — index
-- [System overview](docs/architecture/system-overview.md)
-- [Mermaid diagrams](docs/architecture/diagram.md)
-- [Clients](docs/architecture/clients.md) · [Backend internals](docs/architecture/backend-internals.md)
-- [Data & sync](docs/architecture/data-and-sync.md) · [Auth & billing](docs/architecture/auth-and-billing.md)
-- [External integrations](docs/architecture/external-integrations.md)
-- [Improvements / TODOs / bugs](docs/architecture/improvements.md)
-- [Deploy report (Vercel / Cloudflare)](docs/architecture/deploy-report.md)
-- [Deploy report](docs/architecture/deploy-report.md) — Vercel / Cloudflare checklist
+- **[Architecture docs](../../docs/architecture/README.md)** — index
+- [System overview](../../docs/architecture/system-overview.md)
+- [Mermaid diagrams](../../docs/architecture/diagram.md)
+- [Clients](../../docs/architecture/clients.md) · [Backend internals](../../docs/architecture/backend-internals.md)
+- [Data & sync](../../docs/architecture/data-and-sync.md) · [Auth & billing](../../docs/architecture/auth-and-billing.md)
+- [External integrations](../../docs/architecture/external-integrations.md)
+- [Improvements / TODOs / bugs](../../docs/architecture/improvements.md)
+- [Deploy report (Vercel / Cloudflare)](../../docs/architecture/deploy-report.md)
 
 ## Stack
 
@@ -54,8 +55,7 @@ src/
   utils/
   types/
   index.mts        app entrypoint
-docs/architecture/ Ecosystem diagrams + architecture guides
-docs/mcp/          ChordPro guide, domain docs, and AI workflow skills
+../../docs/mcp/          ChordPro guide, domain docs, and AI workflow skills
                    (copied to dist/mcp/docs on build for Vercel/Docker)
 ```
 
@@ -106,7 +106,7 @@ Important optional: `STUDIO_URL`, `MCP_RESOURCE_URL`, `CRON_SECRET`, `FCM_*`,
 For live note pings and **song annotation sync**, set `FCM_PROJECT_ID`,
 `FCM_CLIENT_EMAIL`, and `FCM_PRIVATE_KEY`, enable Firestore, and deploy
 `firestore.rules` (see
-[docs/ANNOTATIONS_FIREBASE.md](docs/ANNOTATIONS_FIREBASE.md)). Firebase Storage
+[docs/ANNOTATIONS_FIREBASE.md](../../docs/ANNOTATIONS_FIREBASE.md)). Firebase Storage
 is not required.
 
 ## Scripts

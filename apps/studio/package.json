@@ -43,6 +43,7 @@
     "vite": "^6.2.3"
   },
   "devDependencies": {
+    "@hosanna/brand": "workspace:*",
     "@hosanna/config": "workspace:*",
     "@hosanna/types": "workspace:*",
     "@types/cheerio": "^0.22.35",

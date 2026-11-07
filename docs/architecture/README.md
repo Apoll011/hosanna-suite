@@ -18,8 +18,8 @@ Hosanna is a **local-first worship planning platform**: churches organize songs 
 
 Related (outside this folder):
 
-- [../mcp/README.md](../mcp/README.md) — MCP tools, OAuth, ChordPro skills
-- [../ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) — Firestore annotation paths
+- [MCP docs](../../apps/api/docs/mcp/README.md) — MCP tools, OAuth, ChordPro skills
+- [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) — Firestore annotation paths
 
 ## Mental model (one paragraph)
 
@@ -28,9 +28,9 @@ Related (outside this folder):
 ## Product surfaces
 
 ```
-hosanna.live          → marketing (hosanna-saas)
-blog.hosanna.live     → blog (hosanna-blog)
-studio.hosanna.live   → Studio SPA (Hosana-dashboard)
-api.hosanna.live      → this backend (@hosanna/backend)
-mobile / desktop      → Flutter musician app (Hosanna)
+hosanna.live          → apps/saas        (@hosanna/saas)
+blog.hosanna.live     → separate blog repo (not in this monorepo)
+studio.hosanna.live   → apps/studio      (@hosanna/studio)
+api.hosanna.live      → apps/api         (@hosanna/api)
+mobile / desktop      → Flutter musician app (separate repo)
 ```

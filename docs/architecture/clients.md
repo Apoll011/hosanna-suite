@@ -87,7 +87,7 @@ External AI tools connect to `POST /mcp` (Streamable HTTP) or stdio (`npm run mc
 2. Authorize in Studio (`/login` → `/oauth/consent`)
 3. Call MCP with audience = `MCP_RESOURCE_URL`
 
-ChordPro tools can work without org context; library/service tools need session + permissions (+ subscription for writes). See [../mcp/README.md](../mcp/README.md).
+ChordPro tools can work without org context; library/service tools need session + permissions (+ subscription for writes). See [MCP docs](../../apps/api/docs/mcp/README.md).
 
 ---
 

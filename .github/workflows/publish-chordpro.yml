@@ -1,0 +1,45 @@
+name: Publish @hosanna/chordpro
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: startsWith(github.event.release.tag_name, 'chordpro-v') || startsWith(github.event.release.tag_name, '@hosanna/chordpro@')
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/chordpro
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.24.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          scope: "@hosanna"
+          cache: pnpm
+
+      - name: Install workspace
+        working-directory: .
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        working-directory: .
+        run: pnpm --filter @hosanna/chordpro build
+
+      - name: Publish
+        working-directory: packages/chordpro
+        run: pnpm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
