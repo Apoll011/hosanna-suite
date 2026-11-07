@@ -45,3 +45,5 @@ skills-lock.json
 *.sln
 *.sw?
 .DS_Store
+
+*/.obsidian/*
