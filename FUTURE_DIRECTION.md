@@ -15,11 +15,10 @@ flowchart TD
     end
 
     PlatformCore --> Music["Hosanna Music\n(Songbook & Stage)"]
-    PlatformCore --> Presenter["Hosanna Presenter\n(Projection & Media)"]
-    PlatformCore --> Planning["Hosanna Planning\n(Services, Events, Volunteers)"]
-    PlatformCore --> Community["Hosanna Community\n(People, Groups, Wiki, Posts)"]
+    PlatformCore --> Presenter["Hosanna Presenter\n(Projection & Media Desktop)"]
+    PlatformCore --> Planning["Hosanna Planning\n(Services, Events, Volunteers, Resources)"]
+    PlatformCore --> Community["Hosanna Community\n(People, Groups, Posts, Wiki, Sermons)"]
     PlatformCore --> Finance["Hosanna Finance\n(Giving, Budgets, Statements)"]
-    PlatformCore --> Resources["Hosanna Resources\n(Rooms, Vehicles, Equipment)"]
 ```
 
 ---
@@ -30,17 +29,16 @@ flowchart TD
 - **Hosanna Mobile**: Dedicated stage tool for musicians (ChordPro charts, transpose, capo, metronome, auto-scroll, chord diagrams, offline sync).
 - **Hosanna Studio (Web)**: Dual-purpose dashboard handling both **Music Library** (ChordPro management, collections, AI import) and **Services/Agendas** (setlist order, notes, schedules).
 
-### Future: Decoupled Multi-App Ecosystem
-The services and agendas will be extracted out of Hosanna Studio and elevated into a dedicated **Planning** app. The original Hosanna will double down on being the premier **Music & Repertoire Engine**.
+### Future: Decoupled 5-App Ecosystem
+The services, agendas, and scheduling will be extracted out of Hosanna Studio and elevated into a dedicated **Planning** app (which also houses full resource, room, and equipment management). The original Hosanna will double down on being the premier **Music & Repertoire Engine**.
 
 | App | Primary Audience | Core Mission |
 | :--- | :--- | :--- |
 | **Hosanna Music** *(Basic Hosanna)* | Worship leaders, vocalists, band musicians | Song repository, ChordPro charts, audio attachments, stage tools. |
-| **Hosanna Presenter** | Media & tech teams, projectionists | Dual-screen/multi-output live presentation (lyrics, media, confidence stage monitors). |
-| **Hosanna Planning** | Service leaders, event coordinators, ministry directors | Liturgy/order of service, volunteer scheduling, rehearsal & event planning, reminders. |
-| **Hosanna Community** | Pastors, small group leaders, members, volunteers | Member directory, families, check-in, groups, church news (Posts), knowledge base (Wiki), chat. |
+| **Hosanna Presenter** | Media & tech teams, projectionists | Dual-screen/multi-output live presentation (lyrics, media, confidence stage monitors) as a native desktop app. |
+| **Hosanna Planning** | Service leaders, event coordinators, ministry directors, facility leads | Liturgy/order of service, volunteer scheduling, rehearsal & event planning, **rooms, vehicles, and equipment booking**. |
+| **Hosanna Community** | Pastors, small group leaders, members, families | Member directory, families, check-in, groups, church news (Posts), knowledge base (Wiki), sermons/live video, chat. |
 | **Hosanna Finance** | Treasurers, finance committees, donors | Tithes & offerings, donor statements, budget tracking, fund allocation. |
-| **Hosanna Resources** *(Analysis below)* | Facility managers, team leads, event planners | Room bookings, vehicle reservations, equipment/gear checkout. |
 
 ---
 
@@ -81,20 +79,27 @@ The services and agendas will be extracted out of Hosanna Studio and elevated in
 
 ---
 
-### 3.3. Hosanna Planning (Services, Events & Volunteer Scheduling)
-*The central operational calendar for church life.*
+### 3.3. Hosanna Planning (Services, Events, Volunteers & Resources)
+*The central operational calendar, volunteer engine, and facility scheduler for church life.*
 
 - **Scope & Focus**:
   - **Service Order (Order of Worship / Liturgy)**:
     - Detailed run-of-show with item durations, leader assignments, technical notes, and song setlists imported from Hosanna Music.
     - Real-time live service progress tracker (clock tracking whether the service is on time, behind, or ahead).
-  - **Beyond Sunday Services**:
+  - **Beyond Sunday Services (Events & Rehearsals)**:
     - Planning for mid-week rehearsals, conferences, youth meetings, prayer nights, and special outreach events.
+    - Master church calendar with conflict-free scheduling across all ministries.
   - **Volunteer Scheduling & Matrix**:
     - Roster creation across multiple ministries (Worship, Tech/AV, Ushers, Kids, Hospitality).
     - Volunteer invitation workflows (Accept / Decline / Swap requests).
     - Block-out dates (volunteers specify when they are unavailable).
-    - Automated reminders via WhatsApp, SMS, push notifications, and email.
+    - Automated reminders via push notifications, email, and WhatsApp/SMS.
+  - **Facilities & Resource Management (Merged into Planning)**:
+    - **Rooms & Spaces**: Sanctuary, fellowship hall, classrooms, nursery, youth room.
+    - **Vehicles**: Church vans, buses, utility trailers.
+    - **Equipment & Gear**: Projectors, wireless microphones, portable PA systems, tables, folding chairs, communion sets.
+    - **Conflict Detection Engine**: When an event or service is scheduled, rooms and equipment are reserved simultaneously. The system blocks double-booking automatically.
+    - **Approval Workflows**: Set optional approval requirements (e.g., facility manager must approve van or fellowship hall bookings).
   - **Integration with Presenter & Music**:
     - As soon as a service plan is finalized in Planning, the song setlist is instantly available on musicians' mobile devices (Music) and ready in the booth (Presenter).
 
@@ -149,28 +154,23 @@ The services and agendas will be extracted out of Hosanna Studio and elevated in
 
 ---
 
-## 4. Architectural Analysis: Where do "Resources" Belong?
+## 4. Architectural Decision: Resources Permanently Merged into Planning
 
-You raised an important question: *Where should resources like rooms, vehicles, and equipment live? Maybe Finance, or somewhere else?*
+A major design question was: *Where should resources like rooms, vehicles, and equipment live? Maybe Finance, or as a standalone app?*
 
-### The Dilemma:
-Churches have three main categories of physical resources:
-1. **Spaces / Rooms**: Sanctuary, fellowship hall, youth room, classrooms.
-2. **Vehicles**: Church vans, buses, trailers.
-3. **Equipment & Objects**: Projectors, portable sound systems, microphones, communion sets, folding tables/chairs.
+### The Verdict: Merged Permanently into Hosanna Planning
+Rather than creating app fragmentation or forcing leaders to context-switch, **Facilities and Equipment are permanently merged directly inside Hosanna Planning**.
 
-### Evaluation of Placement:
-
-| Option | Pros | Cons | Recommendation |
-| :--- | :--- | :--- | :--- |
-| **Inside Finance** | Assets and capital expenditures are financially tracked. | **Poor User Experience**. Reserving a room or borrowing a microphone is an operational scheduling task, not a monetary transaction. Pastors and volunteers booking a room should not need access to financial ledgers. | ❌ **Not Recommended** |
-| **Inside Planning** | **Natural fit**. Almost every resource booking happens *in tandem with an event or service* (e.g., "Youth Service needs Sanctuary + Wireless Mics", "Mission Trip needs Van"). Conflict detection is unified with the church calendar. | Can make the Planning app menu busier if facility operations become highly complex. | ✅ **Best for Phase 1 & 2** (as a dedicated "Resources" module within Planning) |
-| **Dedicated App: "Hosanna Resources"** | Clean separation of concerns. Matches enterprise solutions (like Planning Center Resources). Supports deep features: room layouts, HVAC triggers, maintenance logs, inspection checklists. | Creates an additional app early on before the core workflow is fully used. | 🎯 **Target for Phase 3** (Extractable standalone app) |
-
-### Strategic Recommendation:
-1. **Architecturally**: Treat **Resources** as a first-class shared domain service (with its own entities: `Resource`, `ResourceType`, `Reservation`, `ConflictRule`, `MaintenanceLog`).
-2. **UI Placement in Early Stages**: Expose Resources within **Hosanna Planning** (under a tab/section `Planning > Facilities & Gear`). When someone creates an Event or Service in Planning, they can reserve rooms, vehicles, or gear with built-in conflict checking.
-3. **Evolution**: When resource management grows to include maintenance schedules, vehicle mileage logs, and room setup layouts, seamlessly promote it to a top-level **Hosanna Resources** tile in the global App Switcher.
+### Why This is the Right Decision:
+1. **Zero Context-Switching**: When a youth pastor or worship director schedules a Wednesday night rehearsal or Friday outreach in Planning, they reserve the sanctuary, the van, and wireless microphones on that exact same screen.
+2. **Unified Conflict Detection**: The scheduling engine checks leader availability, volunteer availability, and room/vehicle availability in a single query.
+3. **Finance Remains Focused on Money**: Reserving a folding table or the church van is an operational planning task, not a monetary ledger transaction. Finance stays clean and focused on giving, budgets, and statements.
+4. **Leaner 5-App Suite**: Keeps the global App Switcher clean, recognizable, and focused:
+   - 🎵 **Hosanna Music**
+   - 📽️ **Hosanna Presenter**
+   - 🗓️ **Hosanna Planning** *(Services + Volunteers + Facilities/Gear)*
+   - 👥 **Hosanna Community**
+   - 💰 **Hosanna Finance**
 
 ---
 
@@ -325,8 +325,8 @@ flowchart LR
   - Add cost-effective WhatsApp/SMS fallback for automated volunteer reminders and urgent alerts.
 - **Child Check-In Kiosks**:
   - Dedicated check-in mode with thermal label printing for child security tags.
-- **Evaluate Standalone Hosanna Resources**:
-  - If facilities and equipment booking becomes extensive, graduate Resources into its own dedicated app in the switcher.
+- **Deepen Facility Operations in Planning**:
+  - Add room setup diagrams, vehicle mileage logs, and equipment maintenance schedules directly inside Planning.
 
 ---
 
@@ -337,6 +337,6 @@ flowchart LR
 | **Presenter Delivery** | **Native Desktop Application** | Eliminates risk of browser crashes or internet dropouts during live church services; provides native hardware video acceleration and reliable multi-monitor control. |
 | **Codebase Architecture** | **Monorepo (Turborepo / pnpm)** | Unifies shared UI tokens, Better Auth SSO, database models, and API clients across all apps while allowing independent deployments. |
 | **Mobile App Strategy** | **Two Dedicated Mobile Apps** | Separates the stage performance tool (*Hosanna Musician*) from general congregation life, check-in, and church updates (*Hosanna Member*). |
-| **Resource Placement** | **Inside Planning (Phase 1-2) → Standalone (Phase 3)** | Room and equipment booking is tied directly to events and service scheduling (conflict engine), avoiding confusing UX in Finance. |
+| **Resource Placement** | **Permanently Merged into Planning** | Keeps all operational scheduling (services, events, volunteers, rooms, vehicles, and equipment) in one cohesive planner with unified conflict prevention, keeping the suite strictly focused on 5 distinct apps. |
 | **Notification Pipeline** | **Push (Current) + Email + WhatsApp/SMS (Upcoming)** | Maximizes deliverability and read rates for volunteer scheduling while optimizing messaging costs. |
 
