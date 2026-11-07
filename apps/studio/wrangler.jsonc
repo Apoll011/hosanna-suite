@@ -11,11 +11,24 @@
     "directory": "./dist",
     "not_found_handling": "single-page-application",
   },
-  // Preview / develop deploy — production (studio.hosanna.live) comes later.
-  "routes": [
-    {
-      "pattern": "dev-studio.hosanna.live",
-      "custom_domain": true,
+  "env": {
+    "preview": {
+      "name": "studio-preview",
+      "routes": [
+        {
+          "pattern": "dev-studio.hosanna.live",
+          "custom_domain": true,
+        },
+      ],
     },
-  ],
+    "production": {
+      "name": "studio",
+      "routes": [
+        {
+          "pattern": "studio.hosanna.live",
+          "custom_domain": true,
+        },
+      ],
+    },
+  },
 }

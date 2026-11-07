@@ -11,8 +11,9 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "deploy:preview": "wrangler deploy",
-    "cf:typegen": "wrangler types"
+    "deploy:preview": "wrangler deploy --env preview",
+    "cf:typegen": "wrangler types",
+    "deploy:production": "wrangler deploy --env production"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^3.0.0",

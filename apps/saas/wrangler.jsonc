@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "saas",
+  "name": "hosanna-saas",
   "compatibility_date": "2026-08-20",
   "workers_dev": true,
   "preview_urls": true,
@@ -16,9 +16,7 @@
       "pattern": "hosanna.live",
       "custom_domain": true,
     },
-    {
-      "pattern": "www.hosanna.live",
-      "custom_domain": true,
-    },
+    // www.hosanna.live already has DNS A/CNAME records managed outside
+    // Workers custom domains — attach/redirect that hostname in the CF dashboard.
   ],
 }
