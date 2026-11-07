@@ -1,0 +1,247 @@
+# @hosanna/chordpro
+
+> A modular ChordPro parser, transformation pipeline, formatter, instrument registry, React renderer, and Ace editor for JavaScript and TypeScript.
+
+## Features
+
+- ChordPro AST parsing with metadata, sections, tabs, grids, comments, repeats, and named variants.
+- Immutable, chainable song transformations: transpose, capo, chord simplification, chord removal, variant selection, and instrument selection.
+- Extensible formatting and linting utilities.
+- Registry-based instrument diagrams for guitar, piano, ukulele, and consumer-defined instruments.
+- React rendering from an already transformed `SongAST`.
+- Lazy Ace editor with ChordPro syntax support, snippets, linting, formatting, and transpose commands.
+
+## Installation
+
+```bash
+npm install @hosanna/chordpro
+```
+
+React consumers also need the peer dependencies:
+
+```bash
+npm install react react-dom ace-builds react-ace
+```
+
+## Modular entry points
+
+| Entry point                     | Contents                                                                      |
+| ------------------------------- | ----------------------------------------------------------------------------- |
+| `@hosanna/chordpro`             | All public APIs                                                               |
+| `@hosanna/chordpro/parser`      | Parser, AST types, transformations, transposition, dictionary, and converters |
+| `@hosanna/chordpro/renderer`    | `ChordProRenderer`, `ChordRoll`, and diagram components                       |
+| `@hosanna/chordpro/editor`      | `Editor`, `ChordFinder`, Ace modes, snippets, and editor integrations         |
+| `@hosanna/chordpro/formatter`   | ChordPro formatter and formatter types                                        |
+| `@hosanna/chordpro/instruments` | Instrument profiles and the instrument registry                               |
+| `@hosanna/chordpro/diff`        | `ChordProDiffEditor` (VS Code-style diff review) and the diff engine          |
+
+## Review a proposed change (diff editor)
+
+Pass a `proposal` to `Editor` to swap the text editor for an inline diff against the current `value`. Every change can be kept or undone individually; nothing touches the document until `onAccept` runs.
+
+```tsx
+<Editor
+  value={content}
+  onChange={setContent}
+  proposal={
+    pending && {
+      content: pending.content,
+      title: "AI proposal",
+      onAccept: (next) => {
+        setContent(next); // the proposal minus any undone changes
+        setPending(null);
+      },
+      onReject: () => setPending(null),
+    }
+  }
+/>
+```
+
+`ChordProDiffEditor` is also available standalone (`original`, `modified`, `onAccept`, `onReject`), with inline and side-by-side views, word-level highlights that treat `[chords]` as atomic tokens, collapsible unchanged regions, an overview ruler, and shortcuts (`F7` / `Shift+F7` next/previous change, `Ctrl/Cmd+Enter` apply, `Ctrl/Cmd+Z` undo/keep the active change). Colours come from `--hcd-*` CSS variables; strings from the `labels` prop. The raw engine (`computeDiff`, `resolveHunks`, `wordDiff`) is exported too.
+
+## Parse and transform a song
+
+`parseChordPro` returns a `SongAST`. Every transformation returns a new song, so pipelines can be reused safely without mutating the parsed source:
+
+```ts
+import { parseChordPro } from "@hosanna/chordpro/parser";
+
+const source = `
+{title: Hallelujah}
+{key: C}
+{start_of_version: Acoustic}
+[C]Halle---lu---jha
+{end_of_version}
+`;
+
+const song = parseChordPro(source)
+  .transpose(2)
+  .withCapo(3)
+  .simplifyChords(1)
+  .removeChords(true)
+  .selectVariant("acoustic")
+  .instrument("guitar");
+```
+
+### Transformation operations
+
+| Operation                  | Description                                                                                                                        |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `.transpose(semitones)`    | Transposes every chord, key, and bass note by the requested interval.                                                              |
+| `.withCapo(position)`      | Stores the capo and moves chord shapes into capo-relative notation. `0` disables it.                                               |
+| `.simplifyChords(level)`   | Simplifies chord qualities. `0` original, `1` slightly simplified, `2` beginner, `3` basic triads only.                            |
+| `.removeChords(cleanText)` | Removes chord annotations from every variant. With `true`, also joins display-only hyphenation such as `Halle---lu---jha`.         |
+| `.selectVariant(id)`       | Selects a named variant (`null`, `undefined`, or `"default"` selects the default) and returns a song containing only that version. |
+| `.instrument(id)`          | Stores the instrument used by downstream renderers. Pass `null` to clear it.                                                       |
+
+The functional equivalent is available for consumers that prefer an explicit pipeline entry point:
+
+```ts
+import { transformSong } from "@hosanna/chordpro/parser";
+
+const transformed = transformSong(parseChordPro(source))
+  .transpose(2)
+  .withCapo(3);
+```
+
+The pipeline is extensible: custom transformations can clone a `SongAST`, update its sections or metadata, and return the result for the next operation.
+
+## Analyze a song
+
+`analyze()` returns structural and harmonic information without changing the song:
+
+```ts
+const analysis = parseChordPro(source).analyze();
+// {
+//   key: "G",
+//   detectedKey: "G",
+//   tempo: 72,
+//   chordCount: 14,
+//   uniqueChords: ["G", "C", "Em", "D"],
+//   sections: 8,
+//   lyricsLength: 1240,
+//   hasTabs: false,
+//   hasAnnotations: true,
+//   hasVariants: true
+// }
+```
+
+`detectedKey` is inferred from chord roots, chord qualities, and diatonic major/minor scale membership. It is independent from the optional declared `key`, so consumers can compare source metadata with the detected harmonic center.
+
+## Render a transformed song
+
+Pass the transformed AST to the renderer. The renderer does not parse source text or apply a second transformation:
+
+```tsx
+import { ChordProRenderer } from "@hosanna/chordpro/renderer";
+
+export function SongViewer({ source }: { source: string }) {
+  const song = parseChordPro(source)
+    .selectVariant("acoustic")
+    .transpose(2)
+    .withCapo(3)
+    .instrument("guitar");
+
+  return <ChordProRenderer song={song} showDiagrams />;
+}
+```
+
+The renderer accepts only a transformed `SongAST`. It derives chord visibility from the AST and reads the selected instrument from `song.metadata.instrument`; call `.removeChords(true)` or `.instrument("guitar")` in the pipeline before rendering.
+
+## Source-preserving transpose
+
+When you need ChordPro **text** back (for saving or MCP proposals) without losing unrelated content, use `transposeChordProSource` instead of round-tripping the AST:
+
+```ts
+import { transposeChordProSource } from "@hosanna/chordpro/parser";
+
+const { content, semitones, fromKey, toKey } = transposeChordProSource(
+  source,
+  { toKey: "A" },
+);
+// or: transposeChordProSource(source, 2)
+```
+
+This rewrites `[chords]` (including timings like `[Am@2x]`) and `{key:}` / `{original_key:}` while preserving lyrics, variants, comments, and unknown directives.
+
+## Capability manifest
+
+```ts
+import {
+  getChordProCapabilities,
+  explainChordProDirective,
+} from "@hosanna/chordpro/parser";
+
+const manifest = getChordProCapabilities();
+const version = explainChordProDirective("start_of_version");
+```
+
+Each directive is marked `parsed`, `formatter-only`, or `unsupported`. Features such as variants, grids, and AST serialization are marked `implemented`, `partial`, or `not_implemented`.
+
+## Variants
+
+Use version blocks in ChordPro:
+
+```chordpro
+{title: Amazing Grace}
+[G]Amazing grace
+
+{start_of_version: Acoustic}
+[C]Amazing grace
+{end_of_version}
+```
+
+Variant IDs are generated as stable slugs (`"Acoustic"` becomes `"acoustic"`). Variant metadata inherits from the preceding version and can override individual fields.
+
+## Instruments
+
+Instrument diagrams use a registry rather than renderer conditionals:
+
+```ts
+import { instrumentRegistry } from "@hosanna/chordpro/instruments";
+
+instrumentRegistry.register({
+  id: "mandolin",
+  displayName: "Mandolin",
+  category: "string",
+  supportsCapo: true,
+  getFingering: (chord) => resolveMandolinShape(chord),
+  renderDiagram: (shape) => <MandolinDiagram shape={shape} />,
+});
+```
+
+An `InstrumentProfile` resolves a chord into instrument-specific shape data and renders that data. Custom instruments work with `ChordRoll` and `ChordProRenderer` without changing either component.
+
+## Formatting and editor
+
+```ts
+import { formatChordPro } from "@hosanna/chordpro/formatter";
+
+const result = formatChordPro(source, {
+  normalizeNotationAliases: true,
+  expandDirectiveAliases: true,
+});
+```
+
+```tsx
+import { Editor } from "@hosanna/chordpro/editor";
+
+<Editor
+  value={source}
+  onChange={setSource}
+  onSave={(nextSource) => save(nextSource)}
+  settings={{ theme: "textmate", fontSize: 14, wordWrap: true }}
+/>;
+```
+
+The editor includes ChordPro completion, diagnostics, section shortcuts (`Alt+V`, `Alt+R`, `Alt+B`), transpose (`Alt+T`), and formatting (`Ctrl/Cmd+Shift+F`).
+
+## Supported directives
+
+Metadata includes `title`, `subtitle`, `artist`, `composer`, `album`, `copyright`, `key`, `original_key`, `capo`, `tempo`, `time`, `duration`, `song_number`, `ccli`, and `youtube`. Sections include verses, choruses, bridges, tabs, grids, comments (with optional `|style` suffixes), repeats, and named versions (`start_of_version` / `end_of_version`).
+
+Comment styles example: `{c: Softly|warning}`. Layout directives such as `define`, fonts, `new_page`, and `column_break` may be recognized by the formatter but are **not** fully supported by Hosanna’s parser or renderer — see `getChordProCapabilities()`.
+
+## License
+
+Licensed under the [Apache License 2.0](LICENSE.md).
