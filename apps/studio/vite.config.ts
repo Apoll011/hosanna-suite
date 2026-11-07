@@ -74,6 +74,9 @@ export default defineConfig(() => {
         "react-dom": "preact/compat",
         "react-dom/client": "preact/compat",
       },
+      // Workspace packages (e.g. @hosanna/chordpro) are symlinked outside this
+      // app, so the aliased preact/compat must resolve from here.
+      dedupe: ["preact"],
     },
     build: {
       outDir: "dist",
