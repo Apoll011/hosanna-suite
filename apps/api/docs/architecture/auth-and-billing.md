@@ -40,7 +40,7 @@ Session extras: `fcm`, `notify`, `activeOrganizationId`, `activeTeamId`.
 
 Organizations are the tenant boundary. Teams are optional subgroups.
 
-**Roles** (`src/permissions/roles.ts`):
+**Roles** (`packages/auth/src/roles.ts`, `@hosanna/auth`):
 
 | Role                  | Typical use                                      |
 | --------------------- | ------------------------------------------------ |

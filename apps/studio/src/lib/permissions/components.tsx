@@ -8,8 +8,7 @@ import {
   useCannot,
   useRole,
 } from "./client";
-import type { PermissionString } from "./permission";
-import type { AppRole } from "./roles";
+import type { AppRole, PermissionString } from "@hosanna/auth";
 
 // ---------------------------------------------------------------------------
 // Shared props

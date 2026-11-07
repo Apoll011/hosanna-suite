@@ -1,6 +1,5 @@
 import type { TranslationKey } from "../i18n";
-import type { PermissionString } from "../permissions/permission";
-import type { AppRole } from "../permissions/roles";
+import type { AppRole, PermissionString } from "@hosanna/auth";
 
 /** Stable ids for modular tour blocks (permission-driven). */
 export type TourBlockId =

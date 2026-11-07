@@ -33,7 +33,7 @@ export const admin = ac.newRole({
 });
 
 export const teamLeader = ac.newRole({
-  song: ["create", "access", "update"],
+  song: ["create", "access", "update", "import"],
   service: ["create", "access", "update"],
   folder: ["create", "access"],
   collection: ["create", "access"],
@@ -58,7 +58,7 @@ export const editor = ac.newRole({
 });
 
 export const musician = ac.newRole({
-  song: ["create", "access", "update"],
+  song: ["create", "access", "update", "import"],
   service: ["access", "update"],
   collection: ["access"],
   agenda: ["access", "update"],

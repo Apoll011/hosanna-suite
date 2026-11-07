@@ -3,7 +3,7 @@
  */
 
 import type { TranslationKey } from "../../i18n";
-import type { PermissionString } from "../../permissions/permission";
+import type { PermissionString } from "@hosanna/auth";
 import type { OnboardingEventName } from "./events";
 
 export interface InteractiveStepDef {

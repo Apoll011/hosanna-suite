@@ -1,0 +1,28 @@
+{
+  "name": "@hosanna/auth",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Hosanna RBAC: Better Auth access-control statements and organization roles",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.7.18"
+  },
+  "devDependencies": {
+    "@hosanna/config": "workspace:*",
+    "@types/node": "catalog:",
+    "better-auth": "^1.7.18",
+    "typescript": "catalog:"
+  }
+}

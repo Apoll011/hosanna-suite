@@ -17,6 +17,6 @@
   "devDependencies": {
     "prettier": "^3.7.3",
     "turbo": "^2.11.10",
-    "typescript": "^5.9.2"
+    "typescript": "catalog:"
   }
 }

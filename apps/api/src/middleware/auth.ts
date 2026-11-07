@@ -7,7 +7,7 @@ import {
   PermissionString,
   roles,
   toPermissionRequest,
-} from "../permissions/index.js";
+} from "@hosanna/auth";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";

@@ -2,8 +2,7 @@
  * Session flags for interactive onboarding inside an isolated demo tab.
  */
 
-import type { AppRole } from "../../permissions/roles";
-import { roles } from "../../permissions/roles";
+import { roles, type AppRole } from "@hosanna/auth";
 
 export const DEMO_ONBOARDING_KEY = "demo_onboarding";
 export const DEMO_ONBOARDING_ROLE_KEY = "demo_onboarding_role";

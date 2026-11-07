@@ -3,8 +3,7 @@
  * Used by the tour block composer (no network round-trip).
  */
 
-import type { PermissionString } from "../permissions/permission";
-import { roles, type AppRole } from "../permissions/roles";
+import { roles, type AppRole, type PermissionString } from "@hosanna/auth";
 
 export function roleHasPermission(
   role: AppRole,

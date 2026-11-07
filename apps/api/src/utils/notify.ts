@@ -1,6 +1,6 @@
 import { prisma } from "../database/prisma.js";
 import { auth } from "../lib/auth.js";
-import { roles } from "../permissions/index.js";
+import { roles } from "@hosanna/auth";
 import { sendFcmToToken, type FcmMessage } from "../lib/fcm.js";
 
 type OrgRole = keyof typeof roles;

@@ -14,7 +14,7 @@ import {
 import { useI18n } from "@/src/lib/i18n";
 import { useCan, useCanAny } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
-import type { AppRole } from "@/src/lib/permissions/roles";
+import type { AppRole } from "@hosanna/auth";
 import { getAvatarGradient, getInitials } from "@/src/utils";
 import {
   ChevronRight,

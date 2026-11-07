@@ -12,7 +12,7 @@ import type { TranslationKey } from "@/src/lib/i18n";
 import { driver, type Driver, type PopoverDOM } from "driver.js";
 import "driver.js/dist/driver.css";
 import "../tour.css";
-import type { AppRole } from "../../permissions/roles";
+import type { AppRole } from "@hosanna/auth";
 import { roleHasAnyPermission, roleHasPermission } from "../permissions";
 import { onOnboardingEvent, waitForOnboardingEvent } from "./events";
 import { INTERACTIVE_MODULES, type InteractiveStepDef } from "./modules";

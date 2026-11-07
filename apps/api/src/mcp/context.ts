@@ -8,7 +8,7 @@ import { auth } from "../lib/auth.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
 import { can } from "../middleware/auth.js";
 import { hasActiveSubscription } from "../middleware/subscription.js";
-import type { AppRole, PermissionString } from "../permissions/index.js";
+import type { AppRole, PermissionString } from "@hosanna/auth";
 import type { AuthorizedUser } from "../types/express.js";
 import { prisma } from "../database/prisma.js";
 import { FolderService } from "../services/folder.service.js";

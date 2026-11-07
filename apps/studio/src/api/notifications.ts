@@ -1,4 +1,4 @@
-import type { AppRole } from "../lib/permissions/roles";
+import type { AppRole } from "@hosanna/auth";
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";
 

@@ -8,12 +8,13 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { authClient } from "../authClient";
 import {
+  roles,
   statement,
+  type AppRole,
   type PermissionRequest,
   type PermissionString,
   type Resource,
-} from "./permission";
-import { roles, type AppRole } from "./roles";
+} from "@hosanna/auth";
 
 // ---------------------------------------------------------------------------
 // 1. Core Caching & Promise Deduplication Layer

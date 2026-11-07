@@ -21,7 +21,7 @@ import { env } from "../config/env.js";
 import { prisma } from "../database/prisma.js";
 import { pluginLocaleOverrides } from "../locales/auth.js";
 import { RESPONSIBILITIES } from "../locales/responsabilities.js";
-import { roles } from "../permissions/index.js";
+import { roles } from "@hosanna/auth";
 import {
   sendAccountDeletedEmail,
   sendCanceledEmail,

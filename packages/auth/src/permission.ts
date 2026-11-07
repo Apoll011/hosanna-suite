@@ -1,4 +1,7 @@
-import { createAccessControl } from "better-auth/plugins/access";
+import {
+  createAccessControl,
+  type AccessControl,
+} from "better-auth/plugins/access";
 import { defaultStatements } from "better-auth/plugins/organization/access";
 
 export const statement = {
@@ -17,7 +20,9 @@ export const statement = {
   notification: ["sent"],
 } as const;
 
-export const ac = createAccessControl(statement);
+// Annotated so the emitted .d.ts keeps the AccessControl alias; the expanded
+// structural type is not assignable to better-auth's AccessControl.
+export const ac: AccessControl<typeof statement> = createAccessControl(statement);
 
 export type Statement = typeof statement;
 export type Resource = keyof Statement;

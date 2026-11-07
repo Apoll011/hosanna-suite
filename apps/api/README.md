@@ -47,7 +47,6 @@ src/
   lib/             Better Auth, email, i18n, …
   middleware/      auth guards, Zod validation, error handler, subscription
   mcp/             MCP tools, resources, prompts (HTTP + stdio)
-  permissions/     RBAC statements + roles
   repositories/    Prisma data-access layer
   routes/          Express routers
   services/        business logic
@@ -61,7 +60,8 @@ docs/mcp/          ChordPro guide, domain docs, and AI workflow skills
 ```
 
 The Prisma schema, migrations, and generated client live in the
-[`@hosanna/db`](../../packages/db) workspace package.
+[`@hosanna/db`](../../packages/db) workspace package. RBAC statements and roles
+live in [`@hosanna/auth`](../../packages/auth).
 
 ## Running with Docker (recommended)
 

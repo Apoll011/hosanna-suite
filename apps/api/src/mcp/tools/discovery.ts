@@ -1,7 +1,7 @@
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import { can } from "../../middleware/auth.js";
-import type { PermissionString } from "../../permissions/index.js";
+import type { PermissionString } from "@hosanna/auth";
 import { getChordProCapabilities } from "../lib/capabilities.js";
 import {
   DOC_RESOURCES,

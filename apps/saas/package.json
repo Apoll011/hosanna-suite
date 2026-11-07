@@ -59,7 +59,7 @@
     "@eslint/js": "^9.32.0",
     "@hosanna/config": "workspace:*",
     "@tailwindcss/typography": "^0.5.20",
-    "@types/node": "^22.16.5",
+    "@types/node": "catalog:",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.2.0",
@@ -70,7 +70,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
     "prettier": "^3.7.3",
-    "typescript": "^5.8.3",
+    "typescript": "catalog:",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.16"
   },
