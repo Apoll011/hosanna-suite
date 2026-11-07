@@ -13,11 +13,11 @@ on:
       - "packages/types/**"
       - "packages/ui/**"
       - "pnpm-lock.yaml"
-      - ".github/workflows/deploy-studio-preview.yml"
+      - ".github/workflows/deploy-Preview.yml"
   workflow_dispatch:
 
 concurrency:
-  group: deploy-studio-preview
+  group: deploy-Preview
   cancel-in-progress: true
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment:
-      name: studio-preview
+      name: Preview
       url: https://dev-studio.hosanna.live
 
     steps:
@@ -50,7 +50,7 @@ jobs:
       - name: Build Studio (+ workspace deps)
         run: pnpm turbo run build --filter=@hosanna/studio
         env:
-          # From GitHub Environment "studio-preview" (vars + secrets).
+          # From GitHub Environment Preview (vars + secrets).
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
           VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
