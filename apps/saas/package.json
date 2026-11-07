@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
-    "clean": "rm -rf dist .output"
+    "clean": "rm -rf dist .output",
+    "deploy:production": "wrangler deploy"
   },
   "dependencies": {
     "@hosanna/i18n": "workspace:*",
@@ -73,7 +74,8 @@
     "prettier": "^3.7.3",
     "typescript": "catalog:",
     "typescript-eslint": "^8.56.1",
-    "vite": "^8.0.16"
+    "vite": "^8.0.16",
+    "wrangler": "^4.151.1"
   },
   "prettier": "@hosanna/config/prettier"
 }

@@ -2,6 +2,8 @@
 
 > Part of the **hosanna-suite** monorepo (`apps/saas`). Shared brand assets live in `@hosanna/brand`. See the [root README](../../README.md).
 
+**Production:** [hosanna.live](https://hosanna.live) — Cloudflare Worker `saas`, deployed from `main`/`master` via `.github/workflows/deploy-saas.yml` (GitHub Environment `SaaS`).
+
 Marketing site for **Hosanna** — a ChordPro **songbook** and **worship planning** platform for churches (open source: Apache 2.0).
 
 Musicians get a mobile songbook with transpose, capo, chord diagrams, metronome, auto-scroll, PDF export, AI chart import, and offline sync. Leaders get **Hosanna Studio** to manage the library, plan services, and run the team.
