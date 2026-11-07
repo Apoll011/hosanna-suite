@@ -220,7 +220,7 @@ export const routePreloaders: Array<{
     pattern: /\/accept-invitation(\/|\?|#|$)/,
     preload: () => AcceptInvitationPage.preload(),
   },
-  { pattern: /\/agenda(\/|\?|#|$)/, preload: () => DemoPage.preload() },
+  { pattern: /\/agenda(\/|\?|#|$)/, preload: () => AgendaPage.preload() },
   { pattern: /\/demo(\/|\?|#|$)/, preload: () => DemoPage.preload() },
   {
     pattern: /\/onboarding(\/|\?|#|$)/,
