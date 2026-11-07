@@ -1,0 +1,696 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Folder {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  name  String
+  color String @default("default")
+  icon  String @default("default")
+
+  parentId  String?
+  parent    Folder?   @relation("FolderChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Folder[]  @relation("FolderChildren")
+  songs     Song[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   Boolean   @default(false) @map("_deleted")
+  purgeAt   DateTime? @map("purge_at")
+
+  @@index([orgId])
+  @@index([parentId])
+  @@index([orgId, updatedAt, id], map: "folders_replication_idx")
+  @@index([deleted, purgeAt])
+  @@map("folders")
+}
+
+model Collection {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  color       String  @default("default")
+  icon        String  @default("default")
+  image       String?
+
+  songs     Song[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   Boolean   @default(false) @map("_deleted")
+  purgeAt   DateTime? @map("purge_at")
+
+  @@index([orgId])
+  @@index([orgId, updatedAt, id], map: "collections_replication_idx")
+  @@map("collections")
+}
+
+model Song {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  title  String
+  artist String @default("Unknown Artist")
+
+  content                String                  @db.Text
+  folderId               String?
+  folder                 Folder?                 @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  collections            Collection[]
+  path                   String
+  tags                   String[]                @default([])
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  song_number            Int?
+  deleted                Boolean                 @default(false) @map("_deleted")
+  purgeAt                DateTime?               @map("purge_at")
+  serviceSongAnnotations ServiceSongAnnotation[]
+
+  @@unique([orgId, path])
+  @@index([orgId])
+  @@index([folderId])
+  @@index([orgId, updatedAt, id], map: "songs_replication_idx")
+  @@index([deleted, purgeAt])
+  @@map("songs")
+}
+
+model ServiceSongAnnotation {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  songId String
+  song   Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  canvasData Bytes
+
+  updatedById String?
+  updatedBy   User?   @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([serviceId, songId])
+  @@index([orgId])
+  @@index([serviceId])
+  @@index([songId])
+  @@index([orgId, updatedAt, id], map: "service_song_annotations_replication_idx")
+  @@map("service_song_annotations")
+}
+
+/// Thread of notes on a worship service.
+///
+/// A note with a null `elementId` belongs to the service itself. A note with
+/// an `elementId` is attached to one item inside `Service.elements`. This is
+/// separate from the single `notes` string stored on each element (and from
+/// `Service.notes`). Rows are not part of RxDB replication: privacy is
+/// enforced when they are read, so private notes never leave the server
+/// except for their author.
+model ServiceNote {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  /// Id of an object inside Service.elements. Null = service-level note.
+  elementId String?
+
+  body    String  @db.Text
+  private Boolean @default(false)
+
+  authorId String?
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orgId])
+  @@index([serviceId, createdAt])
+  @@index([serviceId, elementId])
+  @@index([authorId])
+  @@map("service_notes")
+}
+
+model AgendaEvent {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  date  String
+  title String
+  type  String
+
+  time            String
+  durationMinutes Int
+  location        String?
+  notes           String? @db.Text
+
+  reminder Json @default("{\"enabled\":false,\"label\":\"\"}")
+
+  linkedServiceId String?
+  linkedService   Service? @relation(fields: [linkedServiceId], references: [id], onDelete: SetNull)
+
+  responsibilities Json @default("[]")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   Boolean   @default(false) @map("_deleted")
+  purgeAt   DateTime? @map("purge_at")
+
+  reminderDispatches AgendaReminderDispatch[]
+
+  @@index([orgId])
+  @@index([orgId, updatedAt, id], map: "agenda_events_replication_idx")
+  @@index([deleted, purgeAt])
+  // Reminder cron: orgId = ? AND _deleted = false AND date IN (…).
+  @@index([orgId, deleted, date], map: "agenda_events_org_deleted_date_idx")
+  @@map("agenda_events")
+}
+
+/// Idempotency ledger for the agenda reminder cron.
+///
+/// A row is written once per (event, user, offset) after at least one push is
+/// delivered, so re-running the job (manual trigger or Vercel retry) never
+/// notifies the same person about the same event twice.
+model AgendaReminderDispatch {
+  id String @id @default(uuid())
+
+  eventId String
+  event   AgendaEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /**
+   * Reminder lead time: 1 (tomorrow) or 3 (in three days).
+   */
+  daysUntil Int
+  sentAt    DateTime @default(now())
+
+  @@unique([eventId, userId, daysUntil])
+  @@index([sentAt])
+  @@map("agenda_reminder_dispatches")
+}
+
+model Service {
+  id String @id @default(uuid())
+
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  name String
+
+  date      DateTime @default(now())
+  notes     String?  @db.Text
+  elements  Json?    @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  archived               Boolean                 @default(false)
+  deleted                Boolean                 @default(false) @map("_deleted")
+  purgeAt                DateTime?               @map("purge_at")
+  serviceSongAnnotations ServiceSongAnnotation[]
+  serviceNotes           ServiceNote[]
+  agendaEvents           AgendaEvent[]
+
+  @@index([orgId])
+  @@index([orgId, updatedAt, id], map: "services_replication_idx")
+  @@index([deleted, purgeAt])
+  @@map("services")
+}
+
+model User {
+  id                     String                   @id
+  name                   String
+  email                  String
+  emailVerified          Boolean                  @default(false)
+  image                  String?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  twoFactorEnabled       Boolean?                 @default(false)
+  sessions               Session[]
+  accounts               Account[]
+  notifications          Notification[]
+  twofactors             TwoFactor[]
+  teammembers            TeamMember[]
+  members                Member[]
+  invitations            Invitation[]
+  serviceSongAnnotations ServiceSongAnnotation[]
+  serviceNotes           ServiceNote[]
+  reminderDispatches     AgendaReminderDispatch[]
+
+  stripeCustomerId String?
+
+  role       String?
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
+  metadata String?
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id                   String   @id
+  expiresAt            DateTime
+  token                String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeOrganizationId String?
+  activeTeamId         String?
+
+  impersonatedBy String?
+
+  fcm    String?
+  notify Boolean @default(false)
+
+  @@unique([token])
+  @@index([userId])
+  // Reminder cron lookup: userId = ? AND notify = true AND fcm IS NOT NULL.
+  @@index([userId, notify], map: "session_user_notify_idx")
+  @@index([expiresAt])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  /// Legacy Better Auth 1.7.0–1.7.2 column; ≥1.7.3 no longer writes it.
+  issuer                String?
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Notification {
+  id             String   @id
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String?
+  type           String
+  title          String
+  body           String?
+  href           String?
+  data           Json?
+  read           Boolean  @default(false)
+  createdAt      DateTime
+
+  @@index([userId, createdAt], map: "notification_user_created_idx")
+  @@index([organizationId])
+  @@index([userId, read])
+  @@map("notification")
+}
+
+model TwoFactor {
+  id                      String    @id
+  secret                  String
+  backupCodes             String
+  userId                  String
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verified                Boolean?  @default(true)
+  failedVerificationCount Int?      @default(0)
+  lockedUntil             DateTime?
+
+  @@index([secret])
+  @@index([userId])
+  @@map("twoFactor")
+}
+
+model Organization {
+  id                     String                  @id
+  name                   String
+  slug                   String
+  logo                   String?
+  createdAt              DateTime
+  metadata               String?
+  teams                  Team[]
+  members                Member[]
+  invitations            Invitation[]
+  folders                Folder[]
+  collections            Collection[]
+  songs                  Song[]
+  services               Service[]
+  agendaEvents           AgendaEvent[]
+  serviceSongAnnotations ServiceSongAnnotation[]
+  serviceNotes           ServiceNote[]
+  aiConfig               OrgAiConfig?
+  aiMemory               OrgAiMemory[]
+
+  stripeCustomerId String?
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+/// Per-organization BYOK AI provider settings. API keys are encrypted at rest
+/// and must never be returned to clients.
+model OrgAiConfig {
+  orgId String       @id
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  /// openai | anthropic | google | deepseek | openai_compatible
+  provider String  @default("openai")
+  model    String  @default("gpt-4o-mini")
+  enabled  Boolean @default(false)
+  /// Required for openai_compatible; optional override for deepseek/openai.
+  baseUrl  String?
+
+  apiKeyCiphertext String? @db.Text
+  apiKeyIv         String?
+  apiKeyTag        String?
+
+  /// Max tool calls the assistant may make while answering one message.
+  maxToolCalls    Int     @default(12)
+  /// null = provider default
+  temperature     Float?
+  /// null = provider default
+  maxOutputTokens Int?
+  /// Extra org-wide instructions appended to the assistant's system prompt.
+  instructions    String? @db.Text
+  /// Inject saved memory into the prompt and let the assistant manage it.
+  memoryEnabled   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("org_ai_config")
+}
+
+/// Short durable facts the assistant should remember for the whole organization.
+model OrgAiMemory {
+  id    String       @id @default(uuid())
+  orgId String
+  org   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  content   String
+  /// admin | ai
+  source    String   @default("admin")
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@index([orgId, createdAt])
+  @@map("org_ai_memory")
+}
+
+model Team {
+  id             String       @id
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime
+  updatedAt      DateTime?    @updatedAt
+  teammembers    TeamMember[]
+
+  memberCount Int @default(0)
+
+  @@index([organizationId])
+  @@map("team")
+}
+
+model TeamMember {
+  id        String    @id
+  teamId    String
+  team      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime?
+
+  membershipKey String?
+
+  @@unique([membershipKey])
+  @@index([teamId])
+  @@index([userId])
+  @@map("teamMember")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member")
+  createdAt      DateTime
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  teamId         String?
+  status         String       @default("pending")
+  expiresAt      DateTime
+  createdAt      DateTime     @default(now())
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([email])
+  @@index([email, organizationId])
+  @@map("invitation")
+}
+
+model Subscription {
+  id                   String    @id
+  plan                 String
+  referenceId          String
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  status               String    @default("incomplete")
+  periodStart          DateTime?
+  periodEnd            DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  cancelAtPeriodEnd    Boolean?  @default(false)
+  cancelAt             DateTime?
+  canceledAt           DateTime?
+  endedAt              DateTime?
+  seats                Int?
+  billingInterval      String?
+  stripeScheduleId     String?
+
+  @@index([referenceId])
+  @@index([stripeSubscriptionId])
+  @@index([stripeCustomerId])
+  @@map("subscription")
+}
+
+// ── Better Auth JWT + MCP OAuth (OAuth 2.1 provider) ─────────────────────────
+
+model Jwks {
+  id         String    @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+  expiresAt  DateTime?
+  alg        String?
+  crv        String?
+
+  @@map("jwks")
+}
+
+model OauthClient {
+  id                                String    @id
+  clientId                          String    @unique
+  clientSecret                      String?
+  clientDiscoveryId                 String?
+  disabled                          Boolean?  @default(false)
+  skipConsent                       Boolean?
+  enableEndSession                  Boolean?
+  subjectType                       String?
+  scopes                            String[]  @default([])
+  clientCredentialsScopes           String[]  @default([])
+  userId                            String?
+  createdAt                         DateTime?
+  updatedAt                         DateTime?
+  name                              String?
+  uri                               String?
+  icon                              String?
+  contacts                          String[]  @default([])
+  tos                               String?
+  policy                            String?
+  softwareId                        String?
+  softwareVersion                   String?
+  softwareStatement                 String?
+  redirectUris                      String[]
+  postLogoutRedirectUris            String[]  @default([])
+  backchannelLogoutUri              String?
+  backchannelLogoutSessionRequired  Boolean?
+  tokenEndpointAuthMethod           String?
+  applicationType                   String?
+  jwks                              String?
+  jwksUri                           String?
+  grantTypes                        String[]  @default([])
+  responseTypes                     String[]  @default([])
+  requirePKCE                       Boolean?
+  dpopBoundAccessTokens              Boolean?  @default(false)
+  referenceId                       String?
+  metadata                          Json?
+
+  @@index([userId])
+  @@map("oauthClient")
+}
+
+model OauthResource {
+  id                            String    @id
+  identifier                    String    @unique
+  name                          String
+  accessTokenTtl                Int?
+  refreshTokenTtl               Int?
+  signingAlgorithm              String?
+  signingKeyId                  String?
+  allowedScopes                 String[]  @default([])
+  customClaims                  Json?
+  dpopBoundAccessTokensRequired  Boolean?  @default(false)
+  disabled                      Boolean?  @default(false)
+  createdAt                     DateTime?
+  updatedAt                     DateTime?
+  policyVersion                 Int?
+  metadata                      Json?
+
+  @@map("oauthResource")
+}
+
+model OauthClientResource {
+  id         String    @id
+  clientId   String
+  resourceId String
+  metadata   Json?
+  createdAt  DateTime?
+
+  @@index([clientId])
+  @@index([resourceId])
+  @@map("oauthClientResource")
+}
+
+model OauthRefreshToken {
+  id                      String    @id
+  token                   String    @unique
+  clientId                String
+  sessionId               String?
+  userId                  String
+  referenceId             String?
+  authorizationCodeId     String?
+  resources               String[]  @default([])
+  requestedUserInfoClaims String[]  @default([])
+  expiresAt               DateTime
+  createdAt               DateTime
+  revoked                 DateTime?
+  rotatedAt               DateTime?
+  rotationReplayResponse  String?
+  rotationReplayExpiresAt DateTime?
+  authTime                DateTime?
+  confirmation            Json?
+  scopes                  String[]  @default([])
+
+  @@index([clientId])
+  @@index([sessionId])
+  @@index([userId])
+  @@index([authorizationCodeId])
+  @@map("oauthRefreshToken")
+}
+
+model OauthAccessToken {
+  id                      String    @id
+  token                   String    @unique
+  clientId                String
+  sessionId               String?
+  userId                  String?
+  referenceId             String?
+  authorizationCodeId     String?
+  resources               String[]  @default([])
+  requestedUserInfoClaims String[]  @default([])
+  refreshId               String?
+  expiresAt               DateTime
+  createdAt               DateTime
+  revoked                 DateTime?
+  confirmation            Json?
+  scopes                  String[]  @default([])
+
+  @@index([clientId])
+  @@index([sessionId])
+  @@index([userId])
+  @@index([authorizationCodeId])
+  @@index([refreshId])
+  @@map("oauthAccessToken")
+}
+
+model OauthConsent {
+  id                      String   @id
+  clientId                String
+  userId                  String?
+  referenceId             String?
+  resources               String[] @default([])
+  requestedUserInfoClaims String[] @default([])
+  scopes                  String[] @default([])
+  createdAt               DateTime
+  updatedAt               DateTime
+
+  @@index([clientId])
+  @@index([userId])
+  @@map("oauthConsent")
+}
+
+model OauthClientAssertion {
+  id        String   @id
+  expiresAt DateTime
+
+  @@map("oauthClientAssertion")
+}

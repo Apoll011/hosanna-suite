@@ -1,0 +1,85 @@
+import { adminAc, ownerAc } from "better-auth/plugins/organization/access";
+import { ac } from "./permission.js";
+
+export const owner = ac.newRole({
+  song: ["create", "access", "update", "delete", "import"],
+  service: ["create", "access", "update", "delete"],
+  folder: ["create", "update", "access", "delete"],
+  collection: ["create", "update", "access", "delete"],
+  agenda: ["create", "access", "update", "delete"],
+  settings: ["manage"],
+  ai: ["manage", "use"],
+  export: ["pdf"],
+  billing: ["manage", "access"],
+  backup: ["export", "import"],
+  notification: ["sent"],
+  ...ownerAc.statements,
+});
+
+export const admin = ac.newRole({
+  song: ["create", "access", "update", "delete", "import"],
+  service: ["create", "access", "update", "delete"],
+  folder: ["create", "update", "access", "delete"],
+  collection: ["create", "update", "access", "delete"],
+  agenda: ["create", "access", "update", "delete"],
+  settings: ["manage"],
+  ai: ["manage", "use"],
+  export: ["pdf"],
+  backup: ["export"],
+  notification: ["sent"],
+  ...adminAc.statements,
+});
+
+export const teamLeader = ac.newRole({
+  song: ["create", "access", "update", "import"],
+  service: ["create", "access", "update"],
+  folder: ["create", "access"],
+  collection: ["create", "access"],
+  agenda: ["create", "access", "update"],
+  invitation: ["create"],
+  team: ["create", "update"],
+  notification: ["sent"],
+  export: ["pdf"],
+  ai: ["use"],
+});
+
+export const editor = ac.newRole({
+  song: ["create", "access", "update", "import"],
+  service: ["create", "access", "update"],
+  folder: ["create", "update", "access"],
+  collection: ["create", "update", "access"],
+  agenda: ["create", "access", "update"],
+  export: ["pdf"],
+  ai: ["use"],
+});
+
+export const musician = ac.newRole({
+  song: ["create", "access", "update", "import"],
+  service: ["access", "update"],
+  collection: ["access"],
+  agenda: ["access", "update"],
+  export: ["pdf"],
+  ai: ["use"],
+});
+
+export const guest = ac.newRole({
+  song: ["access"],
+  service: ["access"],
+  collection: ["access"],
+  agenda: ["access"],
+  export: ["pdf"],
+});
+
+export const member = musician;
+
+export const roles = {
+  owner,
+  admin,
+  teamLeader,
+  editor,
+  musician,
+  member,
+  guest,
+} as const;
+
+export type AppRole = keyof typeof roles;

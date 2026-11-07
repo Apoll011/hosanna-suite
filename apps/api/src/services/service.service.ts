@@ -1,0 +1,216 @@
+import { v4 as uuid } from "uuid";
+import type { OrgScopedPrisma } from "../database/prisma.js";
+import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
+import {
+  ServiceRepository,
+  ServiceWithSongs,
+} from "../repositories/service.repository.js";
+import { SongRepository } from "../repositories/song.repository.js";
+import { AppError } from "../utils/errors.js";
+import { syncCache } from "./syncCache.service.js";
+
+function assertUnchanged(
+  current: { updatedAt: Date },
+  clientUpdatedAt: Date,
+  locale: string,
+) {
+  if (current.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
+    throw AppError.conflict(t(locale, "conflict.service"));
+  }
+}
+
+function toDateOnly(value: Date | string): string {
+  if (typeof value === "string") {
+    return value.slice(0, 10);
+  }
+  return value.toISOString().slice(0, 10);
+}
+
+function serialize(service: NonNullable<ServiceWithSongs>) {
+  return {
+    id: service.id,
+    name: service.name,
+    date: service.date,
+    notes: service.notes ?? "",
+    elements: service.elements ?? [],
+    archived: Boolean(service.archived),
+    createdAt: service.createdAt,
+    updatedAt: service.updatedAt,
+  };
+}
+
+/** MCP/get: same as serialize but date as YYYY-MM-DD. */
+function serializeForMcp(service: NonNullable<ServiceWithSongs>) {
+  return {
+    ...serialize(service),
+    date: toDateOnly(service.date),
+    elementCount: Array.isArray(service.elements) ? service.elements.length : 0,
+  };
+}
+
+/** List/search rows — metadata only (no element bodies). */
+function serializeListRow(service: NonNullable<ServiceWithSongs>) {
+  const elements = Array.isArray(service.elements) ? service.elements : [];
+  const hasSongs = elements.some(
+    (el) =>
+      el &&
+      typeof el === "object" &&
+      (el as { type?: string }).type === "song" &&
+      Boolean((el as { songId?: string }).songId),
+  );
+  return {
+    id: service.id,
+    name: service.name,
+    date: toDateOnly(service.date),
+    notes: service.notes ?? "",
+    archived: Boolean(service.archived),
+    elementCount: elements.length,
+    hasSongs,
+    updatedAt: service.updatedAt,
+    createdAt: service.createdAt,
+  };
+}
+
+export class ServiceService {
+  private serviceRepo: ServiceRepository;
+  private songRepo: SongRepository;
+
+  constructor(
+    private readonly db: OrgScopedPrisma,
+    private readonly tenantId: string,
+    private readonly locale: string = DEFAULT_LOCALE,
+  ) {
+    this.serviceRepo = new ServiceRepository(db);
+    this.songRepo = new SongRepository(db);
+  }
+
+  invalidateCache() {
+    syncCache.invalidate(this.tenantId);
+  }
+
+  async list(body: {
+    archived?: boolean;
+    includeArchived?: boolean;
+    metadataOnly: true;
+  }): Promise<ReturnType<typeof serializeListRow>[]>;
+  async list(body?: {
+    archived?: boolean;
+    includeArchived?: boolean;
+    metadataOnly?: false;
+  }): Promise<ReturnType<typeof serialize>[]>;
+  async list(
+    body: {
+      archived?: boolean;
+      includeArchived?: boolean;
+      /** When true, omit element bodies (MCP search). Studio API keeps full rows. */
+      metadataOnly?: boolean;
+    } = {},
+  ): Promise<
+    ReturnType<typeof serialize>[] | ReturnType<typeof serializeListRow>[]
+  > {
+    const mode: boolean | "all" = body.includeArchived
+      ? "all"
+      : (body.archived ?? false);
+    const services = await this.serviceRepo.findAll(mode);
+    if (body.metadataOnly) {
+      return services.map(serializeListRow);
+    }
+    return services.map(serialize);
+  }
+
+  async getById(id: string) {
+    const service = await this.serviceRepo.findById(id);
+    if (!service || service.deleted)
+      throw AppError.notFound(
+        "SERVICE_NOT_FOUND",
+        t(this.locale, "service.not_found"),
+      );
+    return service;
+  }
+
+  async getByIdSerialized(id: string) {
+    return serialize(await this.getById(id));
+  }
+
+  /** MCP-facing get — date normalized to YYYY-MM-DD. */
+  async getByIdForMcp(id: string) {
+    return serializeForMcp(await this.getById(id));
+  }
+
+  async create(input: {
+    name: string;
+    date: Date;
+    notes?: string;
+    elements?: any;
+  }) {
+    const created = await this.serviceRepo.create({
+      id: uuid(),
+      name: input.name,
+      date: input.date,
+      notes: input.notes ?? "",
+      elements: input.elements ?? [],
+    });
+    this.invalidateCache();
+    return serialize(created!);
+  }
+
+  async update(
+    id: string,
+    updatedAt: Date,
+    patch: {
+      name?: string;
+      date?: Date;
+      notes?: string;
+      elements?: any;
+      archived?: boolean;
+    },
+  ) {
+    const current = await this.getById(id);
+    assertUnchanged(current, updatedAt, this.locale);
+
+    await this.serviceRepo.update(id, {
+      name: patch.name ?? undefined,
+      date: patch.date ?? undefined,
+      notes: patch.notes ?? undefined,
+      archived: patch.archived ?? undefined,
+      elements: patch.elements !== undefined ? patch.elements : undefined,
+    });
+
+    this.invalidateCache();
+
+    return serialize((await this.getById(id))!);
+  }
+
+  async delete(id: string) {
+    await this.getById(id);
+    const purgeAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    await this.serviceRepo.update(id, { deleted: true, purgeAt });
+    this.invalidateCache();
+  }
+
+  async restore(id: string) {
+    const service = await this.serviceRepo.findById(id);
+    if (!service || !service.deleted)
+      throw AppError.notFound(
+        "SERVICE_NOT_FOUND",
+        t(this.locale, "service.not_found"),
+      );
+    await this.serviceRepo.update(id, { deleted: false, purgeAt: null });
+    this.invalidateCache();
+    return serialize((await this.serviceRepo.findById(id))!);
+  }
+
+  async listTrashed() {
+    const services = await this.serviceRepo.findTrashed();
+    return services.map(serialize);
+  }
+
+  async updateElements(id: string, updatedAt: Date, elements: any) {
+    const current = await this.getById(id);
+    assertUnchanged(current, updatedAt, this.locale);
+    const updated = await this.serviceRepo.update(id, { elements });
+    this.invalidateCache();
+
+    return serialize(updated!);
+  }
+}

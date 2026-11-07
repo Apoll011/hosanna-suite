@@ -1,0 +1,51 @@
+import { z } from "zod";
+
+export const collectionParamSchema = z.object({
+  collection: z.enum([
+    "songs",
+    "folders",
+    "collections",
+    "services",
+    "agendaEvents",
+  ]),
+});
+
+const checkpointSchema = z
+  .object({
+    updatedAt: z.number(),
+    id: z.string(),
+  })
+  .nullable();
+
+export const pullBodySchema = z.object({
+  checkpoint: checkpointSchema.optional().default(null),
+  limit: z.number().int().min(1).max(2000).optional().default(100),
+});
+
+export const replicatedCollectionSchema = z.enum([
+  "songs",
+  "folders",
+  "collections",
+  "services",
+  "agendaEvents",
+]);
+
+export const pullAllBodySchema = z.object({
+  checkpoints: z
+    .partialRecord(replicatedCollectionSchema, checkpointSchema)
+    .optional()
+    .default({}),
+  limit: z.number().int().min(1).max(2000).optional().default(100),
+});
+
+export const changeRowSchema = z.object({
+  newDocumentState: z.record(z.string(), z.unknown()),
+  assumedMasterState: z.record(z.string(), z.unknown()).nullable().optional(),
+});
+
+export const pushBodySchema = z.object({
+  changeRows: z.array(changeRowSchema).min(1).max(2000),
+});
+
+export type PullBody = z.infer<typeof pullBodySchema>;
+export type PullAllBody = z.infer<typeof pullAllBodySchema>;

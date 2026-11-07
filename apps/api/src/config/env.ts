@@ -1,0 +1,134 @@
+import "dotenv/config";
+
+function required(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
+function optional(name: string): string | undefined {
+  return process.env[name] || undefined;
+}
+
+/** True when running inside a Vercel Function. */
+const isVercel = Boolean(process.env.VERCEL);
+
+export const env = {
+  // ── Server ──────────────────────────────────────────────────────────────
+  nodeEnv: process.env.NODE_ENV ?? "development",
+  port: parseInt(process.env.PORT ?? "3000", 10),
+  /** Legacy local flag; cookie SameSite is always `none`+`secure` for cross-origin Studio↔API. */
+  devMode: process.env.DEV_MODE === "true",
+  /** Vercel Fluid / serverless runtime. */
+  isVercel,
+  /**
+   * Extra CORS origins (comma-separated). Merged with the built-in allowlist
+   * (Studio, localhost, MCP hosts, *.hosanna.live).
+   */
+  corsOriginExtra: (process.env.CORS_ORIGIN ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
+  /**
+   * Global + route rate limits. On by default outside development.
+   * Set RATE_LIMIT_DISABLED=true to turn off (e.g. local load tests).
+   */
+  rateLimitDisabled:
+    process.env.RATE_LIMIT_DISABLED === "true" ||
+    (process.env.NODE_ENV ?? "development") === "development",
+
+  // ── Database ─────────────────────────────────────────────────────────────
+  databaseUrl: required("DATABASE_URL"),
+  /**
+   * Max connections in the pg pool.
+   * Defaults to 5 on Vercel (many warm isolates × large pools exhaust Postgres)
+   * and 20 for long-running hosts (Docker / local).
+   */
+  dbPoolMax: parseInt(process.env.DB_POOL_MAX ?? (isVercel ? "5" : "20"), 10),
+
+  // ── Better Auth ──────────────────────────────────────────────────────────
+  betterAuthSecret: required("BETTER_AUTH_SECRET"),
+  publicAppUrl: required("PUBLIC_APP_URL"),
+  /** Sentinel plugin API key — required in production. */
+  betterAuthApiKey: optional("BETTER_AUTH_API_KEY"),
+
+  // ── OAuth providers ───────────────────────────────────────────────────────
+  googleClientId: required("GOOGLE_CLIENT_ID"),
+  googleClientSecret: required("GOOGLE_CLIENT_SECRET"),
+
+  // ── Stripe ────────────────────────────────────────────────────────────────
+  stripeSecretKey: required("STRIPE_SECRET_KEY"),
+  stripeWebhookSecret: required("STRIPE_WEBHOOK_SECRET"),
+
+  // ── Captcha ───────────────────────────────────────────────────────────────
+  turnstileSecretKey: required("TURNSTILE_SECRET_KEY"),
+
+  // ── Supabase ──────────────────────────────────────────────────────────────
+  supabaseUrl: required("SUPABASE_URL"),
+  supabaseSecretKey: required("SUPABASE_SECRET_KEY"),
+
+  // ── Email (Resend) ────────────────────────────────────────────────────────
+  resendApiKey: required("RESEND_API_KEY"),
+  emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
+
+  // ── Studio URL ────────────────────────────────────────────────────────────
+  /** The front-end app URL used to build email links. */
+  studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
+
+  // ── Cron ──────────────────────────────────────────────────────────────────
+  cronSecret: optional("CRON_SECRET"),
+
+  // ── Firebase Cloud Messaging / Firestore ─────────────────────────────────
+  fcmProjectId: optional("FCM_PROJECT_ID"),
+  fcmClientEmail: optional("FCM_CLIENT_EMAIL"),
+  /** Service-account private key with literal \n escapes (as in the JSON file). */
+  fcmPrivateKey: optional("FCM_PRIVATE_KEY"),
+
+  // ── AI (Studio BYOK) ─────────────────────────────────────────────────────
+  /**
+   * AES-256-GCM key for encrypting per-org LLM API keys at rest.
+   * Prefer 64 hex characters (32 bytes). Required to save/use org AI keys.
+   */
+  aiSettingsEncryptionKey: optional("AI_SETTINGS_ENCRYPTION_KEY"),
+
+  /**
+   * Public URL of this API's MCP endpoint (RFC 9728 resource identifier).
+   * Loopback HTTP is OK for local; production should be https://.../mcp.
+   */
+  mcpResourceUrl:
+    optional("MCP_RESOURCE_URL") ??
+    `http://127.0.0.1:${parseInt(process.env.PORT ?? "3000", 10)}/mcp`,
+
+  // ── Metadata search (Studio AI / MCP) ─────────────────────────────────────
+  /** YouTube Data API v3 key — improves `{youtube:}` lookups. */
+  youtubeApiKey: optional("YOUTUBE_API_KEY"),
+};
+/** Reject loopback MCP resource URLs outside local/dev — breaks Claude/ChatGPT OAuth audience. */
+function assertMcpResourceUrlForRuntime(): void {
+  const url = env.mcpResourceUrl;
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`MCP_RESOURCE_URL is not a valid URL: ${url}`);
+  }
+  const host = parsed.hostname.toLowerCase();
+  const isLoopback =
+    host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const isProd = env.nodeEnv === "production" || Boolean(process.env.VERCEL);
+  if (isProd && (isLoopback || parsed.protocol !== "https:")) {
+    throw new Error(
+      `MCP_RESOURCE_URL must be a public https://…/mcp URL in production (got ${url}). ` +
+        `Set it to the exact URL MCP clients use (e.g. https://dev-api.hosanna.live/mcp).`,
+    );
+  }
+  if (parsed.search || parsed.hash || parsed.username || parsed.password) {
+    throw new Error(
+      `MCP_RESOURCE_URL must not include credentials, query, or fragment (got ${url}).`,
+    );
+  }
+}
+
+assertMcpResourceUrlForRuntime();

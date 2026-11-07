@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "fluid": true,
+  "functions": {
+    "src/index.mts": {
+      "maxDuration": 60,
+      "includeFiles": "docs/mcp/**"
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/purge-trash",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/agenda-reminders",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}
