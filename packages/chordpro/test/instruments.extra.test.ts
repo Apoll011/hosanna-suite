@@ -30,7 +30,9 @@ describe("built-in instrument fingerings", () => {
 
   it("keeps registry ids stable for consumers", () => {
     assert.equal(instrumentRegistry.get("guitar")?.id, "guitar");
-    assert.equal(instrumentRegistry.get("piano")?.displayName?.length > 0, true);
+    const piano = instrumentRegistry.get("piano");
+    assert.ok(piano);
+    assert.ok(piano.displayName.length > 0);
     assert.equal(instrumentRegistry.has("ukulele"), true);
     assert.equal(instrumentRegistry.has("mandolin"), false);
   });
