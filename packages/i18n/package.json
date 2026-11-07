@@ -1,0 +1,22 @@
+{
+  "name": "@hosanna/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Hosanna UI language model: supported languages, locale resolution, and typed dictionary helpers",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@hosanna/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

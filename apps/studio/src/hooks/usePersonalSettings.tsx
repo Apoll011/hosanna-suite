@@ -6,7 +6,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 import { CACHED_USER_KEY, SessionUser } from "../contexts/AuthContext";
 import { authClient } from "../lib/authClient";
-import { PersonalLanguage } from "../lib/i18n/types";
+import type { PersonalLanguage } from "@hosanna/i18n";
 
 export type PersonalTheme = "light" | "dark" | "system";
 export type ViewMode = "grid" | "list";

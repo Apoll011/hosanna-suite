@@ -174,6 +174,9 @@ importers:
 
   apps/saas:
     dependencies:
+      '@hosanna/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.3.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -370,6 +373,9 @@ importers:
       '@hosanna/chordpro':
         specifier: workspace:*
         version: link:../../packages/chordpro
+      '@hosanna/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.13(supports-color@10.2.2))(preact@10.29.8)(rollup@4.67.5)(supports-color@10.2.2)(vite@6.4.5(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
@@ -573,6 +579,15 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 22.20.5
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/i18n:
+    devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../config
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

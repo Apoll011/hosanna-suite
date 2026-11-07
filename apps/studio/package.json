@@ -20,6 +20,7 @@
     "@better-auth/stripe": "^1.7.18",
     "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
+    "@hosanna/i18n": "workspace:*",
     "@preact/preset-vite": "^2.10.6",
     "@tailwindcss/vite": "^4.1.14",
     "@tanstack/markdown": "^0.0.13",

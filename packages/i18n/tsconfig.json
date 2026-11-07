@@ -1,0 +1,12 @@
+{
+  "extends": "@hosanna/config/tsconfig/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "isolatedModules": true,
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["src"]
+}

@@ -13,22 +13,22 @@ import React, {
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
-import { DEFAULT_LANGUAGE } from "./languages";
+import {
+  DEFAULT_LANGUAGE,
+  LANGUAGE_LOCALE,
+  resolveLanguage,
+  resolveString,
+  type Interpolation,
+  type Language,
+  type PersonalLanguage,
+  type TranslationKeyOf,
+  type TranslationPluralKeyOf,
+} from "@hosanna/i18n";
 import { en } from "./locales/en";
 import { es } from "./locales/es";
 import { pt } from "./locales/pt";
-import { resolveLanguage } from "./resolve";
-import {
-  LANGUAGE_LOCALE,
-  Language,
-  PersonalLanguage,
-  TranslationKeyOf,
-  TranslationPluralKeyOf,
-} from "./types";
 
 const MESSAGES: Record<Language, typeof pt> = { pt, en, es };
-
-type Interpolation = Record<string, string | number>;
 
 /** Every dot-path that resolves to a translatable string leaf. */
 export type TranslationKey = TranslationKeyOf<typeof pt>;
@@ -56,36 +56,6 @@ export interface I18nContextValue {
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
-
-function lookup(dict: unknown, key: string): unknown {
-  const parts = key.split(".");
-  let node: unknown = dict;
-  for (const part of parts) {
-    if (node && typeof node === "object" && part in (node as object)) {
-      node = (node as Record<string, unknown>)[part];
-    } else {
-      return undefined;
-    }
-  }
-  return node;
-}
-
-function interpolate(template: string, vars?: Interpolation): string {
-  if (!vars) return template;
-  return template.replace(/\{(\w+)\}/g, (match, name: string) =>
-    vars[name] !== undefined ? String(vars[name]) : match,
-  );
-}
-
-function resolveString(
-  dict: unknown,
-  key: string,
-  vars?: Interpolation,
-): string | undefined {
-  const value = lookup(dict, key);
-  if (typeof value === "string") return interpolate(value, vars);
-  return undefined;
-}
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

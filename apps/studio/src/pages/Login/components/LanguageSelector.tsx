@@ -4,8 +4,7 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import { LANGUAGES, LanguageMeta } from "@/src/lib/i18n/languages";
-import { Language } from "@/src/lib/i18n/types";
+import { LANGUAGES, type Language, type LanguageMeta } from "@hosanna/i18n";
 import { Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 

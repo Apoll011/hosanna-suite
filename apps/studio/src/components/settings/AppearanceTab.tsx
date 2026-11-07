@@ -8,8 +8,7 @@ import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualiz
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
 import type { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
-import { LANGUAGES } from "@/src/lib/i18n/languages";
-import { PersonalLanguage } from "@/src/lib/i18n/types";
+import { LANGUAGES, type PersonalLanguage } from "@hosanna/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import {
   BarChart2,

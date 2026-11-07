@@ -4,7 +4,7 @@
  */
 
 import { DEFAULT_LANGUAGE } from "./languages";
-import { Language, PersonalLanguage } from "./types";
+import type { Language, PersonalLanguage } from "./types";
 
 /**
  * Map an IETF locale tag (e.g. "pt-BR", "en_US", "es-419") to a supported
