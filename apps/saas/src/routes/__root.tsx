@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "@tanstack/react-router";
+import { Link, Outlet, useLocation, type ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { I18nProvider, useI18n } from "@/lib/i18n";
@@ -48,7 +48,7 @@ export function NotFoundComponent() {
   );
 }
 
-export function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+export function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const { t } = useI18n();
 
