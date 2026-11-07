@@ -3,21 +3,45 @@ node_modules/
 
 # build output
 dist/
+dist-ssr/
 build/
 .output/
+.vinxi/
+.nitro/
+coverage/
+*.tsbuildinfo
 
 # tooling caches
 .turbo/
 .wrangler/
 .vercel/
 .tanstack/
-*.tsbuildinfo
+.dev.vars
 
 # environment (never commit secrets)
 .env
 .env.*
 !.env.example
+*.local
 
-# os / editor
-.DS_Store
+# logs
+logs/
 *.log
+
+# local AI / agent tooling
+.agents/
+.claude/
+.impeccable/
+skills-lock.json
+/apps/api/mcp.json
+
+# editors / os
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
