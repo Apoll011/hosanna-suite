@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Google Search Console tip:
-  Submit this sitemap on the hosanna.live property.
-  Also submit https://studio.hosanna.live/sitemap.xml (Domain property for
-  hosanna.live covers both hosts; URL-prefix properties need each sitemap).
-  Studio is also linked from /robots.txt on this site.
--->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<!-- Google Search Console: submit this file for hosanna.live AND also
+     https://studio.hosanna.live/sitemap.xml (use a Domain property for hosanna.live
+     so Studio is covered, or add studio as a second URL-prefix property).
+     Both sitemaps are listed in https://hosanna.live/robots.txt -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://hosanna.live</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://hosanna.live/chordpro</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://hosanna.live/about</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://hosanna.live/contact</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://hosanna.live/privacy</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://hosanna.live/terms</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

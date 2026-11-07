@@ -1,12 +1,12 @@
 {
-  "name": "@hosanna/backend",
+  "name": "@hosanna/api",
   "version": "2.22.4",
   "license": "Apache-2.0",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json && npm run build:mcp-docs",
+    "build": "tsc -p tsconfig.json && pnpm run build:mcp-docs",
     "build:mcp-docs": "mkdir -p dist/mcp/docs && cp -R docs/mcp/. dist/mcp/docs/",
     "start": "node dist/index.mjs",
     "dev": "tsx watch src/index.mts",
@@ -18,7 +18,9 @@
     "prisma:push": "prisma db push",
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
-    "openapi:generate": "node openapi/generate.mjs"
+    "openapi:generate": "node openapi/generate.mjs",
+    "db:generate": "prisma generate",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.92",
@@ -30,7 +32,7 @@
     "@better-auth/infra": "^0.4.27",
     "@better-auth/mcp": "^1.7.18",
     "@better-auth/stripe": "^1.7.18",
-    "@hosanna/chordpro": "^1.7.2",
+    "@hosanna/chordpro": "workspace:*",
     "@modelcontextprotocol/node": "^2.1.2",
     "@modelcontextprotocol/server": "^2.4.0",
     "@prisma/adapter-pg": "^7.9.1",
@@ -68,8 +70,5 @@
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
     "yaml": "^2.9.1"
-  },
-  "overrides": {
-    "better-call": "1.4.5"
   }
 }
