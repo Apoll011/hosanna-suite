@@ -154,27 +154,7 @@ The services, agendas, and scheduling will be extracted out of Hosanna Studio an
 
 ---
 
-## 4. Architectural Decision: Resources Permanently Merged into Planning
-
-A major design question was: *Where should resources like rooms, vehicles, and equipment live? Maybe Finance, or as a standalone app?*
-
-### The Verdict: Merged Permanently into Hosanna Planning
-Rather than creating app fragmentation or forcing leaders to context-switch, **Facilities and Equipment are permanently merged directly inside Hosanna Planning**.
-
-### Why This is the Right Decision:
-1. **Zero Context-Switching**: When a youth pastor or worship director schedules a Wednesday night rehearsal or Friday outreach in Planning, they reserve the sanctuary, the van, and wireless microphones on that exact same screen.
-2. **Unified Conflict Detection**: The scheduling engine checks leader availability, volunteer availability, and room/vehicle availability in a single query.
-3. **Finance Remains Focused on Money**: Reserving a folding table or the church van is an operational planning task, not a monetary ledger transaction. Finance stays clean and focused on giving, budgets, and statements.
-4. **Leaner 5-App Suite**: Keeps the global App Switcher clean, recognizable, and focused:
-   - 🎵 **Hosanna Music**
-   - 📽️ **Hosanna Presenter**
-   - 🗓️ **Hosanna Planning** *(Services + Volunteers + Facilities/Gear)*
-   - 👥 **Hosanna Community**
-   - 💰 **Hosanna Finance**
-
----
-
-## 5. Platform Core: The Multi-App Foundation
+## 4. Platform Core: The Multi-App Foundation
 
 To make multiple apps feel like **one unified product**, the underlying architecture must support:
 
@@ -202,15 +182,15 @@ graph TD
     App1 & App2 & App3 & App4 & App5 --> SharedUI
 ```
 
-### 5.1. Monorepo Architecture (Turborepo / pnpm)
+### 4.1. Monorepo Architecture (Turborepo / pnpm)
 The entire Hosanna suite will transition into a structured monorepo:
 
 ```
 hosanna/
 ├── apps/
 │   ├── web-music/             # Hosanna Music (Songbook, ChordPro, arrangements)
-│   ├── web-planning/          # Hosanna Planning (Services, calendars, volunteer matrix)
-│   ├── web-community/         # Hosanna Community (People, check-in, posts, wiki)
+│   ├── web-planning/          # Hosanna Planning (Services, calendars, volunteer matrix, resources)
+│   ├── web-community/         # Hosanna Community (People, check-in, posts, wiki, media)
 │   ├── web-finance/           # Hosanna Finance (Giving, donor statements, budgets)
 │   ├── desktop-presenter/     # Hosanna Presenter (Native desktop app: Tauri/Electron)
 │   ├── mobile-musician/       # Hosanna Musician App (Stage tool, ChordPro, offline)
@@ -229,7 +209,7 @@ hosanna/
 
 ---
 
-### 5.2. Two-App Mobile Strategy
+### 4.2. Two-App Mobile Strategy
 Rather than crowding every feature into a single cluttered app, Hosanna will provide **two specialized mobile experiences**:
 
 ```mermaid
@@ -268,7 +248,7 @@ flowchart TD
 
 ---
 
-### 5.3. Multi-Channel Notification Engine
+### 4.3. Multi-Channel Notification Engine
 Church communication must reach volunteers and members where they are. The notification pipeline operates on a prioritized routing tier:
 
 ```mermaid
@@ -287,13 +267,13 @@ flowchart LR
 
 ---
 
-## 6. Phased Implementation Roadmap
+## 5. Phased Implementation Roadmap
 
 ```mermaid
 flowchart LR
-    Phase1["Phase 1: Monorepo & Planning Split\n- Migrate to Monorepo\n- Split Planning from Music\n- Launch App Switcher UI\n- Resources v1 in Planning"]
-    Phase2["Phase 2: Desktop Presenter & Community\n- Desktop Presenter (Tauri/Electron)\n- Community (People, Wiki, Posts)\n- Member Mobile App v1"]
-    Phase3["Phase 3: Finance & Advanced Channels\n- Hosanna Finance (Giving & Tax)\n- WhatsApp / SMS integration\n- Child Check-in hardware\n- Standalone Resources app"]
+    Phase1["Phase 1: Monorepo & Planning Split\n- Migrate to Monorepo\n- Split Planning from Music\n- Launch App Switcher UI\n- Resources & Rooms in Planning"]
+    Phase2["Phase 2: Desktop Presenter & Community\n- Desktop Presenter (Tauri/Electron)\n- Community (People, Wiki, Posts, Media)\n- Member Mobile App v1"]
+    Phase3["Phase 3: Finance & Advanced Channels\n- Hosanna Finance (Giving & Tax)\n- WhatsApp / SMS integration\n- Child Check-in hardware"]
 
     Phase1 --> Phase2 --> Phase3
 ```
@@ -302,7 +282,7 @@ flowchart LR
 - **Monorepo Transition**: Reorganize existing code into Turborepo with shared `@hosanna/ui`, `@hosanna/auth`, and `@hosanna/db`.
 - **Decouple Planning from Music**: Extract services, setlists, and agendas from Hosanna Studio into **Hosanna Planning**.
 - **Launch Global App Switcher**: Header component across apps for instant navigation.
-- **Implement Resources v1 inside Planning**: Allow reserving sanctuary, rooms, vans, and AV equipment during event/service scheduling with conflict prevention.
+- **Implement Resources inside Planning**: Allow reserving sanctuary, rooms, vans, and AV equipment during event/service scheduling with conflict prevention.
 
 ### Phase 2: Native Desktop Presenter & Community App
 - **Build Hosanna Presenter (Desktop App)**:
@@ -312,6 +292,7 @@ flowchart LR
 - **Build Hosanna Community**:
   - Member directory, families, and groups.
   - **Posts**: Digital bulletin and church newsfeed.
+  - **Sermons & Media**: In-app YouTube live stream and sermon archive.
   - **Wiki**: Searchable volunteer SOPs and ministry training library.
 - **Launch Hosanna Member Mobile App**:
   - Volunteer scheduling responses (Accept / Decline).
@@ -330,7 +311,7 @@ flowchart LR
 
 ---
 
-## 7. Architectural Decisions Log (Confirmed)
+## 6. Architectural Decisions Log (Confirmed)
 
 | Decision Area | Chosen Strategy | Rationale |
 | :--- | :--- | :--- |
