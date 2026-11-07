@@ -8,6 +8,18 @@ Leaders plan here. Musicians play from the [Hosanna mobile app](https://github.c
 
 Live: [studio.hosanna.live](https://studio.hosanna.live)
 
+**Preview (develop):** [dev-studio.hosanna.live](https://dev-studio.hosanna.live) — Cloudflare Worker `studio`, deployed from the `develop` branch via `.github/workflows/deploy-studio-preview.yml`.
+
+### Deploy (Cloudflare Workers)
+
+```bash
+pnpm turbo run build --filter=@hosanna/studio
+pnpm --filter @hosanna/studio deploy:preview   # wrangler deploy → Worker "studio"
+```
+
+GitHub Actions needs repo secrets `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`, and optional `VITE_TURNSTILE_SITE_KEY` / PostHog secrets. Repo/environment variable `VITE_API_URL` defaults to `https://dev-api.hosanna.live/api` when unset.
+
+
 ### SEO / Search Console
 
 - `public/sitemap.xml` → https://studio.hosanna.live/sitemap.xml (demo, signup, login)

@@ -1,7 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hosana-studio-dev",
+  "name": "studio",
   "compatibility_date": "2026-08-20",
+  "workers_dev": true,
+  "preview_urls": true,
   "observability": {
     "enabled": true,
   },
@@ -9,4 +11,11 @@
     "directory": "./dist",
     "not_found_handling": "single-page-application",
   },
+  // Preview / develop deploy — production (studio.hosanna.live) comes later.
+  "routes": [
+    {
+      "pattern": "dev-studio.hosanna.live",
+      "custom_domain": true,
+    },
+  ],
 }
