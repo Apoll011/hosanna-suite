@@ -123,6 +123,9 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@types/compression':
         specifier: ^1.8.1
         version: 1.8.1
@@ -286,6 +289,9 @@ importers:
       '@eslint/js':
         specifier: ^9.32.0
         version: 9.39.5
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@tailwindcss/typography':
         specifier: ^0.5.20
         version: 0.5.20(tailwindcss@4.3.5)
@@ -410,6 +416,9 @@ importers:
         specifier: ^6.2.3
         version: 6.4.5(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
     devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@types/cheerio':
         specifier: ^0.22.35
         version: 0.22.35
@@ -489,6 +498,9 @@ importers:
         specifier: ^19.0.0
         version: 19.3.1(react@19.3.1)
     devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../config
       '@types/node':
         specifier: ^26.1.2
         version: 26.6.6
@@ -513,6 +525,8 @@ importers:
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
+
+  packages/config: {}
 
 packages:
 

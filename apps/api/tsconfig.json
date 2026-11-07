@@ -1,16 +1,8 @@
 {
+  "extends": "@hosanna/config/tsconfig/node.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "esModuleInterop": true,
-    "lib": ["ES2022"],
     "outDir": "dist",
     "rootDir": "src",
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
     "declaration": false,
     "sourceMap": false,
     "noUnusedLocals": false,

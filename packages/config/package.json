@@ -1,0 +1,17 @@
+{
+  "name": "@hosanna/config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Shared TypeScript and Prettier configuration for Hosanna workspaces",
+  "files": [
+    "tsconfig",
+    "prettier.json"
+  ],
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/node.json": "./tsconfig/node.json",
+    "./tsconfig/vite.json": "./tsconfig/vite.json",
+    "./prettier": "./prettier.json"
+  }
+}

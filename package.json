@@ -12,7 +12,7 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean",
-    "format": "prettier --write ."
+    "format": "turbo run format"
   },
   "devDependencies": {
     "prettier": "^3.7.3",
