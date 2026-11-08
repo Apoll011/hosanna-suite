@@ -393,7 +393,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             if (window.innerWidth < 768) setIsSidebarOpen(false);
           }}
           title={isSidebarCollapsed ? t("common.services") : undefined}
-          className={`${NAV_BASE} ${view === "services" ? NAV_ACTIVE : NAV_INACTIVE}`}
+          className={`${NAV_BASE} ${view === "services" || view === "service-editor" ? NAV_ACTIVE : NAV_INACTIVE}`}
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-5 h-5 flex items-center justify-center shrink-0">
@@ -408,7 +408,11 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             <span className={collapseText()}>{t("common.services")}</span>
           </div>
           <div className={collapseBadge()}>
-            <Badge variant={view === "services" ? "accent" : "neutral"}>{totalServices}</Badge>
+            <Badge
+              variant={view === "services" || view === "service-editor" ? "accent" : "neutral"}
+            >
+              {totalServices}
+            </Badge>
           </div>
         </button>
 
