@@ -25,10 +25,7 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -61,10 +58,7 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
   };
 
   return (
-    <div
-      className={`relative inline-block text-left ${className}`}
-      ref={dropdownRef}
-    >
+    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef}>
       <button
         type="button"
         onClick={() => {
@@ -75,12 +69,10 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
         aria-label={t("sidebar.switchWorkspace")}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="p-2.5 rounded-full bg-m3-card/80 backdrop-blur-md border border-m3-border text-m3-text shadow-[var(--shadow-lg)] transition-colors inline-flex items-center gap-1.5"
+        className="p-2.5 rounded-full bg-m3-card/80 backdrop-blur-md border border-m3-border text-m3-text shadow-lg transition-colors inline-flex items-center gap-1.5"
       >
         <Building2 className="w-5 h-5 shrink-0" />
-        <span className="text-xs font-bold max-w-24 truncate hidden sm:inline">
-          {shortName}
-        </span>
+        <span className="text-xs font-bold max-w-24 truncate hidden sm:inline">{shortName}</span>
         <ChevronDown
           className={`w-3 h-3 shrink-0 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -89,7 +81,7 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-[var(--radius-xl)] border border-m3-border/60 bg-m3-card p-1.5 shadow-[var(--shadow-lg)] ring-1 ring-black/5 dark:ring-white/5 z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-xl border border-m3-border/60 bg-m3-card p-1.5 shadow-lg ring-1 ring-black/5 dark:ring-white/5 z-50 animate-in fade-in zoom-in-95 duration-150">
           <p className="px-3 pt-1.5 pb-1 text-label text-m3-secondary">
             {t("sidebar.switchWorkspace")}
           </p>
@@ -110,34 +102,22 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
               >
                 <div className="w-7 h-7 rounded-lg shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border text-[11px] font-semibold text-m3-primary">
                   {org.logo ? (
-                    <img
-                      src={org.logo}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={org.logo} alt="" className="w-full h-full object-cover" />
                   ) : (
                     (org.name?.trim().charAt(0) || "·").toUpperCase()
                   )}
                 </div>
                 <span className="flex-1 min-w-0 text-left">
-                  <span className="block font-semibold truncate">
-                    {org.name}
-                  </span>
-                  <span className="block text-[10px] opacity-70 truncate">
-                    @{org.slug}
-                  </span>
+                  <span className="block font-semibold truncate">{org.name}</span>
+                  <span className="block text-[10px] opacity-70 truncate">@{org.slug}</span>
                 </span>
                 {isActive && <Check className="w-4 h-4 shrink-0" />}
-                {isLoading && (
-                  <Loader2 className="w-4 h-4 shrink-0 animate-spin" />
-                )}
+                {isLoading && <Loader2 className="w-4 h-4 shrink-0 animate-spin" />}
               </button>
             );
           })}
           {errorMsg && (
-            <p className="px-3 pb-1.5 pt-2 text-[11px] font-medium text-m3-danger">
-              {errorMsg}
-            </p>
+            <p className="px-3 pb-1.5 pt-2 text-[11px] font-medium text-m3-danger">{errorMsg}</p>
           )}
         </div>
       )}

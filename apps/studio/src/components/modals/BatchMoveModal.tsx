@@ -6,12 +6,7 @@
 import { Button, Modal } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
-import {
-  ChevronDown,
-  ChevronRight,
-  Folder as FolderIcon,
-  HardDrive,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, Folder as FolderIcon, HardDrive } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 interface FolderTreeNode {
@@ -50,14 +45,7 @@ const MoveFolderTreeItem: React.FC<{
   disabledFolderIds: Set<string>;
   expandedFolderIds: Set<string>;
   toggleExpand: (id: string) => void;
-}> = ({
-  node,
-  selectedFolderId,
-  onSelect,
-  disabledFolderIds,
-  expandedFolderIds,
-  toggleExpand,
-}) => {
+}> = ({ node, selectedFolderId, onSelect, disabledFolderIds, expandedFolderIds, toggleExpand }) => {
   const { t } = useI18n();
   const isSelected = selectedFolderId === node.folder.id;
   const isDisabled = disabledFolderIds.has(node.folder.id);
@@ -156,9 +144,7 @@ export const BatchMoveModal: React.FC<BatchMoveModalProps> = ({
 }) => {
   const { t } = useI18n();
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
-  const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -203,13 +189,9 @@ export const BatchMoveModal: React.FC<BatchMoveModalProps> = ({
         <p className="text-xs text-m3-secondary">
           {t("modals.chooseDestFolder")}{" "}
           <strong className="text-m3-text">
-            {selectedFoldersCount > 0 &&
-              t("modals.folderCount", { count: selectedFoldersCount })}
-            {selectedFoldersCount > 0 &&
-              selectedSongsCount > 0 &&
-              t("modals.and")}
-            {selectedSongsCount > 0 &&
-              t("modals.songCount", { count: selectedSongsCount })}
+            {selectedFoldersCount > 0 && t("modals.folderCount", { count: selectedFoldersCount })}
+            {selectedFoldersCount > 0 && selectedSongsCount > 0 && t("modals.and")}
+            {selectedSongsCount > 0 && t("modals.songCount", { count: selectedSongsCount })}
           </strong>
           :
         </p>
@@ -249,11 +231,7 @@ export const BatchMoveModal: React.FC<BatchMoveModalProps> = ({
           <Button variant="ghost" onClick={onClose} disabled={isLoading}>
             {t("common.cancel")}
           </Button>
-          <Button
-            variant="primary"
-            isLoading={isLoading}
-            onClick={handleConfirm}
-          >
+          <Button variant="primary" isLoading={isLoading} onClick={handleConfirm}>
             {t("modals.moveItems", { count: totalItems })}
           </Button>
         </div>

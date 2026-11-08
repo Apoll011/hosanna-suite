@@ -55,10 +55,7 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
   const { t } = useI18n();
 
   const elements = useMemo(() => service.elements || [], [service.elements]);
-  const totalSeconds = elements.reduce(
-    (acc, el) => acc + (el.duration || 0),
-    0,
-  );
+  const totalSeconds = elements.reduce((acc, el) => acc + (el.duration || 0), 0);
   const hasTiming = totalSeconds > 0;
   const hasPassages = elements.some((el) => el.passage);
 
@@ -136,17 +133,11 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
               <thead>
                 <tr>
                   <th className="hp-num">#</th>
-                  {hasTiming && (
-                    <th className="hp-right">{t("print.service.startCol")}</th>
-                  )}
+                  {hasTiming && <th className="hp-right">{t("print.service.startCol")}</th>}
                   <th>{t("print.service.momentCol")}</th>
                   <th>{t("print.service.itemCol")}</th>
                   {hasPassages && <th>{t("print.service.passageCol")}</th>}
-                  {hasTiming && (
-                    <th className="hp-right">
-                      {t("print.service.durationCol")}
-                    </th>
-                  )}
+                  {hasTiming && <th className="hp-right">{t("print.service.durationCol")}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -154,23 +145,17 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
                   <tr key={el.id || idx}>
                     <td className="hp-num">{idx + 1}</td>
                     {hasTiming && (
-                      <td className="hp-right hp-mono">
-                        {formatOffset(startOffsets[idx])}
-                      </td>
+                      <td className="hp-right hp-mono">{formatOffset(startOffsets[idx])}</td>
                     )}
                     <td>
-                      <span className={`hp-tag hp-tag--${el.type}`}>
-                        {typeLabel(el.type)}
-                      </span>
+                      <span className={`hp-tag hp-tag--${el.type}`}>{typeLabel(el.type)}</span>
                     </td>
                     <td>
                       <div className="hp-cell-title">{el.title}</div>
                       {el.type === "scripture" && el.content ? (
                         <div className="hp-cell-quote">{el.content}</div>
                       ) : (
-                        el.content && (
-                          <div className="hp-cell-sub">{el.content}</div>
-                        )
+                        el.content && <div className="hp-cell-sub">{el.content}</div>
                       )}
                       {el.notes && (
                         <div className="hp-cell-sub">
@@ -178,14 +163,10 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
                         </div>
                       )}
                     </td>
-                    {hasPassages && (
-                      <td className="hp-cell-title">{el.passage || ""}</td>
-                    )}
+                    {hasPassages && <td className="hp-cell-title">{el.passage || ""}</td>}
                     {hasTiming && (
                       <td className="hp-right">
-                        {formatDuration(el.duration) || (
-                          <span className="hp-dim">—</span>
-                        )}
+                        {formatDuration(el.duration) || <span className="hp-dim">—</span>}
                       </td>
                     )}
                   </tr>

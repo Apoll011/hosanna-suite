@@ -67,13 +67,9 @@ export interface SubscriptionApi {
   /** Re-fetch subscription rows from the server. */
   refresh: () => Promise<void>;
   /** Open Stripe Checkout to start the trial / subscribe. */
-  startCheckout: (
-    options?: StartCheckoutOptions,
-  ) => Promise<{ error?: string }>;
+  startCheckout: (options?: StartCheckoutOptions) => Promise<{ error?: string }>;
   /** Open the Stripe billing portal (payment method, invoices, cancel). */
-  openBillingPortal: (
-    options?: OpenBillingPortalOptions,
-  ) => Promise<{ error?: string }>;
+  openBillingPortal: (options?: OpenBillingPortalOptions) => Promise<{ error?: string }>;
   /** Restore / re-activate a subscription that was set to cancel. */
   restore: () => Promise<{ error?: string }>;
 }
@@ -93,14 +89,10 @@ export function useSubscription(): SubscriptionApi {
   const { organization } = useAuth();
   const orgId = organization?.id ?? null;
 
-  const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(
-    null,
-  );
+  const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pendingAction, setPendingAction] = useState<SubscriptionAction | null>(
-    null,
-  );
+  const [pendingAction, setPendingAction] = useState<SubscriptionAction | null>(null);
 
   // Guards against out-of-order responses when the org changes mid-flight.
   const requestSeq = useRef(0);
@@ -197,15 +189,12 @@ export function useSubscription(): SubscriptionApi {
       const slug = organization?.slug ?? "";
       setPendingAction("portal");
       try {
-        const { error: apiError } = await authClient.subscription.billingPortal(
-          {
-            referenceId: orgId,
-            customerType: "organization",
-            returnUrl:
-              options.returnUrl ??
-              `${window.location.origin}/${slug}/organization?tab=billing`,
-          },
-        );
+        const { error: apiError } = await authClient.subscription.billingPortal({
+          referenceId: orgId,
+          customerType: "organization",
+          returnUrl:
+            options.returnUrl ?? `${window.location.origin}/${slug}/organization?tab=billing`,
+        });
         if (apiError) {
           setPendingAction(null);
           return {

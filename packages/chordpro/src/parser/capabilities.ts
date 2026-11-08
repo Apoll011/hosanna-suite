@@ -8,15 +8,9 @@
  * - unsupported: known ChordPro concepts that Hosanna does not implement
  */
 
-export type DirectiveSupportLevel =
-  | "parsed"
-  | "formatter-only"
-  | "unsupported";
+export type DirectiveSupportLevel = "parsed" | "formatter-only" | "unsupported";
 
-export type FeatureSupportLevel =
-  | "implemented"
-  | "partial"
-  | "not_implemented";
+export type FeatureSupportLevel = "implemented" | "partial" | "not_implemented";
 
 export interface ChordProDirectiveCapability {
   name: string;
@@ -166,8 +160,7 @@ const DIRECTIVES: ChordProDirectiveCapability[] = [
     aliases: ["c"],
     category: "comment",
     support: "parsed",
-    description:
-      "Inline comment. Optional style suffix via |style or |style=name (e.g. |warning).",
+    description: "Inline comment. Optional style suffix via |style or |style=name (e.g. |warning).",
     example: "{c: Softly|warning}",
   },
   {
@@ -371,7 +364,7 @@ const FEATURES: ChordProFeatureCapability[] = [
     id: "inline_chords",
     name: "Inline chords",
     support: "implemented",
-    description: "[G] lyrics with optional timing [Am@2x].",
+    description: "[G] lyrics with inline chord markers.",
   },
   {
     id: "sections",
@@ -477,8 +470,6 @@ export function explainChordProDirective(
 ): ChordProDirectiveCapability | undefined {
   const needle = nameOrAlias.trim().toLowerCase();
   return DIRECTIVES.find(
-    (d) =>
-      d.name === needle ||
-      d.aliases?.some((a) => a.toLowerCase() === needle),
+    (d) => d.name === needle || d.aliases?.some((a) => a.toLowerCase() === needle),
   );
 }

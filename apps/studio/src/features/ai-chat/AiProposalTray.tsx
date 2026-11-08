@@ -20,12 +20,7 @@ import React, { useCallback, useState } from "react";
 import { useOpenEditorKey } from "./useOpenEditorKey";
 import { AiProposalReview } from "./AiProposalReview";
 import { useProposalActions } from "./proposalActions";
-import {
-  aiProposals,
-  useAiProposals,
-  type AiProposal,
-  type SongProposal,
-} from "./proposalStore";
+import { aiProposals, useAiProposals, type AiProposal, type SongProposal } from "./proposalStore";
 
 const iconBtn =
   "inline-flex items-center justify-center w-7 h-7 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text disabled:opacity-50 transition-colors";
@@ -70,9 +65,7 @@ export const AiProposalTray: React.FC = () => {
 
   if (proposals.length === 0) return null;
 
-  const acceptable = proposals.filter(
-    (p) => p.kind === "song" && p.key !== openKey,
-  ).length;
+  const acceptable = proposals.filter((p) => p.kind === "song" && p.key !== openKey).length;
 
   const rowTitle = (p: AiProposal) =>
     p.kind === "song"
@@ -90,11 +83,7 @@ export const AiProposalTray: React.FC = () => {
           className="flex-1 min-w-0 flex items-center gap-2 text-left"
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
-          title={
-            expanded
-              ? t("ai.chat.proposals.collapse")
-              : t("ai.chat.proposals.expand")
-          }
+          title={expanded ? t("ai.chat.proposals.collapse") : t("ai.chat.proposals.expand")}
         >
           <Sparkles className="w-3.5 h-3.5 text-m3-primary shrink-0" />
           <span className="text-xs font-semibold text-m3-text truncate">
@@ -136,13 +125,11 @@ export const AiProposalTray: React.FC = () => {
             return (
               <li
                 key={p.key}
-                className="logos-msg-in flex items-center gap-2 rounded-[var(--radius-md)] border border-m3-border bg-m3-card px-2 py-1.5"
+                className="logos-msg-in flex items-center gap-2 rounded-md border border-m3-border bg-m3-card px-2 py-1.5"
               >
                 <Icon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="m-0 text-xs font-medium text-m3-text truncate">
-                    {rowTitle(p)}
-                  </p>
+                  <p className="m-0 text-xs font-medium text-m3-text truncate">{rowTitle(p)}</p>
                   <p className="m-0 text-[10.5px] text-m3-secondary truncate">
                     {inEditor
                       ? t("ai.chat.proposals.inEditor")
@@ -165,7 +152,7 @@ export const AiProposalTray: React.FC = () => {
                     </button>
                     <button
                       type="button"
-                      className={`${iconBtn} !text-m3-success hover:!bg-m3-success/10`}
+                      className={`${iconBtn} text-m3-success! hover:bg-m3-success/10!`}
                       title={t("ai.chat.accept")}
                       aria-label={t("ai.chat.accept")}
                       disabled={busy !== null}
@@ -202,12 +189,7 @@ export const AiProposalTray: React.FC = () => {
         </ul>
       )}
 
-      {reviewing && (
-        <AiProposalReview
-          proposal={reviewing}
-          onClose={() => setReviewing(null)}
-        />
-      )}
+      {reviewing && <AiProposalReview proposal={reviewing} onClose={() => setReviewing(null)} />}
     </section>
   );
 };

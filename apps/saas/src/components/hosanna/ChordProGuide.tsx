@@ -744,21 +744,10 @@ export function ChordProGuide() {
                     <div>
                       <span className="text-blue-400">{"{end_of_grid}"}</span>
                     </div>
-
-                    <br />
-
-                    <div className="text-slate-500 italic mb-2"># Custom durations</div>
-                    <div>
-                      <span className="text-amber-400 font-bold">||</span> [Em
-                      <span className="text-emerald-400 font-bold">@2x</span>]
-                      <span className="text-amber-400 font-bold">|</span> [C
-                      <span className="text-emerald-400 font-bold">@0.5x</span>] [D]
-                      <span className="text-amber-400 font-bold">||</span>
-                    </div>
                   </CodeWindow>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4 mt-6 reveal">
+                <div className="mt-6 reveal">
                   <div className="p-6 border border-border rounded-2xl shadow-sm bg-secondary/30">
                     <h4 className="font-bold text-primary mb-2 flex items-center gap-2">
                       <Grid3x3 className="w-4 h-4" /> {t("chordproGuide.barlinesTitle")}
@@ -772,26 +761,6 @@ export function ChordProGuide() {
                       </li>
                       <li>
                         <code>|:</code> {t("chordproGuide.barlinesRepeat")} <code>:|</code>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="p-6 border border-border rounded-2xl shadow-sm bg-secondary/30">
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-bold text-primary flex items-center gap-2">
-                        <Repeat className="w-4 h-4" /> {t("chordproGuide.durationsTitle")}
-                      </h4>
-                      <HosannaBadge />
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-3">
-                      {t("chordproGuide.durationsDesc")}
-                    </p>
-                    <ul className="space-y-2 text-sm text-muted-foreground mt-3">
-                      <li>
-                        <code>[Am@2x]</code> → {t("chordproGuide.durationsDouble")}
-                      </li>
-                      <li>
-                        <code>[C@0.5x]</code> → {t("chordproGuide.durationsHalf")}
                       </li>
                     </ul>
                   </div>

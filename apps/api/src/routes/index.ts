@@ -14,12 +14,7 @@ import { trashRouter } from "./trash.routes.js";
 
 import { PLAN_PRICING } from "../config/pricing.js";
 import { authenticate } from "../middleware/auth.js";
-import {
-  apiLimiter,
-  backupLimiter,
-  healthLimiter,
-  syncLimiter,
-} from "../middleware/rateLimit.js";
+import { apiLimiter, backupLimiter, healthLimiter, syncLimiter } from "../middleware/rateLimit.js";
 import { requireSubscription } from "../middleware/subscription.js";
 import { cifraRouter } from "./cifra.route.js";
 import anotationRouter from "./serviceSongAnnotation.routes.js";
@@ -61,12 +56,7 @@ apiRouter.use(authenticate);
 apiRouter.use("/billing", apiLimiter, billingRouter);
 apiRouter.use("/replication", syncLimiter, replicationRouter);
 
-apiRouter.use(
-  "/songs/import",
-  requireSubscription,
-  apiLimiter,
-  songImportRouter,
-);
+apiRouter.use("/songs/import", requireSubscription, apiLimiter, songImportRouter);
 apiRouter.use("/songs", requireSubscription, apiLimiter, songRouter);
 apiRouter.use("/folders", requireSubscription, apiLimiter, folderRouter);
 apiRouter.use("/services", requireSubscription, apiLimiter, serviceRouter);

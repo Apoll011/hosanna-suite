@@ -31,34 +31,15 @@ const START: Record<string, BlockKind> = {
   bridge: "bridge",
   b: "bridge",
 };
-const END = new Set([
-  "end_of_verse",
-  "eov",
-  "end_of_chorus",
-  "eoc",
-  "end_of_bridge",
-  "eob",
-]);
+const END = new Set(["end_of_verse", "eov", "end_of_chorus", "eoc", "end_of_bridge", "eob"]);
 /** Blocks whose content must never be touched. */
-const OPAQUE_START = new Set([
-  "start_of_tab",
-  "sot",
-  "start_of_grid",
-  "sog",
-  "start_of_part",
-]);
-const OPAQUE_END = new Set([
-  "end_of_tab",
-  "eot",
-  "end_of_grid",
-  "eog",
-  "end_of_part",
-]);
+const OPAQUE_START = new Set(["start_of_tab", "sot", "start_of_grid", "sog", "start_of_part"]);
+const OPAQUE_END = new Set(["end_of_tab", "eot", "end_of_grid", "eog", "end_of_part"]);
 const VERSION_START = new Set(["start_of_version", "sov_ver"]);
 const VERSION_END = new Set(["end_of_version", "eov_ver"]);
 
 export type ChordAnchor = {
-  /** Chord text inside brackets (may include timing, e.g. Am@2x). */
+  /** Chord text inside brackets. */
   chord: string;
   /** Index into the lyric-only string where this chord sits. */
   at: number;
@@ -142,10 +123,7 @@ export function parseChordLine(line: string): {
 }
 
 /** Insert anchors into a plain lyric line (existing chords are stripped first). */
-export function applyChordAnchors(
-  targetLine: string,
-  anchors: ChordAnchor[],
-): string {
+export function applyChordAnchors(targetLine: string, anchors: ChordAnchor[]): string {
   const plain = stripChords(targetLine);
   if (anchors.length === 0) return plain;
   // Insert from the end (stable for equal positions) so indices stay valid.
@@ -266,18 +244,13 @@ type AlignOutcome = {
   reason?: string;
 };
 
-function alignAnchors(
-  srcLyrics: string,
-  anchors: ChordAnchor[],
-  tgt: string,
-): AlignOutcome | null {
+function alignAnchors(srcLyrics: string, anchors: ChordAnchor[], tgt: string): AlignOutcome | null {
   const sw = wordsOf(srcLyrics);
   const tw = wordsOf(tgt);
   if (sw.length === 0 || tw.length === 0) return null;
 
   const reasons = new Set<string>();
-  const countGap =
-    Math.abs(sw.length - tw.length) / Math.max(sw.length, tw.length);
+  const countGap = Math.abs(sw.length - tw.length) / Math.max(sw.length, tw.length);
   if (sw.length !== tw.length) {
     reasons.add(`word count differs (${sw.length} → ${tw.length})`);
   }
@@ -330,10 +303,7 @@ function alignAnchors(
 
   // Two chords collapsing onto the same spot is almost always wrong.
   for (let i = 1; i < mapped.length; i++) {
-    if (
-      mapped[i]!.at === mapped[i - 1]!.at &&
-      anchors[i]!.at !== anchors[i - 1]!.at
-    ) {
+    if (mapped[i]!.at === mapped[i - 1]!.at && anchors[i]!.at !== anchors[i - 1]!.at) {
       reasons.add("two chords landed on the same position");
     }
   }
@@ -376,10 +346,7 @@ export function findBlocks(lines: string[]): PropagateBlock[] {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]!;
-    const name =
-      isStructuralLine(line) && !COMMENT_RE.test(line)
-        ? directiveName(line)
-        : null;
+    const name = isStructuralLine(line) && !COMMENT_RE.test(line) ? directiveName(line) : null;
 
     if (name && OPAQUE_START.has(name)) {
       closeOpen(i);
@@ -470,9 +437,7 @@ export function propagateVerseChords(content: string): PropagateResult {
   const touchedBlocks = new Set<PropagateBlock>();
   let chordsCopied = 0;
 
-  const verseLike = blocks.filter(
-    (b) => b.kind === "verse" || b.kind === "stanza",
-  );
+  const verseLike = blocks.filter((b) => b.kind === "verse" || b.kind === "stanza");
   const chorded = (b: PropagateBlock) => blockHasChords(lines, b);
   const sourceVerse = verseLike.find(chorded);
   const sourceVerseIndex = sourceVerse ? verseLike.indexOf(sourceVerse) : -1;
@@ -537,11 +502,7 @@ export function propagateVerseChords(content: string): PropagateResult {
     });
   };
 
-  const fillBlock = (
-    target: PropagateBlock,
-    source: PropagateBlock,
-    allowAligned: boolean,
-  ) => {
+  const fillBlock = (target: PropagateBlock, source: PropagateBlock, allowAligned: boolean) => {
     const srcIdxs = contentLineIndices(lines, source.bodyStart, source.bodyEnd);
     const tgtIdxs = contentLineIndices(lines, target.bodyStart, target.bodyEnd);
     tgtIdxs.forEach((tgtIdx, i) => {
@@ -589,12 +550,7 @@ export function propagateVerseChords(content: string): PropagateResult {
   // Pass 2 — verses/stanzas: align the first chorded verse onto the others.
   if (sourceVerse) {
     for (const target of verseLike) {
-      if (
-        target === sourceVerse ||
-        done.has(target) ||
-        fullyChorded(lines, target)
-      )
-        continue;
+      if (target === sourceVerse || done.has(target) || fullyChorded(lines, target)) continue;
       fillBlock(target, sourceVerse, true);
       done.add(target);
     }
@@ -620,8 +576,7 @@ export function propagateVerseChords(content: string): PropagateResult {
   // Bridges / leftovers with unmatched lyrics are reported, not guessed.
   for (const b of blocks) {
     if (done.has(b) || chorded(b) || fullyChorded(lines, b)) continue;
-    if (contentLineIndices(lines, b.bodyStart, b.bodyEnd).length === 0)
-      continue;
+    if (contentLineIndices(lines, b.bodyStart, b.bodyEnd).length === 0) continue;
     notes.push(
       `${blockLabel(b)} (line ${b.bodyStart + 1}) has no chords and no matching source — write its chords yourself or ask the user.`,
     );
@@ -646,9 +601,7 @@ export function propagateVerseChords(content: string): PropagateResult {
   const needsReview = review.filter((r) => r.confidence === "check").length;
 
   if (!chordedBlocks.length) {
-    notes.push(
-      "No block in this song has chords yet — there is nothing to propagate.",
-    );
+    notes.push("No block in this song has chords yet — there is nothing to propagate.");
   }
 
   return {

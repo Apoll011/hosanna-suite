@@ -27,11 +27,7 @@ export class UniqueConstraintError extends SchemaValidationError {
   readonly fields: string[];
   readonly targetValue: string;
 
-  constructor(
-    message: string,
-    fields: string[] = ["path"],
-    targetValue: string = "",
-  ) {
+  constructor(message: string, fields: string[] = ["path"], targetValue: string = "") {
     super(message, "UNIQUE_CONSTRAINT_VIOLATION");
     this.name = "UniqueConstraintError";
     this.fields = fields;
@@ -226,8 +222,7 @@ export async function validateFolderRules(
     }
 
     if (folderId) {
-      let currentParent: string | null =
-        (parentDoc.parentId as string | null) ?? null;
+      let currentParent: string | null = (parentDoc.parentId as string | null) ?? null;
       const visited = new Set<string>([parentId]);
 
       while (currentParent) {
@@ -240,9 +235,7 @@ export async function validateFolderRules(
         visited.add(currentParent);
 
         const nextDoc = await db.folders.findOne(currentParent).exec();
-        currentParent = nextDoc
-          ? ((nextDoc.parentId as string | null) ?? null)
-          : null;
+        currentParent = nextDoc ? ((nextDoc.parentId as string | null) ?? null) : null;
       }
     }
   }
@@ -284,11 +277,7 @@ export async function validateFolderRename(
 
   const folderDoc = await db.folders.findOne(folderId).exec();
   if (!folderDoc || folderDoc.isDeleted || folderDoc._deleted) {
-    throw new ForeignKeyError(
-      `Folder with ID "${folderId}" does not exist.`,
-      "folder",
-      folderId,
-    );
+    throw new ForeignKeyError(`Folder with ID "${folderId}" does not exist.`, "folder", folderId);
   }
 
   const songsToUpdate = await computeFolderSongPaths(db, folderId, {
@@ -333,19 +322,10 @@ export async function validateSongMove(
 ): Promise<{ songDoc: SongDoc; newPath: string }> {
   const songDoc = await db.songs.findOne(songId).exec();
   if (!songDoc || songDoc.isDeleted || songDoc._deleted) {
-    throw new ForeignKeyError(
-      `Song with ID "${songId}" does not exist.`,
-      "song",
-      songId,
-    );
+    throw new ForeignKeyError(`Song with ID "${songId}" does not exist.`, "song", songId);
   }
 
-  const newPath = await computeSongPath(
-    db,
-    songDoc.title as string,
-    targetFolderId,
-    explicitPath,
-  );
+  const newPath = await computeSongPath(db, songDoc.title as string, targetFolderId, explicitPath);
 
   const existingWithSamePath = await db.songs
     .find({
@@ -359,9 +339,7 @@ export async function validateSongMove(
 
   const conflict = existingWithSamePath.find((d) => d.id !== songId);
   if (conflict) {
-    const inFolderMsg = targetFolderId
-      ? `in the destination folder`
-      : `at the root level`;
+    const inFolderMsg = targetFolderId ? `in the destination folder` : `at the root level`;
     throw new UniqueConstraintError(
       `A song with the title "${songDoc.title as string}" already exists ${inFolderMsg} ("${newPath}").`,
       ["orgId", "path"],
@@ -425,10 +403,7 @@ export function validateAgendaEventRules(event: {
   }
 
   if (!event.time || !/^\d{2}:\d{2}$/.test(event.time)) {
-    throw new SchemaValidationError(
-      "Invalid event time. Expected HH:mm (24h).",
-      "INVALID_TIME",
-    );
+    throw new SchemaValidationError("Invalid event time. Expected HH:mm (24h).", "INVALID_TIME");
   }
 
   if (
@@ -436,10 +411,7 @@ export function validateAgendaEventRules(event: {
     isNaN(event.durationMinutes) ||
     event.durationMinutes < 0
   ) {
-    throw new RequiredFieldError(
-      "durationMinutes",
-      "A valid event duration is required.",
-    );
+    throw new RequiredFieldError("durationMinutes", "A valid event duration is required.");
   }
 }
 

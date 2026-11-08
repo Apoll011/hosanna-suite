@@ -10,10 +10,7 @@ import { sendFcmToUser } from "../utils/notify.js";
 export const notificationsRouter = Router();
 
 /** Org roles, derived from the single source of truth in src/permissions. */
-const ORG_ROLES = Object.keys(roles) as [
-  keyof typeof roles,
-  ...(keyof typeof roles)[],
-];
+const ORG_ROLES = Object.keys(roles) as [keyof typeof roles, ...(keyof typeof roles)[]];
 
 /**
  * Custom FCM push payload. `title` / `body` fall back to the notification's
@@ -27,13 +24,9 @@ const fcmMessageSchema = z
     /** Deep-link / route payload delivered to the device (all values stringified). */
     data: z.record(z.string(), z.string().max(1000)).optional(),
   })
-  .refine(
-    (m) =>
-      m.title !== undefined || m.body !== undefined || m.data !== undefined,
-    {
-      message: "fcm message cannot be empty.",
-    },
-  );
+  .refine((m) => m.title !== undefined || m.body !== undefined || m.data !== undefined, {
+    message: "fcm message cannot be empty.",
+  });
 
 const createNotificationSchema = z
   .object({
@@ -69,8 +62,7 @@ const createNotificationSchema = z
     fcm: fcmMessageSchema.optional(),
   })
   .refine((data) => !!data.userId !== !!data.organizationId, {
-    message:
-      "Provide either userId or organizationId, not both (and not neither).",
+    message: "Provide either userId or organizationId, not both (and not neither).",
     path: ["userId"],
   })
   .refine((data) => !data.roles || !!data.organizationId, {
@@ -99,9 +91,7 @@ notificationsRouter.post(
   requirePermission("notification.sent"),
   validate({ body: createNotificationSchema }),
   asyncHandler(async (req, res) => {
-    const { channel, fcm, ...notifyBody } = req.body as z.infer<
-      typeof createNotificationSchema
-    >;
+    const { channel, fcm, ...notifyBody } = req.body as z.infer<typeof createNotificationSchema>;
 
     // Org fan-out always stays in-app only.
     await auth.api.notify({ body: notifyBody as any });
@@ -114,9 +104,7 @@ notificationsRouter.post(
         data: {
           type: notifyBody.type,
           ...(notifyBody.href ? { href: notifyBody.href } : {}),
-          ...(notifyBody.description
-            ? { description: notifyBody.description }
-            : {}),
+          ...(notifyBody.description ? { description: notifyBody.description } : {}),
           ...fcm?.data,
         },
       });
@@ -124,9 +112,7 @@ notificationsRouter.post(
 
     res.status(201).json({
       ok: true,
-      ...(push
-        ? { push: { sent: push.sent, invalidTokensPruned: push.invalidTokens } }
-        : {}),
+      ...(push ? { push: { sent: push.sent, invalidTokensPruned: push.invalidTokens } } : {}),
     });
   }),
 );

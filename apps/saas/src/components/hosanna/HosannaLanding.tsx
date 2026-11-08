@@ -311,7 +311,7 @@ function Hero() {
 
         {/* Mockups — eager LCP image (not Suspense-lazy) */}
         <div className="pointer-events-none relative z-0 mx-auto -mt-10 max-w-6xl">
-          <div className="relative aspect-[1400/972]">
+          <div className="relative aspect-1400/972">
             <HeroDashboardMockup alt={t("landing.hero.dashboardAlt")} />
           </div>
         </div>
@@ -961,7 +961,11 @@ function SupportTheMission() {
         </SectionHeader>
 
         <div className="reveal mt-10 flex justify-center">
-          <Button asChild size="lg" className="rounded-full bg-primary-dark text-primary-foreground">
+          <Button
+            asChild
+            size="lg"
+            className="rounded-full bg-primary-dark text-primary-foreground"
+          >
             <a href={goFundMeUrl} target="_blank" rel="noopener noreferrer">
               {t("landing.support.cta")} <ArrowRight className="ml-2 h-5 w-5" />
             </a>
@@ -1158,9 +1162,7 @@ export function Footer() {
                     <a
                       href={href}
                       className="text-muted-foreground transition-colors hover:text-primary"
-                      {...(href.startsWith("http")
-                        ? { target: "_blank", rel: "noreferrer" }
-                        : {})}
+                      {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
                     >
                       {label}
                     </a>

@@ -1,8 +1,4 @@
-import {
-  lintChordPro,
-  parseChordPro,
-  type ChordProDiagnostic,
-} from "@hosanna/chordpro/parser";
+import { lintChordPro, parseChordPro, type ChordProDiagnostic } from "@hosanna/chordpro/parser";
 
 export interface ChordProValidationReport {
   ok: boolean;
@@ -14,9 +10,7 @@ export interface ChordProValidationReport {
   score: ReturnType<ReturnType<typeof parseChordPro>["score"]> | null;
 }
 
-export function validateChordProContent(
-  content: string,
-): ChordProValidationReport {
+export function validateChordProContent(content: string): ChordProValidationReport {
   const diagnostics = lintChordPro(content);
   const song = parseChordPro(content);
   const parseErrors = song.errors ?? [];
@@ -70,9 +64,7 @@ export function mirroredMetadataWarnings(args: {
   const meta = metadataFromChordPro(args.content);
   const warnings: string[] = [];
   if (meta.title && normMeta(meta.title) !== normMeta(args.title)) {
-    warnings.push(
-      `Title mismatch: database "${args.title}" vs ChordPro {title: ${meta.title}}`,
-    );
+    warnings.push(`Title mismatch: database "${args.title}" vs ChordPro {title: ${meta.title}}`);
   }
   if (
     meta.artist &&
@@ -100,9 +92,7 @@ export function mirroredMetadataWarnings(args: {
  * Parse {duration:} from ChordPro into seconds.
  * Accepts plain seconds ("180"), M:SS ("3:00"), or minutes if clearly small with unit.
  */
-export function durationSecondsFromChordPro(
-  content: string,
-): number | undefined {
+export function durationSecondsFromChordPro(content: string): number | undefined {
   const match = content.match(/\{duration:\s*([^}]+)\}/i);
   if (!match?.[1]) return undefined;
   const raw = match[1].trim();

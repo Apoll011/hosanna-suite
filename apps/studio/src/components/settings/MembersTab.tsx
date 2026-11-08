@@ -3,14 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  Button,
-  Input,
-  Modal,
-  Spinner,
-  Surface,
-  Tabs,
-} from "@/src/components/common";
+import { Button, Input, Modal, Spinner, Surface, Tabs } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan, useCanAny } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
@@ -33,14 +26,7 @@ import { authClient } from "../../lib/authClient";
 import { getRoleBadge } from "../../utils/settingsUtils";
 import { MemberProfilePage } from "./MemberProfilePage";
 
-const INVITE_ROLES: AppRole[] = [
-  "admin",
-  "teamLeader",
-  "editor",
-  "musician",
-  "member",
-  "guest",
-];
+const INVITE_ROLES: AppRole[] = ["admin", "teamLeader", "editor", "musician", "member", "guest"];
 
 interface OrgMember {
   id: string;
@@ -70,10 +56,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
   const { user, organization } = useAuth();
   const { showToast } = useSync();
   const { t } = useI18n();
-  const { granted: canManageInvites } = useCanAny([
-    "invitation.create",
-    "invitation.cancel",
-  ]);
+  const { granted: canManageInvites } = useCanAny(["invitation.create", "invitation.cancel"]);
   const { granted: canInviteOwner } = useCan("organization.update");
 
   const [activeSubTab, setActiveSubTab] = useState<SubTab>("members");
@@ -96,15 +79,11 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
 
   // Pending invite actions
   const [resendingId, setResendingId] = useState<string | null>(null);
-  const [inviteToCancel, setInviteToCancel] = useState<OrgInvitation | null>(
-    null,
-  );
+  const [inviteToCancel, setInviteToCancel] = useState<OrgInvitation | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
 
   // Fetch Better Auth Organization Members
-  const [orgMembersData, setOrgMembersData] = useState<OrgMember[] | null>(
-    null,
-  );
+  const [orgMembersData, setOrgMembersData] = useState<OrgMember[] | null>(null);
   const [isLoadingOrgMembers, setIsLoadingOrgMembers] = useState(true);
 
   const fetchOrgMembers = useCallback(async () => {
@@ -129,11 +108,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
           }) => ({
             id: m.id,
             userId: m.userId || m.user?.id || m.id,
-            name:
-              m.user?.name ||
-              m.name ||
-              m.user?.email ||
-              t("settings.members.memberRole"),
+            name: m.user?.name || m.name || m.user?.email || t("settings.members.memberRole"),
             email: m.user?.email || m.email || "",
             role: m.role || "member",
             createdAt: m.createdAt,
@@ -222,9 +197,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
   };
 
   const isExpired = (invite: OrgInvitation) =>
-    invite.expiresAt
-      ? new Date(invite.expiresAt).getTime() < Date.now()
-      : false;
+    invite.expiresAt ? new Date(invite.expiresAt).getTime() < Date.now() : false;
 
   const formatRelativeDays = (date?: string | Date) => {
     if (!date) return "";
@@ -281,21 +254,14 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
         resend: true,
       });
       if (error) {
-        showToast(
-          t("settings.members.resendError", { email: invite.email }),
-          "error",
-        );
+        showToast(t("settings.members.resendError", { email: invite.email }), "error");
       } else {
-        showToast(
-          t("settings.members.resendSuccess", { email: invite.email }),
-          "success",
-        );
+        showToast(t("settings.members.resendSuccess", { email: invite.email }), "success");
         refetchInvitations();
       }
     } catch (err: unknown) {
       showToast(
-        (err as Error).message ||
-          t("settings.members.resendError", { email: invite.email }),
+        (err as Error).message || t("settings.members.resendError", { email: invite.email }),
         "error",
       );
     } finally {
@@ -310,10 +276,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
       await authClient.organization.cancelInvitation({
         invitationId: inviteToCancel.id,
       });
-      showToast(
-        t("settings.members.inviteCancelled", { email: inviteToCancel.email }),
-        "success",
-      );
+      showToast(t("settings.members.inviteCancelled", { email: inviteToCancel.email }), "success");
       refetchInvitations();
     } catch (err: unknown) {
       showToast(
@@ -332,9 +295,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
     return (
       <MemberProfilePage
         member={selectedMember}
-        currentUser={
-          user ? { id: user.id, role: (user as { role?: string }).role } : null
-        }
+        currentUser={user ? { id: user.id, role: (user as { role?: string }).role } : null}
         organizationId={organization?.id}
         onBack={() => setSelectedMember(null)}
         onRemove={(m) => handleRemoveMember(m as OrgMember)}
@@ -358,25 +319,18 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
       });
 
       if (error) {
-        showToast(
-          t("settings.members.inviteError", { email: inviteEmail }),
-          "error",
-        );
+        showToast(t("settings.members.inviteError", { email: inviteEmail }), "error");
         return;
       }
 
-      showToast(
-        t("settings.members.inviteSuccess", { email: inviteEmail }),
-        "success",
-      );
+      showToast(t("settings.members.inviteSuccess", { email: inviteEmail }), "success");
       setInviteEmail("");
       setInviteRole("member");
       setIsInviteModalOpen(false);
       refetchInvitations();
     } catch (err: unknown) {
       showToast(
-        (err as Error).message ||
-          t("settings.members.inviteError", { email: inviteEmail }),
+        (err as Error).message || t("settings.members.inviteError", { email: inviteEmail }),
         "error",
       );
     } finally {
@@ -409,7 +363,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
           <button
             type="button"
             onClick={refetchAll}
-            className="p-2 text-m3-secondary hover:text-m3-text rounded-[var(--radius-md)] hover:bg-m3-sidebar transition-colors cursor-pointer"
+            className="p-2 text-m3-secondary hover:text-m3-text rounded-md hover:bg-m3-sidebar transition-colors cursor-pointer"
             title={t("common.refresh")}
           >
             <RefreshCw className="w-4 h-4" />
@@ -455,7 +409,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
                 <Surface
                   key={member.id}
                   padding="sm"
-                  className="hover:border-m3-primary/50 hover:shadow-[var(--shadow-sm)] transition-colors cursor-pointer flex items-center justify-between group"
+                  className="hover:border-m3-primary/50 hover:shadow-sm transition-colors cursor-pointer flex items-center justify-between group"
                   onClick={() => setSelectedMember(member)}
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -480,9 +434,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
                           {member.name}
                         </span>
                       </div>
-                      <p className="text-xs text-m3-secondary truncate">
-                        {member.email}
-                      </p>
+                      <p className="text-xs text-m3-secondary truncate">{member.email}</p>
                       <div className="mt-1">{getRoleBadge(member.role, t)}</div>
                     </div>
                   </div>
@@ -526,7 +478,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
                         <div className="mt-1 flex items-center gap-2 flex-wrap">
                           {getRoleBadge(invite.role, t)}
                           {expired ? (
-                            <span className="text-caption font-semibold text-rose-600 bg-rose-50 dark:bg-rose-950 px-2 py-0.5 rounded-[var(--radius-md)] border border-rose-200 dark:border-rose-800">
+                            <span className="text-caption font-semibold text-rose-600 bg-rose-50 dark:bg-rose-950 px-2 py-0.5 rounded-md border border-rose-200 dark:border-rose-800">
                               {t("settings.members.expired")}
                             </span>
                           ) : (
@@ -547,7 +499,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
                           onClick={() => handleResendInvite(invite)}
                           disabled={resendingId === invite.id}
                           title={t("settings.members.resendInviteTitle")}
-                          className="p-2 text-m3-secondary hover:text-m3-primary rounded-[var(--radius-md)] hover:bg-m3-sidebar transition-colors disabled:opacity-50 cursor-pointer"
+                          className="p-2 text-m3-secondary hover:text-m3-primary rounded-md hover:bg-m3-sidebar transition-colors disabled:opacity-50 cursor-pointer"
                         >
                           {resendingId === invite.id ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -561,7 +513,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
                           type="button"
                           onClick={() => setInviteToCancel(invite)}
                           title={t("settings.members.cancelInviteTitle")}
-                          className="p-2 text-m3-secondary hover:text-rose-500 rounded-[var(--radius-md)] hover:bg-m3-sidebar transition-colors cursor-pointer"
+                          className="p-2 text-m3-secondary hover:text-rose-500 rounded-md hover:bg-m3-sidebar transition-colors cursor-pointer"
                         >
                           <XCircle className="w-4 h-4" />
                         </button>
@@ -592,22 +544,18 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
           />
 
           <div>
-            <label className="text-label block mb-1.5">
-              {t("settings.members.roleLabel")}
-            </label>
+            <label className="text-label block mb-1.5">{t("settings.members.roleLabel")}</label>
             <select
               value={inviteRole}
               onChange={(e) => setInviteRole(e.target.value as AppRole)}
-              className="w-full min-h-10 px-3.5 bg-m3-card border border-m3-border rounded-[var(--radius-md)] text-sm text-m3-text focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
+              className="w-full min-h-10 px-3.5 bg-m3-card border border-m3-border rounded-md text-sm text-m3-text focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
             >
               {INVITE_ROLES.map((role) => (
                 <option key={role} value={role}>
                   {t(`settings.roles.${role}` as "settings.roles.member")}
                 </option>
               ))}
-              {canInviteOwner ? (
-                <option value="owner">{t("settings.roles.owner")}</option>
-              ) : null}
+              {canInviteOwner ? <option value="owner">{t("settings.roles.owner")}</option> : null}
             </select>
           </div>
 
@@ -616,9 +564,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
               {t("common.cancel")}
             </Button>
             <Button variant="primary" type="submit" disabled={isInviting}>
-              {isInviting
-                ? t("settings.members.sending")
-                : t("settings.members.sendInvite")}
+              {isInviting ? t("settings.members.sending") : t("settings.members.sendInvite")}
             </Button>
           </div>
         </form>

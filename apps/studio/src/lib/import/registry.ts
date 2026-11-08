@@ -1,9 +1,5 @@
 import { Song } from "@/src/types";
-import {
-  ImportResult,
-  ProviderImportResult,
-  SongImportProvider,
-} from "@/src/utils/import";
+import { ImportResult, ProviderImportResult, SongImportProvider } from "@/src/utils/import";
 
 export class SongImportRegistry {
   private readonly providers = new Map<string, SongImportProvider>();
@@ -33,10 +29,7 @@ export class SongImportRegistry {
     return [...providers.values()];
   }
 
-  async importFiles(
-    files: readonly File[],
-    songData: Partial<Song>,
-  ): Promise<ImportResult> {
+  async importFiles(files: readonly File[], songData: Partial<Song>): Promise<ImportResult> {
     const grouped = new Map<SongImportProvider, File[]>();
 
     const results: ProviderImportResult[] = [];

@@ -24,12 +24,7 @@ function firstName(name: string | undefined | null): string {
  * Empty conversation: Logos (poke, pet or wake him), greeting and localized
  * suggestions.
  */
-export const AiChatEmpty: React.FC<Props> = ({
-  chips,
-  mood,
-  disabled,
-  onPick,
-}) => {
+export const AiChatEmpty: React.FC<Props> = ({ chips, mood, disabled, onPick }) => {
   const { t } = useI18n();
   const { user } = useAuth();
 
@@ -68,7 +63,7 @@ export const AiChatEmpty: React.FC<Props> = ({
       <h3 className="mt-1 mb-1 text-[17px] font-semibold text-m3-text">
         {t("ai.chat.emptyTitle")}
       </h3>
-      <p className="m-0 max-w-[280px] text-[12.5px] leading-relaxed text-m3-secondary">
+      <p className="m-0 max-w-70 text-[12.5px] leading-relaxed text-m3-secondary">
         {t("ai.chat.emptySubtitle")}
       </p>
 
@@ -90,12 +85,12 @@ export const AiChatEmpty: React.FC<Props> = ({
               onClick={() => onPick(t(chip.promptKey))}
               title={dense ? t(chip.descKey) : undefined}
               style={{ animationDelay: `${i * 45}ms` }}
-              className={`logos-msg-in group flex items-center w-full text-left rounded-[var(--radius-lg)] border border-m3-border bg-m3-card hover:border-m3-primary/50 hover:bg-m3-primary/5 disabled:opacity-50 transition-colors ${
+              className={`logos-msg-in group flex items-center w-full text-left rounded-lg border border-m3-border bg-m3-card hover:border-m3-primary/50 hover:bg-m3-primary/5 disabled:opacity-50 transition-colors ${
                 dense ? "gap-2 px-2 py-1.5" : "gap-3 px-3 py-2"
               }`}
             >
               <span
-                className={`shrink-0 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center group-hover:bg-m3-primary group-hover:text-white transition-colors ${
+                className={`shrink-0 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center group-hover:bg-m3-primary group-hover:text-white transition-colors ${
                   dense ? "w-7 h-7" : "w-8 h-8"
                 }`}
               >
@@ -104,9 +99,7 @@ export const AiChatEmpty: React.FC<Props> = ({
               <span className="min-w-0 flex-1">
                 <span
                   className={`block font-medium text-m3-text ${
-                    dense
-                      ? "text-[12px] leading-tight line-clamp-2"
-                      : "text-[13px] truncate"
+                    dense ? "text-[12px] leading-tight line-clamp-2" : "text-[13px] truncate"
                   }`}
                 >
                   {t(chip.labelKey)}

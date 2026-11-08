@@ -7,11 +7,7 @@ import { AppError } from "../utils/errors.js";
 import { notifyOrg } from "../utils/notify.js";
 import { syncCache } from "./syncCache.service.js";
 
-function assertUnchanged(
-  current: { updatedAt: Date },
-  clientUpdatedAt: Date,
-  locale: string,
-) {
+function assertUnchanged(current: { updatedAt: Date }, clientUpdatedAt: Date, locale: string) {
   if (current.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
     throw AppError.conflict(t(locale, "conflict.folder"));
   }
@@ -56,19 +52,11 @@ export class FolderService {
   async getById(id: string) {
     const folder = await this.folderRepo.findById(id);
     if (!folder || folder.deleted)
-      throw AppError.notFound(
-        "FOLDER_NOT_FOUND",
-        t(this.locale, "folder.not_found"),
-      );
+      throw AppError.notFound("FOLDER_NOT_FOUND", t(this.locale, "folder.not_found"));
     return folder;
   }
 
-  async create(
-    name: string,
-    parentId?: string | null,
-    color?: string,
-    icon?: string,
-  ) {
+  async create(name: string, parentId?: string | null, color?: string, icon?: string) {
     this.invalidateCache();
     if (parentId) {
       this.folderRepo.touch(parentId);
@@ -172,11 +160,7 @@ export class FolderService {
 
   private async deleteRecursive(id: string, tx: OrgScopedTx) {
     const folder = await tx.folder.findUnique({ where: { id } });
-    if (!folder)
-      throw AppError.notFound(
-        "FOLDER_NOT_FOUND",
-        t(this.locale, "folder.not_found"),
-      );
+    if (!folder) throw AppError.notFound("FOLDER_NOT_FOUND", t(this.locale, "folder.not_found"));
 
     const songs = await tx.song.findMany({ where: { folderId: id } });
     const folders = await tx.folder.findMany({ where: { parentId: id } });
@@ -209,10 +193,7 @@ export class FolderService {
   async restore(id: string) {
     const folder = await this.folderRepo.findById(id);
     if (!folder || !folder.deleted)
-      throw AppError.notFound(
-        "FOLDER_NOT_FOUND",
-        t(this.locale, "folder.not_found"),
-      );
+      throw AppError.notFound("FOLDER_NOT_FOUND", t(this.locale, "folder.not_found"));
     await this.folderRepo.update(id, { deleted: false, purgeAt: null });
     this.invalidateCache();
     return this.folderRepo.findById(id);

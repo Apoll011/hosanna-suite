@@ -37,8 +37,7 @@ const MACOS_CODENAMES: Record<string, string> = {
   "15": "Sequoia",
 };
 
-const OS_TOKEN =
-  /^(Android|iOS|iPadOS|macOS|Mac OS X|Windows|Linux|Chrome OS)\b/;
+const OS_TOKEN = /^(Android|iOS|iPadOS|macOS|Mac OS X|Windows|Linux|Chrome OS)\b/;
 
 /** `"151.0.0.0"` → `"151"`, `"17.4"` → `"17.4"`, `"128.0"` → `"128"`. */
 function shortVersion(version: string): string {
@@ -75,15 +74,9 @@ function parseFlutterUA(ua: string): ParsedUserAgentInfo | null {
 
   const osLower = os.toLowerCase();
   let deviceType: DeviceType;
-  if (
-    osLower.includes("android") ||
-    osLower.includes("ios") ||
-    osLower.includes("ipados")
-  ) {
+  if (osLower.includes("android") || osLower.includes("ios") || osLower.includes("ipados")) {
     deviceType =
-      osLower.includes("ipad") || device.toLowerCase().includes("tablet")
-        ? "tablet"
-        : "mobile";
+      osLower.includes("ipad") || device.toLowerCase().includes("tablet") ? "tablet" : "mobile";
   } else if (
     osLower.includes("macos") ||
     osLower.includes("windows") ||
@@ -180,9 +173,7 @@ function parseWebUA(ua: string): ParsedUserAgentInfo {
     device = "iPod";
   } else if (/Android/.test(ua)) {
     const androidDevice = ua.match(/Android [\d.]+; ([^;)]+)/);
-    const model = androidDevice
-      ? androidDevice[1].replace(/ Build\/.*$/, "").trim()
-      : "";
+    const model = androidDevice ? androidDevice[1].replace(/ Build\/.*$/, "").trim() : "";
     if (model && model !== "Mobile" && model !== "Tablet") device = model;
     deviceType = /Tablet/.test(ua)
       ? "tablet"

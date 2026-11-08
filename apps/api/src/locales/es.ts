@@ -15,23 +15,18 @@ const es = {
     missing_permission: "Permisos insuficientes",
     forbidden_default: "No tiene permiso para realizar esta acción.",
     unauthorized_session: "Sesión de autenticación inválida o ausente.",
-    workspace_required:
-      "Se requiere un contexto de espacio de trabajo/organización activo.",
+    workspace_required: "Se requiere un contexto de espacio de trabajo/organización activo.",
     subscription_required:
       "La organización no tiene una suscripción activa ni un período de prueba en curso. Solo se permite el acceso de lectura.",
-    rate_limit_exceeded:
-      "Demasiadas solicitudes. Por favor, inténtelo de nuevo más tarde.",
+    rate_limit_exceeded: "Demasiadas solicitudes. Por favor, inténtelo de nuevo más tarde.",
   },
 
   // ── conflict / optimistic concurrency ──────────────────────────────────
   conflict: {
-    default:
-      "El recurso fue modificado por otra persona. Recargue e inténtelo de nuevo.",
+    default: "El recurso fue modificado por otra persona. Recargue e inténtelo de nuevo.",
     song: "Esta canción fue modificada por otra persona desde la última vez que la cargó.",
-    folder:
-      "Esta carpeta fue modificada por otra persona desde la última vez que la cargó.",
-    service:
-      "Este culto fue modificado por otra persona desde la última vez que lo cargó.",
+    folder: "Esta carpeta fue modificada por otra persona desde la última vez que la cargó.",
+    service: "Este culto fue modificado por otra persona desde la última vez que lo cargó.",
   },
 
   // ── songs ───────────────────────────────────────────────────────────────
@@ -63,8 +58,7 @@ const es = {
   backup: {
     restored_successfully: "Copia de seguridad restaurada con éxito",
     invalid_file: "Archivo de copia de seguridad inválido o dañado.",
-    missing_arrays:
-      "El archivo de copia de seguridad no contiene los arrays esperados.",
+    missing_arrays: "El archivo de copia de seguridad no contiene los arrays esperados.",
   },
 
   // ── notifications ───────────────────────────────────────────────────────
@@ -74,8 +68,7 @@ const es = {
     folder_deleted_title: "Carpeta eliminada con todo su contenido",
     folder_deleted_description:
       "{{songs}} canción(es) y {{folders}} subcarpeta(s) fueron eliminadas permanentemente.",
-    backup_restored_title:
-      "Copia de seguridad restaurada — todos los datos reemplazados",
+    backup_restored_title: "Copia de seguridad restaurada — todos los datos reemplazados",
     backup_restored_description:
       "Una restauración completa importó {{folders}} carpeta(s), {{songs}} canción(es) y {{services}} culto(s).",
     trial_started_title: "Período de prueba iniciado",
@@ -88,8 +81,7 @@ const es = {
     trial_expired_description:
       "Tu período de prueba caducó sin pago. Renueva tu suscripción para mantener el acceso.",
     subscribed_title: "Suscripción activa",
-    subscribed_description:
-      "Tu suscripción al plan {{plan}} ahora está activa.",
+    subscribed_description: "Tu suscripción al plan {{plan}} ahora está activa.",
     canceled_title: "Suscripción cancelada",
     canceled_description:
       "Tu suscripción ha sido cancelada. El acceso permanecerá disponible hasta el final del período de facturación.",
@@ -106,8 +98,7 @@ const es = {
       heading: "Bienvenido a Hosanna{{#if first_name}}, {{first_name}}{{/if}}!",
       body1:
         "Estamos encantados de que te hayas unido a nuestra comunidad. Hosanna está diseñado para ayudarte a conectarte, participar y crecer con tu familia de fe.",
-      body2:
-        "Para empezar, puedes explorar tu panel de control o configurar tu perfil.",
+      body2: "Para empezar, puedes explorar tu panel de control o configurar tu perfil.",
       cta: "Ir al Panel de Control",
     },
     verify_email: {
@@ -116,8 +107,7 @@ const es = {
       body1:
         "¡Gracias por registrarte en Hosanna! Por favor, haz clic en el botón de abajo para verificar tu dirección de correo electrónico y proteger tu cuenta.",
       cta: "Verificar Correo Electrónico",
-      ignore:
-        "Si no creaste una cuenta, puedes ignorar este correo de forma segura.",
+      ignore: "Si no creaste una cuenta, puedes ignorar este correo de forma segura.",
     },
     forgot_password: {
       subject: "Restablece tu contraseña de Hosanna",
@@ -146,16 +136,14 @@ const es = {
       heading: "Cuenta bloqueada temporalmente",
       body1:
         "Detectamos múltiples intentos fallidos de inicio de sesión en tu cuenta. Para proteger tu seguridad, tu cuenta ha sido bloqueada temporalmente.",
-      body2:
-        "Podrás intentar iniciar sesión de nuevo en {{lockout_minutes}} minutos.",
+      body2: "Podrás intentar iniciar sesión de nuevo en {{lockout_minutes}} minutos.",
     },
     change_email_verification: {
       subject: "Verifica tu nueva dirección de correo electrónico - Hosanna",
       heading: "Verifica tu nueva dirección de correo electrónico",
       body1:
         "Recientemente solicitaste cambiar la dirección de correo electrónico asociada a tu cuenta Hosanna a {{new_email}}.",
-      body2:
-        "Por favor, haz clic en el botón de abajo para confirmar este cambio.",
+      body2: "Por favor, haz clic en el botón de abajo para confirmar este cambio.",
       cta: "Aprobar Cambio de Correo Electrónico",
     },
     email_changed_success: {
@@ -176,8 +164,7 @@ const es = {
     church_invitation: {
       subject: "Has sido invitado a unirte a una iglesia - Hosanna",
       heading: "Has sido invitado a {{church_name}}",
-      body1:
-        "{{inviter_name}} te ha invitado a unirte a su espacio de trabajo en Hosanna.",
+      body1: "{{inviter_name}} te ha invitado a unirte a su espacio de trabajo en Hosanna.",
       body2:
         "Únete a {{church_name}} para conectarte con tu comunidad, ver eventos y mantenerte al día.",
       cta: "Aceptar Invitación",
@@ -196,16 +183,14 @@ const es = {
       heading: "¡Estás dentro! Solicitud aprobada",
       body1:
         "¡Buenas noticias! Tu solicitud para unirte a {{church_name}} ha sido aprobada por un administrador.",
-      body2:
-        "Ahora puedes acceder al espacio de trabajo, ver miembros y participar.",
+      body2: "Ahora puedes acceder al espacio de trabajo, ver miembros y participar.",
       cta: "Unirse al Espacio de Trabajo",
     },
     join_request_denied: {
       subject: "Actualización sobre tu solicitud de unión - Hosanna",
       heading: "Actualización sobre tu solicitud de unión",
       salutation: "Hola{{#if first_name}} {{first_name}}{{/if}},",
-      body1:
-        "Tu solicitud para unirte a {{church_name}} no pudo ser aprobada en este momento.",
+      body1: "Tu solicitud para unirte a {{church_name}} no pudo ser aprobada en este momento.",
       body2:
         "Si crees que esto fue un error, por favor contacta directamente a la administración de la iglesia.",
     },
@@ -213,8 +198,7 @@ const es = {
       subject: "Ahora eres Administrador - Hosanna",
       heading: "Ahora eres Administrador",
       salutation: "Hola{{#if first_name}} {{first_name}}{{/if}},",
-      body1:
-        "Tu rol en {{church_name}} ha sido actualizado. Ahora eres Administrador.",
+      body1: "Tu rol en {{church_name}} ha sido actualizado. Ahora eres Administrador.",
       body2:
         "Ahora tienes acceso a la configuración del espacio de trabajo, gestión de miembros y herramientas administrativas.",
       cta: "Ver Panel de Administrador",
@@ -239,32 +223,27 @@ const es = {
     billing_trial_started: {
       subject: "Tu período de prueba ha comenzado - Hosanna",
       heading: "Tu período de prueba ha comenzado",
-      body1:
-        "Tu prueba gratuita del plan {{plan}} ahora está activa para {{church_name}}.",
-      body2:
-        "Explora todas las funciones de Hosanna durante tu período de prueba.",
+      body1: "Tu prueba gratuita del plan {{plan}} ahora está activa para {{church_name}}.",
+      body2: "Explora todas las funciones de Hosanna durante tu período de prueba.",
     },
     billing_trial_ended: {
       subject: "Tu período de prueba ha finalizado - Hosanna",
       heading: "Tu período de prueba ha finalizado",
       body1:
         "El período de prueba de {{church_name}} ha finalizado y tu suscripción al plan {{plan}} ahora está activa.",
-      body2:
-        "Puedes gestionar tu suscripción desde la configuración del espacio de trabajo.",
+      body2: "Puedes gestionar tu suscripción desde la configuración del espacio de trabajo.",
     },
     billing_trial_expired: {
       subject: "Tu período de prueba ha caducado - Hosanna",
       heading: "Tu período de prueba ha caducado",
-      body1:
-        "El período de prueba de {{church_name}} caducó sin un método de pago válido.",
+      body1: "El período de prueba de {{church_name}} caducó sin un método de pago válido.",
       body2:
         "Para mantener el acceso, renueva tu suscripción desde la configuración del espacio de trabajo.",
     },
     billing_subscribed: {
       subject: "Suscripción activa - Hosanna",
       heading: "Suscripción activa",
-      body1:
-        "La suscripción de {{church_name}} al plan {{plan}} ahora está activa.",
+      body1: "La suscripción de {{church_name}} al plan {{plan}} ahora está activa.",
       body2: "¡Gracias por elegir Hosanna!",
     },
     billing_canceled: {

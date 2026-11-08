@@ -37,8 +37,7 @@ export async function clearDemoData(): Promise<void> {
   disableDemoMode();
 
   try {
-    const { disableInteractiveOnboardingSession } =
-      await import("../lib/tour/interactive/session");
+    const { disableInteractiveOnboardingSession } = await import("../lib/tour/interactive/session");
     disableInteractiveOnboardingSession();
   } catch {
     // ignore
@@ -57,19 +56,14 @@ export async function clearDemoData(): Promise<void> {
     // ignore if not yet loaded
   }
 
-  await Promise.all(
-    DEMO_DATABASE_NAMES.map((name) => deleteIndexedDbByName(name)),
-  );
+  await Promise.all(DEMO_DATABASE_NAMES.map((name) => deleteIndexedDbByName(name)));
 
   try {
     const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (!key) continue;
-      if (
-        key === DEMO_EPOCH_LS_KEY ||
-        key.startsWith(`${DEMO_CHECKPOINT_LS_PREFIX}_`)
-      ) {
+      if (key === DEMO_EPOCH_LS_KEY || key.startsWith(`${DEMO_CHECKPOINT_LS_PREFIX}_`)) {
         keysToRemove.push(key);
       }
     }

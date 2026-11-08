@@ -38,10 +38,12 @@ skills-lock.json
 # editors / os
 .idea/
 .vscode/*
-!.vscode/extensions.json
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 .DS_Store
+
+*/.obsidian/*
+.vscode

@@ -18,10 +18,8 @@ import { apiRouter } from "./routes/index.js";
  * loads the ESM build, whose default export is the middleware function.
  */
 const helmet = helmetImport as unknown as (options?: {
-  crossOriginResourcePolicy?:
-    { policy?: "same-origin" | "same-site" | "cross-origin" } | false;
-  hsts?:
-    { maxAge: number; includeSubDomains?: boolean; preload?: boolean } | false;
+  crossOriginResourcePolicy?: { policy?: "same-origin" | "same-site" | "cross-origin" } | false;
+  hsts?: { maxAge: number; includeSubDomains?: boolean; preload?: boolean } | false;
   noSniff?: boolean;
   frameguard?: { action?: "deny" | "sameorigin" } | false;
   xssFilter?: boolean;
@@ -209,9 +207,7 @@ export const config = {
 // ── Long-running server (local + Docker) ───────────────────────────────────
 if (!isVercel) {
   const server = app.listen(env.port, "0.0.0.0", () => {
-    console.log(
-      `Hosanna API listening on http://0.0.0.0:${env.port} (${env.nodeEnv})`,
-    );
+    console.log(`Hosanna API listening on http://0.0.0.0:${env.port} (${env.nodeEnv})`);
   });
 
   // Keep idle keep-alive connections alive for 65 s (slightly above typical

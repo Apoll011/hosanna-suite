@@ -8,12 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PrintOptions } from "../components/print/types";
 import { usePrint } from "../contexts/PrintContext";
 import { useSync } from "../contexts/SyncContext";
-import {
-  getDatabase,
-  getPurgeAt,
-  updateCollectionCounts,
-  validateCollectionRules,
-} from "../db";
+import { getDatabase, getPurgeAt, updateCollectionCounts, validateCollectionRules } from "../db";
 import { invalidateSongsCache } from "./useSongs";
 
 let cachedCollections: Collection[] | null = null;
@@ -26,9 +21,7 @@ export function invalidateCollectionsCache(): void {
 
 export function useCollections() {
   const { showToast } = useSync();
-  const [collections, setCollections] = useState<Collection[]>(
-    () => cachedCollections ?? [],
-  );
+  const [collections, setCollections] = useState<Collection[]>(() => cachedCollections ?? []);
   const [isLoading, setIsLoading] = useState(() => cachedCollections === null);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -144,10 +137,7 @@ export function useCollections() {
         return doc.toJSON() as Collection;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
-          showToast(
-            (err as Error).message || "Falha ao criar coleção",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao criar coleção", "error");
         }
         throw err;
       } finally {
@@ -198,9 +188,7 @@ export function useCollections() {
           patchData.songIds = songIds;
           patchData.songCount = songIds.length;
 
-          const oldSongIds = new Set(
-            Array.isArray(doc.songIds) ? doc.songIds : [],
-          );
+          const oldSongIds = new Set(Array.isArray(doc.songIds) ? doc.songIds : []);
           const newSongIds = new Set(songIds);
 
           for (const sId of newSongIds) {
@@ -225,9 +213,7 @@ export function useCollections() {
             if (!newSongIds.has(sId)) {
               const songDoc = await db.songs.findOne(sId).exec();
               if (songDoc && Array.isArray(songDoc.collectionIds)) {
-                const updatedIds = songDoc.collectionIds.filter(
-                  (cid: string) => cid !== id,
-                );
+                const updatedIds = songDoc.collectionIds.filter((cid: string) => cid !== id);
                 await songDoc.patch({
                   collectionIds: updatedIds,
                   updatedAt: now,
@@ -244,10 +230,7 @@ export function useCollections() {
         showToast("Coleção atualizada", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
-          showToast(
-            (err as Error).message || "Falha ao atualizar coleção",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao atualizar coleção", "error");
         }
         throw err;
       } finally {
@@ -282,13 +265,8 @@ export function useCollections() {
             .exec();
 
           for (const s of songsInCollection) {
-            if (
-              Array.isArray(s.collectionIds) &&
-              s.collectionIds.includes(id)
-            ) {
-              const updatedIds = s.collectionIds.filter(
-                (cid: string) => cid !== id,
-              );
+            if (Array.isArray(s.collectionIds) && s.collectionIds.includes(id)) {
+              const updatedIds = s.collectionIds.filter((cid: string) => cid !== id);
               await s.patch({
                 collectionIds: updatedIds,
                 updatedAt: now,
@@ -302,10 +280,7 @@ export function useCollections() {
         showToast("Coleção enviada para a lixeira", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
-          showToast(
-            (err as Error).message || "Falha ao excluir coleção",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao excluir coleção", "error");
         }
         throw err;
       } finally {
@@ -333,10 +308,7 @@ export function useCollections() {
         showToast("Coleção restaurada", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
-          showToast(
-            (err as Error).message || "Falha ao restaurar coleção",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao restaurar coleção", "error");
         }
         throw err;
       } finally {
@@ -365,9 +337,7 @@ export function useCollections() {
 
           const songDoc = await db.songs.findOne(sId).exec();
           if (songDoc) {
-            const currentCollIds: string[] = Array.isArray(
-              songDoc.collectionIds,
-            )
+            const currentCollIds: string[] = Array.isArray(songDoc.collectionIds)
               ? [...songDoc.collectionIds]
               : [];
             if (!currentCollIds.includes(collectionId)) {
@@ -392,10 +362,7 @@ export function useCollections() {
         showToast("Músicas adicionadas à coleção", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
-          showToast(
-            (err as Error).message || "Falha ao adicionar músicas à coleção",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao adicionar músicas à coleção", "error");
         }
         throw err;
       }
@@ -441,10 +408,7 @@ export function useCollections() {
         showToast("Músicas removidas da coleção", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
-          showToast(
-            (err as Error).message || "Falha ao remover músicas da coleção",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao remover músicas da coleção", "error");
         }
         throw err;
       }
@@ -452,47 +416,37 @@ export function useCollections() {
     [showToast],
   );
 
-  const {
-    printCollection: openPrintCollection,
-    printCollections: openPrintCollections,
-  } = usePrint();
+  const { printCollection: openPrintCollection, printCollections: openPrintCollections } =
+    usePrint();
 
-  const getCollectionSongs = useCallback(
-    async (collectionId: string): Promise<Song[]> => {
-      try {
-        const db = await getDatabase();
-        const collectionDoc = await db.collections.findOne(collectionId).exec();
-        if (!collectionDoc) return [];
-        const songIdSet = new Set(collectionDoc.songIds || []);
-        const allSongsDocs = await db.songs
-          .find({
-            selector: {
-              isDeleted: { $ne: true },
-            },
-          })
-          .exec();
-        return allSongsDocs
-          .map((d) => d.toJSON() as Song)
-          .filter(
-            (s) =>
-              songIdSet.has(s.id) ||
-              (Array.isArray(s.collectionIds) &&
-                s.collectionIds.includes(collectionId)),
-          );
-      } catch (err) {
-        console.error("Failed to load songs for collection", err);
-        return [];
-      }
-    },
-    [],
-  );
+  const getCollectionSongs = useCallback(async (collectionId: string): Promise<Song[]> => {
+    try {
+      const db = await getDatabase();
+      const collectionDoc = await db.collections.findOne(collectionId).exec();
+      if (!collectionDoc) return [];
+      const songIdSet = new Set(collectionDoc.songIds || []);
+      const allSongsDocs = await db.songs
+        .find({
+          selector: {
+            isDeleted: { $ne: true },
+          },
+        })
+        .exec();
+      return allSongsDocs
+        .map((d) => d.toJSON() as Song)
+        .filter(
+          (s) =>
+            songIdSet.has(s.id) ||
+            (Array.isArray(s.collectionIds) && s.collectionIds.includes(collectionId)),
+        );
+    } catch (err) {
+      console.error("Failed to load songs for collection", err);
+      return [];
+    }
+  }, []);
 
   const printCollection = useCallback(
-    async (
-      collection: Collection,
-      songs?: Song[],
-      options?: Partial<PrintOptions>,
-    ) => {
+    async (collection: Collection, songs?: Song[], options?: Partial<PrintOptions>) => {
       let resolvedSongs = songs;
       if (!resolvedSongs) {
         resolvedSongs = await getCollectionSongs(collection.id);
@@ -503,10 +457,7 @@ export function useCollections() {
   );
 
   const printCollections = useCallback(
-    async (
-      collectionsToPrint: Collection[],
-      options?: Partial<PrintOptions>,
-    ) => {
+    async (collectionsToPrint: Collection[], options?: Partial<PrintOptions>) => {
       const collectionsWithSongs = await Promise.all(
         collectionsToPrint.map(async (c) => ({
           collection: c,
@@ -542,9 +493,7 @@ export function useCollection(id: string | null) {
   const [collection, setCollection] = useState<Collection | null>(() =>
     id ? (cachedSingleCollections.get(id) ?? null) : null,
   );
-  const [isLoading, setIsLoading] = useState(() =>
-    id ? !cachedSingleCollections.has(id) : false,
-  );
+  const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleCollections.has(id) : false));
 
   useEffect(() => {
     if (!id) {
@@ -614,8 +563,7 @@ export function useCollection(id: string | null) {
             .filter(
               (s) =>
                 songIdSet.has(s.id) ||
-                (Array.isArray(s.collectionIds) &&
-                  s.collectionIds.includes(collection.id)),
+                (Array.isArray(s.collectionIds) && s.collectionIds.includes(collection.id)),
             );
         } catch (err) {
           console.error("Failed to load songs for collection print", err);

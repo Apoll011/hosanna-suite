@@ -34,10 +34,7 @@ export const ICON_MAP: Record<ResponsibilityIconKey, LucideIcon> = {
  * Tailwind color classes for a category "chip". Centralized here so every
  * component that renders a category icon/badge looks consistent.
  */
-export const COLOR_MAP: Record<
-  ResponsibilityColor,
-  { bg: string; text: string; ring: string }
-> = {
+export const COLOR_MAP: Record<ResponsibilityColor, { bg: string; text: string; ring: string }> = {
   amber: {
     bg: "bg-amber-50 dark:bg-amber-950/40",
     text: "text-amber-500",

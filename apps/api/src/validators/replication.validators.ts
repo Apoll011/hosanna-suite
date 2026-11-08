@@ -1,13 +1,7 @@
 import { z } from "zod";
 
 export const collectionParamSchema = z.object({
-  collection: z.enum([
-    "songs",
-    "folders",
-    "collections",
-    "services",
-    "agendaEvents",
-  ]),
+  collection: z.enum(["songs", "folders", "collections", "services", "agendaEvents"]),
 });
 
 const checkpointSchema = z
@@ -31,10 +25,7 @@ export const replicatedCollectionSchema = z.enum([
 ]);
 
 export const pullAllBodySchema = z.object({
-  checkpoints: z
-    .partialRecord(replicatedCollectionSchema, checkpointSchema)
-    .optional()
-    .default({}),
+  checkpoints: z.partialRecord(replicatedCollectionSchema, checkpointSchema).optional().default({}),
   limit: z.number().int().min(1).max(2000).optional().default(100),
 });
 

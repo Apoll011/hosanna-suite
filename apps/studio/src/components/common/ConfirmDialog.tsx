@@ -51,7 +51,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       <div className="flex items-start gap-4">
         {variant === "danger" && (
           <div
-            className="p-2.5 rounded-[var(--radius-md)] bg-m3-danger/10 text-m3-danger shrink-0"
+            className="p-2.5 rounded-md bg-m3-danger/10 text-m3-danger shrink-0"
             aria-hidden="true"
           >
             <AlertTriangle className="w-5 h-5" />

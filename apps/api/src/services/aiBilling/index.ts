@@ -7,9 +7,7 @@ export type { AiBillingResponse, AiBalanceInfo } from "./types.js";
 
 const config = new OrgAiConfigService();
 
-export async function getOrgAiBilling(
-  orgId: string,
-): Promise<AiBillingResponse> {
+export async function getOrgAiBilling(orgId: string): Promise<AiBillingResponse> {
   const publicSettings = await config.getPublic(orgId);
   const provider = publicSettings.provider as AiProvider;
 

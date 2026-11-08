@@ -9,13 +9,7 @@ import {
   UnfoldVertical,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   buildItems,
   buildSplitItems,
@@ -124,10 +118,7 @@ function CodeText({ line }: { line: DiffLine }) {
   return (
     <>
       {segmentLine(line.text, line.ranges).map((seg, i) => (
-        <span
-          key={i}
-          className={`hcd-s-${seg.syntax}${seg.changed ? " hcd-mark" : ""}`}
-        >
+        <span key={i} className={`hcd-s-${seg.syntax}${seg.changed ? " hcd-mark" : ""}`}>
           {seg.text}
         </span>
       ))}
@@ -159,10 +150,7 @@ export function ChordProDiffEditor({
   style,
 }: ChordProDiffEditorProps) {
   ensureDiffStyles();
-  const labels = useMemo(
-    () => ({ ...DEFAULT_DIFF_LABELS, ...labelOverrides }),
-    [labelOverrides],
-  );
+  const labels = useMemo(() => ({ ...DEFAULT_DIFF_LABELS, ...labelOverrides }), [labelOverrides]);
 
   const diff = useMemo(() => computeDiff(original, modified), [original, modified]);
 
@@ -201,12 +189,7 @@ export function ChordProDiffEditor({
   const effectiveView = narrow ? "inline" : view;
 
   const items = useMemo(
-    () =>
-      buildItems(
-        diff,
-        collapse ? contextLines : Number.MAX_SAFE_INTEGER,
-        expanded,
-      ),
+    () => buildItems(diff, collapse ? contextLines : Number.MAX_SAFE_INTEGER, expanded),
     [diff, collapse, contextLines, expanded],
   );
   const splitItems = useMemo(
@@ -278,8 +261,7 @@ export function ChordProDiffEditor({
     }
   };
 
-  const expandFold = (id: number) =>
-    setExpanded((prev) => new Set(prev).add(id));
+  const expandFold = (id: number) => setExpanded((prev) => new Set(prev).add(id));
 
   /* ------------------------------ renderers ------------------------------ */
 
@@ -384,9 +366,7 @@ export function ChordProDiffEditor({
         {...rowProps(hunk)}
       >
         <span className={`${cls(left, "l")} hcd-no`}>{left?.oldNo ?? ""}</span>
-        <span className={`${cls(left, "l")} hcd-code`}>
-          {left && <CodeText line={left} />}
-        </span>
+        <span className={`${cls(left, "l")} hcd-code`}>{left && <CodeText line={left} />}</span>
         <span className={`${cls(right, "r")} hcd-no`}>{right?.newNo ?? ""}</span>
         <span className={`${cls(right, "r")} hcd-code`}>
           {right && <CodeText line={right} />}
@@ -399,8 +379,7 @@ export function ChordProDiffEditor({
   /* --------------------------- overview ruler ---------------------------- */
 
   const ruler = useMemo(() => {
-    const list: Array<DiffItem | SplitItem> =
-      effectiveView === "split" ? splitItems : items;
+    const list: Array<DiffItem | SplitItem> = effectiveView === "split" ? splitItems : items;
     const count = list.length || 1;
     const marks: Array<{ id: number; pos: number; type: "ins" | "del" | "mix" }> = [];
     const seen = new Set<number>();
@@ -425,10 +404,7 @@ export function ChordProDiffEditor({
   /* -------------------------------- render ------------------------------- */
 
   const rootClass = ["hcd-root", className].filter(Boolean).join(" ");
-  const primaryLabel =
-    undone === 0
-      ? labels.apply
-      : fill(labels.applyPartial, { kept, total });
+  const primaryLabel = undone === 0 ? labels.apply : fill(labels.applyPartial, { kept, total });
 
   return (
     <div
@@ -486,11 +462,7 @@ export function ChordProDiffEditor({
               className="hcd-link"
               disabled={disabled}
               onClick={() =>
-                setRejected(
-                  undone === 0
-                    ? new Set(diff.hunks.map((h) => h.id))
-                    : new Set(),
-                )
+                setRejected(undone === 0 ? new Set(diff.hunks.map((h) => h.id)) : new Set())
               }
             >
               {undone === 0 ? labels.undoAll : labels.keepAll}
@@ -532,12 +504,7 @@ export function ChordProDiffEditor({
               <UnfoldVertical size={16} />
             </button>
           </span>
-          <button
-            type="button"
-            className="hcd-btn"
-            onClick={onReject}
-            disabled={disabled}
-          >
+          <button type="button" className="hcd-btn" onClick={onReject} disabled={disabled}>
             <X size={15} />
             {labels.discard}
           </button>
@@ -566,9 +533,7 @@ export function ChordProDiffEditor({
           className={`hcd-scroll${effectiveView === "split" ? " hcd-is-split" : ""}`}
         >
           {total === 0 && <div className="hcd-empty-state">{labels.noChanges}</div>}
-          {effectiveView === "split"
-            ? splitItems.map(renderSplit)
-            : items.map(renderInline)}
+          {effectiveView === "split" ? splitItems.map(renderSplit) : items.map(renderInline)}
         </div>
         {ruler.length > 0 && (
           <div className="hcd-ruler" aria-hidden={false}>

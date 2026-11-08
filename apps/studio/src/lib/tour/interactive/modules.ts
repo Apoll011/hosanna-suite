@@ -16,10 +16,7 @@ export interface InteractiveStepDef {
   align?: "start" | "center" | "end";
   requireAll?: PermissionString[];
   requireAny?: PermissionString[];
-  when?: (ctx: {
-    collectionsEnabled: boolean;
-    agendaEnabled: boolean;
-  }) => boolean;
+  when?: (ctx: { collectionsEnabled: boolean; agendaEnabled: boolean }) => boolean;
   /** If set, Next stays disabled until this event fires (or user skips step). */
   waitFor?: OnboardingEventName;
   /**

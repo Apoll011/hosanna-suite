@@ -35,14 +35,8 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
       description:
         "List members of the active organization (memberId, userId, name, email, role). Use to resolve people for agenda responsibilities (leader, musicians, preacher, …).",
       inputSchema: z.object({
-        search: z
-          .string()
-          .optional()
-          .describe("Filter by name or email (case-insensitive)"),
-        role: z
-          .string()
-          .optional()
-          .describe("Filter by org role (owner, admin, musician, …)"),
+        search: z.string().optional().describe("Filter by name or email (case-insensitive)"),
+        role: z.string().optional().describe("Filter by org role (owner, admin, musician, …)"),
         limit: z.number().int().positive().max(200).optional().default(100),
       }),
     },
@@ -99,9 +93,7 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
     },
     async ({ names }) => {
       try {
-        return jsonResult(
-          await resolveMembers(requireMcpContext(authInfo), names),
-        );
+        return jsonResult(await resolveMembers(requireMcpContext(authInfo), names));
       } catch (error) {
         return errorResult(error);
       }

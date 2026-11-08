@@ -12,10 +12,7 @@ import React, { useRef, useState } from "react";
 import { authClient } from "../../lib/authClient";
 import LoginLayout from "./Layout";
 import { GoogleTextField } from "./components/GoogleTextField";
-import {
-  TurnstileWidget,
-  type TurnstileHandle,
-} from "./components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileHandle } from "./components/TurnstileWidget";
 
 export const ForgotPasswordPage: React.FC = () => {
   const { navigate } = useAppNavigate();
@@ -110,11 +107,11 @@ export const ForgotPasswordPage: React.FC = () => {
       errorMsg={errorMsg}
     >
       {/* Mode switcher tabs styled like Google material chips */}
-      <div className="flex rounded-[var(--radius-md)] bg-m3-sidebar/80 p-1 mb-5 border border-m3-border/60">
+      <div className="flex rounded-md bg-m3-sidebar/80 p-1 mb-5 border border-m3-border/60">
         <button
           type="button"
           onClick={() => setMode("link")}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
             mode === "link"
               ? "bg-m3-card text-m3-primary shadow-xs"
               : "text-m3-secondary hover:text-m3-text"
@@ -126,7 +123,7 @@ export const ForgotPasswordPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setMode("code")}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
             mode === "code"
               ? "bg-m3-card text-m3-primary shadow-xs"
               : "text-m3-secondary hover:text-m3-text"
@@ -157,11 +154,7 @@ export const ForgotPasswordPage: React.FC = () => {
             {t("auth.forgotPassword.backToLogin")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.forgotPassword.sendLinkBtn")}
           </Button>
         </div>

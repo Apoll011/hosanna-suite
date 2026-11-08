@@ -264,9 +264,7 @@ Inner content
 
     const doc = parseChordProDocument(chordpro);
     assert.ok(doc.errors.length > 0);
-    assert.ok(
-      doc.errors.some((e) => e.includes("Nested version block detected")),
-    );
+    assert.ok(doc.errors.some((e) => e.includes("Nested version block detected")));
     // Outer is still completed at end_of_version
     assert.strictEqual(doc.variants.length, 1);
     assert.strictEqual(doc.variants[0].id, "outer");
@@ -284,11 +282,7 @@ Body 2
 
     const doc = parseChordProDocument(chordpro);
     assert.ok(doc.errors.length > 0);
-    assert.ok(
-      doc.errors.some((e) =>
-        e.includes("Duplicate or invalid variant identifier"),
-      ),
-    );
+    assert.ok(doc.errors.some((e) => e.includes("Duplicate or invalid variant identifier")));
     assert.strictEqual(doc.variants.length, 1);
   });
 
@@ -313,22 +307,14 @@ Some lyrics`;
 
     const doc = parseChordProDocument(chordpro);
     assert.ok(doc.errors.length > 0);
-    assert.ok(
-      doc.errors.some((e) => e.includes("without an active version block")),
-    );
+    assert.ok(doc.errors.some((e) => e.includes("without an active version block")));
     assert.strictEqual(doc.variants.length, 0);
   });
 
   // 15. Slug generation
   it("15. Generates clean IDs from accented and spaced names", () => {
     assert.strictEqual(slugifyVariantName("Simplificada"), "simplificada");
-    assert.strictEqual(
-      slugifyVariantName("Versão de Estúdio"),
-      "versao-de-estudio",
-    );
-    assert.strictEqual(
-      slugifyVariantName("  Ao Vivo (2024)!  "),
-      "ao-vivo-2024",
-    );
+    assert.strictEqual(slugifyVariantName("Versão de Estúdio"), "versao-de-estudio");
+    assert.strictEqual(slugifyVariantName("  Ao Vivo (2024)!  "), "ao-vivo-2024");
   });
 });

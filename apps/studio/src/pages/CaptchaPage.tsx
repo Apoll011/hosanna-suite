@@ -12,8 +12,7 @@
 import React, { useEffect, useRef } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 
-const TURNSTILE_SITE_KEY =
-  import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA";
 
 declare global {
   interface Window {
@@ -60,8 +59,7 @@ export const CaptchaPage: React.FC = () => {
     if (!document.querySelector("#cf-turnstile-script")) {
       const script = document.createElement("script");
       script.id = "cf-turnstile-script";
-      script.src =
-        "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad";
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad";
       script.async = true;
       document.head.appendChild(script);
     }
@@ -78,9 +76,7 @@ export const CaptchaPage: React.FC = () => {
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
       <div className="text-center">
         <div ref={containerRef} className="flex justify-center" />
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-          Verificação de segurança
-        </p>
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Verificação de segurança</p>
       </div>
     </div>
   );

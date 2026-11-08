@@ -53,7 +53,6 @@ If `updatedAt` conflicts, reload with `songs_get` and re-propose — do not forc
 - Exact lyric wording and line breaks unless the user asked to change them
 - Named versions (`{start_of_version}`…`{end_of_version}`)
 - Comment text and style suffixes (`|warning`)
-- Timing annotations (`[Am@2x]`)
 - Unknown/custom metadata directives already in the file
 
 ## Never

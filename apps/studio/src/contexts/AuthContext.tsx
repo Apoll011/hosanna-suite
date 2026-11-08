@@ -5,30 +5,15 @@
 
 import { ResponsibilityCategory } from "@/src/types";
 import { InvitationStatus } from "better-auth/plugins/organization";
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getDemoOrganization, getDemoUser } from "../demo/demoAuth";
 import { clearDemoData, isDemoMode } from "../demo/index";
-import {
-  getPersistedSettingsJson,
-  syncSettingsFromMetadata,
-} from "../hooks/usePersonalSettings";
+import { getPersistedSettingsJson, syncSettingsFromMetadata } from "../hooks/usePersonalSettings";
 import { authClient } from "../lib/authClient";
 import { clearPermissionCache } from "../lib/permissions/client";
 import { posthog } from "../lib/posthog";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
-import {
-  ensureOrgScopedData,
-  getDatabase,
-  resetDatabase,
-  resetReplication,
-} from "../db";
+import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";
 
 export interface SessionUser {
   id: string;
@@ -80,14 +65,7 @@ export type Organization = {
   members?: {
     id: string;
     organizationId: string;
-    role:
-      | "admin"
-      | "editor"
-      | "guest"
-      | "member"
-      | "musician"
-      | "owner"
-      | "teamLeader";
+    role: "admin" | "editor" | "guest" | "member" | "musician" | "owner" | "teamLeader";
     createdAt: Date;
     userId: string;
     teamId?: string;
@@ -102,14 +80,7 @@ export type Organization = {
     id: string;
     organizationId: string;
     email: string;
-    role:
-      | "admin"
-      | "editor"
-      | "guest"
-      | "member"
-      | "musician"
-      | "owner"
-      | "teamLeader";
+    role: "admin" | "editor" | "guest" | "member" | "musician" | "owner" | "teamLeader";
     status: InvitationStatus;
     inviterId: string;
     expiresAt: Date;
@@ -123,10 +94,7 @@ const normalizeOrganization = (org: unknown): Organization => {
 
   if (typeof organization.metadata === "string") {
     try {
-      organization.metadata = JSON.parse(organization.metadata) as Record<
-        string,
-        unknown
-      >;
+      organization.metadata = JSON.parse(organization.metadata) as Record<string, unknown>;
     } catch {
       organization.metadata = null;
     }
@@ -156,9 +124,7 @@ const CACHED_ORG_KEY = "cached_auth_org";
 const CACHED_ORGS_KEY = "cached_auth_orgs";
 const CACHED_TRIAL_KEY = "cached_auth_trial";
 
-const DemoAuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const DemoAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const demoLogout = useCallback(async () => {
     setIsLoading(true);
@@ -183,16 +149,10 @@ const DemoAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }),
     [demoUser, demoOrg, isLoading, demoNoOp, demoLogout],
   );
-  return (
-    <AuthContext.Provider value={demoDemoValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={demoDemoValue}>{children}</AuthContext.Provider>;
 };
 
-const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Stale-While-Revalidate: If we have a cached user, start with isLoading = false immediately!
   const [isLoading, setIsLoading] = useState<boolean>(() => {
     try {
@@ -227,16 +187,14 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return [];
     }
   });
-  const [hasAcceptedTrial, setHasAcceptedTrial] = useState<boolean | null>(
-    () => {
-      try {
-        const stored = localStorage.getItem(CACHED_TRIAL_KEY);
-        return stored === null ? null : stored === "true";
-      } catch {
-        return null;
-      }
-    },
-  );
+  const [hasAcceptedTrial, setHasAcceptedTrial] = useState<boolean | null>(() => {
+    try {
+      const stored = localStorage.getItem(CACHED_TRIAL_KEY);
+      return stored === null ? null : stored === "true";
+    } catch {
+      return null;
+    }
+  });
 
   const handleClearSession = useCallback(() => {
     setUser(null);
@@ -288,8 +246,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const { data: sessionData, error: sessionError } =
-        await authClient.getSession({ query: {} });
+      const { data: sessionData, error: sessionError } = await authClient.getSession({ query: {} });
       const sessionUser = sessionData?.user;
 
       if (!sessionUser || sessionError) {
@@ -318,17 +275,15 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         activeOrg = normalizeOrganization(initialOrgRes.data);
       } else if (orgList.length > 0) {
         const storedSlug = localStorage.getItem("active_org_slug");
-        const targetOrg =
-          orgList.find((o) => o.slug === storedSlug) || orgList[0];
+        const targetOrg = orgList.find((o) => o.slug === storedSlug) || orgList[0];
 
         await authClient.organization.setActive({
           organizationSlug: targetOrg.slug,
         });
 
-        const { data: newlyActiveOrg } =
-          await authClient.organization.getFullOrganization({
-            query: {},
-          });
+        const { data: newlyActiveOrg } = await authClient.organization.getFullOrganization({
+          query: {},
+        });
         activeOrg = normalizeOrganization(newlyActiveOrg);
       }
 
@@ -340,17 +295,14 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
           clearPermissionCache();
         }
 
-        const currentUserMember = activeOrg.members?.find(
-          (m) => m.userId === sessionUser.id,
-        );
+        const currentUserMember = activeOrg.members?.find((m) => m.userId === sessionUser.id);
 
         if (currentUserMember) {
           userRole = currentUserMember.role;
         } else {
-          const { data: roleData } =
-            await authClient.organization.getActiveMemberRole({
-              query: {},
-            });
+          const { data: roleData } = await authClient.organization.getActiveMemberRole({
+            query: {},
+          });
           userRole = roleData?.role || undefined;
         }
       } else {
@@ -462,8 +414,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Sync across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "active_org_slug" || e.key === CACHED_USER_KEY)
-        fetchSession();
+      if (e.key === "active_org_slug" || e.key === CACHED_USER_KEY) fetchSession();
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
@@ -518,10 +469,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
 
       if (error) {
-        throw new Error(
-          (error as { message?: string })?.message ||
-            "Failed to switch workspace",
-        );
+        throw new Error((error as { message?: string })?.message || "Failed to switch workspace");
       }
 
       localStorage.setItem("active_org_slug", org.slug);
@@ -535,10 +483,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const db = await getDatabase();
         await ensureOrgScopedData(db, org.slug);
       } catch (err) {
-        console.warn(
-          "[AuthContext] Failed to clear local data on org switch:",
-          err,
-        );
+        console.warn("[AuthContext] Failed to clear local data on org switch:", err);
       }
 
       // The app boots per organization (local-first database, sync, queries),
@@ -572,14 +517,10 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     ],
   );
 
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   if (isDemoMode()) {
     return <DemoAuthProvider>{children}</DemoAuthProvider>;
   }

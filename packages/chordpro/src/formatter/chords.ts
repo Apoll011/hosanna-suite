@@ -123,9 +123,7 @@ export function normalizeUnicodeAccidentals(chord: string): string {
 export function isValidChord(token: string): boolean {
   if (!token || token.length === 0) return false;
 
-  // Remove timing annotation if present e.g. G@2x
-  const withoutTiming = token.replace(/@[0-9]*\.?[0-9]+x$/, "").trim();
-  const normalizedAccidentals = normalizeUnicodeAccidentals(withoutTiming);
+  const normalizedAccidentals = normalizeUnicodeAccidentals(token.trim());
 
   // Exclude common non-chord bracketed words explicitly if they start with A-G
   // E.g. [Bridge], [Chorus], [Ending], [Fade], [Guitar]

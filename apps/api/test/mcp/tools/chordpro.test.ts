@@ -21,9 +21,7 @@ describe("chordpro library via MCP gate", () => {
   });
 
   it("exposes variants as implemented", () => {
-    const variants = getChordProCapabilities().features.find(
-      (f) => f.id === "variants",
-    );
+    const variants = getChordProCapabilities().features.find((f) => f.id === "variants");
     assert.equal(variants?.support, "implemented");
   });
 });

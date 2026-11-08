@@ -1,11 +1,5 @@
 import { parseChordPro } from "@hosanna/chordpro";
-import {
-  Folder,
-  GetSongsParams,
-  ParsedSong,
-  Song,
-  SongsResponse,
-} from "../types";
+import { Folder, GetSongsParams, ParsedSong, Song, SongsResponse } from "../types";
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";
 
@@ -48,9 +42,7 @@ export const songsApi = {
       limit: params.limit,
       tag: params.tag,
       ...(params.key ? { key: params.key } : {}),
-      ...(params.searchFields
-        ? { searchFields: JSON.stringify(params.searchFields) }
-        : {}),
+      ...(params.searchFields ? { searchFields: JSON.stringify(params.searchFields) } : {}),
     };
 
     const data = await unwrapApiResult(
@@ -102,10 +94,7 @@ export const songsApi = {
     return data as unknown as Song;
   },
 
-  getParsedSongById: async (
-    id: string,
-    folders: Folder[] = [],
-  ): Promise<ParsedSong> => {
+  getParsedSongById: async (id: string, folders: Folder[] = []): Promise<ParsedSong> => {
     const song = await songsApi.getSongById(id);
     return parseSong(song, folders);
   },
@@ -190,13 +179,10 @@ export const songsApi = {
   },
 
   downloadSong: async (id: string, filename: string): Promise<void> => {
-    const { data, error, response } = await getApiClient().openapi.GET(
-      "/songs/{id}/download",
-      {
-        params: { path: { id } },
-        parseAs: "blob",
-      },
-    );
+    const { data, error, response } = await getApiClient().openapi.GET("/songs/{id}/download", {
+      params: { path: { id } },
+      parseAs: "blob",
+    });
     if (!response.ok) {
       await unwrapApiResult({ data, error, response });
     }

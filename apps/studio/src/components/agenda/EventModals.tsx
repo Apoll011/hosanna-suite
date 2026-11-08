@@ -44,14 +44,8 @@ const SectionHeader: React.FC<{
       {icon}
     </div>
     <div>
-      <p className="text-[13px] font-bold text-m3-text/80 leading-tight">
-        {title}
-      </p>
-      {hint && (
-        <p className="text-[11px] font-medium text-m3-secondary mt-0.5">
-          {hint}
-        </p>
-      )}
+      <p className="text-[13px] font-bold text-m3-text/80 leading-tight">{title}</p>
+      {hint && <p className="text-[11px] font-medium text-m3-secondary mt-0.5">{hint}</p>}
     </div>
   </div>
 );
@@ -156,9 +150,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
   ];
   const defaultType = eventTypeOptions[0] ?? "";
 
-  const [form, setForm] = useState<EventFormValue>(() =>
-    emptyEventForm(initial, defaultType),
-  );
+  const [form, setForm] = useState<EventFormValue>(() => emptyEventForm(initial, defaultType));
   const [titleTouched, setTitleTouched] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -193,8 +185,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
       ...f,
       linkedServiceId: serviceId,
       date: service.date.slice(0, 10) || f.date,
-      durationMinutes:
-        seconds > 0 ? Math.max(1, Math.round(seconds / 60)) : f.durationMinutes,
+      durationMinutes: seconds > 0 ? Math.max(1, Math.round(seconds / 60)) : f.durationMinutes,
       title: f.title.trim() ? f.title : service.name,
     }));
   };
@@ -271,9 +262,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
               <input
                 list="agenda-event-types"
                 value={form.type}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, type: e.target.value }))
-                }
+                onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
                 placeholder={t("agenda.typePlaceholder")}
                 className={fieldInputClass}
               />
@@ -291,7 +280,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                     key={opt}
                     type="button"
                     onClick={() => setForm((f) => ({ ...f, type: opt }))}
-                    className="px-2.5 h-7 rounded-[var(--radius-md)] text-[11px] font-semibold border border-m3-border text-m3-secondary hover:border-m3-primary/50 hover:text-m3-primary transition-colors cursor-pointer"
+                    className="px-2.5 h-7 rounded-md text-[11px] font-semibold border border-m3-border text-m3-secondary hover:border-m3-primary/50 hover:text-m3-primary transition-colors cursor-pointer"
                   >
                     {opt}
                   </button>
@@ -350,7 +339,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
               >
                 <Minus className="w-4 h-4" />
               </IconButton>
-              <div className="flex-1 h-11 flex items-center justify-center gap-2 bg-m3-sidebar border border-m3-border rounded-[var(--radius-md)]">
+              <div className="flex-1 h-11 flex items-center justify-center gap-2 bg-m3-sidebar border border-m3-border rounded-md">
                 <Clock3 className="w-4 h-4 text-m3-secondary" />
                 <span className="text-sm font-bold tabular-nums">
                   {formatDuration(form.durationMinutes, t)}
@@ -368,18 +357,13 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
         {/* ── Detalhes ───────────────────────────────────────────────── */}
         <section className="space-y-2.5">
-          <SectionHeader
-            icon={<MapPin className="w-3.5 h-3.5" />}
-            title={t("common.details")}
-          />
+          <SectionHeader icon={<MapPin className="w-3.5 h-3.5" />} title={t("common.details")} />
           <Input
             label={t("agenda.location")}
             placeholder={t("agenda.locationPlaceholder")}
             icon={<MapPin className="w-4 h-4" />}
             value={form.location}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, location: e.target.value }))
-            }
+            onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
           />
           <div>
             <div className="flex items-center justify-between ml-1 mb-1.5">
@@ -388,9 +372,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
               </FieldLabel>
               <span
                 className={`text-[10px] font-bold tabular-nums ${
-                  form.notes.length > NOTES_MAX
-                    ? "text-m3-danger"
-                    : "text-m3-secondary"
+                  form.notes.length > NOTES_MAX ? "text-m3-danger" : "text-m3-secondary"
                 }`}
               >
                 {form.notes.length}/{NOTES_MAX}
@@ -399,11 +381,9 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
             <textarea
               value={form.notes}
               maxLength={NOTES_MAX}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, notes: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
               placeholder={t("agenda.notesPlaceholder")}
-              className="w-full h-20 p-3 bg-m3-sidebar border border-m3-border rounded-[var(--radius-md)] text-xs font-medium focus:outline-none focus:border-m3-primary transition-colors resize-none"
+              className="w-full h-20 p-3 bg-m3-sidebar border border-m3-border rounded-md text-xs font-medium focus:outline-none focus:border-m3-primary transition-colors resize-none"
             />
           </div>
         </section>
@@ -416,17 +396,13 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                 <span className="text-[11px] font-bold text-m3-danger hidden sm:inline">
                   {t("agenda.deleteEventConfirm")}
                 </span>
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={() => setConfirmingDelete(false)}
-                >
+                <Button variant="outline" type="button" onClick={() => setConfirmingDelete(false)}>
                   {t("common.cancel")}
                 </Button>
                 <button
                   type="button"
                   onClick={onDelete}
-                  className="h-10 px-4 rounded-[var(--radius-md)] bg-m3-danger hover:opacity-90 text-white text-sm font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="h-10 px-4 rounded-md bg-m3-danger hover:opacity-90 text-white text-sm font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                   {t("common.confirm")}
@@ -500,11 +476,7 @@ export const AddResponsibilityModal: React.FC<AddResponsibilityModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t("agenda.addResponsibility")}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={t("agenda.addResponsibility")}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -541,7 +513,7 @@ export const AddResponsibilityModal: React.FC<AddResponsibilityModalProps> = ({
                       key={c.id}
                       type="button"
                       onClick={() => setCategoryId(c.id)}
-                      className={`flex items-center justify-between gap-3 px-3.5 h-11 rounded-[var(--radius-md)] border text-sm font-bold transition-colors cursor-pointer ${
+                      className={`flex items-center justify-between gap-3 px-3.5 h-11 rounded-md border text-sm font-bold transition-colors cursor-pointer ${
                         selected
                           ? "border-m3-primary bg-m3-primary/10 text-m3-primary"
                           : "border-m3-border text-m3-secondary hover:border-m3-primary/40"
@@ -582,11 +554,7 @@ export const AddResponsibilityModal: React.FC<AddResponsibilityModalProps> = ({
           <Button variant="outline" type="button" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={available.length === 0}
-          >
+          <Button variant="primary" type="submit" disabled={available.length === 0}>
             {t("agenda.add")}
           </Button>
         </div>
@@ -650,11 +618,7 @@ export const EditAssigneesModal: React.FC<EditAssigneesModalProps> = ({
           <Button variant="outline" type="button" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={() => onSubmit(value)}
-          >
+          <Button variant="primary" type="button" onClick={() => onSubmit(value)}>
             {t("common.save")}
           </Button>
         </div>

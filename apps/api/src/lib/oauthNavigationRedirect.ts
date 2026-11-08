@@ -26,10 +26,7 @@ export function wantsBrowserNavigation(request: Request): boolean {
   }
 
   const accept = request.headers.get("accept") ?? "";
-  if (
-    accept.includes("text/html") ||
-    accept.includes("application/xhtml+xml")
-  ) {
+  if (accept.includes("text/html") || accept.includes("application/xhtml+xml")) {
     return true;
   }
 
@@ -41,9 +38,7 @@ export function isOauthAuthorizeGet(request: Request): boolean {
   if (request.method !== "GET" && request.method !== "HEAD") return false;
   try {
     const path = new URL(request.url).pathname;
-    return (
-      path.endsWith("/oauth2/authorize") || path.includes("/oauth2/authorize/")
-    );
+    return path.endsWith("/oauth2/authorize") || path.includes("/oauth2/authorize/");
   } catch {
     return false;
   }

@@ -3,12 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  Badge,
-  ConfirmDialog,
-  EmptyState,
-  Spinner,
-} from "@/src/components/common";
+import { Badge, ConfirmDialog, EmptyState, Spinner } from "@/src/components/common";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
 import { CreateCollectionModal } from "@/src/components/modals/CreateCollectionModal";
@@ -20,10 +15,7 @@ import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Collection } from "@/src/types";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "@/src/utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "@/src/utils/folderCustomization";
 import {
   CheckSquare,
   Edit2,
@@ -35,13 +27,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 type CollectionSortBy = "updatedAt" | "title" | "number";
@@ -61,14 +47,13 @@ export const CollectionsPage: React.FC = () => {
   const { granted: canDeleteCollection } = useCan("collection.delete");
   const { granted: canPrint } = useCan("export.pdf");
 
-  const { searchQuery, sortBy, sortOrder, viewMode, density } =
-    useOutletContext<{
-      searchQuery: string;
-      sortBy: CollectionSortBy;
-      sortOrder?: "asc" | "desc";
-      viewMode?: "grid" | "list";
-      density?: "comfortable" | "compact";
-    }>();
+  const { searchQuery, sortBy, sortOrder, viewMode, density } = useOutletContext<{
+    searchQuery: string;
+    sortBy: CollectionSortBy;
+    sortOrder?: "asc" | "desc";
+    viewMode?: "grid" | "list";
+    density?: "comfortable" | "compact";
+  }>();
 
   const order = sortOrder ?? "asc";
   const mode = viewMode ?? "grid";
@@ -85,9 +70,7 @@ export const CollectionsPage: React.FC = () => {
   } = useCollections();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingCollection, setEditingCollection] = useState<Collection | null>(
-    null,
-  );
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
@@ -186,9 +169,7 @@ export const CollectionsPage: React.FC = () => {
     e.stopPropagation();
     if (collection) {
       setSelectedIds((prev) =>
-        prev.has(collection.id) && prev.size > 1
-          ? prev
-          : new Set([collection.id]),
+        prev.has(collection.id) && prev.size > 1 ? prev : new Set([collection.id]),
       );
       setLastClickedId(collection.id);
     }
@@ -235,9 +216,7 @@ export const CollectionsPage: React.FC = () => {
       }
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "a") {
@@ -257,21 +236,13 @@ export const CollectionsPage: React.FC = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [
-    filteredCollections,
-    selectedIds,
-    openCollection,
-    canDeleteCollection,
-    requestDelete,
-  ]);
+  }, [filteredCollections, selectedIds, openCollection, canDeleteCollection, requestDelete]);
 
   const menuCollection = contextMenu?.id
     ? filteredCollections.find((c) => c.id === contextMenu.id)
     : undefined;
   const menuIsMulti = selectedIds.size > 1 && Boolean(contextMenu?.id);
-  const deletingCollection = filteredCollections.find((c) =>
-    pendingDeleteIds.includes(c.id),
-  );
+  const deletingCollection = filteredCollections.find((c) => pendingDeleteIds.includes(c.id));
 
   if (isLoading) {
     return (
@@ -296,9 +267,7 @@ export const CollectionsPage: React.FC = () => {
           <EmptyState
             icon={<LibraryBig className="w-8 h-8" />}
             title={
-              searchQuery
-                ? t("foldersPage.noResults")
-                : t("collectionsPage.noCollectionsAvailable")
+              searchQuery ? t("foldersPage.noResults") : t("collectionsPage.noCollectionsAvailable")
             }
             description={
               searchQuery
@@ -309,20 +278,16 @@ export const CollectionsPage: React.FC = () => {
                 : t("collectionsPage.createCollectionFirst")
             }
             actionLabel={
-              !searchQuery && canCreateCollection
-                ? t("addressBar.newCollection")
-                : undefined
+              !searchQuery && canCreateCollection ? t("addressBar.newCollection") : undefined
             }
             onAction={
-              !searchQuery && canCreateCollection
-                ? () => setIsCreateModalOpen(true)
-                : undefined
+              !searchQuery && canCreateCollection ? () => setIsCreateModalOpen(true) : undefined
             }
           />
         </div>
       ) : mode === "list" ? (
         <div className={isCompact ? "p-3" : "p-6"}>
-          <div className="bg-m3-card border border-m3-border rounded-[var(--radius-lg)] overflow-hidden divide-y divide-m3-border/60">
+          <div className="bg-m3-card border border-m3-border rounded-lg overflow-hidden divide-y divide-m3-border/60">
             {filteredCollections.map((collection) => (
               <CollectionRow
                 key={collection.id}
@@ -361,7 +326,7 @@ export const CollectionsPage: React.FC = () => {
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-[80] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+          className="fixed z-80 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
           onContextMenu={(e) => e.preventDefault()}
@@ -403,11 +368,7 @@ export const CollectionsPage: React.FC = () => {
                 <Badge variant="accent">{selectedIds.size}</Badge>
               </div>
               <Can permission="export.pdf">
-                <button
-                  type="button"
-                  className={MENU_ITEM}
-                  onClick={printSelected}
-                >
+                <button type="button" className={MENU_ITEM} onClick={printSelected}>
                   <Printer className={MENU_ICON} />
                   <span>{t("common.print")}</span>
                 </button>
@@ -579,7 +540,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
         onDoubleClick();
       }}
       onContextMenu={onContextMenu}
-      className={`group relative rounded-[var(--radius-lg)] border bg-m3-card overflow-hidden transition-colors duration-200 cursor-pointer flex flex-col ${
+      className={`group relative rounded-lg border bg-m3-card overflow-hidden transition-colors duration-200 cursor-pointer flex flex-col ${
         isSelected
           ? "border-m3-primary/40 bg-m3-primary/5 ring-2 ring-m3-primary/30"
           : "border-m3-border/80 hover:border-m3-primary/40"
@@ -587,9 +548,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
     >
       {collection.image && (
         <div
-          className={`relative w-full overflow-hidden bg-m3-sidebar ${
-            isCompact ? "h-24" : "h-36"
-          }`}
+          className={`relative w-full overflow-hidden bg-m3-sidebar ${isCompact ? "h-24" : "h-36"}`}
         >
           <img
             src={collection.image}
@@ -602,12 +561,10 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
         </div>
       )}
 
-      <div
-        className={`relative flex-1 flex flex-col ${isCompact ? "px-3 py-2.5" : "px-4 py-3.5"}`}
-      >
+      <div className={`relative flex-1 flex flex-col ${isCompact ? "px-3 py-2.5" : "px-4 py-3.5"}`}>
         <div className="flex items-start gap-3">
           <div
-            className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-[var(--radius-md)] flex items-center justify-center shrink-0 border`}
+            className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md flex items-center justify-center shrink-0 border`}
             style={{
               backgroundColor: `${colorStyle.colorHex}18`,
               color: colorStyle.colorHex,
@@ -623,10 +580,9 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
               {collection.name}
             </h4>
             <span className="text-caption mt-0.5 block">
-              {t(
-                `collectionsPage.songCount.${songCount === 1 ? "one" : "other"}`,
-                { count: songCount },
-              )}
+              {t(`collectionsPage.songCount.${songCount === 1 ? "one" : "other"}`, {
+                count: songCount,
+              })}
             </span>
           </div>
           <button
@@ -636,7 +592,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
               onContextMenu(e);
             }}
             onDoubleClick={(e) => e.stopPropagation()}
-            className={`min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer ${
+            className={`min-h-10 min-w-10 inline-flex items-center justify-center rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer ${
               isSelected
                 ? "opacity-100"
                 : "opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
@@ -687,11 +643,11 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
         <img
           src={collection.image}
           alt=""
-          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-[var(--radius-md)] object-cover shrink-0 bg-m3-sidebar`}
+          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md object-cover shrink-0 bg-m3-sidebar`}
         />
       ) : (
         <div
-          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-[var(--radius-md)] flex items-center justify-center shrink-0 border`}
+          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md flex items-center justify-center shrink-0 border`}
           style={{
             backgroundColor: `${colorStyle.colorHex}18`,
             color: colorStyle.colorHex,
@@ -702,9 +658,7 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div
-          className={`${isCompact ? "text-xs" : "text-sm"} font-medium truncate`}
-        >
+        <div className={`${isCompact ? "text-xs" : "text-sm"} font-medium truncate`}>
           {collection.name}
         </div>
         {!isCompact && collection.description && (
@@ -722,7 +676,7 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
           e.stopPropagation();
           onContextMenu(e);
         }}
-        className="min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
+        className="min-h-10 min-w-10 inline-flex items-center justify-center rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
         aria-label={t("explorer.moreOptions")}
       >
         <MoreHorizontal className="w-4 h-4" />

@@ -25,12 +25,7 @@ describe("folderSongs helpers", () => {
   });
 
   it("collects a folder and all descendants", () => {
-    assert.deepEqual(collectFolderIds(folders, "a").sort(), [
-      "a",
-      "b",
-      "c",
-      "d",
-    ]);
+    assert.deepEqual(collectFolderIds(folders, "a").sort(), ["a", "b", "c", "d"]);
     assert.deepEqual(collectFolderIds(folders, "d"), ["d"]);
   });
 

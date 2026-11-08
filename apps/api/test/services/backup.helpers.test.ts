@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  isLiveRow,
-  sortFoldersParentsFirst,
-} from "../../src/services/backup.helpers.js";
+import { isLiveRow, sortFoldersParentsFirst } from "../../src/services/backup.helpers.js";
 
 describe("backup helpers", () => {
   it("isLiveRow skips soft-deleted and tombstoned rows", () => {

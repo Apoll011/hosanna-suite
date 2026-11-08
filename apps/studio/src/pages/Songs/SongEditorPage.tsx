@@ -29,14 +29,7 @@ import {
   Settings,
   Settings2,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { HelpModal } from "../../components/modals/HelpModal";
 import { useAuth } from "../../contexts/AuthContext";
@@ -76,9 +69,7 @@ export const SongEditorPage: React.FC = () => {
 
   const deferredContent = useDeferredValue(content);
 
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>(
-    canUpdateSong ? "split" : "preview",
-  );
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>(canUpdateSong ? "split" : "preview");
 
   useEffect(() => {
     setLayoutMode(canUpdateSong ? "split" : "preview");
@@ -102,10 +93,7 @@ export const SongEditorPage: React.FC = () => {
 
   const isSavingRef = useRef(false);
 
-  const parsedSong = useMemo(
-    () => parseChordPro(deferredContent),
-    [deferredContent],
-  );
+  const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
 
   const transformedSong = useMemo(() => {
     let transformed = parsedSong
@@ -385,11 +373,7 @@ export const SongEditorPage: React.FC = () => {
             "flex flex-col overflow-hidden relative bg-m3-card min-w-0",
             "transition-all duration-300 ease-in-out",
             layoutMode === "preview" ? "max-md:hidden" : "",
-            layoutMode === "editor"
-              ? "h-full"
-              : layoutMode === "split"
-                ? "h-1/2"
-                : "",
+            layoutMode === "editor" ? "h-full" : layoutMode === "split" ? "h-1/2" : "",
             "md:h-auto",
             layoutMode === "editor"
               ? "md:basis-full"
@@ -451,11 +435,7 @@ export const SongEditorPage: React.FC = () => {
             "flex flex-col overflow-hidden relative bg-m3-card min-w-0",
             "transition-all duration-300 ease-in-out",
             layoutMode === "editor" ? "max-md:hidden" : "",
-            layoutMode === "preview"
-              ? "h-full"
-              : layoutMode === "split"
-                ? "h-1/2"
-                : "",
+            layoutMode === "preview" ? "h-full" : layoutMode === "split" ? "h-1/2" : "",
             "md:h-auto",
             layoutMode === "preview"
               ? "md:basis-full"
@@ -475,9 +455,7 @@ export const SongEditorPage: React.FC = () => {
               {parsedSong.variants && parsedSong.variants.length > 0 && (
                 <select
                   value={selectedVariant ?? ""}
-                  onChange={(event) =>
-                    setSelectedVariant(event.target.value || null)
-                  }
+                  onChange={(event) => setSelectedVariant(event.target.value || null)}
                   className="max-w-32 rounded-md border border-m3-border bg-m3-card px-1.5 py-1 text-[10px] text-m3-text"
                   aria-label={t("songEditor.variant")}
                 >

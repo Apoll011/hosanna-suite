@@ -16,9 +16,5 @@ function openEditorKey(): string {
 }
 
 export function useOpenEditorKey(): string {
-  return useSyncExternalStore(
-    aiContextBridge.subscribe,
-    openEditorKey,
-    openEditorKey,
-  );
+  return useSyncExternalStore(aiContextBridge.subscribe, openEditorKey, openEditorKey);
 }

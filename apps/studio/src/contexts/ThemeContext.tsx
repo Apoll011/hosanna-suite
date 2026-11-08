@@ -1,8 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  usePersonalSettings,
-  type PersonalTheme,
-} from "../hooks/usePersonalSettings";
+import { usePersonalSettings, type PersonalTheme } from "../hooks/usePersonalSettings";
 
 export type Theme = PersonalTheme;
 

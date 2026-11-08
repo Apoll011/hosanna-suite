@@ -60,26 +60,18 @@ export const DEFAULT_SETTINGS: PersonalSettings = {
 /** New accounts start with an explicit pending tour (not the legacy `null`). */
 export const NEW_USER_TOUR_SETTINGS: Pick<
   PersonalSettings,
-  | "productTourCompleted"
-  | "productTourDismissedAt"
-  | "interactiveOnboardingCompleted"
+  "productTourCompleted" | "productTourDismissedAt" | "interactiveOnboardingCompleted"
 > = {
   productTourCompleted: false,
   productTourDismissedAt: null,
   interactiveOnboardingCompleted: false,
 };
 
-export function shouldAutoStartProductTour(
-  settings: PersonalSettings,
-): boolean {
-  return (
-    settings.productTourCompleted === false && !settings.productTourDismissedAt
-  );
+export function shouldAutoStartProductTour(settings: PersonalSettings): boolean {
+  return settings.productTourCompleted === false && !settings.productTourDismissedAt;
 }
 
-export function shouldOfferMissedProductTour(
-  settings: PersonalSettings,
-): boolean {
+export function shouldOfferMissedProductTour(settings: PersonalSettings): boolean {
   return settings.productTourCompleted === null;
 }
 
@@ -148,11 +140,7 @@ function loadSettings(): PersonalSettings {
     // One-time migration from legacy scattered keys.
     let migrated = false;
     const legacyTheme = localStorage.getItem(LEGACY_KEYS.theme);
-    if (
-      legacyTheme === "light" ||
-      legacyTheme === "dark" ||
-      legacyTheme === "system"
-    ) {
+    if (legacyTheme === "light" || legacyTheme === "dark" || legacyTheme === "system") {
       settings.theme = legacyTheme;
       migrated = true;
     }
@@ -210,11 +198,7 @@ async function syncMetadataToServer(settingsToSave: PersonalSettings) {
 
   // Persist to better-auth backend
   try {
-    await (
-      authClient.updateUser as unknown as (params: {
-        metadata: string;
-      }) => Promise<unknown>
-    )({
+    await (authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>)({
       metadata: serialized,
     });
   } catch (err) {

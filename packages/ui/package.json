@@ -13,7 +13,8 @@
     }
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"test/**/*.test.ts\""
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -24,8 +25,10 @@
   },
   "devDependencies": {
     "@hosanna/config": "workspace:*",
+    "@types/node": "catalog:",
     "@types/react": "^19.2.0",
     "react": "^19.2.0",
+    "tsx": "^4.23.15",
     "typescript": "catalog:"
   }
 }

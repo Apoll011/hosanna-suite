@@ -67,9 +67,7 @@ export const SongForm: React.FC<SongFormProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -134,7 +132,7 @@ export const SongForm: React.FC<SongFormProps> = ({
           value={formData.folderId}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary hover:border-m3-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary hover:border-m3-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <option value="">{t("forms.rootLevel")}</option>
           {folders.map((f) => (
@@ -156,12 +154,7 @@ export const SongForm: React.FC<SongFormProps> = ({
       />
 
       <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onCancel}
-          disabled={isLoading}
-        >
+        <Button type="button" variant="ghost" onClick={onCancel} disabled={isLoading}>
           {t("common.cancel")}
         </Button>
         <Button type="submit" variant="primary" isLoading={isLoading}>

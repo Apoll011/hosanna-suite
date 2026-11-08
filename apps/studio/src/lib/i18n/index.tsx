@@ -3,13 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo } from "react";
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
@@ -48,18 +42,12 @@ export interface I18nContextValue {
   /** Translate a dot-path key with `{var}` interpolation. */
   t: TranslateFn;
   /** Translate a pluralized key (`key.one` / `key.other`) based on `count`. */
-  tc: (
-    key: TranslationPluralKey,
-    count: number,
-    vars?: Interpolation,
-  ) => string;
+  tc: (key: TranslationPluralKey, count: number, vars?: Interpolation) => string;
 }
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
-export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { organization } = useAuth();
   const { settings, updateSetting } = usePersonalSettings();
 
@@ -68,9 +56,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const language = useMemo<Language>(() => {
     const browser =
-      typeof navigator !== "undefined"
-        ? (navigator.languages ?? navigator.language)
-        : undefined;
+      typeof navigator !== "undefined" ? (navigator.languages ?? navigator.language) : undefined;
     return resolveLanguage(personalLanguage, orgLocale, browser);
   }, [personalLanguage, orgLocale]);
 
@@ -90,11 +76,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const tc = useCallback(
-    (
-      key: TranslationPluralKey,
-      count: number,
-      vars?: Interpolation,
-    ): string => {
+    (key: TranslationPluralKey, count: number, vars?: Interpolation): string => {
       const form = count === 1 ? "one" : "other";
       return t(`${key}.${form}` as TranslationKey, { ...vars, count });
     },

@@ -28,11 +28,7 @@ import { useAppNavigate } from "../hooks/useAppNavigate";
 import { useSubscription } from "../hooks/useSubscription";
 import { authClient } from "../lib/authClient";
 import { posthog } from "../lib/posthog";
-import {
-  fetchPlanPricing,
-  PLAN_PRICING,
-  type PlanPricing,
-} from "../lib/subscriptions";
+import { fetchPlanPricing, PLAN_PRICING, type PlanPricing } from "../lib/subscriptions";
 import { GoogleTextField } from "./Login/components/GoogleTextField";
 import { LanguageSelector } from "./Login/components/LanguageSelector";
 import { WorkspaceSwitcher } from "./Login/components/WorkspaceSwitcher";
@@ -57,14 +53,11 @@ export const OnboardingPage: React.FC = () => {
     void fetchPlanPricing().then(setPlanPricing);
   }, []);
   const { t, language } = useI18n();
-  const { hasStarted, pendingAction, refresh, startCheckout } =
-    useSubscription();
+  const { hasStarted, pendingAction, refresh, startCheckout } = useSubscription();
   const [mode, setMode] = useState<"choose" | "create" | "trial">("choose");
   const [orgName, setOrgName] = useState("");
   const [orgSlug, setOrgSlug] = useState("");
-  const [slugStatus, setSlugStatus] = useState<
-    "idle" | "checking" | "available" | "taken"
-  >("idle");
+  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -96,9 +89,7 @@ export const OnboardingPage: React.FC = () => {
   }, [orgSlug]);
 
   // Newly-created org, kept around just long enough to offer the trial step
-  const [newOrg, setNewOrg] = useState<{ id: string; slug: string } | null>(
-    null,
-  );
+  const [newOrg, setNewOrg] = useState<{ id: string; slug: string } | null>(null);
   const [annual, setAnnual] = useState(false);
 
   // Invitations state
@@ -332,20 +323,18 @@ export const OnboardingPage: React.FC = () => {
 
       {/* Main Center Stage */}
       <main className="flex-1 w-full flex items-center justify-center p-2 sm:p-3 md:p-4 z-10">
-        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-[var(--radius-xl)] sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
+        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-xl sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
           {/* Header Brand & Titles */}
           <div className="flex flex-col items-center text-center mb-7 sm:mb-8 select-none">
             <h1 className="text-title text-m3-text">{getHeaderTitle()}</h1>
 
             {getHeaderSubtitle() && (
-              <p className="mt-1.5 text-muted max-w-sm">
-                {getHeaderSubtitle()}
-              </p>
+              <p className="mt-1.5 text-muted max-w-sm">{getHeaderSubtitle()}</p>
             )}
           </div>
 
           {errorMsg && (
-            <div className="mb-5 p-3 rounded-[var(--radius-md)] bg-m3-danger/10 border border-m3-danger/30 text-m3-danger text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-in fade-in duration-200">
+            <div className="mb-5 p-3 rounded-md bg-m3-danger/10 border border-m3-danger/30 text-m3-danger text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-in fade-in duration-200">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-m3-danger" />
               <span className="flex-1 leading-snug">{errorMsg}</span>
             </div>
@@ -354,7 +343,7 @@ export const OnboardingPage: React.FC = () => {
           {/* Mode: Trial */}
           {mode === "trial" && newOrg && (
             <div className="text-center space-y-5">
-              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-[var(--radius-lg)] p-4 text-left space-y-2.5">
+              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-4 text-left space-y-2.5">
                 {(
                   [
                     "onboarding.trial.features.sync",
@@ -371,16 +360,14 @@ export const OnboardingPage: React.FC = () => {
               </div>
 
               {/* Billing interval choice */}
-              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-[var(--radius-lg)] p-3">
+              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-3">
                 <div className="flex items-center gap-2 bg-m3-card border border-m3-border rounded-full p-1 mb-3">
                   <button
                     type="button"
                     onClick={() => setAnnual(false)}
                     disabled={pendingAction === "checkout"}
                     className={`flex-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer disabled:opacity-50 ${
-                      !annual
-                        ? "bg-m3-primary text-white shadow-xs"
-                        : "text-m3-secondary"
+                      !annual ? "bg-m3-primary text-white shadow-xs" : "text-m3-secondary"
                     }`}
                   >
                     {t("settings.billing.monthly")}
@@ -390,9 +377,7 @@ export const OnboardingPage: React.FC = () => {
                     onClick={() => setAnnual(true)}
                     disabled={pendingAction === "checkout"}
                     className={`flex-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer disabled:opacity-50 ${
-                      annual
-                        ? "bg-m3-primary text-white shadow-xs"
-                        : "text-m3-secondary"
+                      annual ? "bg-m3-primary text-white shadow-xs" : "text-m3-secondary"
                     }`}
                   >
                     {t("settings.billing.annual")}
@@ -400,14 +385,10 @@ export const OnboardingPage: React.FC = () => {
                 </div>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-2xl font-semibold text-m3-text">
-                    {annual
-                      ? planPricing.annual.amount
-                      : planPricing.monthly.amount}
+                    {annual ? planPricing.annual.amount : planPricing.monthly.amount}
                   </span>
                   <span className="text-xs sm:text-sm text-m3-secondary">
-                    {annual
-                      ? planPricing.annual.period
-                      : planPricing.monthly.period}
+                    {annual ? planPricing.annual.period : planPricing.monthly.period}
                   </span>
                 </div>
                 {annual && (
@@ -428,9 +409,7 @@ export const OnboardingPage: React.FC = () => {
               >
                 {t("onboarding.trial.startBtn")}
               </Button>
-              <p className="text-xs text-m3-secondary">
-                {t("onboarding.trial.note")}
-              </p>
+              <p className="text-xs text-m3-secondary">{t("onboarding.trial.note")}</p>
 
               <div className="pt-2 text-center">
                 <button
@@ -451,10 +430,7 @@ export const OnboardingPage: React.FC = () => {
               {/* Section: Pending Invitations */}
               {isFetchingInvitations ? (
                 <div className="flex items-center justify-center p-4">
-                  <Spinner
-                    size="sm"
-                    label={t("settings.members.loadingInvites")}
-                  />
+                  <Spinner size="sm" label={t("settings.members.loadingInvites")} />
                 </div>
               ) : invitations.length > 0 ? (
                 <div className="space-y-3">
@@ -473,7 +449,7 @@ export const OnboardingPage: React.FC = () => {
                       return (
                         <div
                           key={inv.id}
-                          className="p-4 bg-m3-primary/5 border border-m3-primary/25 rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
+                          className="p-4 bg-m3-primary/5 border border-m3-primary/25 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
                         >
                           <div className="space-y-0.5">
                             <div className="flex items-center gap-2">
@@ -520,14 +496,12 @@ export const OnboardingPage: React.FC = () => {
 
               {/* Action options */}
               <div className="space-y-3">
-                {invitations.length > 0 && (
-                  <h3 className="text-label px-1">Outras Opções</h3>
-                )}
+                {invitations.length > 0 && <h3 className="text-label px-1">Outras Opções</h3>}
 
                 <button
                   type="button"
                   onClick={() => setMode("create")}
-                  className="w-full flex items-center p-4 border border-m3-border hover:border-m3-primary rounded-[var(--radius-lg)] transition-all group text-left bg-transparent hover:bg-m3-hover cursor-pointer"
+                  className="w-full flex items-center p-4 border border-m3-border hover:border-m3-primary rounded-lg transition-all group text-left bg-transparent hover:bg-m3-hover cursor-pointer"
                 >
                   <div className="w-10 h-10 bg-m3-primary/10 text-m3-primary rounded-full flex items-center justify-center mr-3.5 transition-colors">
                     <PlusCircle className="w-5 h-5" />
@@ -536,9 +510,7 @@ export const OnboardingPage: React.FC = () => {
                     <h3 className="font-medium text-m3-text text-sm">
                       {t("onboarding.createOrgTab")}
                     </h3>
-                    <p className="text-xs text-m3-secondary">
-                      {t("onboarding.step1Desc")}
-                    </p>
+                    <p className="text-xs text-m3-secondary">{t("onboarding.step1Desc")}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-m3-secondary group-hover:text-m3-primary group-hover:translate-x-0.5 transition-all" />
                 </button>
@@ -571,13 +543,9 @@ export const OnboardingPage: React.FC = () => {
               <GoogleTextField
                 label={t("onboarding.slugLabel")}
                 value={orgSlug}
-                onChange={(e) =>
-                  setOrgSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))
-                }
+                onChange={(e) => setOrgSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
                 required
-                error={
-                  slugStatus === "taken" ? t("onboarding.slugTaken") : undefined
-                }
+                error={slugStatus === "taken" ? t("onboarding.slugTaken") : undefined}
                 helperText={
                   slugStatus === "checking"
                     ? t("onboarding.checkingSlug")
@@ -609,10 +577,7 @@ export const OnboardingPage: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={
-                    isLoading ||
-                    !orgName.trim() ||
-                    !orgSlug.trim() ||
-                    slugStatus !== "available"
+                    isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"
                   }
                   isLoading={isLoading}
                   className="rounded-full px-6"

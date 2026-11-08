@@ -257,6 +257,7 @@ model User {
   serviceSongAnnotations ServiceSongAnnotation[]
   serviceNotes           ServiceNote[]
   reminderDispatches     AgendaReminderDispatch[]
+  aiMemory               UserAiMemory[]
 
   stripeCustomerId String?
 
@@ -388,6 +389,7 @@ model Organization {
 
   stripeCustomerId String?
 
+
   @@unique([slug])
   @@map("organization")
 }
@@ -440,6 +442,21 @@ model OrgAiMemory {
 
   @@index([orgId, createdAt])
   @@map("org_ai_memory")
+}
+
+/// Account-scoped notes the assistant remembers for one user across chats.
+model UserAiMemory {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  content   String
+  /// user | ai
+  source    String   @default("user")
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("user_ai_memory")
 }
 
 model Team {

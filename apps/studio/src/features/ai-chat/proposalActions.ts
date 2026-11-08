@@ -8,11 +8,7 @@ import type { Song } from "@/src/types";
 import { parseChordPro } from "@hosanna/chordpro";
 import { useCallback } from "react";
 import { dispatchAiNavigate } from "./contextBridge";
-import {
-  aiProposals,
-  type AiProposal,
-  type SongProposal,
-} from "./proposalStore";
+import { aiProposals, type AiProposal, type SongProposal } from "./proposalStore";
 
 /** Persist a song proposal directly (no editor needed) and clear it. */
 export function useProposalActions() {

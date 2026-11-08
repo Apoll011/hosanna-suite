@@ -1,14 +1,6 @@
 // network.d.ts
 type ConnectionType =
-  | "bluetooth"
-  | "cellular"
-  | "ethernet"
-  | "mixed"
-  | "none"
-  | "other"
-  | "unknown"
-  | "wifi"
-  | "wimax";
+  "bluetooth" | "cellular" | "ethernet" | "mixed" | "none" | "other" | "unknown" | "wifi" | "wimax";
 type EffectiveConnectionType = "2g" | "3g" | "4g" | "slow-2g";
 
 interface NetworkInformation extends EventTarget {

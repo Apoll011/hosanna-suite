@@ -27,10 +27,7 @@ function extractChordProText(conversion: ConversionResult): string {
   if (conversion?.chordpro) return conversion.chordpro;
   const anyConversion = conversion as unknown as Record<string, unknown>;
   const candidate =
-    anyConversion.chordPro ??
-    anyConversion.text ??
-    anyConversion.output ??
-    anyConversion.content;
+    anyConversion.chordPro ?? anyConversion.text ?? anyConversion.output ?? anyConversion.content;
 
   if (typeof candidate === "string") return candidate;
   return JSON.stringify(conversion, null, 2);
@@ -42,9 +39,11 @@ export interface ThirdPartyProvidersModalProps {
   handleSave: (result: ConversionResult, artist: string, title: string) => void;
 }
 
-export const ThirdPartyProvidersModal: React.FC<
-  ThirdPartyProvidersModalProps
-> = ({ isOpen, handleClose, handleSave }) => {
+export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> = ({
+  isOpen,
+  handleClose,
+  handleSave,
+}) => {
   const { t } = useI18n();
 
   // Active tab: 'online' (link to CifraClub/UltimateGuitar/etc) or 'raw' (pasted text)
@@ -133,10 +132,8 @@ export const ThirdPartyProvidersModal: React.FC<
       }
 
       const fallback = parseUrlFallback(trimmedUrl);
-      const parsedArtist =
-        result.artist?.trim() || fallback.artist || t("forms.unknownArtist");
-      const parsedTitle =
-        result.name?.trim() || fallback.title || t("forms.untitled");
+      const parsedArtist = result.artist?.trim() || fallback.artist || t("forms.unknownArtist");
+      const parsedTitle = result.name?.trim() || fallback.title || t("forms.untitled");
 
       const conversion = convertToChordProDetailed(result.cifra, {
         strictChordDetection: false,
@@ -202,11 +199,7 @@ export const ThirdPartyProvidersModal: React.FC<
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={resetAndClose}
-      title={t("modals.thirdPartyProvidersTitle")}
-    >
+    <Modal isOpen={isOpen} onClose={resetAndClose} title={t("modals.thirdPartyProvidersTitle")}>
       {previewText !== null ? (
         <div className="space-y-4 py-2">
           <p className="text-xs text-m3-secondary bg-m3-sidebar/60 p-2.5 rounded-xl border border-m3-border">
@@ -233,12 +226,7 @@ export const ThirdPartyProvidersModal: React.FC<
             </Button>
 
             <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={resetAndClose}
-              >
+              <Button type="button" variant="ghost" size="sm" onClick={resetAndClose}>
                 {t("common.close")}
               </Button>
               <Button

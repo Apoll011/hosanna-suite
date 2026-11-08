@@ -90,11 +90,7 @@
 }
 
 .hosana-driver-popover .hosana-tour-exit-btn:hover {
-  background: color-mix(
-    in srgb,
-    var(--color-m3-secondary, #64748b) 10%,
-    transparent
-  );
+  background: color-mix(in srgb, var(--color-m3-secondary, #64748b) 10%, transparent);
 }
 
 .hosana-driver-popover .driver-popover-close-btn {
@@ -104,17 +100,12 @@
 .hosana-driver-popover .hosana-tour-interactive-btn {
   background: transparent;
   color: var(--color-m3-primary, #0ea5e9);
-  border: 1px solid
-    color-mix(in srgb, var(--color-m3-primary, #0ea5e9) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-m3-primary, #0ea5e9) 40%, transparent);
   cursor: pointer;
 }
 
 .hosana-driver-popover .hosana-tour-interactive-btn:hover {
-  background: color-mix(
-    in srgb,
-    var(--color-m3-primary, #0ea5e9) 10%,
-    transparent
-  );
+  background: color-mix(in srgb, var(--color-m3-primary, #0ea5e9) 10%, transparent);
 }
 
 .dark .hosana-driver-popover.driver-popover {
@@ -146,8 +137,7 @@ body:has(.hosana-interactive-tour) .driver-overlay {
   z-index: 30 !important;
 }
 
-body:has(.hosana-interactive-tour)
-  .hosana-driver-popover.hosana-interactive-tour {
+body:has(.hosana-interactive-tour) .hosana-driver-popover.hosana-interactive-tour {
   pointer-events: auto !important;
   z-index: 60 !important;
 }

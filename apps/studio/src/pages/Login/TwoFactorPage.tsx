@@ -128,11 +128,11 @@ export const TwoFactorPage: React.FC = () => {
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Method selector tabs */}
-        <div className="flex rounded-[var(--radius-md)] bg-m3-sidebar/80 p-1 border border-m3-border/60">
+        <div className="flex rounded-md bg-m3-sidebar/80 p-1 border border-m3-border/60">
           <button
             type="button"
             onClick={() => handleSwitchMethod("totp")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               method === "totp"
                 ? "bg-m3-card text-m3-primary shadow-xs"
                 : "text-m3-secondary hover:text-m3-text"
@@ -144,7 +144,7 @@ export const TwoFactorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleSwitchMethod("otp")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               method === "otp"
                 ? "bg-m3-card text-m3-primary shadow-xs"
                 : "text-m3-secondary hover:text-m3-text"
@@ -156,7 +156,7 @@ export const TwoFactorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleSwitchMethod("backup")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               method === "backup"
                 ? "bg-m3-card text-m3-primary shadow-xs"
                 : "text-m3-secondary hover:text-m3-text"
@@ -194,9 +194,7 @@ export const TwoFactorPage: React.FC = () => {
               disabled={isSendingOtp}
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-primary hover:text-m3-primary-dark hover:underline disabled:opacity-50 cursor-pointer"
             >
-              <RefreshCw
-                className={`w-3.5 h-3.5 ${isSendingOtp ? "animate-spin" : ""}`}
-              />
+              <RefreshCw className={`w-3.5 h-3.5 ${isSendingOtp ? "animate-spin" : ""}`} />
               <span>Reenviar código por e-mail</span>
             </button>
           </div>
@@ -222,11 +220,7 @@ export const TwoFactorPage: React.FC = () => {
             {t("auth.forgotPassword.backToLogin")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.twoFactor.verifyBtn")}
           </Button>
         </div>
@@ -235,13 +229,7 @@ export const TwoFactorPage: React.FC = () => {
   );
 };
 
-function OtpInput({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
+function OtpInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const length = 6;
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -288,20 +276,14 @@ function OtpInput({
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, length);
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
     onChange(pasted);
     const nextFocus = Math.min(pasted.length, length - 1);
     inputRefs.current[nextFocus]?.focus();
   };
 
   return (
-    <div
-      className="flex gap-2 sm:gap-3 justify-center my-2"
-      onPaste={handlePaste}
-    >
+    <div className="flex gap-2 sm:gap-3 justify-center my-2" onPaste={handlePaste}>
       {Array.from({ length }).map((_, i) => (
         <input
           key={i}
@@ -316,7 +298,7 @@ function OtpInput({
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKey(i, e)}
           onFocus={(e) => e.target.select()}
-          className="w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-medium rounded-[var(--radius-md)] border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
+          className="w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-medium rounded-md border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
         />
       ))}
     </div>

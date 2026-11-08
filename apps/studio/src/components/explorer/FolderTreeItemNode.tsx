@@ -8,10 +8,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import React from "react";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "../../utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "../../utils/folderCustomization";
 
 export interface FolderTreeNode {
   folder: Folder;
@@ -59,18 +56,13 @@ export function getFolderAncestors(
   while (current && !visited.has(current.id)) {
     visited.add(current.id);
     trail.unshift(current);
-    current = current.parentId
-      ? folders.find((f) => f.id === current?.parentId)
-      : undefined;
+    current = current.parentId ? folders.find((f) => f.id === current?.parentId) : undefined;
   }
 
   return trail;
 }
 
-export function getFolderDescendantIds(
-  folderId: string,
-  folders?: Folder[] | null,
-): Set<string> {
+export function getFolderDescendantIds(folderId: string, folders?: Folder[] | null): Set<string> {
   const descendantIds = new Set<string>([folderId]);
   if (!Array.isArray(folders)) return descendantIds;
   let addedNew = true;
@@ -78,11 +70,7 @@ export function getFolderDescendantIds(
   while (addedNew) {
     addedNew = false;
     folders.forEach((f) => {
-      if (
-        f.parentId &&
-        descendantIds.has(f.parentId) &&
-        !descendantIds.has(f.id)
-      ) {
+      if (f.parentId && descendantIds.has(f.parentId) && !descendantIds.has(f.id)) {
         descendantIds.add(f.id);
         addedNew = true;
       }
@@ -100,14 +88,7 @@ export const FolderTreeItemNode: React.FC<{
   expandedFolderIds: Set<string>;
   toggleExpand: (id: string) => void;
 }> = React.memo(
-  ({
-    node,
-    currentFolderId,
-    onSelectFolder,
-    onContextMenu,
-    expandedFolderIds,
-    toggleExpand,
-  }) => {
+  ({ node, currentFolderId, onSelectFolder, onContextMenu, expandedFolderIds, toggleExpand }) => {
     const { t } = useI18n();
     const isActive = currentFolderId === node.folder.id;
     const hasChildren = node.children.length > 0;
@@ -116,9 +97,9 @@ export const FolderTreeItemNode: React.FC<{
     return (
       <div className="flex flex-col w-full">
         <div
-          className={`w-full flex items-center justify-between py-2 pr-3 rounded-[var(--radius-xl)] text-[13px] font-bold transition-colors cursor-pointer group ${
+          className={`w-full flex items-center justify-between py-2 pr-3 rounded-xl text-[13px] font-bold transition-colors cursor-pointer group ${
             isActive
-              ? "bg-m3-primary/10 text-m3-primary border border-m3-primary/20 shadow-[var(--shadow-sm)]"
+              ? "bg-m3-primary/10 text-m3-primary border border-m3-primary/20 shadow-sm"
               : "text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           }`}
           style={{ paddingLeft: `${8 + node.level * 16}px` }}
@@ -213,14 +194,7 @@ export const MoveFolderTreeItem: React.FC<{
   expandedFolderIds: Set<string>;
   toggleExpand: (id: string) => void;
 }> = React.memo(
-  ({
-    node,
-    selectedFolderId,
-    onSelect,
-    disabledFolderIds,
-    expandedFolderIds,
-    toggleExpand,
-  }) => {
+  ({ node, selectedFolderId, onSelect, disabledFolderIds, expandedFolderIds, toggleExpand }) => {
     const isDisabled = disabledFolderIds?.has(node.folder.id);
     const isSelected = selectedFolderId === node.folder.id;
     const hasChildren = node.children.length > 0;
@@ -268,9 +242,7 @@ export const MoveFolderTreeItem: React.FC<{
           )}
 
           <FolderIcon className="w-4 h-4 text-amber-500 shrink-0" />
-          <span className="text-xs font-bold text-m3-text truncate">
-            {node.folder.name}
-          </span>
+          <span className="text-xs font-bold text-m3-text truncate">{node.folder.name}</span>
         </label>
 
         {hasChildren && isExpanded && (

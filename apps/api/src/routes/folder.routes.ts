@@ -1,9 +1,6 @@
 import { Router } from "express";
 import { t } from "../lib/i18n.js";
-import {
-  requireAllPermissions,
-  requirePermission,
-} from "../middleware/auth.js";
+import { requireAllPermissions, requirePermission } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { FolderService } from "../services/folder.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -59,16 +56,7 @@ folderRouter.put(
   asyncHandler(async (req, res) => {
     const service = new FolderService(req.db!, req.orgId!, req.locale);
     const { updatedAt, name, parentId, color, icon } = req.body;
-    res.json(
-      await service.update(
-        req.params.id,
-        updatedAt,
-        name,
-        parentId,
-        color,
-        icon,
-      ),
-    );
+    res.json(await service.update(req.params.id, updatedAt, name, parentId, color, icon));
   }),
 );
 
@@ -79,8 +67,7 @@ folderRouter.delete(
   validate({ params: idParamSchema, query: deleteFolderQuerySchema }),
   asyncHandler(async (req, res) => {
     const service = new FolderService(req.db!, req.orgId!, req.locale);
-    const action =
-      (req.query.action as string) || req.body?.action || "move_to_root";
+    const action = (req.query.action as string) || req.body?.action || "move_to_root";
     const result =
       action === "delete_songs"
         ? await service.deleteWithContent(req.params.id)
@@ -99,9 +86,7 @@ folderRouter.delete(
   validate({ params: idParamSchema }),
   asyncHandler(async (req, res) => {
     const service = new FolderService(req.db!, req.orgId!, req.locale);
-    res
-      .status(200)
-      .json(await service.deleteMovingContentToRoot(req.params.id));
+    res.status(200).json(await service.deleteMovingContentToRoot(req.params.id));
   }),
 );
 

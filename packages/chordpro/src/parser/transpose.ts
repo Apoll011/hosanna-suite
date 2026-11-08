@@ -32,27 +32,12 @@ const NOTE_TO_VAL: { [key: string]: number } = {
   SI: 11,
 };
 
-const SHARPS = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
+const SHARPS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const FLATS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 
 export function getNoteValue(note: string): number | undefined {
   if (!note) return undefined;
-  const match = note.match(
-    /^([A-G][#b]?|Do|Ré|Mi|Fá|Sol|Lá|Si|DO|RE|RÉ|MI|FA|FÁ|SOL|LA|LÁ|SI)/i,
-  );
+  const match = note.match(/^([A-G][#b]?|Do|Ré|Mi|Fá|Sol|Lá|Si|DO|RE|RÉ|MI|FA|FÁ|SOL|LA|LÁ|SI)/i);
   if (!match) return undefined;
   return NOTE_TO_VAL[match[1].toUpperCase()];
 }
@@ -88,11 +73,7 @@ export function getSuggestedCapo(
   return null;
 }
 
-export function transposeNote(
-  note: string,
-  semitones: number,
-  preferFlats = false,
-): string {
+export function transposeNote(note: string, semitones: number, preferFlats = false): string {
   const upper = note.toUpperCase();
   if (NOTE_TO_VAL[upper] === undefined) return note;
 
@@ -118,8 +99,7 @@ export function transposeChord(chord: string, semitones: number): string {
       .join("/");
   }
 
-  const noteRegex =
-    /^([A-G][#b]?|Do|Ré|Mi|Fá|Sol|Lá|Si|DO|RE|RÉ|MI|FA|FÁ|SOL|LA|LÁ|SI)/;
+  const noteRegex = /^([A-G][#b]?|Do|Ré|Mi|Fá|Sol|Lá|Si|DO|RE|RÉ|MI|FA|FÁ|SOL|LA|LÁ|SI)/;
   const match = chord.match(noteRegex);
 
   if (!match) return chord;

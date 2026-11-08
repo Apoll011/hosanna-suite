@@ -85,10 +85,7 @@ export type HosanaDoc<T extends AnyDoc> = T & {
   _raw: T;
 };
 
-function makeDoc<T extends AnyDoc>(
-  raw: T,
-  collection: HosanaCollection<T>,
-): HosanaDoc<T> {
+function makeDoc<T extends AnyDoc>(raw: T, collection: HosanaCollection<T>): HosanaDoc<T> {
   const doc = Object.assign(Object.create(null) as object, raw) as HosanaDoc<T>;
 
   // Store references to the mutable collection so patch/remove can call back.
@@ -110,10 +107,7 @@ function makeDoc<T extends AnyDoc>(
     return out;
   };
 
-  doc.patch = async function (
-    this: HosanaDoc<T>,
-    fields: Partial<T>,
-  ): Promise<void> {
+  doc.patch = async function (this: HosanaDoc<T>, fields: Partial<T>): Promise<void> {
     const next = { ...this._raw, ...fields } as T;
     await this._collection._put(next);
     // Update own properties to reflect new state
@@ -127,8 +121,7 @@ function makeDoc<T extends AnyDoc>(
     const tombstone = { ...this._raw, _deleted: true } as T;
     await this._collection._put(tombstone);
     Object.assign(this, { _deleted: true });
-    (this as { _raw: T })._raw =
-      this._collection.getRaw(this._raw.id) ?? tombstone;
+    (this as { _raw: T })._raw = this._collection.getRaw(this._raw.id) ?? tombstone;
   };
 
   return doc;
@@ -136,10 +129,7 @@ function makeDoc<T extends AnyDoc>(
 
 // ─── Selector matching ────────────────────────────────────────────────────────
 
-function matchesSelector<T extends AnyDoc>(
-  doc: T,
-  selector: Selector,
-): boolean {
+function matchesSelector<T extends AnyDoc>(doc: T, selector: Selector): boolean {
   for (const [key, condition] of Object.entries(selector)) {
     const docVal = (doc as Record<string, unknown>)[key];
     if (condition !== null && typeof condition === "object") {
@@ -232,10 +222,7 @@ export class HosanaCollection<T extends AnyDoc> {
     if (origin === "local") {
       const previous = this._store.get(doc.id);
       if (previous) {
-        notifyPushBaseline(
-          this._storeName,
-          previous as unknown as Record<string, unknown>,
-        );
+        notifyPushBaseline(this._storeName, previous as unknown as Record<string, unknown>);
       }
     }
     const stamped: T =
@@ -253,28 +240,20 @@ export class HosanaCollection<T extends AnyDoc> {
    * @internal Put a batch; single IDB transaction.
    * `origin` defaults to "local" (bulkInsert). Replication uses "remote".
    */
-  async _putBatch(
-    docs: T[],
-    origin: "local" | "remote" = "local",
-  ): Promise<void> {
+  async _putBatch(docs: T[], origin: "local" | "remote" = "local"): Promise<void> {
     if (docs.length === 0) return;
     if (origin === "local") {
       for (const doc of docs) {
         const previous = this._store.get(doc.id);
         if (previous) {
-          notifyPushBaseline(
-            this._storeName,
-            previous as unknown as Record<string, unknown>,
-          );
+          notifyPushBaseline(this._storeName, previous as unknown as Record<string, unknown>);
         }
       }
     }
     const stamped =
       origin === "local"
         ? docs.map((d) =>
-            "updatedAt" in d
-              ? ({ ...d, updatedAt: new Date().toISOString() } as T)
-              : d,
+            "updatedAt" in d ? ({ ...d, updatedAt: new Date().toISOString() } as T) : d,
           )
         : docs;
     const enriched = stamped.map((d) => this._applyComputedFields(d));
@@ -296,10 +275,7 @@ export class HosanaCollection<T extends AnyDoc> {
    *
    * Drops stale server docs if local doc was updated more recently (e.g. edit during in-flight pull).
    */
-  async _mergeFromServer(
-    serverDoc: T,
-    options: { force?: boolean } = {},
-  ): Promise<void> {
+  async _mergeFromServer(serverDoc: T, options: { force?: boolean } = {}): Promise<void> {
     if (!options.force) {
       const existing = this._store.get(serverDoc.id);
       if (
@@ -321,10 +297,7 @@ export class HosanaCollection<T extends AnyDoc> {
    *
    * Drops stale server docs if local doc was updated more recently (e.g. edit during in-flight pull).
    */
-  async _mergeBatchFromServer(
-    serverDocs: T[],
-    options: { force?: boolean } = {},
-  ): Promise<void> {
+  async _mergeBatchFromServer(serverDocs: T[], options: { force?: boolean } = {}): Promise<void> {
     if (serverDocs.length === 0) return;
     const force = options.force ?? false;
     const eligibleDocs = force
@@ -333,8 +306,7 @@ export class HosanaCollection<T extends AnyDoc> {
           const existing = this._store.get(sDoc.id);
           if (
             existing &&
-            typeof (existing as Record<string, unknown>).updatedAt ===
-              "string" &&
+            typeof (existing as Record<string, unknown>).updatedAt === "string" &&
             typeof (sDoc as Record<string, unknown>).updatedAt === "string" &&
             (existing as Record<string, unknown>).updatedAt >
               (sDoc as Record<string, unknown>).updatedAt
@@ -372,9 +344,7 @@ export class HosanaCollection<T extends AnyDoc> {
         (overrides as Record<string, unknown>)[lf] = existingVal;
       }
     }
-    return Object.keys(overrides).length > 0
-      ? ({ ...serverDoc, ...overrides } as T)
-      : serverDoc;
+    return Object.keys(overrides).length > 0 ? ({ ...serverDoc, ...overrides } as T) : serverDoc;
   }
 
   private _applyComputedFields(doc: T): T {
@@ -426,9 +396,7 @@ export class HosanaCollection<T extends AnyDoc> {
       $: {
         subscribe: (fn: (doc: HosanaDoc<T> | null) => void): Subscription => {
           fn(execNow());
-          const unsubDoc = busSubscribe(this._storeName, id, () =>
-            fn(execNow()),
-          );
+          const unsubDoc = busSubscribe(this._storeName, id, () => fn(execNow()));
           return { unsubscribe: unsubDoc };
         },
       },
@@ -439,9 +407,7 @@ export class HosanaCollection<T extends AnyDoc> {
 
   async insert(doc: T): Promise<HosanaDoc<T>> {
     if (this._store.has(doc.id)) {
-      throw new Error(
-        `[hosana-idb] "${doc.id}" already exists in "${this._storeName}"`,
-      );
+      throw new Error(`[hosana-idb] "${doc.id}" already exists in "${this._storeName}"`);
     }
     await this._put(doc);
     return makeDoc(this._store.get(doc.id)!, this);
@@ -453,9 +419,7 @@ export class HosanaCollection<T extends AnyDoc> {
     if (this._localFields.size > 0) {
       const overrides: Partial<T> = {};
       for (const lf of this._localFields) {
-        const existingVal = existing
-          ? (existing as Record<string, unknown>)[lf]
-          : undefined;
+        const existingVal = existing ? (existing as Record<string, unknown>)[lf] : undefined;
         if (existingVal != null) {
           (overrides as Record<string, unknown>)[lf] = existingVal;
         }
@@ -468,9 +432,7 @@ export class HosanaCollection<T extends AnyDoc> {
     return makeDoc(this._store.get(doc.id)!, this);
   }
 
-  async bulkInsert(
-    docs: T[],
-  ): Promise<{ success: HosanaDoc<T>[]; error: T[] }> {
+  async bulkInsert(docs: T[]): Promise<{ success: HosanaDoc<T>[]; error: T[] }> {
     const success: HosanaDoc<T>[] = [];
     const error: T[] = [];
     const toWrite: T[] = [];

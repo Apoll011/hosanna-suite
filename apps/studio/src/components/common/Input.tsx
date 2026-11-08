@@ -15,11 +15,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = React.memo(
   React.forwardRef<HTMLInputElement, InputProps>(
     ({ label, error, icon, helperText, className = "", id, ...props }, ref) => {
-      const inputId =
-        id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+      const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
       const errorId = error && inputId ? `${inputId}-error` : undefined;
-      const helperId =
-        helperText && !error && inputId ? `${inputId}-helper` : undefined;
+      const helperId = helperText && !error && inputId ? `${inputId}-helper` : undefined;
 
       return (
         <div className="w-full flex flex-col gap-1.5">
@@ -42,7 +40,7 @@ export const Input = React.memo(
               ref={ref}
               aria-invalid={error ? true : undefined}
               aria-describedby={errorId || helperId}
-              className={`w-full rounded-[var(--radius-md)] border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary ${
+              className={`w-full rounded-md border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary ${
                 icon ? "pl-10" : ""
               } ${
                 error
@@ -53,11 +51,7 @@ export const Input = React.memo(
             />
           </div>
           {error && (
-            <span
-              id={errorId}
-              className="text-xs text-m3-danger font-medium"
-              role="alert"
-            >
+            <span id={errorId} className="text-xs text-m3-danger font-medium" role="alert">
               {error}
             </span>
           )}

@@ -12,10 +12,7 @@ import {
   STUDIO_ONLY_TOOLS,
 } from "../../src/mcp/lib/toolCatalog.js";
 import { HOSANNA_MCP_VERSION } from "../../src/mcp/version.js";
-import {
-  createHosannaMcpServer,
-  MCP_SERVER_INFO,
-} from "../../src/mcp/server.js";
+import { createHosannaMcpServer, MCP_SERVER_INFO } from "../../src/mcp/server.js";
 
 describe("MCP contract", () => {
   it("server version matches package catalog", () => {
@@ -38,10 +35,7 @@ describe("MCP contract", () => {
   it("DOC_RESOURCES entries appear in listResources", () => {
     const uris = new Set(listResources().map((r) => r.uri));
     for (const doc of DOC_RESOURCES) {
-      assert.ok(
-        uris.has(doc.uri),
-        `DOC_RESOURCES uri missing from list: ${doc.uri}`,
-      );
+      assert.ok(uris.has(doc.uri), `DOC_RESOURCES uri missing from list: ${doc.uri}`);
     }
   });
 
@@ -67,10 +61,7 @@ describe("MCP contract", () => {
       "services_get_many",
       "library_overview",
     ]) {
-      assert.ok(
-        ALL_MCP_TOOL_NAMES.includes(required),
-        `catalog missing ${required}`,
-      );
+      assert.ok(ALL_MCP_TOOL_NAMES.includes(required), `catalog missing ${required}`);
     }
     for (const studio of STUDIO_ONLY_TOOLS) {
       assert.equal(

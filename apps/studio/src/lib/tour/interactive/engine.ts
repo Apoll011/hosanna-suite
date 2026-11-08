@@ -94,20 +94,16 @@ export function destroyInteractiveOnboarding(): void {
  * we must clear that too or the whole UI stays frozen.
  */
 function unlockInteractiveChrome(): void {
-  document
-    .querySelectorAll<HTMLElement>(".driver-overlay, .driver-overlay *")
-    .forEach((el) => {
-      el.style.setProperty("pointer-events", "none", "important");
-    });
+  document.querySelectorAll<HTMLElement>(".driver-overlay, .driver-overlay *").forEach((el) => {
+    el.style.setProperty("pointer-events", "none", "important");
+  });
   document.querySelectorAll<HTMLElement>(".driver-overlay").forEach((el) => {
     el.style.setProperty("z-index", "30", "important");
   });
-  document
-    .querySelectorAll<HTMLElement>(".hosana-interactive-tour")
-    .forEach((el) => {
-      el.style.setProperty("pointer-events", "auto", "important");
-      el.style.setProperty("z-index", "60", "important");
-    });
+  document.querySelectorAll<HTMLElement>(".hosana-interactive-tour").forEach((el) => {
+    el.style.setProperty("pointer-events", "auto", "important");
+    el.style.setProperty("z-index", "60", "important");
+  });
 }
 
 /** Hide every tour popover immediately (used when leaving a step). */
@@ -200,10 +196,7 @@ function stepAllowed(
 }
 
 export function buildInteractiveSteps(
-  options: Pick<
-    InteractiveRunOptions,
-    "role" | "collectionsEnabled" | "agendaEnabled"
-  >,
+  options: Pick<InteractiveRunOptions, "role" | "collectionsEnabled" | "agendaEnabled">,
 ): InteractiveStepDef[] {
   const ctx = {
     collectionsEnabled: options.collectionsEnabled,
@@ -227,9 +220,7 @@ export function buildInteractiveSteps(
   return steps;
 }
 
-export async function runInteractiveOnboarding(
-  options: InteractiveRunOptions,
-): Promise<boolean> {
+export async function runInteractiveOnboarding(options: InteractiveRunOptions): Promise<boolean> {
   destroyInteractiveOnboarding();
 
   const allSteps = buildInteractiveSteps(options);
@@ -326,13 +317,7 @@ export async function runInteractiveOnboarding(
     if (step.skipIfElementMissing && step.element) {
       if (!document.querySelector(step.element)) {
         const foundLate = await waitForSelector(step.element, 250, signal);
-        if (
-          !foundLate ||
-          signal.aborted ||
-          dismissed ||
-          completed ||
-          myToken !== paintToken
-        ) {
+        if (!foundLate || signal.aborted || dismissed || completed || myToken !== paintToken) {
           setActiveOnboardingWaitFor(null);
           unlockInteractiveChrome();
           continue;
@@ -423,9 +408,7 @@ export async function runInteractiveOnboarding(
       if (!activeDriver || allowDestroy || completed || dismissed) return;
       paintOpts = opts;
 
-      const node = opts.element
-        ? document.querySelector<HTMLElement>(opts.element)
-        : null;
+      const node = opts.element ? document.querySelector<HTMLElement>(opts.element) : null;
 
       activeDriver.highlight({
         element: node ?? undefined,
@@ -443,9 +426,7 @@ export async function runInteractiveOnboarding(
             .replace("{{current}}", String(i + 1))
             .replace("{{total}}", String(allSteps.length)),
           nextBtnText: isLast ? options.labels.done : options.labels.next,
-          prevBtnText: step.waitFor
-            ? options.labels.skipStep
-            : options.labels.skipTour,
+          prevBtnText: step.waitFor ? options.labels.skipStep : options.labels.skipTour,
           onNextClick: () => {
             if (myToken !== paintToken || left) return;
             if (step.waitFor && !actionDone) return;
@@ -480,9 +461,7 @@ export async function runInteractiveOnboarding(
             popover.nextButton.style.display = "block";
             popover.previousButton.style.display = "block";
             popover.previousButton.disabled = false;
-            popover.previousButton.classList.remove(
-              "driver-popover-btn-disabled",
-            );
+            popover.previousButton.classList.remove("driver-popover-btn-disabled");
             popover.previousButton.style.opacity = "1";
             popover.previousButton.style.cursor = "pointer";
             popover.previousButton.style.pointerEvents = "auto";
@@ -494,9 +473,7 @@ export async function runInteractiveOnboarding(
               popover.nextButton.style.cursor = "not-allowed";
             } else {
               popover.nextButton.disabled = false;
-              popover.nextButton.classList.remove(
-                "driver-popover-btn-disabled",
-              );
+              popover.nextButton.classList.remove("driver-popover-btn-disabled");
               popover.nextButton.style.opacity = "1";
               popover.nextButton.style.cursor = "pointer";
             }
@@ -523,8 +500,7 @@ export async function runInteractiveOnboarding(
                 exitBtn = document.createElement("button");
                 exitBtn.type = "button";
                 exitBtn.dataset.tourExit = "true";
-                exitBtn.className =
-                  "driver-popover-footer-btn hosana-tour-exit-btn";
+                exitBtn.className = "driver-popover-footer-btn hosana-tour-exit-btn";
                 exitBtn.textContent = options.labels.skipTour;
                 exitBtn.addEventListener("click", (e) => {
                   e.preventDefault();
@@ -532,10 +508,7 @@ export async function runInteractiveOnboarding(
                   finish("dismissed");
                   leaveStep();
                 });
-                popover.footerButtons.insertBefore(
-                  exitBtn,
-                  popover.previousButton,
-                );
+                popover.footerButtons.insertBefore(exitBtn, popover.previousButton);
               }
             }
 
@@ -549,9 +522,7 @@ export async function runInteractiveOnboarding(
                 return;
               }
               if ((e.target as HTMLElement)?.isContentEditable) return;
-              if (
-                (e.target as HTMLElement)?.classList?.contains("ace_text-input")
-              ) {
+              if ((e.target as HTMLElement)?.classList?.contains("ace_text-input")) {
                 return;
               }
               e.preventDefault();
@@ -560,11 +531,7 @@ export async function runInteractiveOnboarding(
             window.addEventListener("keydown", onKey);
             keyCleanup = () => {
               window.removeEventListener("keydown", onKey);
-              popover.previousButton.removeEventListener(
-                "click",
-                onSkipClick,
-                true,
-              );
+              popover.previousButton.removeEventListener("click", onSkipClick, true);
             };
 
             unlockInteractiveChrome();
@@ -584,13 +551,7 @@ export async function runInteractiveOnboarding(
           unlockInteractiveChrome();
           return;
         }
-        if (
-          token !== paintToken ||
-          left ||
-          signal.aborted ||
-          dismissed ||
-          completed
-        ) {
+        if (token !== paintToken || left || signal.aborted || dismissed || completed) {
           unlockInteractiveChrome();
           return;
         }
@@ -621,16 +582,14 @@ export async function runInteractiveOnboarding(
         if (myToken !== paintToken) return;
         window.requestAnimationFrame(() => {
           window.setTimeout(() => {
-            void waitForSelector(step.retargetElement, 3000, signal).then(
-              (found) => {
-                if (!found || myToken !== paintToken) return;
-                paintStep({
-                  element: step.retargetElement,
-                  side: step.retargetSide ?? "left",
-                  align: "start",
-                });
-              },
-            );
+            void waitForSelector(step.retargetElement, 3000, signal).then((found) => {
+              if (!found || myToken !== paintToken) return;
+              paintStep({
+                element: step.retargetElement,
+                side: step.retargetSide ?? "left",
+                align: "start",
+              });
+            });
           }, 50);
         });
       });

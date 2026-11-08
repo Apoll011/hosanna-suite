@@ -21,9 +21,7 @@ function upsertTool(
   toolCallId: string,
   update: (prev: AiToolCallState | undefined) => AiToolCallState,
 ): AiMessagePart[] {
-  const idx = parts.findIndex(
-    (p) => p.type === "tool" && p.tool.toolCallId === toolCallId,
-  );
+  const idx = parts.findIndex((p) => p.type === "tool" && p.tool.toolCallId === toolCallId);
   if (idx >= 0) {
     const prev = (parts[idx] as Extract<AiMessagePart, { type: "tool" }>).tool;
     const next = [...parts];
@@ -62,8 +60,7 @@ function readMeta(raw: unknown): AiMessageMeta | undefined {
     steps: num(m.steps),
     inputTokens: num(usage.inputTokens),
     outputTokens: num(usage.outputTokens),
-    finishReason:
-      typeof m.finishReason === "string" ? m.finishReason : undefined,
+    finishReason: typeof m.finishReason === "string" ? m.finishReason : undefined,
     toolCalls: num(m.toolCalls),
     toolLimit: num(m.toolLimit),
     limitReached: m.limitReached === true ? true : undefined,
@@ -90,15 +87,11 @@ export function applyStreamEvent(
   switch (event.type) {
     case "text-delta": {
       const delta = str(event.delta);
-      return delta
-        ? { ...msg, parts: appendText(msg.parts, "text", delta) }
-        : msg;
+      return delta ? { ...msg, parts: appendText(msg.parts, "text", delta) } : msg;
     }
     case "reasoning-delta": {
       const delta = str(event.delta);
-      return delta
-        ? { ...msg, parts: appendText(msg.parts, "reasoning", delta) }
-        : msg;
+      return delta ? { ...msg, parts: appendText(msg.parts, "reasoning", delta) } : msg;
     }
     case "start-step": {
       if (msg.parts.length === 0) return msg;
@@ -169,14 +162,11 @@ export function applyStreamEvent(
     case "message-metadata":
     case "finish": {
       const meta = readMeta(event.messageMetadata);
-      const finishReason =
-        str((event as { finishReason?: unknown }).finishReason) || undefined;
+      const finishReason = str((event as { finishReason?: unknown }).finishReason) || undefined;
       if (!meta && !finishReason) return msg;
       const merged: AiMessageMeta = {
         ...msg.meta,
-        ...Object.fromEntries(
-          Object.entries(meta ?? {}).filter(([, v]) => v !== undefined),
-        ),
+        ...Object.fromEntries(Object.entries(meta ?? {}).filter(([, v]) => v !== undefined)),
         ...(finishReason ? { finishReason } : {}),
       };
       const rawMeta = (event.messageMetadata ?? {}) as Record<string, unknown>;
@@ -204,9 +194,7 @@ export function settleRunningTools(
   reason: string,
   now = Date.now(),
 ): AiChatMessage {
-  if (
-    !msg.parts.some((p) => p.type === "tool" && p.tool.status === "running")
-  ) {
+  if (!msg.parts.some((p) => p.type === "tool" && p.tool.status === "running")) {
     return msg;
   }
   return {
@@ -295,7 +283,6 @@ export function toolRunStatus(tools: AiToolCallState[]): {
 /** `[["folders_update", 6], ["studio_sync", 1]]` in first-seen order. */
 export function countByName(tools: AiToolCallState[]): [string, number][] {
   const counts = new Map<string, number>();
-  for (const t of tools)
-    counts.set(t.toolName, (counts.get(t.toolName) ?? 0) + 1);
+  for (const t of tools) counts.set(t.toolName, (counts.get(t.toolName) ?? 0) + 1);
   return [...counts.entries()];
 }

@@ -3,10 +3,7 @@
  * Avoids the model guessing "today" / "next Sunday".
  */
 
-export function buildClockContext(
-  now = new Date(),
-  timeZone = "Europe/Lisbon",
-) {
+export function buildClockContext(now = new Date(), timeZone = "Europe/Lisbon") {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
     year: "numeric",
@@ -49,10 +46,7 @@ export function buildClockContext(
 }
 
 /** One short block to append to system prompts. */
-export function clockContextPromptBlock(
-  now = new Date(),
-  timeZone = "Europe/Lisbon",
-): string {
+export function clockContextPromptBlock(now = new Date(), timeZone = "Europe/Lisbon"): string {
   const c = buildClockContext(now, timeZone);
   return `
 

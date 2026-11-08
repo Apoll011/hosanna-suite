@@ -89,8 +89,7 @@ replicationRouter.post(
     // Check permission for every requested collection up front
     for (const collection of requestedCollections) {
       const permKey = PULL_PERMISSIONS[collection];
-      if (!permKey)
-        throw AppError.badRequest(`Invalid collection: ${collection}`);
+      if (!permKey) throw AppError.badRequest(`Invalid collection: ${collection}`);
       if (!req.user || !can(req.user, permKey as any)) {
         throw AppError.forbidden();
       }

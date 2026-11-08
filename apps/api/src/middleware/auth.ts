@@ -2,12 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { forOrganization, prisma } from "../database/prisma.js";
 import { auth } from "../lib/auth.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
-import {
-  AppRole,
-  PermissionString,
-  roles,
-  toPermissionRequest,
-} from "@hosanna/auth";
+import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
@@ -33,26 +28,19 @@ const DEFAULT_FORBIDDEN: DeniedResponse = {
 };
 
 function send(res: Response, req: Request, denied: DeniedResponse) {
-  const body =
-    typeof denied.body === "function" ? denied.body(req) : denied.body;
+  const body = typeof denied.body === "function" ? denied.body(req) : denied.body;
   res.status(denied.status ?? 403).json(body ?? { error: "Forbidden" });
 }
 
 /** Checks a single permission string against a role. Usable outside Express too. */
-export function can(
-  user: Pick<AuthorizedUser, "role">,
-  permission: PermissionString,
-): boolean {
+export function can(user: Pick<AuthorizedUser, "role">, permission: PermissionString): boolean {
   const roleName = user.role?.toLowerCase() as AppRole;
   const role = roles[roleName];
   if (!role) return false;
   return role.authorize(toPermissionRequest(permission)).success;
 }
 
-export function cannot(
-  user: Pick<AuthorizedUser, "role">,
-  permission: PermissionString,
-): boolean {
+export function cannot(user: Pick<AuthorizedUser, "role">, permission: PermissionString): boolean {
   return !can(user, permission);
 }
 
@@ -80,10 +68,7 @@ export function assertUser(
 }
 
 /** router.post("/songs", requirePermission("song.create"), ...) */
-export function requirePermission(
-  permission: PermissionString,
-  options: MiddlewareOptions = {},
-) {
+export function requirePermission(permission: PermissionString, options: MiddlewareOptions = {}) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!requireUser(req, res, options)) return;
     if (!can(req.user, permission)) {
@@ -120,16 +105,12 @@ export function requireAnyPermission(
 export function requireRole(role: AppRole, options: MiddlewareOptions = {}) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!requireUser(req, res, options)) return;
-    if (req.user.role !== role)
-      return send(res, req, options.onForbidden ?? DEFAULT_FORBIDDEN);
+    if (req.user.role !== role) return send(res, req, options.onForbidden ?? DEFAULT_FORBIDDEN);
     next();
   };
 }
 
-export function requireAnyRole(
-  allowedRoles: AppRole[],
-  options: MiddlewareOptions = {},
-) {
+export function requireAnyRole(allowedRoles: AppRole[], options: MiddlewareOptions = {}) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!requireUser(req, res, options)) return;
     if (!allowedRoles.includes(req.user.role)) {
@@ -178,10 +159,7 @@ const ORG_LOCALE_CACHE_TTL_MS = 300_000; // 5 min
 const USER_ROLE_CACHE_TTL_MS = 60_000; // 1 min
 const MAX_CACHE_ENTRIES = 2_048;
 
-const sessionCache = new Map<
-  string,
-  { sessionData: SessionResult; expiresAt: number }
->();
+const sessionCache = new Map<string, { sessionData: SessionResult; expiresAt: number }>();
 
 const orgLocaleCache = new Map<string, { locale: string; expiresAt: number }>();
 
@@ -196,9 +174,7 @@ export function invalidateAuthCaches() {
 /**
  * Resolves a session from cookies on the incoming request (web dashboard flow).
  */
-async function getSessionFromCookies(
-  req: Request,
-): Promise<SessionResult | null> {
+async function getSessionFromCookies(req: Request): Promise<SessionResult | null> {
   const sessionData = await auth.api.getSession({
     headers: req.headers as any,
   });
@@ -209,9 +185,7 @@ async function getSessionFromCookies(
  * Resolves a session from an `Authorization: Bearer <token>` header
  * (mobile app / API clients using the better-auth bearer plugin).
  */
-async function getSessionFromBearerToken(
-  req: Request,
-): Promise<SessionResult | null> {
+async function getSessionFromBearerToken(req: Request): Promise<SessionResult | null> {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("Bearer ")) return null;
 
@@ -274,8 +248,7 @@ async function resolveSession(req: Request): Promise<SessionResult | null> {
 /** Parse locale out of an org's JSON metadata blob. */
 function parseLocaleFromMeta(metadata: unknown): string | null {
   try {
-    let meta: any =
-      typeof metadata === "string" ? JSON.parse(metadata) : metadata;
+    let meta: any = typeof metadata === "string" ? JSON.parse(metadata) : metadata;
     const locale = meta?.settings?.general?.locale ?? meta?.locale;
     if (typeof locale === "string" && locale.length > 0) return locale;
   } catch {
@@ -310,10 +283,7 @@ async function getCachedOrgLocale(workspaceId: string): Promise<string> {
   return locale;
 }
 
-async function getCachedUserRole(
-  workspaceId: string,
-  userId: string,
-): Promise<string> {
+async function getCachedUserRole(workspaceId: string, userId: string): Promise<string> {
   const key = `${workspaceId}:${userId}`;
   const now = Date.now();
   const cached = userRoleCache.get(key);
@@ -349,17 +319,13 @@ export const authenticate = asyncHandler(
 
     const workspaceId = (session as any).activeOrganizationId;
     if (!workspaceId) {
-      throw AppError.forbidden(
-        "An active workspace/organization context is required.",
-      );
+      throw AppError.forbidden("An active workspace/organization context is required.");
     }
 
     const teamId = (session as any).activeTeamId || undefined;
 
     const roleFromSession =
-      (session as any).role ||
-      (sessionData as any).member?.role ||
-      (user as any).role;
+      (session as any).role || (sessionData as any).member?.role || (user as any).role;
 
     // Concurrently resolve cached role and cached locale
     const [resolvedRole, locale] = await Promise.all([

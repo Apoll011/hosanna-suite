@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  buildClockContext,
-  clockContextPromptBlock,
-} from "../../src/lib/clockContext.js";
+import { buildClockContext, clockContextPromptBlock } from "../../src/lib/clockContext.js";
 
 describe("clockContext", () => {
   it("formats date and next Sunday", () => {
@@ -16,10 +13,7 @@ describe("clockContext", () => {
   });
 
   it("prompt block mentions duration seconds", () => {
-    const block = clockContextPromptBlock(
-      new Date("2026-10-29T12:00:00.000Z"),
-      "UTC",
-    );
+    const block = clockContextPromptBlock(new Date("2026-10-29T12:00:00.000Z"), "UTC");
     assert.match(block, /2026-10-29/);
     assert.match(block, /seconds/);
   });

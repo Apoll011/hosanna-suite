@@ -17,7 +17,7 @@ const SparkIcon: React.FC<{ busy: boolean }> = ({ busy }) => {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="w-[18px] h-[18px] transition-transform duration-300 ease-out group-hover:rotate-12 group-hover:scale-110"
+      className="w-4.5 h-4.5 transition-transform duration-300 ease-out group-hover:rotate-12 group-hover:scale-110"
       fill="currentColor"
       aria-hidden
     >
@@ -63,10 +63,10 @@ export const AiChatToggle: React.FC = () => {
       title={`${label} (Ctrl+Shift+L)`}
       aria-label={label}
       aria-pressed={chat.open}
-      className={`group relative shrink-0 w-9 h-9 rounded-[var(--radius-md)] inline-flex items-center justify-center cursor-pointer border transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-m3-card ${
+      className={`group relative shrink-0 w-9 h-9 rounded-md inline-flex items-center justify-center cursor-pointer border transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 focus-visible:ring-offset-1 focus-visible:ring-offset-m3-card ${
         chat.open
-          ? "text-white border-transparent bg-gradient-to-br from-sky-400 to-m3-primary shadow-[0_2px_10px_color-mix(in_srgb,var(--color-m3-primary)_40%,transparent)]"
-          : "text-m3-primary border-m3-primary/25 bg-gradient-to-br from-sky-400/15 to-m3-primary/10 hover:border-m3-primary/50 hover:from-sky-400/25 hover:to-m3-primary/15 hover:shadow-[0_2px_8px_color-mix(in_srgb,var(--color-m3-primary)_22%,transparent)]"
+          ? "text-white border-transparent bg-linear-to-br from-sky-400 to-m3-primary shadow-[0_2px_10px_color-mix(in_srgb,var(--color-m3-primary)_40%,transparent)]"
+          : "text-m3-primary border-m3-primary/25 bg-linear-to-br from-sky-400/15 to-m3-primary/10 hover:border-m3-primary/50 hover:from-sky-400/25 hover:to-m3-primary/15 hover:shadow-[0_2px_8px_color-mix(in_srgb,var(--color-m3-primary)_22%,transparent)]"
       }`}
     >
       <SparkIcon busy={busy} />

@@ -56,10 +56,7 @@ function songMissing(song: Song): ScoreMissingCriterion[] {
   return song.score.missing;
 }
 
-function toIssueSong(
-  song: Song,
-  criterion: ScoreMissingCriterion,
-): LibraryHealthIssueSong {
+function toIssueSong(song: Song, criterion: ScoreMissingCriterion): LibraryHealthIssueSong {
   return {
     id: song.id,
     title: song.title || "Untitled",
@@ -92,10 +89,7 @@ export function computeLibraryHealth(songs: Song[]): LibraryHealthSummary {
   const averageScore = totalScore / songCount;
   const healthPercentage = Math.round(averageScore);
 
-  const byCriterion = new Map<
-    ScoreMissingCriterion,
-    Map<string, LibraryHealthIssueSong>
-  >();
+  const byCriterion = new Map<ScoreMissingCriterion, Map<string, LibraryHealthIssueSong>>();
 
   for (const criterion of SCORE_CRITERIA) {
     byCriterion.set(criterion, new Map());
@@ -128,23 +122,19 @@ export function computeLibraryHealth(songs: Song[]): LibraryHealthSummary {
     }
   }
 
-  const categories: LibraryHealthCategory[] = SCORE_CRITERIA.map(
-    (criterion) => {
-      const songsInCategory = [
-        ...(byCriterion.get(criterion)?.values() ?? []),
-      ].sort(
-        (a, b) =>
-          Number(b.autoFixable) - Number(a.autoFixable) ||
-          a.score - b.score ||
-          a.title.localeCompare(b.title),
-      );
-      return {
-        criterion,
-        songs: songsInCategory,
-        autoFixableCount: songsInCategory.filter((s) => s.autoFixable).length,
-      };
-    },
-  ).filter((c) => c.songs.length > 0);
+  const categories: LibraryHealthCategory[] = SCORE_CRITERIA.map((criterion) => {
+    const songsInCategory = [...(byCriterion.get(criterion)?.values() ?? [])].sort(
+      (a, b) =>
+        Number(b.autoFixable) - Number(a.autoFixable) ||
+        a.score - b.score ||
+        a.title.localeCompare(b.title),
+    );
+    return {
+      criterion,
+      songs: songsInCategory,
+      autoFixableCount: songsInCategory.filter((s) => s.autoFixable).length,
+    };
+  }).filter((c) => c.songs.length > 0);
 
   return {
     healthPercentage,

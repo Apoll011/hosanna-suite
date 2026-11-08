@@ -124,10 +124,7 @@ const CHORD_TOKEN_REGEX = new RegExp(`^${CHORD_BODY}$`, "i");
 const NO_CHORD_TOKEN_REGEX = /^N\.?C\.?$/i;
 // Scan regex also matches the "N.C." (no chord) token so it isn't silently
 // dropped when merging a chord line into its lyric line.
-const CHORD_SCAN_REGEX = new RegExp(
-  `(?<=^|\\s)(${CHORD_BODY}|N\\.?C\\.?)(?=\\s|$)`,
-  "gi",
-);
+const CHORD_SCAN_REGEX = new RegExp(`(?<=^|\\s)(${CHORD_BODY}|N\\.?C\\.?)(?=\\s|$)`, "gi");
 
 const PUNCTUATION_TOKENS = new Set([
   "|",
@@ -160,14 +157,10 @@ function isValidChordToken(token: string): boolean {
 function isChordLine(line: string, strict: boolean): boolean {
   const trimmed = line.trim();
   if (!trimmed) return false;
-  const tokens = trimmed
-    .split(/\s+/)
-    .filter((t) => !PUNCTUATION_TOKENS.has(t.toLowerCase()));
+  const tokens = trimmed.split(/\s+/).filter((t) => !PUNCTUATION_TOKENS.has(t.toLowerCase()));
   if (tokens.length === 0) return false;
   const validCount = tokens.filter(isValidChordToken).length;
-  return strict
-    ? validCount === tokens.length
-    : validCount / tokens.length >= 0.8;
+  return strict ? validCount === tokens.length : validCount / tokens.length >= 0.8;
 }
 
 function isAlreadyInlineChordPro(line: string): boolean {
@@ -235,15 +228,7 @@ type SectionKind = "verse" | "chorus" | "bridge" | "part";
 const SECTION_KEYWORDS: Record<SectionKind, string[]> = {
   verse: ["verso", "verse"],
   chorus: ["refrao", "chorus", "coro"],
-  bridge: [
-    "ponte",
-    "bridge",
-    "pre-refrao",
-    "prerefrao",
-    "prechorus",
-    "pre chorus",
-    "pre-chorus",
-  ],
+  bridge: ["ponte", "bridge", "pre-refrao", "prerefrao", "prechorus", "pre chorus", "pre-chorus"],
   part: [
     "intro",
     "introducao",
@@ -272,19 +257,13 @@ const SECTION_TAGS: Record<SectionKind, { start: string; end: string }> = {
 // A bracketed UG-style header, e.g. "[Verse]", "[Chorus 2]", "[Intro]"
 const BRACKET_HEADER_REGEX = /^\[([^\]]+)]$/;
 
-function classifySectionLabel(
-  rawLabel: string,
-): { kind: SectionKind; label: string } | null {
+function classifySectionLabel(rawLabel: string): { kind: SectionKind; label: string } | null {
   let s = rawLabel.trim().replace(/:$/, "").trim();
   const base = s.replace(/\s*\d+\s*$/, "").trim();
   const normalized = stripAccents(base).toLowerCase();
 
   for (const kind of Object.keys(SECTION_KEYWORDS) as SectionKind[]) {
-    if (
-      SECTION_KEYWORDS[kind].some(
-        (kw) => normalized === kw || normalized.startsWith(kw),
-      )
-    ) {
+    if (SECTION_KEYWORDS[kind].some((kw) => normalized === kw || normalized.startsWith(kw))) {
       return { kind, label: s };
     }
   }
@@ -346,11 +325,7 @@ export function detectSourceFormat(input: string): SourceFormat {
     if (/^(capo|tuning|key)\s*:/i.test(line)) ugScore += 2;
     if (/\s[xX]\d+\s*$/.test(raw)) ugScore += 1;
 
-    if (
-      /^(tom|capotraste|capodastro|int[ée]rprete|compositor|letrista)\s*:/i.test(
-        line,
-      )
-    )
+    if (/^(tom|capotraste|capodastro|int[ée]rprete|compositor|letrista)\s*:/i.test(line))
       ccScore += 2;
     if (/^\(?\d+x\)?\s*$/i.test(line)) ccScore += 1;
 
@@ -401,9 +376,7 @@ function mergeChordsIntoLyric(
   for (const match of matches) {
     const token = match[0];
     const index = match.index ?? 0;
-    const rendered = NO_CHORD_TOKEN_REGEX.test(token)
-      ? token.toUpperCase()
-      : token;
+    const rendered = NO_CHORD_TOKEN_REGEX.test(token) ? token.toUpperCase() : token;
     combined += lyricLine.substring(lastIndex, index);
     combined += `[${rendered}]`;
     lastIndex = index;
@@ -478,10 +451,7 @@ function classify(
     }
 
     // Unbracketed section label on its own short line (CifraClub-style: "Refrão", "Verso 2")
-    if (
-      trimmed.length <= 28 &&
-      !isChordLine(trimmed, opts.strictChordDetection)
-    ) {
+    if (trimmed.length <= 28 && !isChordLine(trimmed, opts.strictChordDetection)) {
       const classified = classifySectionLabel(trimmed);
       if (classified) {
         result.push({ kind: "section-header", section: classified });
@@ -490,11 +460,9 @@ function classify(
     }
 
     if (isChordLine(trimmed, opts.strictChordDetection)) {
-      const nextRaw =
-        i + 1 < lines.length ? lines[i + 1].replace(/\r$/, "") : null;
+      const nextRaw = i + 1 < lines.length ? lines[i + 1].replace(/\r$/, "") : null;
       const nextIsChord =
-        nextRaw !== null &&
-        isChordLine(nextRaw.trim(), opts.strictChordDetection);
+        nextRaw !== null && isChordLine(nextRaw.trim(), opts.strictChordDetection);
       const nextIsBlank = nextRaw !== null && nextRaw.trim() === "";
 
       if (nextRaw === null || nextIsChord || nextIsBlank) {
@@ -502,9 +470,7 @@ function classify(
         result.push({
           kind: "chord-only",
           rendered: tokens
-            .map((t) =>
-              NO_CHORD_TOKEN_REGEX.test(t) ? `[${t.toUpperCase()}]` : `[${t}]`,
-            )
+            .map((t) => (NO_CHORD_TOKEN_REGEX.test(t) ? `[${t.toUpperCase()}]` : `[${t}]`))
             .join(" "),
         });
         continue;
@@ -544,15 +510,11 @@ function classify(
 // Render
 // ---------------------------------------------------------------------------
 
-function render(
-  lines: ParsedLine[],
-  opts: Required<ConversionOptions>,
-): string {
+function render(lines: ParsedLine[], opts: Required<ConversionOptions>): string {
   const out: string[] = [];
   let openSection: { kind: SectionKind; label: string } | null = null;
 
-  const tagsFor = (kind: SectionKind) =>
-    kind === "part" ? opts.partTagNames : SECTION_TAGS[kind];
+  const tagsFor = (kind: SectionKind) => (kind === "part" ? opts.partTagNames : SECTION_TAGS[kind]);
 
   const closeSection = () => {
     if (openSection) {
@@ -627,16 +589,14 @@ export function convertToChordProDetailed(
     };
   }
 
-  const detectedSource =
-    opts.source === "auto" ? detectSourceFormat(input) : opts.source;
+  const detectedSource = opts.source === "auto" ? detectSourceFormat(input) : opts.source;
 
   const lines = input.split("\n");
   const parsed = classify(lines, opts, detectedSource);
   const chordpro = render(parsed, opts);
   const title = extractTitle(chordpro);
 
-  if (!title)
-    warnings.push("No {title: ...} directive was detected in the input.");
+  if (!title) warnings.push("No {title: ...} directive was detected in the input.");
 
   const shorthandTokens = new Set<string>();
   for (const raw of lines) {

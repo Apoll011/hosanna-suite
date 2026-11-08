@@ -6,10 +6,7 @@
 import type { TranslationKey } from "@/src/lib/i18n";
 import { Crown, Music, Shield, User, UserCheck, Users } from "lucide-react";
 
-type TranslateFn = (
-  key: TranslationKey,
-  vars?: Record<string, string | number>,
-) => string;
+type TranslateFn = (key: TranslationKey, vars?: Record<string, string | number>) => string;
 
 export const getRoleLabel = (role: string, t?: TranslateFn) => {
   switch (role?.toLowerCase()) {
@@ -83,11 +80,7 @@ export const getRoleBadge = (role: string, t?: TranslateFn) => {
   }
 };
 
-export const compressImage = (
-  file: File,
-  maxWidth = 800,
-  quality = 0.8,
-): Promise<string> => {
+export const compressImage = (file: File, maxWidth = 800, quality = 0.8): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

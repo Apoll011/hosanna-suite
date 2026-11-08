@@ -36,10 +36,7 @@ export const EventPrintView: React.FC<EventPrintViewProps> = ({
 }) => {
   const { t } = useI18n();
 
-  const categoryMap = useMemo(
-    () => new Map(categories.map((c) => [c.id, c])),
-    [categories],
-  );
+  const categoryMap = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories]);
   const duration = event.durationMinutes || 60;
   const responsibilities = event.responsibilities || [];
 
@@ -93,14 +90,11 @@ export const EventPrintView: React.FC<EventPrintViewProps> = ({
                 return (
                   <tr key={resp.id}>
                     <td className="hp-cell-title">
-                      {categoryMap.get(resp.categoryId)?.label ||
-                        resp.categoryId}
+                      {categoryMap.get(resp.categoryId)?.label || resp.categoryId}
                     </td>
                     <td>
                       {assignees.length === 0 ? (
-                        <span className="hp-dim">
-                          {t("print.event.noAssignee")}
-                        </span>
+                        <span className="hp-dim">{t("print.event.noAssignee")}</span>
                       ) : (
                         assignees.map((a) => (
                           <span key={a.id} className="hp-chip">

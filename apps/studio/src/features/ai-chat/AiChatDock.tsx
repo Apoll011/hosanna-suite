@@ -4,20 +4,11 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import React, {
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useAiChat } from "./AiChatProvider";
 
 // Heavy chat UI (markdown, mascot, history) loads only when first opened.
-const AiChatPanel = lazy(() =>
-  import("./AiChatPanel").then((m) => ({ default: m.AiChatPanel })),
-);
+const AiChatPanel = lazy(() => import("./AiChatPanel").then((m) => ({ default: m.AiChatPanel })));
 
 const WIDTH_KEY = "hosanna:ai-chat-width";
 const MIN_W = 340;
@@ -67,10 +58,7 @@ export const AiChatDock: React.FC = () => {
       const startW = widthRef.current;
       setDragging(true);
       const onMove = (ev: PointerEvent) => {
-        const next = Math.min(
-          MAX_W,
-          Math.max(MIN_W, startW + (startX - ev.clientX)),
-        );
+        const next = Math.min(MAX_W, Math.max(MIN_W, startW + (startX - ev.clientX)));
         setWidth(next);
       };
       const onUp = () => {
@@ -89,10 +77,7 @@ export const AiChatDock: React.FC = () => {
     const step = e.shiftKey ? 48 : 16;
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       e.preventDefault();
-      const next = Math.min(
-        MAX_W,
-        Math.max(MIN_W, width + (e.key === "ArrowLeft" ? step : -step)),
-      );
+      const next = Math.min(MAX_W, Math.max(MIN_W, width + (e.key === "ArrowLeft" ? step : -step)));
       setWidth(next);
       persist(next);
     }
@@ -112,12 +97,10 @@ export const AiChatDock: React.FC = () => {
       style={{ ["--ai-w" as string]: `${width}px` }}
       className={`${
         open
-          ? "fixed inset-0 z-50 sm:static sm:z-auto sm:w-[var(--ai-w)] border-l border-m3-border"
+          ? "fixed inset-0 z-50 sm:static sm:z-auto sm:w-(--ai-w) border-l border-m3-border"
           : "w-0 border-l-0"
       } h-full shrink-0 overflow-hidden relative ${
-        dragging
-          ? "select-none"
-          : "sm:transition-[width] sm:duration-200 sm:ease-out"
+        dragging ? "select-none" : "sm:transition-[width] sm:duration-200 sm:ease-out"
       }`}
     >
       {open && (
@@ -135,7 +118,7 @@ export const AiChatDock: React.FC = () => {
           className="hidden sm:block absolute left-0 top-0 bottom-0 w-1.5 -ml-0.5 z-10 cursor-col-resize hover:bg-m3-primary/30 focus-visible:bg-m3-primary/40 transition-colors"
         />
       )}
-      <div className="h-full w-full sm:w-[var(--ai-w)]">
+      <div className="h-full w-full sm:w-(--ai-w)">
         {(open || everOpened) && (
           <Suspense fallback={null}>
             <AiChatPanel wide={wide} onToggleWide={toggleWide} />

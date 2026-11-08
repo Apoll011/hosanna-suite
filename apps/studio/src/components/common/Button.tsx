@@ -30,13 +30,10 @@ export const Button: React.FC<ButtonProps> = React.memo(
     const variantStyles = {
       primary:
         "bg-m3-primary hover:bg-m3-primary-dark text-white shadow-[var(--shadow-sm)] data-[action=primary]:bg-m3-primary",
-      secondary:
-        "bg-m3-sidebar hover:bg-m3-hover text-m3-text border border-m3-border/60",
-      danger:
-        "bg-m3-danger hover:opacity-90 text-white shadow-[var(--shadow-sm)]",
+      secondary: "bg-m3-sidebar hover:bg-m3-hover text-m3-text border border-m3-border/60",
+      danger: "bg-m3-danger hover:opacity-90 text-white shadow-[var(--shadow-sm)]",
       ghost: "hover:bg-m3-hover text-m3-secondary hover:text-m3-text",
-      outline:
-        "border border-m3-border text-m3-text hover:bg-m3-hover bg-transparent",
+      outline: "border border-m3-border text-m3-text hover:bg-m3-hover bg-transparent",
       link: "text-m3-primary hover:text-m3-primary-dark underline-offset-2 hover:underline px-0 py-0 h-auto",
     };
 
@@ -55,10 +52,7 @@ export const Button: React.FC<ButtonProps> = React.memo(
         {...props}
       >
         {isLoading ? (
-          <Loader2
-            className="w-4 h-4 animate-spin text-current"
-            aria-hidden="true"
-          />
+          <Loader2 className="w-4 h-4 animate-spin text-current" aria-hidden="true" />
         ) : icon ? (
           <span className="shrink-0" aria-hidden="true">
             {icon}

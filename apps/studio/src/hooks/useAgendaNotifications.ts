@@ -14,11 +14,7 @@
  * deliberately NOT handled here.
  */
 
-import {
-  notificationsApi,
-  type NotificationType,
-  type SendNotificationsResult,
-} from "@/src/api";
+import { notificationsApi, type NotificationType, type SendNotificationsResult } from "@/src/api";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useSync } from "@/src/contexts/SyncContext";
 import { useI18n } from "@/src/lib/i18n";
@@ -67,9 +63,7 @@ export function useAgendaNotifications(options: {
   const { t, tc } = useI18n();
   const { granted: canNotify } = useCan("notification.sent");
 
-  const [changed, setChanged] = useState<Record<string, PendingUpdateChanges>>(
-    {},
-  );
+  const [changed, setChanged] = useState<Record<string, PendingUpdateChanges>>({});
   const [isNotifying, setIsNotifying] = useState(false);
 
   /** memberId (org member record id) → userId, required to address a push. */
@@ -109,15 +103,12 @@ export function useAgendaNotifications(options: {
   const pendingLocation = !!event && changed[event.id]?.location === true;
 
   /** Record a saved edit so the explicit "notify" action can pick it up. */
-  const markChanged = useCallback(
-    (eventId: string, fields: PendingUpdateChanges) => {
-      setChanged((prev) => ({
-        ...prev,
-        [eventId]: { ...prev[eventId], ...fields },
-      }));
-    },
-    [],
-  );
+  const markChanged = useCallback((eventId: string, fields: PendingUpdateChanges) => {
+    setChanged((prev) => ({
+      ...prev,
+      [eventId]: { ...prev[eventId], ...fields },
+    }));
+  }, []);
 
   const clearChanged = useCallback((eventId: string) => {
     setChanged((prev) => {
@@ -247,10 +238,7 @@ export function useAgendaNotifications(options: {
       if (outcome.succeededMemberIds.length > 0) {
         await store.setResponsibilities(
           event.id,
-          markMembersNotified(
-            event.responsibilities,
-            outcome.succeededMemberIds,
-          ),
+          markMembersNotified(event.responsibilities, outcome.succeededMemberIds),
         );
       }
     } catch (err) {
@@ -412,25 +400,13 @@ export function useAgendaNotifications(options: {
         setIsNotifying(false);
       }
     },
-    [
-      event,
-      isNotifying,
-      canNotify,
-      deliver,
-      formatEventDate,
-      report,
-      showToast,
-      t,
-    ],
+    [event, isNotifying, canNotify, deliver, formatEventDate, report, showToast, t],
   );
 
   /* ── 4. Event cancellation (explicit toggle in the delete flow) ──────── */
 
   const notifyEventCancelled = useCallback(
-    async (
-      targetEvent: AgendaEvent,
-      groups: AssignmentGroup[],
-    ): Promise<boolean> => {
+    async (targetEvent: AgendaEvent, groups: AssignmentGroup[]): Promise<boolean> => {
       if (isNotifying) return false;
       if (!canNotify) {
         showToast(t("agenda.notify.noPermission"), "error");

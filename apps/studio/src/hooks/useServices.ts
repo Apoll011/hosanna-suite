@@ -16,12 +16,8 @@ export function useServices(includeArchived: boolean = false) {
   const { showToast } = useSync();
   const { t } = useI18n();
   const cacheKey = includeArchived ? "archived_included" : "active_only";
-  const [services, setServices] = useState<Service[]>(
-    () => cachedServicesMap.get(cacheKey) ?? [],
-  );
-  const [isLoading, setIsLoading] = useState(
-    () => !cachedServicesMap.has(cacheKey),
-  );
+  const [services, setServices] = useState<Service[]>(() => cachedServicesMap.get(cacheKey) ?? []);
+  const [isLoading, setIsLoading] = useState(() => !cachedServicesMap.has(cacheKey));
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -285,9 +281,7 @@ export function useService(id: string | null) {
   const [service, setService] = useState<Service | null>(() =>
     id ? (cachedSingleServices.get(id) ?? null) : null,
   );
-  const [isLoading, setIsLoading] = useState(() =>
-    id ? !cachedSingleServices.has(id) : false,
-  );
+  const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleServices.has(id) : false));
 
   useEffect(() => {
     if (!id) {

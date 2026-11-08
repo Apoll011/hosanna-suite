@@ -50,8 +50,7 @@ export function captureOnboardingQueryParams(
   search: string = typeof window !== "undefined" ? window.location.search : "",
 ): void {
   const params = new URLSearchParams(search);
-  const onboarding =
-    params.get("onboarding") === "1" || params.get("onboarding") === "true";
+  const onboarding = params.get("onboarding") === "1" || params.get("onboarding") === "true";
   if (!onboarding) return;
   const role = params.get("role") ?? undefined;
   enableInteractiveOnboardingSession(role ?? undefined);

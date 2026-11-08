@@ -83,11 +83,7 @@ export function daysBetween(from: string, to: string): number {
     Number(from.slice(5, 7)) - 1,
     Number(from.slice(8, 10)),
   );
-  const b = Date.UTC(
-    Number(to.slice(0, 4)),
-    Number(to.slice(5, 7)) - 1,
-    Number(to.slice(8, 10)),
-  );
+  const b = Date.UTC(Number(to.slice(0, 4)), Number(to.slice(5, 7)) - 1, Number(to.slice(8, 10)));
   return Math.round((b - a) / 86_400_000);
 }
 
@@ -181,8 +177,7 @@ export function computeSetlistInsights(
       playCount,
       appearanceCount: stat.appearanceCount,
       lastPlayed: stat.lastPlayed,
-      daysSinceLastPlayed:
-        stat.lastPlayed != null ? daysBetween(stat.lastPlayed, today) : null,
+      daysSinceLastPlayed: stat.lastPlayed != null ? daysBetween(stat.lastPlayed, today) : null,
       lastServiceName: stat.lastServiceName,
       upcomingCount: stat.upcomingServiceIds.size,
     };
@@ -196,9 +191,7 @@ export function computeSetlistInsights(
     .sort((a, b) => a.title.localeCompare(b.title));
   const totalPlays = songsPlayed.reduce((sum, s) => sum + s.playCount, 0);
   const averagePlaysPerSong =
-    allSongs.length === 0
-      ? 0
-      : Math.round((totalPlays / allSongs.length) * 10) / 10;
+    allSongs.length === 0 ? 0 : Math.round((totalPlays / allSongs.length) * 10) / 10;
 
   const mostPlayed = songsPlayed.slice(0, highlightLimit);
 
@@ -210,19 +203,12 @@ export function computeSetlistInsights(
     .slice(0, highlightLimit);
 
   const overdue = songsPlayed
-    .filter(
-      (s) =>
-        s.daysSinceLastPlayed != null &&
-        s.daysSinceLastPlayed >= staleAfterDays,
-    )
+    .filter((s) => s.daysSinceLastPlayed != null && s.daysSinceLastPlayed >= staleAfterDays)
     .sort((a, b) => (b.daysSinceLastPlayed ?? 0) - (a.daysSinceLastPlayed ?? 0))
     .slice(0, highlightLimit);
 
   const recentlyPlayed = songsPlayed
-    .filter(
-      (s) =>
-        s.daysSinceLastPlayed != null && s.daysSinceLastPlayed <= recentDays,
-    )
+    .filter((s) => s.daysSinceLastPlayed != null && s.daysSinceLastPlayed <= recentDays)
     .sort((a, b) => (b.lastPlayed ?? "").localeCompare(a.lastPlayed ?? ""))
     .slice(0, highlightLimit);
 

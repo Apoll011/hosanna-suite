@@ -228,18 +228,14 @@ export const FOLDER_COLORS: FolderColorOption[] = [
   },
 ];
 
-export function getFolderColorStyle(
-  colorId?: string | null,
-): FolderColorOption {
+export function getFolderColorStyle(colorId?: string | null): FolderColorOption {
   if (!colorId || colorId === "default") {
     return FOLDER_COLORS[0];
   }
   return FOLDER_COLORS.find((c) => c.id === colorId) || FOLDER_COLORS[0];
 }
 
-export function getFolderIconComponent(
-  iconId?: string | null,
-): React.ComponentType<LucideProps> {
+export function getFolderIconComponent(iconId?: string | null): React.ComponentType<LucideProps> {
   if (!iconId || iconId === "default") {
     return FolderIcon;
   }

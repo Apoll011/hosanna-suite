@@ -4,23 +4,13 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import {
-  AlertCircle,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Loader2,
-  X,
-} from "lucide-react";
+import { AlertCircle, Check, ChevronDown, ChevronRight, Loader2, X } from "lucide-react";
 import React, { memo, useMemo, useState } from "react";
 import { AiConfirmCard } from "./AiConfirmCard";
 import { AiProposalCard } from "./AiProposalCard";
 import { CopyButton } from "./CopyButton";
 import { countByName, toolRunStatus } from "./messageState";
-import {
-  extractDestructiveConfirmation,
-  extractSongProposal,
-} from "./proposals";
+import { extractDestructiveConfirmation, extractSongProposal } from "./proposals";
 import {
   formatDuration,
   parseToolOutput,
@@ -57,7 +47,7 @@ const PayloadBlock: React.FC<{
       <CopyButton text={text} className="p-1" iconClassName="w-3 h-3" />
     </div>
     <pre
-      className={`text-[10.5px] leading-snug font-mono whitespace-pre-wrap break-all m-0 max-h-48 overflow-auto rounded-[var(--radius-sm)] border px-2 py-1.5 ${
+      className={`text-[10.5px] leading-snug font-mono whitespace-pre-wrap break-all m-0 max-h-48 overflow-auto rounded-sm border px-2 py-1.5 ${
         error
           ? "border-red-500/30 bg-red-500/5 text-red-600 dark:text-red-400"
           : "border-m3-border/70 bg-m3-bg text-m3-text/90"
@@ -81,17 +71,10 @@ const AiToolRow = memo(function AiToolRow({
   const label = toolLabel(tool.toolName, t);
   const summary = useMemo(() => toolSummary(tool), [tool]);
   const hint = useMemo(() => toolResultHint(tool), [tool]);
-  const inputText = useMemo(
-    () => (open ? toolPayloadText(tool.input) : ""),
-    [open, tool.input],
-  );
-  const outputText = useMemo(
-    () => (open ? toolPayloadText(tool.output) : ""),
-    [open, tool.output],
-  );
+  const inputText = useMemo(() => (open ? toolPayloadText(tool.input) : ""), [open, tool.input]);
+  const outputText = useMemo(() => (open ? toolPayloadText(tool.output) : ""), [open, tool.output]);
   const Icon = toolIcon(tool.toolName);
-  const duration =
-    tool.endedAt && tool.startedAt ? tool.endedAt - tool.startedAt : undefined;
+  const duration = tool.endedAt && tool.startedAt ? tool.endedAt - tool.startedAt : undefined;
   const hasDetails = tool.status !== "running" || tool.input !== undefined;
 
   const statusIcon =
@@ -106,7 +89,7 @@ const AiToolRow = memo(function AiToolRow({
     );
 
   return (
-    <li className="rounded-[var(--radius-md)] border border-m3-border/70 bg-m3-card/70 overflow-hidden">
+    <li className="rounded-md border border-m3-border/70 bg-m3-card/70 overflow-hidden">
       <button
         type="button"
         onClick={() => hasDetails && setOpen((v) => !v)}
@@ -115,13 +98,9 @@ const AiToolRow = memo(function AiToolRow({
         className="w-full flex items-center gap-2 px-2 py-1.5 text-left text-[12px] hover:bg-m3-hover/60 transition-colors disabled:cursor-default"
       >
         <Icon className="w-3.5 h-3.5 shrink-0 text-m3-secondary" />
-        <span className="font-medium text-m3-text shrink-0 max-w-[55%] truncate">
-          {label}
-        </span>
+        <span className="font-medium text-m3-text shrink-0 max-w-[55%] truncate">{label}</span>
         {summary ? (
-          <span className="text-m3-secondary truncate min-w-0 flex-1">
-            {summary}
-          </span>
+          <span className="text-m3-secondary truncate min-w-0 flex-1">{summary}</span>
         ) : (
           <span className="flex-1" />
         )}
@@ -147,18 +126,10 @@ const AiToolRow = memo(function AiToolRow({
       {open && (
         <div className="border-t border-m3-border/70 px-2 py-2 space-y-2 bg-m3-bg/40">
           {tool.status === "error" && tool.errorText ? (
-            <PayloadBlock
-              title={t("ai.chat.toolErrorDetail")}
-              text={tool.errorText}
-              error
-            />
+            <PayloadBlock title={t("ai.chat.toolErrorDetail")} text={tool.errorText} error />
           ) : null}
-          {inputText ? (
-            <PayloadBlock title={t("ai.chat.toolInput")} text={inputText} />
-          ) : null}
-          {outputText ? (
-            <PayloadBlock title={t("ai.chat.toolOutput")} text={outputText} />
-          ) : null}
+          {inputText ? <PayloadBlock title={t("ai.chat.toolInput")} text={inputText} /> : null}
+          {outputText ? <PayloadBlock title={t("ai.chat.toolOutput")} text={outputText} /> : null}
         </div>
       )}
     </li>
@@ -173,11 +144,7 @@ const MAX_NAMES = 3;
  * Sequential tool calls collapsed into one text-only line. Click to reveal the
  * list; click a row to reveal that tool's input / result.
  */
-export const AiToolGroup = memo(function AiToolGroup({
-  tools,
-}: {
-  tools: AiToolCallState[];
-}) {
+export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolCallState[] }) {
   const { t, tc } = useI18n();
   const [open, setOpen] = useState(false);
   const [everOpened, setEverOpened] = useState(false);
@@ -187,9 +154,7 @@ export const AiToolGroup = memo(function AiToolGroup({
   const confirmations = useMemo(
     () =>
       tools.map((tool) =>
-        tool.status === "done"
-          ? extractDestructiveConfirmation(tool.output)
-          : null,
+        tool.status === "done" ? extractDestructiveConfirmation(tool.output) : null,
       ),
     [tools],
   );
@@ -223,9 +188,7 @@ export const AiToolGroup = memo(function AiToolGroup({
       ? t("ai.chat.toolsWorking", { done: finished, total: tools.length })
       : tc("ai.chat.toolsUsed", tools.length);
   const detail =
-    run.status === "running" && current
-      ? toolLabel(current.toolName, t)
-      : `${namesText}${extra}`;
+    run.status === "running" && current ? toolLabel(current.toolName, t) : `${namesText}${extra}`;
 
   const toggle = () => {
     setOpen((v) => !v);
@@ -239,7 +202,7 @@ export const AiToolGroup = memo(function AiToolGroup({
         onClick={toggle}
         aria-expanded={open}
         title={t("ai.chat.toolsToggle")}
-        className="group max-w-full inline-flex items-center gap-1.5 rounded-[var(--radius-md)] px-1.5 py-1 -mx-1.5 text-left text-[12px] text-m3-secondary hover:bg-m3-hover/70 hover:text-m3-text transition-colors"
+        className="group max-w-full inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 -mx-1.5 text-left text-[12px] text-m3-secondary hover:bg-m3-hover/70 hover:text-m3-text transition-colors"
       >
         {run.status === "running" ? (
           <Loader2 className="w-3.5 h-3.5 shrink-0 animate-spin text-m3-primary" />
@@ -256,9 +219,7 @@ export const AiToolGroup = memo(function AiToolGroup({
           </span>
         ) : null}
         <ChevronRight
-          className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-            open ? "rotate-90" : ""
-          }`}
+          className={`w-3.5 h-3.5 shrink-0 transition-transform ${open ? "rotate-90" : ""}`}
         />
       </button>
 
@@ -280,9 +241,7 @@ export const AiToolGroup = memo(function AiToolGroup({
 
       {/* Song edits can be reviewed and applied right here. */}
       {songProposals.map((p, i) =>
-        p ? (
-          <AiProposalCard key={`p-${tools[i].toolCallId}`} proposal={p} />
-        ) : null,
+        p ? <AiProposalCard key={`p-${tools[i].toolCallId}`} proposal={p} /> : null,
       )}
 
       {/* Pending confirmations stay visible even while the list is collapsed. */}

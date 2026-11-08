@@ -8,10 +8,7 @@ import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useServices } from "@/src/hooks/useServices";
 import { useAllSongs } from "@/src/hooks/useSongs";
 import { useI18n, type TranslationKey } from "@/src/lib/i18n";
-import {
-  computeSetlistInsights,
-  type SongPlayStat,
-} from "@/src/lib/setlistInsights";
+import { computeSetlistInsights, type SongPlayStat } from "@/src/lib/setlistInsights";
 import {
   CalendarClock,
   ChevronRight,
@@ -61,15 +58,13 @@ function SongRow({
     <button
       type="button"
       onClick={() => onOpen(song.songId)}
-      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] text-left hover:bg-m3-primary/5 border border-transparent hover:border-m3-primary/20 transition-colors cursor-pointer group"
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-left hover:bg-m3-primary/5 border border-transparent hover:border-m3-primary/20 transition-colors cursor-pointer group"
     >
-      <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-sidebar flex items-center justify-center shrink-0 group-hover:bg-m3-primary/10">
+      <div className="w-8 h-8 rounded-md bg-m3-sidebar flex items-center justify-center shrink-0 group-hover:bg-m3-primary/10">
         <Music2 className="w-4 h-4 text-m3-secondary group-hover:text-m3-primary" />
       </div>
       <div className="flex-1 min-w-0">
-        <span className="block text-sm font-semibold text-m3-text truncate">
-          {song.title}
-        </span>
+        <span className="block text-sm font-semibold text-m3-text truncate">{song.title}</span>
         <span className="block text-xs text-m3-secondary truncate">
           {song.artist || "—"}
           {" · "}
@@ -119,9 +114,7 @@ function InsightSection({
       </div>
       <div className="p-2 sm:p-3 space-y-0.5">
         {songs.length === 0 ? (
-          <p className="text-sm text-m3-secondary px-3 py-8 text-center">
-            {empty}
-          </p>
+          <p className="text-sm text-m3-secondary px-3 py-8 text-center">{empty}</p>
         ) : (
           songs.map((song) => (
             <SongRow
@@ -139,9 +132,7 @@ function InsightSection({
   );
 }
 
-export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
-  active,
-}) => {
+export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({ active }) => {
   const { t, locale } = useI18n();
   const { navigate } = useAppNavigate();
   const { slug } = useParams<{ slug: string }>();
@@ -153,19 +144,10 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
   const [sortKey, setSortKey] = useState<SortKey>("frequency");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
 
-  const songs = useMemo(
-    () => songsQuery.data?.songs ?? [],
-    [songsQuery.data?.songs],
-  );
-  const services = useMemo(
-    () => servicesQuery.data ?? [],
-    [servicesQuery.data],
-  );
+  const songs = useMemo(() => songsQuery.data?.songs ?? [], [songsQuery.data?.songs]);
+  const services = useMemo(() => servicesQuery.data ?? [], [servicesQuery.data]);
 
-  const summary = useMemo(
-    () => computeSetlistInsights(songs, services),
-    [songs, services],
-  );
+  const summary = useMemo(() => computeSetlistInsights(songs, services), [songs, services]);
 
   const maxPlays = summary.mostPlayed[0]?.playCount ?? 0;
 
@@ -200,9 +182,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
     let list = summary.songs;
     if (q) {
       list = list.filter(
-        (s) =>
-          s.title.toLowerCase().includes(q) ||
-          s.artist.toLowerCase().includes(q),
+        (s) => s.title.toLowerCase().includes(q) || s.artist.toLowerCase().includes(q),
       );
     }
 
@@ -333,11 +313,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
               : t("analytics.setlist.sections.rarelyDesc")
           }
           icon={Sparkles}
-          songs={
-            summary.neverPlayed.length > 0
-              ? summary.neverPlayed
-              : summary.rarelyPlayed
-          }
+          songs={summary.neverPlayed.length > 0 ? summary.neverPlayed : summary.rarelyPlayed}
           maxPlays={maxPlays}
           empty={t("analytics.setlist.emptyNever")}
           onOpen={openSong}
@@ -352,9 +328,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
             <h3 className="text-sm font-semibold text-m3-text">
               {t("analytics.setlist.allSongs")}
             </h3>
-            <p className="mt-1 text-caption">
-              {t("analytics.setlist.allSongsDesc")}
-            </p>
+            <p className="mt-1 text-caption">{t("analytics.setlist.allSongsDesc")}</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             <div className="flex-1">
@@ -373,7 +347,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
                     key={opt.id}
                     type="button"
                     onClick={() => toggleSort(opt.id)}
-                    className={`px-3 py-1.5 rounded-[var(--radius-md)] text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors ${
                       activeSort
                         ? "bg-m3-primary text-white"
                         : "bg-m3-sidebar text-m3-secondary hover:text-m3-text"
@@ -399,7 +373,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
                 <button
                   type="button"
                   onClick={() => openSong(song.songId)}
-                  className="w-full flex items-center gap-3 px-3 py-3 rounded-[var(--radius-md)] text-left hover:bg-m3-sidebar/80 transition-colors cursor-pointer group"
+                  className="w-full flex items-center gap-3 px-3 py-3 rounded-md text-left hover:bg-m3-sidebar/80 transition-colors cursor-pointer group"
                 >
                   <div className="flex-1 min-w-0">
                     <span className="block text-sm font-semibold text-m3-text truncate">
@@ -415,13 +389,11 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
                         : ""}
                     </span>
                   </div>
-                  <div className="hidden sm:flex flex-col items-end gap-0.5 shrink-0 min-w-[7rem]">
+                  <div className="hidden sm:flex flex-col items-end gap-0.5 shrink-0 min-w-28">
                     <span className="text-xs font-semibold tabular-nums text-m3-text">
                       {formatPlays(song.playCount)}
                     </span>
-                    <span className="text-caption">
-                      {formatLastPlayed(song)}
-                    </span>
+                    <span className="text-caption">{formatLastPlayed(song)}</span>
                   </div>
                   <div className="flex sm:hidden flex-col items-end gap-0.5 shrink-0">
                     <span className="text-xs font-semibold tabular-nums">
@@ -442,10 +414,8 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="p-3.5 rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/60">
-      <span className="block text-2xl font-semibold text-m3-text tabular-nums">
-        {value}
-      </span>
+    <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
+      <span className="block text-2xl font-semibold text-m3-text tabular-nums">{value}</span>
       <span className="text-caption">{label}</span>
     </div>
   );

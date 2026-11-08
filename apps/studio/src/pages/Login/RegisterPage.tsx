@@ -17,10 +17,7 @@ import LoginLayout from "./Layout";
 import { GoogleTextField } from "./components/GoogleTextField";
 import { PasswordStrengthMeter } from "./components/PasswordStrengthMeter";
 import { SocialAuthButtons } from "./components/SocialAuthButtons";
-import {
-  TurnstileWidget,
-  type TurnstileHandle,
-} from "./components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileHandle } from "./components/TurnstileWidget";
 
 export const RegisterPage: React.FC = () => {
   const { refetch } = useAuth();
@@ -38,8 +35,7 @@ export const RegisterPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [successState, setSuccessState] = useState(false);
 
-  const passwordMismatch =
-    confirmPassword.length > 0 && password !== confirmPassword;
+  const passwordMismatch = confirmPassword.length > 0 && password !== confirmPassword;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,9 +159,7 @@ export const RegisterPage: React.FC = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
-            error={
-              passwordMismatch ? t("auth.register.passwordMismatch") : undefined
-            }
+            error={passwordMismatch ? t("auth.register.passwordMismatch") : undefined}
           />
         </div>
 
@@ -178,9 +172,7 @@ export const RegisterPage: React.FC = () => {
               onChange={(e) => setShowPassword(e.target.checked)}
               className="w-4 h-4 rounded-sm border-m3-border text-m3-primary focus:ring-m3-primary bg-m3-card cursor-pointer"
             />
-            <span className="text-xs sm:text-sm text-m3-secondary">
-              Mostrar palavra-passe
-            </span>
+            <span className="text-xs sm:text-sm text-m3-secondary">Mostrar palavra-passe</span>
           </label>
         </div>
 
@@ -190,9 +182,7 @@ export const RegisterPage: React.FC = () => {
           ref={captchaRef}
           onVerify={(token) => {
             setCaptchaToken(token);
-            setErrorMsg((msg) =>
-              msg === t("auth.captcha.pending") ? "" : msg,
-            );
+            setErrorMsg((msg) => (msg === t("auth.captcha.pending") ? "" : msg));
           }}
           onExpire={() => setCaptchaToken("")}
           onError={() => setErrorMsg(t("auth.captcha.failed"))}
@@ -207,20 +197,13 @@ export const RegisterPage: React.FC = () => {
             {t("auth.register.loginLink")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.register.registerBtn")}
           </Button>
         </div>
       </form>
 
-      <SocialAuthButtons
-        onError={(err) => setErrorMsg(err)}
-        disabled={isLoading}
-      />
+      <SocialAuthButtons onError={(err) => setErrorMsg(err)} disabled={isLoading} />
     </LoginLayout>
   );
 };

@@ -7,10 +7,7 @@ import {
 
 describe("durationSecondsFromChordPro", () => {
   it("parses plain seconds", () => {
-    assert.equal(
-      durationSecondsFromChordPro("{title: A}\n{duration: 180}\n"),
-      180,
-    );
+    assert.equal(durationSecondsFromChordPro("{title: A}\n{duration: 180}\n"), 180);
   });
 
   it("parses M:SS", () => {

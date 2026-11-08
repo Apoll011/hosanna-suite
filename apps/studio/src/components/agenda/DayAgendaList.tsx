@@ -24,7 +24,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
   const { t } = useI18n();
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-4 shadow-[var(--shadow-sm)]">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-label">{t("agenda.dayEvents")}</h3>
         <span className="text-caption bg-m3-sidebar/60 rounded-full px-2 py-0.5">
@@ -33,9 +33,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
       </div>
 
       {events.length === 0 ? (
-        <p className="text-xs text-m3-secondary py-4 text-center">
-          {t("agenda.noEventsForDay")}
-        </p>
+        <p className="text-xs text-m3-secondary py-4 text-center">{t("agenda.noEventsForDay")}</p>
       ) : (
         <div className="space-y-2">
           {events.map((event) => {
@@ -45,7 +43,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
               <button
                 key={event.id}
                 onClick={() => onSelectEvent(event.id)}
-                className={`w-full text-left rounded-[var(--radius-md)] p-3 border transition-colors cursor-pointer flex items-center justify-between gap-2 ${
+                className={`w-full text-left rounded-md p-3 border transition-colors cursor-pointer flex items-center justify-between gap-2 ${
                   isSelected
                     ? "bg-m3-primary/10 border-m3-primary/20"
                     : "border-transparent hover:bg-m3-hover"
@@ -61,9 +59,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
                     {event.time}
                     <span className="font-bold truncate">{event.title}</span>
                   </div>
-                  <p className="text-[11px] text-m3-secondary mt-0.5 truncate">
-                    {event.type}
-                  </p>
+                  <p className="text-[11px] text-m3-secondary mt-0.5 truncate">{event.type}</p>
                 </div>
                 <div className="flex items-center gap-1 text-[11px] font-bold text-m3-secondary shrink-0">
                   <Users className="w-3.5 h-3.5" />

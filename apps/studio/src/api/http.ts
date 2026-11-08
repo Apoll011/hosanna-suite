@@ -8,9 +8,7 @@ export function configureApiClient(baseURL: string) {
 
 export function getApiClient(): ApiClient {
   if (!httpClient) {
-    throw new Error(
-      "API client not configured. Call configureApiClient() during app startup.",
-    );
+    throw new Error("API client not configured. Call configureApiClient() during app startup.");
   }
 
   return httpClient;

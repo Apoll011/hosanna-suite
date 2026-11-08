@@ -3,12 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  Button,
-  ConfirmDialog,
-  EmptyState,
-  Spinner,
-} from "@/src/components/common";
+import { ConfirmDialog, EmptyState, Spinner, Table } from "@/src/components/common";
+import type { CollectionToolbarActions } from "@/src/components/layout";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
 import { AddSongsToCollectionModal } from "@/src/components/modals/AddSongsToCollectionModal";
@@ -23,30 +19,16 @@ import { useCan } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Song } from "@/src/types";
 import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "@/src/utils/folderCustomization";
-import {
   CheckSquare,
-  ChevronLeft,
-  ChevronRight,
-  Edit2,
   ExternalLink,
   FolderKanban,
   MoreHorizontal,
   Music2,
-  Plus,
-  Printer,
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useOutletContext, useParams } from "react-router-dom";
 
 const MENU_ITEM =
@@ -62,13 +44,28 @@ export const CollectionDetailPage: React.FC = () => {
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
 
-  const { data: collection, isLoading: isCollectionLoading } = useCollection(
-    id || null,
-  );
+  const { data: collection, isLoading: isCollectionLoading } = useCollection(id || null);
 
-  const { searchQuery } = useOutletContext<{
-    searchQuery: string;
-  }>();
+  const {
+    searchQuery = "",
+    sortBy = "title",
+    sortOrder = "asc",
+    selectedKey = "",
+    selectedTag = "",
+    density = "comfortable",
+    setCollectionToolbarActions,
+  } = useOutletContext<{
+    searchQuery?: string;
+    sortBy?: "title" | "artist" | "updatedAt" | "number";
+    sortOrder?: "asc" | "desc";
+    selectedKey?: string | null;
+    selectedTag?: string | null;
+    density?: "comfortable" | "compact";
+    setCollectionToolbarActions?: (actions: CollectionToolbarActions | null) => void;
+  }>() ?? {};
+  const isCompact = density === "compact";
+  const rowPad = isCompact ? "px-4 py-2.5" : "px-6 py-3.5";
+  const rowText = isCompact ? "text-xs" : "text-sm";
 
   const {
     updateCollection,
@@ -88,7 +85,7 @@ export const CollectionDetailPage: React.FC = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const [itemsPerPage, setItemsPerPage] = useState(50);
 
   // Modals & menus
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -96,17 +93,13 @@ export const CollectionDetailPage: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [songToRemove, setSongToRemove] = useState<Song | null>(null);
   const [pendingRemoveIds, setPendingRemoveIds] = useState<string[]>([]);
-  const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
-  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
     songId: string | null;
   } | null>(null);
-  const headerMenuRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { selectionBox, handleMouseDown } = useMarqueeSelection({
@@ -121,14 +114,8 @@ export const CollectionDetailPage: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        headerMenuRef.current &&
-        !headerMenuRef.current.contains(e.target as Node)
-      ) {
-        setIsHeaderMenuOpen(false);
-      }
       const target = e.target as HTMLElement | null;
-      if (!target?.closest?.("[data-collection-context-menu]")) {
+      if (!target?.closest?.("[data-song-context-menu]")) {
         setContextMenu(null);
       }
     };
@@ -136,12 +123,12 @@ export const CollectionDetailPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Reset page when search changes
+  // Reset page when search / filters / sort change
   useEffect(() => {
     setCurrentPage(1);
     setSelectedSongIds(new Set());
     setLastClickedId(null);
-  }, [searchQuery]);
+  }, [searchQuery, sortBy, sortOrder, selectedKey, selectedTag]);
 
   // Songs in this collection (union of both sides of the relationship)
   const songsInCollection = useMemo(() => {
@@ -150,12 +137,25 @@ export const CollectionDetailPage: React.FC = () => {
     return allSongs.filter(
       (song) =>
         songIdSet.has(song.id) ||
-        (Array.isArray(song.collectionIds) &&
-          song.collectionIds.includes(collection.id)),
+        (Array.isArray(song.collectionIds) && song.collectionIds.includes(collection.id)),
     );
   }, [collection, allSongs]);
 
-  // Apply both global and local search filters
+  // Register collection actions on the explorer toolbar (replaces the old identity header)
+  useEffect(() => {
+    if (!collection || !setCollectionToolbarActions) return;
+    setCollectionToolbarActions({
+      onAddSongs: () => setIsAddSongsModalOpen(true),
+      onPrint: () => {
+        void printCollection(collection, songsInCollection);
+      },
+      onEdit: () => setIsEditModalOpen(true),
+      onDelete: () => setIsDeleteDialogOpen(true),
+    });
+    return () => setCollectionToolbarActions(null);
+  }, [collection, songsInCollection, printCollection, setCollectionToolbarActions]);
+
+  // Search, key/tag filters, and sort
   const filteredSongs = useMemo(() => {
     let result = songsInCollection;
     const gq = searchQuery.trim().toLowerCase();
@@ -167,16 +167,54 @@ export const CollectionDetailPage: React.FC = () => {
           s.tags?.some((tag) => tag.toLowerCase().includes(gq)),
       );
     }
+    if (selectedKey) {
+      result = result.filter((s) => {
+        const k = s.content?.match(/\{key:\s*([^}]+)\}/i)?.[1]?.trim();
+        return k === selectedKey;
+      });
+    }
+    if (selectedTag) {
+      result = result.filter((s) => s.tags?.includes(selectedTag));
+    }
+
+    if (result.length > 1) {
+      result = [...result].sort((a, b) => {
+        let valA: string | number = "";
+        let valB: string | number = "";
+        if (sortBy === "artist") {
+          valA = a.artist?.toLowerCase() ?? "";
+          valB = b.artist?.toLowerCase() ?? "";
+        } else if (sortBy === "updatedAt") {
+          valA = new Date(a.updatedAt).getTime();
+          valB = new Date(b.updatedAt).getTime();
+        } else if (sortBy === "number") {
+          valA = a.song_number ?? Infinity;
+          valB = b.song_number ?? Infinity;
+        } else {
+          valA = a.title?.toLowerCase() ?? "";
+          valB = b.title?.toLowerCase() ?? "";
+        }
+        if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+        if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+
     return result;
-  }, [songsInCollection, searchQuery]);
+  }, [songsInCollection, searchQuery, selectedKey, selectedTag, sortBy, sortOrder]);
 
   // Pagination
   const totalSongs = filteredSongs.length;
-  const totalPages = Math.ceil(totalSongs / itemsPerPage) || 1;
+  const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
   const paginatedSongs = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredSongs.slice(start, start + itemsPerPage);
-  }, [filteredSongs, currentPage]);
+    if (itemsPerPage === 0) return filteredSongs;
+    const start = (currentPage - 1) * effectivePerPage;
+    return filteredSongs.slice(start, start + effectivePerPage);
+  }, [filteredSongs, currentPage, effectivePerPage, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
   const handleUpdate = async (data: {
     name: string;
@@ -243,9 +281,7 @@ export const CollectionDetailPage: React.FC = () => {
         const a = ids.indexOf(lastClickedId);
         const b = ids.indexOf(song.id);
         if (a !== -1 && b !== -1) {
-          setSelectedSongIds(
-            new Set(ids.slice(Math.min(a, b), Math.max(a, b) + 1)),
-          );
+          setSelectedSongIds(new Set(ids.slice(Math.min(a, b), Math.max(a, b) + 1)));
         } else {
           setSelectedSongIds(new Set([song.id]));
         }
@@ -282,9 +318,7 @@ export const CollectionDetailPage: React.FC = () => {
       }
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "a") {
@@ -309,13 +343,7 @@ export const CollectionDetailPage: React.FC = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [
-    filteredSongs,
-    selectedSongIds,
-    canUpdateCollection,
-    navigate,
-    slugPrefix,
-  ]);
+  }, [filteredSongs, selectedSongIds, canUpdateCollection, navigate, slugPrefix]);
 
   // ── Loading ─────────────────────────────────────────────────────────────────
   if (isCollectionLoading) {
@@ -341,370 +369,145 @@ export const CollectionDetailPage: React.FC = () => {
     );
   }
 
-  const IconComp = getFolderIconComponent(collection.icon);
-  const colorStyle = getFolderColorStyle(collection.color);
-  const songCount = songsInCollection.length;
-  const isFiltering = searchQuery.trim() !== "";
+  const isFiltering = searchQuery.trim() !== "" || Boolean(selectedKey) || Boolean(selectedTag);
 
   return (
     <div
       ref={containerRef}
       onMouseDown={handleMouseDown}
-      className="flex-1 flex flex-col h-full overflow-y-auto bg-m3-bg select-none"
+      className="flex-1 flex flex-col h-full overflow-hidden bg-m3-bg select-none"
     >
-      {/* Identity strip */}
-      <div className="relative w-full overflow-hidden border-b border-m3-border">
-        {collection.image ? (
-          <img
-            src={collection.image}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
-          />
-        ) : (
-          <div
-            className="absolute inset-0 opacity-40"
-            style={{
-              background: `linear-gradient(90deg, ${colorStyle.colorHex}22 0%, ${colorStyle.colorHex}55 100%)`,
-            }}
-          />
-        )}
-        <div className="absolute inset-0 bg-m3-card/80 backdrop-blur-sm" />
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4">
-          <div
-            className="w-12 h-12 rounded-[var(--radius-lg)] flex items-center justify-center text-white shrink-0 border border-white/20"
-            style={{ backgroundColor: colorStyle.colorHex }}
-          >
-            <IconComp className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col min-w-0 flex-1">
-            <h1 className="text-display text-m3-text truncate">
-              {collection.name}
-            </h1>
-            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-              <span className="text-caption">
-                {t(
-                  `collectionsPage.songCount.${songCount === 1 ? "one" : "other"}`,
-                  { count: songCount },
-                )}
-              </span>
-              {collection.description && (
-                <>
-                  <span className="text-m3-border">·</span>
-                  <span className="text-caption line-clamp-1">
-                    {collection.description}
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div ref={headerMenuRef} className="flex items-center gap-2 shrink-0">
-            <Can permission="export.pdf">
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                icon={<Printer className="w-3.5 h-3.5" />}
-                onClick={() =>
-                  void printCollection(collection, songsInCollection)
+      <div className="flex-1 min-h-0 flex flex-col px-4 sm:px-6 py-4">
+        <Table
+          empty={
+            paginatedSongs.length === 0 ? (
+              <EmptyState
+                icon={<Music2 className="w-8 h-8" />}
+                title={
+                  songsInCollection.length === 0
+                    ? t("collectionsPage.emptyTitle")
+                    : t("collectionsPage.noSearchResultsTitle")
                 }
-                title={t("print.buttons.printCollection")}
-              >
-                <span className="hidden sm:inline">{t("common.print")}</span>
-              </Button>
-            </Can>
-            <Can permission="collection.update">
-              <Button
-                type="button"
-                variant="primary"
-                size="sm"
-                icon={<Plus className="w-3.5 h-3.5" />}
-                onClick={() => setIsAddSongsModalOpen(true)}
-              >
-                {t("collectionsPage.addSongs")}
-              </Button>
-            </Can>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsHeaderMenuOpen((v) => !v)}
-                className="p-2 min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
-                title={t("explorer.moreOptions")}
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
-              {isHeaderMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-30 p-1.5 space-y-0.5 hosanna-enter">
-                  <Can permission="export.pdf">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        void printCollection(collection, songsInCollection);
-                      }}
-                      className={MENU_ITEM}
-                    >
-                      <Printer className={MENU_ICON} />
-                      {t("print.buttons.printCollection")}
-                    </button>
-                  </Can>
-                  <Can permission="collection.update">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        setIsEditModalOpen(true);
-                      }}
-                      className={MENU_ITEM}
-                    >
-                      <Edit2 className={MENU_ICON} />
-                      {t("collectionsPage.editCollection")}
-                    </button>
-                  </Can>
-                  <Can permission="collection.update">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        setIsAddSongsModalOpen(true);
-                      }}
-                      className={MENU_ITEM}
-                    >
-                      <Plus className={MENU_ICON} />
-                      {t("collectionsPage.addSongs")}
-                    </button>
-                  </Can>
-                  <Can permission="collection.delete">
-                    <div className="my-1 h-px bg-m3-border mx-1" />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        setIsDeleteDialogOpen(true);
-                      }}
-                      className={MENU_ITEM_DANGER}
-                    >
-                      <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
-                      {t("collectionsPage.deleteTitle")}
-                    </button>
-                  </Can>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex-1 px-4 sm:px-6 py-4">
-        {paginatedSongs.length === 0 ? (
-          <EmptyState
-            icon={<Music2 className="w-8 h-8" />}
-            title={
-              songsInCollection.length === 0
-                ? t("collectionsPage.emptyTitle")
-                : t("collectionsPage.noSearchResultsTitle")
-            }
-            description={
-              songsInCollection.length === 0
-                ? t("collectionsPage.emptyDesc")
-                : t("collectionsPage.noSearchResultsDesc", {
-                    query: searchQuery,
-                  })
-            }
-            actionLabel={
-              !isFiltering && canUpdateCollection
-                ? t("collectionsPage.addSongs")
-                : undefined
-            }
-            onAction={
-              !isFiltering && canUpdateCollection
-                ? () => setIsAddSongsModalOpen(true)
-                : undefined
-            }
-          />
-        ) : (
-          /* Song table */
-          <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-sm overflow-hidden flex flex-col transition-all">
-            {/* Column headers */}
-            <div className="grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 border-b border-m3-border bg-m3-sidebar/40">
+                description={
+                  songsInCollection.length === 0
+                    ? t("collectionsPage.emptyDesc")
+                    : t("collectionsPage.noSearchResultsDesc", {
+                        query: searchQuery,
+                      })
+                }
+                actionLabel={
+                  !isFiltering && canUpdateCollection ? t("collectionsPage.addSongs") : undefined
+                }
+                onAction={
+                  !isFiltering && canUpdateCollection
+                    ? () => setIsAddSongsModalOpen(true)
+                    : undefined
+                }
+              />
+            ) : undefined
+          }
+          header={
+            <div
+              className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center border-b border-m3-border bg-m3-sidebar/40 shrink-0 ${rowPad}`}
+            >
               <span className="text-label text-center">#</span>
               <span className="text-label">{t("songsPage.titlePath")}</span>
-              <span className="hidden sm:block text-label text-right">
-                {t("songsPage.tags")}
-              </span>
-              <span className="text-label text-right">
-                {t("songsPage.actions")}
-              </span>
+              <span className="hidden sm:block text-label text-right">{t("songsPage.tags")}</span>
+              <span className="text-label text-right">{t("songsPage.actions")}</span>
             </div>
+          }
+          pagination={{
+            page: currentPage,
+            totalItems: totalSongs,
+            itemsPerPage,
+            onPageChange: setCurrentPage,
+            onItemsPerPageChange: setItemsPerPage,
+            itemLabel: t("songsPage.songsWord"),
+            emptyLabel: t("songsPage.zeroSongs"),
+          }}
+        >
+          <div className={`divide-y divide-m3-border/30 font-semibold ${rowText}`}>
+            {paginatedSongs.map((song, index) => {
+              const globalIndex = (currentPage - 1) * effectivePerPage + index + 1;
+              const keyMatch = song.content?.match(/\{key:\s*([^}]+)\}/i)?.[1]?.trim();
+              const isSelected = selectedSongIds.has(song.id);
 
-            <div className="divide-y divide-m3-border/30 text-sm font-semibold">
-              {paginatedSongs.map((song, index) => {
-                const globalIndex =
-                  (currentPage - 1) * itemsPerPage + index + 1;
-                const keyMatch = song.content
-                  ?.match(/\{key:\s*([^}]+)\}/i)?.[1]
-                  ?.trim();
-                const isSelected = selectedSongIds.has(song.id);
+              return (
+                <div
+                  key={song.id}
+                  data-item-id={song.id}
+                  onClick={(e) => handleSongClick(e, song)}
+                  onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
+                  onContextMenu={(e) => openContextMenu(e, song)}
+                  className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center transition-colors select-none cursor-pointer ${rowPad} ${
+                    isSelected
+                      ? "bg-m3-primary/5 ring-2 ring-inset ring-m3-primary/30 text-m3-primary"
+                      : "text-m3-text hover:bg-m3-hover/50"
+                  }`}
+                >
+                  <span className="text-center text-caption tabular-nums">{globalIndex}</span>
 
-                return (
-                  <div
-                    key={song.id}
-                    data-item-id={song.id}
-                    onClick={(e) => handleSongClick(e, song)}
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/songs/${song.id}`)
-                    }
-                    onContextMenu={(e) => openContextMenu(e, song)}
-                    className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 transition-colors select-none cursor-pointer ${
-                      isSelected
-                        ? "bg-m3-primary/5 ring-2 ring-inset ring-m3-primary/30 text-m3-primary"
-                        : "text-m3-text hover:bg-m3-hover/50"
-                    }`}
-                  >
-                    <span className="text-center text-caption tabular-nums">
-                      {globalIndex}
-                    </span>
-
-                    <div className="flex flex-col min-w-0">
-                      <span className="truncate font-semibold">
-                        {song.title}
-                      </span>
-                      <span className="text-caption mt-0.5 truncate">
-                        {song.artist || "—"}
-                      </span>
-                    </div>
-
-                    <div className="hidden sm:flex items-center gap-1.5 flex-wrap justify-end">
-                      {keyMatch && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
-                          {keyMatch}
-                        </span>
-                      )}
-                      {song.tags?.slice(0, 2).map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {(song.tags?.length ?? 0) > 2 && (
-                        <span className="text-caption">
-                          +{(song.tags?.length ?? 0) - 2}
-                        </span>
-                      )}
-                    </div>
-
-                    <div
-                      className="flex items-center justify-end gap-1"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        type="button"
-                        onClick={() =>
-                          navigate(`${slugPrefix}/songs/${song.id}`)
-                        }
-                        className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                        title={t("collectionsPage.viewSong")}
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </button>
-                      <Can permission="collection.update">
-                        <button
-                          type="button"
-                          onClick={() => setSongToRemove(song)}
-                          className="p-1.5 text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                          title={t("collectionsPage.removeFromCollection")}
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </Can>
-                      <button
-                        type="button"
-                        onClick={(e) => openContextMenu(e, song)}
-                        className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
-                        title={t("explorer.moreOptions")}
-                      >
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
-                    </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="truncate font-semibold">{song.title}</span>
+                    <span className="text-caption mt-0.5 truncate">{song.artist || "—"}</span>
                   </div>
-                );
-              })}
-            </div>
 
-            {/* Pagination footer */}
-            {totalPages > 1 && (
-              <div className="px-4 py-3 bg-m3-sidebar/30 border-t border-m3-border flex items-center justify-between text-xs">
-                <span className="text-m3-secondary font-medium">
-                  {t("collectionsPage.paginationInfo", {
-                    from: Math.min(
-                      (currentPage - 1) * itemsPerPage + 1,
-                      totalSongs,
-                    ),
-                    to: Math.min(currentPage * itemsPerPage, totalSongs),
-                    total: totalSongs,
-                  })}
-                </span>
-                <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-xs">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage <= 1}
-                    className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                  <div className="hidden sm:flex items-center gap-1.5 flex-wrap justify-end">
+                    {keyMatch && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
+                        {keyMatch}
+                      </span>
+                    )}
+                    {song.tags?.slice(0, 2).map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {(song.tags?.length ?? 0) > 2 && (
+                      <span className="text-caption">+{(song.tags?.length ?? 0) - 2}</span>
+                    )}
+                  </div>
+
+                  <div
+                    className="flex items-center justify-end gap-1"
+                    onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter((p) => {
-                      if (totalPages <= 7) return true;
-                      if (p === 1 || p === totalPages) return true;
-                      return Math.abs(p - currentPage) <= 1;
-                    })
-                    .map((p, idx, arr) => {
-                      const prev = arr[idx - 1];
-                      const showEllipsis = prev && p - prev > 1;
-                      return (
-                        <React.Fragment key={p}>
-                          {showEllipsis && (
-                            <span className="px-1 text-m3-secondary opacity-50">
-                              …
-                            </span>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setCurrentPage(p)}
-                            className={`w-7 h-7 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                              currentPage === p
-                                ? "bg-m3-primary text-white shadow-sm"
-                                : "hover:bg-m3-hover text-m3-text"
-                            }`}
-                          >
-                            {p}
-                          </button>
-                        </React.Fragment>
-                      );
-                    })}
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={currentPage >= totalPages}
-                    className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
+                      className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md cursor-pointer transition-colors"
+                      title={t("collectionsPage.viewSong")}
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </button>
+                    <Can permission="collection.update">
+                      <button
+                        type="button"
+                        onClick={() => setSongToRemove(song)}
+                        className="p-1.5 text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-md cursor-pointer transition-colors"
+                        title={t("collectionsPage.removeFromCollection")}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </Can>
+                    <button
+                      type="button"
+                      onClick={(e) => openContextMenu(e, song)}
+                      className="p-1.5 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+                      title={t("explorer.moreOptions")}
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })}
           </div>
-        )}
+        </Table>
       </div>
 
       {/* ── MODALS ───────────────────────────────────────────────────────────── */}
@@ -778,124 +581,123 @@ export const CollectionDetailPage: React.FC = () => {
 
       <MarqueeSelectionBox box={selectionBox} />
 
-      {contextMenu && (
-        <div
-          data-collection-context-menu
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          {selectedSongIds.size > 1 &&
-          contextMenu.songId &&
-          selectedSongIds.has(contextMenu.songId) ? (
-            <>
-              <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 flex items-center justify-between">
-                <span>{t("songsPage.multiSelect")}</span>
-                <span className="text-caption">{selectedSongIds.size}</span>
-              </div>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
-                  setContextMenu(null);
-                }}
-              >
-                <CheckSquare className={MENU_ICON} />
-                <span>{t("explorer.contextMenu.selectAll")}</span>
-              </button>
-              <Can permission="collection.update">
+      {contextMenu &&
+        createPortal(
+          <div
+            data-song-context-menu
+            style={{ top: contextMenu.y, left: contextMenu.x }}
+            className="fixed z-100 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            {selectedSongIds.size > 1 &&
+            contextMenu.songId &&
+            selectedSongIds.has(contextMenu.songId) ? (
+              <>
+                <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 flex items-center justify-between">
+                  <span>{t("songsPage.multiSelect")}</span>
+                  <span className="text-caption">{selectedSongIds.size}</span>
+                </div>
                 <button
                   type="button"
-                  className={MENU_ITEM_DANGER}
+                  className={MENU_ITEM}
                   onClick={() => {
-                    setPendingRemoveIds(Array.from(selectedSongIds));
+                    setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
                     setContextMenu(null);
                   }}
                 >
-                  <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
-                  <span>{t("collectionsPage.removeFromCollection")}</span>
+                  <CheckSquare className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.selectAll")}</span>
                 </button>
-              </Can>
-              <div className="my-1 border-t border-m3-border" />
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set());
-                  setLastClickedId(null);
-                  setContextMenu(null);
-                }}
-              >
-                <X className={MENU_ICON} />
-                <span>{t("songsPage.deselect")}</span>
-              </button>
-            </>
-          ) : contextMenu.songId ? (
-            <>
-              <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
-                {filteredSongs.find((s) => s.id === contextMenu.songId)
-                  ?.title ?? ""}
-              </div>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  navigate(`${slugPrefix}/songs/${contextMenu.songId}`);
-                  setContextMenu(null);
-                }}
-              >
-                <Music2 className={MENU_ICON} />
-                <span>{t("collectionsPage.viewSong")}</span>
-              </button>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
-                  setContextMenu(null);
-                }}
-              >
-                <CheckSquare className={MENU_ICON} />
-                <span>{t("explorer.contextMenu.selectAll")}</span>
-              </button>
-              <Can permission="collection.update">
+                <Can permission="collection.update">
+                  <button
+                    type="button"
+                    className={MENU_ITEM_DANGER}
+                    onClick={() => {
+                      setPendingRemoveIds(Array.from(selectedSongIds));
+                      setContextMenu(null);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
+                    <span>{t("collectionsPage.removeFromCollection")}</span>
+                  </button>
+                </Can>
                 <div className="my-1 border-t border-m3-border" />
                 <button
                   type="button"
-                  className={MENU_ITEM_DANGER}
+                  className={MENU_ITEM}
                   onClick={() => {
-                    const song = filteredSongs.find(
-                      (s) => s.id === contextMenu.songId,
-                    );
-                    if (song) setSongToRemove(song);
+                    setSelectedSongIds(new Set());
+                    setLastClickedId(null);
                     setContextMenu(null);
                   }}
                 >
-                  <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
-                  <span>{t("collectionsPage.removeFromCollection")}</span>
+                  <X className={MENU_ICON} />
+                  <span>{t("songsPage.deselect")}</span>
                 </button>
-              </Can>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
-                  setContextMenu(null);
-                }}
-              >
-                <CheckSquare className={MENU_ICON} />
-                <span>{t("explorer.contextMenu.selectAll")}</span>
-              </button>
-            </>
-          )}
-        </div>
-      )}
+              </>
+            ) : contextMenu.songId ? (
+              <>
+                <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
+                  {filteredSongs.find((s) => s.id === contextMenu.songId)?.title ?? ""}
+                </div>
+                <button
+                  type="button"
+                  className={MENU_ITEM}
+                  onClick={() => {
+                    navigate(`${slugPrefix}/songs/${contextMenu.songId}`);
+                    setContextMenu(null);
+                  }}
+                >
+                  <Music2 className={MENU_ICON} />
+                  <span>{t("collectionsPage.viewSong")}</span>
+                </button>
+                <button
+                  type="button"
+                  className={MENU_ITEM}
+                  onClick={() => {
+                    setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
+                    setContextMenu(null);
+                  }}
+                >
+                  <CheckSquare className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.selectAll")}</span>
+                </button>
+                <Can permission="collection.update">
+                  <div className="my-1 border-t border-m3-border" />
+                  <button
+                    type="button"
+                    className={MENU_ITEM_DANGER}
+                    onClick={() => {
+                      const song = filteredSongs.find((s) => s.id === contextMenu.songId);
+                      if (song) setSongToRemove(song);
+                      setContextMenu(null);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
+                    <span>{t("collectionsPage.removeFromCollection")}</span>
+                  </button>
+                </Can>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className={MENU_ITEM}
+                  onClick={() => {
+                    setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
+                    setContextMenu(null);
+                  }}
+                >
+                  <CheckSquare className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.selectAll")}</span>
+                </button>
+              </>
+            )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

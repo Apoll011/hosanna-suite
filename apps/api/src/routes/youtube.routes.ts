@@ -2,10 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { assertUser } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
-import {
-  extractYouTubeVideoId,
-  getYouTubeDuration,
-} from "../mcp/lib/youtubeSearch.js";
+import { extractYouTubeVideoId, getYouTubeDuration } from "../mcp/lib/youtubeSearch.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const youtubeRouter = Router();
@@ -35,10 +32,7 @@ youtubeRouter.get(
       return res.set("Cache-Control", "private, max-age=3600").json(result);
     } catch (error) {
       return res.status(502).json({
-        error:
-          error instanceof Error
-            ? error.message
-            : "Failed to resolve YouTube duration",
+        error: error instanceof Error ? error.message : "Failed to resolve YouTube duration",
       });
     }
   }),

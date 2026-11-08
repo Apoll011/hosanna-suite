@@ -14,7 +14,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"test/**/*.test.ts\""
   },
   "peerDependencies": {
     "better-auth": "^1.7.18"
@@ -23,6 +24,7 @@
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
     "better-auth": "^1.7.18",
+    "tsx": "^4.23.15",
     "typescript": "catalog:"
   }
 }

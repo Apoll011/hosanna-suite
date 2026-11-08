@@ -34,11 +34,7 @@ export function GuitarDiagram({
   const getFretY = (index: number) => 22 + index * 20;
 
   return (
-    <svg
-      width={width}
-      height={height}
-      className="text-m3-text dark:text-m3-dark-text select-none"
-    >
+    <svg width={width} height={height} className="text-m3-text dark:text-m3-dark-text select-none">
       {/* Nut or Top thick line */}
       <line
         x1={getStringX(0)}
@@ -215,12 +211,6 @@ export const guitarInstrument: InstrumentProfile<GuitarShape> = {
   },
 
   renderDiagram(shape: GuitarShape) {
-    return (
-      <GuitarDiagram
-        frets={shape.frets}
-        fingers={shape.fingers}
-        barre={shape.barre}
-      />
-    );
+    return <GuitarDiagram frets={shape.frets} fingers={shape.fingers} barre={shape.barre} />;
   },
 };

@@ -54,17 +54,11 @@ export function setPublishProgress(
   });
 }
 
-export function clearPublishProgress(
-  orgId: string,
-  clientRequestId: string,
-): void {
+export function clearPublishProgress(orgId: string, clientRequestId: string): void {
   progressStore.delete(progressKey(orgId, clientRequestId));
 }
 
-export function getCompletedPublish(
-  orgId: string,
-  clientRequestId: string,
-): unknown | undefined {
+export function getCompletedPublish(orgId: string, clientRequestId: string): unknown | undefined {
   const k = completedKey(orgId, clientRequestId);
   const hit = completedStore.get(k);
   if (!hit) return undefined;
@@ -75,11 +69,7 @@ export function getCompletedPublish(
   return hit.result;
 }
 
-export function setCompletedPublish(
-  orgId: string,
-  clientRequestId: string,
-  result: unknown,
-): void {
+export function setCompletedPublish(orgId: string, clientRequestId: string, result: unknown): void {
   completedStore.set(completedKey(orgId, clientRequestId), {
     at: Date.now(),
     result,

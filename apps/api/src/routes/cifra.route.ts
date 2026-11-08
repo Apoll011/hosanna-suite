@@ -35,13 +35,11 @@ const USER_AGENT =
 /** Browser-like headers — Cifra Club sits behind Akamai bot protection. */
 const BROWSER_HEADERS: Record<string, string> = {
   "User-Agent": USER_AGENT,
-  Accept:
-    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
   "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
   "Cache-Control": "no-cache",
   Pragma: "no-cache",
-  "Sec-Ch-Ua":
-    '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+  "Sec-Ch-Ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
   "Sec-Ch-Ua-Mobile": "?0",
   "Sec-Ch-Ua-Platform": '"Windows"',
   "Sec-Fetch-Dest": "document",
@@ -78,22 +76,10 @@ function extractMeta(html: string, property: string): string | undefined {
   const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   const patterns = [
-    new RegExp(
-      `<meta[^>]+property=["']${escaped}["'][^>]+content=["']([^"']+)["']`,
-      "i",
-    ),
-    new RegExp(
-      `<meta[^>]+content=["']([^"']+)["'][^>]+property=["']${escaped}["']`,
-      "i",
-    ),
-    new RegExp(
-      `<meta[^>]+name=["']${escaped}["'][^>]+content=["']([^"']+)["']`,
-      "i",
-    ),
-    new RegExp(
-      `<meta[^>]+content=["']([^"']+)["'][^>]+name=["']${escaped}["']`,
-      "i",
-    ),
+    new RegExp(`<meta[^>]+property=["']${escaped}["'][^>]+content=["']([^"']+)["']`, "i"),
+    new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+property=["']${escaped}["']`, "i"),
+    new RegExp(`<meta[^>]+name=["']${escaped}["'][^>]+content=["']([^"']+)["']`, "i"),
+    new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+name=["']${escaped}["']`, "i"),
   ];
 
   for (const pattern of patterns) {
@@ -139,11 +125,7 @@ function extractJsonLd(html: string): JsonLdSong | undefined {
           type === "MusicComposition" ||
           type === "CreativeWork" ||
           (Array.isArray(type) &&
-            type.some((t) =>
-              ["MusicRecording", "MusicComposition", "CreativeWork"].includes(
-                t,
-              ),
-            ));
+            type.some((t) => ["MusicRecording", "MusicComposition", "CreativeWork"].includes(t)));
 
         if (isSong) {
           return item;
@@ -178,10 +160,7 @@ function extractYouTubeUrl(html: string): string | undefined {
 function detectSource(url: URL): SongResult["source"] | undefined {
   const hostname = url.hostname.toLowerCase();
 
-  if (
-    hostname === "cifraclub.com.br" ||
-    hostname.endsWith(".cifraclub.com.br")
-  ) {
+  if (hostname === "cifraclub.com.br" || hostname.endsWith(".cifraclub.com.br")) {
     return "cifraclub";
   }
 
@@ -304,9 +283,7 @@ function extractUltimateGuitar(html: string): string | undefined {
 
 /** Best-effort chord body from provider Fetch Markdown (DeepSeek). */
 function extractCifraFromMarkdown(markdown: string): string | undefined {
-  const fenced = [
-    ...markdown.matchAll(/```(?:text|chordpro|cifra)?\n([\s\S]*?)```/gi),
-  ]
+  const fenced = [...markdown.matchAll(/```(?:text|chordpro|cifra)?\n([\s\S]*?)```/gi)]
     .map((m) => m[1]?.trim())
     .filter((b): b is string => Boolean(b && /\[[A-G]/.test(b)));
   if (fenced[0]) return fenced[0];
@@ -359,9 +336,7 @@ async function fetchSong(url: URL, orgId?: string): Promise<SongResult> {
   const source = detectSource(url);
 
   if (!source) {
-    throw new Error(
-      "Unsupported source. Supported sources: Cifra Club and Ultimate Guitar.",
-    );
+    throw new Error("Unsupported source. Supported sources: Cifra Club and Ultimate Guitar.");
   }
 
   const result: SongResult = {
@@ -406,10 +381,7 @@ async function fetchSong(url: URL, orgId?: string): Promise<SongResult> {
   result.artist = metadata.artist;
   result.youtube_url = extractYouTubeUrl(html);
 
-  result.cifra =
-    source === "cifraclub"
-      ? extractCifraClub(html)
-      : extractUltimateGuitar(html);
+  result.cifra = source === "cifraclub" ? extractCifraClub(html) : extractUltimateGuitar(html);
 
   return result;
 }
@@ -436,25 +408,19 @@ cifraRouter.get(
 
     if (!detectSource(url)) {
       return res.status(400).json({
-        error:
-          "Unsupported source. Supported sources: Cifra Club and Ultimate Guitar.",
+        error: "Unsupported source. Supported sources: Cifra Club and Ultimate Guitar.",
       });
     }
 
     try {
       const result = await fetchSong(url, req.orgId);
 
-      return res
-        .set("Cache-Control", "public, max-age=300, s-maxage=3600")
-        .json(result);
+      return res.set("Cache-Control", "public, max-age=300, s-maxage=3600").json(result);
     } catch (error) {
       const result: SongResult = {
         source: detectSource(url)!,
         source_url: url.toString(),
-        error:
-          error instanceof Error
-            ? error.message
-            : "Error fetching song details",
+        error: error instanceof Error ? error.message : "Error fetching song details",
       };
 
       return res.status(502).json(result);

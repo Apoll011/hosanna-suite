@@ -6,18 +6,8 @@
 import { Badge, Button, Spinner } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
-import {
-  fetchPlanPricing,
-  PLAN_PRICING,
-  type PlanPricing,
-} from "@/src/lib/subscriptions";
-import {
-  AlertTriangle,
-  Check,
-  CreditCard,
-  Lock,
-  RotateCcw,
-} from "lucide-react";
+import { fetchPlanPricing, PLAN_PRICING, type PlanPricing } from "@/src/lib/subscriptions";
+import { AlertTriangle, Check, CreditCard, Lock, RotateCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useSubscription } from "../../hooks/useSubscription";
@@ -25,10 +15,7 @@ import { posthog } from "../../lib/posthog";
 
 export interface BillingTabProps {
   active: boolean;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 const PLAN_FEATURE_KEYS = [
@@ -39,16 +26,11 @@ const PLAN_FEATURE_KEYS = [
   "settings.billing.plan.features.support",
 ] as const;
 
-export const BillingTab: React.FC<BillingTabProps> = ({
-  active,
-  showToast,
-}) => {
+export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => {
   const { t, language } = useI18n();
   const { organization } = useAuth();
-  const { granted: canManageBilling, loading: canManageLoading } =
-    useCan("billing.manage");
-  const { granted: canAccessBilling, loading: canAccessLoading } =
-    useCan("billing.access");
+  const { granted: canManageBilling, loading: canManageLoading } = useCan("billing.manage");
+  const { granted: canAccessBilling, loading: canAccessLoading } = useCan("billing.access");
 
   const {
     subscriptions,
@@ -86,14 +68,10 @@ export const BillingTab: React.FC<BillingTabProps> = ({
 
   if (!canAccessBilling) {
     return (
-      <div className="max-w-4xl mx-auto w-full bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-8 text-center">
+      <div className="max-w-4xl mx-auto w-full bg-m3-card border border-m3-border rounded-xl p-8 text-center">
         <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
-        <h3 className="text-base font-bold text-m3-text">
-          {t("settings.billing.noAccessTitle")}
-        </h3>
-        <p className="text-sm text-m3-secondary mt-1">
-          {t("settings.billing.noAccessDesc")}
-        </p>
+        <h3 className="text-base font-bold text-m3-text">{t("settings.billing.noAccessTitle")}</h3>
+        <p className="text-sm text-m3-secondary mt-1">{t("settings.billing.noAccessDesc")}</p>
       </div>
     );
   }
@@ -153,22 +131,19 @@ export const BillingTab: React.FC<BillingTabProps> = ({
   // that subscribed before (even if it later cancelled) is billed right away,
   // so the "free trial" wording below must not be shown to them.
   const usedTrial = (subscriptions ?? []).some(
-    (s) =>
-      Boolean(s.trialStart) || Boolean(s.trialEnd) || s.status === "trialing",
+    (s) => Boolean(s.trialStart) || Boolean(s.trialEnd) || s.status === "trialing",
   );
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+      <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
           <div>
             <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
               <CreditCard className="w-5 h-5 text-m3-primary" />
               {t("settings.billing.title")}
             </h3>
-            <p className="text-sm text-m3-secondary mt-1">
-              {t("settings.billing.desc")}
-            </p>
+            <p className="text-sm text-m3-secondary mt-1">{t("settings.billing.desc")}</p>
           </div>
           {!canManageBilling && (
             <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-full flex items-center gap-1.5 font-semibold">
@@ -187,11 +162,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
             <div className="flex flex-col items-center text-center gap-3 py-6">
               <AlertTriangle className="w-6 h-6 text-m3-danger" />
               <p className="text-sm text-m3-danger">{fetchError}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => void refresh()}
-              >
+              <Button variant="outline" size="sm" onClick={() => void refresh()}>
                 {t("common.retry")}
               </Button>
             </div>
@@ -199,12 +170,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
             <div className="space-y-5">
               {/* Status row */}
               <div className="flex flex-wrap items-center gap-3">
-                <Badge
-                  variant={
-                    activeSub.status === "trialing" ? "amber" : "emerald"
-                  }
-                  size="md"
-                >
+                <Badge variant={activeSub.status === "trialing" ? "amber" : "emerald"} size="md">
                   {activeSub.status === "trialing"
                     ? t("settings.billing.status.trialing")
                     : t("settings.billing.status.active")}
@@ -246,9 +212,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-m3-danger shrink-0 mt-0.5" />
                     <div className="text-sm text-rose-700 dark:text-rose-400">
-                      <strong className="font-bold">
-                        {t("settings.billing.cancelingTitle")}
-                      </strong>
+                      <strong className="font-bold">{t("settings.billing.cancelingTitle")}</strong>
                       <p className="mt-0.5 opacity-90">
                         {t("settings.billing.cancelingDesc", {
                           date: formatDate(activeSub.periodEnd),
@@ -278,8 +242,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
                     {t("settings.billing.currentPeriod")}
                   </span>
                   <span className="font-semibold text-m3-text">
-                    {formatDate(activeSub.periodStart)} →{" "}
-                    {formatDate(activeSub.periodEnd)}
+                    {formatDate(activeSub.periodStart)} → {formatDate(activeSub.periodEnd)}
                   </span>
                 </div>
                 <div className="p-3.5 bg-m3-sidebar rounded-xl">
@@ -287,9 +250,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
                     {t("settings.billing.nextCharge")}
                   </span>
                   <span className="font-semibold text-m3-text">
-                    {activeSub.cancelAtPeriodEnd
-                      ? "—"
-                      : formatDate(activeSub.periodEnd)}
+                    {activeSub.cancelAtPeriodEnd ? "—" : formatDate(activeSub.periodEnd)}
                   </span>
                 </div>
               </div>
@@ -311,7 +272,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
               )}
             </div>
           ) : (
-            <div className="border border-m3-primary/20 dark:border-m3-primary/30 bg-m3-primary/5 dark:bg-m3-primary/10 rounded-[var(--radius-xl)] p-6">
+            <div className="border border-m3-primary/20 dark:border-m3-primary/30 bg-m3-primary/5 dark:bg-m3-primary/10 rounded-xl p-6">
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                   <h4 className="text-base font-semibold text-m3-text">
@@ -348,14 +309,10 @@ export const BillingTab: React.FC<BillingTabProps> = ({
 
               <div className="mt-4 flex items-baseline gap-1">
                 <span className="text-3xl font-semibold text-m3-text">
-                  {annual
-                    ? planPricing.annual.amount
-                    : planPricing.monthly.amount}
+                  {annual ? planPricing.annual.amount : planPricing.monthly.amount}
                 </span>
                 <span className="text-sm text-m3-secondary">
-                  {annual
-                    ? planPricing.annual.period
-                    : planPricing.monthly.period}
+                  {annual ? planPricing.annual.period : planPricing.monthly.period}
                 </span>
               </div>
               {annual && (
@@ -367,10 +324,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
 
               <ul className="mt-4 space-y-2">
                 {PLAN_FEATURE_KEYS.map((key) => (
-                  <li
-                    key={key}
-                    className="flex items-center gap-2 text-sm text-m3-text"
-                  >
+                  <li key={key} className="flex items-center gap-2 text-sm text-m3-text">
                     <Check className="w-4 h-4 text-m3-primary shrink-0" />
                     {t(key)}
                   </li>
@@ -385,9 +339,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
                     isLoading={pendingAction === "checkout"}
                     onClick={() => void handleStart()}
                   >
-                    {usedTrial
-                      ? t("settings.billing.subscribe")
-                      : t("settings.billing.startTrial")}
+                    {usedTrial ? t("settings.billing.subscribe") : t("settings.billing.startTrial")}
                   </Button>
                   <p className="text-xs text-m3-secondary mt-2">
                     {usedTrial
@@ -399,9 +351,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
                   </p>
                 </div>
               ) : (
-                <p className="text-xs text-m3-secondary mt-6">
-                  {t("settings.billing.askOwner")}
-                </p>
+                <p className="text-xs text-m3-secondary mt-6">{t("settings.billing.askOwner")}</p>
               )}
             </div>
           )}

@@ -6,9 +6,7 @@ type BackupDocument = components["schemas"]["BackupDocument"];
 
 export const backupApi = {
   downloadBackup: async (): Promise<void> => {
-    const backup = await unwrapApiResult(
-      await getApiClient().openapi.GET("/backup"),
-    );
+    const backup = await unwrapApiResult(await getApiClient().openapi.GET("/backup"));
 
     const blob = new Blob([JSON.stringify(backup, null, 2)], {
       type: "application/json",

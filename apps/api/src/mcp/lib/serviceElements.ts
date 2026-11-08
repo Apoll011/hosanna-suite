@@ -51,15 +51,11 @@ export async function validateServicePlan(
         await songService.getById(el.songId);
       } catch {
         missingSongIds.push(el.songId);
-        errors.push(
-          `Element "${el.title}" (${el.id}) references missing song ${el.songId}`,
-        );
+        errors.push(`Element "${el.title}" (${el.id}) references missing song ${el.songId}`);
       }
     }
     if (el.type === "scripture" && !el.passage && !el.content) {
-      warnings.push(
-        `Scripture element "${el.title}" has no passage or content`,
-      );
+      warnings.push(`Scripture element "${el.title}" has no passage or content`);
     }
     if (typeof el.duration === "number" && el.duration > 0) {
       // Hosanna stores element duration in seconds.
@@ -72,15 +68,11 @@ export async function validateServicePlan(
           );
         }
         if (el.duration > 3600) {
-          warnings.push(
-            `Song "${el.title}" duration=${el.duration}s (>1h) — verify unit`,
-          );
+          warnings.push(`Song "${el.title}" duration=${el.duration}s (>1h) — verify unit`);
         }
       }
       if (el.type === "message" && el.duration > 9000) {
-        warnings.push(
-          `Message "${el.title}" duration=${el.duration}s is unusually long`,
-        );
+        warnings.push(`Message "${el.title}" duration=${el.duration}s is unusually long`);
       }
     }
   }

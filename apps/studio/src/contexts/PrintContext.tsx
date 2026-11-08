@@ -4,11 +4,7 @@
  */
 
 import { PrintModal } from "@/src/components/print/PrintModal";
-import {
-  PrintItem,
-  PrintOptions,
-  PrintPayload,
-} from "@/src/components/print/types";
+import { PrintItem, PrintOptions, PrintPayload } from "@/src/components/print/types";
 import {
   AgendaEvent,
   Collection,
@@ -24,16 +20,8 @@ export interface PrintContextValue {
   openPrintModal: (payload: PrintPayload) => void;
   closePrintModal: () => void;
   printSong: (song: Song, options?: Partial<PrintOptions>) => void;
-  printSongs: (
-    songs: Song[],
-    title?: string,
-    options?: Partial<PrintOptions>,
-  ) => void;
-  printFolder: (
-    folder: Folder,
-    songs?: Song[],
-    options?: Partial<PrintOptions>,
-  ) => void;
+  printSongs: (songs: Song[], title?: string, options?: Partial<PrintOptions>) => void;
+  printFolder: (folder: Folder, songs?: Song[], options?: Partial<PrintOptions>) => void;
   printFolders: (
     foldersWithSongs: Array<{ folder: Folder; songs?: Song[] }>,
     title?: string,
@@ -49,11 +37,7 @@ export interface PrintContextValue {
     title?: string,
     options?: Partial<PrintOptions>,
   ) => void;
-  printService: (
-    service: Service,
-    songs?: Song[],
-    options?: Partial<PrintOptions>,
-  ) => void;
+  printService: (service: Service, songs?: Song[], options?: Partial<PrintOptions>) => void;
   printServices: (
     servicesWithSongs: Array<{ service: Service; songs?: Song[] }>,
     title?: string,
@@ -70,18 +54,12 @@ export interface PrintContextValue {
     title?: string,
     options?: Partial<PrintOptions>,
   ) => void;
-  printBatch: (
-    items: PrintItem[],
-    title?: string,
-    options?: Partial<PrintOptions>,
-  ) => void;
+  printBatch: (items: PrintItem[], title?: string, options?: Partial<PrintOptions>) => void;
 }
 
 const PrintContext = createContext<PrintContextValue | null>(null);
 
-export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [payload, setPayload] = useState<PrintPayload | null>(null);
 
@@ -148,11 +126,7 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const printCollection = useCallback(
-    (
-      collection: Collection,
-      songs?: Song[],
-      options?: Partial<PrintOptions>,
-    ) => {
+    (collection: Collection, songs?: Song[], options?: Partial<PrintOptions>) => {
       openPrintModal({
         title: `Coleção: ${collection.name}`,
         items: [{ type: "collection", data: collection, songs }],

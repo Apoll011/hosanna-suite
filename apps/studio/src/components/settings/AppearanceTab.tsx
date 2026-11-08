@@ -30,10 +30,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 
 export interface AppearanceTabProps {
   active: boolean;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 interface ThemeOption {
@@ -44,10 +41,7 @@ interface ThemeOption {
   previewBg: string;
 }
 
-export const AppearanceTab: React.FC<AppearanceTabProps> = ({
-  active,
-  showToast,
-}) => {
+export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast }) => {
   const { theme, setTheme } = useTheme();
   const { settings, updateSetting } = usePersonalSettings();
   const { t, personalLanguage, setPersonalLanguage } = useI18n();
@@ -61,8 +55,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
       title: t("settings.appearance.light"),
       description: t("settings.appearance.lightDesc"),
       icon: Sun,
-      previewBg:
-        "from-amber-500/10 to-orange-500/5 text-amber-600 dark:text-amber-400",
+      previewBg: "from-amber-500/10 to-orange-500/5 text-amber-600 dark:text-amber-400",
     },
     {
       id: "system",
@@ -94,9 +87,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
   const handleFolderTreeToggle = (checked: boolean) => {
     updateSetting("showFolderTree", checked);
     showToast?.(
-      checked
-        ? t("settings.toast.folderTreeVisible")
-        : t("settings.toast.folderTreeHidden"),
+      checked ? t("settings.toast.folderTreeVisible") : t("settings.toast.folderTreeHidden"),
       "success",
     );
   };
@@ -104,9 +95,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
   const handleStudioSettingsChange = (checked: boolean) => {
     updateSetting("showChordsDefault", checked);
     showToast?.(
-      checked
-        ? t("settings.toast.chordsVisible")
-        : t("settings.toast.chordsHidden"),
+      checked ? t("settings.toast.chordsVisible") : t("settings.toast.chordsHidden"),
       "success",
     );
   };
@@ -117,10 +106,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
       lang === "auto"
         ? t("settings.appearance.languageAuto")
         : (LANGUAGES.find((l) => l.code === lang)?.nativeLabel ?? lang);
-    showToast?.(
-      t("settings.toast.languageChanged", { language: label }),
-      "info",
-    );
+    showToast?.(t("settings.toast.languageChanged", { language: label }), "info");
   };
 
   const optionCard = (selected: boolean) =>
@@ -139,11 +125,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               <MonitorSmartphone className="w-5 h-5 text-m3-primary" />
               {t("settings.appearance.themeTitle")}
             </h2>
-            <p className="mt-1 text-muted">
-              {t("settings.appearance.themeDesc")}
-            </p>
+            <p className="mt-1 text-muted">{t("settings.appearance.themeDesc")}</p>
           </div>
-          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
             <User className="w-3.5 h-3.5" />
             {t("settings.appearance.personalPreference")}
           </span>
@@ -163,25 +147,21 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 className={`${optionCard(selected)} p-5`}
               >
                 {selected && (
-                  <div className="absolute top-4 right-4 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center shadow-[var(--shadow-sm)]">
+                  <div className="absolute top-4 right-4 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center shadow-sm">
                     <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                   </div>
                 )}
 
                 <div className="flex items-center justify-between mb-4">
                   <div
-                    className={`inline-flex rounded-[var(--radius-md)] p-2.5 bg-linear-to-br border border-m3-border/50 ${item.previewBg}`}
+                    className={`inline-flex rounded-md p-2.5 bg-linear-to-br border border-m3-border/50 ${item.previewBg}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-sm text-m3-text">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-caption leading-relaxed">
-                  {item.description}
-                </p>
+                <h3 className="font-semibold text-sm text-m3-text">{item.title}</h3>
+                <p className="mt-1 text-caption leading-relaxed">{item.description}</p>
               </button>
             );
           })}
@@ -195,11 +175,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               <Globe className="w-5 h-5 text-m3-primary" />
               {t("settings.appearance.languageTitle")}
             </h3>
-            <p className="mt-1 text-muted">
-              {t("settings.appearance.languageDesc")}
-            </p>
+            <p className="mt-1 text-muted">{t("settings.appearance.languageDesc")}</p>
           </div>
-          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
             <User className="w-3.5 h-3.5" />
             {t("settings.appearance.personalPreference")}
           </span>
@@ -246,12 +224,8 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 <div className="text-2xl mb-2" aria-hidden="true">
                   {lang.flag}
                 </div>
-                <span className="block font-semibold text-sm text-m3-text">
-                  {lang.nativeLabel}
-                </span>
-                <span className="block mt-1 text-caption">
-                  {lang.englishLabel}
-                </span>
+                <span className="block font-semibold text-sm text-m3-text">{lang.nativeLabel}</span>
+                <span className="block mt-1 text-caption">{lang.englishLabel}</span>
               </button>
             );
           })}
@@ -264,12 +238,10 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
             <Sliders className="w-5 h-5 text-m3-primary" />
             {t("settings.appearance.navigationTitle")}
           </h3>
-          <p className="text-muted mt-1">
-            {t("settings.appearance.navigationDesc")}
-          </p>
+          <p className="text-muted mt-1">{t("settings.appearance.navigationDesc")}</p>
         </div>
 
-        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
+        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-md cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
           <div className="flex items-center h-5 mt-0.5">
             <input
               type="checkbox"
@@ -283,9 +255,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               <FolderTree className="w-4 h-4 text-m3-secondary" />
               {t("settings.appearance.showFolderTree")}
             </span>
-            <p className="text-caption mt-1">
-              {t("settings.appearance.showFolderTreeDesc")}
-            </p>
+            <p className="text-caption mt-1">{t("settings.appearance.showFolderTreeDesc")}</p>
           </div>
         </label>
       </Surface>
@@ -297,17 +267,15 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               <Layout className="w-5 h-5 text-m3-primary" />
               {t("settings.appearance.studioTitle")}
             </h3>
-            <p className="text-muted mt-1">
-              {t("settings.appearance.studioDesc")}
-            </p>
+            <p className="text-muted mt-1">{t("settings.appearance.studioDesc")}</p>
           </div>
-          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
             <Smartphone className="w-3.5 h-3.5" />
             {t("settings.appearance.onDevice")}
           </span>
         </div>
 
-        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
+        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-md cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
           <div className="flex items-center h-5 mt-0.5">
             <input
               type="checkbox"
@@ -336,25 +304,21 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 <Star className="w-5 h-5 text-amber-500" />
                 {t("settings.appearance.songScoreTitle")}
               </h3>
-              <p className="text-muted mt-1">
-                {t("settings.appearance.songScoreDesc")}
-              </p>
+              <p className="text-muted mt-1">{t("settings.appearance.songScoreDesc")}</p>
             </div>
-            <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+            <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
               <BarChart2 className="w-3.5 h-3.5" />
               {t("settings.appearance.songScoreBadge")}
             </span>
           </div>
 
           <div className="space-y-5">
-            <label className="flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
+            <label className="flex items-start gap-4 p-4 border border-m3-border rounded-md cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
               <div className="flex items-center h-5 mt-0.5">
                 <input
                   type="checkbox"
                   checked={settings.showSongScore}
-                  onChange={(e) =>
-                    updateSetting("showSongScore", e.target.checked)
-                  }
+                  onChange={(e) => updateSetting("showSongScore", e.target.checked)}
                   className="w-4.5 h-4.5 text-amber-500 border-m3-border rounded focus:ring-amber-400 cursor-pointer"
                 />
               </div>
@@ -371,9 +335,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
             {settings.showSongScore && (
               <div>
-                <p className="text-label mb-3">
-                  {t("settings.appearance.songScoreStyle")}
-                </p>
+                <p className="text-label mb-3">{t("settings.appearance.songScoreStyle")}</p>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   {(
                     [
@@ -406,32 +368,26 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         type="button"
                         onClick={() => updateSetting("songScoreLayout", opt.id)}
                         aria-pressed={selected}
-                        className={`group relative rounded-[var(--radius-lg)] border p-4 text-left transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/50 ${
+                        className={`group relative rounded-lg border p-4 text-left transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/50 ${
                           selected
-                            ? "border-amber-400 bg-amber-50/60 dark:bg-amber-400/5 ring-2 ring-amber-400/25 shadow-[var(--shadow-sm)]"
+                            ? "border-amber-400 bg-amber-50/60 dark:bg-amber-400/5 ring-2 ring-amber-400/25 shadow-sm"
                             : "border-m3-border hover:border-m3-primary/40 bg-m3-sidebar/40"
                         }`}
                       >
                         {selected && (
-                          <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-amber-400 flex items-center justify-center shadow-[var(--shadow-sm)]">
+                          <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-amber-400 flex items-center justify-center shadow-sm">
                             <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                           </div>
                         )}
 
                         <div className="flex items-center justify-center mb-3 h-10">
-                          <SongScoreVisualizer
-                            score={74}
-                            layout={opt.id}
-                            compact
-                          />
+                          <SongScoreVisualizer score={74} layout={opt.id} compact />
                         </div>
 
                         <span className="block font-semibold text-sm text-m3-text">
                           {opt.label}
                         </span>
-                        <span className="block mt-1 text-caption leading-relaxed">
-                          {opt.desc}
-                        </span>
+                        <span className="block mt-1 text-caption leading-relaxed">{opt.desc}</span>
                       </button>
                     );
                   })}

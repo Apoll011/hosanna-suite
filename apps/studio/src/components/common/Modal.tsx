@@ -97,7 +97,7 @@ export const Modal: React.FC<ModalProps> = ({
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className={`w-full ${maxWidthClasses[maxWidth]} bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] overflow-hidden flex flex-col max-h-[min(90vh,720px)] outline-none transition-all duration-200 ease-in-out ${
+        className={`w-full ${maxWidthClasses[maxWidth]} bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-[min(90vh,720px)] outline-none transition-all duration-200 ease-in-out ${
           shown ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
         }`}
       >
@@ -109,15 +109,13 @@ export const Modal: React.FC<ModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="shrink-0 p-2 min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer"
+            className="shrink-0 p-2 min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="px-6 py-5 overflow-y-auto flex-1 overscroll-contain">
-          {children}
-        </div>
+        <div className="px-6 py-5 overflow-y-auto flex-1 overscroll-contain">{children}</div>
 
         {footer && (
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-m3-border/50 bg-m3-sidebar/40">

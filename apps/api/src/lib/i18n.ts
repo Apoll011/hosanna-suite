@@ -42,10 +42,7 @@ async function loadLocale(locale: string): Promise<Record<string, any>> {
 type DotPath<T, Prefix extends string = ""> =
   T extends Record<string, unknown>
     ? {
-        [K in keyof T & string]: DotPath<
-          T[K],
-          Prefix extends "" ? K : `${Prefix}.${K}`
-        >;
+        [K in keyof T & string]: DotPath<T[K], Prefix extends "" ? K : `${Prefix}.${K}`>;
       }[keyof T & string]
     : Prefix;
 
@@ -61,10 +58,7 @@ function resolve(obj: Record<string, any>, path: string): string | undefined {
   return typeof cur === "string" ? cur : undefined;
 }
 
-function interpolate(
-  template: string,
-  vars: Record<string, string | number>,
-): string {
+function interpolate(template: string, vars: Record<string, string | number>): string {
   return template.replace(/\{\{(\w+)\}\}/g, (_, key) =>
     key in vars ? String(vars[key]) : `{{${key}}}`,
   );

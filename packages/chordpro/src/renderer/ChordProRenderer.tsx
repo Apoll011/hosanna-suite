@@ -39,9 +39,7 @@ function songHasChords(song: SongAST): boolean {
     section.lines.some(
       (line) =>
         line.segments?.some((segment) => Boolean(segment.chord)) ||
-        line.measures?.some((measure) =>
-          measure.chords.some((segment) => Boolean(segment.chord)),
-        ),
+        line.measures?.some((measure) => measure.chords.some((segment) => Boolean(segment.chord))),
     ),
   );
 }
@@ -145,10 +143,7 @@ const ChordProRenderer = React.memo(
                     <div className="flex items-center gap-1.5 text-xs text-neutral-500 mt-2 font-medium flex-wrap">
                       <User className="w-3.5 h-3.5 text-[#0284c7]" />
                       <span>
-                        Por:{" "}
-                        {[metadata.artist, metadata.composer]
-                          .filter(Boolean)
-                          .join(" / ")}
+                        Por: {[metadata.artist, metadata.composer].filter(Boolean).join(" / ")}
                       </span>
                     </div>
                   )}
@@ -196,13 +191,11 @@ const ChordProRenderer = React.memo(
                       Tom Orig: {metadata.originalKey}
                     </span>
                   )}
-                  {metadata.capo &&
-                    metadata.capo !== "0" &&
-                    effectiveCapo === 0 && (
-                      <span className="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-lg border border-amber-100 dark:border-amber-950/50">
-                        Capo Orig: {metadata.capo}ª casa
-                      </span>
-                    )}
+                  {metadata.capo && metadata.capo !== "0" && effectiveCapo === 0 && (
+                    <span className="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-lg border border-amber-100 dark:border-amber-950/50">
+                      Capo Orig: {metadata.capo}ª casa
+                    </span>
+                  )}
                   {metadata.tempo && (
                     <span className="text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-950/50 flex items-center gap-1">
                       <Flame className="w-3 h-3" />
@@ -225,9 +218,7 @@ const ChordProRenderer = React.memo(
               {(metadata.copyright || metadata.duration) && (
                 <div className="flex items-center gap-4 text-[10px] text-neutral-400 dark:text-neutral-500 mt-3 pt-3 border-t border-neutral-100 dark:border-slate-800/50">
                   {metadata.copyright && <span>© {metadata.copyright}</span>}
-                  {metadata.duration && (
-                    <span>Duração: {getDuration(metadata.duration)}</span>
-                  )}
+                  {metadata.duration && <span>Duração: {getDuration(metadata.duration)}</span>}
                 </div>
               )}
 
@@ -307,16 +298,12 @@ const ChordProRenderer = React.memo(
                     <div
                       key={secIdx}
                       className={`pl-3 my-6 border-l-2 border-slate-200 dark:border-slate-800 ${
-                        twoColumnLayout
-                          ? "break-inside-avoid-column inline-block w-full"
-                          : ""
+                        twoColumnLayout ? "break-inside-avoid-column inline-block w-full" : ""
                       }`}
                     >
                       <div className="text-[11px] text-slate-400 dark:text-slate-500 mb-1.5 select-none">
                         {section.label || "Instrumental"}
-                        {section.repeat && (
-                          <span> · repetir {section.repeat}×</span>
-                        )}
+                        {section.repeat && <span> · repetir {section.repeat}×</span>}
                       </div>
                       <div className="space-y-1.5">
                         {section.lines.map((line, lineIdx) => (
@@ -341,28 +328,20 @@ const ChordProRenderer = React.memo(
                   const labelColor = isChorus
                     ? "text-m3-text dark:text-m3-dark-text"
                     : "text-amber-700 dark:text-amber-400";
-                  const iconColor = isChorus
-                    ? "text-m3-secondary"
-                    : "text-amber-500";
+                  const iconColor = isChorus ? "text-m3-secondary" : "text-amber-500";
 
                   return (
                     <div
                       key={secIdx}
                       className={`pl-4 md:pl-6 border-l-2 my-6 ${borderColor} ${
-                        twoColumnLayout
-                          ? "break-inside-avoid-column inline-block w-full"
-                          : ""
+                        twoColumnLayout ? "break-inside-avoid-column inline-block w-full" : ""
                       }`}
                     >
                       <div
                         className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider mb-3 select-none ${labelColor}`}
                       >
-                        <Music
-                          className={`w-3.5 h-3.5 shrink-0 ${iconColor}`}
-                        />
-                        <span>
-                          {section.label || (isChorus ? "Refrão" : "Ponte")}
-                        </span>
+                        <Music className={`w-3.5 h-3.5 shrink-0 ${iconColor}`} />
+                        <span>{section.label || (isChorus ? "Refrão" : "Ponte")}</span>
 
                         {/* Indicador visual de {repeat} */}
                         {section.repeat && (
@@ -379,9 +358,7 @@ const ChordProRenderer = React.memo(
                       </div>
                       <div className="space-y-4 font-medium">
                         {section.lines.length === 0 ? (
-                          <div
-                            className={`text-xs italic my-1 opacity-70 ${labelColor}`}
-                          >
+                          <div className={`text-xs italic my-1 opacity-70 ${labelColor}`}>
                             (Repete o refrão)
                           </div>
                         ) : (
@@ -406,9 +383,7 @@ const ChordProRenderer = React.memo(
                     <div
                       key={secIdx}
                       className={`bg-slate-900 p-4 pt-6 rounded-xl shadow-inner border border-slate-800 my-6 select-text relative group ${
-                        twoColumnLayout
-                          ? "break-inside-avoid-column inline-block w-full"
-                          : ""
+                        twoColumnLayout ? "break-inside-avoid-column inline-block w-full" : ""
                       }`}
                     >
                       <div className="absolute top-0 left-4 -translate-y-1/2 bg-slate-800 text-[10px] font-bold text-slate-300 uppercase tracking-widest px-2 py-0.5 rounded border border-slate-700 shadow-sm select-none">
@@ -416,9 +391,7 @@ const ChordProRenderer = React.memo(
                       </div>
                       <div className="overflow-x-auto no-scrollbar">
                         <pre className="font-mono text-[13px] md:text-sm text-slate-300 leading-relaxed whitespace-pre drop-shadow-sm">
-                          {section.lines
-                            .map((line) => line.text || "")
-                            .join("\n")}
+                          {section.lines.map((line) => line.text || "").join("\n")}
                         </pre>
                       </div>
                     </div>
@@ -440,9 +413,7 @@ const ChordProRenderer = React.memo(
                   <div
                     key={secIdx}
                     className={`relative pl-6 sm:pl-8 border-l border-m3-border/30 dark:border-m3-dark-border/30 py-1.5 my-4 ${
-                      twoColumnLayout
-                        ? "break-inside-avoid-column inline-block w-full"
-                        : ""
+                      twoColumnLayout ? "break-inside-avoid-column inline-block w-full" : ""
                     }`}
                   >
                     {section.label && (
@@ -483,18 +454,14 @@ const ChordProRenderer = React.memo(
               {metadata.lyricist && <p>Letra: {metadata.lyricist}</p>}
               {metadata.arranger && <p>Arranjo: {metadata.arranger}</p>}
               {metadata.year && <p>Ano: {metadata.year}</p>}
-              {metadata.originalKey && (
-                <p>Tom Original: {metadata.originalKey}</p>
-              )}
+              {metadata.originalKey && <p>Tom Original: {metadata.originalKey}</p>}
 
               <div className="pt-2 mt-2 border-t border-neutral-50/50 dark:border-zinc-900/50 inline-block">
                 {metadata.copyright && <p>© Copyright: {metadata.copyright}</p>}
                 {metadata.ccli && <p>CCLI: {metadata.ccli}</p>}
               </div>
 
-              {fileName && (
-                <p className="mt-4 opacity-50">Ficheiro base: {fileName}</p>
-              )}
+              {fileName && <p className="mt-4 opacity-50">Ficheiro base: {fileName}</p>}
             </div>
           </div>
         </div>
@@ -535,15 +502,12 @@ const ChordProRenderer = React.memo(
 
               <div className="py-4 flex flex-col items-center justify-center min-h-[140px] border border-m3-border/30 dark:border-m3-dark-border/30 rounded-2xl bg-m3-sidebar/30 dark:bg-m3-dark-sidebar/10">
                 {modalFingering ? (
-                  (instrumentRegistry
-                    .get(modalInstrument)
-                    ?.renderDiagram(modalFingering.shape) ?? (
+                  (instrumentRegistry.get(modalInstrument)?.renderDiagram(modalFingering.shape) ?? (
                     <div className="text-center p-4">
                       <HelpCircle className="w-8 h-8 mx-auto text-amber-500 opacity-80 mb-2" />
                       <p className="text-xs text-m3-secondary dark:text-m3-dark-secondary font-medium">
-                        O diagrama para{" "}
-                        {instrumentRegistry.get(modalInstrument)?.displayName}{" "}
-                        não pôde ser calculado.
+                        O diagrama para {instrumentRegistry.get(modalInstrument)?.displayName} não
+                        pôde ser calculado.
                       </p>
                     </div>
                   ))
@@ -554,8 +518,8 @@ const ChordProRenderer = React.memo(
                       Acorde &quot;{selectedChord}&quot; não registado
                     </p>
                     <p className="text-[10px] text-m3-secondary dark:text-m3-dark-secondary max-w-[200px] leading-normal">
-                      Este acorde não se encontra no nosso dicionário estrito,
-                      mas pode tocá-lo com as notas de acompanhamento habituais.
+                      Este acorde não se encontra no nosso dicionário estrito, mas pode tocá-lo com
+                      as notas de acompanhamento habituais.
                     </p>
                   </div>
                 )}
@@ -609,8 +573,7 @@ const LineRenderer = React.memo(
   ({ line, showChords, transpose = 0, onChordClick }: LineRendererProps) => {
     if (line.type === "empty") return <div className="h-2"></div>;
     if (line.type === "comment") return <CommentRenderer line={line} />;
-    if (line.type === "comment_italic")
-      return <CommentItalicRenderer line={line} />;
+    if (line.type === "comment_italic") return <CommentItalicRenderer line={line} />;
     if (line.type === "comment_box") return <CommentBoxRenderer line={line} />;
 
     if (line.type === "chord-section")
@@ -636,18 +599,14 @@ const LineRenderer = React.memo(
 
 // Plain, unobtrusive comment (`{comment}` / `{c}`) — small, muted, upright text.
 const CommentRenderer = React.memo(({ line }: { line: LineAST }) => (
-  <div className="text-xs text-slate-400 dark:text-slate-500 my-1">
-    {line.text}
-  </div>
+  <div className="text-xs text-slate-400 dark:text-slate-500 my-1">{line.text}</div>
 ));
 
 // Italic comment (`{comment_italic}` / `{ci}`) — same weight as a plain
 // comment but visually distinct so the two directives don't collapse into
 // one look.
 const CommentItalicRenderer = React.memo(({ line }: { line: LineAST }) => (
-  <div className="text-xs text-slate-400 dark:text-slate-500 italic my-1">
-    {line.text}
-  </div>
+  <div className="text-xs text-slate-400 dark:text-slate-500 italic my-1">{line.text}</div>
 ));
 
 /** Visual styles available to `{comment_box}` (and, via `|style=`, to
@@ -684,8 +643,7 @@ const COMMENT_BOX_STYLES: Record<
 };
 
 const CommentBoxRenderer = React.memo(({ line }: { line: LineAST }) => {
-  const style =
-    COMMENT_BOX_STYLES[line.style ?? "info"] ?? COMMENT_BOX_STYLES.info;
+  const style = COMMENT_BOX_STYLES[line.style ?? "info"] ?? COMMENT_BOX_STYLES.info;
   const { Icon } = style;
   return (
     <div
@@ -715,9 +673,7 @@ const LyricsRenderer = React.memo(
       <div className="flex flex-wrap items-end leading-relaxed">
         {segments.map((seg, segIdx) => {
           const hasChord = !!seg.chord;
-          const transposed = hasChord
-            ? transposeChord(seg.chord, transpose)
-            : "";
+          const transposed = hasChord ? transposeChord(seg.chord, transpose) : "";
 
           return (
             <div
@@ -775,21 +731,14 @@ const ChordSectionRenderer = React.memo(
             <span className="flex items-baseline gap-1.5">
               {measure.chords.map((chordSeg, cIdx) => {
                 const transposed = transposeChord(chordSeg.chord, transpose);
-                const timing = chordSeg.timing ?? 1;
 
                 return (
                   <span
                     key={cIdx}
                     className="font-mono text-[14px] text-slate-600 dark:text-slate-400 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
                     onClick={() => onChordClick?.(transposed)}
-                    title={timing !== 1 ? `Duração: ${timing}x` : undefined}
                   >
                     {transposed}
-                    {timing !== 1 && (
-                      <sub className="text-[9px] text-slate-400 dark:text-slate-600 ml-px">
-                        {timing}×
-                      </sub>
-                    )}
                   </span>
                 );
               })}
@@ -803,12 +752,9 @@ const ChordSectionRenderer = React.memo(
 );
 
 function renderBarline(barline: string): React.ReactNode {
-  const wrapperStyle =
-    "flex items-center justify-center flex-shrink-0 select-none";
-  const repeatStyle =
-    "text-indigo-400 dark:text-indigo-500 text-[18px] leading-none";
-  const normalStyle =
-    "text-slate-300 dark:text-slate-600 font-black text-[16px] leading-none";
+  const wrapperStyle = "flex items-center justify-center flex-shrink-0 select-none";
+  const repeatStyle = "text-indigo-400 dark:text-indigo-500 text-[18px] leading-none";
+  const normalStyle = "text-slate-300 dark:text-slate-600 font-black text-[16px] leading-none";
 
   switch (barline) {
     case "|:":

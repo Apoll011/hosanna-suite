@@ -20,9 +20,7 @@ async function resolveStdioAuth(): Promise<AuthInfo | undefined> {
   headers.set("authorization", `Bearer ${token}`);
   const resolved = await resolveMcpContextFromHeaders(headers);
   if (!resolved) {
-    console.error(
-      "HOSANNA_BEARER_TOKEN did not resolve to a session with an active organization.",
-    );
+    console.error("HOSANNA_BEARER_TOKEN did not resolve to a session with an active organization.");
     return undefined;
   }
   const ctx: McpContext = resolved.ctx;

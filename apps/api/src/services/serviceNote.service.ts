@@ -10,10 +10,7 @@ import { ServiceRepository } from "../repositories/service.repository.js";
 import { AppError } from "../utils/errors.js";
 
 /** True when `elementId` is the id of an item in a service's elements array. */
-export function serviceHasElement(
-  elements: unknown,
-  elementId: string,
-): boolean {
+export function serviceHasElement(elements: unknown, elementId: string): boolean {
   if (!Array.isArray(elements)) return false;
   return elements.some(
     (element) =>
@@ -73,10 +70,7 @@ export class ServiceNoteService {
     const service = await this.assertService(serviceId);
     const elementId = input.elementId ?? null;
     if (elementId && !serviceHasElement(service.elements, elementId)) {
-      throw AppError.notFound(
-        "ELEMENT_NOT_FOUND",
-        t(this.locale, "note.element_not_found"),
-      );
+      throw AppError.notFound("ELEMENT_NOT_FOUND", t(this.locale, "note.element_not_found"));
     }
 
     const created = await this.notes.create({
@@ -97,11 +91,7 @@ export class ServiceNoteService {
     return serialize(created);
   }
 
-  async update(
-    serviceId: string,
-    noteId: string,
-    patch: { body?: string; private?: boolean },
-  ) {
+  async update(serviceId: string, noteId: string, patch: { body?: string; private?: boolean }) {
     await this.loadOwnNote(serviceId, noteId);
     const updated = await this.notes.update(noteId, patch);
     void publishNotesSignal({
@@ -129,10 +119,7 @@ export class ServiceNoteService {
   private async assertService(serviceId: string) {
     const service = await this.services.findById(serviceId);
     if (!service || service.deleted) {
-      throw AppError.notFound(
-        "SERVICE_NOT_FOUND",
-        t(this.locale, "service.not_found"),
-      );
+      throw AppError.notFound("SERVICE_NOT_FOUND", t(this.locale, "service.not_found"));
     }
     return service;
   }
@@ -147,10 +134,7 @@ export class ServiceNoteService {
     await this.assertService(serviceId);
     const note = await this.notes.findInService(serviceId, noteId);
     if (!note || (note.private && note.authorId !== this.userId)) {
-      throw AppError.notFound(
-        "NOTE_NOT_FOUND",
-        t(this.locale, "note.not_found"),
-      );
+      throw AppError.notFound("NOTE_NOT_FOUND", t(this.locale, "note.not_found"));
     }
     if (note.authorId !== this.userId) {
       throw AppError.forbidden(t(this.locale, "note.forbidden"));

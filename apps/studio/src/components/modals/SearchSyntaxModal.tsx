@@ -23,8 +23,7 @@ interface QueryExample {
 const EXAMPLES: QueryExample[] = [
   {
     query: "graça",
-    descriptionPt:
-      "Pesquisa por palavra em qualquer campo (insensível a maiúsculas)",
+    descriptionPt: "Pesquisa por palavra em qualquer campo (insensível a maiúsculas)",
     descriptionEn: "Search for word in any field (case-insensitive)",
     category: "basic",
   },
@@ -108,8 +107,7 @@ const EXAMPLES: QueryExample[] = [
   },
   {
     query: "title:A* AND NOT key:D",
-    descriptionPt:
-      "Wildcard (*) para títulos que comecem por 'A', exceto tom D",
+    descriptionPt: "Wildcard (*) para títulos que comecem por 'A', exceto tom D",
     descriptionEn: "Wildcard (*) starting with 'A' excluding key D",
     category: "boolean",
   },
@@ -172,9 +170,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
   ];
 
   const displayedExamples =
-    filterCat === "all"
-      ? EXAMPLES
-      : EXAMPLES.filter((e) => e.category === filterCat);
+    filterCat === "all" ? EXAMPLES : EXAMPLES.filter((e) => e.category === filterCat);
 
   return (
     <div
@@ -182,7 +178,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="bg-m3-card rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
+        className="bg-m3-card rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -219,13 +215,11 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
         {/* Modal Body */}
         <div className="overflow-y-auto p-6 space-y-6">
           {/* Quick Intro Banner */}
-          <div className="p-4 bg-m3-primary/5 rounded-[var(--radius-xl)] border border-m3-primary/20 flex items-start gap-3">
+          <div className="p-4 bg-m3-primary/5 rounded-xl border border-m3-primary/20 flex items-start gap-3">
             <Sparkles className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
             <div className="text-xs text-m3-secondary leading-relaxed">
               <p className="font-bold text-m3-text mb-1">
-                {isPt
-                  ? "Pesquisa rápida em tempo real"
-                  : "Real-time fast search"}
+                {isPt ? "Pesquisa rápida em tempo real" : "Real-time fast search"}
               </p>
               {isPt
                 ? "Basta escrever termos normais (ex: 'graça') ou consultas com campo (ex: 'artist:Morada AND key:E'). Pode clicar em qualquer exemplo abaixo para o testar de imediato."
@@ -241,7 +235,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
                 onClick={() => setFilterCat(c.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-colors cursor-pointer ${
                   filterCat === c.id
-                    ? "bg-m3-primary text-white shadow-[var(--shadow-sm)]"
+                    ? "bg-m3-primary text-white shadow-sm"
                     : "bg-m3-sidebar text-m3-secondary hover:bg-m3-hover"
                 }`}
               >
@@ -269,11 +263,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
                       }
                     }}
                     className="p-2.5 rounded-xl border border-m3-border/60 bg-m3-sidebar/50 dark:bg-m3-sidebar/30 hover:border-m3-primary/40 hover:bg-m3-primary/5 transition-colors cursor-pointer group flex items-center justify-between gap-3"
-                    title={
-                      isPt
-                        ? "Clique para usar na pesquisa"
-                        : "Click to apply this search"
-                    }
+                    title={isPt ? "Clique para usar na pesquisa" : "Click to apply this search"}
                   >
                     <div className="min-w-0 flex-1">
                       <code className="text-xs font-mono font-bold text-m3-primary dark:text-m3-primary bg-m3-card border border-m3-border/80 px-2 py-0.5 rounded-lg inline-block truncate max-w-full">
@@ -295,12 +285,10 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
             <div className="md:col-span-5 space-y-2.5">
               <div className="flex items-center gap-2 text-label text-m3-primary mb-2">
                 <BookOpen className="w-4 h-4" />
-                <span>
-                  {isPt ? "Campos Pesquisáveis" : "Searchable Fields"}
-                </span>
+                <span>{isPt ? "Campos Pesquisáveis" : "Searchable Fields"}</span>
               </div>
 
-              <div className="border border-m3-border rounded-[var(--radius-xl)] overflow-hidden divide-y divide-m3-border/60 bg-m3-card text-xs">
+              <div className="border border-m3-border rounded-xl overflow-hidden divide-y divide-m3-border/60 bg-m3-card text-xs">
                 {SEARCHABLE_FIELDS.map(([field, descPt, descEn]) => (
                   <div
                     key={field}

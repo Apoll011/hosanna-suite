@@ -4,7 +4,7 @@
  */
 
 import { OverflowTagList } from "@/src/components/OverflowTagList";
-import { Badge, EmptyState, Spinner } from "@/src/components/common";
+import { Badge, EmptyState, Table } from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
@@ -12,25 +12,8 @@ import { useI18n } from "@/src/lib/i18n";
 import { usePermissionValue } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Song } from "@/src/types";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  FileText,
-  FolderInput,
-  Music,
-  Tag,
-  Trash2,
-  X,
-} from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FileText, FolderInput, Music, Tag, Trash2, X } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFolders } from "../../hooks/useFolders";
@@ -58,27 +41,20 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const { settings } = usePersonalSettings();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<
-    string,
-    unknown
-  >;
+  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<string, unknown>;
 
   // Density from context with the unified personal-settings fallback
-  const contextDensity = context.density as
-    "comfortable" | "compact" | undefined;
+  const contextDensity = context.density as "comfortable" | "compact" | undefined;
 
   const density = contextDensity ?? settings.explorerDensity;
   const isCompact = density === "compact";
 
   // Search & Filter props resolution
   const contextSearchQuery = context.searchQuery as string | undefined;
-  const contextSortBy = context.sortBy as
-    "title" | "artist" | "updatedAt" | "number" | undefined;
+  const contextSortBy = context.sortBy as "title" | "artist" | "updatedAt" | "number" | undefined;
   const contextSortOrder = context.sortOrder as "asc" | "desc" | undefined;
-  const actualSelectedKey =
-    selectedKey ?? (context.selectedKey as string | null) ?? "";
-  const actualSelectedTag =
-    selectedTag ?? (context.selectedTag as string | null) ?? "";
+  const actualSelectedKey = selectedKey ?? (context.selectedKey as string | null) ?? "";
+  const actualSelectedTag = selectedTag ?? (context.selectedTag as string | null) ?? "";
 
   const [page, setPage] = useState(1);
 
@@ -109,28 +85,21 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     undefined,
   );
 
-  const [jumpPageInput, setJumpPageInput] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(50);
 
   // Modals & Target delegates from layout context
   const openModal = context.openModal as ((modal: string) => void) | undefined;
-  const setMoveSongTarget = context.setMoveSongTarget as
-    ((song: Song | null) => void) | undefined;
+  const setMoveSongTarget = context.setMoveSongTarget as ((song: Song | null) => void) | undefined;
   const setDeleteSongTarget = context.setDeleteSongTarget as
     ((song: Song | null) => void) | undefined;
 
-  const contextSelectedSongIds = context.selectedSongIds as
-    Set<string> | undefined;
+  const contextSelectedSongIds = context.selectedSongIds as Set<string> | undefined;
   const contextSetSelectedSongIds = context.setSelectedSongIds as
     React.Dispatch<React.SetStateAction<Set<string>>> | undefined;
 
-  const [localSelectedSongIds, setLocalSelectedSongIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [localSelectedSongIds, setLocalSelectedSongIds] = useState<Set<string>>(new Set());
   const selectedSongIds = contextSelectedSongIds ?? localSelectedSongIds;
-  const setSelectedSongIds = useCallback<
-    React.Dispatch<React.SetStateAction<Set<string>>>
-  >(
+  const setSelectedSongIds = useCallback<React.Dispatch<React.SetStateAction<Set<string>>>>(
     (action) => {
       if (contextSetSelectedSongIds) {
         contextSetSelectedSongIds(action);
@@ -157,10 +126,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const { foldersQuery } = useFolders();
 
   const folders = useMemo(
-    () =>
-      Array.isArray(foldersQuery.data?.folders)
-        ? foldersQuery.data.folders
-        : [],
+    () => (Array.isArray(foldersQuery.data?.folders) ? foldersQuery.data.folders : []),
     [foldersQuery.data?.folders],
   );
 
@@ -182,10 +148,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     let result = allSongs;
 
     if (finalSearchQuery.trim()) {
-      const liqeMatches = filterSearchableSongsWithLiqe(
-        searchableSongs,
-        finalSearchQuery,
-      );
+      const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, finalSearchQuery);
       const matchedIds = new Set(liqeMatches.map((s) => s.id));
       result = result.filter((song) => matchedIds.has(song.id));
     }
@@ -239,9 +202,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   ]);
 
   const totalSongs = filteredSongs.length;
-  const effectivePerPage =
-    itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
-  const totalPages = Math.max(1, Math.ceil(totalSongs / effectivePerPage));
+  const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
 
   // Reset page when filters change
   useEffect(() => {
@@ -265,26 +226,23 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   }, [filteredSongs, page, effectivePerPage, itemsPerPage]);
 
   // Rubberband marquee selection
-  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } =
-    useMarqueeSelection({
-      containerRef,
-      enabled: true,
-      selectedIds: selectedSongIds,
-      onSelectionChange: setSelectedSongIds,
-      onClearSelection: () => {
-        setSelectedSongIds(new Set());
-        setLastClickedId(null);
-      },
-    });
+  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } = useMarqueeSelection({
+    containerRef,
+    enabled: true,
+    selectedIds: selectedSongIds,
+    onSelectionChange: setSelectedSongIds,
+    onClearSelection: () => {
+      setSelectedSongIds(new Set());
+      setLastClickedId(null);
+    },
+  });
 
   // Keyboard navigation & Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if (e.key === "Escape") {
@@ -315,14 +273,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    songsData,
-    selectedSongIds,
-    allSongs,
-    setSelectedSongIds,
-    setDeleteSongTarget,
-    openModal,
-  ]);
+  }, [songsData, selectedSongIds, allSongs, setSelectedSongIds, setDeleteSongTarget, openModal]);
 
   // Outside click to close context menu
   useEffect(() => {
@@ -330,15 +281,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     window.addEventListener("click", handleClickOutside);
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
-
-  const handleJumpPage = (e: React.FormEvent) => {
-    e.preventDefault();
-    const targetPage = parseInt(jumpPageInput, 10);
-    if (!isNaN(targetPage) && targetPage >= 1 && targetPage <= totalPages) {
-      setPage(targetPage);
-      setJumpPageInput("");
-    }
-  };
 
   const handleSongClick = useCallback(
     (e: React.MouseEvent, song: Song) => {
@@ -374,14 +316,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
         setLastClickedId(song.id);
       }
     },
-    [
-      navigate,
-      slugPrefix,
-      lastClickedId,
-      selectedSongIds,
-      songsData,
-      setSelectedSongIds,
-    ],
+    [navigate, slugPrefix, lastClickedId, selectedSongIds, songsData, setSelectedSongIds],
   );
 
   const openContextMenu = useCallback(
@@ -401,307 +336,184 @@ export const SongsPage: React.FC<SongsPageProps> = ({
       ref={containerRef}
       data-tour="songs-list"
       onMouseDown={handleWorkspaceMouseDown}
-      className="flex-1 flex flex-col w-full mx-auto space-y-4 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-4 sm:p-8 max-w-7xl"
+      className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-300 overflow-hidden h-full relative select-none p-4 sm:p-8 max-w-7xl"
     >
-      {/* Main Content Area: Grid / Table View */}
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden flex flex-col flex-1 transition-colors">
-        {songsQuery.isLoading ? (
-          <div className="flex-1 flex items-center justify-center p-12 min-h-64">
-            <Spinner label={t("songsPage.loading")} />
-          </div>
-        ) : songsQuery.isError ? (
-          <div className="p-12 text-center text-m3-danger font-bold">
-            {t("songsPage.loadError", {
-              error: (songsQuery.error as unknown as Error).message,
-            })}
-          </div>
-        ) : songsData.length === 0 ? (
-          <div className="p-8">
+      <Table
+        isLoading={songsQuery.isLoading}
+        loadingLabel={t("songsPage.loading")}
+        error={
+          songsQuery.isError
+            ? t("songsPage.loadError", {
+                error: (songsQuery.error as unknown as Error).message,
+              })
+            : undefined
+        }
+        empty={
+          !songsQuery.isLoading && !songsQuery.isError && songsData.length === 0 ? (
             <EmptyState
               icon={<Music className="w-12 h-12 text-m3-primary opacity-40" />}
               title={t("songsPage.noResults")}
               description={
-                finalSearchQuery
-                  ? t("songsPage.noResultsDesc")
-                  : t("songsPage.emptyDesc")
+                finalSearchQuery ? t("songsPage.noResultsDesc") : t("songsPage.emptyDesc")
               }
               actionLabel={emptyStateAction}
               onAction={() => openModal?.("create-song")}
             />
-          </div>
-        ) : (
-          /* Table View Layout */
-          <div className="overflow-x-auto flex-1">
-            <table className="w-full text-left border-collapse select-none">
-              <thead>
-                <tr className="bg-m3-sidebar/40 border-b border-m3-border text-label">
-                  <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
-                    {t("songsPage.titlePath")}
-                  </th>
-                  <th
-                    className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.artist")}
-                  </th>
-                  <th
-                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.folder")}
-                  </th>
-                  <th
-                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.tags")}
-                  </th>
-                  <th
-                    className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.updatedAt")}
-                  </th>
-                  <th
-                    className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}
-                  >
-                    <span className="sr-only">{t("songsPage.actions")}</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                className={`divide-y divide-m3-border/40 ${
-                  isCompact ? "text-xs" : "text-[13px]"
-                } font-medium`}
-              >
-                {songsData.map((song) => {
-                  const folderName = folderMap.get(song.folderId || "");
-                  const isSelected = selectedSongIds.has(song.id);
+          ) : undefined
+        }
+        header={
+          <table className="w-full text-left border-collapse select-none">
+            <thead>
+              <tr className="bg-m3-sidebar/40 border-b border-m3-border text-label">
+                <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
+                  {t("songsPage.titlePath")}
+                </th>
+                <th className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
+                  {t("songsPage.artist")}
+                </th>
+                <th className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
+                  {t("songsPage.folder")}
+                </th>
+                <th className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
+                  {t("songsPage.tags")}
+                </th>
+                <th className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
+                  {t("songsPage.updatedAt")}
+                </th>
+                <th className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}>
+                  <span className="sr-only">{t("songsPage.actions")}</span>
+                </th>
+              </tr>
+            </thead>
+          </table>
+        }
+        pagination={{
+          page,
+          totalItems: totalSongs,
+          itemsPerPage,
+          onPageChange: setPage,
+          onItemsPerPageChange: (size) => {
+            setItemsPerPage(size);
+            setPage(1);
+          },
+          itemLabel: t("songsPage.songsWord"),
+          emptyLabel: t("songsPage.zeroSongs"),
+        }}
+      >
+        <table className="w-full text-left border-collapse select-none">
+          <tbody
+            className={`divide-y divide-m3-border/40 ${
+              isCompact ? "text-xs" : "text-[13px]"
+            } font-medium`}
+          >
+            {songsData.map((song) => {
+              const folderName = folderMap.get(song.folderId || "");
+              const isSelected = selectedSongIds.has(song.id);
 
-                  return (
-                    <tr
-                      key={song.id}
-                      data-item-id={song.id}
-                      data-item-type="song"
-                      className={`transition-colors group cursor-pointer ${
-                        isSelected
-                          ? "bg-m3-primary/10 text-m3-primary"
-                          : "hover:bg-m3-hover/50 text-m3-text"
-                      }`}
-                      onClick={(e) => handleSongClick(e, song)}
-                      onDoubleClick={() =>
-                        navigate(`${slugPrefix}/songs/${song.id}`)
-                      }
-                      onContextMenu={(e) => openContextMenu(e, song)}
-                    >
-                      <td
-                        className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-xs sm:max-w-md`}
-                      >
-                        <div className="flex flex-col min-w-0">
-                          <span className="truncate font-semibold text-m3-text">
-                            {song.title}
-                          </span>
-                          <span className="sm:hidden text-caption truncate mt-0.5">
-                            {song.artist || "—"}
-                          </span>
-                          {song.path && (
-                            <span className="hidden sm:block text-label opacity-60 mt-0.5 truncate">
-                              {song.path.split("/")[0]}/
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td
-                        className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-m3-secondary max-w-40 truncate font-normal`}
-                      >
+              return (
+                <tr
+                  key={song.id}
+                  data-item-id={song.id}
+                  data-item-type="song"
+                  className={`transition-colors group cursor-pointer ${
+                    isSelected
+                      ? "bg-m3-primary/10 text-m3-primary"
+                      : "hover:bg-m3-hover/50 text-m3-text"
+                  }`}
+                  onClick={(e) => handleSongClick(e, song)}
+                  onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
+                  onContextMenu={(e) => openContextMenu(e, song)}
+                >
+                  <td className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-xs sm:max-w-md`}>
+                    <div className="flex flex-col min-w-0">
+                      <span className="truncate font-semibold text-m3-text">{song.title}</span>
+                      <span className="sm:hidden text-caption truncate mt-0.5">
                         {song.artist || "—"}
-                      </td>
+                      </span>
+                      {song.path && (
+                        <span className="hidden sm:block text-label opacity-60 mt-0.5 truncate">
+                          {song.path.split("/")[0]}/
+                        </span>
+                      )}
+                    </div>
+                  </td>
 
-                      <td
-                        className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+                  <td
+                    className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-m3-secondary max-w-40 truncate font-normal`}
+                  >
+                    {song.artist || "—"}
+                  </td>
+
+                  <td className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
+                    {folderName ? (
+                      <Badge variant="sky">{folderName}</Badge>
+                    ) : (
+                      <span className="text-label opacity-40 italic">{t("songsPage.root")}</span>
+                    )}
+                  </td>
+
+                  <td
+                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-56`}
+                  >
+                    <OverflowTagList tags={song.tags} />
+                  </td>
+
+                  <td
+                    className={`hidden md:table-cell tabular-nums ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-caption whitespace-nowrap`}
+                  >
+                    {new Date(song.updatedAt).toLocaleDateString(locale)}
+                  </td>
+
+                  <td
+                    className={`${isCompact ? "py-2.5 px-3" : "py-3 px-4"} text-right`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-center justify-end gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
+                        title={t("songsPage.openEditor")}
+                        aria-label={t("songsPage.openEditor")}
+                        className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
                       >
-                        {folderName ? (
-                          <Badge variant="sky">{folderName}</Badge>
-                        ) : (
-                          <span className="text-label opacity-40 italic">
-                            {t("songsPage.root")}
-                          </span>
-                        )}
-                      </td>
-
-                      <td
-                        className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-56`}
-                      >
-                        <OverflowTagList tags={song.tags} />
-                      </td>
-
-                      <td
-                        className={`hidden md:table-cell tabular-nums ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-caption whitespace-nowrap`}
-                      >
-                        {new Date(song.updatedAt).toLocaleDateString(locale)}
-                      </td>
-
-                      <td
-                        className={`${isCompact ? "py-2.5 px-3" : "py-3 px-4"} text-right`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="flex items-center justify-end gap-0.5">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              navigate(`${slugPrefix}/songs/${song.id}`)
-                            }
-                            title={t("songsPage.openEditor")}
-                            aria-label={t("songsPage.openEditor")}
-                            className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                          >
-                            <FileText className="w-4 h-4" />
-                          </button>
-                          <Can permission="song.update">
-                            <button
-                              type="button"
-                              onClick={() => setMoveSongTarget?.(song)}
-                              title={t("songsPage.move")}
-                              aria-label={t("songsPage.move")}
-                              className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                            >
-                              <FolderInput className="w-4 h-4" />
-                            </button>
-                          </Can>
-                          <Can permission="song.delete">
-                            <button
-                              type="button"
-                              onClick={() => setDeleteSongTarget?.(song)}
-                              title={t("songsPage.delete")}
-                              aria-label={t("songsPage.delete")}
-                              className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </Can>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Clean, Modern Pagination & Status Footer Bar */}
-        <div className="px-4 py-3 bg-m3-sidebar/30 border-t border-m3-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          {/* Left: Summary & Per-Page selector */}
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-m3-secondary font-medium">
-              {totalSongs === 0 ? (
-                t("songsPage.zeroSongs")
-              ) : (
-                <>
-                  {t("songsPage.showing")}{" "}
-                  <strong className="font-bold text-m3-text">
-                    {itemsPerPage === 0 ? 1 : (page - 1) * effectivePerPage + 1}
-                  </strong>{" "}
-                  {t("songsPage.to")}{" "}
-                  <strong className="font-bold text-m3-text">
-                    {itemsPerPage === 0
-                      ? totalSongs
-                      : Math.min(page * effectivePerPage, totalSongs)}
-                  </strong>{" "}
-                  {t("songsPage.of")}{" "}
-                  <strong className="font-bold text-m3-text">
-                    {totalSongs}
-                  </strong>{" "}
-                  {t("songsPage.songsWord")}
-                </>
-              )}
-            </span>
-
-            <div className="flex items-center gap-1.5 bg-m3-card border border-m3-border rounded-xl px-2.5 py-1 shadow-[var(--shadow-sm)]">
-              <span className="text-label">{t("songsPage.display")}</span>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setPage(1);
-                }}
-                className="bg-transparent font-bold text-m3-text focus:outline-none cursor-pointer text-xs"
-              >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={0}>
-                  {t("songsPage.allPages", { count: totalSongs })}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          {/* Right: Clean Page Controls */}
-          {totalPages > 1 && (
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-              {/* Navigation button group */}
-              <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-[var(--shadow-sm)]">
-                <button
-                  type="button"
-                  onClick={() => setPage(1)}
-                  disabled={page <= 1}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.firstPage")}
-                >
-                  <ChevronsLeft className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage(page - 1)}
-                  disabled={page <= 1}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.prevPage")}
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
-
-                <span className="px-2 font-bold text-m3-text flex items-center text-xs whitespace-nowrap">
-                  <form onSubmit={handleJumpPage} className="flex items-center">
-                    <input
-                      type="number"
-                      min={1}
-                      max={totalPages}
-                      placeholder={String(page)}
-                      value={jumpPageInput}
-                      onChange={(e) => setJumpPageInput(e.target.value)}
-                      className="w-5 bg-transparent text-center font-bold text-m3-text focus:outline-none border-b border-m3-border focus:border-m3-primary text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                  </form>{" "}
-                  / {totalPages}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() => setPage(page + 1)}
-                  disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.nextPage")}
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage(totalPages)}
-                  disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.lastPage")}
-                >
-                  <ChevronsRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+                        <FileText className="w-4 h-4" />
+                      </button>
+                      <Can permission="song.update">
+                        <button
+                          type="button"
+                          onClick={() => setMoveSongTarget?.(song)}
+                          title={t("songsPage.move")}
+                          aria-label={t("songsPage.move")}
+                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
+                        >
+                          <FolderInput className="w-4 h-4" />
+                        </button>
+                      </Can>
+                      <Can permission="song.delete">
+                        <button
+                          type="button"
+                          onClick={() => setDeleteSongTarget?.(song)}
+                          title={t("songsPage.delete")}
+                          aria-label={t("songsPage.delete")}
+                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-md cursor-pointer transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </Can>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Table>
 
       {/* Floating Context Menu */}
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
         >
           {contextMenu.isMulti ? (
@@ -721,9 +533,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
                 >
                   <Tag className="w-4 h-4 text-m3-secondary" />
-                  <span>
-                    {t("songsPage.tagCount", { count: selectedSongIds.size })}
-                  </span>
+                  <span>{t("songsPage.tagCount", { count: selectedSongIds.size })}</span>
                 </button>
 
                 <button
@@ -735,9 +545,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
                 >
                   <FolderInput className="w-4 h-4 text-m3-secondary" />
-                  <span>
-                    {t("songsPage.moveCount", { count: selectedSongIds.size })}
-                  </span>
+                  <span>{t("songsPage.moveCount", { count: selectedSongIds.size })}</span>
                 </button>
               </Can>
 

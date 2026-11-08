@@ -20,10 +20,7 @@ export const PROD_EPOCH_LS_KEY = "hosana_repl_epoch";
 export const DEMO_EPOCH_LS_KEY = "demo_hosana_repl_epoch";
 
 /** Databases that belong exclusively to demo / interactive onboarding. */
-export const DEMO_DATABASE_NAMES = [
-  DEMO_DB_NAME,
-  DEMO_CHECKPOINT_DB_NAME,
-] as const;
+export const DEMO_DATABASE_NAMES = [DEMO_DB_NAME, DEMO_CHECKPOINT_DB_NAME] as const;
 
 export function getMainDbName(): string {
   return isDemoMode() ? DEMO_DB_NAME : PROD_DB_NAME;

@@ -14,10 +14,7 @@ import { initializeNewUserTourSettings } from "../../lib/tour";
 import LoginLayout from "./Layout";
 import { GoogleTextField } from "./components/GoogleTextField";
 import { PasswordStrengthMeter } from "./components/PasswordStrengthMeter";
-import {
-  TurnstileWidget,
-  type TurnstileHandle,
-} from "./components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileHandle } from "./components/TurnstileWidget";
 
 export const RegisterOrganizationPage: React.FC = () => {
   const { navigate } = useAppNavigate();
@@ -29,9 +26,7 @@ export const RegisterOrganizationPage: React.FC = () => {
   // Form State
   const [orgName, setOrgName] = useState("");
   const [orgSlug, setOrgSlug] = useState("");
-  const [slugStatus, setSlugStatus] = useState<
-    "idle" | "checking" | "available" | "taken"
-  >("idle");
+  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
@@ -46,8 +41,7 @@ export const RegisterOrganizationPage: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const passwordMismatch =
-    confirmPassword.length > 0 && adminPassword !== confirmPassword;
+  const passwordMismatch = confirmPassword.length > 0 && adminPassword !== confirmPassword;
 
   // Check slug availability with debounce
   useEffect(() => {
@@ -77,10 +71,7 @@ export const RegisterOrganizationPage: React.FC = () => {
   }, [orgSlug]);
 
   // Validation per step
-  const isStep1Valid =
-    orgName.trim() !== "" &&
-    orgSlug.trim() !== "" &&
-    slugStatus === "available";
+  const isStep1Valid = orgName.trim() !== "" && orgSlug.trim() !== "" && slugStatus === "available";
   const isStep2Valid = adminName.trim() !== "" && adminEmail.trim() !== "";
   const isStep3Valid =
     adminPassword.trim() !== "" &&
@@ -119,8 +110,7 @@ export const RegisterOrganizationPage: React.FC = () => {
           : undefined,
       });
 
-      if (signUpError)
-        throw new Error(signUpError.message || "Falha ao criar conta.");
+      if (signUpError) throw new Error(signUpError.message || "Falha ao criar conta.");
 
       await initializeNewUserTourSettings();
 
@@ -131,8 +121,7 @@ export const RegisterOrganizationPage: React.FC = () => {
         userId: data.user.id,
       });
 
-      if (orgError)
-        throw new Error(orgError.message || "Falha ao criar organização.");
+      if (orgError) throw new Error(orgError.message || "Falha ao criar organização.");
 
       setIsLoading(false);
       setIsSuccess(true);
@@ -144,10 +133,7 @@ export const RegisterOrganizationPage: React.FC = () => {
         });
       }, 2000);
     } catch (err: unknown) {
-      setErrorMsg(
-        (err as Error).message ||
-          "Falha ao criar organização. Tente novamente.",
-      );
+      setErrorMsg((err as Error).message || "Falha ao criar organização. Tente novamente.");
       setIsLoading(false);
       captchaRef.current?.reset();
       setCaptchaToken("");
@@ -180,9 +166,7 @@ export const RegisterOrganizationPage: React.FC = () => {
           <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/50 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <p className="text-m3-secondary text-sm">
-            {t("auth.resetPassword.successDesc")}
-          </p>
+          <p className="text-m3-secondary text-sm">{t("auth.resetPassword.successDesc")}</p>
         </div>
       ) : (
         <>
@@ -218,16 +202,8 @@ export const RegisterOrganizationPage: React.FC = () => {
                 <GoogleTextField
                   label={t("onboarding.slugLabel")}
                   value={orgSlug}
-                  onChange={(e) =>
-                    setOrgSlug(
-                      e.target.value.toLowerCase().replace(/\s+/g, "-"),
-                    )
-                  }
-                  error={
-                    slugStatus === "taken"
-                      ? t("onboarding.slugTaken")
-                      : undefined
-                  }
+                  onChange={(e) => setOrgSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
+                  error={slugStatus === "taken" ? t("onboarding.slugTaken") : undefined}
                   helperText={
                     slugStatus === "checking"
                       ? t("onboarding.checkingSlug")
@@ -284,11 +260,7 @@ export const RegisterOrganizationPage: React.FC = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   autoComplete="new-password"
-                  error={
-                    passwordMismatch
-                      ? t("auth.register.passwordMismatch")
-                      : undefined
-                  }
+                  error={passwordMismatch ? t("auth.register.passwordMismatch") : undefined}
                 />
 
                 <div className="flex items-center justify-between px-0.5">
@@ -305,9 +277,7 @@ export const RegisterOrganizationPage: React.FC = () => {
                   </label>
                 </div>
 
-                {adminPassword.length > 0 && (
-                  <PasswordStrengthMeter password={adminPassword} />
-                )}
+                {adminPassword.length > 0 && <PasswordStrengthMeter password={adminPassword} />}
 
                 <TurnstileWidget ref={captchaRef} onVerify={setCaptchaToken} />
 
@@ -323,8 +293,7 @@ export const RegisterOrganizationPage: React.FC = () => {
                     htmlFor="org-terms"
                     className="text-xs sm:text-sm text-m3-secondary leading-snug cursor-pointer select-none"
                   >
-                    Concordo com os Termos de Serviço e a Política de
-                    Privacidade.
+                    Concordo com os Termos de Serviço e a Política de Privacidade.
                   </label>
                 </div>
               </div>

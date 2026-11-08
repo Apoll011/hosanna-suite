@@ -80,13 +80,8 @@ export function dispatchAiSettingsChanged() {
   window.dispatchEvent(new CustomEvent(AI_SETTINGS_CHANGED_EVENT));
 }
 
-export function dispatchLibraryChanged(detail?: {
-  action?: string;
-  id?: string;
-}) {
-  window.dispatchEvent(
-    new CustomEvent(AI_LIBRARY_CHANGED_EVENT, { detail: detail ?? {} }),
-  );
+export function dispatchLibraryChanged(detail?: { action?: string; id?: string }) {
+  window.dispatchEvent(new CustomEvent(AI_LIBRARY_CHANGED_EVENT, { detail: detail ?? {} }));
 }
 
 export type AiNavigateDetail = {

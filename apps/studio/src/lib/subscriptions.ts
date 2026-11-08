@@ -31,9 +31,7 @@ export const SUBSCRIPTION_CUSTOMER_TYPE = "organization" as const;
  * Fetch every subscription row for an organization, any status.
  * Throws on error so callers decide how to fail.
  */
-export async function fetchSubscriptionRows(
-  referenceId: string,
-): Promise<Subscription[]> {
+export async function fetchSubscriptionRows(referenceId: string): Promise<Subscription[]> {
   const { data, error } = await authClient.subscription.list({
     query: {
       referenceId,
@@ -47,12 +45,8 @@ export async function fetchSubscriptionRows(
 }
 
 /** The subscription currently in effect, if any (status "active" or "trialing"). */
-export function findActiveSubscription(
-  rows: Subscription[],
-): Subscription | null {
-  return (
-    rows.find((s) => s.status === "active" || s.status === "trialing") ?? null
-  );
+export function findActiveSubscription(rows: Subscription[]): Subscription | null {
+  return rows.find((s) => s.status === "active" || s.status === "trialing") ?? null;
 }
 
 /**
@@ -60,9 +54,7 @@ export function findActiveSubscription(
  * `null` when the org has no live subscription. For the full history (canceled,
  * past_due, unpaid, ...) inspect the rows themselves.
  */
-export function currentSubscriptionStatus(
-  rows: Subscription[],
-): Subscription["status"] | null {
+export function currentSubscriptionStatus(rows: Subscription[]): Subscription["status"] | null {
   return findActiveSubscription(rows)?.status ?? null;
 }
 
@@ -80,9 +72,7 @@ export type PlanPricing = typeof PLAN_PRICING;
 let cachedPricing: PlanPricing | null = null;
 
 /** Load display amounts from GET /api/billing/pricing (public). */
-export async function fetchPlanPricing(
-  apiBaseUrl?: string,
-): Promise<PlanPricing> {
+export async function fetchPlanPricing(apiBaseUrl?: string): Promise<PlanPricing> {
   if (cachedPricing) return cachedPricing;
   const base =
     apiBaseUrl ??

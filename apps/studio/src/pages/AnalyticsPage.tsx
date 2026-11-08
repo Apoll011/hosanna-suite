@@ -21,14 +21,11 @@ export const AnalyticsPage: React.FC = () => {
   const { t } = useI18n();
   const { slug } = useParams<{ slug: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { granted: canViewHealth, loading: permLoading } =
-    useCan("library.health");
+  const { granted: canViewHealth, loading: permLoading } = useCan("library.health");
 
   const initialTab = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState<TabType>(
-    VALID_TABS.includes(initialTab as TabType)
-      ? (initialTab as TabType)
-      : "usage",
+    VALID_TABS.includes(initialTab as TabType) ? (initialTab as TabType) : "usage",
   );
 
   useEffect(() => {
@@ -67,10 +64,7 @@ export const AnalyticsPage: React.FC = () => {
   return (
     <div className="h-full w-full overflow-y-auto bg-m3-bg text-m3-text p-4 sm:p-6 lg:p-8">
       <div className="max-w-5xl mx-auto space-y-6">
-        <PageHeader
-          title={t("analytics.title")}
-          description={t("analytics.desc")}
-        />
+        <PageHeader title={t("analytics.title")} description={t("analytics.desc")} />
 
         <Tabs
           items={tabItems}

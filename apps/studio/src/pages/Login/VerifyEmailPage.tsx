@@ -6,14 +6,7 @@
 import { AppLink } from "@/src/components/AppLink";
 import { Button } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
-import {
-  CheckCircle2,
-  Clock,
-  Loader2,
-  MailCheck,
-  RefreshCw,
-  XCircle,
-} from "lucide-react";
+import { CheckCircle2, Clock, Loader2, MailCheck, RefreshCw, XCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { authClient } from "../../lib/authClient";
@@ -88,14 +81,10 @@ export const VerifyEmailPage: React.FC = () => {
             </p>
             {resendSuccess ? (
               <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-2 justify-center">
-                <CheckCircle2 className="w-4 h-4" />{" "}
-                {t("auth.forgotPassword.emailSentTitle")}
+                <CheckCircle2 className="w-4 h-4" /> {t("auth.forgotPassword.emailSentTitle")}
               </p>
             ) : (
-              <form
-                onSubmit={handleResend}
-                className="flex flex-col sm:flex-row gap-2.5"
-              >
+              <form onSubmit={handleResend} className="flex flex-col sm:flex-row gap-2.5">
                 <div className="flex-1">
                   <GoogleTextField
                     type="email"
@@ -113,9 +102,7 @@ export const VerifyEmailPage: React.FC = () => {
                 </Button>
               </form>
             )}
-            {resendError && (
-              <p className="text-xs text-m3-danger mt-2">{resendError}</p>
-            )}
+            {resendError && <p className="text-xs text-m3-danger mt-2">{resendError}</p>}
           </div>
         </div>
       </LoginLayout>
@@ -175,10 +162,7 @@ export const VerifyEmailPage: React.FC = () => {
           <div className="w-16 h-16 bg-amber-100 dark:bg-amber-950/50 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 mb-2">
             <Clock className="w-8 h-8" />
           </div>
-          <form
-            onSubmit={handleResend}
-            className="w-full flex flex-col sm:flex-row gap-2.5 mt-2"
-          >
+          <form onSubmit={handleResend} className="w-full flex flex-col sm:flex-row gap-2.5 mt-2">
             <div className="flex-1">
               <GoogleTextField
                 type="email"
@@ -200,9 +184,7 @@ export const VerifyEmailPage: React.FC = () => {
               {t("auth.forgotPassword.emailSentTitle")}
             </p>
           )}
-          {resendError && (
-            <p className="text-xs text-m3-danger">{resendError}</p>
-          )}
+          {resendError && <p className="text-xs text-m3-danger">{resendError}</p>}
         </div>
       </LoginLayout>
     );

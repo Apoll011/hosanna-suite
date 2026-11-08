@@ -33,10 +33,7 @@ describe("extractYouTubeVideoId", () => {
       extractYouTubeVideoId("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
       "dQw4w9WgXcQ",
     );
-    assert.equal(
-      extractYouTubeVideoId("https://youtu.be/dQw4w9WgXcQ"),
-      "dQw4w9WgXcQ",
-    );
+    assert.equal(extractYouTubeVideoId("https://youtu.be/dQw4w9WgXcQ"), "dQw4w9WgXcQ");
     assert.equal(extractYouTubeVideoId("dQw4w9WgXcQ"), "dQw4w9WgXcQ");
   });
 });

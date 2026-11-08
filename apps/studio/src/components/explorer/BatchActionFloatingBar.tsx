@@ -30,7 +30,7 @@ export const BatchActionFloatingBar: React.FC<BatchActionFloatingBarProps> = ({
   const { t } = useI18n();
   if (selectedCount <= 1) return null;
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-m3-card text-m3-text border border-m3-border rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] px-5 py-3 animate-in fade-in slide-in-from-bottom-4 duration-200">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-m3-card text-m3-text border border-m3-border rounded-lg shadow-lg px-5 py-3 animate-in fade-in slide-in-from-bottom-4 duration-200">
       <span className="text-label px-2">
         {selectedCount} {itemLabel} selecionados
       </span>

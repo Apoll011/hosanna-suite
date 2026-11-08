@@ -5,11 +5,11 @@
 
 import { aiApi, type AiProvider, type AiSettingsPublic } from "@/src/api/ai";
 import { Button, Spinner, Surface } from "@/src/components/common";
-import { dispatchAiSettingsChanged } from "@/src/features/ai-chat";
+import { dispatchAiSettingsChanged, LogosMascot } from "@/src/features/ai-chat";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import {
-  Bot,
+  Check,
   CheckCircle2,
   ChevronDown,
   CircleOff,
@@ -18,19 +18,17 @@ import {
   Lock,
   Save,
   Settings2,
-  Trash2,
+  Sparkles,
   Zap,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { AiBillingCard } from "./AiBillingCard";
 import { AiMemoryPanel } from "./AiMemoryPanel";
+import { AiProviderLogoBadge } from "./AiProviderLogo";
 
 export interface AiSettingsTabProps {
   active: boolean;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 const selectClass =
@@ -39,34 +37,46 @@ const selectClass =
 const inputClass =
   "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
 
+const API_KEY_MASK = "••••••••••••••••••••••••";
+
 const PROVIDER_META: Record<
   AiProvider,
-  { label: string; hint: string; accent: string }
+  {
+    label: string;
+    hint: string;
+    ring: string;
+    usesDefaultEndpoint: boolean;
+  }
 > = {
   openai: {
-    label: "OpenAI",
-    hint: "GPT models",
-    accent: "from-emerald-500/15 to-teal-500/5",
+    label: "ChatGPT",
+    hint: "OpenAI GPT models",
+    ring: "ring-emerald-500/40",
+    usesDefaultEndpoint: true,
   },
   anthropic: {
     label: "Anthropic",
-    hint: "Claude",
-    accent: "from-amber-500/15 to-orange-500/5",
+    hint: "Claude models",
+    ring: "ring-amber-500/40",
+    usesDefaultEndpoint: true,
   },
   google: {
     label: "Gemini",
     hint: "Google AI",
-    accent: "from-sky-500/15 to-blue-500/5",
+    ring: "ring-sky-500/40",
+    usesDefaultEndpoint: true,
   },
   deepseek: {
     label: "DeepSeek",
     hint: "Search + fetch",
-    accent: "from-violet-500/15 to-indigo-500/5",
+    ring: "ring-violet-500/40",
+    usesDefaultEndpoint: true,
   },
   openai_compatible: {
     label: "Custom",
-    hint: "OpenAI-compatible",
-    accent: "from-stone-500/15 to-zinc-500/5",
+    hint: "Your own endpoint",
+    ring: "ring-stone-500/40",
+    usesDefaultEndpoint: false,
   },
 };
 
@@ -87,14 +97,12 @@ function SectionCard({
     <Surface padding="none" className="overflow-hidden">
       <div className="px-5 py-4 border-b border-m3-border flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
             {icon}
           </div>
           <div className="min-w-0">
             <h3 className="text-sm font-semibold text-m3-text">{title}</h3>
-            {desc ? (
-              <p className="text-caption text-m3-secondary mt-0.5">{desc}</p>
-            ) : null}
+            {desc ? <p className="text-caption text-m3-secondary mt-0.5">{desc}</p> : null}
           </div>
         </div>
         {action}
@@ -104,10 +112,7 @@ function SectionCard({
   );
 }
 
-export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
-  active,
-  showToast,
-}) => {
+export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast }) => {
   const { t } = useI18n();
   const { granted: canManage, loading: canLoading } = useCan("ai.manage");
 
@@ -121,6 +126,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
   const [customModel, setCustomModel] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [apiKey, setApiKey] = useState("");
+  const [apiKeyEditing, setApiKeyEditing] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
   const [maxToolCalls, setMaxToolCalls] = useState(12);
   const [temperature, setTemperature] = useState<number | null>(null);
@@ -142,20 +148,19 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         setProvider(data.provider);
         setModel(data.model);
         setEnabled(data.enabled);
-        setBaseUrl(data.baseUrl ?? "");
+        setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
         setMaxToolCalls(data.maxToolCalls);
         setTemperature(data.temperature);
-        setMaxOutputTokens(
-          data.maxOutputTokens != null ? String(data.maxOutputTokens) : "",
-        );
+        setMaxOutputTokens(data.maxOutputTokens != null ? String(data.maxOutputTokens) : "");
         setInstructions(data.instructions ?? "");
         setMemoryEnabled(data.memoryEnabled);
+        setApiKey("");
+        setApiKeyEditing(false);
         const presets = data.modelPresets[data.provider] ?? [];
         setCustomModel(!presets.includes(data.model));
       })
       .catch((err: unknown) => {
-        const message =
-          err instanceof Error ? err.message : t("ai.settings.loadError");
+        const message = err instanceof Error ? err.message : t("ai.settings.loadError");
         showToast?.(message, "error");
       })
       .finally(() => {
@@ -166,10 +171,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
     };
   }, [active, canManage, showToast, t]);
 
-  const presets = useMemo(
-    () => settings?.modelPresets[provider] ?? [],
-    [settings, provider],
-  );
+  const presets = useMemo(() => settings?.modelPresets[provider] ?? [], [settings, provider]);
 
   if (!active) return null;
 
@@ -185,9 +187,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
     return (
       <Surface className="max-w-xl mx-auto w-full text-center p-10">
         <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
-        <h3 className="text-title text-m3-text">
-          {t("ai.settings.noAccessTitle")}
-        </h3>
+        <h3 className="text-title text-m3-text">{t("ai.settings.noAccessTitle")}</h3>
         <p className="text-muted mt-1">{t("ai.settings.noAccessDesc")}</p>
       </Surface>
     );
@@ -199,15 +199,14 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
     if (nextPresets.length > 0 && !customModel) {
       setModel(nextPresets[0]!);
     }
-    const def = settings?.defaultBaseUrls?.[next];
-    if (def) setBaseUrl(def);
-    else if (next !== "openai_compatible") setBaseUrl("");
+    if (next === "openai_compatible") {
+      setBaseUrl(settings?.baseUrl ?? settings?.defaultBaseUrls?.[next] ?? "");
+    } else {
+      setBaseUrl("");
+    }
   };
 
-  const needsBaseUrl =
-    provider === "openai_compatible" ||
-    provider === "deepseek" ||
-    provider === "openai";
+  const isCustomProvider = provider === "openai_compatible";
 
   const handleSave = async () => {
     setSaving(true);
@@ -217,25 +216,22 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         model: model.trim(),
         enabled,
         ...(apiKey.trim() ? { apiKey: apiKey.trim() } : {}),
-        ...(needsBaseUrl
-          ? { baseUrl: baseUrl.trim() || null }
-          : { baseUrl: null }),
+        ...(isCustomProvider ? { baseUrl: baseUrl.trim() || null } : { baseUrl: null }),
         maxToolCalls,
         temperature,
-        maxOutputTokens: maxOutputTokens.trim()
-          ? Number(maxOutputTokens.trim())
-          : null,
+        maxOutputTokens: maxOutputTokens.trim() ? Number(maxOutputTokens.trim()) : null,
         instructions: instructions.trim() || null,
         memoryEnabled,
       });
       setSettings(data);
       setApiKey("");
+      setApiKeyEditing(false);
+      setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
       setBillingRefreshKey((k) => k + 1);
       dispatchAiSettingsChanged();
       showToast?.(t("ai.settings.saved"), "success");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : t("ai.settings.saveError");
+      const message = err instanceof Error ? err.message : t("ai.settings.saveError");
       showToast?.(message, "error");
     } finally {
       setSaving(false);
@@ -248,11 +244,12 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       const data = await aiApi.clearKey();
       setSettings(data);
       setEnabled(false);
+      setApiKey("");
+      setApiKeyEditing(false);
       dispatchAiSettingsChanged();
       showToast?.(t("ai.settings.keyCleared"), "success");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : t("ai.settings.saveError");
+      const message = err instanceof Error ? err.message : t("ai.settings.saveError");
       showToast?.(message, "error");
     } finally {
       setClearing(false);
@@ -261,54 +258,57 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
 
   const providers = settings?.providers ?? [];
   const ready = Boolean(settings?.configured && enabled);
+  const showMaskedKey = Boolean(settings?.configured) && !apiKeyEditing;
 
   return (
     <div className="max-w-4xl mx-auto w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      {/* Hero status */}
-      <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-m3-border bg-m3-card">
+      <div className="relative overflow-hidden rounded-xl border border-m3-border bg-m3-card">
         <div className="absolute inset-0 bg-linear-to-br from-m3-primary/10 via-transparent to-m3-sidebar pointer-events-none" />
         <div className="relative p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-5">
-          <div className="w-14 h-14 rounded-[var(--radius-lg)] bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-[var(--shadow-md)]">
-            <Bot className="w-7 h-7" />
+          <div className="shrink-0 flex items-center justify-center">
+            <LogosMascot
+              flat
+              interactive
+              track
+              antics="calm"
+              size={72}
+              mood={ready ? "happy" : settings?.configured ? "sleeping" : "idle"}
+              label={t("ai.settings.title")}
+            />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-title text-m3-text">{t("ai.settings.title")}</h2>
-            <p className="text-sm text-m3-secondary mt-1 max-w-xl">
-              {t("ai.settings.desc")}
-            </p>
+            <p className="text-sm text-m3-secondary mt-1 max-w-xl">{t("ai.settings.desc")}</p>
             <div className="flex flex-wrap items-center gap-2 mt-3">
               {ready ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[var(--radius-md)] bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   {t("ai.settings.statusOn")}
                 </span>
               ) : settings?.configured ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[var(--radius-md)] bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
                   <CircleOff className="w-3.5 h-3.5" />
                   {t("ai.settings.statusPaused")}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border">
                   <KeyRound className="w-3.5 h-3.5" />
                   {t("ai.settings.statusSetup")}
                 </span>
               )}
               {settings?.configured ? (
                 <span className="text-caption text-m3-secondary">
-                  {PROVIDER_META[settings.provider]?.label ?? settings.provider}{" "}
-                  · {settings.model}
+                  {PROVIDER_META[settings.provider]?.label ?? settings.provider} · {settings.model}
                 </span>
               ) : null}
             </div>
           </div>
           {settings ? (
-            <label className="flex items-center gap-3 shrink-0 self-start sm:self-center cursor-pointer rounded-[var(--radius-md)] border border-m3-border bg-m3-card/80 px-3.5 py-2.5">
-              <span className="text-sm font-medium text-m3-text">
-                {t("ai.settings.enabled")}
-              </span>
+            <label className="flex items-center gap-3 shrink-0 self-start sm:self-center cursor-pointer rounded-md border border-m3-border bg-m3-card/80 px-3.5 py-2.5">
+              <span className="text-sm font-medium text-m3-text">{t("ai.settings.enabled")}</span>
               <input
                 type="checkbox"
-                className="w-4 h-4 accent-[var(--color-m3-primary)]"
+                className="w-4 h-4 accent-m3-primary"
                 checked={enabled}
                 disabled={!settings.configured && !apiKey.trim()}
                 onChange={(e) => setEnabled(e.currentTarget.checked)}
@@ -326,7 +326,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       ) : (
         <>
           {!settings.encryptionReady && (
-            <div className="rounded-[var(--radius-md)] border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
               {t("ai.settings.encryptionMissing")}
             </div>
           )}
@@ -337,10 +337,19 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             desc={t("ai.settings.connectionDesc")}
           >
             <div>
-              <span className="text-label text-m3-text block mb-2">
-                {t("ai.settings.provider")}
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="flex items-end justify-between gap-3 mb-3">
+                <div>
+                  <span className="text-label text-m3-text block">{t("ai.settings.provider")}</span>
+                  <p className="text-caption text-m3-secondary mt-0.5">
+                    {t("ai.settings.providerHint")}
+                  </p>
+                </div>
+              </div>
+              <div
+                className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2.5"
+                role="radiogroup"
+                aria-label={t("ai.settings.provider")}
+              >
                 {providers.map((p) => {
                   const meta = PROVIDER_META[p];
                   const selected = provider === p;
@@ -348,74 +357,83 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                     <button
                       key={p}
                       type="button"
+                      role="radio"
+                      aria-checked={selected}
                       onClick={() => handleProviderChange(p)}
-                      className={`relative text-left rounded-[var(--radius-md)] border p-3 transition-colors cursor-pointer overflow-hidden ${
+                      className={`group relative text-left rounded-lg border p-3.5 transition-all cursor-pointer ${
                         selected
-                          ? "border-m3-primary bg-m3-primary/5"
-                          : "border-m3-border hover:border-m3-primary/40"
+                          ? `border-m3-primary bg-m3-primary/5 ring-2 ${meta.ring}`
+                          : "border-m3-border hover:border-m3-primary/40 hover:bg-m3-sidebar/40"
                       }`}
                     >
-                      <div
-                        className={`absolute inset-0 bg-linear-to-br ${meta.accent} pointer-events-none`}
-                      />
-                      <div className="relative">
-                        <span
-                          className={`block text-sm font-semibold ${
-                            selected ? "text-m3-primary" : "text-m3-text"
-                          }`}
-                        >
-                          {meta.label}
-                        </span>
-                        <span className="block text-caption text-m3-secondary mt-0.5">
-                          {meta.hint}
+                      <div className="flex items-start gap-3">
+                        <AiProviderLogoBadge provider={p} />
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={`block text-sm font-semibold truncate ${
+                                selected ? "text-m3-primary" : "text-m3-text"
+                              }`}
+                            >
+                              {meta.label}
+                            </span>
+                            {selected ? (
+                              <Check className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                            ) : null}
+                          </span>
+                          <span className="block text-caption text-m3-secondary mt-0.5">
+                            {meta.hint}
+                          </span>
+                          {meta.usesDefaultEndpoint ? (
+                            <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-sidebar text-m3-secondary border border-m3-border">
+                              {t("ai.settings.defaultEndpoint")}
+                            </span>
+                          ) : (
+                            <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                              {t("ai.settings.customEndpoint")}
+                            </span>
+                          )}
                         </span>
                       </div>
                     </button>
                   );
                 })}
               </div>
-              <p className="text-caption text-m3-secondary mt-2">
-                {settings.nativeWebCapabilities?.[provider]?.search
-                  ? t("ai.settings.nativeWebOn")
-                  : t("ai.settings.nativeWebOff")}
+              <p className="text-caption text-m3-secondary mt-2.5 flex items-start gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>
+                  {settings.nativeWebCapabilities?.[provider]?.search
+                    ? t("ai.settings.nativeWebOn")
+                    : t("ai.settings.nativeWebOff")}
+                </span>
               </p>
             </div>
 
-            {needsBaseUrl && (
+            {isCustomProvider ? (
               <label className="block space-y-1.5">
-                <span className="text-label text-m3-text">
-                  {t("ai.settings.baseUrl")}
-                </span>
+                <span className="text-label text-m3-text">{t("ai.settings.baseUrl")}</span>
                 <input
                   className={inputClass}
                   value={baseUrl}
                   onChange={(e) => setBaseUrl(e.currentTarget.value)}
-                  placeholder={
-                    provider === "openai_compatible"
-                      ? t("ai.settings.baseUrlRequiredPlaceholder")
-                      : t("ai.settings.baseUrlPlaceholder")
-                  }
-                  required={provider === "openai_compatible"}
+                  placeholder={t("ai.settings.baseUrlRequiredPlaceholder")}
+                  required
                 />
                 <span className="text-caption text-m3-secondary">
                   {t("ai.settings.baseUrlHint")}
                 </span>
               </label>
-            )}
+            ) : null}
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-label text-m3-text">
-                  {t("ai.settings.model")}
-                </span>
+                <span className="text-label text-m3-text">{t("ai.settings.model")}</span>
                 <button
                   type="button"
                   className="text-xs text-m3-primary hover:underline cursor-pointer"
                   onClick={() => setCustomModel((v) => !v)}
                 >
-                  {customModel
-                    ? t("ai.settings.usePresets")
-                    : t("ai.settings.customModel")}
+                  {customModel ? t("ai.settings.usePresets") : t("ai.settings.customModel")}
                 </button>
               </div>
               {customModel ? (
@@ -443,39 +461,77 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               )}
             </div>
 
-            <label className="block space-y-1.5">
-              <span className="text-label text-m3-text flex items-center gap-2">
-                <KeyRound className="w-3.5 h-3.5" />
-                {t("ai.settings.apiKey")}
-              </span>
-              <input
-                className={inputClass}
-                type="password"
-                autoComplete="off"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.currentTarget.value)}
-                placeholder={
-                  settings.configured
-                    ? t("ai.settings.apiKeyConfiguredPlaceholder")
-                    : t("ai.settings.apiKeyPlaceholder")
-                }
-              />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-label text-m3-text flex items-center gap-2">
+                  <KeyRound className="w-3.5 h-3.5" />
+                  {t("ai.settings.apiKey")}
+                </span>
+                {settings.configured ? (
+                  <button
+                    type="button"
+                    className="text-xs text-m3-danger hover:underline cursor-pointer disabled:opacity-50"
+                    disabled={clearing || saving}
+                    onClick={() => void handleClearKey()}
+                  >
+                    {t("ai.settings.clearKey")}
+                  </button>
+                ) : null}
+              </div>
+              <div className="relative">
+                <input
+                  className={`${inputClass} ${showMaskedKey ? "tracking-[0.18em] text-m3-secondary" : "font-mono"}`}
+                  type={showMaskedKey ? "text" : "password"}
+                  autoComplete="off"
+                  spellCheck={false}
+                  readOnly={showMaskedKey}
+                  value={showMaskedKey ? API_KEY_MASK : apiKey}
+                  onFocus={() => {
+                    if (showMaskedKey) {
+                      setApiKeyEditing(true);
+                      setApiKey("");
+                    }
+                  }}
+                  onChange={(e) => {
+                    setApiKeyEditing(true);
+                    setApiKey(e.currentTarget.value);
+                  }}
+                  placeholder={
+                    settings.configured
+                      ? t("ai.settings.apiKeyConfiguredPlaceholder")
+                      : t("ai.settings.apiKeyPlaceholder")
+                  }
+                />
+                {showMaskedKey ? (
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-caption text-m3-secondary">
+                    {t("ai.settings.keyStatusConfigured")}
+                  </span>
+                ) : null}
+              </div>
               <span className="text-caption text-m3-secondary">
                 {settings.configured
-                  ? t("ai.settings.keyStatusConfigured")
+                  ? t("ai.settings.apiKeyReplaceHint")
                   : t("ai.settings.keyStatusMissing")}{" "}
                 {t("ai.settings.keyNeverReturned")}
               </span>
-            </label>
+            </div>
 
-            {settings.configured &&
-            settings.provider === "deepseek" &&
-            provider === "deepseek" ? (
-              <AiBillingCard
-                refreshKey={billingRefreshKey}
-                showToast={showToast}
-              />
+            {settings.configured && settings.provider === "deepseek" && provider === "deepseek" ? (
+              <AiBillingCard refreshKey={billingRefreshKey} showToast={showToast} />
             ) : null}
+
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
+              <Button
+                variant="primary"
+                size="sm"
+                isLoading={saving}
+                icon={<Save className="w-4 h-4" />}
+                onClick={() => void handleSave()}
+                disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
+              >
+                {t("common.save")}
+              </Button>
+            </div>
           </SectionCard>
 
           <SectionCard
@@ -484,9 +540,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             desc={t("ai.settings.behaviorDesc")}
           >
             <label className="block space-y-1.5">
-              <span className="text-label text-m3-text">
-                {t("ai.settings.instructions")}
-              </span>
+              <span className="text-label text-m3-text">{t("ai.settings.instructions")}</span>
               <textarea
                 className={`${inputClass} min-h-28 resize-y`}
                 value={instructions}
@@ -502,7 +556,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               </span>
             </label>
 
-            <label className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-m3-border px-3.5 py-3 cursor-pointer hover:bg-m3-sidebar/40 transition-colors">
+            <label className="flex items-center justify-between gap-3 rounded-md border border-m3-border px-3.5 py-3 cursor-pointer hover:bg-m3-sidebar/40 transition-colors">
               <div>
                 <span className="text-sm font-medium text-m3-text block">
                   {t("ai.settings.memoryEnabled")}
@@ -513,13 +567,13 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               </div>
               <input
                 type="checkbox"
-                className="w-4 h-4 accent-[var(--color-m3-primary)]"
+                className="w-4 h-4 accent-m3-primary"
                 checked={memoryEnabled}
                 onChange={(e) => setMemoryEnabled(e.currentTarget.checked)}
               />
             </label>
 
-            <div className="rounded-[var(--radius-md)] border border-m3-border overflow-hidden">
+            <div className="rounded-md border border-m3-border overflow-hidden">
               <button
                 type="button"
                 className="w-full flex items-center justify-between gap-2 px-3.5 py-3 text-left hover:bg-m3-sidebar/60 transition-colors cursor-pointer"
@@ -551,14 +605,12 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                     </div>
                     <input
                       type="range"
-                      className="w-full accent-[var(--color-m3-primary)]"
+                      className="w-full accent-m3-primary"
                       min={settings.limits.maxToolCalls.min}
                       max={settings.limits.maxToolCalls.max}
                       step={1}
                       value={maxToolCalls}
-                      onChange={(e) =>
-                        setMaxToolCalls(Number(e.currentTarget.value))
-                      }
+                      onChange={(e) => setMaxToolCalls(Number(e.currentTarget.value))}
                     />
                     <span className="text-caption text-m3-secondary block">
                       {t("ai.settings.maxToolCallsHint", {
@@ -591,14 +643,12 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                     </div>
                     <input
                       type="range"
-                      className="w-full accent-[var(--color-m3-primary)]"
+                      className="w-full accent-m3-primary"
                       min={settings.limits.temperature.min}
                       max={settings.limits.temperature.max}
                       step={0.1}
                       value={temperature ?? 0.7}
-                      onChange={(e) =>
-                        setTemperature(Number(e.currentTarget.value))
-                      }
+                      onChange={(e) => setTemperature(Number(e.currentTarget.value))}
                     />
                     <span className="text-caption text-m3-secondary block">
                       {t("ai.settings.temperatureHint")}
@@ -616,9 +666,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                       min={settings.limits.maxOutputTokens.min}
                       max={settings.limits.maxOutputTokens.max}
                       value={maxOutputTokens}
-                      onChange={(e) =>
-                        setMaxOutputTokens(e.currentTarget.value)
-                      }
+                      onChange={(e) => setMaxOutputTokens(e.currentTarget.value)}
                       placeholder={t("ai.settings.temperatureDefault")}
                     />
                     <span className="text-caption text-m3-secondary">
@@ -628,42 +676,27 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                 </div>
               ) : null}
             </div>
-          </SectionCard>
 
-          {memoryEnabled ? (
-            <AiMemoryPanel limits={settings.limits} showToast={showToast} />
-          ) : null}
-
-          <div className="sticky bottom-4 z-10">
-            <div className="flex flex-wrap items-center justify-end gap-2 rounded-[var(--radius-xl)] border border-m3-border bg-m3-card/95 backdrop-blur-sm px-4 py-3 shadow-[var(--shadow-md)]">
-              {settings.configured && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  isLoading={clearing}
-                  icon={<Trash2 className="w-4 h-4" />}
-                  onClick={() => void handleClearKey()}
-                  disabled={saving}
-                >
-                  {t("ai.settings.clearKey")}
-                </Button>
-              )}
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
               <Button
                 variant="primary"
                 size="sm"
                 isLoading={saving}
                 icon={<Save className="w-4 h-4" />}
                 onClick={() => void handleSave()}
-                disabled={
-                  clearing ||
-                  !model.trim() ||
-                  (provider === "openai_compatible" && !baseUrl.trim())
-                }
+                disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
               >
                 {t("common.save")}
               </Button>
             </div>
-          </div>
+          </SectionCard>
+
+          {memoryEnabled ? (
+            <div className="space-y-4">
+              <AiMemoryPanel scope="organization" limits={settings.limits} showToast={showToast} />
+              <AiMemoryPanel scope="personal" limits={settings.limits} showToast={showToast} />
+            </div>
+          ) : null}
         </>
       )}
     </div>

@@ -38,14 +38,9 @@ import { PrintingSettingsCard } from "./PrintingSettingsCard";
 
 export interface WorkspaceTabProps {
   active: boolean;
-  showToast: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast: (text: string, variant: "success" | "error" | "info" | "warning") => void;
   setPendingRestoreData: (data: Record<string, unknown> | null) => void;
-  setRestoreStats: (
-    stats: { songs: number; folders: number; services: number } | null,
-  ) => void;
+  setRestoreStats: (stats: { songs: number; folders: number; services: number } | null) => void;
   setIsTogglingWs?: (toggling: boolean) => void;
 }
 
@@ -86,12 +81,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
   setPendingRestoreData,
   setRestoreStats,
 }) => {
-  const {
-    organization,
-    organizations,
-    refetch: refetchAuth,
-    switchOrganization,
-  } = useAuth();
+  const { organization, organizations, refetch: refetchAuth, switchOrganization } = useAuth();
   const { t } = useI18n();
   const orgMetadata = (organization?.metadata as OrgMetadataStructure) || {};
 
@@ -105,44 +95,31 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
   // --- Read-Only / Saved State ---
   const [currentName, setCurrentName] = useState(organization?.name || "");
-  const [currentLogo, setCurrentLogo] = useState<string | null | undefined>(
-    organization?.logo,
-  );
-  const [currentDescription, setCurrentDescription] = useState(
-    orgMetadata.description || "",
-  );
-  const [currentShortName, setCurrentShortName] = useState(
-    orgMetadata.shortName || "",
-  );
+  const [currentLogo, setCurrentLogo] = useState<string | null | undefined>(organization?.logo);
+  const [currentDescription, setCurrentDescription] = useState(orgMetadata.description || "");
+  const [currentShortName, setCurrentShortName] = useState(orgMetadata.shortName || "");
   const [currentAppearance, setCurrentAppearance] = useState<OrgAppearance>({
-    accentColor:
-      orgMetadata.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
+    accentColor: orgMetadata.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
     showBranding: orgMetadata.settings?.appearance?.showBranding ?? true,
   });
 
   const { printSong } = usePrint();
-  const [currentPrintSettings, setCurrentPrintSettings] =
-    useState<OrgPrintSettings>(() =>
-      resolveOrgPrintSettings(orgMetadata.settings?.print),
-    );
+  const [currentPrintSettings, setCurrentPrintSettings] = useState<OrgPrintSettings>(() =>
+    resolveOrgPrintSettings(orgMetadata.settings?.print),
+  );
 
   // --- Draft State (Edit Mode) ---
   const [isEditing, setIsEditing] = useState(false);
   const [draftName, setDraftName] = useState(currentName);
-  const [draftLogo, setDraftLogo] = useState<string | null | undefined>(
-    currentLogo,
-  );
+  const [draftLogo, setDraftLogo] = useState<string | null | undefined>(currentLogo);
   const [draftDescription, setDraftDescription] = useState(currentDescription);
   const [draftShortName, setDraftShortName] = useState(currentShortName);
-  const [draftAppearance, setDraftAppearance] =
-    useState<OrgAppearance>(currentAppearance);
+  const [draftAppearance, setDraftAppearance] = useState<OrgAppearance>(currentAppearance);
   const [draftPrintSettings, setDraftPrintSettings] =
     useState<OrgPrintSettings>(currentPrintSettings);
 
   // --- Permissions ---
-  const { granted: canManageOrg, loading: canLoading } = useCan(
-    "organization.update",
-  );
+  const { granted: canManageOrg, loading: canLoading } = useCan("organization.update");
 
   // Sync state when organization auth context changes
   useEffect(() => {
@@ -153,8 +130,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       const desc = meta.description || "";
       const short = meta.shortName || "";
       const appearance: OrgAppearance = {
-        accentColor:
-          meta.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
+        accentColor: meta.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
         showBranding: meta.settings?.appearance?.showBranding ?? true,
       };
       const parsedPrint = resolveOrgPrintSettings(meta.settings?.print);
@@ -380,7 +356,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       {/* 1. PERFIL E IDENTIDADE DA ORGANIZAÇÃO      */}
       {/* ========================================== */}
       <form id="org-main-form" onSubmit={handleSaveOrganization}>
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+        <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
           {/* Card Header */}
           <div className="px-6 py-5 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
             <div>
@@ -388,9 +364,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 <Building2 className="w-5 h-5 text-m3-primary" />
                 {t("settings.workspace.title")}
               </h2>
-              <p className="text-sm text-m3-secondary mt-1">
-                {t("settings.workspace.desc")}
-              </p>
+              <p className="text-sm text-m3-secondary mt-1">{t("settings.workspace.desc")}</p>
             </div>
 
             {!canLoading && !canManageOrg && (
@@ -407,7 +381,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
             <div className="flex flex-col md:flex-row gap-8 items-start">
               {/* Logo Upload Box */}
               <div className="flex flex-col items-center gap-3 shrink-0 mx-auto md:mx-0">
-                <div className="relative group w-32 h-32 rounded-[var(--radius-xl)] bg-m3-sidebar flex items-center justify-center border-2 border-dashed border-m3-border overflow-hidden shadow-inner">
+                <div className="relative group w-32 h-32 rounded-xl bg-m3-sidebar flex items-center justify-center border-2 border-dashed border-m3-border overflow-hidden shadow-inner">
                   {displayLogo ? (
                     <img
                       src={displayLogo}
@@ -417,9 +391,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                   ) : (
                     <div className="flex flex-col items-center justify-center text-m3-secondary p-2 text-center">
                       <ImagePlus className="w-10 h-10 mb-1 opacity-70" />
-                      <span className="text-label">
-                        {t("settings.workspace.noLogo")}
-                      </span>
+                      <span className="text-label">{t("settings.workspace.noLogo")}</span>
                     </div>
                   )}
 
@@ -488,9 +460,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         label={t("settings.workspace.shortNameLabel")}
                         value={draftShortName}
                         onChange={(e) => setDraftShortName(e.target.value)}
-                        placeholder={t(
-                          "settings.workspace.shortNamePlaceholder",
-                        )}
+                        placeholder={t("settings.workspace.shortNamePlaceholder")}
                         disabled={isSavingOrganization}
                       />
                     </div>
@@ -502,9 +472,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         rows={3}
                         value={draftDescription}
                         onChange={(e) => setDraftDescription(e.target.value)}
-                        placeholder={t(
-                          "settings.workspace.descriptionPlaceholder",
-                        )}
+                        placeholder={t("settings.workspace.descriptionPlaceholder")}
                         disabled={isSavingOrganization}
                         className="w-full rounded-xl border border-m3-border bg-m3-card px-3.5 py-2.5 text-sm text-m3-text placeholder:text-m3-secondary focus:outline-hidden focus:ring-2 focus:ring-m3-primary/30 focus:border-m3-primary transition-colors resize-none disabled:opacity-50"
                       />
@@ -537,17 +505,13 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         <span className="font-semibold text-m3-secondary uppercase text-[10px] tracking-wider">
                           ID:
                         </span>
-                        <span className="font-mono text-m3-text">
-                          {organization?.id || "—"}
-                        </span>
+                        <span className="font-mono text-m3-text">{organization?.id || "—"}</span>
                       </div>
                       <div className="bg-m3-sidebar px-3 py-1.5 rounded-lg border border-m3-border/70 dark:border-m3-border flex items-center gap-2">
                         <span className="font-semibold text-m3-secondary uppercase text-[10px] tracking-wider">
                           Slug:
                         </span>
-                        <span className="font-mono text-m3-text">
-                          {organization?.slug || "—"}
-                        </span>
+                        <span className="font-mono text-m3-text">{organization?.slug || "—"}</span>
                       </div>
                     </div>
                   </div>
@@ -571,7 +535,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
               </div>
 
               {isEditing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-m3-sidebar/70 dark:bg-m3-sidebar/40 p-5 rounded-[var(--radius-xl)] border border-m3-border/70 dark:border-m3-border">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-m3-sidebar/70 dark:bg-m3-sidebar/40 p-5 rounded-xl border border-m3-border/70 dark:border-m3-border">
                   {/* Cor de Destaque */}
                   <div className="space-y-3">
                     <label className="text-label text-m3-text block">
@@ -630,17 +594,14 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                             }
                             title={preset.name}
                             className={`w-6 h-6 rounded-full transition-transform flex items-center justify-center cursor-pointer ${
-                              draftAppearance.accentColor.toLowerCase() ===
-                              preset.hex.toLowerCase()
+                              draftAppearance.accentColor.toLowerCase() === preset.hex.toLowerCase()
                                 ? "ring-2 ring-offset-2 ring-m3-text dark:ring-white dark:ring-offset-m3-card"
                                 : ""
                             }`}
                             style={{ backgroundColor: preset.hex }}
                           >
                             {draftAppearance.accentColor.toLowerCase() ===
-                              preset.hex.toLowerCase() && (
-                              <Check className="w-3 h-3 text-white" />
-                            )}
+                              preset.hex.toLowerCase() && <Check className="w-3 h-3 text-white" />}
                           </button>
                         ))}
                       </div>
@@ -650,7 +611,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                   {/* Toggle de Marca & Live Preview */}
                   <div className="flex flex-col justify-between space-y-4">
                     <label
-                      className={`flex items-start gap-3 p-3.5 bg-m3-card border border-m3-border rounded-[var(--radius-md)] transition-colors ${
+                      className={`flex items-start gap-3 p-3.5 bg-m3-card border border-m3-border rounded-md transition-colors ${
                         !isSavingOrganization
                           ? "cursor-pointer hover:border-m3-border"
                           : "opacity-70 cursor-not-allowed"
@@ -686,7 +647,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                       </span>
                       <div className="flex items-center gap-2">
                         <span
-                          className="px-2.5 py-1 rounded-md text-white font-medium text-[11px] shadow-[var(--shadow-sm)]"
+                          className="px-2.5 py-1 rounded-md text-white font-medium text-[11px] shadow-sm"
                           style={{
                             backgroundColor: draftAppearance.accentColor,
                           }}
@@ -695,9 +656,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         </span>
                         {draftAppearance.showBranding && (
                           <span className="text-[11px] font-semibold text-m3-text border border-m3-border px-2 py-0.5 rounded">
-                            {draftShortName ||
-                              draftName ||
-                              t("settings.workspace.churchFallback")}
+                            {draftShortName || draftName || t("settings.workspace.churchFallback")}
                           </span>
                         )}
                       </div>
@@ -709,10 +668,10 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 p-3.5 rounded-xl border border-m3-border/60 bg-m3-sidebar/50 dark:bg-m3-sidebar/30">
                     <div
-                      className="w-10 h-10 rounded-xl border border-white/20 shadow-[var(--shadow-sm)] shrink-0 flex items-center justify-center"
+                      className="w-10 h-10 rounded-xl border border-white/20 shadow-sm shrink-0 flex items-center justify-center"
                       style={{ backgroundColor: displayAccentColor }}
                     >
-                      <Palette className="w-5 h-5 text-white drop-shadow-[var(--shadow-sm)]" />
+                      <Palette className="w-5 h-5 text-white drop-shadow-(--shadow-sm)" />
                     </div>
                     <div>
                       <span className="text-xs text-m3-secondary uppercase font-semibold tracking-wider block">
@@ -761,7 +720,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
           {/* Card Footer (Actions) */}
           {canManageOrg && (
-            <div className="px-6 py-4 bg-m3-sidebar/70 dark:bg-m3-card/70 border-t border-m3-border/60 flex justify-end items-center gap-3">
+            <div className="px-6 py-4 bg-m3-sidebar/70 border-t border-m3-border/60 flex justify-end items-center gap-3">
               {isEditing ? (
                 <>
                   <Button
@@ -809,22 +768,20 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       {/* 2. CÓPIAS DE SEGURANÇA & DADOS             */}
       {/* ========================================== */}
       <CanAny permissions={["backup.export", "backup.import"]}>
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+        <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
             <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
               <ShieldAlert className="w-5 h-5 text-m3-primary" />
               {t("settings.workspace.backupTitle")}
             </h3>
-            <p className="text-sm text-m3-secondary mt-1">
-              {t("settings.workspace.backupDesc")}
-            </p>
+            <p className="text-sm text-m3-secondary mt-1">{t("settings.workspace.backupDesc")}</p>
           </div>
 
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Export Area */}
               <Can permission="backup.export">
-                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar/50 dark:bg-m3-bg justify-between">
+                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
                   <div className="flex items-start gap-3.5 mb-4">
                     <div className="p-2.5 bg-m3-primary/10 text-m3-primary rounded-xl shrink-0">
                       <Download className="w-5 h-5" />
@@ -861,7 +818,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
               {/* Import Area */}
               <Can permission="backup.import">
-                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar/50 dark:bg-m3-bg justify-between">
+                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
                   <div className="flex items-start gap-3.5 mb-4">
                     <div className="p-2.5 bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-xl shrink-0">
                       <Upload className="w-5 h-5" />
@@ -900,7 +857,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
         </div>
       </CanAny>
       {organizations.length > 1 && (
-        <section className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+        <section className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
             <h2 className="text-lg font-bold text-m3-text flex items-center gap-2">
               <Layers className="w-5 h-5 text-m3-primary" />
@@ -917,7 +874,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 return (
                   <li
                     key={org.id}
-                    className={`flex items-center justify-between gap-4 p-3.5 rounded-[var(--radius-xl)] border transition-colors ${
+                    className={`flex items-center justify-between gap-4 p-3.5 rounded-xl border transition-colors ${
                       isCurrent
                         ? "border-m3-primary/30 bg-m3-primary/4 dark:bg-m3-primary/10"
                         : "border-m3-border bg-m3-card hover:border-m3-border"
@@ -936,12 +893,8 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-m3-text truncate">
-                          {org.name}
-                        </p>
-                        <p className="text-xs text-m3-secondary font-mono truncate">
-                          @{org.slug}
-                        </p>
+                        <p className="text-sm font-bold text-m3-text truncate">{org.name}</p>
+                        <p className="text-xs text-m3-secondary font-mono truncate">@{org.slug}</p>
                       </div>
                     </div>
 

@@ -30,10 +30,5 @@ export interface LibraryHealthAutoFix {
    * Build a partial song update. Return `null` if nothing changed.
    * Prefer content / metadata patches only — path is left alone.
    */
-  apply(
-    song: Song,
-  ):
-    | LibraryHealthAutoFixPatch
-    | null
-    | Promise<LibraryHealthAutoFixPatch | null>;
+  apply(song: Song): LibraryHealthAutoFixPatch | null | Promise<LibraryHealthAutoFixPatch | null>;
 }

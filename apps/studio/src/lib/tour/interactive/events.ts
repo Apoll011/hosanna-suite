@@ -34,10 +34,7 @@ type Listener = (detail?: unknown) => void;
 
 const listeners = new Map<OnboardingEventName, Set<Listener>>();
 
-export function emitOnboardingEvent(
-  name: OnboardingEventName,
-  detail?: unknown,
-): void {
+export function emitOnboardingEvent(name: OnboardingEventName, detail?: unknown): void {
   const set = listeners.get(name);
   if (!set) return;
   for (const listener of set) {
@@ -49,10 +46,7 @@ export function emitOnboardingEvent(
   }
 }
 
-export function onOnboardingEvent(
-  name: OnboardingEventName,
-  listener: Listener,
-): () => void {
+export function onOnboardingEvent(name: OnboardingEventName, listener: Listener): () => void {
   let set = listeners.get(name);
   if (!set) {
     set = new Set();

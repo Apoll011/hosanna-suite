@@ -10,8 +10,7 @@ import { AppError } from "../utils/errors.js";
 export const cronRouter = Router();
 
 function requireCronSecret(req: Request, _res: Response, next: NextFunction) {
-  if (!env.cronSecret)
-    return next(AppError.forbidden("CRON_SECRET not configured."));
+  if (!env.cronSecret) return next(AppError.forbidden("CRON_SECRET not configured."));
   if (req.headers["authorization"] !== `Bearer ${env.cronSecret}`) {
     return next(AppError.forbidden("Invalid cron secret."));
   }
@@ -25,17 +24,9 @@ async function agendaRemindersHandler(_req: Request, res: Response) {
   res.json(result);
 }
 
-cronRouter.get(
-  "/agenda-reminders",
-  requireCronSecret,
-  asyncHandler(agendaRemindersHandler),
-);
+cronRouter.get("/agenda-reminders", requireCronSecret, asyncHandler(agendaRemindersHandler));
 
-cronRouter.post(
-  "/agenda-reminders",
-  requireCronSecret,
-  asyncHandler(agendaRemindersHandler),
-);
+cronRouter.post("/agenda-reminders", requireCronSecret, asyncHandler(agendaRemindersHandler));
 
 const TRASH_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -44,10 +35,7 @@ function expiredTrashWhere(now: Date) {
   const retentionCutoff = new Date(now.getTime() - TRASH_RETENTION_MS);
   return {
     deleted: true as const,
-    OR: [
-      { purgeAt: { lte: now } },
-      { purgeAt: null, updatedAt: { lte: retentionCutoff } },
-    ],
+    OR: [{ purgeAt: { lte: now } }, { purgeAt: null, updatedAt: { lte: retentionCutoff } }],
   };
 }
 
@@ -62,23 +50,18 @@ async function purgeTrashHandler(_req: Request, res: Response) {
 
   // Songs before folders/collections so FK cleanups stay simple under load.
   const songs = await prisma.song.deleteMany({ where: trashWhere });
-  const [folders, collections, services, agendaEvents, reminderDispatches] =
-    await Promise.all([
-      prisma.folder.deleteMany({ where: trashWhere }),
-      prisma.collection.deleteMany({ where: trashWhere }),
-      prisma.service.deleteMany({ where: trashWhere }),
-      prisma.agendaEvent.deleteMany({ where: trashWhere }),
-      prisma.agendaReminderDispatch.deleteMany({
-        where: { sentAt: { lt: dispatchCutoff } },
-      }),
-    ]);
+  const [folders, collections, services, agendaEvents, reminderDispatches] = await Promise.all([
+    prisma.folder.deleteMany({ where: trashWhere }),
+    prisma.collection.deleteMany({ where: trashWhere }),
+    prisma.service.deleteMany({ where: trashWhere }),
+    prisma.agendaEvent.deleteMany({ where: trashWhere }),
+    prisma.agendaReminderDispatch.deleteMany({
+      where: { sentAt: { lt: dispatchCutoff } },
+    }),
+  ]);
 
   const totalPurged =
-    songs.count +
-    folders.count +
-    collections.count +
-    services.count +
-    agendaEvents.count;
+    songs.count + folders.count + collections.count + services.count + agendaEvents.count;
   if (totalPurged > 0) {
     syncCache.invalidateAll();
   }
@@ -95,14 +78,6 @@ async function purgeTrashHandler(_req: Request, res: Response) {
   });
 }
 
-cronRouter.get(
-  "/purge-trash",
-  requireCronSecret,
-  asyncHandler(purgeTrashHandler),
-);
+cronRouter.get("/purge-trash", requireCronSecret, asyncHandler(purgeTrashHandler));
 
-cronRouter.post(
-  "/purge-trash",
-  requireCronSecret,
-  asyncHandler(purgeTrashHandler),
-);
+cronRouter.post("/purge-trash", requireCronSecret, asyncHandler(purgeTrashHandler));

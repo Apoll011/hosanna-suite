@@ -2,10 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const brandDir = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../public",
-);
+const brandDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 
 function contentType(file: string): string {
   switch (path.extname(file).toLowerCase()) {
@@ -30,10 +27,7 @@ function contentType(file: string): string {
 }
 
 function safeBrandFile(urlPath: string): string | null {
-  const rel = decodeURIComponent(urlPath.split("?")[0] ?? "").replace(
-    /^\/+/,
-    "",
-  );
+  const rel = decodeURIComponent(urlPath.split("?")[0] ?? "").replace(/^\/+/, "");
   if (!rel || rel.includes("..")) return null;
   const file = path.join(brandDir, rel);
   if (!file.startsWith(brandDir + path.sep) && file !== brandDir) return null;
@@ -65,15 +59,9 @@ export function hosannaBrandPublic() {
 
   return {
     name: "hosanna-brand-public",
-    configResolved(config: {
-      root: string;
-      publicDir: string;
-      build: { outDir: string };
-    }) {
+    configResolved(config: { root: string; publicDir: string; build: { outDir: string } }) {
       outDir = path.resolve(config.root, config.build.outDir);
-      appPublicDir = config.publicDir
-        ? path.resolve(config.root, config.publicDir)
-        : "";
+      appPublicDir = config.publicDir ? path.resolve(config.root, config.publicDir) : "";
     },
     configureServer(server: {
       middlewares: {

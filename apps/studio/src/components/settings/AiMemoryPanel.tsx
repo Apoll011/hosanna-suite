@@ -6,41 +6,53 @@
 import { aiApi, type AiLimits, type AiMemoryItem } from "@/src/api/ai";
 import { Button, Surface } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
-import { Brain, Loader2, Plus, Sparkles, Trash2, User } from "lucide-react";
+import { Brain, Building2, Loader2, Plus, Sparkles, Trash2, User } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
+export type AiMemoryScope = "organization" | "personal";
+
 export interface AiMemoryPanelProps {
+  scope: AiMemoryScope;
   limits: AiLimits;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
-/** Org-wide notes the assistant remembers (admin CRUD, applied instantly). */
-export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
-  limits,
-  showToast,
-}) => {
+const SCOPE_API = {
+  organization: {
+    list: aiApi.listMemory,
+    add: aiApi.addMemory,
+    remove: aiApi.removeMemory,
+    clear: aiApi.clearMemory,
+  },
+  personal: {
+    list: aiApi.listPersonalMemory,
+    add: aiApi.addPersonalMemory,
+    remove: aiApi.removePersonalMemory,
+    clear: aiApi.clearPersonalMemory,
+  },
+} as const;
+
+/** Notes the assistant remembers — org-wide or account-scoped. */
+export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({ scope, limits, showToast }) => {
   const { t } = useI18n();
   const [items, setItems] = useState<AiMemoryItem[] | null>(null);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const api = SCOPE_API[scope];
+  const isOrg = scope === "organization";
 
   const fail = useCallback(
     (err: unknown) => {
-      showToast?.(
-        err instanceof Error ? err.message : t("ai.settings.memoryError"),
-        "error",
-      );
+      showToast?.(err instanceof Error ? err.message : t("ai.settings.memoryError"), "error");
     },
     [showToast, t],
   );
 
   useEffect(() => {
     let cancelled = false;
-    void aiApi
-      .listMemory()
+    setItems(null);
+    void SCOPE_API[scope]
+      .list()
       .then((r) => {
         if (!cancelled) setItems(r.items);
       })
@@ -53,17 +65,15 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
     return () => {
       cancelled = true;
     };
-  }, [fail]);
+  }, [scope, fail]);
 
   const add = async () => {
     const content = draft.trim();
     if (!content) return;
     setBusy(true);
     try {
-      const item = await aiApi.addMemory(content);
-      setItems((prev) =>
-        prev?.some((p) => p.id === item.id) ? prev : [...(prev ?? []), item],
-      );
+      const item = await api.add(content);
+      setItems((prev) => (prev?.some((p) => p.id === item.id) ? prev : [...(prev ?? []), item]));
       setDraft("");
     } catch (err) {
       fail(err);
@@ -75,7 +85,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
   const remove = async (id: string) => {
     setBusy(true);
     try {
-      await aiApi.removeMemory(id);
+      await api.remove(id);
       setItems((prev) => prev?.filter((p) => p.id !== id) ?? null);
     } catch (err) {
       fail(err);
@@ -87,7 +97,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
   const clear = async () => {
     setBusy(true);
     try {
-      await aiApi.clearMemory();
+      await api.clear();
       setItems([]);
     } catch (err) {
       fail(err);
@@ -98,19 +108,20 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
 
   const count = items?.length ?? 0;
   const full = count >= limits.memoryMaxEntries;
+  const Icon = isOrg ? Building2 : User;
 
   return (
     <Surface className="p-6 space-y-5">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
-          <Brain className="w-5 h-5" />
+        <div className="w-10 h-10 rounded-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+          <Icon className="w-5 h-5" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-title text-m3-text">
-            {t("ai.settings.memoryTitle")}
+            {isOrg ? t("ai.settings.memoryOrgTitle") : t("ai.settings.memoryPersonalTitle")}
           </h2>
           <p className="text-muted mt-1 text-sm">
-            {t("ai.settings.memoryDesc")}
+            {isOrg ? t("ai.settings.memoryOrgDesc") : t("ai.settings.memoryPersonalDesc")}
           </p>
         </div>
         <div className="shrink-0 flex flex-col items-end gap-1.5 pt-1">
@@ -139,12 +150,16 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
         }}
       >
         <input
-          className="flex-1 min-w-0 rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60"
+          className="flex-1 min-w-0 rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60"
           value={draft}
           maxLength={limits.memoryEntryMaxChars}
           disabled={busy || full}
           onChange={(e) => setDraft(e.currentTarget.value)}
-          placeholder={t("ai.settings.memoryPlaceholder")}
+          placeholder={
+            isOrg
+              ? t("ai.settings.memoryOrgPlaceholder")
+              : t("ai.settings.memoryPersonalPlaceholder")
+          }
         />
         <Button
           type="submit"
@@ -163,15 +178,13 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
           <Loader2 className="w-4 h-4 animate-spin" />
         </div>
       ) : items.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-[var(--radius-md)] border border-dashed border-m3-border py-8 px-4 text-center">
+        <div className="flex flex-col items-center gap-2 rounded-md border border-dashed border-m3-border py-8 px-4 text-center">
           <Brain className="w-6 h-6 text-m3-secondary/60" />
-          <p className="text-sm text-m3-secondary max-w-sm m-0">
-            {t("ai.settings.memoryEmpty")}
-          </p>
+          <p className="text-sm text-m3-secondary max-w-sm m-0">{t("ai.settings.memoryEmpty")}</p>
         </div>
       ) : (
         <div className="space-y-2">
-          <ul className="m-0 p-0 list-none rounded-[var(--radius-md)] border border-m3-border divide-y divide-m3-border overflow-hidden">
+          <ul className="m-0 p-0 list-none rounded-md border border-m3-border divide-y divide-m3-border overflow-hidden">
             {items.map((item) => (
               <li
                 key={item.id}
@@ -186,7 +199,9 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
                   title={
                     item.source === "ai"
                       ? t("ai.settings.memorySourceAi")
-                      : t("ai.settings.memorySourceAdmin")
+                      : isOrg
+                        ? t("ai.settings.memorySourceAdmin")
+                        : t("ai.settings.memorySourceUser")
                   }
                 >
                   {item.source === "ai" ? (
@@ -195,7 +210,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
                     <User className="w-3 h-3" />
                   )}
                 </span>
-                <span className="flex-1 min-w-0 text-sm text-m3-text break-words">
+                <span className="flex-1 min-w-0 text-sm text-m3-text wrap-break-word">
                   {item.content}
                 </span>
                 <button
@@ -204,7 +219,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
                   onClick={() => void remove(item.id)}
                   title={t("ai.settings.memoryDelete")}
                   aria-label={t("ai.settings.memoryDelete")}
-                  className="shrink-0 p-1.5 rounded-[var(--radius-sm)] text-m3-secondary opacity-60 group-hover:opacity-100 hover:text-red-600 hover:bg-red-500/10 focus-visible:opacity-100 disabled:opacity-40 transition"
+                  className="shrink-0 p-1.5 rounded-sm text-m3-secondary opacity-60 group-hover:opacity-100 hover:text-red-600 hover:bg-red-500/10 focus-visible:opacity-100 disabled:opacity-40 transition"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>

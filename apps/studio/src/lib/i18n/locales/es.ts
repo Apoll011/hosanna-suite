@@ -54,6 +54,16 @@ export const es: typeof pt = {
     refresh: "Actualizar",
   },
 
+  table: {
+    showing: "Mostrando",
+    to: "a",
+    of: "de",
+    display: "Mostrar:",
+    all: "Todos ({count})",
+    prevPage: "Página Anterior",
+    nextPage: "Página Siguiente",
+  },
+
   sidebar: {
     mainMenu: "Menú Principal",
     drive: "Drive de {name}",
@@ -185,8 +195,7 @@ export const es: typeof pt = {
       pageDesc: "Enviar un mensaje al equipo.",
       loading: "Cargando…",
       noAccessTitle: "Sin permiso",
-      noAccessDesc:
-        "Necesitas acceso a notificaciones de un propietario de la organización.",
+      noAccessDesc: "Necesitas acceso a notificaciones de un propietario de la organización.",
       send: "Enviar",
       sending: "Enviando…",
       sentToast: "Notificación enviada.",
@@ -266,8 +275,7 @@ export const es: typeof pt = {
       loading: "Cargando facturación...",
       loadError: "No se pudo cargar la información de facturación.",
       noAccessTitle: "Sin acceso a facturación",
-      noAccessDesc:
-        "Solo el propietario de la organización puede ver la facturación.",
+      noAccessDesc: "Solo el propietario de la organización puede ver la facturación.",
       status: {
         trialing: "Periodo de prueba",
         active: "Activo",
@@ -299,19 +307,16 @@ export const es: typeof pt = {
       currentPeriod: "Periodo actual",
       nextCharge: "Próximo cobro",
       manage: "Gestionar facturación",
-      manageDesc:
-        "Actualice el método de pago, vea facturas o cancele la suscripción.",
+      manageDesc: "Actualice el método de pago, vea facturas o cancele la suscripción.",
       startTrial: "Iniciar periodo de prueba de 14 días",
       trialNote:
         "Se requiere una tarjeta para comenzar. No se le cobrará nada durante los 14 días de prueba.",
       // Used when the org already used its free trial (re-subscribing after
       // cancel): Stripe does not grant a second trial, so don't promise one.
       subscribe: "Suscribirse ahora",
-      subscribeNote:
-        "La suscripción comienza de inmediato. Puede cancelarla cuando quiera.",
+      subscribeNote: "La suscripción comienza de inmediato. Puede cancelarla cuando quiera.",
       promoHint: "¿Tiene un código promocional? Puede aplicarlo al pagar.",
-      askOwner:
-        "Pida al propietario de la organización que active la suscripción.",
+      askOwner: "Pida al propietario de la organización que active la suscripción.",
       checkoutError: "No se pudo iniciar el proceso de pago.",
       portalError: "No se pudo abrir el portal de facturación.",
       subscribedToast: "¡Suscripción activada!",
@@ -350,8 +355,7 @@ export const es: typeof pt = {
         sendLink: "Enviar enlace",
         loadError: "Algo salió mal al cargar esto.",
         sendError: "No se pudo enviar el mensaje — inténtalo de nuevo.",
-        restoreRateLimited:
-          "Demasiadas solicitudes — inténtalo de nuevo en un momento.",
+        restoreRateLimited: "Demasiadas solicitudes — inténtalo de nuevo en un momento.",
         restoreError: "No se pudo enviar el correo de recuperación.",
         noMessagesYet: "Aún no hay mensajes",
         messages: "mensajes",
@@ -386,8 +390,7 @@ export const es: typeof pt = {
       languageAuto: "Automático",
       languageAutoDesc: "Seguir la organización o el navegador",
       navigationTitle: "Navegación y Estructura",
-      navigationDesc:
-        "Ajuste cómo se disponen los repertorios y carpetas en su área de trabajo.",
+      navigationDesc: "Ajuste cómo se disponen los repertorios y carpetas en su área de trabajo.",
       showFolderTree: "Mostrar Árbol Jerárquico de Carpetas",
       showFolderTreeDesc:
         "Muestra la estructura completa de carpetas y subcarpetas en la barra lateral izquierda.",
@@ -399,8 +402,7 @@ export const es: typeof pt = {
       showChordsDesc:
         "Activa automáticamente la línea de acordes (ChordPro) al abrir el visor de canciones, ensayo y modo de proyección para músicos.",
       songScoreTitle: "Puntuación de Canciones",
-      songScoreDesc:
-        "Muestra un indicador de calidad en cada tarjeta de canción del explorador.",
+      songScoreDesc: "Muestra un indicador de calidad en cada tarjeta de canción del explorador.",
       songScoreBadge: "Explorador",
       showSongScore: "Mostrar puntuación de la canción",
       showSongScoreDesc:
@@ -452,8 +454,7 @@ export const es: typeof pt = {
       showNotesDesc:
         "Permite a los líderes y al equipo añadir notas de dinámica, tono y observaciones en cada elemento.",
       autoSave: "Guardar Borradores Automáticamente (Autoguardado)",
-      autoSaveDesc:
-        "Guarda cambios continuos mientras prepara y reorganiza el orden musical.",
+      autoSaveDesc: "Guarda cambios continuos mientras prepara y reorganiza el orden musical.",
       reset: "Restablecer Valores",
       saving: "Guardando preferencias...",
       save: "Guardar Preferencias",
@@ -530,8 +531,7 @@ export const es: typeof pt = {
         notConnected: "No conectada",
         connect: "Vincular Cuenta",
         disconnect: "Desconectar",
-        googleDesc:
-          "Utilice su cuenta de Google para iniciar sesión con un solo clic.",
+        googleDesc: "Utilice su cuenta de Google para iniciar sesión con un solo clic.",
         githubDesc: "Utilice su cuenta de GitHub para iniciar sesión.",
         appleDesc: "Utilice su Apple ID para iniciar sesión.",
         microsoftDesc: "Utilice su cuenta de Microsoft para iniciar sesión.",
@@ -585,8 +585,7 @@ export const es: typeof pt = {
         newPassword: "Nueva Contraseña",
         confirmNewPassword: "Confirmar Nueva Contraseña",
         currentPasswordRequired: "Por favor, introduzca su contraseña actual.",
-        passwordMinLength:
-          "La nueva contraseña debe tener al menos 6 caracteres.",
+        passwordMinLength: "La nueva contraseña debe tener al menos 6 caracteres.",
         passwordMismatch: "Las contraseñas no coinciden.",
         passwordChanged: "¡Contraseña cambiada con éxito!",
         passwordChangeError: "Error al cambiar la contraseña: {error}",
@@ -605,14 +604,12 @@ export const es: typeof pt = {
       disableBtn: "Desactivar 2FA",
       setupModalTitle: "Configurar 2FA",
       disableModalTitle: "Desactivar 2FA",
-      passwordStepDesc:
-        "Para activar la verificación en dos pasos, confirme su contraseña actual:",
+      passwordStepDesc: "Para activar la verificación en dos pasos, confirme su contraseña actual:",
       passwordLabel: "Contraseña",
       continue: "Continuar",
       setupStep1:
         "1. Escanee el código QR con su aplicación de autenticación (como Google Authenticator, Authy o Microsoft Authenticator).",
-      setupStep2:
-        "2. Introduzca el código de 6 dígitos generado por la aplicación:",
+      setupStep2: "2. Introduzca el código de 6 dígitos generado por la aplicación:",
       verificationCodeLabel: "Código de Verificación",
       verificationCodePlaceholder: "123456",
       verify: "Verificar",
@@ -620,8 +617,7 @@ export const es: typeof pt = {
       backupWarning:
         "Guarde estos códigos de recuperación en un lugar seguro (como un gestor de contraseñas). Son la única forma de acceder a su cuenta si pierde su teléfono.",
       backupSavedBtn: "He guardado los códigos de forma segura",
-      disableStepDesc:
-        "Para desactivar la verificación en dos pasos, confirme su contraseña:",
+      disableStepDesc: "Para desactivar la verificación en dos pasos, confirme su contraseña:",
       passwordRequired: "Por favor, introduzca su contraseña.",
       codeRequired: "Por favor, introduzca el código de verificación.",
       enableError: "Error al activar 2FA: {error}",
@@ -715,8 +711,7 @@ export const es: typeof pt = {
       shortNameLabel: "Sigla / Abreviatura",
       shortNamePlaceholder: "e.g. IHM",
       descriptionLabel: "Descripción o Visión",
-      descriptionPlaceholder:
-        "Breve descripción de los propósitos de la iglesia o equipo...",
+      descriptionPlaceholder: "Breve descripción de los propósitos de la iglesia o equipo...",
       defaultOrgName: "Mi Organización",
       noDescription: "Ninguna descripción configurada.",
       visualIdentityTitle: "Identidad Visual y Colores",
@@ -743,8 +738,7 @@ export const es: typeof pt = {
       saved: "¡Organización e identidad visual actualizadas con éxito!",
       saveError: "Error al actualizar la organización: {error}",
       backupTitle: "Copia de Seguridad y Datos",
-      backupDesc:
-        "Exporte o restaure todos los repertorios y cultos en un archivo HOSANNA seguro.",
+      backupDesc: "Exporte o restaure todos los repertorios y cultos en un archivo HOSANNA seguro.",
       exportData: "Exportar Datos",
       exportDesc:
         "Descargue una copia de seguridad completa en HOSANNA con canciones, planes y carpetas.",
@@ -760,8 +754,7 @@ export const es: typeof pt = {
     about: {
       title: "Acerca de Hosanna Studio",
       controlPanel: "Panel de Control",
-      copyright:
-        "© {year} Embrace & Tiago Inês. Código bajo licencia Apache 2.0.",
+      copyright: "© {year} Embrace & Tiago Inês. Código bajo licencia Apache 2.0.",
       studioVersion: "Versión de Studio",
       openSourceBanner:
         "¡Este proyecto es <strong>open-source</strong>! Creemos en el software libre para equipar y apoyar comunidades.",
@@ -769,8 +762,7 @@ export const es: typeof pt = {
       supportedFormats: "Formatos de Importación Compatibles",
       thirdPartyLicenses: "Licencias de Bibliotecas de Terceros ({count})",
       productTourTitle: "Tour del producto",
-      productTourDesc:
-        "Repasa lo esencial de la interfaz adaptado a tu rol en la organización.",
+      productTourDesc: "Repasa lo esencial de la interfaz adaptado a tu rol en la organización.",
       productTourRelaunch: "Iniciar tour",
       interactiveTourRelaunch: "Tour interactivo",
     },
@@ -779,8 +771,7 @@ export const es: typeof pt = {
   tour: {
     product: {
       missedTitle: "Tour del producto disponible",
-      missedDesc:
-        "Hay un tour guiado de las funciones esenciales. ¿Quieres verlo ahora?",
+      missedDesc: "Hay un tour guiado de las funciones esenciales. ¿Quieres verlo ahora?",
       missedAction: "Iniciar tour",
       unavailableTitle: "Tour no disponible",
       unavailableDesc:
@@ -805,23 +796,19 @@ export const es: typeof pt = {
       },
       library: {
         title: "Biblioteca",
-        description:
-          "Ve todas las canciones en un solo lugar, sin importar la carpeta.",
+        description: "Ve todas las canciones en un solo lugar, sin importar la carpeta.",
       },
       collections: {
         title: "Colecciones",
-        description:
-          "Agrupa canciones en listas reutilizables para ensayos o temas.",
+        description: "Agrupa canciones en listas reutilizables para ensayos o temas.",
       },
       services: {
         title: "Servicios",
-        description:
-          "Arma el orden de alabanza con canciones, notas y momentos del servicio.",
+        description: "Arma el orden de alabanza con canciones, notas y momentos del servicio.",
       },
       agenda: {
         title: "Agenda",
-        description:
-          "Planifica eventos y vincúlalos a servicios cuando lo necesites.",
+        description: "Planifica eventos y vincúlalos a servicios cuando lo necesites.",
       },
       search: {
         title: "Búsqueda",
@@ -835,8 +822,7 @@ export const es: typeof pt = {
       },
       settings: {
         title: "Cuenta y ajustes",
-        description:
-          "Accede a preferencias personales, organización y más desde tu perfil.",
+        description: "Accede a preferencias personales, organización y más desde tu perfil.",
       },
       finish: {
         title: "Listo para empezar",
@@ -884,8 +870,7 @@ export const es: typeof pt = {
       songs: {
         create: {
           title: "Crear una canción",
-          description:
-            "Usa + → Nueva canción. Luego el tour te pedirá abrirla en el editor.",
+          description: "Usa + → Nueva canción. Luego el tour te pedirá abrirla en el editor.",
         },
         open: {
           title: "Abrir una canción",
@@ -942,8 +927,7 @@ export const es: typeof pt = {
         },
         openFolder: {
           title: "Abrir una carpeta",
-          description:
-            "Haz doble clic en una carpeta (o selecciónala y pulsa Enter) para entrar.",
+          description: "Haz doble clic en una carpeta (o selecciónala y pulsa Enter) para entrar.",
         },
         selectAll: {
           title: "Seleccionar todo",
@@ -1019,8 +1003,7 @@ export const es: typeof pt = {
     songCreated: "¡Canción creada con éxito!",
     songImported: "¡Canción importada con éxito!",
     folderNameMismatch: "El nombre de carpeta introducido no coincide.",
-    uploadSuccess:
-      '¡{count} archivo(s) {type} subido(s) con éxito a "{folder}"!',
+    uploadSuccess: '¡{count} archivo(s) {type} subido(s) con éxito a "{folder}"!',
     uploadError: "Error al subir {count} archivo(s) {type}",
     uploadIgnored: "Ignorado(s) {count} archivo(s) {type}",
   },
@@ -1091,17 +1074,14 @@ export const es: typeof pt = {
     archiveService: "Archivar Culto",
     activateService: "Activar Culto",
     deleteService: "Eliminar Culto",
-    deleteServiceMessage:
-      '¿Está seguro de que desea eliminar el culto "{name}"?',
-    archiveServiceMessage:
-      '¿Está seguro de que desea {action} el culto "{name}"?',
+    deleteServiceMessage: '¿Está seguro de que desea eliminar el culto "{name}"?',
+    archiveServiceMessage: '¿Está seguro de que desea {action} el culto "{name}"?',
     deleteAllTitle: "Eliminar {count} Cultos",
     deleteAllMessage:
       "¿Está seguro de que desea eliminar permanentemente {count} cultos seleccionados?",
     deleteAll: "Eliminar Todos",
     archiveAllTitle: "Archivar {count} Cultos",
-    archiveAllMessage:
-      "¿Está seguro de que desea archivar {count} cultos seleccionados?",
+    archiveAllMessage: "¿Está seguro de que desea archivar {count} cultos seleccionados?",
     archiveAll: "Archivar Todos",
   },
 
@@ -1127,8 +1107,7 @@ export const es: typeof pt = {
     removeSongMessage:
       '¿Desea quitar "{title}" de esta colección? La canción continuará guardada en la biblioteca.',
     emptyTitle: "Esta colección aún no tiene canciones",
-    emptyDesc:
-      "Añade canciones de tu biblioteca a esta colección para organizarlas.",
+    emptyDesc: "Añade canciones de tu biblioteca a esta colección para organizarlas.",
     noSearchResultsTitle: "No se encontraron canciones coincidentes",
     noSearchResultsDesc: 'No se encontraron canciones para "{query}".',
     paginationInfo: "{from} a {to} de {total} canciones",
@@ -1137,8 +1116,7 @@ export const es: typeof pt = {
     nameLabel: "Nombre de la Colección *",
     namePlaceholder: "Ej: Alabanza y Adoración, Jóvenes, Culto Dominical...",
     descLabel: "Descripción (opcional)",
-    descPlaceholder:
-      "Canciones para momentos de alabanza y adoración a Dios...",
+    descPlaceholder: "Canciones para momentos de alabanza y adoración a Dios...",
     coverLabel: "Imagen de Portada / URL (opcional)",
     colorLabel: "Color",
     iconLabel: "Ícono",
@@ -1161,8 +1139,7 @@ export const es: typeof pt = {
     deleteManyTitle: "Eliminar colecciones",
     deleteManyMessage:
       "¿Enviar {count} colecciones a la papelera? Las canciones siguen en la biblioteca.",
-    createCollectionFirst:
-      "Cree una colección primero para poder añadir canciones.",
+    createCollectionFirst: "Cree una colección primero para poder añadir canciones.",
   },
 
   agenda: {
@@ -1225,8 +1202,7 @@ export const es: typeof pt = {
     type: "Tipo",
     location: "Ubicación",
     linkedService: "Servicio vinculado",
-    linkedServiceHint:
-      "Rellena automáticamente la fecha y la duración del evento.",
+    linkedServiceHint: "Rellena automáticamente la fecha y la duración del evento.",
     openService: "Abrir servicio",
     notes: "Observaciones",
     noNotes: "Sin observaciones.",
@@ -1263,8 +1239,7 @@ export const es: typeof pt = {
       removalBody:
         "Sus responsabilidades en {event} han sido actualizadas.\n\nFecha: {date}\n\nEliminado:\n{list}",
       eventCancelledTitle: "{event} ha sido cancelado",
-      eventCancelledBody:
-        'El evento "{event}" programado para {date} ha sido cancelado.',
+      eventCancelledBody: 'El evento "{event}" programado para {date} ha sido cancelado.',
       dateTitle: "La fecha de {event} ha cambiado",
       dateBody: "Nueva fecha:\n{date}",
       locationTitle: "La ubicación de {event} ha cambiado",
@@ -1278,13 +1253,11 @@ export const es: typeof pt = {
       },
       removeSummary: "A eliminar",
       notifyRemovalLabel: "Notificar al usuario sobre la cancelación",
-      notifyRemovalHint:
-        "Desactivado por omisión: no se envía ninguna notificación.",
+      notifyRemovalHint: "Desactivado por omisión: no se envía ninguna notificación.",
       notifyDeleteLabel: "Notificar a todos los usuarios asignados",
       notifyDeleteHint: {
         one: "Se notificará a 1 usuario asignado de que el evento fue cancelado.",
-        other:
-          "Se notificará a {count} usuarios asignados de que el evento fue cancelado.",
+        other: "Se notificará a {count} usuarios asignados de que el evento fue cancelado.",
       },
     },
     editAssignments: "Editar asignaciones",
@@ -1302,8 +1275,7 @@ export const es: typeof pt = {
     linkedServiceMissing:
       "El servicio vinculado ya no existe: elige otro o elimina la vinculación.",
     removeLink: "Eliminar vinculación",
-    noServicesToLink:
-      "Aún no hay servicios. Crea uno en Servicios para poder vincularlo.",
+    noServicesToLink: "Aún no hay servicios. Crea uno en Servicios para poder vincularlo.",
     elementsCount: {
       one: "{count} elemento",
       other: "{count} elementos",
@@ -1334,8 +1306,7 @@ export const es: typeof pt = {
       specialEvent: "Evento Especial",
     },
     allResponsibilitiesAdded: "Ya se han añadido todas las responsabilidades",
-    createCategoriesInSettings:
-      "Puedes crear nuevas categorías en Configuración → Servidor.",
+    createCategoriesInSettings: "Puedes crear nuevas categorías en Configuración → Servidor.",
     category: "Categoría",
     categoryHint: "Elige el área de servicio a asignar.",
     assignTo: "Asignar a",
@@ -1433,8 +1404,7 @@ export const es: typeof pt = {
     serviceTitlePlaceholder: "Ej: Culto de Domingo por la Mañana",
     scheduledDate: "Fecha Programada",
     planningNotes: "Notas Generales de Planificación",
-    planningNotesPlaceholder:
-      "Ej: Tema: Gracia y Esperanza. Ensayo de la banda a las 8:15.",
+    planningNotesPlaceholder: "Ej: Tema: Gracia y Esperanza. Ensayo de la banda a las 8:15.",
     saveService: "Guardar Plan de Culto",
     unknownArtist: "Artista Desconocido",
     untitled: "Sin Título",
@@ -1455,13 +1425,11 @@ export const es: typeof pt = {
     moveItems: "Mover {count} Elemento(s)",
     batchDeleteTitle: "Eliminar {count} Elemento(s) Seleccionado(s)",
     aboutToDelete: "Está a punto de eliminar",
-    whatToDo:
-      "¿Qué hacer con las canciones dentro de las carpetas seleccionadas?",
+    whatToDo: "¿Qué hacer con las canciones dentro de las carpetas seleccionadas?",
     preserveSongs: "Preservar canciones (Mover al Nivel Raíz)",
     preserveSongsDesc:
       "Elimina solo las carpetas y mueve sus canciones a la raíz sin perder datos.",
-    deletePermanently:
-      "Eliminar permanentemente las carpetas y todas sus canciones",
+    deletePermanently: "Eliminar permanentemente las carpetas y todas sus canciones",
     deletePermanentlyDesc:
       "Acción destructiva. Elimina las carpetas y todas las canciones contenidas en ellas.",
     safetyConfirmation: "Confirmación de Seguridad",
@@ -1477,12 +1445,10 @@ export const es: typeof pt = {
     add: "Añadir",
     replace: "Reemplazar",
     remove: "Eliminar",
-    appendDesc:
-      "• Añade estas etiquetas manteniendo las existentes en las canciones.",
+    appendDesc: "• Añade estas etiquetas manteniendo las existentes en las canciones.",
     replaceDesc:
       "• Reemplaza todas las etiquetas existentes por las etiquetas seleccionadas abajo.",
-    removeDesc:
-      "• Elimina estas etiquetas específicas de todas las canciones seleccionadas.",
+    removeDesc: "• Elimina estas etiquetas específicas de todas las canciones seleccionadas.",
     suggestedCategories: "Categorías y Temas Sugeridos",
     newCustomTag: "Nueva Etiqueta Personalizada",
     customTagPlaceholder: "Ej: Jóvenes, Ministración, Solo...",
@@ -1502,8 +1468,7 @@ export const es: typeof pt = {
     thirdPartyProvidersTitle: "Importar Acordes & Proveedores de Terceros",
     tabOnline: "Enlace Online",
     tabRawText: "Texto de Acordes",
-    pasteLink:
-      "Pegue el enlace directo de la página de acordes de un proveedor compatible.",
+    pasteLink: "Pegue el enlace directo de la página de acordes de un proveedor compatible.",
     songLink: "Enlace de la Canción / Acordes",
     pleaseEnterLink: "Por favor, introduzca un enlace de acordes válido.",
     pleaseEnterValidLink:
@@ -1515,19 +1480,15 @@ export const es: typeof pt = {
     importCifra: "Importar Acordes",
     confirmKeyword: "ELIMINAR",
     showChordProOnlyLabel: "Solo mostrar ChordPro",
-    showChordProOnlyHint:
-      "Omite guardar la canción y solo genera el texto ChordPro para copiar",
-    chordProPreviewHint:
-      "Aquí está el ChordPro generado. Cópialo donde lo necesites.",
+    showChordProOnlyHint: "Omite guardar la canción y solo genera el texto ChordPro para copiar",
+    chordProPreviewHint: "Aquí está el ChordPro generado. Cópialo donde lo necesites.",
     generateChordPro: "Generar ChordPro",
     copyChordPro: "Copiar ChordPro",
     copied: "¡Copiado!",
     copyFailed: "No se pudo copiar al portapapeles",
-    rawTextDesc:
-      "Pega el texto con los acordes sobre la letra. Se convertirá al formato ChordPro.",
+    rawTextDesc: "Pega el texto con los acordes sobre la letra. Se convertirá al formato ChordPro.",
     rawTextLabel: "Texto de la Cifra (Acordes y Letra)",
-    rawTextPlaceholder:
-      "Pega los acordes y la letra aquí (acordes arriba de la letra)...",
+    rawTextPlaceholder: "Pega los acordes y la letra aquí (acordes arriba de la letra)...",
     songTitle: "Título de la Canción",
     songTitlePlaceholder: "ej: Salvador Maravilloso",
     artist: "Artista",
@@ -1592,8 +1553,7 @@ export const es: typeof pt = {
       rootTopLevel: "Directorio Raíz (Nivel Superior)",
       moveFolderBtn: "Mover Carpeta",
       deleteFolderTitle: 'Eliminar Carpeta "{folder}"',
-      selectDeleteFolderOption:
-        "Seleccione cómo manejar el contenido dentro de esta carpeta:",
+      selectDeleteFolderOption: "Seleccione cómo manejar el contenido dentro de esta carpeta:",
       moveContentsToRoot: "Mover Contenidos a la Raíz (Recomendado)",
       moveContentsToRootDesc:
         "Mantiene las cifras de canciones en la biblioteca sin categoría de carpeta.",
@@ -1651,11 +1611,9 @@ export const es: typeof pt = {
       theme: "Tema",
       fontSize: "Tamaño de Fuente ({size}px)",
       wordWrap: "Ajuste de Línea",
-      wordWrapDesc:
-        "Ajusta el texto al ancho del editor sin desplazamiento horizontal.",
+      wordWrapDesc: "Ajusta el texto al ancho del editor sin desplazamiento horizontal.",
       showLineNumbers: "Mostrar Números de Línea",
-      showLineNumbersDesc:
-        "Muestra la numeración de líneas en el margen izquierdo del editor.",
+      showLineNumbersDesc: "Muestra la numeración de líneas en el margen izquierdo del editor.",
       themes: {
         textmate: "Textmate (claro)",
         github: "GitHub (claro)",
@@ -1683,15 +1641,12 @@ export const es: typeof pt = {
       syncing: "Sincronizando...",
       syncingTooltip: "Sincronizando datos locales con el servidor...",
       offline: "Sin conexión",
-      offlineTooltip:
-        "Modo sin conexión. Los cambios se sincronizarán al reconectar.",
+      offlineTooltip: "Modo sin conexión. Los cambios se sincronizarán al reconectar.",
       error: "Error al sincronizar",
       errorTooltip: "Error en la sincronización. Haga clic para reintentar.",
       synced: "Sincronizado",
-      syncedTooltip:
-        "Sincronizado ({time}). Haga clic para forzar sincronización.",
-      syncedTooltipNoTime:
-        "Sincronizado. Haga clic para forzar sincronización.",
+      syncedTooltip: "Sincronizado ({time}). Haga clic para forzar sincronización.",
+      syncedTooltipNoTime: "Sincronizado. Haga clic para forzar sincronización.",
       local_only: "Solo local",
     },
     help: {
@@ -1703,8 +1658,7 @@ export const es: typeof pt = {
       tipDesc:
         "Al insertar un snippet, el texto temporal queda seleccionado. Simplemente escriba encima. ¡Presione <key>TAB</key> nuevamente para saltar al siguiente campo!",
       shortcutsTitle: "Atajos de Teclado",
-      shortcutsDesc:
-        "Acelere la edición y navegación sin quitar las manos del teclado.",
+      shortcutsDesc: "Acelere la edición y navegación sin quitar las manos del teclado.",
     },
   },
 
@@ -1783,8 +1737,7 @@ export const es: typeof pt = {
     serviceOrder: "Orden del Culto",
     servicePlan: "Plan de Culto",
     emptyOutlineTitle: "El plan todavía está vacío",
-    emptyOutlineDesc:
-      "Arrastra canciones de la biblioteca o añade momentos litúrgicos arriba.",
+    emptyOutlineDesc: "Arrastra canciones de la biblioteca o añade momentos litúrgicos arriba.",
     noSongsFound: "No se encontraron canciones.",
     searchSongsPlaceholder: "Buscar canciones...",
     clearSearch: "Limpiar búsqueda",
@@ -1823,8 +1776,7 @@ export const es: typeof pt = {
     songsLibrary: "Biblioteca de Canciones",
     dragToList: "Arrastra a la lista",
     generalNotesPlaceholder: "Ej: Ensayo a las 8:30...",
-    noGeneralNotes:
-      "Sin notas generales del culto. Haz clic para añadir información útil.",
+    noGeneralNotes: "Sin notas generales del culto. Haz clic para añadir información útil.",
     editGeneralNotes: "Editar Notas Generales",
     openLibraryToSearch: "Abrir biblioteca y buscar",
     unknownSong: "Canción Desconocida",
@@ -1861,31 +1813,27 @@ export const es: typeof pt = {
     bible: {
       modalTitle: "Lectura Bíblica",
       badgeTitle: "Escritura",
-      badgeDesc:
-        "Busque un pasaje bíblico, elija la traducción y añádalo al culto.",
+      badgeDesc: "Busque un pasaje bíblico, elija la traducción y añádalo al culto.",
       titleLabel: "Título",
       titlePlaceholder: "Ej: Lectura Bíblica",
       translationLabel: "Traducción",
       loadingTranslations: "Cargando traducciones...",
       passageLabel: "Pasaje Bíblico",
       passagePlaceholder: "Ej: Salmos 23:1-6, Juan 3:16, 1 Juan 1:9",
-      acceptedFormats:
-        "Formatos aceptados: Salmos 23, Juan 3:16, Génesis 1:1-5, 1 Juan 3:16",
+      acceptedFormats: "Formatos aceptados: Salmos 23, Juan 3:16, Génesis 1:1-5, 1 Juan 3:16",
       searchBtn: "Buscar",
       searchingBtn: "Buscando...",
       usePassageBtn: "Usar este Pasaje",
       acceptedBadge: "Aceptado",
       notesLabel: "Notas",
-      notesPlaceholder:
-        "Ej: Leído por el diácono Carlos, congregación de pie...",
+      notesPlaceholder: "Ej: Leído por el diácono Carlos, congregación de pie...",
       invalidFormatError:
         "Libro o formato no válido. Pruebe: Libro Capítulo:Versículo (ej: Salmos 23:1-6, 1 Juan 3:16)",
       notFoundError: "Pasaje no encontrado.",
       chapterNotFoundError: "Capítulo no encontrado en esta traducción.",
       noVersesError: "Ningún versículo encontrado en el rango especificado.",
       timeoutError: "La búsqueda tardó demasiado tiempo. Inténtelo de nuevo.",
-      genericError:
-        "Error al buscar el pasaje. Compruebe su conexión a internet.",
+      genericError: "Error al buscar el pasaje. Compruebe su conexión a internet.",
     },
     custom: {
       modalTitle: "Elemento Personalizado",
@@ -1905,8 +1853,7 @@ export const es: typeof pt = {
       titleLabel: "Título del Sermón",
       titlePlaceholder: "Ej: Caminando por Fe",
       summaryLabel: "Resumen / Puntos Principales",
-      summaryPlaceholder:
-        "Ej: Introducción sobre la fe, 3 puntos sobre confiar en Dios...",
+      summaryPlaceholder: "Ej: Introducción sobre la fe, 3 puntos sobre confiar en Dios...",
       notesLabel: "Notas",
       notesPlaceholder: "Ej: Predicador: Pastor Juan. Duración: ~30min.",
     },
@@ -1932,8 +1879,7 @@ export const es: typeof pt = {
     welcomeTitle: "¡Bienvenido a Hosanna Studio!",
     welcomeSubtitle: "Vamos a configurar su espacio de alabanza y adoración.",
     step1Title: "Crear o Unirse a una Organización",
-    step1Desc:
-      "Una organización es el espacio compartido de su iglesia o ministerio.",
+    step1Desc: "Una organización es el espacio compartido de su iglesia o ministerio.",
     createOrgTab: "Crear Nueva Organización",
     joinOrgTab: "Unirse con Invitación",
     orgNameLabel: "Nombre de la Organización",
@@ -1945,8 +1891,7 @@ export const es: typeof pt = {
     checkingSlug: "Comprobando disponibilidad...",
     createOrgBtn: "Crear y Continuar",
     creatingOrgBtn: "Creando organización...",
-    joinInviteDesc:
-      "Si recibió una invitación por correo, puede aceptarla directamente.",
+    joinInviteDesc: "Si recibió una invitación por correo, puede aceptarla directamente.",
     checkInvitesBtn: "Verificar Invitaciones",
     step2Title: "Personalización Rápida",
     step2Desc: "Elija las preferencias iniciales para su equipo.",
@@ -1968,16 +1913,13 @@ export const es: typeof pt = {
 
   auth: {
     captcha: {
-      pending:
-        "Esperando la verificación de seguridad. Inténtalo de nuevo en un momento.",
-      failed:
-        "La verificación de seguridad falló. Recarga la página e inténtalo de nuevo.",
+      pending: "Esperando la verificación de seguridad. Inténtalo de nuevo en un momento.",
+      failed: "La verificación de seguridad falló. Recarga la página e inténtalo de nuevo.",
     },
     error: {
       title: "Inicio de sesión interrumpido",
       subtitle: "No se pudo completar la autenticación",
-      generic:
-        "Ocurrió un error durante el inicio de sesión. Inténtelo de nuevo.",
+      generic: "Ocurrió un error durante el inicio de sesión. Inténtelo de nuevo.",
       hint: "Si cerró la ventana del proveedor o denegó el acceso, puede intentarlo de nuevo sin problema.",
       backToLogin: "Volver al inicio de sesión",
     },
@@ -2026,8 +1968,7 @@ export const es: typeof pt = {
       sendingBtn: "Enviando...",
       backToLogin: "Volver al inicio de sesión",
       emailSentTitle: "¡Enlace enviado!",
-      emailSentDesc:
-        "Si existe una cuenta asociada a este correo, recibirá instrucciones pronto.",
+      emailSentDesc: "Si existe una cuenta asociada a este correo, recibirá instrucciones pronto.",
     },
     resetPassword: {
       title: "Establecer Nueva Contraseña",
@@ -2071,8 +2012,7 @@ export const es: typeof pt = {
     },
     twoFactor: {
       title: "Verificación en 2 Pasos",
-      subtitle:
-        "Introduzca el código de 6 dígitos generado por su aplicación de autenticación",
+      subtitle: "Introduzca el código de 6 dígitos generado por su aplicación de autenticación",
       codeLabel: "Código de Verificación",
       verifyBtn: "Verificar",
       verifyingBtn: "Verificando...",
@@ -2151,8 +2091,7 @@ export const es: typeof pt = {
       pageGuides: "Mostrar saltos de página",
       reset: "Restablecer",
       saveDefault: "Guardar como predeterminado",
-      savedDefault:
-        "Preferencias de impresión de la organización actualizadas.",
+      savedDefault: "Preferencias de impresión de la organización actualizadas.",
       saveDefaultError: "No se pudieron guardar las preferencias.",
       pdfHint:
         "Para obtener un PDF, elija «Guardar como PDF» como destino en el cuadro de impresión.",
@@ -2199,8 +2138,7 @@ export const es: typeof pt = {
       pageNumbers: "Números de página",
       pageNumbersHint: "En la esquina inferior de cada hoja.",
       accentColor: "Color de marca",
-      accentColorHint:
-        "Azul Hosana en encabezados y acordes. Desactívelo para blanco y negro.",
+      accentColorHint: "Azul Hosana en encabezados y acordes. Desactívelo para blanco y negro.",
       footer: "Nota al pie",
       footerPlaceholder: "Ej.: Licencia CCLI #12345",
     },
@@ -2382,8 +2320,7 @@ export const es: typeof pt = {
         collections: "Colecciones",
         uniqueTags: "Etiquetas únicas",
         estimatedData: "Tamaño estimado de datos",
-        estimatedDataHint:
-          "Tamaño aproximado de los documentos sincronizados en este dispositivo",
+        estimatedDataHint: "Tamaño aproximado de los documentos sincronizados en este dispositivo",
         members: "Miembros",
         pendingInvites: "Invitaciones pendientes",
         roleCount: "{role}",
@@ -2424,8 +2361,7 @@ export const es: typeof pt = {
       },
       sections: {
         mostPlayed: "Más tocadas",
-        mostPlayedDesc:
-          "Canciones que aparecen con más frecuencia en tus setlists.",
+        mostPlayedDesc: "Canciones que aparecen con más frecuencia en tus setlists.",
         recent: "Recientes",
         recentDesc: "Usadas en un culto en los últimos 14 días.",
         overdue: "Sin uso 28+ días",
@@ -2473,8 +2409,7 @@ export const es: typeof pt = {
     title: "Historial de inicio de sesión",
     personalDesc:
       "Inicios de sesión recientes en tu cuenta, con dispositivo y ubicación cuando estén disponibles.",
-    orgDesc:
-      "Actividad de inicio de sesión de todos los miembros de esta organización.",
+    orgDesc: "Actividad de inicio de sesión de todos los miembros de esta organización.",
     loading: "Cargando historial...",
     loadError: "No se pudo cargar el historial de inicio de sesión.",
     empty: "Aún no hay registros de inicio de sesión.",
@@ -2493,8 +2428,7 @@ export const es: typeof pt = {
 
   organization: {
     offlineTitle: "Sin conexión",
-    offlineDesc:
-      "La configuración de la organización necesita conexión a internet.",
+    offlineDesc: "La configuración de la organización necesita conexión a internet.",
     tabs: {
       workspace: "Espacio de trabajo",
       members: "Miembros",
@@ -2508,8 +2442,7 @@ export const es: typeof pt = {
       title: "Actividad de login",
       desc: "Historial de inicios de sesión de toda la organización (solo propietarios y administradores).",
       listTitle: "Inicios de sesión de la organización",
-      listDesc:
-        "Eventos recientes de autenticación de los miembros de este espacio de trabajo.",
+      listDesc: "Eventos recientes de autenticación de los miembros de este espacio de trabajo.",
       noAccessTitle: "Sin acceso",
       noAccessDesc:
         "Solo los propietarios y administradores pueden ver la actividad de login de la organización.",
@@ -2537,8 +2470,7 @@ export const es: typeof pt = {
       saved: "Configuración de IA guardada.",
       keyCleared: "Clave de API eliminada.",
       noAccessTitle: "Sin acceso",
-      noAccessDesc:
-        "Solo propietarios y administradores pueden gestionar la IA.",
+      noAccessDesc: "Solo propietarios y administradores pueden gestionar la IA.",
       statusOn: "Activado",
       statusPaused: "Configurado · desactivado",
       statusSetup: "No configurado",
@@ -2547,6 +2479,9 @@ export const es: typeof pt = {
       encryptionMissing:
         "Falta AI_SETTINGS_ENCRYPTION_KEY en el servidor. Configúrala antes de guardar claves.",
       provider: "Proveedor",
+      providerHint: "Elige quién sirve los modelos.",
+      defaultEndpoint: "API predeterminada",
+      customEndpoint: "URL personalizada",
       nativeWebOn: "Admite búsqueda web y lectura de páginas.",
       nativeWebOff: "La búsqueda web usa DuckDuckGo con este proveedor.",
       baseUrl: "URL base de la API",
@@ -2559,15 +2494,15 @@ export const es: typeof pt = {
       modelPlaceholder: "p. ej. gpt-4o-mini",
       apiKey: "Clave de API",
       apiKeyPlaceholder: "Pega tu clave de API",
-      apiKeyConfiguredPlaceholder: "Déjalo vacío para mantener la clave actual",
-      keyStatusConfigured: "Configurada.",
+      apiKeyConfiguredPlaceholder: "Enfoca para reemplazar la clave actual",
+      apiKeyReplaceHint: "Clave guardada. Haz clic en el campo para reemplazarla.",
+      keyStatusConfigured: "Guardada",
       keyStatusMissing: "No definida.",
       keyNeverReturned: "La clave nunca se devuelve al navegador.",
       enabled: "Activar asistente",
       enabledDesc: "Los miembros con acceso a IA pueden abrir el chat.",
       advanced: "Avanzado",
-      advancedDesc:
-        "Límite de herramientas, temperatura y longitud de respuesta.",
+      advancedDesc: "Límite de herramientas, temperatura y longitud de respuesta.",
       behaviorTitle: "Comportamiento",
       behaviorDesc: "Instrucciones y memoria en cada respuesta.",
       maxToolCalls: "Máximo de herramientas por respuesta",
@@ -2579,13 +2514,17 @@ export const es: typeof pt = {
       maxOutputTokensHint: "Déjalo vacío para el predeterminado del modelo.",
       instructions: "Instrucciones de la organización",
       instructionsHint: "Se incluyen en cada conversación.",
-      instructionsPlaceholder:
-        "p. ej. Preferimos tonalidades de G a D. Títulos en Title Case.",
+      instructionsPlaceholder: "p. ej. Preferimos tonalidades de G a D. Títulos en Title Case.",
       memoryTitle: "Memoria",
-      memoryDesc: "Notas recordadas en los chats de la organización.",
+      memoryDesc: "Notas recordadas en los chats.",
+      memoryOrgTitle: "Memoria de la organización",
+      memoryOrgDesc: "Notas compartidas por toda la organización.",
+      memoryOrgPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
+      memoryPersonalTitle: "Memoria individual",
+      memoryPersonalDesc: "Notas de tu cuenta — solo para ti, no se comparten con la organización.",
+      memoryPersonalPlaceholder: "p. ej. Prefiero setlists más cortos.",
       memoryEnabled: "Activar memoria",
-      memoryEnabledDesc:
-        "Incluye las notas en el contexto y permite actualizarlas.",
+      memoryEnabledDesc: "Incluye las notas en el contexto y permite actualizarlas.",
       memoryEmpty: "Aún no hay notas.",
       memoryPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
       memoryAdd: "Añadir",
@@ -2593,6 +2532,7 @@ export const es: typeof pt = {
       memoryClear: "Borrar todo",
       memorySourceAi: "Guardado por Logos",
       memorySourceAdmin: "Añadido por un administrador",
+      memorySourceUser: "Añadido por ti",
       memoryCount: "{count}/{max} notas",
       memoryError: "No se pudo actualizar la memoria.",
       clearKey: "Quitar clave",
@@ -2609,8 +2549,7 @@ export const es: typeof pt = {
         unavailable: "El saldo puede ser insuficiente",
         refreshedAt: "Actualizado {time}",
         notConfigured: "Guarda una clave de API para ver el saldo.",
-        cryptoMissing:
-          "El cifrado del servidor no está configurado; no se puede obtener el saldo.",
+        cryptoMissing: "El cifrado del servidor no está configurado; no se puede obtener el saldo.",
         unsupported: "El saldo solo está disponible para DeepSeek.",
       },
     },
@@ -2826,16 +2765,14 @@ export const es: typeof pt = {
           "Completa una estructura de servicio equilibrada (bienvenida, canciones, mensaje, etc.) para este plan. Propón los elementos; no guardes.",
         createSong:
           "Ayúdame a crear una canción nueva en ChordPro. Pregunta título/artista si hace falta y luego propón el contenido (no guardes hasta que confirme).",
-        searchHelp:
-          "Ayúdame a buscar y organizar las canciones de la biblioteca.",
+        searchHelp: "Ayúdame a buscar y organizar las canciones de la biblioteca.",
         planService:
           "Ayúdame a planear un nuevo servicio de adoración. Pregunta fecha/tema si hace falta y luego propón un repertorio de la biblioteca.",
         organizeFolders:
           "Revisa mis carpetas y dale a cada una un color e icono adecuados para distinguir bien cada tipo. Aplícalo todo de una vez.",
         upcomingAgenda:
           "Muestra los próximos eventos de mi agenda y señala lo que falta (responsabilidades, canciones, notas).",
-        reviewTrash:
-          "Lista lo que hay en la papelera e indícame qué es seguro restaurar o dejar.",
+        reviewTrash: "Lista lo que hay en la papelera e indícame qué es seguro restaurar o dejar.",
         general:
           "¿En qué puedes ayudarme en Hosanna Studio (canciones, servicios, ChordPro, biblioteca)?",
       },

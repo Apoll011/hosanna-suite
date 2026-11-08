@@ -62,10 +62,9 @@ export type AiThread = {
   messages: AiChatMessage[];
 };
 
-export type AiThreadSummary = Pick<
-  AiThread,
-  "id" | "title" | "createdAt" | "updatedAt"
-> & { messageCount: number };
+export type AiThreadSummary = Pick<AiThread, "id" | "title" | "createdAt" | "updatedAt"> & {
+  messageCount: number;
+};
 
 export type QuickChip = {
   id: string;
@@ -106,9 +105,7 @@ export const SILENT_TOOLS = new Set(["studio_sync", "suggest_followups"]);
 
 export function messageText(msg: AiChatMessage): string {
   return msg.parts
-    .filter(
-      (p): p is Extract<AiMessagePart, { type: "text" }> => p.type === "text",
-    )
+    .filter((p): p is Extract<AiMessagePart, { type: "text" }> => p.type === "text")
     .map((p) => p.text)
     .join("");
 }
@@ -174,9 +171,7 @@ export function toUiMessages(messages: AiChatMessage[]): AiUiMessage[] {
     return { id: m.id, role: "assistant" as const, parts };
   });
   // Drop assistant turns that produced nothing (aborted / errored early).
-  return out.filter(
-    (m) => m.role === "user" || m.parts.some((p) => p.type !== "step-start"),
-  );
+  return out.filter((m) => m.role === "user" || m.parts.some((p) => p.type !== "step-start"));
 }
 
 export function newId(): string {

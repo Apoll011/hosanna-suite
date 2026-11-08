@@ -45,12 +45,8 @@ const SectionHeading: React.FC<{
       <Icon className="w-4 h-4" />
     </div>
     <div>
-      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-        {title}
-      </h3>
-      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-        {subtitle}
-      </p>
+      <h3 className="text-sm font-bold text-m3-text">{title}</h3>
+      <p className="text-xs text-m3-secondary mt-0.5">{subtitle}</p>
     </div>
   </div>
 );
@@ -87,15 +83,10 @@ const writeLocalInterest = (state: Record<string, boolean>) => {
 
 const EarlyAccessPanel: React.FC = () => {
   const { t } = useI18n();
-  const [activeFeatures, setActiveFeatures] = useState<EarlyAccessFeature[]>(
-    [],
-  );
-  const [conceptFeatures, setConceptFeatures] = useState<EarlyAccessFeature[]>(
-    [],
-  );
+  const [activeFeatures, setActiveFeatures] = useState<EarlyAccessFeature[]>([]);
+  const [conceptFeatures, setConceptFeatures] = useState<EarlyAccessFeature[]>([]);
   const [enrolled, setEnrolled] = useState<Record<string, boolean>>({});
-  const [interested, setInterested] =
-    useState<Record<string, boolean>>(readLocalInterest);
+  const [interested, setInterested] = useState<Record<string, boolean>>(readLocalInterest);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -109,9 +100,7 @@ const EarlyAccessPanel: React.FC = () => {
     try {
       posthog.getEarlyAccessFeatures(
         (feats) => {
-          const active = feats.filter((f) =>
-            ["alpha", "beta"].includes(f.stage),
-          );
+          const active = feats.filter((f) => ["alpha", "beta"].includes(f.stage));
           const concept = feats.filter((f) => f.stage === "concept");
           setActiveFeatures(active);
           setConceptFeatures(concept);
@@ -164,13 +153,11 @@ const EarlyAccessPanel: React.FC = () => {
   ) => (
     <li
       key={feat.flagKey}
-      className="flex items-start justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800"
+      className="flex items-start justify-between gap-3 p-3 rounded-xl bg-m3-sidebar border border-m3-border"
     >
       <div className="min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs font-semibold text-slate-900 dark:text-slate-100">
-            {feat.name}
-          </span>
+          <span className="text-xs font-semibold text-m3-text">{feat.name}</span>
           <span className="text-[10px] uppercase tracking-wide font-bold px-1.5 py-0.5 rounded bg-m3-primary/10 text-m3-primary">
             {feat.stage}
           </span>
@@ -181,9 +168,7 @@ const EarlyAccessPanel: React.FC = () => {
           )}
         </div>
         {feat.description && (
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-            {feat.description}
-          </p>
+          <p className="text-[11px] text-m3-secondary mt-1 leading-relaxed">{feat.description}</p>
         )}
         {feat.documentationUrl && (
           <a
@@ -205,14 +190,14 @@ const EarlyAccessPanel: React.FC = () => {
         {on ? (
           <ToggleRight className="w-6 h-6 text-m3-primary" />
         ) : (
-          <ToggleLeft className="w-6 h-6 text-slate-400" />
+          <ToggleLeft className="w-6 h-6 text-m3-secondary" />
         )}
       </button>
     </li>
   );
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-5">
       <div className="flex items-start justify-between mb-4">
         <SectionHeading
           icon={FlaskConical}
@@ -221,29 +206,25 @@ const EarlyAccessPanel: React.FC = () => {
         />
         <button
           onClick={load}
-          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
+          className="p-1.5 rounded-lg hover:bg-m3-hover text-m3-secondary transition-colors"
         >
-          <RefreshCw
-            className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
-          />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
         </button>
       </div>
 
       {!posthog ? (
-        <p className="text-xs text-slate-400 py-2">
+        <p className="text-xs text-m3-secondary py-2">
           {t("settings.features.earlyAccess.unavailable")}
         </p>
       ) : loading ? (
-        <div className="flex items-center gap-2 py-4 text-slate-400 text-xs">
+        <div className="flex items-center gap-2 py-4 text-m3-secondary text-xs">
           <Loader2 className="w-4 h-4 animate-spin" />
           {t("common.loading")}…
         </div>
       ) : error ? (
         <ErrorNote message={error} />
       ) : activeFeatures.length === 0 && conceptFeatures.length === 0 ? (
-        <p className="text-xs text-slate-400 py-2">
-          {t("settings.features.earlyAccess.empty")}
-        </p>
+        <p className="text-xs text-m3-secondary py-2">{t("settings.features.earlyAccess.empty")}</p>
       ) : (
         <div className="space-y-5">
           {activeFeatures.length > 0 && (
@@ -263,7 +244,7 @@ const EarlyAccessPanel: React.FC = () => {
 
           {conceptFeatures.length > 0 && (
             <div>
-              <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-2">
+              <p className="text-[11px] font-semibold text-m3-secondary uppercase tracking-wide mb-2">
                 {t("settings.features.earlyAccess.comingSoon")}
               </p>
               <ul className="space-y-2">
@@ -294,7 +275,7 @@ const STATUS_STYLES: Record<string, string> = {
   open: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
   pending: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   on_hold: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
-  resolved: "bg-slate-200 dark:bg-slate-700 text-slate-500",
+  resolved: "bg-m3-sidebar text-m3-secondary",
 };
 
 const stripMarkdown = (text: string): string =>
@@ -316,9 +297,7 @@ const SupportPanel: React.FC = () => {
   // `isAvailable()` can flip from false -> true asynchronously once the
   // conversations module finishes loading, so this must be state, not a
   // one-off computed const, or the panel can get stuck "unavailable".
-  const [available, setAvailable] = useState(
-    () => posthog?.conversations?.isAvailable() ?? false,
-  );
+  const [available, setAvailable] = useState(() => posthog?.conversations?.isAvailable() ?? false);
 
   const [view, setView] = useState<SupportView>("tickets");
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -447,19 +426,14 @@ const SupportPanel: React.FC = () => {
   // if we're viewing a ticket that isn't the SDK's current one, replying
   // here would silently misfile the message into the wrong conversation.
   const currentTicketId = posthog?.conversations?.getCurrentTicketId();
-  const canReply =
-    isNewChat || (!!activeTicketId && activeTicketId === currentTicketId);
+  const canReply = isNewChat || (!!activeTicketId && activeTicketId === currentTicketId);
 
   const sendMsg = async () => {
     if (!draft.trim() || sending || !canReply) return;
     setSending(true);
     setError(null);
     try {
-      const res = await posthog!.conversations!.sendMessage(
-        draft.trim(),
-        undefined,
-        isNewChat,
-      );
+      const res = await posthog!.conversations!.sendMessage(draft.trim(), undefined, isNewChat);
       if (!res) {
         setError(t("settings.features.support.sendError"));
         return;
@@ -483,8 +457,7 @@ const SupportPanel: React.FC = () => {
       await posthog!.conversations!.requestRestoreLink(restoreEmail.trim());
       setRestoreSent(true);
     } catch (err) {
-      const errObj = err as
-        { message?: string; status?: number } | null | undefined;
+      const errObj = err as { message?: string; status?: number } | null | undefined;
       setError(
         errObj?.message?.includes("Too many requests") || errObj?.status === 429
           ? t("settings.features.support.restoreRateLimited")
@@ -497,13 +470,13 @@ const SupportPanel: React.FC = () => {
 
   if (!posthog) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-5">
         <SectionHeading
           icon={HelpCircle}
           title={t("settings.features.support.title")}
           subtitle={t("settings.features.support.subtitle")}
         />
-        <p className="text-xs text-slate-400 py-2">
+        <p className="text-xs text-m3-secondary py-2">
           {t("settings.features.support.unavailable")}
         </p>
       </div>
@@ -512,13 +485,13 @@ const SupportPanel: React.FC = () => {
 
   if (!available) {
     return (
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-5">
         <SectionHeading
           icon={HelpCircle}
           title={t("settings.features.support.title")}
           subtitle={t("settings.features.support.subtitle")}
         />
-        <div className="flex items-center gap-2 py-4 text-slate-400 text-xs">
+        <div className="flex items-center gap-2 py-4 text-m3-secondary text-xs">
           <Loader2 className="w-4 h-4 animate-spin" />
           {t("common.loading")}…
         </div>
@@ -536,13 +509,13 @@ const SupportPanel: React.FC = () => {
         : t("settings.features.support.subtitle");
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+    <div className="bg-m3-card border border-m3-border rounded-xl overflow-hidden">
       {/* Header */}
       <div className="flex items-start gap-2 px-5 pt-5 pb-3">
         {view !== "tickets" && (
           <button
             onClick={() => setView("tickets")}
-            className="p-1 mt-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
+            className="p-1 mt-1 rounded-lg hover:bg-m3-hover text-m3-secondary transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -559,25 +532,23 @@ const SupportPanel: React.FC = () => {
             <button
               onClick={() => startNewChat()}
               title={t("settings.features.support.newTicket")}
-              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-m3-hover text-m3-secondary transition-colors"
             >
               <Plus className="w-4 h-4" />
             </button>
             <button
               onClick={() => setView("restore")}
               title={t("settings.features.support.restore")}
-              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-m3-hover text-m3-secondary transition-colors"
             >
               <MailCheck className="w-4 h-4" />
             </button>
             <button
               onClick={loadTickets}
               title="Refresh"
-              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-m3-hover text-m3-secondary transition-colors"
             >
-              <RefreshCw
-                className={`w-3.5 h-3.5 ${loadingTickets ? "animate-spin" : ""}`}
-              />
+              <RefreshCw className={`w-3.5 h-3.5 ${loadingTickets ? "animate-spin" : ""}`} />
             </button>
           </div>
         )}
@@ -593,16 +564,14 @@ const SupportPanel: React.FC = () => {
       {view === "tickets" && (
         <div className="px-5 pb-5 space-y-3">
           {loadingTickets ? (
-            <div className="flex items-center gap-2 py-4 text-slate-400 text-xs">
+            <div className="flex items-center gap-2 py-4 text-m3-secondary text-xs">
               <Loader2 className="w-4 h-4 animate-spin" />
               {t("common.loading")}…
             </div>
           ) : tickets.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 dark:text-slate-500">
+            <div className="text-center py-8 text-m3-secondary">
               <Inbox className="w-8 h-8 mx-auto mb-2 opacity-40" />
-              <p className="text-xs">
-                {t("settings.features.support.noTickets")}
-              </p>
+              <p className="text-xs">{t("settings.features.support.noTickets")}</p>
             </div>
           ) : (
             <ul className="space-y-2">
@@ -610,19 +579,17 @@ const SupportPanel: React.FC = () => {
                 <li key={tk.id}>
                   <button
                     onClick={() => openTicket(tk.id)}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 hover:border-m3-primary/40 hover:bg-m3-primary/5 transition-all text-left"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-m3-sidebar border border-m3-border hover:border-m3-primary/40 hover:bg-m3-primary/5 transition-all text-left"
                   >
-                    <MessageSquare className="w-4 h-4 text-slate-400 shrink-0" />
+                    <MessageSquare className="w-4 h-4 text-m3-secondary shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
+                      <p className="text-xs font-semibold text-m3-text truncate">
                         {tk.last_message
                           ? stripMarkdown(tk.last_message)
                           : t("settings.features.support.noMessagesYet")}
                       </p>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        {new Date(
-                          tk.last_message_at ?? tk.created_at,
-                        ).toLocaleDateString()}
+                      <p className="text-[11px] text-m3-secondary mt-0.5">
+                        {new Date(tk.last_message_at ?? tk.created_at).toLocaleDateString()}
                         {tk.message_count != null &&
                           ` · ${tk.message_count} ${t("settings.features.support.messages")}`}
                       </p>
@@ -633,11 +600,11 @@ const SupportPanel: React.FC = () => {
                       </span>
                     )}
                     <span
-                      className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${STATUS_STYLES[tk.status] ?? "bg-slate-200 dark:bg-slate-700 text-slate-500"}`}
+                      className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${STATUS_STYLES[tk.status] ?? "bg-m3-sidebar text-m3-secondary"}`}
                     >
                       {tk.status}
                     </span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                    <ChevronRight className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
                   </button>
                 </li>
               ))}
@@ -653,7 +620,7 @@ const SupportPanel: React.FC = () => {
           )}
           {/* Quick starters */}
           <div className="pt-1 space-y-2">
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">
+            <p className="text-[11px] font-semibold text-m3-secondary uppercase tracking-wide">
               {t("settings.features.support.startNew")}
             </p>
             <div className="grid grid-cols-2 gap-2">
@@ -674,12 +641,10 @@ const SupportPanel: React.FC = () => {
                 <button
                   key={label}
                   onClick={() => startNewChat(msg)}
-                  className="flex items-center gap-2 p-3 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 hover:border-m3-primary/50 hover:bg-m3-primary/5 transition-all text-left"
+                  className="flex items-center gap-2 p-3 rounded-xl border border-dashed border-m3-border hover:border-m3-primary/50 hover:bg-m3-primary/5 transition-all text-left"
                 >
                   <Icon className="w-4 h-4 text-m3-primary shrink-0" />
-                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                    {label}
-                  </span>
+                  <span className="text-xs font-medium text-m3-text">{label}</span>
                 </button>
               ))}
             </div>
@@ -692,13 +657,13 @@ const SupportPanel: React.FC = () => {
         <div className="flex flex-col px-5 pb-5">
           <div className="h-80 overflow-y-auto space-y-3 py-2">
             {loadingMsgs ? (
-              <div className="flex items-center justify-center gap-2 h-full text-slate-400 text-xs">
+              <div className="flex items-center justify-center gap-2 h-full text-m3-secondary text-xs">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 {t("common.loading")}…
               </div>
             ) : messages.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <p className="text-xs text-slate-400 text-center">
+                <p className="text-xs text-m3-secondary text-center">
                   {t("settings.features.support.chatEmpty")}
                 </p>
               </div>
@@ -712,10 +677,10 @@ const SupportPanel: React.FC = () => {
                     className={`flex ${isCustomer ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[80%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${isCustomer ? "bg-m3-primary text-white rounded-br-sm" : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm"}`}
+                      className={`max-w-[80%] rounded-2xl px-3 py-2 text-xs leading-relaxed ${isCustomer ? "bg-m3-primary text-white rounded-br-sm" : "bg-m3-sidebar text-m3-text rounded-bl-sm"}`}
                     >
                       {!isCustomer && (
-                        <p className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-0.5">
+                        <p className="flex items-center gap-1 text-[10px] font-semibold text-m3-secondary mb-0.5">
                           {isAI && <Bot className="w-3 h-3" />}
                           {m.author_name ??
                             (isAI
@@ -724,9 +689,7 @@ const SupportPanel: React.FC = () => {
                         </p>
                       )}
                       {isCustomer ? (
-                        <p className="whitespace-pre-wrap wrap-break-word">
-                          {m.content}
-                        </p>
+                        <p className="whitespace-pre-wrap wrap-break-word">{m.content}</p>
                       ) : (
                         <div
                           dangerouslySetInnerHTML={{
@@ -735,7 +698,7 @@ const SupportPanel: React.FC = () => {
                         />
                       )}
                       <p
-                        className={`text-[10px] mt-1 ${isCustomer ? "text-white/60" : "text-slate-400"}`}
+                        className={`text-[10px] mt-1 ${isCustomer ? "text-white/60" : "text-m3-secondary"}`}
                       >
                         {new Date(m.created_at).toLocaleTimeString([], {
                           hour: "2-digit",
@@ -751,7 +714,7 @@ const SupportPanel: React.FC = () => {
           </div>
 
           {!canReply ? (
-            <div className="flex items-start gap-2 mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+            <div className="flex items-start gap-2 mt-3 p-3 rounded-xl bg-m3-sidebar border border-m3-border text-[11px] text-m3-secondary">
               <Lock className="w-3.5 h-3.5 shrink-0 mt-0.5" />
               <span>
                 {t("settings.features.support.readOnlyTicket")}{" "}
@@ -764,7 +727,7 @@ const SupportPanel: React.FC = () => {
               </span>
             </div>
           ) : (
-            <div className="flex items-end gap-2 mt-3 border-t border-slate-100 dark:border-slate-800 pt-3">
+            <div className="flex items-end gap-2 mt-3 border-t border-m3-border pt-3">
               <textarea
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
@@ -776,7 +739,7 @@ const SupportPanel: React.FC = () => {
                 }}
                 rows={2}
                 placeholder={t("settings.features.support.placeholder")}
-                className="flex-1 resize-none text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-m3-primary/40"
+                className="flex-1 resize-none text-xs rounded-xl border border-m3-border bg-m3-sidebar px-3 py-2 text-m3-text placeholder:text-m3-secondary focus:outline-none focus:ring-2 focus:ring-m3-primary/40"
               />
               <button
                 onClick={sendMsg}
@@ -797,9 +760,7 @@ const SupportPanel: React.FC = () => {
       {/* Restore */}
       {view === "restore" && (
         <div className="px-5 pb-5 space-y-4">
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {t("settings.features.support.restoreDesc")}
-          </p>
+          <p className="text-xs text-m3-secondary">{t("settings.features.support.restoreDesc")}</p>
           {restoreSent ? (
             <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-700 dark:text-emerald-300 text-xs">
               <MailCheck className="w-4 h-4 shrink-0" />
@@ -815,7 +776,7 @@ const SupportPanel: React.FC = () => {
                   if (e.key === "Enter") sendRestore();
                 }}
                 placeholder={t("settings.features.support.emailPlaceholder")}
-                className="flex-1 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-m3-primary/40"
+                className="flex-1 text-xs rounded-xl border border-m3-border bg-m3-sidebar px-3 py-2 text-m3-text placeholder:text-m3-secondary focus:outline-none focus:ring-2 focus:ring-m3-primary/40"
               />
               <button
                 onClick={sendRestore}

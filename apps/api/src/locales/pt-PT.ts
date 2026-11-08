@@ -14,23 +14,18 @@ const ptPT = {
     missing_permission: "Permissão insuficiente",
     forbidden_default: "Não tem permissão para executar esta ação.",
     unauthorized_session: "Sessão de autenticação inválida ou ausente.",
-    workspace_required:
-      "É necessário um contexto de workspace/organização ativo.",
+    workspace_required: "É necessário um contexto de workspace/organização ativo.",
     subscription_required:
       "A organização não tem uma subscrição ativa nem um período de avaliação em curso. Só é permitida a leitura.",
-    rate_limit_exceeded:
-      "Demasiados pedidos. Por favor, tente novamente mais tarde.",
+    rate_limit_exceeded: "Demasiados pedidos. Por favor, tente novamente mais tarde.",
   },
 
   // ── conflict / optimistic concurrency ──────────────────────────────────
   conflict: {
-    default:
-      "O recurso foi modificado por outra pessoa. Recarregue e tente novamente.",
+    default: "O recurso foi modificado por outra pessoa. Recarregue e tente novamente.",
     song: "Esta música foi modificada por outra pessoa desde a última vez que a carregou.",
-    folder:
-      "Esta pasta foi modificada por outra pessoa desde a última vez que a carregou.",
-    service:
-      "Este culto foi modificado por outra pessoa desde a última vez que o carregou.",
+    folder: "Esta pasta foi modificada por outra pessoa desde a última vez que a carregou.",
+    service: "Este culto foi modificado por outra pessoa desde a última vez que o carregou.",
   },
 
   // ── songs ───────────────────────────────────────────────────────────────
@@ -85,8 +80,7 @@ const ptPT = {
     trial_expired_description:
       "O teu período de avaliação expirou sem pagamento. Renova a tua subscrição para continuar a ter acesso.",
     subscribed_title: "Subscrição ativa",
-    subscribed_description:
-      "A tua subscrição ao plano {{plan}} está agora ativa.",
+    subscribed_description: "A tua subscrição ao plano {{plan}} está agora ativa.",
     canceled_title: "Subscrição cancelada",
     canceled_description:
       "A tua subscrição foi cancelada. O acesso continuará disponível até ao fim do período faturado.",
@@ -103,8 +97,7 @@ const ptPT = {
       heading: "Bem-vindo ao Hosanna{{#if first_name}}, {{first_name}}{{/if}}!",
       body1:
         "Estamos muito felizes por te teres juntado à nossa comunidade. O Hosanna foi criado para te ajudar a ligar-te, envolver-te e crescer com a tua família de fé.",
-      body2:
-        "Para começar, podes explorar o teu painel ou configurar o teu perfil.",
+      body2: "Para começar, podes explorar o teu painel ou configurar o teu perfil.",
       cta: "Ir para o Painel",
     },
     verify_email: {
@@ -113,8 +106,7 @@ const ptPT = {
       body1:
         "Obrigado por te registares no Hosanna! Por favor, clica no botão abaixo para verificar o teu endereço de e-mail e proteger a tua conta.",
       cta: "Verificar E-mail",
-      ignore:
-        "Se não criaste uma conta, podes ignorar este e-mail com segurança.",
+      ignore: "Se não criaste uma conta, podes ignorar este e-mail com segurança.",
     },
     forgot_password: {
       subject: "Redefine a tua palavra-passe Hosanna",
@@ -143,8 +135,7 @@ const ptPT = {
       heading: "Conta temporariamente bloqueada",
       body1:
         "Detetámos várias tentativas de login falhadas na tua conta. Para proteger a tua segurança, a tua conta foi temporariamente bloqueada.",
-      body2:
-        "Poderás tentar iniciar sessão novamente em {{lockout_minutes}} minutos.",
+      body2: "Poderás tentar iniciar sessão novamente em {{lockout_minutes}} minutos.",
     },
     change_email_verification: {
       subject: "Verifica o teu novo endereço de e-mail - Hosanna",
@@ -172,8 +163,7 @@ const ptPT = {
     church_invitation: {
       subject: "Foste convidado para te juntares a uma Igreja - Hosanna",
       heading: "Foste convidado para {{church_name}}",
-      body1:
-        "{{inviter_name}} convidou-te para te juntares ao espaço de trabalho no Hosanna.",
+      body1: "{{inviter_name}} convidou-te para te juntares ao espaço de trabalho no Hosanna.",
       body2:
         "Junta-te a {{church_name}} para te ligar à tua comunidade, ver eventos e manteres-te atualizado.",
       cta: "Aceitar Convite",
@@ -184,24 +174,21 @@ const ptPT = {
       salutation: "Olá{{#if first_name}} {{first_name}}{{/if}},",
       body1:
         "O teu pedido para te juntares a {{church_name}} foi recebido e está a aguardar aprovação de um administrador.",
-      body2:
-        "Notificar-te-emos por e-mail assim que um administrador analisar o teu pedido.",
+      body2: "Notificar-te-emos por e-mail assim que um administrador analisar o teu pedido.",
     },
     join_request_approved: {
       subject: "Estás dentro! Pedido de adesão aprovado - Hosanna",
       heading: "Estás dentro! Pedido aprovado",
       body1:
         "Ótimas notícias! O teu pedido para te juntares a {{church_name}} foi aprovado por um administrador.",
-      body2:
-        "Podes agora aceder ao espaço de trabalho, ver membros e participar.",
+      body2: "Podes agora aceder ao espaço de trabalho, ver membros e participar.",
       cta: "Entrar no Espaço de Trabalho",
     },
     join_request_denied: {
       subject: "Atualização sobre o teu pedido de adesão - Hosanna",
       heading: "Atualização sobre o teu pedido de adesão",
       salutation: "Olá{{#if first_name}} {{first_name}}{{/if}},",
-      body1:
-        "O teu pedido para te juntares a {{church_name}} não pôde ser aprovado neste momento.",
+      body1: "O teu pedido para te juntares a {{church_name}} não pôde ser aprovado neste momento.",
       body2:
         "Se achas que se trata de um erro, por favor contacta diretamente a administração da igreja.",
     },
@@ -209,8 +196,7 @@ const ptPT = {
       subject: "És agora um Administrador - Hosanna",
       heading: "És agora um Administrador",
       salutation: "Olá{{#if first_name}} {{first_name}}{{/if}},",
-      body1:
-        "O teu papel em {{church_name}} foi atualizado. Passaste a ser Administrador.",
+      body1: "O teu papel em {{church_name}} foi atualizado. Passaste a ser Administrador.",
       body2:
         "Tens agora acesso às definições do espaço de trabalho, gestão de membros e ferramentas administrativas.",
       cta: "Ver Painel de Administrador",
@@ -235,32 +221,27 @@ const ptPT = {
     billing_trial_started: {
       subject: "O teu período de avaliação começou - Hosanna",
       heading: "O teu período de avaliação começou",
-      body1:
-        "A tua avaliação gratuita do plano {{plan}} está agora ativa para {{church_name}}.",
-      body2:
-        "Explora todas as funcionalidades do Hosanna durante o teu período de avaliação.",
+      body1: "A tua avaliação gratuita do plano {{plan}} está agora ativa para {{church_name}}.",
+      body2: "Explora todas as funcionalidades do Hosanna durante o teu período de avaliação.",
     },
     billing_trial_ended: {
       subject: "O teu período de avaliação terminou - Hosanna",
       heading: "O teu período de avaliação terminou",
       body1:
         "O período de avaliação de {{church_name}} terminou e a tua subscrição ao plano {{plan}} está agora ativa.",
-      body2:
-        "Podes gerir a tua subscrição nas definições do espaço de trabalho.",
+      body2: "Podes gerir a tua subscrição nas definições do espaço de trabalho.",
     },
     billing_trial_expired: {
       subject: "O teu período de avaliação expirou - Hosanna",
       heading: "O teu período de avaliação expirou",
-      body1:
-        "O período de avaliação de {{church_name}} expirou sem um método de pagamento válido.",
+      body1: "O período de avaliação de {{church_name}} expirou sem um método de pagamento válido.",
       body2:
         "Para continuar a ter acesso, renova a tua subscrição nas definições do espaço de trabalho.",
     },
     billing_subscribed: {
       subject: "Subscrição ativa - Hosanna",
       heading: "Subscrição ativa",
-      body1:
-        "A subscrição de {{church_name}} ao plano {{plan}} está agora ativa.",
+      body1: "A subscrição de {{church_name}} ao plano {{plan}} está agora ativa.",
       body2: "Obrigado por escolheres o Hosanna!",
     },
     billing_canceled: {

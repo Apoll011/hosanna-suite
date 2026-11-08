@@ -26,9 +26,7 @@ interface CommandPaletteContextType {
   allActions: CommandAction[];
 }
 
-const CommandPaletteContext = createContext<CommandPaletteContextType | null>(
-  null,
-);
+const CommandPaletteContext = createContext<CommandPaletteContextType | null>(null);
 
 const RECENTS_KEY = "hosanna_cmd_recent_ids";
 
@@ -42,9 +40,9 @@ export function CommandPaletteProvider({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeParentId, setActiveParentId] = useState<string | null>(null);
-  const [dynamicActionGroups, setDynamicActionGroups] = useState<
-    Record<string, CommandAction[]>
-  >({});
+  const [dynamicActionGroups, setDynamicActionGroups] = useState<Record<string, CommandAction[]>>(
+    {},
+  );
   const [recentActionIds, setRecentActionIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(RECENTS_KEY);
@@ -76,12 +74,9 @@ export function CommandPaletteProvider({
     });
   }, []);
 
-  const registerDynamicActions = useCallback(
-    (key: string, actions: CommandAction[]) => {
-      setDynamicActionGroups((prev) => ({ ...prev, [key]: actions }));
-    },
-    [],
-  );
+  const registerDynamicActions = useCallback((key: string, actions: CommandAction[]) => {
+    setDynamicActionGroups((prev) => ({ ...prev, [key]: actions }));
+  }, []);
 
   const unregisterDynamicActions = useCallback((key: string) => {
     setDynamicActionGroups((prev) => {
@@ -197,9 +192,7 @@ export function CommandPaletteProvider({
 export function useCommandPalette() {
   const context = useContext(CommandPaletteContext);
   if (!context) {
-    throw new Error(
-      "useCommandPalette must be used within a CommandPaletteProvider",
-    );
+    throw new Error("useCommandPalette must be used within a CommandPaletteProvider");
   }
   return context;
 }

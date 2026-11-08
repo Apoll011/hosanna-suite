@@ -16,15 +16,11 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const currentLang: LanguageMeta =
-    LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
+  const currentLang: LanguageMeta = LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -33,14 +29,11 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
   }, []);
 
   return (
-    <div
-      className={`relative inline-block text-left ${className}`}
-      ref={dropdownRef}
-    >
+    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2.5 rounded-full bg-m3-card/80 backdrop-blur-md border border-m3-border/80 text-m3-text shadow-[var(--shadow-sm)] transition-colors inline-flex items-center gap-1.5"
+        className="p-2.5 rounded-full bg-m3-card/80 backdrop-blur-md border border-m3-border/80 text-m3-text shadow-sm transition-colors inline-flex items-center gap-1.5"
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label="Change language"
@@ -52,7 +45,7 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-[var(--radius-xl)] border border-m3-border bg-m3-card p-1.5 shadow-[var(--shadow-lg)] z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
           {LANGUAGES.map((lang) => {
             const isSelected = lang.code === language;
             return (
@@ -62,7 +55,7 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
                   setPersonalLanguage(lang.code as Language);
                   setIsOpen(false);
                 }}
-                className={`flex w-full items-center gap-2.5 rounded-[var(--radius-md)] px-3 py-2 min-h-10 text-xs font-medium transition-colors cursor-pointer ${
+                className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 min-h-10 text-xs font-medium transition-colors cursor-pointer ${
                   isSelected
                     ? "bg-m3-primary/10 text-m3-primary font-semibold"
                     : "text-m3-secondary hover:bg-m3-hover hover:text-m3-text"

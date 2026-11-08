@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "fix": "eslint . --fix; prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "clean": "rm -rf dist .output",
     "deploy:production": "wrangler deploy"
   },

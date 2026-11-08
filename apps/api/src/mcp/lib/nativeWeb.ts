@@ -5,10 +5,7 @@
  * a separate REST search we can call from our own `metadata_web_*` tools.
  */
 
-import {
-  type AiProvider,
-  OrgAiConfigService,
-} from "../../services/orgAiConfig.service.js";
+import { type AiProvider, OrgAiConfigService } from "../../services/orgAiConfig.service.js";
 import {
   providerSupportsNativeFetch,
   providerSupportsNativeSearch,
@@ -89,9 +86,7 @@ export async function nativeWebSearch(
   },
 ): Promise<{ hits: NativeSearchHit[]; provider: AiProvider }> {
   if (!providerSupportsNativeSearch(auth.provider)) {
-    throw new Error(
-      `Provider ${auth.provider} has no native web search API for Hosanna tools.`,
-    );
+    throw new Error(`Provider ${auth.provider} has no native web search API for Hosanna tools.`);
   }
 
   const query = opts.query.trim().slice(0, 128);
@@ -153,9 +148,7 @@ export async function nativeWebFetch(
   pageUrl: string,
 ): Promise<NativeFetchResult> {
   if (!providerSupportsNativeFetch(auth.provider)) {
-    throw new Error(
-      `Provider ${auth.provider} has no native web fetch API for Hosanna tools.`,
-    );
+    throw new Error(`Provider ${auth.provider} has no native web fetch API for Hosanna tools.`);
   }
 
   const trimmed = pageUrl.trim();
@@ -187,14 +180,11 @@ export async function nativeWebFetch(
  * Load org BYOK credentials when that provider supports native Search/Fetch.
  * Returns null when AI is off, key missing, or provider has no native web tools.
  */
-export async function resolveNativeWebAuth(
-  orgId: string,
-): Promise<NativeWebAuth | null> {
+export async function resolveNativeWebAuth(orgId: string): Promise<NativeWebAuth | null> {
   try {
     const runtime = await new OrgAiConfigService().getRuntimeConfig(orgId);
     if (!providerSupportsNativeSearch(runtime.provider)) return null;
-    const baseUrl =
-      runtime.baseUrl?.replace(/\/+$/, "") || "https://api.deepseek.com";
+    const baseUrl = runtime.baseUrl?.replace(/\/+$/, "") || "https://api.deepseek.com";
     return {
       provider: runtime.provider,
       apiKey: runtime.apiKey,

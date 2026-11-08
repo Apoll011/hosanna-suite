@@ -80,9 +80,7 @@ function getCacheKey(permissions: PermissionString[]): string {
 /**
  * Core fetcher. Batches permissions, deduplicates requests, and pre-populates cache.
  */
-function fetchPermissionsBatch(
-  permissions: PermissionString[],
-): Promise<boolean> {
+function fetchPermissionsBatch(permissions: PermissionString[]): Promise<boolean> {
   if (permissions.length === 0) return Promise.resolve(true);
 
   const cacheKey = getCacheKey(permissions);
@@ -167,14 +165,10 @@ export function checkPermissionsLocally(
   const roleConfig = roles[role];
   for (const perm of permissions) {
     const dotIndex = perm.indexOf(".");
-    const resource = perm.slice(
-      0,
-      dotIndex,
-    ) as keyof typeof roleConfig.statements;
+    const resource = perm.slice(0, dotIndex) as keyof typeof roleConfig.statements;
     const action = perm.slice(dotIndex + 1);
     const allowedActions = roleConfig.statements[resource];
-    const isGranted =
-      Array.isArray(allowedActions) && allowedActions.includes(action);
+    const isGranted = Array.isArray(allowedActions) && allowedActions.includes(action);
     if (!isGranted) return false;
   }
   return true;
@@ -188,10 +182,7 @@ export function checkPermissionAnyLocally(
   const roleConfig = roles[role];
   for (const perm of permissions) {
     const dotIndex = perm.indexOf(".");
-    const resource = perm.slice(
-      0,
-      dotIndex,
-    ) as keyof typeof roleConfig.statements;
+    const resource = perm.slice(0, dotIndex) as keyof typeof roleConfig.statements;
     const action = perm.slice(dotIndex + 1);
     const allowedActions = roleConfig.statements[resource];
     if (Array.isArray(allowedActions) && allowedActions.includes(action)) {
@@ -256,12 +247,10 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
 
     fetchPermissionsBatch(permissions)
       .then((granted) => {
-        if (mounted.current)
-          setResult({ granted, loading: false, error: null });
+        if (mounted.current) setResult({ granted, loading: false, error: null });
       })
       .catch((error) => {
-        if (mounted.current)
-          setResult({ granted: false, loading: false, error });
+        if (mounted.current) setResult({ granted: false, loading: false, error });
       });
 
     return () => {
@@ -346,16 +335,12 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
       try {
         // 2. Fire individual checks concurrently. Promise Deduplication ensures
         // we don't spam the network if other components are checking these same perms.
-        const results = await Promise.all(
-          permissions.map((p) => fetchPermissionsBatch([p])),
-        );
+        const results = await Promise.all(permissions.map((p) => fetchPermissionsBatch([p])));
         const granted = results.some(Boolean);
 
-        if (mounted.current)
-          setResult({ granted, loading: false, error: null });
+        if (mounted.current) setResult({ granted, loading: false, error: null });
       } catch (error) {
-        if (mounted.current)
-          setResult({ granted: false, loading: false, error: error as Error });
+        if (mounted.current) setResult({ granted: false, loading: false, error: error as Error });
       }
     };
 
@@ -407,9 +392,7 @@ export function useAnyRole(...roles: AppRole[]) {
  */
 const ALL_PERMISSIONS: PermissionString[] = Object.entries(statement).flatMap(
   ([resource, actions]) =>
-    (actions as readonly string[]).map(
-      (action) => `${resource}.${action}` as PermissionString,
-    ),
+    (actions as readonly string[]).map((action) => `${resource}.${action}` as PermissionString),
 );
 
 /**
@@ -423,16 +406,12 @@ export function preloadPermissionsForRole(role: AppRole | null): void {
 
   ALL_PERMISSIONS.forEach((perm) => {
     const dotIndex = perm.indexOf(".");
-    const resource = perm.slice(
-      0,
-      dotIndex,
-    ) as keyof typeof roleConfig.statements;
+    const resource = perm.slice(0, dotIndex) as keyof typeof roleConfig.statements;
     const action = perm.slice(dotIndex + 1);
 
     // Check if the action is granted for the resource in this role's statements
     const allowedActions = roleConfig.statements[resource];
-    const isGranted =
-      Array.isArray(allowedActions) && allowedActions.includes(action);
+    const isGranted = Array.isArray(allowedActions) && allowedActions.includes(action);
 
     const cacheKey = getCacheKey([perm]);
     permCache.set(cacheKey, isGranted);

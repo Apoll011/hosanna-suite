@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/api",
-  "version": "2.22.4",
+  "version": "2.23.1",
   "license": "Apache-2.0",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",
@@ -11,7 +11,7 @@
     "start": "node dist/index.mjs",
     "dev": "tsx watch src/index.mts",
     "mcp": "tsx src/mcp/stdio.ts",
-    "test": "tsx --test \"test/**/*.test.ts\"",
+    "test": "tsx --import ./test/setup-env.ts --test \"test/**/*.test.ts\"",
     "prisma:generate": "pnpm --filter @hosanna/db db:generate",
     "prisma:migrate": "pnpm --filter @hosanna/db db:migrate",
     "prisma:migrate:dev": "pnpm --filter @hosanna/db db:migrate:dev",

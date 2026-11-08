@@ -10,8 +10,7 @@ export const ChordProPreviewSettings: React.FC<{
   capo?: string;
 }> = ({ settings, updateSetting, resetSettings, capo }) => {
   const { t } = useI18n();
-  const { showChords, transposeVal, fontSize, instrument, showDiagrams } =
-    settings;
+  const { showChords, transposeVal, fontSize, instrument, showDiagrams } = settings;
   const availableInstruments = instrumentRegistry.list();
 
   const handleTranspose = (delta: number) => {
@@ -122,9 +121,7 @@ export const ChordProPreviewSettings: React.FC<{
               </span>
               <select
                 value={instrument}
-                onChange={(event) =>
-                  updateSetting("instrument", event.target.value)
-                }
+                onChange={(event) => updateSetting("instrument", event.target.value)}
                 className="max-w-36 rounded-md border border-m3-border bg-m3-sidebar px-2 py-1 text-[10px] font-bold text-m3-text"
                 aria-label={t("misc.chordproSettings.instrument")}
               >
@@ -145,9 +142,7 @@ export const ChordProPreviewSettings: React.FC<{
         </span>
         <div className="flex items-center gap-1">
           <button
-            onClick={() =>
-              updateSetting("fontSize", Math.max(10, fontSize - 1))
-            }
+            onClick={() => updateSetting("fontSize", Math.max(10, fontSize - 1))}
             className="w-6 h-6 rounded-md bg-m3-sidebar hover:bg-m3-hover flex justify-center items-center border border-m3-border/20 cursor-pointer"
           >
             <Minus className="w-3 h-3 text-m3-secondary" />
@@ -156,9 +151,7 @@ export const ChordProPreviewSettings: React.FC<{
             {fontSize}
           </span>
           <button
-            onClick={() =>
-              updateSetting("fontSize", Math.min(28, fontSize + 1))
-            }
+            onClick={() => updateSetting("fontSize", Math.min(28, fontSize + 1))}
             className="w-6 h-6 rounded-md bg-m3-sidebar hover:bg-m3-hover flex justify-center items-center border border-m3-border/20 cursor-pointer"
           >
             <Plus className="w-3 h-3 text-m3-secondary" />

@@ -67,9 +67,7 @@ const renderShortcut = (shortcut: string) => {
   return shortcut.split(" + ").map((key, index, array) => (
     <React.Fragment key={key}>
       <Key>{key}</Key>
-      {index < array.length - 1 && (
-        <span className="text-m3-secondary text-xs">+</span>
-      )}
+      {index < array.length - 1 && <span className="text-m3-secondary text-xs">+</span>}
     </React.Fragment>
   ));
 };
@@ -94,7 +92,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-m3-card rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
+        className="bg-m3-card rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Fixo */}
@@ -116,13 +114,11 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           {/* Coluna 1: Snippets */}
           <div>
             <div className="flex items-center gap-2 mb-2 text-m3-primary">
-              <h3 className="text-lg font-bold">
-                {t("misc.help.smartSnippets")}
-              </h3>
+              <h3 className="text-lg font-bold">{t("misc.help.smartSnippets")}</h3>
             </div>
             <p className="text-xs text-m3-secondary mb-5 leading-relaxed">
-              Escreva uma das siglas abaixo numa linha vazia e prima{" "}
-              <Key>TAB</Key> para o editor preencher automaticamente.
+              Escreva uma das siglas abaixo numa linha vazia e prima <Key>TAB</Key> para o editor
+              preencher automaticamente.
             </p>
 
             <div className="space-y-1.5">
@@ -144,9 +140,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             <div className="mt-6 p-4 bg-m3-primary/10 dark:bg-m3-primary/10 rounded-xl border border-m3-primary/20 dark:border-m3-primary/20 flex gap-3">
               <Lightbulb className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
               <p className="text-[11px] sm:text-xs text-m3-secondary leading-relaxed">
-                <strong className="text-m3-primary">
-                  {t("misc.help.tipTitle")}{" "}
-                </strong>
+                <strong className="text-m3-primary">{t("misc.help.tipTitle")} </strong>
                 {t("misc.help.tipDesc")}
               </p>
             </div>
@@ -156,9 +150,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           <div>
             <div className="flex items-center gap-2 mb-2 text-m3-primary">
               <Keyboard className="w-5 h-5" />
-              <h3 className="text-lg font-bold">
-                {t("misc.help.shortcutsTitle")}
-              </h3>
+              <h3 className="text-lg font-bold">{t("misc.help.shortcutsTitle")}</h3>
             </div>
             <p className="text-xs text-m3-secondary mb-5 leading-relaxed">
               {t("misc.help.shortcutsDesc")}
@@ -170,9 +162,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                   key={key}
                   className="flex items-center justify-between py-2.5 border-b border-m3-border/60 group hover:bg-m3-hover px-2 -mx-2 rounded-lg transition-colors gap-4"
                 >
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {renderShortcut(key)}
-                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">{renderShortcut(key)}</div>
                   <span className="text-[11px] sm:text-xs text-m3-secondary text-right leading-snug">
                     {action}
                   </span>

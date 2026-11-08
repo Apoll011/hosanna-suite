@@ -13,10 +13,7 @@ interface GoogleTextFieldProps extends React.InputHTMLAttributes<HTMLInputElemen
   trailingIcon?: React.ReactNode;
 }
 
-export const GoogleTextField = React.forwardRef<
-  HTMLInputElement,
-  GoogleTextFieldProps
->(
+export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFieldProps>(
   (
     {
       label,
@@ -52,7 +49,7 @@ export const GoogleTextField = React.forwardRef<
     return (
       <div className="w-full flex flex-col group/field text-left">
         <div
-          className={`relative flex items-center min-h-12.5 sm:min-h-13.5 rounded-[var(--radius-md)] border transition-all duration-200 bg-transparent ${
+          className={`relative flex items-center min-h-12.5 sm:min-h-13.5 rounded-md border transition-all duration-200 bg-transparent ${
             error
               ? "border-m3-danger ring-1 ring-m3-danger"
               : isFocused
@@ -63,11 +60,7 @@ export const GoogleTextField = React.forwardRef<
           {leadingIcon && (
             <div
               className={`pl-3 pr-1 shrink-0 transition-colors ${
-                error
-                  ? "text-m3-danger"
-                  : isFocused
-                    ? "text-m3-primary"
-                    : "text-m3-secondary"
+                error ? "text-m3-danger" : isFocused ? "text-m3-primary" : "text-m3-secondary"
               }`}
             >
               {leadingIcon}
@@ -81,11 +74,7 @@ export const GoogleTextField = React.forwardRef<
             } ${
               isFloating
                 ? `-top-2.5 px-1.5 text-label bg-m3-card ${
-                    error
-                      ? "text-m3-danger"
-                      : isFocused
-                        ? "text-m3-primary"
-                        : "text-m3-secondary"
+                    error ? "text-m3-danger" : isFocused ? "text-m3-primary" : "text-m3-secondary"
                   }`
                 : "top-1/2 -translate-y-1/2 text-sm text-m3-secondary"
             }`}
@@ -108,13 +97,11 @@ export const GoogleTextField = React.forwardRef<
               setIsFocused(false);
               onBlur?.(e);
             }}
-            className={`w-full h-full bg-transparent px-3.5 py-3 sm:py-3.5 text-sm text-m3-text rounded-[var(--radius-md)] focus:outline-none placeholder-transparent ${className}`}
+            className={`w-full h-full bg-transparent px-3.5 py-3 sm:py-3.5 text-sm text-m3-text rounded-md focus:outline-none placeholder-transparent ${className}`}
             {...props}
           />
 
-          {trailingIcon && (
-            <div className="pr-3 pl-1 shrink-0">{trailingIcon}</div>
-          )}
+          {trailingIcon && <div className="pr-3 pl-1 shrink-0">{trailingIcon}</div>}
         </div>
 
         {error ? (

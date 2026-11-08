@@ -30,8 +30,7 @@ export const ResetPasswordPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [state, setState] = useState<State>("form");
 
-  const passwordMismatch =
-    confirmPassword.length > 0 && password !== confirmPassword;
+  const passwordMismatch = confirmPassword.length > 0 && password !== confirmPassword;
 
   if (!token) {
     return (
@@ -166,9 +165,7 @@ export const ResetPasswordPage: React.FC = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           autoComplete="new-password"
-          error={
-            passwordMismatch ? t("auth.register.passwordMismatch") : undefined
-          }
+          error={passwordMismatch ? t("auth.register.passwordMismatch") : undefined}
         />
 
         <div className="flex items-center justify-between px-0.5">
@@ -179,9 +176,7 @@ export const ResetPasswordPage: React.FC = () => {
               onChange={(e) => setShowPassword(e.target.checked)}
               className="w-4 h-4 rounded-[4px] border-m3-border text-m3-primary focus:ring-m3-primary bg-m3-card cursor-pointer"
             />
-            <span className="text-xs sm:text-sm text-m3-secondary">
-              Mostrar palavra-passe
-            </span>
+            <span className="text-xs sm:text-sm text-m3-secondary">Mostrar palavra-passe</span>
           </label>
         </div>
 
@@ -195,11 +190,7 @@ export const ResetPasswordPage: React.FC = () => {
             {t("auth.forgotPassword.backToLogin")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.resetPassword.resetBtn")}
           </Button>
         </div>

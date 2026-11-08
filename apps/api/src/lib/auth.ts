@@ -220,10 +220,7 @@ export const auth = betterAuth({
           first_name: user.name,
         });
       } catch (err) {
-        console.error(
-          "[auth] Failed to send password reset success email:",
-          err,
-        );
+        console.error("[auth] Failed to send password reset success email:", err);
       }
     },
   },
@@ -249,10 +246,7 @@ export const auth = betterAuth({
                 };
               }
             } catch (err) {
-              console.error(
-                "[auth databaseHook] avatar upload failed on create:",
-                err,
-              );
+              console.error("[auth databaseHook] avatar upload failed on create:", err);
             }
           }
         },
@@ -270,10 +264,7 @@ export const auth = betterAuth({
         before: async (user, context) => {
           if (user.image && typeof user.image === "string") {
             try {
-              const userId =
-                (user as any).id ??
-                context?.context?.session?.user?.id ??
-                "unknown";
+              const userId = (user as any).id ?? context?.context?.session?.user?.id ?? "unknown";
 
               let publicUrl: string | undefined;
               if (isBase64Image(user.image)) {
@@ -291,10 +282,7 @@ export const auth = betterAuth({
                 };
               }
             } catch (err) {
-              console.error(
-                "[auth databaseHook] avatar upload failed on update:",
-                err,
-              );
+              console.error("[auth databaseHook] avatar upload failed on update:", err);
             }
           }
         },
@@ -459,18 +447,14 @@ export const auth = betterAuth({
           const reservedSlugs = new Set(["hosanna-demo", "demo"]);
           const slug = (organization?.slug ?? "").toLowerCase();
           if (reservedSlugs.has(slug)) {
-            throw new Error(
-              "This organization slug is reserved. Please choose another.",
-            );
+            throw new Error("This organization slug is reserved. Please choose another.");
           }
-          const locale =
-            (organization?.metadata?.["locale"] as string) || "pt-PT";
+          const locale = (organization?.metadata?.["locale"] as string) || "pt-PT";
           return {
             data: {
               ...organization,
               metadata: {
-                description:
-                  (organization?.metadata?.["description"] as string) || "",
+                description: (organization?.metadata?.["description"] as string) || "",
                 shortName:
                   (organization?.metadata?.["shortName"] as string) ||
                   organization.name
@@ -481,9 +465,7 @@ export const auth = betterAuth({
                 settings: {
                   general: {
                     locale,
-                    timezone:
-                      (organization?.metadata?.["timezone"] as string) ||
-                      "Europe/Lisbon",
+                    timezone: (organization?.metadata?.["timezone"] as string) || "Europe/Lisbon",
                     weekStartsOn: 1,
                   },
                   services: {
@@ -501,9 +483,8 @@ export const auth = betterAuth({
                   },
                   agenda: {
                     responsibilityCategories:
-                      RESPONSIBILITIES[
-                        locale as keyof typeof RESPONSIBILITIES
-                      ] ?? RESPONSIBILITIES["pt-PT"],
+                      RESPONSIBILITIES[locale as keyof typeof RESPONSIBILITIES] ??
+                      RESPONSIBILITIES["pt-PT"],
                   },
                 },
               },
@@ -529,22 +510,13 @@ export const auth = betterAuth({
             roles: ["admin", "owner"],
             type: "org.new_member",
             title: t(DEFAULT_LOCALE, "notification.new_member_title"),
-            description: t(
-              DEFAULT_LOCALE,
-              "notification.new_member_description",
-              {
-                name: user.name,
-              },
-            ),
+            description: t(DEFAULT_LOCALE, "notification.new_member_description", {
+              name: user.name,
+            }),
           });
         },
 
-        afterUpdateMemberRole: async ({
-          member,
-          previousRole,
-          user,
-          organization,
-        }) => {
+        afterUpdateMemberRole: async ({ member, previousRole, user, organization }) => {
           try {
             const locale = await getOrgLocale(organization.id);
             if (member.role === "admin" || member.role === "owner") {
@@ -563,10 +535,7 @@ export const auth = betterAuth({
               });
             }
           } catch (err) {
-            console.error(
-              "[auth] Failed to send member role updated email:",
-              err,
-            );
+            console.error("[auth] Failed to send member role updated email:", err);
           }
         },
 
@@ -579,10 +548,7 @@ export const auth = betterAuth({
               locale,
             });
           } catch (err) {
-            console.error(
-              "[auth] Failed to send removed from church email:",
-              err,
-            );
+            console.error("[auth] Failed to send removed from church email:", err);
           }
         },
       },
@@ -602,10 +568,10 @@ export const auth = betterAuth({
               days: 14,
               onTrialStart: async (subscription) => {
                 try {
-                  const { churchName, recipients, locale } =
-                    await getOrgRecipientsWithLocale(subscription.referenceId, [
-                      "owner",
-                    ]);
+                  const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
+                    subscription.referenceId,
+                    ["owner"],
+                  );
                   await Promise.all(
                     recipients.map((r) =>
                       sendTrialStartedEmail(r.email, {
@@ -617,28 +583,22 @@ export const auth = betterAuth({
                     ),
                   );
                 } catch (err) {
-                  console.error(
-                    "[auth] Failed to send trial started email:",
-                    err,
-                  );
+                  console.error("[auth] Failed to send trial started email:", err);
                 }
                 notifyOrg({
                   organizationId: subscription.referenceId,
                   roles: ["owner"],
                   type: "billing.trial_started",
                   title: t(DEFAULT_LOCALE, "notification.trial_started_title"),
-                  description: t(
-                    DEFAULT_LOCALE,
-                    "notification.trial_started_description",
-                  ),
+                  description: t(DEFAULT_LOCALE, "notification.trial_started_description"),
                 });
               },
               onTrialEnd: async ({ subscription }) => {
                 try {
-                  const { churchName, recipients, locale } =
-                    await getOrgRecipientsWithLocale(subscription.referenceId, [
-                      "owner",
-                    ]);
+                  const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
+                    subscription.referenceId,
+                    ["owner"],
+                  );
                   await Promise.all(
                     recipients.map((r) =>
                       sendTrialEndedEmail(r.email, {
@@ -650,28 +610,22 @@ export const auth = betterAuth({
                     ),
                   );
                 } catch (err) {
-                  console.error(
-                    "[auth] Failed to send trial ended email:",
-                    err,
-                  );
+                  console.error("[auth] Failed to send trial ended email:", err);
                 }
                 notifyOrg({
                   organizationId: subscription.referenceId,
                   roles: ["owner"],
                   type: "billing.trial_ended",
                   title: t(DEFAULT_LOCALE, "notification.trial_ended_title"),
-                  description: t(
-                    DEFAULT_LOCALE,
-                    "notification.trial_ended_description",
-                  ),
+                  description: t(DEFAULT_LOCALE, "notification.trial_ended_description"),
                 });
               },
               onTrialExpired: async (subscription) => {
                 try {
-                  const { churchName, recipients, locale } =
-                    await getOrgRecipientsWithLocale(subscription.referenceId, [
-                      "owner",
-                    ]);
+                  const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
+                    subscription.referenceId,
+                    ["owner"],
+                  );
                   await Promise.all(
                     recipients.map((r) =>
                       sendTrialExpiredEmail(r.email, {
@@ -683,20 +637,14 @@ export const auth = betterAuth({
                     ),
                   );
                 } catch (err) {
-                  console.error(
-                    "[auth] Failed to send trial expired email:",
-                    err,
-                  );
+                  console.error("[auth] Failed to send trial expired email:", err);
                 }
                 notifyOrg({
                   organizationId: subscription.referenceId,
                   roles: ["owner"],
                   type: "billing.trial_expired",
                   title: t(DEFAULT_LOCALE, "notification.trial_expired_title"),
-                  description: t(
-                    DEFAULT_LOCALE,
-                    "notification.trial_expired_description",
-                  ),
+                  description: t(DEFAULT_LOCALE, "notification.trial_expired_description"),
                 });
               },
             },
@@ -719,11 +667,10 @@ export const auth = betterAuth({
         },
         onSubscriptionComplete: async ({ subscription, plan }) => {
           try {
-            const { churchName, recipients, locale } =
-              await getOrgRecipientsWithLocale(subscription.referenceId, [
-                "owner",
-                "admin",
-              ]);
+            const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
+              subscription.referenceId,
+              ["owner", "admin"],
+            );
             await Promise.all(
               recipients.map((r) =>
                 sendSubscribedEmail(r.email, {
@@ -739,26 +686,20 @@ export const auth = betterAuth({
               roles: ["owner", "admin"],
               type: "billing.subscribed",
               title: t(DEFAULT_LOCALE, "notification.subscribed_title"),
-              description: t(
-                DEFAULT_LOCALE,
-                "notification.subscribed_description",
-                { plan: plan.name },
-              ),
+              description: t(DEFAULT_LOCALE, "notification.subscribed_description", {
+                plan: plan.name,
+              }),
             });
           } catch (err) {
-            console.error(
-              "[auth] Failed to notify org after subscription complete:",
-              err,
-            );
+            console.error("[auth] Failed to notify org after subscription complete:", err);
           }
         },
         onSubscriptionCancel: async ({ subscription, event }) => {
           try {
-            const { churchName, recipients, locale } =
-              await getOrgRecipientsWithLocale(subscription.referenceId, [
-                "owner",
-                "admin",
-              ]);
+            const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
+              subscription.referenceId,
+              ["owner", "admin"],
+            );
             await Promise.all(
               recipients.map((r) =>
                 sendCanceledEmail(r.email, {
@@ -774,16 +715,10 @@ export const auth = betterAuth({
               roles: ["owner", "admin"],
               type: "billing.canceled",
               title: t(DEFAULT_LOCALE, "notification.canceled_title"),
-              description: t(
-                DEFAULT_LOCALE,
-                "notification.canceled_description",
-              ),
+              description: t(DEFAULT_LOCALE, "notification.canceled_description"),
             });
           } catch (err) {
-            console.error(
-              "[auth] Failed to notify org after subscription cancel:",
-              err,
-            );
+            console.error("[auth] Failed to notify org after subscription cancel:", err);
           }
         },
       },
@@ -817,12 +752,7 @@ export const auth = betterAuth({
     changeEmail: {
       enabled: true,
       sendChangeEmailVerification: async (
-        {
-          user,
-          newEmail,
-          url,
-          token,
-        }: { user: any; newEmail: string; url: string; token: string },
+        { user, newEmail, url, token }: { user: any; newEmail: string; url: string; token: string },
         request?: any,
       ) => {
         try {
@@ -832,10 +762,7 @@ export const auth = betterAuth({
             confirm_email_link: url,
           });
         } catch (err) {
-          console.error(
-            "[auth] Failed to send change email verification:",
-            err,
-          );
+          console.error("[auth] Failed to send change email verification:", err);
         }
       },
     },

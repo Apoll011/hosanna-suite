@@ -66,11 +66,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
           rows={Math.min(8, Math.max(2, draft.split("\n").length))}
           onChange={(e) => setDraft(e.currentTarget.value)}
           onKeyDown={(e) => {
-            if (
-              e.key === "Enter" &&
-              !e.shiftKey &&
-              !e.nativeEvent.isComposing
-            ) {
+            if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
               e.preventDefault();
               submit();
             } else if (e.key === "Escape") {
@@ -78,7 +74,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
               setDraft(text);
             }
           }}
-          className="w-full resize-none rounded-[var(--radius-lg)] border border-m3-primary bg-m3-bg text-m3-text text-[13px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-m3-primary/25"
+          className="w-full resize-none rounded-lg border border-m3-primary bg-m3-bg text-m3-text text-[13px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-m3-primary/25"
         />
         <div className="flex justify-end gap-1.5">
           <button
@@ -87,7 +83,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
               setEditing(false);
               setDraft(text);
             }}
-            className="text-[11px] px-2.5 py-1 rounded-[var(--radius-md)] border border-m3-border text-m3-text hover:bg-m3-hover"
+            className="text-[11px] px-2.5 py-1 rounded-md border border-m3-border text-m3-text hover:bg-m3-hover"
           >
             {t("ai.chat.decline")}
           </button>
@@ -95,7 +91,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
             type="button"
             onClick={submit}
             disabled={!draft.trim()}
-            className="text-[11px] px-2.5 py-1 rounded-[var(--radius-md)] bg-m3-primary text-white disabled:opacity-40"
+            className="text-[11px] px-2.5 py-1 rounded-md bg-m3-primary text-white disabled:opacity-40"
           >
             {t("ai.chat.send")}
           </button>
@@ -106,7 +102,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
 
   return (
     <div className="group/msg flex flex-col items-end gap-0.5 max-w-[92%]">
-      <div className="rounded-[var(--radius-lg)] rounded-br-[var(--radius-sm)] px-3 py-2 text-[13px] leading-relaxed bg-m3-primary text-white whitespace-pre-wrap break-words">
+      <div className="rounded-lg rounded-br-sm px-3 py-2 text-[13px] leading-relaxed bg-m3-primary text-white whitespace-pre-wrap wrap-break-word">
         {text}
       </div>
       <div className={ACTIONS}>
@@ -120,7 +116,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
             }}
             title={t("ai.chat.editMessage")}
             aria-label={t("ai.chat.editMessage")}
-            className="p-1 rounded-[var(--radius-sm)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover"
+            className="p-1 rounded-sm text-m3-secondary hover:text-m3-text hover:bg-m3-hover"
           >
             <Pencil className="w-3.5 h-3.5" />
           </button>
@@ -132,10 +128,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
 
 /* ------------------------------ reasoning block --------------------------- */
 
-const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({
-  text,
-  live,
-}) => {
+const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({ text, live }) => {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
@@ -144,15 +137,11 @@ const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 text-[12px] text-m3-secondary hover:text-m3-text rounded-[var(--radius-md)] px-1.5 py-1 -mx-1.5 hover:bg-m3-hover/70"
+        className="inline-flex items-center gap-1.5 text-[12px] text-m3-secondary hover:text-m3-text rounded-md px-1.5 py-1 -mx-1.5 hover:bg-m3-hover/70"
       >
-        <Brain
-          className={`w-3.5 h-3.5 ${live ? "animate-pulse text-m3-primary" : ""}`}
-        />
+        <Brain className={`w-3.5 h-3.5 ${live ? "animate-pulse text-m3-primary" : ""}`} />
         <span>{t("ai.chat.reasoning")}</span>
-        <ChevronRight
-          className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-90" : ""}`}
-        />
+        <ChevronRight className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-90" : ""}`} />
       </button>
       <div className="logos-collapse" data-open={open}>
         <div>
@@ -184,12 +173,7 @@ const AssistantMessage: React.FC<Props> = ({
 
   return (
     <div className="group/msg flex items-start gap-2 w-full">
-      <LogosMascot
-        flat
-        size={26}
-        mood={live ? mood : "idle"}
-        className="mt-0.5"
-      />
+      <LogosMascot flat size={26} mood={live ? mood : "idle"} className="mt-0.5" />
       <div className="min-w-0 flex-1">
         {blocks.length === 0 && live ? (
           <div
@@ -223,7 +207,7 @@ const AssistantMessage: React.FC<Props> = ({
             return (
               <div
                 key={block.key}
-                className={`text-m3-text text-[13px] leading-relaxed break-words [&>:first-child]:mt-0 [&>:last-child]:mb-0 ${
+                className={`text-m3-text text-[13px] leading-relaxed wrap-break-word *:first:mt-0 *:last:mb-0 ${
                   streamingThis ? "logos-streaming" : ""
                 }`}
               >
@@ -246,10 +230,10 @@ const AssistantMessage: React.FC<Props> = ({
         {msg.error ? (
           <div
             role="alert"
-            className="mt-2 flex items-start gap-2 rounded-[var(--radius-md)] border border-red-500/30 bg-red-500/5 px-2.5 py-2 text-[12px] text-red-600 dark:text-red-400"
+            className="mt-2 flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/5 px-2.5 py-2 text-[12px] text-red-600 dark:text-red-400"
           >
             <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-            <span className="min-w-0 flex-1 break-words">{msg.error}</span>
+            <span className="min-w-0 flex-1 wrap-break-word">{msg.error}</span>
             {isLast && !streaming ? (
               <button
                 type="button"
@@ -271,7 +255,7 @@ const AssistantMessage: React.FC<Props> = ({
         ) : null}
 
         {msg.truncated && !live ? (
-          <div className="mt-2 flex items-center gap-2 rounded-[var(--radius-md)] border border-amber-500/30 bg-amber-500/5 px-2.5 py-1.5 text-[12px] text-m3-text">
+          <div className="mt-2 flex items-center gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-2.5 py-1.5 text-[12px] text-m3-text">
             <span className="flex-1 min-w-0">
               {msg.meta?.limitReached && msg.meta.toolLimit
                 ? t("ai.chat.toolLimitNotice", { limit: msg.meta.toolLimit })
@@ -298,15 +282,13 @@ const AssistantMessage: React.FC<Props> = ({
                 onClick={onRegenerate}
                 title={t("ai.chat.regenerate")}
                 aria-label={t("ai.chat.regenerate")}
-                className="p-1 rounded-[var(--radius-sm)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover"
+                className="p-1 rounded-sm text-m3-secondary hover:text-m3-text hover:bg-m3-hover"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
             ) : null}
             {duration ? (
-              <span className="ml-1 text-[10px] tabular-nums text-m3-secondary">
-                {duration}
-              </span>
+              <span className="ml-1 text-[10px] tabular-nums text-m3-secondary">{duration}</span>
             ) : null}
           </div>
         ) : null}
@@ -340,16 +322,10 @@ const AssistantMessage: React.FC<Props> = ({
 export const AiChatMessageView = memo(function AiChatMessageView(props: Props) {
   return (
     <div
-      className={`logos-msg-in flex ${
-        props.msg.role === "user" ? "justify-end" : "justify-start"
-      }`}
+      className={`logos-msg-in flex ${props.msg.role === "user" ? "justify-end" : "justify-start"}`}
     >
       {props.msg.role === "user" ? (
-        <UserMessage
-          msg={props.msg}
-          streaming={props.streaming}
-          onEdit={props.onEdit}
-        />
+        <UserMessage msg={props.msg} streaming={props.streaming} onEdit={props.onEdit} />
       ) : (
         <AssistantMessage {...props} />
       )}

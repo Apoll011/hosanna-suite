@@ -5,8 +5,7 @@ import { rateLimit, ipKeyGenerator } from "express-rate-limit";
 import { env } from "../config/env.js";
 
 function makeKeyGenerator() {
-  return (req: any) =>
-    req.user?.id || req.orgId || ipKeyGenerator(req) || "unknown";
+  return (req: any) => req.user?.id || req.orgId || ipKeyGenerator(req) || "unknown";
 }
 
 const skipInDev = () => env.rateLimitDisabled;

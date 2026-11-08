@@ -25,9 +25,7 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
   onConfirm,
 }) => {
   const { t } = useI18n();
-  const [folderAction, setFolderAction] = useState<
-    "move_to_root" | "delete_songs"
-  >("move_to_root");
+  const [folderAction, setFolderAction] = useState<"move_to_root" | "delete_songs">("move_to_root");
   const [confirmText, setConfirmText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,16 +39,12 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
   const hasFolders = selectedFolders.length > 0;
   const totalItems = selectedFolders.length + selectedSongsCount;
 
-  const requiresTypedConfirmation =
-    hasFolders && folderAction === "delete_songs";
+  const requiresTypedConfirmation = hasFolders && folderAction === "delete_songs";
   // Expected text: name of first folder if 1 folder, or 'APAGAR' if multiple
   const expectedConfirmText =
-    selectedFolders.length === 1
-      ? selectedFolders[0].name.trim()
-      : t("modals.confirmKeyword");
+    selectedFolders.length === 1 ? selectedFolders[0].name.trim() : t("modals.confirmKeyword");
 
-  const isConfirmDisabled =
-    requiresTypedConfirmation && confirmText.trim() !== expectedConfirmText;
+  const isConfirmDisabled = requiresTypedConfirmation && confirmText.trim() !== expectedConfirmText;
 
   const handleConfirm = async () => {
     setIsLoading(true);
@@ -76,11 +70,8 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
             <strong>
               {selectedFolders.length > 0 &&
                 t("modals.folderCount", { count: selectedFolders.length })}
-              {selectedFolders.length > 0 &&
-                selectedSongsCount > 0 &&
-                t("modals.and")}
-              {selectedSongsCount > 0 &&
-                t("modals.songCount", { count: selectedSongsCount })}
+              {selectedFolders.length > 0 && selectedSongsCount > 0 && t("modals.and")}
+              {selectedSongsCount > 0 && t("modals.songCount", { count: selectedSongsCount })}
             </strong>
             .
           </p>
@@ -143,9 +134,7 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
             </div>
             <p className="text-rose-900 dark:text-rose-200 text-[11px] leading-relaxed">
               {t("modals.confirmDeleteIntro")}{" "}
-              <strong className="font-extrabold underline">
-                {expectedConfirmText}
-              </strong>
+              <strong className="font-extrabold underline">{expectedConfirmText}</strong>
               {t("modals.writeNameBelow")}
             </p>
             <Input

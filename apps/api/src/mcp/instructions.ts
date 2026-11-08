@@ -5,10 +5,7 @@ import { clockContextPromptBlock } from "../lib/clockContext.js";
  * Compatible hosts surface this as system guidance for the model.
  * Clock block is computed at call time so "today" stays accurate.
  */
-export function buildHosannaMcpInstructions(
-  now = new Date(),
-  timeZone = "Europe/Lisbon",
-): string {
+export function buildHosannaMcpInstructions(now = new Date(), timeZone = "Europe/Lisbon"): string {
   return `You are connected to the Hosanna MCP server for church song libraries and service planning.
 ${clockContextPromptBlock(now, timeZone)}
 ## Tool surfaces

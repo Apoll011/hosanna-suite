@@ -23,10 +23,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
     <span>
       {parts.map((part, i) =>
         part.toLowerCase() === query.toLowerCase() ? (
-          <span
-            key={i}
-            className="text-m3-primary font-semibold underline underline-offset-2"
-          >
+          <span key={i} className="text-m3-primary font-semibold underline underline-offset-2">
             {part}
           </span>
         ) : (
@@ -41,9 +38,7 @@ interface CommandPaletteModalProps {
   isSearchingDb?: boolean;
 }
 
-export function CommandPaletteModal({
-  isSearchingDb,
-}: CommandPaletteModalProps) {
+export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps) {
   const {
     isOpen,
     closePalette,
@@ -96,9 +91,7 @@ export function CommandPaletteModal({
             });
           }
         });
-        const nonRecents = currentPool.filter(
-          (a) => !recentActionIds.includes(a.id),
-        );
+        const nonRecents = currentPool.filter((a) => !recentActionIds.includes(a.id));
         return [...recents, ...nonRecents];
       }
       return currentPool;
@@ -172,14 +165,10 @@ export function CommandPaletteModal({
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev < flatVisibleActions.length - 1 ? prev + 1 : 0,
-      );
+      setSelectedIndex((prev) => (prev < flatVisibleActions.length - 1 ? prev + 1 : 0));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev > 0 ? prev - 1 : flatVisibleActions.length - 1,
-      );
+      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : flatVisibleActions.length - 1));
     } else if (e.key === "Enter") {
       e.preventDefault();
       const current = flatVisibleActions[selectedIndex];
@@ -200,7 +189,7 @@ export function CommandPaletteModal({
       onClick={closePalette}
     >
       <div
-        className="w-full max-w-2xl rounded-[var(--radius-xl)] bg-m3-card border border-m3-border shadow-[var(--shadow-lg)] overflow-hidden flex flex-col transition-colors duration-150 hosanna-enter"
+        className="w-full max-w-2xl rounded-xl bg-m3-card border border-m3-border shadow-lg overflow-hidden flex flex-col transition-colors duration-150 hosanna-enter"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
@@ -221,9 +210,7 @@ export function CommandPaletteModal({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={
-              activeParentId
-                ? t("palette.searchSubmenu")
-                : t("palette.searchPlaceholder")
+              activeParentId ? t("palette.searchSubmenu") : t("palette.searchPlaceholder")
             }
             className="w-full bg-transparent text-m3-text placeholder-m3-input text-sm outline-none font-sans"
           />
@@ -247,9 +234,7 @@ export function CommandPaletteModal({
               <div className="w-12 h-12 rounded-2xl bg-m3-hover flex items-center justify-center mb-3">
                 <SearchX className="w-6 h-6 text-m3-secondary" />
               </div>
-              <p className="text-sm font-medium text-m3-text">
-                {t("palette.noResults")}
-              </p>
+              <p className="text-sm font-medium text-m3-text">{t("palette.noResults")}</p>
               <p className="text-xs text-m3-secondary mt-1 max-w-70">
                 {t("palette.noResultsDesc", { query: searchQuery })}
               </p>
@@ -289,10 +274,7 @@ export function CommandPaletteModal({
                         <div className="flex flex-col min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium truncate font-sans">
-                              <HighlightText
-                                text={action.name}
-                                query={searchQuery}
-                              />
+                              <HighlightText text={action.name} query={searchQuery} />
                             </span>
                             {action.badge && (
                               <span className="text-[10px] px-1.5 py-0.2 rounded bg-m3-hover border border-m3-border text-m3-secondary font-mono">
@@ -302,10 +284,7 @@ export function CommandPaletteModal({
                           </div>
                           {action.subtitle && (
                             <span className="text-xs text-m3-secondary truncate">
-                              <HighlightText
-                                text={action.subtitle}
-                                query={searchQuery}
-                              />
+                              <HighlightText text={action.subtitle} query={searchQuery} />
                             </span>
                           )}
                         </div>
@@ -339,18 +318,12 @@ export function CommandPaletteModal({
         <div className="px-4 py-2 bg-m3-toolbar border-t border-m3-border flex items-center justify-between text-[11px] text-m3-secondary">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-m3-card border border-m3-border">
-                ↑
-              </kbd>
-              <kbd className="px-1 py-0.5 rounded bg-m3-card border border-m3-border">
-                ↓
-              </kbd>{" "}
+              <kbd className="px-1 py-0.5 rounded bg-m3-card border border-m3-border">↑</kbd>
+              <kbd className="px-1 py-0.5 rounded bg-m3-card border border-m3-border">↓</kbd>{" "}
               {t("palette.navigate")}
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-m3-card border border-m3-border">
-                ↵
-              </kbd>{" "}
+              <kbd className="px-1 py-0.5 rounded bg-m3-card border border-m3-border">↵</kbd>{" "}
               {t("palette.select")}
             </span>
           </div>

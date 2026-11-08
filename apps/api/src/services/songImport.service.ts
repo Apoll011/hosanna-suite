@@ -7,15 +7,9 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { validateChordProContent } from "../mcp/lib/chordproGate.js";
 import { searchMusicBrainzRecordings } from "../mcp/lib/musicbrainz.js";
-import {
-  nativeWebAuthFromRuntime,
-  type NativeWebAuth,
-} from "../mcp/lib/nativeWeb.js";
+import { nativeWebAuthFromRuntime, type NativeWebAuth } from "../mcp/lib/nativeWeb.js";
 import { searchWeb } from "../mcp/lib/webSearch.js";
-import {
-  getYouTubeDuration,
-  searchYouTube,
-} from "../mcp/lib/youtubeSearch.js";
+import { getYouTubeDuration, searchYouTube } from "../mcp/lib/youtubeSearch.js";
 import { prisma } from "../database/prisma.js";
 import { AppError } from "../utils/errors.js";
 import {
@@ -66,11 +60,7 @@ export type SongImportDraft = {
 };
 
 export type SongImportCancelCode =
-  | "not_a_song"
-  | "unreadable"
-  | "blank"
-  | "wrong_content"
-  | "multiple_unclear";
+  "not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear";
 
 export type SongImportJob = {
   id: string;
@@ -119,14 +109,9 @@ type CreateInput = {
 
 const draftSchema = z.object({
   title: z.string().min(1).describe("Song title"),
-  artist: z
-    .string()
-    .describe("Artist or songwriter; empty string if unknown"),
+  artist: z.string().describe("Artist or songwriter; empty string if unknown"),
   key: z.string().optional().describe("Musical key, e.g. G or Am"),
-  tempo: z
-    .union([z.string(), z.number()])
-    .optional()
-    .describe("Tempo marking or BPM"),
+  tempo: z.union([z.string(), z.number()]).optional().describe("Tempo marking or BPM"),
   timeSignature: z.string().optional().describe("Time signature, e.g. 4/4"),
   youtube: z
     .string()
@@ -136,10 +121,7 @@ const draftSchema = z.object({
   composer: z.string().optional().describe("Composer / writers if known"),
   copyright: z.string().optional().describe("Copyright / publisher line"),
   subtitle: z.string().optional().describe("Subtitle or alternate title"),
-  duration: z
-    .string()
-    .optional()
-    .describe("Song duration like 4:35 when known from YouTube/web"),
+  duration: z.string().optional().describe("Song duration like 4:35 when known from YouTube/web"),
   album: z.string().optional().describe("Release / album title if known"),
   content: z
     .string()
@@ -147,29 +129,15 @@ const draftSchema = z.object({
     .describe(
       "Full ChordPro with metadata directives ({title},{artist},{key},{youtube},{ccli},…) and lyric lines with [Chords]",
     ),
-  confidence: z
-    .number()
-    .min(0)
-    .max(1)
-    .optional()
-    .describe("Confidence 0-1 in the extraction"),
-  notes: z
-    .string()
-    .optional()
-    .describe("Short warning or note about uncertainty"),
+  confidence: z.number().min(0).max(1).optional().describe("Confidence 0-1 in the extraction"),
+  notes: z.string().optional().describe("Short warning or note about uncertainty"),
 });
 
 type DraftFields = z.infer<typeof draftSchema>;
 
 const cancelSchema = z.object({
   code: z
-    .enum([
-      "not_a_song",
-      "unreadable",
-      "blank",
-      "wrong_content",
-      "multiple_unclear",
-    ])
+    .enum(["not_a_song", "unreadable", "blank", "wrong_content", "multiple_unclear"])
     .describe(
       "not_a_song=photo of something else; unreadable=too blurry/dark; blank=empty page; wrong_content=text but not a chord/lyric sheet; multiple_unclear=several songs mixed with no clear primary",
     ),
@@ -210,9 +178,7 @@ function buildModel(
       // tool_choice — disable thinking on every import request.
       const url = baseUrl || AI_PROVIDER_DEFAULT_BASE_URL[provider];
       if (!url) {
-        throw AppError.badRequest(
-          "baseUrl is required for this AI provider.",
-        );
+        throw AppError.badRequest("baseUrl is required for this AI provider.");
       }
       return createOpenAICompatible({
         name: provider,
@@ -232,8 +198,7 @@ function buildModel(
     }
     case "openai":
     default: {
-      const url =
-        baseUrl || AI_PROVIDER_DEFAULT_BASE_URL[provider] || undefined;
+      const url = baseUrl || AI_PROVIDER_DEFAULT_BASE_URL[provider] || undefined;
       const client = createOpenAI({
         apiKey,
         ...(url ? { baseURL: url } : {}),
@@ -285,10 +250,7 @@ function providerExtras(provider: AiProvider) {
     : {};
 }
 
-function appendTextToMessages(
-  messages: ModelMessage[],
-  text: string,
-): ModelMessage[] {
+function appendTextToMessages(messages: ModelMessage[], text: string): ModelMessage[] {
   return messages.map((m) => {
     if (m.role !== "user") return m;
     if (typeof m.content === "string") {
@@ -335,16 +297,12 @@ async function analyzeSheetMusic(
       toolChoice: "required",
     });
 
-    const cancelCall = result.toolCalls.find(
-      (c) => c.toolName === "cancel_import",
-    );
+    const cancelCall = result.toolCalls.find((c) => c.toolName === "cancel_import");
     if (cancelCall && "input" in cancelCall && cancelCall.input != null) {
       return { kind: "cancel", cancel: cancelSchema.parse(cancelCall.input) };
     }
 
-    const draftCall = result.toolCalls.find(
-      (c) => c.toolName === "submit_song_draft",
-    );
+    const draftCall = result.toolCalls.find((c) => c.toolName === "submit_song_draft");
     if (draftCall && "input" in draftCall && draftCall.input != null) {
       return { kind: "draft", draft: draftSchema.parse(draftCall.input) };
     }
@@ -386,8 +344,7 @@ async function analyzeSheetMusic(
     const candidate = fence?.[1]?.trim() || raw;
     const start = candidate.indexOf("{");
     const end = candidate.lastIndexOf("}");
-    const jsonText =
-      start >= 0 && end > start ? candidate.slice(start, end + 1) : candidate;
+    const jsonText = start >= 0 && end > start ? candidate.slice(start, end + 1) : candidate;
     const obj = JSON.parse(jsonText) as Record<string, unknown>;
     if (obj.cancel === true || obj.cancel_import === true) {
       return { kind: "cancel", cancel: cancelSchema.parse(obj) };
@@ -404,9 +361,7 @@ async function analyzeSheetMusic(
   const parsed = parseDraftJson(raw);
   if (parsed) return { kind: "draft", draft: parsed };
 
-  throw new Error(
-    "Model returned neither a song draft nor a cancel decision.",
-  );
+  throw new Error("Model returned neither a song draft nor a cancel decision.");
 }
 
 /**
@@ -425,17 +380,14 @@ async function generateSongDraft(opts: GenerateOpts): Promise<DraftFields> {
       ...(messages ? { messages } : { prompt: promptBase }),
       tools: {
         submit_song_draft: tool({
-          description:
-            "Submit the improved ChordPro song draft with metadata.",
+          description: "Submit the improved ChordPro song draft with metadata.",
           inputSchema: draftSchema,
         }),
       },
       toolChoice: { type: "tool", toolName: "submit_song_draft" },
     });
 
-    const call = result.toolCalls.find(
-      (c) => c.toolName === "submit_song_draft",
-    );
+    const call = result.toolCalls.find((c) => c.toolName === "submit_song_draft");
     if (call && "input" in call && call.input != null) {
       return draftSchema.parse(call.input);
     }
@@ -468,9 +420,7 @@ async function generateSongDraft(opts: GenerateOpts): Promise<DraftFields> {
 
   const parsed = parseDraftJson(retry.text ?? "");
   if (!parsed) {
-    throw new Error(
-      "Model returned no song draft tool call and text was not valid JSON.",
-    );
+    throw new Error("Model returned no song draft tool call and text was not valid JSON.");
   }
   return parsed;
 }
@@ -535,11 +485,7 @@ function stripDataUrl(raw: string): string {
   return idx >= 0 ? raw.slice(idx + "base64,".length) : raw;
 }
 
-function upsertDirective(
-  content: string,
-  name: string,
-  value?: string | null,
-): string {
+function upsertDirective(content: string, name: string, value?: string | null): string {
   const trimmed = value?.toString().trim();
   if (!trimmed) return content;
   const re = new RegExp(`\\{${name}:\\s*[^}]*\\}`, "i");
@@ -577,10 +523,7 @@ function applyDraftMetadata(fields: DraftFields): DraftFields {
   return { ...fields, title, artist, content };
 }
 
-function toImportDraft(
-  fields: DraftFields,
-  extraWarnings: string[] = [],
-): SongImportDraft {
+function toImportDraft(fields: DraftFields, extraWarnings: string[] = []): SongImportDraft {
   const normalized = applyDraftMetadata(fields);
   const warnings = [...extraWarnings];
   if (normalized.notes) warnings.push(normalized.notes);
@@ -591,8 +534,7 @@ function toImportDraft(
     content,
     key: normalized.key?.toString() || readDirective(content, "key"),
     tempo: normalized.tempo?.toString() || readDirective(content, "tempo"),
-    timeSignature:
-      normalized.timeSignature || readDirective(content, "time"),
+    timeSignature: normalized.timeSignature || readDirective(content, "time"),
     confidence: normalized.confidence,
     warnings,
     youtube: normalized.youtube || readDirective(content, "youtube"),
@@ -721,9 +663,7 @@ async function gatherOnlineEvidence(
         h.release ? ` (release: ${h.release})` : ""
       }${h.firstReleaseDate ? ` [${h.firstReleaseDate}]` : ""} score=${h.score}`;
     });
-    sections.push(
-      "MusicBrainz recordings:\n" + (lines.join("\n") || "(none)"),
-    );
+    sections.push("MusicBrainz recordings:\n" + (lines.join("\n") || "(none)"));
   } else {
     sections.push(
       `MusicBrainz: skipped (${mbRes.reason instanceof Error ? mbRes.reason.message : String(mbRes.reason)})`,
@@ -737,8 +677,7 @@ async function gatherOnlineEvidence(
       return `${i + 1}. ${h.title}${h.channel ? ` — ${h.channel}` : ""}\n   ${h.url}\n   directive: ${h.directive}`;
     });
     sections.push(
-      "YouTube hits (prefer official / lyric video when clear):\n" +
-        (lines.join("\n") || "(none)"),
+      "YouTube hits (prefer official / lyric video when clear):\n" + (lines.join("\n") || "(none)"),
     );
     if (youtubeUrl) {
       try {
@@ -759,10 +698,9 @@ async function gatherOnlineEvidence(
 
   if (webRes.status === "fulfilled") {
     sources.push(`Web (${webRes.value.provider})`);
-    const lines = webRes.value.results.slice(0, 4).map(
-      (h, i) =>
-        `${i + 1}. ${h.title}\n${h.url}\n${h.snippet || h.summary || ""}`,
-    );
+    const lines = webRes.value.results
+      .slice(0, 4)
+      .map((h, i) => `${i + 1}. ${h.title}\n${h.url}\n${h.snippet || h.summary || ""}`);
     sections.push("Web search:\n" + (lines.join("\n\n") || "(none)"));
   } else {
     sections.push(
@@ -772,10 +710,9 @@ async function gatherOnlineEvidence(
 
   if (ccliRes.status === "fulfilled") {
     sources.push(`CCLI web (${ccliRes.value.provider})`);
-    const lines = ccliRes.value.results.slice(0, 3).map(
-      (h, i) =>
-        `${i + 1}. ${h.title}\n${h.url}\n${h.snippet || h.summary || ""}`,
-    );
+    const lines = ccliRes.value.results
+      .slice(0, 3)
+      .map((h, i) => `${i + 1}. ${h.title}\n${h.url}\n${h.snippet || h.summary || ""}`);
     sections.push(
       "CCLI / licensing search (only set {ccli:} when the number is explicit):\n" +
         (lines.join("\n\n") || "(none)"),
@@ -810,11 +747,7 @@ export class SongImportService {
     if (!job || job.orgId !== orgId) {
       throw AppError.notFound("SONG_NOT_FOUND", "Import job not found.");
     }
-    if (
-      job.status === "completed" ||
-      job.status === "failed" ||
-      job.status === "cancelled"
-    ) {
+    if (job.status === "completed" || job.status === "failed" || job.status === "cancelled") {
       return publicJob(job);
     }
     job.abortRequested = true;
@@ -862,8 +795,7 @@ export class SongImportService {
         job.errorMessage = err.message;
       } else {
         job.status = "failed";
-        job.errorMessage =
-          err instanceof Error ? err.message : "Import failed unexpectedly.";
+        job.errorMessage = err instanceof Error ? err.message : "Import failed unexpectedly.";
       }
       job.updatedAt = Date.now();
     });
@@ -882,21 +814,13 @@ export class SongImportService {
 
       const runtime = await this.config.getRuntimeConfig(input.orgId);
       assertNotAborted(job);
-      const model = buildModel(
-        runtime.provider,
-        runtime.model,
-        runtime.apiKey,
-        runtime.baseUrl,
-      );
+      const model = buildModel(runtime.provider, runtime.model, runtime.apiKey, runtime.baseUrl);
 
       markStep(job, "process", "done");
       assertNotAborted(job);
       markStep(job, "extract", "active");
 
-      const primaryBytes = Buffer.from(
-        stripDataUrl(input.imageBase64),
-        "base64",
-      );
+      const primaryBytes = Buffer.from(stripDataUrl(input.imageBase64), "base64");
       const primaryMime = input.imageMimeType || "image/jpeg";
       const extraImages = (input.imagesBase64 ?? [])
         .map((raw, i) => ({
@@ -949,10 +873,7 @@ export class SongImportService {
       assertNotAborted(job);
 
       if (analysis.kind === "cancel") {
-        throw new ImportCancelledError(
-          analysis.cancel.code,
-          analysis.cancel.reason,
-        );
+        throw new ImportCancelledError(analysis.cancel.code, analysis.cancel.reason);
       }
 
       const lyricBody = analysis.draft.content
@@ -998,9 +919,7 @@ export class SongImportService {
           evidence.artistHint && !draft.artist
             ? `Artist hint from MusicBrainz: ${evidence.artistHint}`
             : "",
-          evidence.youtubeUrl
-            ? `Suggested YouTube URL: ${evidence.youtubeUrl}`
-            : "",
+          evidence.youtubeUrl ? `Suggested YouTube URL: ${evidence.youtubeUrl}` : "",
           evidence.duration ? `Suggested duration: ${evidence.duration}` : "",
           "",
           "Current ChordPro:",
@@ -1024,11 +943,7 @@ export class SongImportService {
         const merged: DraftFields = {
           ...verifiedDraft,
           title: verifiedDraft.title.trim() || draft.title,
-          artist:
-            (verifiedDraft.artist || "").trim() ||
-            draft.artist ||
-            evidence.artistHint ||
-            "",
+          artist: (verifiedDraft.artist || "").trim() || draft.artist || evidence.artistHint || "",
           key: verifiedDraft.key || draft.key,
           tempo: verifiedDraft.tempo || draft.tempo,
           timeSignature: verifiedDraft.timeSignature || draft.timeSignature,
@@ -1036,24 +951,15 @@ export class SongImportService {
             verifiedDraft.youtube ||
             readDirective(verifiedDraft.content, "youtube") ||
             evidence.youtubeUrl,
-          ccli:
-            verifiedDraft.ccli || readDirective(verifiedDraft.content, "ccli"),
-          composer:
-            verifiedDraft.composer ||
-            readDirective(verifiedDraft.content, "composer"),
-          copyright:
-            verifiedDraft.copyright ||
-            readDirective(verifiedDraft.content, "copyright"),
-          subtitle:
-            verifiedDraft.subtitle ||
-            readDirective(verifiedDraft.content, "subtitle"),
+          ccli: verifiedDraft.ccli || readDirective(verifiedDraft.content, "ccli"),
+          composer: verifiedDraft.composer || readDirective(verifiedDraft.content, "composer"),
+          copyright: verifiedDraft.copyright || readDirective(verifiedDraft.content, "copyright"),
+          subtitle: verifiedDraft.subtitle || readDirective(verifiedDraft.content, "subtitle"),
           duration:
             verifiedDraft.duration ||
             readDirective(verifiedDraft.content, "duration") ||
             evidence.duration,
-          album:
-            verifiedDraft.album ||
-            readDirective(verifiedDraft.content, "album"),
+          album: verifiedDraft.album || readDirective(verifiedDraft.content, "album"),
           content: verifiedDraft.content.trim() || draft.content,
           confidence: verifiedDraft.confidence ?? draft.confidence,
         };
@@ -1063,16 +969,11 @@ export class SongImportService {
           `Verified & enriched online (${evidence.sources.join(", ") || "search"}).`,
         ]);
       } catch (err) {
-        if (
-          err instanceof UserCancelledError ||
-          err instanceof ImportCancelledError
-        ) {
+        if (err instanceof UserCancelledError || err instanceof ImportCancelledError) {
           throw err;
         }
         draft.warnings.push(
-          `Online verification skipped: ${
-            err instanceof Error ? err.message : String(err)
-          }`,
+          `Online verification skipped: ${err instanceof Error ? err.message : String(err)}`,
         );
       }
 
@@ -1095,13 +996,9 @@ export class SongImportService {
       if (!validation.ok) {
         const msgs = [
           ...validation.parseErrors,
-          ...validation.diagnostics
-            .filter((d) => d.severity === "error")
-            .map((d) => d.message),
+          ...validation.diagnostics.filter((d) => d.severity === "error").map((d) => d.message),
         ];
-        draft.warnings.push(
-          `ChordPro validation warnings: ${msgs.join("; ") || "see content"}`,
-        );
+        draft.warnings.push(`ChordPro validation warnings: ${msgs.join("; ") || "see content"}`);
       }
 
       if (!/\{title:/i.test(draft.content)) {
@@ -1143,8 +1040,7 @@ export class SongImportService {
         job.errorMessage = err.message;
       } else {
         job.status = "failed";
-        job.errorMessage =
-          err instanceof Error ? err.message : "Import failed unexpectedly.";
+        job.errorMessage = err instanceof Error ? err.message : "Import failed unexpectedly.";
       }
       job.updatedAt = Date.now();
     }

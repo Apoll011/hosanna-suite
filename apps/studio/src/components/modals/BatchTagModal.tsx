@@ -12,10 +12,7 @@ interface BatchTagModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedSongIds: string[];
-  onConfirm: (
-    tags: string[],
-    mode: "append" | "replace" | "remove",
-  ) => Promise<void>;
+  onConfirm: (tags: string[], mode: "append" | "replace" | "remove") => Promise<void>;
 }
 
 const PRESET_CATEGORIES = [
@@ -98,32 +95,23 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
   const count = selectedSongIds.length;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t("modals.batchTagTitle", { count })}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={t("modals.batchTagTitle", { count })}>
       <div className="flex flex-col gap-5 text-m3-text">
         <p className="text-xs text-m3-secondary">
           {t("modals.selectCategories")}{" "}
-          <strong className="text-m3-text">
-            {t("modals.selectedSongs", { count })}
-          </strong>
-          .
+          <strong className="text-m3-text">{t("modals.selectedSongs", { count })}</strong>.
         </p>
 
         {/* Mode Selector */}
         <div className="flex flex-col gap-2">
-          <label className="text-label text-m3-textr text-[10px]">
-            {t("modals.applyMode")}
-          </label>
+          <label className="text-label text-m3-textr text-[10px]">{t("modals.applyMode")}</label>
           <div className="grid grid-cols-3 gap-2 p-1 bg-m3-sidebar/60 rounded-xl">
             <button
               type="button"
               onClick={() => setMode("append")}
               className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer ${
                 mode === "append"
-                  ? "bg-m3-card text-m3-primary shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-primary shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -134,7 +122,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
               onClick={() => setMode("replace")}
               className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer ${
                 mode === "replace"
-                  ? "bg-m3-card text-amber-600 dark:text-amber-400 shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-amber-600 dark:text-amber-400 shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -145,7 +133,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
               onClick={() => setMode("remove")}
               className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer ${
                 mode === "remove"
-                  ? "bg-m3-card text-m3-danger shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-danger shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -174,7 +162,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
                   onClick={() => togglePresetTag(cat)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer select-none ${
                     isSelected
-                      ? "bg-m3-primary text-white shadow-[var(--shadow-sm)]"
+                      ? "bg-m3-primary text-white shadow-sm"
                       : "bg-m3-card text-m3-text border border-m3-border hover:border-m3-primary"
                   }`}
                 >
@@ -216,10 +204,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
           <div className="flex flex-col gap-1.5 p-3 bg-m3-primary/10 border border-m3-primary/20 rounded-xl">
             <span className="text-label text-m3-primary">
               {t("modals.tagsToApply", {
-                action:
-                  mode === "remove"
-                    ? t("modals.removeLower")
-                    : t("modals.applyLower"),
+                action: mode === "remove" ? t("modals.removeLower") : t("modals.applyLower"),
                 count: tags.length,
               })}
             </span>

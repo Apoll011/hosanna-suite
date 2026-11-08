@@ -24,9 +24,7 @@ export const TEMPLATE_FAMILIES: TemplateFamilyInfo[] = [
   },
 ];
 
-export function getTemplateFamilyInfo(
-  id: PrintTemplateFamily,
-): TemplateFamilyInfo {
+export function getTemplateFamilyInfo(id: PrintTemplateFamily): TemplateFamilyInfo {
   return TEMPLATE_FAMILIES.find((f) => f.id === id) || TEMPLATE_FAMILIES[0];
 }
 

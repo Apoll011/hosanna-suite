@@ -54,9 +54,7 @@ export function readSkill(name: string): {
 } {
   const safe = name.trim().replace(/^hosanna:\/\/skills\//, "");
   if (!SKILL_NAMES.includes(safe as SkillName)) {
-    throw new Error(
-      `Unknown skill "${safe}". Valid: ${SKILL_NAMES.join(", ")}`,
-    );
+    throw new Error(`Unknown skill "${safe}". Valid: ${SKILL_NAMES.join(", ")}`);
   }
   const path = join(getSkillsRoot(), safe, "SKILL.md");
   if (!existsSync(path)) {
@@ -221,9 +219,7 @@ export function readResourceByUri(uri: string): {
 
   const entry = DOC_RESOURCES.find((r) => r.uri === trimmed);
   if (!entry) {
-    throw new Error(
-      `Unknown resource "${trimmed}". Call hosanna_resources_list for URIs.`,
-    );
+    throw new Error(`Unknown resource "${trimmed}". Call hosanna_resources_list for URIs.`);
   }
 
   if (entry.relativePath) {

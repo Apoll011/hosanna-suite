@@ -6,9 +6,9 @@
  * anything), which is the right behavior for *rendering* a song. The linter
  * instead walks the same syntax looking for the mistakes people actually
  * make while writing ChordPro — unclosed directives/brackets, mismatched
- * section blocks, unknown chord symbols, malformed timing annotations — and
- * reports them as line/column-addressed diagnostics an editor can surface
- * as squiggly underlines and gutter markers.
+ * section blocks, unknown chord symbols — and reports them as
+ * line/column-addressed diagnostics an editor can surface as squiggly
+ * underlines and gutter markers.
  */
 
 import { analyzeChordSymbol } from "./chordDictionary";
@@ -84,29 +84,15 @@ function analyzeBracketContent(
   // Inline annotations, e.g. [* Bass fill], are free text — not a chord.
   if (trimmed.startsWith("*")) return [];
 
-  const timingMatch = trimmed.match(/^(.+?)@(.*)$/);
-  const chordPart = timingMatch ? timingMatch[1] : trimmed;
   const diagnostics: ChordProDiagnostic[] = [];
-
-  if (timingMatch && !/^[0-9]*\.?[0-9]+x$/i.test(timingMatch[2])) {
-    diagnostics.push({
-      line: lineIdx,
-      column: startCol,
-      endColumn: endCol,
-      severity: "warning",
-      message: `Anotação de duração mal formatada em "[${trimmed}]" — use algo como [${chordPart}@2x].`,
-      code: "malformed-timing",
-    });
-  }
-
-  const analysis = analyzeChordSymbol(chordPart);
+  const analysis = analyzeChordSymbol(trimmed);
   if (!analysis.hasValidRoot) {
     diagnostics.push({
       line: lineIdx,
       column: startCol,
       endColumn: endCol,
       severity: "warning",
-      message: `Acorde não reconhecido: "${chordPart}".`,
+      message: `Acorde não reconhecido: "${trimmed}".`,
       code: "unknown-chord-root",
     });
   } else if (!analysis.qualityRecognized) {
@@ -115,7 +101,7 @@ function analyzeBracketContent(
       column: startCol,
       endColumn: endCol,
       severity: "warning",
-      message: `Qualidade de acorde não reconhecida em "${chordPart}" (assumida como maior).`,
+      message: `Qualidade de acorde não reconhecida em "${trimmed}" (assumida como maior).`,
       code: "unknown-chord-quality",
     });
   }
@@ -123,10 +109,7 @@ function analyzeBracketContent(
   return diagnostics;
 }
 
-function findBracketDiagnostics(
-  line: string,
-  lineIdx: number,
-): ChordProDiagnostic[] {
+function findBracketDiagnostics(line: string, lineIdx: number): ChordProDiagnostic[] {
   const diagnostics: ChordProDiagnostic[] = [];
   let depth = 0;
   let openIdx = -1;
@@ -151,9 +134,7 @@ function findBracketDiagnostics(
       depth--;
       if (depth === 0 && openIdx !== -1) {
         const content = line.slice(openIdx + 1, i);
-        diagnostics.push(
-          ...analyzeBracketContent(content, lineIdx, openIdx, i + 1),
-        );
+        diagnostics.push(...analyzeBracketContent(content, lineIdx, openIdx, i + 1));
         openIdx = -1;
       }
     }
@@ -217,9 +198,7 @@ export function lintChordPro(content: string): ChordProDiagnostic[] {
       }
 
       const colonIdx = directive.indexOf(":");
-      const rawName = (
-        colonIdx === -1 ? directive : directive.slice(0, colonIdx)
-      ).trim();
+      const rawName = (colonIdx === -1 ? directive : directive.slice(0, colonIdx)).trim();
       const value = colonIdx === -1 ? "" : directive.slice(colonIdx + 1).trim();
       const lowerName = rawName.toLowerCase();
 
@@ -290,11 +269,7 @@ export function lintChordPro(content: string): ChordProDiagnostic[] {
         continue;
       }
 
-      if (
-        NUMERIC_DIRECTIVES.has(lowerName) &&
-        value &&
-        !/^-?[0-9]+(\.[0-9]+)?$/.test(value)
-      ) {
+      if (NUMERIC_DIRECTIVES.has(lowerName) && value && !/^-?[0-9]+(\.[0-9]+)?$/.test(value)) {
         diagnostics.push({
           line: i,
           column: line.indexOf(":") + 1,

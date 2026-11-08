@@ -11,8 +11,7 @@ export const TwoFactorSection: React.FC = () => {
   const { user, refetch: refetchAuth } = useAuth();
   const { showToast } = useSync();
   const { t } = useI18n();
-  const is2FAEnabled =
-    (user as { twoFactorEnabled?: boolean })?.twoFactorEnabled || false;
+  const is2FAEnabled = (user as { twoFactorEnabled?: boolean })?.twoFactorEnabled || false;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [password, setPassword] = useState("");
@@ -20,9 +19,7 @@ export const TwoFactorSection: React.FC = () => {
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState("");
 
-  const [step, setStep] = useState<"password" | "setup" | "backup" | "disable">(
-    "password",
-  );
+  const [step, setStep] = useState<"password" | "setup" | "backup" | "disable">("password");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEnable2FA = async () => {
@@ -69,10 +66,7 @@ export const TwoFactorSection: React.FC = () => {
         trustDevice: true,
       });
       if (error) {
-        showToast(
-          error.message || t("settings.twoFactor.codeInvalid"),
-          "error",
-        );
+        showToast(error.message || t("settings.twoFactor.codeInvalid"), "error");
       } else {
         showToast(t("settings.twoFactor.codeVerified"), "success");
         setStep("backup");
@@ -137,16 +131,14 @@ export const TwoFactorSection: React.FC = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
             <Shield className="w-4 h-4 text-m3-primary" />
             {t("settings.twoFactor.title")}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {t("settings.twoFactor.desc")}
-          </p>
+          <p className="text-xs text-m3-secondary mt-0.5">{t("settings.twoFactor.desc")}</p>
         </div>
         <button
           onClick={() => {
@@ -159,9 +151,7 @@ export const TwoFactorSection: React.FC = () => {
               : "bg-m3-primary text-white hover:bg-m3-primary-dark shadow-xs"
           }`}
         >
-          {is2FAEnabled
-            ? t("settings.twoFactor.disableBtn")
-            : t("settings.twoFactor.enableBtn")}
+          {is2FAEnabled ? t("settings.twoFactor.disableBtn") : t("settings.twoFactor.enableBtn")}
         </button>
       </div>
 
@@ -178,7 +168,7 @@ export const TwoFactorSection: React.FC = () => {
           {/* PASSO 1: CONFIRMAR PALAVRA-PASSE */}
           {step === "password" && (
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-xs text-slate-600 dark:text-m3-secondary mb-4">
                 {t("settings.twoFactor.passwordStepDesc")}
               </p>
               <Input
@@ -191,12 +181,7 @@ export const TwoFactorSection: React.FC = () => {
                 <Button variant="outline" size="sm" onClick={closeModal}>
                   {t("common.cancel")}
                 </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  isLoading={isLoading}
-                  onClick={handleEnable2FA}
-                >
+                <Button variant="primary" size="sm" isLoading={isLoading} onClick={handleEnable2FA}>
                   {t("settings.twoFactor.continue")}
                 </Button>
               </div>
@@ -206,28 +191,26 @@ export const TwoFactorSection: React.FC = () => {
           {/* PASSO 2: CONFIGURAR CÓDIGO QR */}
           {step === "setup" && (
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-xs text-slate-600 dark:text-m3-secondary mb-4">
                 {t("settings.twoFactor.setupStep1")}
               </p>
 
               {totpURI && (
                 <div className="flex justify-center mb-6">
-                  <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+                  <div className="bg-m3-card p-3 rounded-xl shadow-sm border border-m3-border">
                     <QRCodeSVG value={totpURI} size={160} />
                   </div>
                 </div>
               )}
 
-              <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
+              <p className="text-xs text-slate-600 dark:text-m3-secondary mb-2">
                 {t("settings.twoFactor.setupStep2")}
               </p>
 
               <Input
                 type="text"
                 label={t("settings.twoFactor.verificationCodeLabel")}
-                placeholder={t(
-                  "settings.twoFactor.verificationCodePlaceholder",
-                )}
+                placeholder={t("settings.twoFactor.verificationCodePlaceholder")}
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 maxLength={6}
@@ -237,12 +220,7 @@ export const TwoFactorSection: React.FC = () => {
                 <Button variant="outline" size="sm" onClick={closeModal}>
                   {t("common.cancel")}
                 </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  isLoading={isLoading}
-                  onClick={handleVerify2FA}
-                >
+                <Button variant="primary" size="sm" isLoading={isLoading} onClick={handleVerify2FA}>
                   {t("settings.twoFactor.verify")}
                 </Button>
               </div>
@@ -267,12 +245,12 @@ export const TwoFactorSection: React.FC = () => {
               </div>
 
               {backupCodes.length > 0 && (
-                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <div className="grid grid-cols-2 gap-2 font-mono text-sm text-slate-700 dark:text-slate-300 text-center">
+                <div className="bg-m3-sidebar p-4 rounded-xl border border-m3-border">
+                  <div className="grid grid-cols-2 gap-2 font-mono text-sm text-m3-text text-center">
                     {backupCodes.map((code, idx) => (
                       <span
                         key={idx}
-                        className="bg-white dark:bg-slate-900 py-1.5 rounded border border-slate-200 dark:border-slate-800 shadow-sm"
+                        className="bg-m3-card py-1.5 rounded border border-m3-border shadow-sm"
                       >
                         {code}
                       </span>
@@ -292,7 +270,7 @@ export const TwoFactorSection: React.FC = () => {
           {/* PASSO DESATIVAR */}
           {step === "disable" && (
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">
+              <p className="text-xs text-slate-600 dark:text-m3-secondary mb-4">
                 {t("settings.twoFactor.disableStepDesc")}
               </p>
               <Input

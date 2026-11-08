@@ -37,7 +37,8 @@ export const ROUTES = [
   {
     path: "/contact",
     title: "Contact | Hosanna",
-    description: "Talk to the Hosanna team — questions about the songbook app, Studio, pricing, or support for your church.",
+    description:
+      "Talk to the Hosanna team — questions about the songbook app, Studio, pricing, or support for your church.",
     url: `${SITE_URL}/contact`,
     changefreq: "monthly",
     priority: "0.6",

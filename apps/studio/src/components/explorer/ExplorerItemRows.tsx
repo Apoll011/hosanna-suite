@@ -4,10 +4,7 @@ import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FileMusic, MoreVertical } from "lucide-react";
 import React from "react";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "../../utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "../../utils/folderCustomization";
 import { SongScoreVisualizer } from "./SongScoreVisualizer";
 
 export interface FolderTableRowProps {
@@ -97,9 +94,7 @@ export const FolderTableRow: React.FC<FolderTableRowProps> = React.memo(
             );
           })()}
         </td>
-        <td className={`${cellPadding} text-m3-secondary opacity-70`}>
-          {t("explorer.folder")}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary opacity-70`}>{t("explorer.folder")}</td>
         {isSearchingOrFiltering && getFolderPathString && (
           <td className={`${cellPadding} text-m3-primary/80`}>
             {getFolderPathString(folder.parentId)}
@@ -112,7 +107,7 @@ export const FolderTableRow: React.FC<FolderTableRowProps> = React.memo(
           <td className={cellPadding}>
             {typeof averageScore === "number" ? (
               songScoreLayout === "bar" || songScoreLayout === "dots" ? (
-                <div className="min-w-[80px] max-w-[120px]">
+                <div className="min-w-20 max-w-30">
                   <SongScoreVisualizer
                     score={averageScore}
                     layout={songScoreLayout}
@@ -229,23 +224,19 @@ export const SongTableRow: React.FC<SongTableRowProps> = React.memo(
             <span className="truncate font-medium">{song.title}</span>
           </div>
         </td>
-        <td className={`${cellPadding} text-m3-secondary opacity-70`}>
-          {t("explorer.cifra")}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary opacity-70`}>{t("explorer.cifra")}</td>
         {isSearchingOrFiltering && getFolderPathString && (
           <td className={`${cellPadding} text-m3-secondary font-medium`}>
             {getFolderPathString(song.folderId)}
           </td>
         )}
-        <td className={`${cellPadding} text-m3-secondary`}>
-          {song.artist || "—"}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary`}>{song.artist || "—"}</td>
 
         {showSongScore && (
           <td className={cellPadding}>
             {hasScore ? (
               songScoreLayout === "bar" || songScoreLayout === "dots" ? (
-                <div className="min-w-[80px] max-w-[120px]">
+                <div className="min-w-20 max-w-30">
                   <SongScoreVisualizer
                     score={scoreValue!}
                     layout={songScoreLayout}

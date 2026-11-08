@@ -4,13 +4,7 @@
  */
 
 import { backupApi } from "@/src/api";
-import {
-  Button,
-  Modal,
-  PageHeader,
-  Surface,
-  Tabs,
-} from "@/src/components/common";
+import { Button, Modal, PageHeader, Surface, Tabs } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { useAnyRole, useCan } from "@/src/lib/permissions/client";
 import {
@@ -40,13 +34,7 @@ import { isDemoMode } from "../demo";
 import { useOnline } from "../hooks/useOnline";
 
 type TabType =
-  | "workspace"
-  | "members"
-  | "notifications"
-  | "billing"
-  | "general"
-  | "ai"
-  | "loginActivity";
+  "workspace" | "members" | "notifications" | "billing" | "general" | "ai" | "loginActivity";
 
 const VALID_TABS: TabType[] = [
   "workspace",
@@ -64,10 +52,7 @@ export const OrganizationPage: React.FC = () => {
   const isOnline = useOnline();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { matched: canViewLoginActivity, loading: roleLoading } = useAnyRole(
-    "owner",
-    "admin",
-  );
+  const { matched: canViewLoginActivity, loading: roleLoading } = useAnyRole("owner", "admin");
   const { granted: canUpdate } = useCan("organization.update");
   const { granted: canAccessBilling } = useCan("billing.access");
   const { granted: canSendNotifications } = useCan("notification.sent");
@@ -114,19 +99,11 @@ export const OrganizationPage: React.FC = () => {
       next.set("tab", "workspace");
       setSearchParams(next, { replace: true });
     }
-  }, [
-    activeTab,
-    canViewLoginActivity,
-    canManageAi,
-    roleLoading,
-    searchParams,
-    setSearchParams,
-  ]);
+  }, [activeTab, canViewLoginActivity, canManageAi, roleLoading, searchParams, setSearchParams]);
 
-  const [pendingRestoreData, setPendingRestoreData] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
+  const [pendingRestoreData, setPendingRestoreData] = useState<Record<string, unknown> | null>(
+    null,
+  );
   const [restoreStats, setRestoreStats] = useState<{
     songs: number;
     folders: number;
@@ -225,15 +202,11 @@ export const OrganizationPage: React.FC = () => {
         <PageHeader title={t("common.organization")} />
 
         {!isOnline && (
-          <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-[var(--radius-lg)] text-amber-700 dark:text-amber-300 text-xs">
+          <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-700 dark:text-amber-300 text-xs">
             <CloudOff className="w-5 h-5 shrink-0 text-amber-500" />
             <div>
-              <span className="font-semibold block">
-                {t("organization.offlineTitle")}
-              </span>
-              <span className="opacity-90">
-                {t("organization.offlineDesc")}
-              </span>
+              <span className="font-semibold block">{t("organization.offlineTitle")}</span>
+              <span className="opacity-90">{t("organization.offlineDesc")}</span>
             </div>
           </div>
         )}
@@ -267,18 +240,9 @@ export const OrganizationPage: React.FC = () => {
               setIsTogglingWs={setIsTogglingWs}
             />
             <MembersTab active={activeTab === "members"} />
-            <NotificationsTab
-              active={activeTab === "notifications"}
-              showToast={showToast}
-            />
-            <BillingTab
-              active={activeTab === "billing"}
-              showToast={showToast}
-            />
-            <GeneralTab
-              active={activeTab === "general"}
-              showToast={showToast}
-            />
+            <NotificationsTab active={activeTab === "notifications"} showToast={showToast} />
+            <BillingTab active={activeTab === "billing"} showToast={showToast} />
+            <GeneralTab active={activeTab === "general"} showToast={showToast} />
             <AiSettingsTab active={activeTab === "ai"} showToast={showToast} />
             {activeTab === "loginActivity" && canViewLoginActivity && (
               <div className="max-w-4xl mx-auto w-full">
@@ -290,19 +254,15 @@ export const OrganizationPage: React.FC = () => {
                 />
               </div>
             )}
-            {activeTab === "loginActivity" &&
-              !roleLoading &&
-              !canViewLoginActivity && (
-                <Surface className="max-w-4xl mx-auto w-full text-center">
-                  <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
-                  <h3 className="text-title text-m3-text">
-                    {t("organization.loginActivity.noAccessTitle")}
-                  </h3>
-                  <p className="text-muted mt-1">
-                    {t("organization.loginActivity.noAccessDesc")}
-                  </p>
-                </Surface>
-              )}
+            {activeTab === "loginActivity" && !roleLoading && !canViewLoginActivity && (
+              <Surface className="max-w-4xl mx-auto w-full text-center">
+                <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
+                <h3 className="text-title text-m3-text">
+                  {t("organization.loginActivity.noAccessTitle")}
+                </h3>
+                <p className="text-muted mt-1">{t("organization.loginActivity.noAccessDesc")}</p>
+              </Surface>
+            )}
           </div>
         </div>
       </div>
@@ -313,45 +273,35 @@ export const OrganizationPage: React.FC = () => {
         title={t("settings.restore.confirmTitle")}
       >
         <div className="flex flex-col gap-4">
-          <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-[var(--radius-md)] flex items-start gap-3 text-xs text-amber-800 dark:text-amber-300">
+          <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-md flex items-start gap-3 text-xs text-amber-800 dark:text-amber-300">
             <AlertTriangle className="w-5 h-5 shrink-0 text-amber-500 mt-0.5" />
             <div>
-              <strong className="font-semibold">
-                {t("settings.restore.attention")}
-              </strong>
+              <strong className="font-semibold">{t("settings.restore.attention")}</strong>
               <p className="mt-0.5">{t("settings.restore.attentionDesc")}</p>
             </div>
           </div>
 
           {restoreStats && (
             <Surface variant="inset" padding="sm" className="space-y-2">
-              <span className="text-label text-m3-text block">
-                {t("settings.restore.summary")}
-              </span>
+              <span className="text-label text-m3-text block">{t("settings.restore.summary")}</span>
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="p-2 bg-m3-card rounded-[var(--radius-md)] border border-m3-border">
+                <div className="p-2 bg-m3-card rounded-md border border-m3-border">
                   <span className="block text-lg font-semibold text-m3-primary tabular-nums">
                     {restoreStats.songs}
                   </span>
-                  <span className="text-caption">
-                    {t("settings.restore.songs")}
-                  </span>
+                  <span className="text-caption">{t("settings.restore.songs")}</span>
                 </div>
-                <div className="p-2 bg-m3-card rounded-[var(--radius-md)] border border-m3-border">
+                <div className="p-2 bg-m3-card rounded-md border border-m3-border">
                   <span className="block text-lg font-semibold text-amber-500 tabular-nums">
                     {restoreStats.folders}
                   </span>
-                  <span className="text-caption">
-                    {t("settings.restore.folders")}
-                  </span>
+                  <span className="text-caption">{t("settings.restore.folders")}</span>
                 </div>
-                <div className="p-2 bg-m3-card rounded-[var(--radius-md)] border border-m3-border">
+                <div className="p-2 bg-m3-card rounded-md border border-m3-border">
                   <span className="block text-lg font-semibold text-emerald-500 tabular-nums">
                     {restoreStats.services}
                   </span>
-                  <span className="text-caption">
-                    {t("settings.restore.services")}
-                  </span>
+                  <span className="text-caption">{t("settings.restore.services")}</span>
                 </div>
               </div>
             </Surface>

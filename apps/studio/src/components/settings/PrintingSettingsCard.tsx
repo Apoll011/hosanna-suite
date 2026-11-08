@@ -7,11 +7,7 @@ import { Button } from "@/src/components/common";
 import { PRINT_BRAND_ACCENT } from "@/src/components/print/brand";
 import { toOrgPrintSettings } from "@/src/components/print/options";
 import { PrintOptionsPanel } from "@/src/components/print/PrintOptionsPanel";
-import {
-  OrgPrintSettings,
-  PrintBrand,
-  PrintOptions,
-} from "@/src/components/print/types";
+import { OrgPrintSettings, PrintBrand, PrintOptions } from "@/src/components/print/types";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useI18n } from "@/src/lib/i18n";
 import { Eye, Printer } from "lucide-react";
@@ -50,21 +46,17 @@ export const PrintingSettingsCard: React.FC<PrintingSettingsCardProps> = ({
 
   const options: PrintOptions = { ...settings, includeSongs: true };
   const handleChange = (patch: Partial<PrintOptions>) =>
-    onUpdate((prev) =>
-      toOrgPrintSettings({ ...prev, includeSongs: true, ...patch }),
-    );
+    onUpdate((prev) => toOrgPrintSettings({ ...prev, includeSongs: true, ...patch }));
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden transition-all mt-6">
-      <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+    <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden transition-all mt-6">
+      <div className="px-6 py-5 border-b border-m3-border flex items-center justify-between gap-4 bg-m3-sidebar/50">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
             <Printer className="w-5 h-5 text-sky-500" />
             <span>{t("print.settingsCard.title")}</span>
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            {t("print.settingsCard.description")}
-          </p>
+          <p className="text-sm text-m3-secondary mt-1">{t("print.settingsCard.description")}</p>
         </div>
 
         <Button
@@ -81,9 +73,7 @@ export const PrintingSettingsCard: React.FC<PrintingSettingsCardProps> = ({
 
       <div className="p-6">
         {!isEditing && canManageOrg && (
-          <p className="text-xs text-m3-secondary mb-4">
-            {t("print.settingsCard.editHint")}
-          </p>
+          <p className="text-xs text-m3-secondary mb-4">{t("print.settingsCard.editHint")}</p>
         )}
         <PrintOptionsPanel
           options={options}

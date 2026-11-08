@@ -42,9 +42,7 @@ let cachedTokenExpiresAt = 0;
 let tokenRefresh: Promise<string> | null = null;
 
 function normalizePrivateKey(privateKey: string): string {
-  return privateKey.includes("\\n")
-    ? privateKey.replace(/\\n/g, "\n")
-    : privateKey;
+  return privateKey.includes("\\n") ? privateKey.replace(/\\n/g, "\n") : privateKey;
 }
 
 function firebaseConfigured(): boolean {
@@ -54,9 +52,7 @@ function firebaseConfigured(): boolean {
 async function fetchAccessToken(): Promise<string> {
   const { fcmClientEmail: clientEmail, fcmPrivateKey: privateKey } = env;
   if (!clientEmail || !privateKey) {
-    throw new Error(
-      "[firestore] FCM_CLIENT_EMAIL / FCM_PRIVATE_KEY are not configured.",
-    );
+    throw new Error("[firestore] FCM_CLIENT_EMAIL / FCM_PRIVATE_KEY are not configured.");
   }
 
   const assertion = jwt.sign(
@@ -81,9 +77,7 @@ async function fetchAccessToken(): Promise<string> {
 
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(
-      `[firestore] Failed to exchange JWT for access token (${res.status}): ${body}`,
-    );
+    throw new Error(`[firestore] Failed to exchange JWT for access token (${res.status}): ${body}`);
   }
 
   const data = (await res.json()) as {
@@ -107,11 +101,7 @@ async function getAccessToken(): Promise<string> {
   return tokenRefresh;
 }
 
-function annotationDocPath(
-  projectId: string,
-  serviceId: string,
-  songId: string,
-) {
+function annotationDocPath(projectId: string, serviceId: string, songId: string) {
   return (
     `projects/${projectId}/databases/(default)/documents/` +
     `services/${encodeURIComponent(serviceId)}/annotations/${encodeURIComponent(songId)}`
@@ -134,9 +124,7 @@ export interface NotesSignalPayload {
  * Upserts `services/{serviceId}/realtime/notes`. Never throws — failures are
  * logged so a Firestore outage cannot break note CRUD.
  */
-export async function publishNotesSignal(
-  payload: NotesSignalPayload,
-): Promise<void> {
+export async function publishNotesSignal(payload: NotesSignalPayload): Promise<void> {
   try {
     const projectId = env.fcmProjectId;
     if (!firebaseConfigured() || !projectId) {
@@ -152,32 +140,27 @@ export async function publishNotesSignal(
       .map((f) => `updateMask.fieldPaths=${encodeURIComponent(f)}`)
       .join("&");
 
-    const res = await fetch(
-      `https://firestore.googleapis.com/v1/${docPath}?${mask}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-        body: JSON.stringify({
-          fields: {
-            updatedAt: { timestampValue: new Date().toISOString() },
-            action: { stringValue: payload.action },
-            noteId: { stringValue: payload.noteId },
-            authorId: { stringValue: payload.authorId },
-            private: { booleanValue: payload.private },
-          },
-        }),
+    const res = await fetch(`https://firestore.googleapis.com/v1/${docPath}?${mask}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
-    );
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      body: JSON.stringify({
+        fields: {
+          updatedAt: { timestampValue: new Date().toISOString() },
+          action: { stringValue: payload.action },
+          noteId: { stringValue: payload.noteId },
+          authorId: { stringValue: payload.authorId },
+          private: { booleanValue: payload.private },
+        },
+      }),
+    });
 
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      console.error(
-        `[firestore] publishNotesSignal failed (${res.status}): ${body}`,
-      );
+      console.error(`[firestore] publishNotesSignal failed (${res.status}): ${body}`);
     }
   } catch (err) {
     console.error("[firestore] publishNotesSignal failed:", err);
@@ -230,10 +213,7 @@ function fieldString(
   return fields?.[key]?.stringValue;
 }
 
-function fieldInt(
-  fields: Record<string, FirestoreValue> | undefined,
-  key: string,
-): number {
+function fieldInt(fields: Record<string, FirestoreValue> | undefined, key: string): number {
   const raw = fields?.[key]?.integerValue;
   return raw != null ? Number(raw) : 0;
 }
@@ -292,9 +272,7 @@ export async function getAnnotationDoc(
     if (res.status === 404) return null;
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      console.error(
-        `[firestore] getAnnotationDoc failed (${res.status}): ${body}`,
-      );
+      console.error(`[firestore] getAnnotationDoc failed (${res.status}): ${body}`);
       return null;
     }
     const data = (await res.json()) as FirestoreDocument;
@@ -309,9 +287,7 @@ export async function getAnnotationDoc(
  * Resolves inline canvas bytes from a Firestore doc. Returns null when the
  * payload lives on the API / Postgres (callers should load from there).
  */
-export async function resolveAnnotationBytes(
-  doc: AnnotationFirebaseDoc,
-): Promise<Buffer | null> {
+export async function resolveAnnotationBytes(doc: AnnotationFirebaseDoc): Promise<Buffer | null> {
   if (doc.payloadLocation !== "firestore" || !doc.canvasDataBase64) {
     return null;
   }
@@ -330,9 +306,7 @@ export async function resolveAnnotationBytes(
  * Never throws — failures are logged so a Firestore outage cannot break the
  * Postgres write path.
  */
-export async function publishAnnotation(
-  payload: AnnotationFirebasePayload,
-): Promise<boolean> {
+export async function publishAnnotation(payload: AnnotationFirebasePayload): Promise<boolean> {
   try {
     const projectId = env.fcmProjectId;
     if (!firebaseConfigured() || !projectId) {
@@ -340,12 +314,9 @@ export async function publishAnnotation(
     }
 
     const accessToken = await getAccessToken();
-    const inlineOk =
-      payload.canvasData.byteLength <= ANNOTATION_INLINE_MAX_BYTES;
+    const inlineOk = payload.canvasData.byteLength <= ANNOTATION_INLINE_MAX_BYTES;
     const inline = inlineOk ? payload.canvasData.toString("base64") : undefined;
-    const payloadLocation: AnnotationPayloadLocation = inline
-      ? "firestore"
-      : "api";
+    const payloadLocation: AnnotationPayloadLocation = inline ? "firestore" : "api";
 
     if (!inline) {
       console.info(
@@ -368,11 +339,7 @@ export async function publishAnnotation(
       fields.canvasDataBase64 = { stringValue: inline };
     }
 
-    const docPath = annotationDocPath(
-      projectId,
-      payload.serviceId,
-      payload.songId,
-    );
+    const docPath = annotationDocPath(projectId, payload.serviceId, payload.songId);
     // Fields in updateMask but omitted from `fields` are deleted — clears a
     // previous inline payload and any legacy `storagePath` from older builds.
     const maskFields = [
@@ -384,24 +351,19 @@ export async function publishAnnotation(
       .map((f) => `updateMask.fieldPaths=${encodeURIComponent(f)}`)
       .join("&");
 
-    const res = await fetch(
-      `https://firestore.googleapis.com/v1/${docPath}?${mask}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-        body: JSON.stringify({ fields }),
+    const res = await fetch(`https://firestore.googleapis.com/v1/${docPath}?${mask}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
-    );
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      body: JSON.stringify({ fields }),
+    });
 
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      console.error(
-        `[firestore] publishAnnotation failed (${res.status}): ${body}`,
-      );
+      console.error(`[firestore] publishAnnotation failed (${res.status}): ${body}`);
       return false;
     }
     return true;

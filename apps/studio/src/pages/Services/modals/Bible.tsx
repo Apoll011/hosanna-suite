@@ -274,11 +274,7 @@ interface ParsedPassage {
 }
 
 // Timeout fetch abstraction helper
-async function fetchWithTimeout(
-  url: string,
-  options: RequestInit = {},
-  timeoutMs = 8000,
-) {
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 8000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -321,9 +317,7 @@ function parsePassageInput(input: string): ParsedPassage | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
 
-  const match = trimmed.match(
-    /^(.+?)\s+(\d+)(?:[:.,]\s*(\d+)(?:\s*[-–,]\s*(\d+))?)?$/,
-  );
+  const match = trimmed.match(/^(.+?)\s+(\d+)(?:[:.,]\s*(\d+)(?:\s*[-–,]\s*(\d+))?)?$/);
   if (!match) return null;
 
   const rawBookStr = match[1];
@@ -374,13 +368,9 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
   const [title, setTitle] = useState(initial?.title || defaultTitle);
   const [passageInput, setPassageInput] = useState(initial?.passage || "");
   const [notes, setNotes] = useState(initial?.notes || "");
-  const [duration, setDuration] = useState(
-    secondsToDurationInput(initial?.duration),
-  );
+  const [duration, setDuration] = useState(secondsToDurationInput(initial?.duration));
 
-  const [translations, setTranslations] = useState<Translation[]>(
-    FALLBACK_TRANSLATIONS,
-  );
+  const [translations, setTranslations] = useState<Translation[]>(FALLBACK_TRANSLATIONS);
   const [selectedTranslation, setSelectedTranslation] = useState("ARA");
   const [translationsLoading, setTranslationsLoading] = useState(false);
 
@@ -472,10 +462,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
       let label = `${prettyBookName} ${parsed.chapter}`;
       if (parsed.startVerse !== undefined) {
         label += `:${parsed.startVerse}`;
-        if (
-          parsed.endVerse !== undefined &&
-          parsed.endVerse !== parsed.startVerse
-        ) {
+        if (parsed.endVerse !== undefined && parsed.endVerse !== parsed.startVerse) {
           label += `-${parsed.endVerse}`;
         }
       }
@@ -488,9 +475,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
       if (errorObj?.name === "AbortError") {
         setFetchError(t("serviceModals.bible.timeoutError"));
       } else {
-        setFetchError(
-          errorObj?.message || t("serviceModals.bible.genericError"),
-        );
+        setFetchError(errorObj?.message || t("serviceModals.bible.genericError"));
       }
     } finally {
       setIsFetching(false);
@@ -535,9 +520,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
             <p className="text-xs font-bold" style={{ color: "#C026D3" }}>
               {t("serviceModals.bible.badgeTitle")}
             </p>
-            <p className="text-[11px] text-slate-500">
-              {t("serviceModals.bible.badgeDesc")}
-            </p>
+            <p className="text-[11px] text-slate-500">{t("serviceModals.bible.badgeDesc")}</p>
           </div>
         </div>
 
@@ -628,9 +611,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
                 : t("serviceModals.bible.searchBtn")}
             </Button>
           </div>
-          <p className="text-[10px] text-slate-400">
-            {t("serviceModals.bible.acceptedFormats")}
-          </p>
+          <p className="text-[10px] text-slate-400">{t("serviceModals.bible.acceptedFormats")}</p>
         </div>
 
         {/* Error */}
@@ -648,12 +629,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
                 {fetchedPassageLabel}
               </p>
               {!accepted ? (
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  onClick={handleAcceptPassage}
-                >
+                <Button type="button" variant="primary" size="sm" onClick={handleAcceptPassage}>
                   <Check className="w-3.5 h-3.5" />
                   {t("serviceModals.bible.usePassageBtn")}
                 </Button>
@@ -681,9 +657,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.bible.notesLabel")}
-            <span className="font-normal text-slate-400 ml-1">
-              ({t("common.details")})
-            </span>
+            <span className="font-normal text-slate-400 ml-1">({t("common.details")})</span>
           </label>
           <textarea
             rows={2}
@@ -711,12 +685,7 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           <Button type="button" variant="ghost" size="sm" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={handleSave}
-          >
+          <Button type="button" variant="primary" size="sm" onClick={handleSave}>
             {t("common.save")}
           </Button>
         </div>

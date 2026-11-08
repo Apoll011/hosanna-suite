@@ -8,10 +8,7 @@ export class SongRepository {
     return this.db.song.findUnique({ where: { id } });
   }
 
-  findMany(
-    where?: Prisma.SongWhereInput,
-    orderBy?: Prisma.SongOrderByWithRelationInput,
-  ) {
+  findMany(where?: Prisma.SongWhereInput, orderBy?: Prisma.SongOrderByWithRelationInput) {
     return this.db.song.findMany({ where, orderBy });
   }
 

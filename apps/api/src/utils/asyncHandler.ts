@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-type Handler = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Promise<unknown>;
+type Handler = (req: Request, res: Response, next: NextFunction) => Promise<unknown>;
 
 /**
  * Wraps an async route handler so that rejected promises are forwarded to

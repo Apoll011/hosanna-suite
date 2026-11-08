@@ -67,8 +67,7 @@ export const Can: React.FC<CanProps> = ({
   loading: loadingSlot = null,
 }) => {
   const status = useCan(permission);
-  if (status.loading && typeof children !== "function")
-    return <>{loadingSlot}</>;
+  if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.granted, fallback);
 };
 
@@ -86,8 +85,7 @@ export const Cannot: React.FC<CannotProps> = ({
   loading: loadingSlot = null,
 }) => {
   const status = useCannot(permission);
-  if (status.loading && typeof children !== "function")
-    return <>{loadingSlot}</>;
+  if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.denied, fallback);
 };
 
@@ -110,8 +108,7 @@ export const CanAll: React.FC<MultiCanProps> = ({
   loading: loadingSlot = null,
 }) => {
   const status = useCanAll(permissions);
-  if (status.loading && typeof children !== "function")
-    return <>{loadingSlot}</>;
+  if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.granted, fallback);
 };
 
@@ -123,8 +120,7 @@ export const CanAny: React.FC<MultiCanProps> = ({
   loading: loadingSlot = null,
 }) => {
   const status = useCanAny(permissions);
-  if (status.loading && typeof children !== "function")
-    return <>{loadingSlot}</>;
+  if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.granted, fallback);
 };
 
@@ -146,8 +142,7 @@ export const RoleGate: React.FC<RoleGateProps> = ({
   loading: loadingSlot = null,
 }) => {
   const status = useRole(role);
-  if (status.loading && typeof children !== "function")
-    return <>{loadingSlot}</>;
+  if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.matched, fallback);
 };
 
@@ -165,8 +160,7 @@ export const AnyRoleGate: React.FC<AnyRoleGateProps> = ({
   loading: loadingSlot = null,
 }) => {
   const status = useAnyRole(...roles);
-  if (status.loading && typeof children !== "function")
-    return <>{loadingSlot}</>;
+  if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.matched, fallback);
 };
 
@@ -233,10 +227,7 @@ export function withRole<P extends object>(
 ) {
   return function WithRoleWrapper(props: P) {
     return (
-      <RoleGate
-        role={role}
-        fallback={FallbackComponent ? <FallbackComponent {...props} /> : null}
-      >
+      <RoleGate role={role} fallback={FallbackComponent ? <FallbackComponent {...props} /> : null}>
         <WrappedComponent {...props} />
       </RoleGate>
     );

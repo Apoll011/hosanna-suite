@@ -20,10 +20,7 @@ export class ChordProImportProvider implements SongImportProvider {
     return name || filename.replace(/\.[^/.]+$/, "").trim();
   }
 
-  async import(
-    files: File[],
-    songData: Partial<Song>,
-  ): Promise<ProviderImportResult> {
+  async import(files: File[], songData: Partial<Song>): Promise<ProviderImportResult> {
     const songPayloads: Array<Partial<Song>> = [];
 
     for (const file of files) {

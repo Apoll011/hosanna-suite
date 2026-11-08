@@ -5,27 +5,18 @@
 
 import { roles, type AppRole, type PermissionString } from "@hosanna/auth";
 
-export function roleHasPermission(
-  role: AppRole,
-  permission: PermissionString,
-): boolean {
+export function roleHasPermission(role: AppRole, permission: PermissionString): boolean {
   const roleConfig = roles[role];
   if (!roleConfig) return false;
 
   const dotIndex = permission.indexOf(".");
-  const resource = permission.slice(
-    0,
-    dotIndex,
-  ) as keyof typeof roleConfig.statements;
+  const resource = permission.slice(0, dotIndex) as keyof typeof roleConfig.statements;
   const action = permission.slice(dotIndex + 1);
 
   const allowedActions = roleConfig.statements[resource];
   return Array.isArray(allowedActions) && allowedActions.includes(action);
 }
 
-export function roleHasAnyPermission(
-  role: AppRole,
-  permissions: PermissionString[],
-): boolean {
+export function roleHasAnyPermission(role: AppRole, permissions: PermissionString[]): boolean {
   return permissions.some((p) => roleHasPermission(role, p));
 }

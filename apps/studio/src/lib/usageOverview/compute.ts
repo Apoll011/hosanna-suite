@@ -4,13 +4,7 @@
  */
 
 export type UsageResourceId =
-  | "songs"
-  | "members"
-  | "services"
-  | "events"
-  | "collections"
-  | "folders"
-  | "storage";
+  "songs" | "members" | "services" | "events" | "collections" | "folders" | "storage";
 
 export interface UsageResource {
   id: UsageResourceId;
@@ -70,11 +64,7 @@ function clampPercentage(used: number, limit: number | null): number | null {
   return Math.min(100, Math.round((used / limit) * 100));
 }
 
-function resource(
-  id: UsageResourceId,
-  used: number,
-  limit: number | null,
-): UsageResource {
+function resource(id: UsageResourceId, used: number, limit: number | null): UsageResource {
   return {
     id,
     used,
@@ -111,9 +101,7 @@ function localToday(): string {
  * Song/service/event/folder/collection counts come from the local DB;
  * members/invites come from the active organization payload.
  */
-export function computeUsageOverview(
-  input: UsageOverviewInput,
-): UsageOverviewSummary {
+export function computeUsageOverview(input: UsageOverviewInput): UsageOverviewSummary {
   const today = input.today ?? localToday();
   const songs = input.songs.length;
   const members = input.members.length;

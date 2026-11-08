@@ -9,15 +9,8 @@ import {
   services as serviceService,
   songs as songService,
 } from "../mcp/context.js";
-import {
-  deleteAgendaEvent,
-  deleteCollection,
-  deleteFolder,
-} from "../mcp/lib/libraryCrud.js";
-import {
-  AiChatService,
-  describeChatError,
-} from "../services/aiChat.service.js";
+import { deleteAgendaEvent, deleteCollection, deleteFolder } from "../mcp/lib/libraryCrud.js";
+import { AiChatService, describeChatError } from "../services/aiChat.service.js";
 import { getOrgAiBilling } from "../services/aiBilling/index.js";
 import { OrgAiConfigService } from "../services/orgAiConfig.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -76,7 +69,7 @@ aiRouter.get(
   "/memory",
   requirePermission("ai.use"),
   asyncHandler(async (req, res) => {
-    res.json({ items: await memory.list(req.orgId!) });
+    res.json({ items: await memory.listOrg(req.orgId!) });
   }),
 );
 
@@ -85,7 +78,7 @@ aiRouter.post(
   requirePermission("ai.manage"),
   validate({ body: addAiMemorySchema }),
   asyncHandler(async (req, res) => {
-    const item = await memory.add(req.orgId!, req.body.content, {
+    const item = await memory.addOrg(req.orgId!, req.body.content, {
       source: "admin",
       userId: req.user?.id,
     });
@@ -94,22 +87,65 @@ aiRouter.post(
 );
 
 aiRouter.delete(
-  "/memory/:id",
+  "/memory",
   requirePermission("ai.manage"),
   asyncHandler(async (req, res) => {
-    const removed = await memory.remove(req.orgId!, String(req.params.id));
-    if (!removed)
-      throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
+    const cleared = await memory.clearOrg(req.orgId!);
+    res.json({ cleared });
+  }),
+);
+
+// Personal routes before /memory/:id so "personal" is not captured as an id.
+aiRouter.get(
+  "/memory/personal",
+  requirePermission("ai.use"),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    res.json({ items: await memory.listPersonal(req.user.id) });
+  }),
+);
+
+aiRouter.post(
+  "/memory/personal",
+  requirePermission("ai.use"),
+  validate({ body: addAiMemorySchema }),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    const item = await memory.addPersonal(req.user.id, req.body.content, {
+      source: "user",
+    });
+    res.status(item.duplicate ? 200 : 201).json(item);
+  }),
+);
+
+aiRouter.delete(
+  "/memory/personal",
+  requirePermission("ai.use"),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    const cleared = await memory.clearPersonal(req.user.id);
+    res.json({ cleared });
+  }),
+);
+
+aiRouter.delete(
+  "/memory/personal/:id",
+  requirePermission("ai.use"),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    const removed = await memory.removePersonal(req.user.id, String(req.params.id));
+    if (!removed) throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
     res.status(204).end();
   }),
 );
 
 aiRouter.delete(
-  "/memory",
+  "/memory/:id",
   requirePermission("ai.manage"),
   asyncHandler(async (req, res) => {
-    const cleared = await memory.clear(req.orgId!);
-    res.json({ cleared });
+    const removed = await memory.removeOrg(req.orgId!, String(req.params.id));
+    if (!removed) throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
+    res.status(204).end();
   }),
 );
 
@@ -125,11 +161,7 @@ aiRouter.post(
     void authInfo;
     const body = req.body as {
       action:
-        | "delete_song"
-        | "delete_service"
-        | "delete_folder"
-        | "delete_collection"
-        | "delete_agenda";
+        "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
       id: string;
       folderAction?: "move_to_root" | "delete_songs";
     };
@@ -207,8 +239,7 @@ aiRouter.post(
       originalMessages: messages,
       sendReasoning: true,
       onError: (error) => {
-        if (!abort.signal.aborted)
-          console.error("AI chat stream error:", error);
+        if (!abort.signal.aborted) console.error("AI chat stream error:", error);
         return describeChatError(error);
       },
       messageMetadata: ({ part }) => {
@@ -220,8 +251,7 @@ aiRouter.post(
             finishReason: part.finishReason,
             // Tool budget used up (the model was told to wrap up) or the
             // step safety net hit while it still wanted tools.
-            truncated:
-              budget.limitReached || part.finishReason === "tool-calls",
+            truncated: budget.limitReached || part.finishReason === "tool-calls",
             toolCalls: budget.used,
             toolLimit: budget.max,
             limitReached: budget.limitReached,

@@ -50,10 +50,7 @@ const SERVICE_PERMS: PermissionString[] = [
   "service.delete",
 ];
 
-export function registerDiscoveryTools(
-  server: McpServer,
-  authInfo?: AuthInfo,
-): void {
+export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): void {
   server.registerTool(
     "hosanna_capabilities",
     {
@@ -81,9 +78,7 @@ export function registerDiscoveryTools(
             ...MCP_TOOL_GROUPS,
             services: [
               ...MCP_TOOL_GROUPS.services.map((name) =>
-                name === "services_search"
-                  ? "services_search (archived / includeArchived)"
-                  : name,
+                name === "services_search" ? "services_search (archived / includeArchived)" : name,
               ),
             ],
           },
@@ -147,8 +142,7 @@ export function registerDiscoveryTools(
     "hosanna_permissions",
     {
       title: "Current permissions",
-      description:
-        "Return the authenticated user/org role and allowed song/service actions.",
+      description: "Return the authenticated user/org role and allowed song/service actions.",
       inputSchema: z.object({}),
     },
     async () => {
@@ -161,9 +155,7 @@ export function registerDiscoveryTools(
               "Not authenticated. ChordPro tools still work; song/service tools require a session.",
           });
         }
-        const allowed = [...SONG_PERMS, ...SERVICE_PERMS].filter((p) =>
-          can(ctx.user, p),
-        );
+        const allowed = [...SONG_PERMS, ...SERVICE_PERMS].filter((p) => can(ctx.user, p));
         return jsonResult({
           authenticated: true,
           userId: ctx.user.id,
@@ -323,23 +315,8 @@ export function registerDiscoveryTools(
                 types: serviceElementTypeSchema.options,
                 fields: {
                   song: ["id", "type", "title", "songId", "duration", "notes"],
-                  scripture: [
-                    "id",
-                    "type",
-                    "title",
-                    "passage",
-                    "content",
-                    "duration",
-                    "notes",
-                  ],
-                  other: [
-                    "id",
-                    "type",
-                    "title",
-                    "content",
-                    "duration",
-                    "notes",
-                  ],
+                  scripture: ["id", "type", "title", "passage", "content", "duration", "notes"],
+                  other: ["id", "type", "title", "content", "duration", "notes"],
                 },
                 durationUnit: "seconds",
               },

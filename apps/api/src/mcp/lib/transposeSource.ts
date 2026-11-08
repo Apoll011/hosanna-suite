@@ -6,11 +6,7 @@
  * unknown directives stay intact.
  */
 
-import {
-  getNoteValue,
-  transposeChord,
-  transposeNote,
-} from "@hosanna/chordpro/parser";
+import { getNoteValue, transposeChord, transposeNote } from "@hosanna/chordpro/parser";
 
 export type TransposeChordProSourceOptions =
   { semitones: number; toKey?: never } | { toKey: string; semitones?: never };
@@ -68,13 +64,6 @@ function rewriteKeyDirectives(source: string, semitones: number): string {
 function rewriteChordBrackets(source: string, semitones: number): string {
   if (semitones === 0) return source;
   return source.replace(/\[([^\]]+)\]/g, (_match, chord: string) => {
-    // Preserve timing annotations like [Am@2x]
-    const timingMatch = chord.match(/^(.+?)(@.+)$/);
-    if (timingMatch) {
-      const base = timingMatch[1];
-      const timing = timingMatch[2];
-      return `[${transposeChord(base, semitones)}${timing}]`;
-    }
     return `[${transposeChord(chord, semitones)}]`;
   });
 }
@@ -119,10 +108,7 @@ export function transposeChordProSource(
   // When targeting an explicit key, force {key:} to that exact spelling
   if (typeof options !== "number" && "toKey" in options && options.toKey) {
     if (/\{(?:key|k)\s*:/i.test(content)) {
-      content = content.replace(
-        /\{(key|k)\s*:\s*[^}]+\}/i,
-        `{key: ${options.toKey}}`,
-      );
+      content = content.replace(/\{(key|k)\s*:\s*[^}]+\}/i, `{key: ${options.toKey}}`);
     }
   }
 
@@ -131,8 +117,6 @@ export function transposeChordProSource(
     semitones: applied,
     fromKey,
     toKey:
-      typeof options !== "number" && "toKey" in options && options.toKey
-        ? options.toKey
-        : toKey,
+      typeof options !== "number" && "toKey" in options && options.toKey ? options.toKey : toKey,
   };
 }

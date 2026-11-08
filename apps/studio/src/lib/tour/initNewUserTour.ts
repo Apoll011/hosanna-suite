@@ -19,11 +19,9 @@ export async function initializeNewUserTourSettings(): Promise<void> {
   try {
     const serialized = JSON.stringify(settings);
     localStorage.setItem("personal-settings", serialized);
-    await (
-      authClient.updateUser as unknown as (params: {
-        metadata: string;
-      }) => Promise<unknown>
-    )({ metadata: serialized });
+    await (authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>)({
+      metadata: serialized,
+    });
   } catch (err) {
     console.warn("Failed to initialize new-user tour settings:", err);
   }

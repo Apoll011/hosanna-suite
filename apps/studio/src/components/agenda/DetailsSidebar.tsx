@@ -49,15 +49,14 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
 
   const linkedService = event?.linkedServiceId
-    ? ((servicesQuery.data ?? []).find((s) => s.id === event.linkedServiceId) ??
-      null)
+    ? ((servicesQuery.data ?? []).find((s) => s.id === event.linkedServiceId) ?? null)
     : null;
 
   if (!event) return null;
 
   return (
     <div className="space-y-4">
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 shadow-[var(--shadow-sm)]">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-5 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-label">{t("common.details")}</h3>
           {canUpdate && (
@@ -74,9 +73,7 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
         <div className="space-y-3">
           <div>
             <p className="text-label">{t("common.name")}</p>
-            <p className="text-sm font-semibold text-m3-text mt-0.5 truncate">
-              {event.title}
-            </p>
+            <p className="text-sm font-semibold text-m3-text mt-0.5 truncate">{event.title}</p>
           </div>
           <div>
             <p className="text-label">{t("common.date")}</p>
@@ -87,9 +84,7 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <p className="text-label">{t("agenda.time")}</p>
-              <p className="text-sm font-semibold text-m3-text mt-0.5">
-                {event.time}
-              </p>
+              <p className="text-sm font-semibold text-m3-text mt-0.5">{event.time}</p>
             </div>
             <div>
               <p className="text-label">{t("agenda.duration")}</p>
@@ -100,18 +95,14 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
           </div>
           <div>
             <p className="text-label">{t("agenda.type")}</p>
-            <p className="text-sm font-semibold text-m3-primary mt-0.5">
-              {event.type}
-            </p>
+            <p className="text-sm font-semibold text-m3-primary mt-0.5">{event.type}</p>
           </div>
           <div>
             <p className="text-label">{t("agenda.linkedService")}</p>
             {linkedService ? (
               <div className="mt-0.5">
                 <button
-                  onClick={() =>
-                    navigate(`${slugPrefix}/services/${linkedService.id}`)
-                  }
+                  onClick={() => navigate(`${slugPrefix}/services/${linkedService.id}`)}
                   title={t("agenda.openService")}
                   className="flex items-center text-m3-text justify-between gap-2 rounded-lg hover:text-m3-primary hover:text-bold transition-colors cursor-pointer shrink-0"
                 >
@@ -135,9 +126,7 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
           </div>
           <div>
             <p className="text-label">{t("agenda.location")}</p>
-            <p className="text-sm font-semibold text-m3-text mt-0.5">
-              {event.location || "—"}
-            </p>
+            <p className="text-sm font-semibold text-m3-text mt-0.5">{event.location || "—"}</p>
           </div>
           <div>
             <p className="text-label">{t("agenda.notes")}</p>
@@ -149,7 +138,7 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
       </div>
 
       {canNotify && (
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 shadow-[var(--shadow-sm)]">
+        <div className="bg-m3-card border border-m3-border rounded-xl p-5 shadow-sm">
           <h3 className="text-label mb-3 flex items-center gap-1.5">
             <Bell className="w-3.5 h-3.5" />
             {t("agenda.notifications")}

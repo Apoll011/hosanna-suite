@@ -1,9 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
-import {
-  buildHosannaMcpInstructions,
-  SYSTEM_PROMPT_NAME,
-} from "../instructions.js";
+import { buildHosannaMcpInstructions, SYSTEM_PROMPT_NAME } from "../instructions.js";
 
 export function registerSystemPrompts(server: McpServer): void {
   server.registerPrompt(
@@ -64,11 +61,7 @@ function skillsForJob(job: string): string[] {
   const safe = "hosanna://skills/hosanna-safe-data";
   switch (job) {
     case "create_song":
-      return [
-        safe,
-        "hosanna://skills/chordpro-create",
-        "hosanna://chordpro/guide",
-      ];
+      return [safe, "hosanna://skills/chordpro-create", "hosanna://chordpro/guide"];
     case "edit_song":
     case "fix_song":
       return [safe, "hosanna://skills/songs-edit-fix"];
@@ -99,10 +92,6 @@ function skillsForJob(job: string): string[] {
         "hosanna://skills/services-create-edit",
       ];
     default:
-      return [
-        safe,
-        "hosanna://skills/chordpro-create",
-        "hosanna://skills/services-create-edit",
-      ];
+      return [safe, "hosanna://skills/chordpro-create", "hosanna://skills/services-create-edit"];
   }
 }

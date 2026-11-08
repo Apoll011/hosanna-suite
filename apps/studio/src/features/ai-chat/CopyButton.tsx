@@ -48,7 +48,7 @@ export const CopyButton: React.FC<Props> = ({
       onClick={onCopy}
       title={title}
       aria-label={title}
-      className={`inline-flex items-center justify-center rounded-[var(--radius-sm)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors ${className}`}
+      className={`inline-flex items-center justify-center rounded-sm text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors ${className}`}
     >
       {copied ? (
         <Check className={`${iconClassName} text-emerald-500`} />

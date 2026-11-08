@@ -1,31 +1,22 @@
-import {
-  Badge,
-  ConfirmDialog,
-  EmptyState,
-  Modal,
-  Spinner,
-} from "@/src/components/common";
+import { Badge, ConfirmDialog, EmptyState, Modal, Spinner } from "@/src/components/common";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
-import { usePermissionValue } from "@/src/lib/permissions/client";
+import { useCan, usePermissionValue } from "@/src/lib/permissions/client";
+import { Can } from "@/src/lib/permissions/components";
 import { Service } from "@/src/types";
 import {
   Archive,
   ArchiveRestore,
   Calendar,
+  CheckSquare,
   Copy,
   Edit2,
+  Plus,
   Printer,
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
   BatchActionFloatingBar,
@@ -47,36 +38,25 @@ interface ServicesPageProps {
 type ServiceSortBy = "date" | "name";
 type SortOrder = "asc" | "desc";
 
-export const ServicesPage: React.FC<ServicesPageProps> = ({
-  searchQuery: externalSearchQuery,
-}) => {
+export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externalSearchQuery }) => {
   const { navigate } = useAppNavigate();
   const { t } = useI18n();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<
-    string,
-    unknown
-  >;
+  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<string, unknown>;
   const viewMode = context.viewMode ?? "grid";
-  const density =
-    (context.density as "comfortable" | "compact") ?? "comfortable";
+  const density = (context.density as "comfortable" | "compact") ?? "comfortable";
   const contextSortBy = context.sortBy;
   const contextSortOrder = context.sortOrder;
   const actualSearchQuery =
-    externalSearchQuery !== undefined
-      ? externalSearchQuery
-      : (context.searchQuery as string) || "";
+    externalSearchQuery !== undefined ? externalSearchQuery : (context.searchQuery as string) || "";
 
-  const { servicesQuery, createService, updateService, deleteService } =
-    useServices();
+  const { servicesQuery, createService, updateService, deleteService } = useServices();
   const { printService, printServices } = usePrint();
 
   // Effective sort (from MainLayout context)
-  const effectiveSortBy: ServiceSortBy =
-    contextSortBy === "title" ? "name" : "date";
-  const effectiveSortOrder: SortOrder =
-    (contextSortOrder as SortOrder) ?? "desc";
+  const effectiveSortBy: ServiceSortBy = contextSortBy === "title" ? "name" : "date";
+  const effectiveSortOrder: SortOrder = (contextSortOrder as SortOrder) ?? "desc";
 
   // ─── Archive toggle (from MainLayout context or local fallback) ──────────
   const showArchived = (context.showArchived as boolean) ?? false;
@@ -88,6 +68,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     (context.archivedServicesQuery as typeof localArchivedServicesQuery) ??
     localArchivedServicesQuery;
 
+  const { granted: canCreateService } = useCan("service.create");
   const { value: emptyStateAction } = usePermissionValue(
     "service.create",
     t("servicesPage.createFirstService"),
@@ -107,9 +88,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   } | null>(null);
 
   // ─── Multi-select state ───────────────────
-  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isBatchDeleteOpen, setIsBatchDeleteOpen] = useState(false);
@@ -126,10 +105,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   );
 
   // Active (non-archived) services
-  const activeServices = useMemo(
-    () => allServices.filter((s) => !s.archived),
-    [allServices],
-  );
+  const activeServices = useMemo(() => allServices.filter((s) => !s.archived), [allServices]);
 
   const archivedServices = useMemo(
     () =>
@@ -169,9 +145,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     if (actualSearchQuery.trim()) {
       const lq = actualSearchQuery.toLowerCase();
       list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(lq) ||
-          (s.notes && s.notes.toLowerCase().includes(lq)),
+        (s) => s.name.toLowerCase().includes(lq) || (s.notes && s.notes.toLowerCase().includes(lq)),
       );
     }
     return sortServices(list);
@@ -182,9 +156,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     if (actualSearchQuery.trim()) {
       const lq = actualSearchQuery.toLowerCase();
       list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(lq) ||
-          (s.notes && s.notes.toLowerCase().includes(lq)),
+        (s) => s.name.toLowerCase().includes(lq) || (s.notes && s.notes.toLowerCase().includes(lq)),
       );
     }
     return sortServices(list);
@@ -192,10 +164,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
   // Combined visible list for keyboard selection and operations
   const allVisibleServices = useMemo(
-    () =>
-      showArchived
-        ? [...filteredServices, ...filteredArchivedServices]
-        : filteredServices,
+    () => (showArchived ? [...filteredServices, ...filteredArchivedServices] : filteredServices),
     [showArchived, filteredServices, filteredArchivedServices],
   );
 
@@ -217,9 +186,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if (e.key === "Escape") {
@@ -239,9 +206,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         if (selectedServiceIds.size === 0) return;
         e.preventDefault();
         if (selectedServiceIds.size === 1) {
-          const service = allVisibleServices.find((s) =>
-            selectedServiceIds.has(s.id),
-          );
+          const service = allVisibleServices.find((s) => selectedServiceIds.has(s.id));
           if (service) setDeleteTarget(service);
         } else {
           setIsBatchDeleteOpen(true);
@@ -253,17 +218,16 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   }, [allVisibleServices, selectedServiceIds]);
 
   // ─── Marquee selection hook ──────────────────────────────────────────────
-  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } =
-    useMarqueeSelection({
-      containerRef,
-      enabled: true,
-      selectedIds: selectedServiceIds,
-      onSelectionChange: setSelectedServiceIds,
-      onClearSelection: () => {
-        setSelectedServiceIds(new Set());
-        setLastClickedId(null);
-      },
-    });
+  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } = useMarqueeSelection({
+    containerRef,
+    enabled: true,
+    selectedIds: selectedServiceIds,
+    onSelectionChange: setSelectedServiceIds,
+    onClearSelection: () => {
+      setSelectedServiceIds(new Set());
+      setLastClickedId(null);
+    },
+  });
 
   // ─── Item click handler (Ctrl/Shift/normal) ───────────────────────────────
   const handleServiceClick = useCallback(
@@ -292,10 +256,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         }
         setLastClickedId(service.id);
       } else {
-        if (
-          selectedServiceIds.size === 1 &&
-          selectedServiceIds.has(service.id)
-        ) {
+        if (selectedServiceIds.size === 1 && selectedServiceIds.has(service.id)) {
           navigate(`${slugPrefix}/services/${service.id}`);
           return;
         }
@@ -308,31 +269,38 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
   // ─── Context menu opener ──────────────────────────────────────────────────
   const openContextMenu = useCallback(
-    (e: React.MouseEvent, service: Service) => {
+    (e: React.MouseEvent, service?: Service) => {
       e.preventDefault();
       e.stopPropagation();
 
-      if (!selectedServiceIds.has(service.id)) {
-        setSelectedServiceIds(new Set([service.id]));
-        setLastClickedId(service.id);
+      if (service) {
+        if (!selectedServiceIds.has(service.id)) {
+          setSelectedServiceIds(new Set([service.id]));
+          setLastClickedId(service.id);
+        }
       }
 
       const x = Math.max(12, Math.min(e.clientX, window.innerWidth - 240));
       const y = Math.max(12, Math.min(e.clientY, window.innerHeight - 320));
-      const isMulti =
-        selectedServiceIds.size > 1 && selectedServiceIds.has(service.id);
+      const isMulti = service
+        ? selectedServiceIds.size > 1 && selectedServiceIds.has(service.id)
+        : false;
 
-      setContextMenu({ x, y, service, isMulti });
+      setContextMenu({ x, y, service: service ?? null, isMulti });
     },
     [selectedServiceIds],
   );
 
+  const handleCanvasContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      if ((e.target as HTMLElement).closest("[data-item-id]")) return;
+      openContextMenu(e);
+    },
+    [openContextMenu],
+  );
+
   // ─── Service actions ──────────────────────────────────────────────────────
-  const handleCreateServiceSubmit = async (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => {
+  const handleCreateServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
     try {
       const newService = await createService({
         name: data.name,
@@ -348,11 +316,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     }
   };
 
-  const handleEditServiceSubmit = async (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => {
+  const handleEditServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
     if (!editTarget) return;
     try {
       await updateService({
@@ -374,9 +338,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     try {
       let fullElements = service.elements;
       if (!fullElements) {
-        const fullService = (servicesQuery.data || []).find(
-          (s: Service) => s.id === service.id,
-        );
+        const fullService = (servicesQuery.data || []).find((s: Service) => s.id === service.id);
         fullElements = fullService?.elements || [];
       }
       await createService({
@@ -465,22 +427,47 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   // ─── Truly Empty State (Only when no active services AND archive view is off/empty) ───
   const hasNoItemsToShow =
     activeServices.length === 0 &&
-    (!showArchived ||
-      (archivedServices.length === 0 && !archivedServicesQuery.isLoading));
+    (!showArchived || (archivedServices.length === 0 && !archivedServicesQuery.isLoading));
 
   if (hasNoItemsToShow && !actualSearchQuery) {
     return (
       <div
         className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-500 overflow-y-auto h-full p-4 sm:p-8 max-w-7xl"
-        onContextMenu={(e) => e.preventDefault()}
+        onContextMenu={handleCanvasContextMenu}
       >
         <EmptyState
           icon={<Calendar className="w-12 h-12 text-m3-primary opacity-40" />}
           title={t("servicesPage.noServicesTitle")}
           description={t("servicesPage.noServicesDesc")}
           actionLabel={emptyStateAction}
-          onAction={() => setIsCreateModalOpen(true)}
+          onAction={canCreateService ? () => setIsCreateModalOpen(true) : undefined}
         />
+        {contextMenu && contextMenu.service === null && (
+          <div
+            style={{ top: contextMenu.y, left: contextMenu.x }}
+            className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <div className="px-3 py-1.5 text-label text-m3-secondary border-b border-m3-border mb-0.5 truncate">
+              {t("common.services")}
+            </div>
+            <Can permission="service.create">
+              <button
+                type="button"
+                onClick={() => {
+                  setContextMenu(null);
+                  setIsCreateModalOpen(true);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+              >
+                <Plus className="w-4 h-4 text-m3-secondary shrink-0" />
+                <span>{t("addressBar.newService")}</span>
+              </button>
+            </Can>
+          </div>
+        )}
         <Modal
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
@@ -500,7 +487,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     <div
       className="flex-1 flex flex-col w-full mx-auto space-y-6 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-4 sm:p-8 max-w-7xl"
       onMouseDown={handleWorkspaceMouseDown}
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={handleCanvasContextMenu}
       ref={containerRef}
     >
       {/* ── Services Content (Grid / List Views) ── */}
@@ -523,12 +510,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 service={service}
                 isSelected={selectedServiceIds.has(service.id)}
                 density={density}
-                onClick={(e) =>
-                  handleServiceClick(e, service, filteredServices)
-                }
-                onDoubleClick={() =>
-                  navigate(`${slugPrefix}/services/${service.id}`)
-                }
+                onClick={(e) => handleServiceClick(e, service, filteredServices)}
+                onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                 onContextMenu={(e) => openContextMenu(e, service)}
               />
             ))
@@ -548,8 +531,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 </span>
                 <div className="h-px flex-1 bg-amber-500/20" />
               </div>
-              {filteredArchivedServices.length === 0 &&
-              !archivedServicesQuery.isLoading ? (
+              {filteredArchivedServices.length === 0 && !archivedServicesQuery.isLoading ? (
                 <div className="col-span-full text-center py-8 text-m3-secondary text-xs opacity-60">
                   {t("servicesPage.noArchived")}
                 </div>
@@ -561,12 +543,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                     isSelected={selectedServiceIds.has(service.id)}
                     isArchived
                     density={density}
-                    onClick={(e) =>
-                      handleServiceClick(e, service, filteredArchivedServices)
-                    }
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/services/${service.id}`)
-                    }
+                    onClick={(e) => handleServiceClick(e, service, filteredArchivedServices)}
+                    onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                     onContextMenu={(e) => openContextMenu(e, service)}
                   />
                 ))
@@ -579,25 +557,13 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
           <table className="w-full text-left border-collapse select-none">
             <thead>
               <tr className="bg-m3-sidebar/40 border-b border-m3-border">
-                <th
-                  className={`text-label ${
-                    density === "compact" ? "py-2.5 px-4" : "py-4 px-6"
-                  }`}
-                >
+                <th className={`text-label ${density === "compact" ? "py-2.5 px-4" : "py-4 px-6"}`}>
                   {t("servicesPage.serviceName")}
                 </th>
-                <th
-                  className={`text-label ${
-                    density === "compact" ? "py-2.5 px-4" : "py-4 px-6"
-                  }`}
-                >
+                <th className={`text-label ${density === "compact" ? "py-2.5 px-4" : "py-4 px-6"}`}>
                   {t("common.type")}
                 </th>
-                <th
-                  className={`text-label ${
-                    density === "compact" ? "py-2.5 px-4" : "py-4 px-6"
-                  }`}
-                >
+                <th className={`text-label ${density === "compact" ? "py-2.5 px-4" : "py-4 px-6"}`}>
                   {t("servicesPage.scheduledDate")}
                 </th>
                 <th
@@ -612,10 +578,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             >
               {filteredServices.length === 0 && !showArchived ? (
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="text-center py-12 text-m3-secondary opacity-60"
-                  >
+                  <td colSpan={4} className="text-center py-12 text-m3-secondary opacity-60">
                     {t("servicesPage.noMatch")}
                   </td>
                 </tr>
@@ -626,12 +589,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                     service={service}
                     isSelected={selectedServiceIds.has(service.id)}
                     density={density}
-                    onClick={(e) =>
-                      handleServiceClick(e, service, filteredServices)
-                    }
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/services/${service.id}`)
-                    }
+                    onClick={(e) => handleServiceClick(e, service, filteredServices)}
+                    onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                     onContextMenu={(e) => openContextMenu(e, service)}
                   />
                 ))
@@ -641,23 +600,17 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
               {showArchived && (
                 <>
                   <tr>
-                    <td
-                      colSpan={4}
-                      className="py-3 px-6 bg-amber-50/50 dark:bg-amber-950/20"
-                    >
+                    <td colSpan={4} className="py-3 px-6 bg-amber-50/50 dark:bg-amber-950/20">
                       <span className="text-label text-amber-600 dark:text-amber-400 flex items-center gap-2">
                         <Archive className="w-3.5 h-3.5" />
                         {t("servicesPage.archivedTitle", {
                           count: filteredArchivedServices.length,
                         })}
-                        {archivedServicesQuery.isLoading && (
-                          <Spinner size="sm" />
-                        )}
+                        {archivedServicesQuery.isLoading && <Spinner size="sm" />}
                       </span>
                     </td>
                   </tr>
-                  {filteredArchivedServices.length === 0 &&
-                  !archivedServicesQuery.isLoading ? (
+                  {filteredArchivedServices.length === 0 && !archivedServicesQuery.isLoading ? (
                     <tr>
                       <td
                         colSpan={4}
@@ -674,16 +627,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                         isSelected={selectedServiceIds.has(service.id)}
                         isArchived
                         density={density}
-                        onClick={(e) =>
-                          handleServiceClick(
-                            e,
-                            service,
-                            filteredArchivedServices,
-                          )
-                        }
-                        onDoubleClick={() =>
-                          navigate(`${slugPrefix}/services/${service.id}`)
-                        }
+                        onClick={(e) => handleServiceClick(e, service, filteredArchivedServices)}
+                        onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                         onContextMenu={(e) => openContextMenu(e, service)}
                       />
                     ))
@@ -700,9 +645,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         selectedCount={selectedServiceIds.size}
         itemLabel={t("common.services")}
         onPrint={() => {
-          const selected = allServices.filter((s) =>
-            selectedServiceIds.has(s.id),
-          );
+          const selected = allServices.filter((s) => selectedServiceIds.has(s.id));
           if (selected.length > 0) {
             printServices(selected.map((s) => ({ service: s })));
           }
@@ -719,11 +662,42 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
           onContextMenu={(e) => e.preventDefault()}
         >
-          {contextMenu.isMulti ? (
+          {contextMenu.service === null ? (
+            <>
+              <div className="px-3 py-1.5 text-label text-m3-secondary border-b border-m3-border mb-0.5 truncate">
+                {t("common.services")}
+              </div>
+              <Can permission="service.create">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setContextMenu(null);
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                >
+                  <Plus className="w-4 h-4 text-m3-secondary shrink-0" />
+                  <span>{t("addressBar.newService")}</span>
+                </button>
+              </Can>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedServiceIds(new Set(allVisibleServices.map((s) => s.id)));
+                  setContextMenu(null);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+              >
+                <CheckSquare className="w-4 h-4 text-m3-secondary shrink-0" />
+                <span>{t("explorer.contextMenu.selectAll")}</span>
+              </button>
+            </>
+          ) : contextMenu.isMulti ? (
             <>
               <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 flex items-center justify-between">
                 <span>{t("servicesPage.multiSelect")}</span>
@@ -731,15 +705,13 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
               </div>
               <button
                 onClick={() => {
-                  const selected = allServices.filter((s) =>
-                    selectedServiceIds.has(s.id),
-                  );
+                  const selected = allServices.filter((s) => selectedServiceIds.has(s.id));
                   if (selected.length > 0) {
                     printServices(selected.map((s) => ({ service: s })));
                   }
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-m3-secondary" />
                 <span>
@@ -753,7 +725,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setIsBatchArchiveOpen(true);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Archive className="w-4 h-4 text-m3-secondary" />
                 <span>
@@ -767,7 +739,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setIsBatchDeleteOpen(true);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 text-m3-danger" />
                 <span>
@@ -782,13 +754,13 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setSelectedServiceIds(new Set());
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <X className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.deselect")}</span>
               </button>
             </>
-          ) : contextMenu.service ? (
+          ) : (
             <>
               <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
                 {contextMenu.service.name}
@@ -799,7 +771,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   navigate(`${slugPrefix}/services/${contextMenu.service!.id}`);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Calendar className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.openService")}</span>
@@ -810,7 +782,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setEditTarget(contextMenu.service);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Edit2 className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.editNameDate")}</span>
@@ -821,7 +793,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   handleDuplicateService(contextMenu.service!);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Copy className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.duplicate")}</span>
@@ -834,7 +806,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   }
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-m3-secondary" />
                 <span>{t("print.buttons.printServiceShort")}</span>
@@ -844,7 +816,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 onClick={() => {
                   handleArchiveToggle(contextMenu.service!);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 {contextMenu.service.archived ? (
                   <ArchiveRestore className="w-4 h-4 text-m3-secondary" />
@@ -865,13 +837,13 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setDeleteTarget(contextMenu.service);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 text-m3-danger" />
                 <span>{t("servicesPage.deleteService")}</span>
               </button>
             </>
-          ) : null}
+          )}
         </div>
       )}
 
@@ -930,9 +902,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             : t("servicesPage.archiveService")
         }
         message={t("servicesPage.archiveServiceMessage", {
-          action: archiveTarget?.archived
-            ? t("servicesPage.activate")
-            : t("servicesPage.archive"),
+          action: archiveTarget?.archived ? t("servicesPage.activate") : t("servicesPage.archive"),
           name: archiveTarget?.name || "",
         })}
         confirmText={

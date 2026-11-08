@@ -71,8 +71,7 @@ export const TeamsPage: React.FC = () => {
       id: "team-2",
       name: "Técnicos de Som e Multimédia",
       slug: "som-multimedia",
-      description:
-        "Equipa responsável por som, projeção e transmissão ao vivo.",
+      description: "Equipa responsável por som, projeção e transmissão ao vivo.",
       leaderId: "user-2",
       leaderName: "Carlos Silva",
       membersCount: 4,
@@ -134,9 +133,7 @@ export const TeamsPage: React.FC = () => {
   const [newTeamDesc, setNewTeamDesc] = useState("");
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
-  const [newMemberRole, setNewMemberRole] = useState<"leader" | "member">(
-    "member",
-  );
+  const [newMemberRole, setNewMemberRole] = useState<"leader" | "member">("member");
 
   // User role check
   const userRole = (user as { role?: string })?.role || "admin";
@@ -200,8 +197,7 @@ export const TeamsPage: React.FC = () => {
 
   const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedTeam || !newMemberName.trim() || !newMemberEmail.trim())
-      return;
+    if (!selectedTeam || !newMemberName.trim() || !newMemberEmail.trim()) return;
 
     const newMember: TeamMember = {
       id: `tm-${Date.now()}`,
@@ -233,9 +229,7 @@ export const TeamsPage: React.FC = () => {
 
     if (newMemberRole === "leader" && selectedTeam) {
       setSelectedTeam((prev) =>
-        prev
-          ? { ...prev, leaderId: newMember.userId, leaderName: newMember.name }
-          : null,
+        prev ? { ...prev, leaderId: newMember.userId, leaderName: newMember.name } : null,
       );
     }
 
@@ -253,9 +247,7 @@ export const TeamsPage: React.FC = () => {
 
     setTeams((prev) =>
       prev.map((t) =>
-        t.id === teamId
-          ? { ...t, membersCount: Math.max(1, t.membersCount - 1) }
-          : t,
+        t.id === teamId ? { ...t, membersCount: Math.max(1, t.membersCount - 1) } : t,
       ),
     );
 
@@ -273,26 +265,20 @@ export const TeamsPage: React.FC = () => {
 
     setTeams((prev) =>
       prev.map((t) =>
-        t.id === teamId
-          ? { ...t, leaderId: member.userId, leaderName: member.name }
-          : t,
+        t.id === teamId ? { ...t, leaderId: member.userId, leaderName: member.name } : t,
       ),
     );
 
     if (selectedTeam?.id === teamId) {
       setSelectedTeam((prev) =>
-        prev
-          ? { ...prev, leaderId: member.userId, leaderName: member.name }
-          : null,
+        prev ? { ...prev, leaderId: member.userId, leaderName: member.name } : null,
       );
     }
 
     showToast(t("teamsPage.leaderAssigned", { name: member.name }), "success");
   };
 
-  const handleTogglePermission = (
-    permKey: keyof NonNullable<Team["permissions"]>,
-  ) => {
+  const handleTogglePermission = (permKey: keyof NonNullable<Team["permissions"]>) => {
     if (!selectedTeam) return;
 
     const currentPerms = selectedTeam.permissions || {
@@ -312,9 +298,7 @@ export const TeamsPage: React.FC = () => {
     });
 
     setTeams((prev) =>
-      prev.map((t) =>
-        t.id === selectedTeam.id ? { ...t, permissions: updated } : t,
-      ),
+      prev.map((t) => (t.id === selectedTeam.id ? { ...t, permissions: updated } : t)),
     );
 
     showToast(t("teamsPage.permissionsUpdated"), "success");
@@ -323,8 +307,7 @@ export const TeamsPage: React.FC = () => {
   // If viewing single team detail page (TEAM-05)
   if (selectedTeam) {
     const members = teamMembers[selectedTeam.id] || [];
-    const isLeaderOfTeam =
-      selectedTeam.leaderId === user?.id || isOrgAdminOrOwner;
+    const isLeaderOfTeam = selectedTeam.leaderId === user?.id || isOrgAdminOrOwner;
 
     return (
       <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6 animate-in fade-in duration-200">
@@ -339,28 +322,22 @@ export const TeamsPage: React.FC = () => {
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-caption bg-m3-sidebar text-m3-secondary border border-m3-border px-2.5 py-1 rounded-[var(--radius-md)] flex items-center gap-1">
+            <span className="text-caption bg-m3-sidebar text-m3-secondary border border-m3-border px-2.5 py-1 rounded-md flex items-center gap-1">
               <Shield className="w-3.5 h-3.5" />
-              {isLeaderOfTeam
-                ? t("teamsPage.teamManagerBadge")
-                : t("teamsPage.memberBadge")}
+              {isLeaderOfTeam ? t("teamsPage.teamManagerBadge") : t("teamsPage.memberBadge")}
             </span>
           </div>
         </div>
 
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 sm:p-8 shadow-[var(--shadow-sm)]">
-          <span className="text-label text-m3-secondary bg-m3-sidebar px-2.5 py-1 rounded-[var(--radius-md)]">
+        <div className="bg-m3-card border border-m3-border rounded-xl p-6 sm:p-8 shadow-sm">
+          <span className="text-label text-m3-secondary bg-m3-sidebar px-2.5 py-1 rounded-md">
             {selectedTeam.slug}
           </span>
-          <h1 className="text-display text-m3-text mt-3 mb-1">
-            {selectedTeam.name}
-          </h1>
-          <p className="text-muted max-w-xl">
-            {selectedTeam.description || t("teamsPage.noDesc")}
-          </p>
+          <h1 className="text-display text-m3-text mt-3 mb-1">{selectedTeam.name}</h1>
+          <p className="text-muted max-w-xl">{selectedTeam.description || t("teamsPage.noDesc")}</p>
 
           <div className="flex flex-wrap gap-3 mt-5 text-caption">
-            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-[var(--radius-md)]">
+            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-md">
               <Crown className="w-4 h-4 text-amber-500" />
               <span>
                 {t("teamsPage.leaderLabel", {
@@ -368,11 +345,9 @@ export const TeamsPage: React.FC = () => {
                 })}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-[var(--radius-md)]">
+            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-md">
               <Users className="w-4 h-4 text-m3-primary" />
-              <span>
-                {t("teamsPage.membersCount", { count: members.length })}
-              </span>
+              <span>{t("teamsPage.membersCount", { count: members.length })}</span>
             </div>
           </div>
         </div>
@@ -398,7 +373,7 @@ export const TeamsPage: React.FC = () => {
               )}
             </div>
 
-            <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] divide-y divide-m3-border/60 overflow-hidden shadow-[var(--shadow-sm)]">
+            <div className="bg-m3-card border border-m3-border rounded-xl divide-y divide-m3-border/60 overflow-hidden shadow-sm">
               {members.map((member) => (
                 <div
                   key={member.id}
@@ -410,9 +385,7 @@ export const TeamsPage: React.FC = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-m3-text text-sm">
-                          {member.name}
-                        </span>
+                        <span className="font-bold text-m3-text text-sm">{member.name}</span>
                         {member.role === "leader" && (
                           <span className="text-label bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 px-2 py-0.5 rounded-md flex items-center gap-1">
                             <Crown className="w-3 h-3" />
@@ -420,9 +393,7 @@ export const TeamsPage: React.FC = () => {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-m3-secondary">
-                        {member.email}
-                      </p>
+                      <p className="text-xs text-m3-secondary">{member.email}</p>
                     </div>
                   </div>
 
@@ -430,24 +401,18 @@ export const TeamsPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       {member.role !== "leader" && isOrgAdminOrOwner && (
                         <button
-                          onClick={() =>
-                            handleAssignLeader(selectedTeam.id, member)
-                          }
+                          onClick={() => handleAssignLeader(selectedTeam.id, member)}
                           title={t("teamsPage.setLeaderTitle")}
                           className="px-2.5 py-1 text-xs font-bold text-amber-600 hover:bg-amber-50 rounded-lg transition-colors border border-amber-200 flex items-center gap-1 cursor-pointer"
                         >
                           <Crown className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">
-                            {t("teamsPage.setLeader")}
-                          </span>
+                          <span className="hidden sm:inline">{t("teamsPage.setLeader")}</span>
                         </button>
                       )}
 
                       {member.userId !== user?.id && (
                         <button
-                          onClick={() =>
-                            handleRemoveMember(selectedTeam.id, member.id)
-                          }
+                          onClick={() => handleRemoveMember(selectedTeam.id, member.id)}
                           title={t("teamsPage.removeFromTeamTitle")}
                           className="p-1.5 text-m3-secondary hover:text-m3-danger rounded-lg hover:bg-m3-danger/10 transition-colors cursor-pointer"
                         >
@@ -468,7 +433,7 @@ export const TeamsPage: React.FC = () => {
               {t("teamsPage.teamPermissionsTitle")}
             </h2>
 
-            <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 space-y-4 shadow-[var(--shadow-sm)]">
+            <div className="bg-m3-card border border-m3-border rounded-xl p-5 space-y-4 shadow-sm">
               <p className="text-xs text-m3-secondary leading-relaxed">
                 {t("teamsPage.teamPermissionsDesc")}
               </p>
@@ -478,9 +443,7 @@ export const TeamsPage: React.FC = () => {
                   <div className="flex items-center gap-2.5">
                     <Music className="w-4 h-4 text-m3-primary" />
                     <div>
-                      <p className="text-xs font-bold text-m3-text">
-                        {t("teamsPage.manageSongs")}
-                      </p>
+                      <p className="text-xs font-bold text-m3-text">{t("teamsPage.manageSongs")}</p>
                       <p className="text-[10px] text-m3-secondary">
                         {t("teamsPage.manageSongsDesc")}
                       </p>
@@ -509,9 +472,7 @@ export const TeamsPage: React.FC = () => {
                   </div>
                   <input
                     type="checkbox"
-                    checked={
-                      selectedTeam.permissions?.canManageServices ?? true
-                    }
+                    checked={selectedTeam.permissions?.canManageServices ?? true}
                     onChange={() => handleTogglePermission("canManageServices")}
                     disabled={!isLeaderOfTeam}
                     className="w-4 h-4 accent-m3-primary rounded cursor-pointer"
@@ -573,16 +534,12 @@ export const TeamsPage: React.FC = () => {
                 </label>
                 <select
                   value={newMemberRole}
-                  onChange={(e) =>
-                    setNewMemberRole(e.target.value as "leader" | "member")
-                  }
+                  onChange={(e) => setNewMemberRole(e.target.value as "leader" | "member")}
                   className="w-full h-11 px-3 bg-m3-sidebar border border-m3-border rounded-xl text-sm font-semibold"
                 >
                   <option value="member">{t("settings.roles.member")}</option>
                   {isOrgAdminOrOwner && (
-                    <option value="leader">
-                      {t("settings.roles.teamLeader")}
-                    </option>
+                    <option value="leader">{t("settings.roles.teamLeader")}</option>
                   )}
                 </select>
               </div>
@@ -625,7 +582,7 @@ export const TeamsPage: React.FC = () => {
       />
 
       {/* Search & Stats */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-m3-card p-4 border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)]">
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-m3-card p-4 border border-m3-border rounded-xl shadow-sm">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-m3-secondary absolute left-3 top-3.5" />
           <input
@@ -648,7 +605,7 @@ export const TeamsPage: React.FC = () => {
           <div
             key={team.id}
             onClick={() => setSelectedTeam(team)}
-            className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 hover:border-m3-primary/50 hover:shadow-[var(--shadow-md)] transition-colors cursor-pointer group flex flex-col justify-between relative"
+            className="bg-m3-card border border-m3-border rounded-xl p-5 hover:border-m3-primary/50 hover:shadow-md transition-colors cursor-pointer group flex flex-col justify-between relative"
           >
             <div>
               <div className="flex items-start justify-between gap-2 mb-3">
@@ -730,18 +687,10 @@ export const TeamsPage: React.FC = () => {
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => setIsCreateModalOpen(false)}
-              >
+              <Button variant="outline" type="button" onClick={() => setIsCreateModalOpen(false)}>
                 {t("common.cancel")}
               </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={!newTeamName.trim()}
-              >
+              <Button variant="primary" type="submit" disabled={!newTeamName.trim()}>
                 {t("teamsPage.createBtn")}
               </Button>
             </div>

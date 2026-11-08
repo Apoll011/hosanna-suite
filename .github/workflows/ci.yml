@@ -40,6 +40,10 @@ jobs:
         run: pnpm turbo run build
 
       - name: Test
+        # Unit tests preload dummy secrets via apps/api/test/setup-env.ts;
+        # keep NODE_ENV=test so rate limits / prod MCP URL checks stay off.
+        env:
+          NODE_ENV: test
         run: pnpm turbo run test
 
       - name: Lint (report only)

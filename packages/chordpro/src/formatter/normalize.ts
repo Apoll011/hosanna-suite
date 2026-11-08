@@ -5,11 +5,7 @@
 
 import type { FormatChange, FormatOptions, FormatWarning } from "./types";
 import { isValidChord, normalizeChordContent } from "./chords";
-import {
-  buildDirectiveLine,
-  detectMalformedDirective,
-  parseDirectiveContent,
-} from "./directives";
+import { buildDirectiveLine, detectMalformedDirective, parseDirectiveContent } from "./directives";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -48,11 +44,6 @@ function normalizeChordBracket(
 ): string {
   const trimmedContent = raw.trim();
 
-  // Check for timing annotation e.g. G@2x
-  const timingMatch = trimmedContent.match(/^(.+?)(@[0-9]*\.?[0-9]+x)$/);
-  const chordPart = timingMatch ? timingMatch[1] : trimmedContent;
-  const timingSuffix = timingMatch ? timingMatch[2] : "";
-
   // Check for inline annotation [* ...]
   if (trimmedContent.startsWith("*")) {
     const normalized = "[" + trimmedContent + "]";
@@ -68,22 +59,22 @@ function normalizeChordBracket(
   }
 
   // Not a valid recognized chord — preserve original text (do not convert [hello] or [Verse])
-  if (!isValidChord(chordPart)) {
+  if (!isValidChord(trimmedContent)) {
     return "[" + raw + "]";
   }
 
   // Normalize the chord content
-  const { result: normalized, changed } = normalizeChordContent(chordPart, {
+  const { result: normalized, changed } = normalizeChordContent(trimmedContent, {
     normalizeNotationAliases: options.normalizeNotationAliases,
   });
 
   const before = "[" + raw + "]";
-  const after = "[" + normalized + timingSuffix + "]";
+  const after = "[" + normalized + "]";
 
   if (changed || trimmedContent !== raw) {
     let changeType: FormatChange["type"] = "chord_spacing";
-    if (normalized !== chordPart.trim()) {
-      if (/^[a-g]/.test(chordPart.trim())) {
+    if (normalized !== trimmedContent.trim()) {
+      if (/^[a-g]/.test(trimmedContent.trim())) {
         changeType = "chord_root_case";
       } else if (normalized.includes("#") || normalized.includes("b")) {
         changeType = "unicode";
@@ -130,10 +121,7 @@ function normalizeChordLyricSpacing(
 ): string {
   const original = line;
   // Remove space between a closing bracket ']' and a non-whitespace, non-'[' character
-  const result = line.replace(
-    /\]\s+([^\s\[])/g,
-    (_: string, char: string) => "]" + char,
-  );
+  const result = line.replace(/\]\s+([^\s\[])/g, (_: string, char: string) => "]" + char);
   if (result !== original) {
     changes.push({
       type: "chord_spacing",
@@ -149,11 +137,7 @@ function normalizeChordLyricSpacing(
  * Normalize excessive whitespace between words on a plain text line.
  * Collapses multiple spaces between words safely without touching bracketed chord text.
  */
-function normalizeTextSpacing(
-  line: string,
-  lineNumber: number,
-  changes: FormatChange[],
-): string {
+function normalizeTextSpacing(line: string, lineNumber: number, changes: FormatChange[]): string {
   const parts: string[] = [];
   const regex = /\[[^\]]*\]/g;
   let lastIndex = 0;

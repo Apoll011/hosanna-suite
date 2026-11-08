@@ -119,10 +119,9 @@ export function sanitizePrintOptions(raw: unknown): Partial<PrintOptions> {
 
 /** Merges option layers from lowest to highest priority over the defaults. */
 export function resolvePrintOptions(...layers: unknown[]): PrintOptions {
-  return layers.reduce<PrintOptions>(
-    (acc, layer) => ({ ...acc, ...sanitizePrintOptions(layer) }),
-    { ...DEFAULT_PRINT_OPTIONS },
-  );
+  return layers.reduce<PrintOptions>((acc, layer) => ({ ...acc, ...sanitizePrintOptions(layer) }), {
+    ...DEFAULT_PRINT_OPTIONS,
+  });
 }
 
 export function resolveOrgPrintSettings(raw: unknown): OrgPrintSettings {

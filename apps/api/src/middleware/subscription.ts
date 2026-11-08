@@ -18,10 +18,7 @@ const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
  * Any other status (`incomplete`, `past_due`, `canceled`, ...) or the absence
  * of a subscription row means the organization is read-only.
  */
-export function isEntitledSubscription(sub: {
-  status: string;
-  trialEnd?: Date | null;
-}): boolean {
+export function isEntitledSubscription(sub: { status: string; trialEnd?: Date | null }): boolean {
   if (sub.status === "active") return true;
   if (sub.status !== "trialing") return false;
   return !sub.trialEnd || sub.trialEnd.getTime() > Date.now();
@@ -38,9 +35,7 @@ interface CacheEntry {
 const subCache = new Map<string, CacheEntry>();
 
 /** True when the organization has an active subscription or is on a trial. */
-export async function hasActiveSubscription(
-  organizationId: string,
-): Promise<boolean> {
+export async function hasActiveSubscription(organizationId: string): Promise<boolean> {
   const now = Date.now();
   const cached = subCache.get(organizationId);
   if (cached && cached.expiresAt > now) return cached.result;
@@ -86,8 +81,6 @@ export const requireSubscription = asyncHandler(
 
     if (await hasActiveSubscription(req.orgId)) return next();
 
-    throw AppError.subscriptionRequired(
-      t(locale, "error.subscription_required"),
-    );
+    throw AppError.subscriptionRequired(t(locale, "error.subscription_required"));
   },
 );

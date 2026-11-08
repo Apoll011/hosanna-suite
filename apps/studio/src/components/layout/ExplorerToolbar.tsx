@@ -5,10 +5,29 @@
 
 import { Button } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
+import { Can } from "@/src/lib/permissions/components";
 import { Service } from "@/src/types";
-import { Archive, ArrowUpDown, Filter, LayoutGrid, List } from "lucide-react";
-import React from "react";
+import {
+  Archive,
+  ArrowUpDown,
+  Edit2,
+  Filter,
+  LayoutGrid,
+  List,
+  MoreHorizontal,
+  Plus,
+  Printer,
+  Trash2,
+} from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
+
+export interface CollectionToolbarActions {
+  onAddSongs: () => void;
+  onPrint: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
 
 interface ExplorerToolbarProps {
   view: ViewName;
@@ -18,16 +37,20 @@ interface ExplorerToolbarProps {
   archivedServices: Service[];
   sortBy: "title" | "artist" | "updatedAt" | "number";
   sortOrder: "asc" | "desc";
-  onSortChange: (
-    sb: "title" | "artist" | "updatedAt" | "number",
-    so: "asc" | "desc",
-  ) => void;
+  onSortChange: (sb: "title" | "artist" | "updatedAt" | "number", so: "asc" | "desc") => void;
   viewMode: "grid" | "list";
   onViewModeChange: (mode: "grid" | "list") => void;
   density: "comfortable" | "compact";
   onDensityChange: (d: "comfortable" | "compact") => void;
   onOpenFilterPanel: () => void;
+  collectionActions?: CollectionToolbarActions | null;
 }
+
+const MENU_ITEM =
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
+const MENU_ITEM_DANGER =
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
+const MENU_ICON = "w-4 h-4 text-m3-secondary shrink-0";
 
 export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   view,
@@ -43,13 +66,33 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   density,
   onDensityChange,
   onOpenFilterPanel,
+  collectionActions = null,
 }) => {
   const { t } = useI18n();
+  const [isCollectionMenuOpen, setIsCollectionMenuOpen] = useState(false);
+  const collectionMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isCollectionMenuOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (collectionMenuRef.current && !collectionMenuRef.current.contains(e.target as Node)) {
+        setIsCollectionMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [isCollectionMenuOpen]);
+
+  useEffect(() => {
+    setIsCollectionMenuOpen(false);
+  }, [view, collectionActions]);
+
   if (
     view !== "explorer" &&
     view !== "services" &&
     view !== "songs" &&
-    view !== "collections"
+    view !== "collections" &&
+    view !== "collection-detail"
   )
     return null;
 
@@ -58,7 +101,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
       {/* Left Side: Filter button, Archive button (services), Sort dropdown */}
       <div className="flex items-center gap-2.5 flex-wrap">
         {/* Sort Control Button */}
-        <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-[var(--radius-md)] px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
+        <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-md px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
           <ArrowUpDown className="w-4 h-4 text-m3-secondary shrink-0" />
           <select
             value={`${sortBy}-${sortOrder}`}
@@ -69,23 +112,15 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
               ];
               onSortChange(sb, so);
             }}
-            className="bg-transparent font-medium text-m3-text cursor-pointer text-[length:var(--text-label)]"
-            title={
-              view === "services"
-                ? t("toolbar.sortServices")
-                : t("toolbar.sortFiles")
-            }
+            className="bg-transparent font-medium text-m3-text cursor-pointer text-(length:--text-label)"
+            title={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
           >
             {view === "services" ? (
               <>
-                <option
-                  value={`${sortBy !== "title" ? sortBy : "updatedAt"}-desc`}
-                >
+                <option value={`${sortBy !== "title" ? sortBy : "updatedAt"}-desc`}>
                   {t("toolbar.dateDesc")}
                 </option>
-                <option
-                  value={`${sortBy !== "title" ? sortBy : "updatedAt"}-asc`}
-                >
+                <option value={`${sortBy !== "title" ? sortBy : "updatedAt"}-asc`}>
                   {t("toolbar.dateAsc")}
                 </option>
                 <option value="title-asc">{t("toolbar.nameAsc")}</option>
@@ -94,9 +129,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
             ) : view === "collections" ? (
               <>
                 <option value="number-asc">{t("toolbar.songNumberAsc")}</option>
-                <option value="number-desc">
-                  {t("toolbar.songNumberDesc")}
-                </option>
+                <option value="number-desc">{t("toolbar.songNumberDesc")}</option>
                 <option value="title-asc">{t("toolbar.nameAsc")}</option>
                 <option value="title-desc">{t("toolbar.nameDesc")}</option>
                 <option value="updatedAt-asc">{t("toolbar.dateAsc")}</option>
@@ -118,10 +151,10 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
         </div>
 
         {/* Filter Pop-Up Panel Trigger Button */}
-        {(view === "explorer" || view === "songs") && (
+        {(view === "explorer" || view === "songs" || view === "collection-detail") && (
           <button
             onClick={onOpenFilterPanel}
-            className={`flex items-center gap-2 px-4 py-1.5 min-h-10 rounded-[var(--radius-md)] border text-label transition-colors cursor-pointer relative ${
+            className={`flex items-center gap-2 px-4 py-1.5 min-h-10 rounded-md border text-label transition-colors cursor-pointer relative ${
               activeFiltersCount > 0
                 ? "bg-m3-primary/10 border-m3-primary/30 text-m3-primary"
                 : "bg-m3-card border-m3-border text-m3-secondary hover:bg-m3-hover hover:text-m3-text hover:border-m3-primary/30"
@@ -131,7 +164,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
             <Filter className="w-4 h-4" />
             <span>{t("toolbar.filters")}</span>
             {activeFiltersCount > 0 && (
-              <span className="w-4.5 h-4.5 rounded-full bg-m3-primary text-white text-[10px] font-semibold flex items-center justify-center shadow-[var(--shadow-sm)]">
+              <span className="w-4.5 h-4.5 rounded-full bg-m3-primary text-white text-[10px] font-semibold flex items-center justify-center shadow-sm">
                 {activeFiltersCount}
               </span>
             )}
@@ -143,16 +176,12 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           <button
             type="button"
             onClick={() => setShowArchived((v) => !v)}
-            className={`flex items-center gap-2 px-4 py-1.5 min-h-10 rounded-[var(--radius-md)] border text-label transition-colors cursor-pointer shrink-0 ${
+            className={`flex items-center gap-2 px-4 py-1.5 min-h-10 rounded-md border text-label transition-colors cursor-pointer shrink-0 ${
               showArchived
                 ? "bg-m3-primary/10 border-m3-primary/30 text-m3-primary"
                 : "bg-m3-card border-m3-border text-m3-secondary hover:bg-m3-hover hover:text-m3-text hover:border-m3-primary/30"
             }`}
-            title={
-              showArchived
-                ? t("toolbar.hideArchived")
-                : t("toolbar.showArchived")
-            }
+            title={showArchived ? t("toolbar.hideArchived") : t("toolbar.showArchived")}
           >
             <Archive className="w-4 h-4" />
             <span>{t("toolbar.archived")}</span>
@@ -165,14 +194,91 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
         )}
       </div>
 
-      {/* Right Side: View Mode Toggle & Density Selector */}
+      {/* Right Side: Collection actions / View Mode / Density */}
       <div className="flex items-center gap-2.5">
-        {/* View Mode Toggle (hidden in Songs view) */}
-        {view !== "songs" && (
+        {view === "collection-detail" && collectionActions && (
+          <div ref={collectionMenuRef} className="relative shrink-0">
+            <button
+              type="button"
+              data-collection-context-menu
+              onClick={() => setIsCollectionMenuOpen((v) => !v)}
+              className="p-2 min-h-10 min-w-10 inline-flex items-center justify-center rounded-md border border-m3-border bg-m3-card text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+              title={t("explorer.moreOptions")}
+              aria-expanded={isCollectionMenuOpen}
+              aria-haspopup="menu"
+            >
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
+            {isCollectionMenuOpen && (
+              <div
+                data-collection-context-menu
+                role="menu"
+                className="absolute right-0 top-full mt-2 w-52 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-1.5 space-y-0.5 hosanna-enter"
+              >
+                <Can permission="export.pdf">
+                  <button
+                    type="button"
+                    className={MENU_ITEM}
+                    onClick={() => {
+                      setIsCollectionMenuOpen(false);
+                      collectionActions.onPrint();
+                    }}
+                  >
+                    <Printer className={MENU_ICON} />
+                    {t("print.buttons.printCollection")}
+                  </button>
+                </Can>
+                <Can permission="collection.update">
+                  <button
+                    type="button"
+                    className={MENU_ITEM}
+                    onClick={() => {
+                      setIsCollectionMenuOpen(false);
+                      collectionActions.onEdit();
+                    }}
+                  >
+                    <Edit2 className={MENU_ICON} />
+                    {t("collectionsPage.editCollection")}
+                  </button>
+                </Can>
+                <Can permission="collection.update">
+                  <button
+                    type="button"
+                    className={MENU_ITEM}
+                    onClick={() => {
+                      setIsCollectionMenuOpen(false);
+                      collectionActions.onAddSongs();
+                    }}
+                  >
+                    <Plus className={MENU_ICON} />
+                    {t("collectionsPage.addSongs")}
+                  </button>
+                </Can>
+                <Can permission="collection.delete">
+                  <div className="my-1 h-px bg-m3-border mx-1" />
+                  <button
+                    type="button"
+                    className={MENU_ITEM_DANGER}
+                    onClick={() => {
+                      setIsCollectionMenuOpen(false);
+                      collectionActions.onDelete();
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
+                    {t("collectionsPage.deleteTitle")}
+                  </button>
+                </Can>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* View Mode Toggle (hidden on song tables) */}
+        {view !== "songs" && view !== "collection-detail" && (
           <div
             role="group"
             aria-label={t("toolbar.viewMode")}
-            className="inline-flex items-center bg-m3-bg p-px rounded-[var(--radius-md)] border border-m3-border select-none shrink-0"
+            className="inline-flex items-center bg-m3-bg p-px rounded-md border border-m3-border select-none shrink-0"
           >
             <Button
               type="button"
@@ -184,7 +290,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
               aria-pressed={viewMode === "grid"}
               className={`min-h-10 min-w-10 ${
                 viewMode === "grid"
-                  ? "bg-m3-card text-m3-primary shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-primary shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -201,7 +307,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
               aria-pressed={viewMode === "list"}
               className={`min-h-10 min-w-10 ${
                 viewMode === "list"
-                  ? "bg-m3-card text-m3-primary shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-primary shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -210,14 +316,12 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           </div>
         )}
         {/* Density Selector (Confortável / Compacto) */}
-        <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-[var(--radius-md)] px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
+        <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-md px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
           <LayoutGrid className="w-4 h-4 text-m3-primary shrink-0" />
           <select
             value={density}
-            onChange={(e) =>
-              onDensityChange(e.target.value as "comfortable" | "compact")
-            }
-            className="bg-transparent font-medium text-m3-text cursor-pointer text-[length:var(--text-label)]"
+            onChange={(e) => onDensityChange(e.target.value as "comfortable" | "compact")}
+            className="bg-transparent font-medium text-m3-text cursor-pointer text-(length:--text-label)"
             title={t("toolbar.density")}
           >
             <option value="comfortable">{t("toolbar.comfortable")}</option>

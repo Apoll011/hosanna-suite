@@ -17,16 +17,12 @@ import { posthog } from "../../lib/posthog";
 import LoginLayout from "./Layout";
 import { GoogleTextField } from "./components/GoogleTextField";
 import { SocialAuthButtons } from "./components/SocialAuthButtons";
-import {
-  TurnstileWidget,
-  type TurnstileHandle,
-} from "./components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileHandle } from "./components/TurnstileWidget";
 
 export const LoginPage: React.FC = () => {
   const { navigate } = useAppNavigate();
   const location = useLocation();
-  const redirectMessage =
-    (location.state as { message?: string })?.message || "";
+  const redirectMessage = (location.state as { message?: string })?.message || "";
   const { refetch } = useAuth();
   const { t } = useI18n();
 
@@ -75,10 +71,7 @@ export const LoginPage: React.FC = () => {
     setCaptchaToken("");
 
     if (error) {
-      if (
-        error.code === "TWO_FACTOR_REQUIRED" ||
-        (error as { status?: number })?.status === 403
-      ) {
+      if (error.code === "TWO_FACTOR_REQUIRED" || (error as { status?: number })?.status === 403) {
         navigate("/two-factor");
         return;
       }
@@ -132,11 +125,7 @@ export const LoginPage: React.FC = () => {
                 className="p-1 rounded-full text-m3-secondary hover:text-m3-text transition-colors"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             }
           />
@@ -167,9 +156,7 @@ export const LoginPage: React.FC = () => {
           ref={captchaRef}
           onVerify={(token) => {
             setCaptchaToken(token);
-            setErrorMsg((msg) =>
-              msg === t("auth.captcha.pending") ? "" : msg,
-            );
+            setErrorMsg((msg) => (msg === t("auth.captcha.pending") ? "" : msg));
           }}
           onExpire={() => setCaptchaToken("")}
           onError={() => setErrorMsg(t("auth.captcha.failed"))}
@@ -184,20 +171,13 @@ export const LoginPage: React.FC = () => {
             {t("auth.login.registerLink")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.login.loginBtn")}
           </Button>
         </div>
       </form>
 
-      <SocialAuthButtons
-        onError={(err) => setErrorMsg(err)}
-        disabled={isLoading}
-      />
+      <SocialAuthButtons onError={(err) => setErrorMsg(err)} disabled={isLoading} />
     </LoginLayout>
   );
 };

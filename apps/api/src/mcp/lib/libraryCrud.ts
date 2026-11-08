@@ -6,10 +6,7 @@ import {
   requireWriteEntitlement,
 } from "../context.js";
 import { syncCache } from "../../services/syncCache.service.js";
-import {
-  normalizeResponsibilities,
-  type OrgResponsibility,
-} from "./orgDirectory.js";
+import { normalizeResponsibilities, type OrgResponsibility } from "./orgDirectory.js";
 
 const PURGE_MS = 30 * 24 * 60 * 60 * 1000;
 const DEFAULT_REMINDER = { enabled: false, label: "" };
@@ -121,12 +118,7 @@ export async function createFolder(
 ) {
   requirePermission(ctx, "folder.create");
   requireWriteEntitlement(ctx);
-  const created = await folderService(ctx).create(
-    args.name,
-    args.parentId,
-    args.color,
-    args.icon,
-  );
+  const created = await folderService(ctx).create(args.name, args.parentId, args.color, args.icon);
   return { created: true, folder: serializeFolder(created) };
 }
 
@@ -168,9 +160,7 @@ export async function deleteFolder(
     const result = await folderService(ctx).deleteWithContent(args.folderId);
     return { deleted: true, folderId: args.folderId, ...result };
   }
-  const result = await folderService(ctx).deleteMovingContentToRoot(
-    args.folderId,
-  );
+  const result = await folderService(ctx).deleteMovingContentToRoot(args.folderId);
   return { deleted: true, folderId: args.folderId, ...result };
 }
 
@@ -216,10 +206,7 @@ export async function getCollection(
         ? {}
         : {
             songs: {
-              select:
-                include === "ids"
-                  ? { id: true }
-                  : { id: true, title: true, artist: true },
+              select: include === "ids" ? { id: true } : { id: true, title: true, artist: true },
               skip: (page - 1) * limit,
               take: limit,
               orderBy: { title: "asc" },
@@ -272,9 +259,7 @@ export async function createCollection(
       description: args.description?.trim() || null,
       color: args.color ?? "default",
       icon: args.icon ?? "default",
-      ...(args.songIds?.length
-        ? { songs: { connect: args.songIds.map((id) => ({ id })) } }
-        : {}),
+      ...(args.songIds?.length ? { songs: { connect: args.songIds.map((id) => ({ id })) } } : {}),
     } as never,
     include: {
       songs: { select: { id: true } },
@@ -303,17 +288,13 @@ export async function updateCollection(
   });
   if (!current) throw new Error("Collection not found");
   if (current.updatedAt.getTime() !== new Date(args.updatedAt).getTime()) {
-    throw new Error(
-      "Collection was modified elsewhere; refresh and retry with current updatedAt",
-    );
+    throw new Error("Collection was modified elsewhere; refresh and retry with current updatedAt");
   }
   const updated = await ctx.db.collection.update({
     where: { id: args.collectionId },
     data: {
       ...(args.name !== undefined ? { name: args.name.trim() } : {}),
-      ...(args.description !== undefined
-        ? { description: args.description }
-        : {}),
+      ...(args.description !== undefined ? { description: args.description } : {}),
       ...(args.color !== undefined ? { color: args.color } : {}),
       ...(args.icon !== undefined ? { icon: args.icon } : {}),
     },
@@ -394,10 +375,7 @@ export async function collectionRemoveSongs(
 
 // ── Agenda ─────────────────────────────────────────────────────────────────
 
-export async function listAgenda(
-  ctx: McpContext,
-  args?: { from?: string; limit?: number },
-) {
+export async function listAgenda(ctx: McpContext, args?: { from?: string; limit?: number }) {
   requirePermission(ctx, "agenda.access");
   const since = args?.from?.trim() || new Date().toISOString().slice(0, 10);
   const events = await ctx.db.agendaEvent.findMany({
@@ -433,9 +411,7 @@ export async function createAgendaEvent(
 ) {
   requirePermission(ctx, "agenda.create");
   requireWriteEntitlement(ctx);
-  const responsibilities = normalizeResponsibilities(
-    args.responsibilities ?? [],
-  );
+  const responsibilities = normalizeResponsibilities(args.responsibilities ?? []);
   const durationProvided = args.durationMinutes != null;
   const durationMinutes = args.durationMinutes ?? 60;
   const created = await ctx.db.agendaEvent.create({
@@ -494,9 +470,7 @@ export async function updateAgendaEvent(
   });
   if (!current) throw new Error("Agenda event not found");
   if (current.updatedAt.getTime() !== new Date(args.updatedAt).getTime()) {
-    throw new Error(
-      "Event was modified elsewhere; refresh and retry with current updatedAt",
-    );
+    throw new Error("Event was modified elsewhere; refresh and retry with current updatedAt");
   }
   const updated = await ctx.db.agendaEvent.update({
     where: { id: args.eventId },
@@ -505,14 +479,10 @@ export async function updateAgendaEvent(
       ...(args.date !== undefined ? { date: args.date } : {}),
       ...(args.time !== undefined ? { time: args.time } : {}),
       ...(args.type !== undefined ? { type: args.type.trim() } : {}),
-      ...(args.durationMinutes !== undefined
-        ? { durationMinutes: args.durationMinutes }
-        : {}),
+      ...(args.durationMinutes !== undefined ? { durationMinutes: args.durationMinutes } : {}),
       ...(args.location !== undefined ? { location: args.location } : {}),
       ...(args.notes !== undefined ? { notes: args.notes } : {}),
-      ...(args.linkedServiceId !== undefined
-        ? { linkedServiceId: args.linkedServiceId }
-        : {}),
+      ...(args.linkedServiceId !== undefined ? { linkedServiceId: args.linkedServiceId } : {}),
       ...(args.responsibilities !== undefined
         ? {
             responsibilities: normalizeResponsibilities(args.responsibilities),
@@ -532,9 +502,7 @@ export async function updateAgendaEvent(
   };
 }
 
-function responsibilityWarnings(
-  responsibilities: OrgResponsibility[],
-): string[] {
+function responsibilityWarnings(responsibilities: OrgResponsibility[]): string[] {
   const warnings: string[] = [];
   for (const r of responsibilities) {
     for (const a of r.assignees) {

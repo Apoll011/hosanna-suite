@@ -81,13 +81,11 @@ Rules:
 
 Example resource: `hosanna://chordpro/examples/variants`.
 
-## Inline chords and timings
+## Inline chords
 
 ```chordpro
-[G]Hello [Am@2x]world
+[G]Hello [Am]world
 ```
-
-`@Nx` timings are preserved by source-preserving transpose (`chordpro_transpose`).
 
 ## Not fully supported — be honest
 

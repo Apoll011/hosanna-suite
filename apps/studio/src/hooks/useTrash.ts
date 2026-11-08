@@ -70,12 +70,7 @@ export function useTrash() {
       let receivedAgendaEvents = isTrashCached;
 
       const emit = () => {
-        if (
-          !receivedFolders ||
-          !receivedSongs ||
-          !receivedServices ||
-          !receivedAgendaEvents
-        ) {
+        if (!receivedFolders || !receivedSongs || !receivedServices || !receivedAgendaEvents) {
           return;
         }
         isTrashCached = true;
@@ -85,20 +80,18 @@ export function useTrash() {
       };
 
       subs.push(
-        db.folders
-          .find({ selector: { isDeleted: true } })
-          .$.subscribe((docs) => {
-            if (!isSubscribed) return;
-            cachedTrashMap.folders = docs.map((d) => ({
-              id: d.id,
-              type: "folder" as const,
-              name: d.name,
-              updatedAt: d.updatedAt,
-              purgeAt: d.purgeAt ?? null,
-            }));
-            receivedFolders = true;
-            emit();
-          }),
+        db.folders.find({ selector: { isDeleted: true } }).$.subscribe((docs) => {
+          if (!isSubscribed) return;
+          cachedTrashMap.folders = docs.map((d) => ({
+            id: d.id,
+            type: "folder" as const,
+            name: d.name,
+            updatedAt: d.updatedAt,
+            purgeAt: d.purgeAt ?? null,
+          }));
+          receivedFolders = true;
+          emit();
+        }),
       );
 
       subs.push(
@@ -117,37 +110,33 @@ export function useTrash() {
       );
 
       subs.push(
-        db.services
-          .find({ selector: { isDeleted: true } })
-          .$.subscribe((docs) => {
-            if (!isSubscribed) return;
-            cachedTrashMap.services = docs.map((d) => ({
-              id: d.id,
-              type: "service" as const,
-              name: d.name,
-              updatedAt: d.updatedAt,
-              purgeAt: d.purgeAt ?? null,
-            }));
-            receivedServices = true;
-            emit();
-          }),
+        db.services.find({ selector: { isDeleted: true } }).$.subscribe((docs) => {
+          if (!isSubscribed) return;
+          cachedTrashMap.services = docs.map((d) => ({
+            id: d.id,
+            type: "service" as const,
+            name: d.name,
+            updatedAt: d.updatedAt,
+            purgeAt: d.purgeAt ?? null,
+          }));
+          receivedServices = true;
+          emit();
+        }),
       );
 
       subs.push(
-        db.agendaEvents
-          .find({ selector: { isDeleted: true } })
-          .$.subscribe((docs) => {
-            if (!isSubscribed) return;
-            cachedTrashMap.agendaEvents = docs.map((d) => ({
-              id: d.id,
-              type: "agenda" as const,
-              name: d.title,
-              updatedAt: d.updatedAt,
-              purgeAt: d.purgeAt ?? null,
-            }));
-            receivedAgendaEvents = true;
-            emit();
-          }),
+        db.agendaEvents.find({ selector: { isDeleted: true } }).$.subscribe((docs) => {
+          if (!isSubscribed) return;
+          cachedTrashMap.agendaEvents = docs.map((d) => ({
+            id: d.id,
+            type: "agenda" as const,
+            name: d.title,
+            updatedAt: d.updatedAt,
+            purgeAt: d.purgeAt ?? null,
+          }));
+          receivedAgendaEvents = true;
+          emit();
+        }),
       );
     }
 
@@ -170,10 +159,6 @@ export function useTrash() {
     items,
     isLoading,
     restoreItem,
-    isRestoring:
-      isRestoringFolder ||
-      isRestoringSong ||
-      isRestoringService ||
-      isRestoringEvent,
+    isRestoring: isRestoringFolder || isRestoringSong || isRestoringService || isRestoringEvent,
   };
 }

@@ -21,9 +21,7 @@ describe("summarizeDiff", () => {
 
 describe("validateServiceElements", () => {
   it("requires songId for song elements", () => {
-    const result = validateServiceElements([
-      { id: "1", type: "song", title: "Test" },
-    ]);
+    const result = validateServiceElements([{ id: "1", type: "song", title: "Test" }]);
     assert.equal(result.ok, false);
     assert.ok(result.errors.some((e) => e.includes("songId")));
   });

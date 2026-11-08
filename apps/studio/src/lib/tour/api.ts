@@ -21,9 +21,7 @@ export function startProductTour(): boolean {
 type InteractiveStarter = () => void;
 let interactiveStarter: InteractiveStarter | null = null;
 
-export function registerInteractiveOnboardingStarter(
-  starter: InteractiveStarter | null,
-): void {
+export function registerInteractiveOnboardingStarter(starter: InteractiveStarter | null): void {
   interactiveStarter = starter;
 }
 

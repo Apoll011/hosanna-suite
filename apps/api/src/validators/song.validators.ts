@@ -1,17 +1,12 @@
 import { z } from "zod";
-import {
-  concurrencySchema,
-  paginationQuerySchema,
-} from "./common.validators.js";
+import { concurrencySchema, paginationQuerySchema } from "./common.validators.js";
 
 export const listSongsQuerySchema = paginationQuerySchema.extend({
   search: z.string().optional(),
   folder: z.string().optional(), // folder UUID, or the literal "root"
   key: z.string().optional(),
   tag: z.string().optional(),
-  sortBy: z
-    .enum(["title", "artist", "createdAt", "updatedAt"])
-    .default("title"),
+  sortBy: z.enum(["title", "artist", "createdAt", "updatedAt"]).default("title"),
   sortOrder: z.enum(["asc", "desc"]).default("asc"),
   // JSON-encoded { title?: boolean, artist?: boolean, content?: boolean, tags?: boolean }
   searchFields: z.string().optional(),

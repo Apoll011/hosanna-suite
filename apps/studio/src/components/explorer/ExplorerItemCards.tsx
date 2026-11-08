@@ -4,10 +4,7 @@ import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FileMusicIcon, MoreVertical } from "lucide-react";
 import React from "react";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "../../utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "../../utils/folderCustomization";
 import { SongScoreVisualizer } from "./SongScoreVisualizer";
 
 export interface FolderGridCardProps {
@@ -68,7 +65,7 @@ export const FolderGridCard: React.FC<FolderGridCardProps> = React.memo(
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
-        className={`${isCompact ? "p-3" : "p-4"} rounded-[var(--radius-lg)] border transition-colors cursor-pointer flex flex-col items-center text-center group relative select-none ${
+        className={`${isCompact ? "p-3" : "p-4"} rounded-lg border transition-colors cursor-pointer flex flex-col items-center text-center group relative select-none ${
           isDropTarget && !isDropDisabled
             ? "border-m3-primary border-dashed bg-m3-primary/5 ring-2 ring-m3-primary/30"
             : isSelected
@@ -100,11 +97,9 @@ export const FolderGridCard: React.FC<FolderGridCardProps> = React.memo(
           const colorStyle = getFolderColorStyle(folder.color);
           return (
             <div
-              className={`${isCompact ? "w-9 h-9 mb-2" : "w-11 h-11 mb-2.5"} rounded-[var(--radius-md)] ${colorStyle.bgClass} border ${colorStyle.borderClass} flex items-center justify-center ${colorStyle.textClass}`}
+              className={`${isCompact ? "w-9 h-9 mb-2" : "w-11 h-11 mb-2.5"} rounded-md ${colorStyle.bgClass} border ${colorStyle.borderClass} flex items-center justify-center ${colorStyle.textClass}`}
             >
-              <IconComponent
-                className={`${isCompact ? "w-4 h-4" : "w-5 h-5"} opacity-90`}
-              />
+              <IconComponent className={`${isCompact ? "w-4 h-4" : "w-5 h-5"} opacity-90`} />
             </div>
           );
         })()}
@@ -122,7 +117,7 @@ export const FolderGridCard: React.FC<FolderGridCardProps> = React.memo(
         </span>
 
         {isSearchingOrFiltering && getFolderPathString && (
-          <span className="text-caption text-m3-primary bg-m3-primary/10 px-2 py-0.5 rounded-[var(--radius-md)] mt-2 truncate max-w-full">
+          <span className="text-caption text-m3-primary bg-m3-primary/10 px-2 py-0.5 rounded-md mt-2 truncate max-w-full">
             {getFolderPathString(folder.parentId)}
           </span>
         )}
@@ -168,8 +163,7 @@ export const SongGridCard: React.FC<SongGridCardProps> = React.memo(
     const isCompact = density === "compact";
     const scoreValue = (song as { score?: { score: number } }).score?.score;
     const hasScore = showSongScore && scoreValue !== undefined;
-    const scoreCorner =
-      hasScore && (songScoreLayout === "ring" || songScoreLayout === "badge");
+    const scoreCorner = hasScore && (songScoreLayout === "ring" || songScoreLayout === "badge");
 
     return (
       <div
@@ -184,7 +178,7 @@ export const SongGridCard: React.FC<SongGridCardProps> = React.memo(
         onContextMenu={onContextMenu}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
-        className={`${isCompact ? "p-3" : "p-4"} rounded-[var(--radius-lg)] border transition-colors cursor-pointer flex flex-col items-center text-center group relative overflow-hidden select-none ${
+        className={`${isCompact ? "p-3" : "p-4"} rounded-lg border transition-colors cursor-pointer flex flex-col items-center text-center group relative overflow-hidden select-none ${
           isSelected
             ? "border-m3-primary/40 bg-m3-primary/5 ring-2 ring-m3-primary/30"
             : "border-m3-border/50 bg-m3-card hover:bg-m3-hover hover:border-m3-primary/40"
@@ -210,29 +204,21 @@ export const SongGridCard: React.FC<SongGridCardProps> = React.memo(
         </Button>
 
         {song.song_number && !hasScore && (
-          <span className="absolute top-2 left-2 text-[10px] px-1.5 py-0.5 font-medium bg-m3-hover text-m3-secondary rounded-[var(--radius-sm)] border border-m3-border tabular-nums">
+          <span className="absolute top-2 left-2 text-[10px] px-1.5 py-0.5 font-medium bg-m3-hover text-m3-secondary rounded-sm border border-m3-border tabular-nums">
             {t("explorer.songNumber", { number: song.song_number })}
           </span>
         )}
 
         {scoreCorner && (
-          <div
-            className={`absolute z-10 ${isCompact ? "top-2 left-2" : "top-2.5 left-2.5"}`}
-          >
-            <SongScoreVisualizer
-              score={scoreValue!}
-              layout={songScoreLayout}
-              compact
-            />
+          <div className={`absolute z-10 ${isCompact ? "top-2 left-2" : "top-2.5 left-2.5"}`}>
+            <SongScoreVisualizer score={scoreValue!} layout={songScoreLayout} compact />
           </div>
         )}
 
         <div
-          className={`${isCompact ? "w-9 h-9 mb-2" : "w-11 h-11 mb-2.5"} rounded-[var(--radius-md)] bg-m3-primary/10 border border-m3-primary/20 flex items-center justify-center text-m3-primary`}
+          className={`${isCompact ? "w-9 h-9 mb-2" : "w-11 h-11 mb-2.5"} rounded-md bg-m3-primary/10 border border-m3-primary/20 flex items-center justify-center text-m3-primary`}
         >
-          <FileMusicIcon
-            className={`${isCompact ? "w-4 h-4" : "w-5 h-5"} opacity-90`}
-          />
+          <FileMusicIcon className={`${isCompact ? "w-4 h-4" : "w-5 h-5"} opacity-90`} />
         </div>
 
         <span
@@ -249,19 +235,14 @@ export const SongGridCard: React.FC<SongGridCardProps> = React.memo(
         </span>
 
         {/* Bar / dots rendered below the artist name, full width */}
-        {hasScore &&
-          (songScoreLayout === "bar" || songScoreLayout === "dots") && (
-            <div className="w-full px-1">
-              <SongScoreVisualizer
-                score={scoreValue!}
-                layout={songScoreLayout}
-                compact={isCompact}
-              />
-            </div>
-          )}
+        {hasScore && (songScoreLayout === "bar" || songScoreLayout === "dots") && (
+          <div className="w-full px-1">
+            <SongScoreVisualizer score={scoreValue!} layout={songScoreLayout} compact={isCompact} />
+          </div>
+        )}
 
         {isSearchingOrFiltering && getFolderPathString && (
-          <span className="text-caption text-m3-secondary bg-m3-bg px-2 py-0.5 rounded-[var(--radius-md)] mt-2 truncate max-w-full border border-m3-border/50">
+          <span className="text-caption text-m3-secondary bg-m3-bg px-2 py-0.5 rounded-md mt-2 truncate max-w-full border border-m3-border/50">
             {getFolderPathString(song.folderId)}
           </span>
         )}

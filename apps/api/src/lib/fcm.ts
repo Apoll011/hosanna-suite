@@ -39,17 +39,13 @@ let tokenRefresh: Promise<string> | null = null;
  * PEM parses.
  */
 function normalizePrivateKey(privateKey: string): string {
-  return privateKey.includes("\\n")
-    ? privateKey.replace(/\\n/g, "\n")
-    : privateKey;
+  return privateKey.includes("\\n") ? privateKey.replace(/\\n/g, "\n") : privateKey;
 }
 
 async function fetchAccessToken(): Promise<string> {
   const { fcmClientEmail: clientEmail, fcmPrivateKey: privateKey } = env;
   if (!clientEmail || !privateKey) {
-    throw new Error(
-      "[fcm] FCM_CLIENT_EMAIL / FCM_PRIVATE_KEY are not configured.",
-    );
+    throw new Error("[fcm] FCM_CLIENT_EMAIL / FCM_PRIVATE_KEY are not configured.");
   }
 
   const assertion = jwt.sign(
@@ -74,9 +70,7 @@ async function fetchAccessToken(): Promise<string> {
 
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(
-      `[fcm] Failed to exchange JWT for access token (${res.status}): ${body}`,
-    );
+    throw new Error(`[fcm] Failed to exchange JWT for access token (${res.status}): ${body}`);
   }
 
   const data = (await res.json()) as {
@@ -122,10 +116,7 @@ export interface FcmSendResult {
  * Send a push notification to a single FCM registration token.
  * Never throws — all failures are captured in the returned result.
  */
-export async function sendFcmToToken(
-  token: string,
-  message: FcmMessage,
-): Promise<FcmSendResult> {
+export async function sendFcmToToken(token: string, message: FcmMessage): Promise<FcmSendResult> {
   try {
     const projectId = env.fcmProjectId;
     if (!projectId) {
@@ -166,12 +157,9 @@ export async function sendFcmToToken(
       res.status === 404 ||
       res.status === 410 ||
       body.includes("UNREGISTERED") ||
-      (res.status === 400 &&
-        /registration token|registration_token/i.test(body));
+      (res.status === 400 && /registration token|registration_token/i.test(body));
 
-    console.error(
-      `[fcm] Send failed (${res.status}) for token …${token.slice(-8)}: ${body}`,
-    );
+    console.error(`[fcm] Send failed (${res.status}) for token …${token.slice(-8)}: ${body}`);
     return { ok: false, invalidToken, error: body };
   } catch (err) {
     console.error("[fcm] Send failed:", err);

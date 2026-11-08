@@ -13,10 +13,7 @@ describe("parseChordLine / applyChordAnchors", () => {
   it("round-trips lyric offsets", () => {
     const { lyrics, anchors } = parseChordLine("[G]Amazing [C]grace");
     assert.equal(lyrics, "Amazing grace");
-    assert.equal(
-      applyChordAnchors("Amazing grace", anchors),
-      "[G]Amazing [C]grace",
-    );
+    assert.equal(applyChordAnchors("Amazing grace", anchors), "[G]Amazing [C]grace");
   });
 
   it("keeps order when two chords share a position", () => {
@@ -57,9 +54,7 @@ That saved a wretch
       r.content,
       /\{start_of_verse\}\n\[G\]Amazing \[C\]grace how \[G\]sweet\n\[D\]That saved a \[G\]wretch\n\{end_of_verse\}\n$/,
     );
-    assert.ok(
-      r.review.every((x) => x.mode === "exact" && x.confidence === "high"),
-    );
+    assert.ok(r.review.every((x) => x.mode === "exact" && x.confidence === "high"));
   });
 
   it("anchors chords to words when the lyrics differ", () => {
@@ -82,10 +77,7 @@ Ale[G]luia, [D]Senhor
 Aleluia, Senhor
 {end_of_verse}
 `);
-    assert.match(
-      r.content,
-      /\{start_of_verse\}\nAle\[G\]luia, \[D\]Senhor\n\{end_of_verse\}\n$/,
-    );
+    assert.match(r.content, /\{start_of_verse\}\nAle\[G\]luia, \[D\]Senhor\n\{end_of_verse\}\n$/);
   });
 
   it("flags uncertain lines for review", () => {
@@ -138,10 +130,7 @@ Some words
 Holy holy
 {end_of_chorus}
 `);
-    assert.match(
-      r.content,
-      /\{start_of_chorus\}\n\[C\]Holy \[G\]holy\n\{end_of_chorus\}\n$/,
-    );
+    assert.match(r.content, /\{start_of_chorus\}\n\[C\]Holy \[G\]holy\n\{end_of_chorus\}\n$/);
     assert.ok(r.notes.some((n) => /\{chorus\}/.test(n)) === false);
   });
 
@@ -170,10 +159,7 @@ Hello
 `;
     const r = propagateVerseChords(input);
     assert.match(r.content, /e\|---0---\|/);
-    assert.match(
-      r.content,
-      /\{start_of_verse\}\n\[G\]Hello\n\{end_of_verse\}\n$/,
-    );
+    assert.match(r.content, /\{start_of_verse\}\n\[G\]Hello\n\{end_of_verse\}\n$/);
   });
 
   it("supports stanzas without section directives", () => {

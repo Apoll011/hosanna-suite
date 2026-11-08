@@ -21,17 +21,9 @@ import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
-import type {
-  AgendaEvent,
-  Assignee,
-  ResponsibilityCategory,
-} from "@/src/types";
+import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
 import { formatLongDate } from "@/src/utils/agendaDate";
-import {
-  assigneeKey,
-  collectEventMembers,
-  groupAssignees,
-} from "@/src/utils/agendaNotify";
+import { assigneeKey, collectEventMembers, groupAssignees } from "@/src/utils/agendaNotify";
 import { CalendarPlus, Printer, Trash2 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -66,16 +58,11 @@ export const AgendaPage: React.FC = () => {
   const [isNewEventOpen, setIsNewEventOpen] = useState(false);
   const [isEditEventOpen, setIsEditEventOpen] = useState(false);
   const [isAddResponsibilityOpen, setIsAddResponsibilityOpen] = useState(false);
-  const [pendingRemoval, setPendingRemoval] = useState<PendingRemoval | null>(
-    null,
-  );
+  const [pendingRemoval, setPendingRemoval] = useState<PendingRemoval | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
-  const [editingAssigneesFor, setEditingAssigneesFor] = useState<string | null>(
-    null,
-  );
+  const [editingAssigneesFor, setEditingAssigneesFor] = useState<string | null>(null);
   /** Snapshot kept open while delete + optional notify finish. */
-  const [pendingDeleteEvent, setPendingDeleteEvent] =
-    useState<AgendaEvent | null>(null);
+  const [pendingDeleteEvent, setPendingDeleteEvent] = useState<AgendaEvent | null>(null);
 
   // Open create modal when navigated here with ?create=1 (e.g. from command palette)
   useEffect(() => {
@@ -91,10 +78,7 @@ export const AgendaPage: React.FC = () => {
     }
   }, [searchParams, setSearchParams, canCreateAgenda]);
 
-  const markedDates = useMemo(
-    () => new Set(store.events.map((ev) => ev.date)),
-    [store.events],
-  );
+  const markedDates = useMemo(() => new Set(store.events.map((ev) => ev.date)), [store.events]);
 
   const eventsForSelectedDate = useMemo(
     () => store.getEventsForDate(selectedDate),
@@ -103,10 +87,7 @@ export const AgendaPage: React.FC = () => {
 
   // Keep a valid selection whenever the day or the underlying data changes.
   const effectiveEventId = useMemo(() => {
-    if (
-      selectedEventId &&
-      eventsForSelectedDate.some((ev) => ev.id === selectedEventId)
-    ) {
+    if (selectedEventId && eventsForSelectedDate.some((ev) => ev.id === selectedEventId)) {
       return selectedEventId;
     }
     return eventsForSelectedDate[0]?.id ?? null;
@@ -118,10 +99,7 @@ export const AgendaPage: React.FC = () => {
   );
 
   const responsibilitiesForSelectedEvent = useMemo(
-    () =>
-      effectiveEventId
-        ? store.getResponsibilitiesForEvent(effectiveEventId)
-        : [],
+    () => (effectiveEventId ? store.getResponsibilitiesForEvent(effectiveEventId) : []),
     [store, effectiveEventId],
   );
 
@@ -160,10 +138,7 @@ export const AgendaPage: React.FC = () => {
   });
 
   const deleteAffectedCount = useMemo(
-    () =>
-      pendingDeleteEvent
-        ? collectEventMembers(pendingDeleteEvent, isReachable).length
-        : 0,
+    () => (pendingDeleteEvent ? collectEventMembers(pendingDeleteEvent, isReachable).length : 0),
     [pendingDeleteEvent, isReachable],
   );
 
@@ -171,12 +146,9 @@ export const AgendaPage: React.FC = () => {
   const removalInfo = useMemo(() => {
     if (!pendingRemoval) return null;
     const target = store.events.find((e) => e.id === pendingRemoval.eventId);
-    const responsibility = target?.responsibilities.find(
-      (r) => r.id === pendingRemoval.respId,
-    );
+    const responsibility = target?.responsibilities.find((r) => r.id === pendingRemoval.respId);
     const label = responsibility
-      ? (categoriesById[responsibility.categoryId]?.label ??
-        t("agenda.responsibility"))
+      ? (categoriesById[responsibility.categoryId]?.label ?? t("agenda.responsibility"))
       : t("agenda.responsibility");
     return pendingRemoval.kind === "responsibility"
       ? {
@@ -195,12 +167,9 @@ export const AgendaPage: React.FC = () => {
     if (!pendingRemoval || !removalInfo) return;
     const { eventId, respId } = pendingRemoval;
     const target = store.events.find((e) => e.id === eventId);
-    const responsibility = target?.responsibilities.find(
-      (r) => r.id === respId,
-    );
+    const responsibility = target?.responsibilities.find((r) => r.id === respId);
     const label = responsibility
-      ? (categoriesById[responsibility.categoryId]?.label ??
-        t("agenda.responsibility"))
+      ? (categoriesById[responsibility.categoryId]?.label ?? t("agenda.responsibility"))
       : t("agenda.responsibility");
 
     setIsRemoving(true);
@@ -216,16 +185,8 @@ export const AgendaPage: React.FC = () => {
           await notifications.notifyRemoval(affected);
         }
       } else {
-        const affected = groupAssignees(
-          pendingRemoval.removed,
-          label,
-          isReachable,
-        );
-        await store.updateResponsibilityAssignees(
-          eventId,
-          respId,
-          pendingRemoval.next,
-        );
+        const affected = groupAssignees(pendingRemoval.removed, label, isReachable);
+        await store.updateResponsibilityAssignees(eventId, respId, pendingRemoval.next);
         if (notifyUser && affected.length > 0) {
           await notifications.notifyRemoval(affected);
         }
@@ -241,9 +202,10 @@ export const AgendaPage: React.FC = () => {
   const handleConfirmDeleteEvent = async (notifyUsers: boolean) => {
     if (!pendingDeleteEvent) return;
     const snapshot = pendingDeleteEvent;
-    const groups = collectEventMembers(snapshot, isReachable).map(
-      (memberId) => ({ memberId, labels: [] as string[] }),
-    );
+    const groups = collectEventMembers(snapshot, isReachable).map((memberId) => ({
+      memberId,
+      labels: [] as string[],
+    }));
 
     try {
       // Capture recipients first, then delete — the cancel notice needs the
@@ -301,9 +263,7 @@ export const AgendaPage: React.FC = () => {
                   }}
                   title={t("print.buttons.printEventTitle")}
                 >
-                  <span className="hidden sm:inline">
-                    {t("print.buttons.printEvent")}
-                  </span>
+                  <span className="hidden sm:inline">{t("print.buttons.printEvent")}</span>
                 </Button>
               ) : eventsForSelectedDate.length > 0 ? (
                 <Button
@@ -375,8 +335,7 @@ export const AgendaPage: React.FC = () => {
                 onSelectDate={handleSelectDate}
                 onChangeMonth={(delta) =>
                   setVisibleMonth(
-                    (prev) =>
-                      new Date(prev.getFullYear(), prev.getMonth() + delta, 1),
+                    (prev) => new Date(prev.getFullYear(), prev.getMonth() + delta, 1),
                   )
                 }
                 onGoToday={() => {
@@ -449,16 +408,10 @@ export const AgendaPage: React.FC = () => {
             // Track what changed so the "notify" buttons know what to send
             // (date+location together → one aggregated update).
             const changes: { date?: boolean; location?: boolean } = {};
-            if (
-              value.date !== selectedEvent.date ||
-              value.time !== selectedEvent.time
-            ) {
+            if (value.date !== selectedEvent.date || value.time !== selectedEvent.time) {
               changes.date = true;
             }
-            if (
-              (value.location ?? "").trim() !==
-              (selectedEvent.location ?? "").trim()
-            ) {
+            if ((value.location ?? "").trim() !== (selectedEvent.location ?? "").trim()) {
               changes.location = true;
             }
             if (changes.date || changes.location) {
@@ -487,19 +440,13 @@ export const AgendaPage: React.FC = () => {
           isOpen={isAddResponsibilityOpen}
           onClose={() => setIsAddResponsibilityOpen(false)}
           categories={store.categories}
-          existingCategoryIds={responsibilitiesForSelectedEvent.map(
-            (r) => r.categoryId,
-          )}
+          existingCategoryIds={responsibilitiesForSelectedEvent.map((r) => r.categoryId)}
           manualSuggestions={store.manualAssignees}
           onSubmit={async (categoryId, assignees) => {
             try {
               // Await the save so a failure keeps the modal open (the hook
               // shows the error toast) instead of closing it silently.
-              await store.addResponsibility(
-                selectedEvent.id,
-                categoryId,
-                assignees,
-              );
+              await store.addResponsibility(selectedEvent.id, categoryId, assignees);
               setIsAddResponsibilityOpen(false);
             } catch {
               // error toast already shown by the hook; keep the modal open
@@ -514,8 +461,7 @@ export const AgendaPage: React.FC = () => {
           isOpen={!!editingAssigneesFor}
           onClose={() => setEditingAssigneesFor(null)}
           categoryLabel={
-            categoriesById[editingAssigneesResp.responsibility.categoryId]
-              ?.label ?? ""
+            categoriesById[editingAssigneesResp.responsibility.categoryId]?.label ?? ""
           }
           assignees={editingAssigneesResp.responsibility.assignees}
           manualSuggestions={store.manualAssignees}

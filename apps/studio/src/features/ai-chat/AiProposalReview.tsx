@@ -37,12 +37,11 @@ export const AiProposalReview: React.FC<Props> = ({ proposal, onClose }) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const title =
-    song?.title || proposal.title || t("ai.chat.proposals.untitled");
+  const title = song?.title || proposal.title || t("ai.chat.proposals.untitled");
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6 bg-m3-bg/75 backdrop-blur-sm overscroll-contain"
+      className="fixed inset-0 z-70 flex items-center justify-center p-3 sm:p-6 bg-m3-bg/75 backdrop-blur-sm overscroll-contain"
       role="presentation"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -52,7 +51,7 @@ export const AiProposalReview: React.FC<Props> = ({ proposal, onClose }) => {
         role="dialog"
         aria-modal="true"
         aria-label={t("ai.chat.proposals.reviewTitle", { title })}
-        className="flex flex-col w-full max-w-6xl h-[min(88vh,820px)] rounded-[var(--radius-xl)] border border-m3-border bg-m3-card shadow-[var(--shadow-lg)] overflow-hidden"
+        className="flex flex-col w-full max-w-6xl h-[min(88vh,820px)] rounded-xl border border-m3-border bg-m3-card shadow-lg overflow-hidden"
       >
         <div className="flex items-center gap-3 px-4 py-3 border-b border-m3-border shrink-0">
           <div className="min-w-0 flex-1">
@@ -80,7 +79,7 @@ export const AiProposalReview: React.FC<Props> = ({ proposal, onClose }) => {
             type="button"
             onClick={onClose}
             aria-label={t("ai.chat.close")}
-            className="shrink-0 p-2 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+            className="shrink-0 p-2 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           >
             <X className="w-4 h-4" />
           </button>

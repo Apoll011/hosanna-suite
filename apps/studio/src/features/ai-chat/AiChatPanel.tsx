@@ -4,20 +4,8 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import {
-  ArrowDown,
-  Maximize2,
-  Minimize2,
-  MessageSquarePlus,
-  X,
-} from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { ArrowDown, Maximize2, Minimize2, MessageSquarePlus, X } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AiChatComposer, type AiChatComposerHandle } from "./AiChatComposer";
 import { AiChatEmpty } from "./AiChatEmpty";
 import { AiChatHistory } from "./AiChatHistory";
@@ -34,13 +22,9 @@ function useContextLabel(ctx: PageContextSnapshot): string {
   const title = ctx.title?.trim();
   switch (ctx.kind) {
     case "song_editor":
-      return title
-        ? t("ai.chat.contextSong", { title })
-        : t("ai.chat.contextSongs");
+      return title ? t("ai.chat.contextSong", { title }) : t("ai.chat.contextSongs");
     case "service_editor":
-      return title
-        ? t("ai.chat.contextService", { title })
-        : t("ai.chat.contextServices");
+      return title ? t("ai.chat.contextService", { title }) : t("ai.chat.contextServices");
     case "songs_list":
       return t("ai.chat.contextSongs");
     case "services_list":
@@ -124,8 +108,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
   const onScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
-    const atBottom =
-      el.scrollHeight - el.scrollTop - el.clientHeight < STICK_THRESHOLD_PX;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < STICK_THRESHOLD_PX;
     stickRef.current = atBottom;
     setShowJump((prev) => (prev === !atBottom ? prev : !atBottom));
   }, []);
@@ -204,7 +187,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         </div>
         <button
           type="button"
-          className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+          className="p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           onClick={newChat}
           title={t("ai.chat.new")}
           aria-label={t("ai.chat.new")}
@@ -220,21 +203,17 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         {onToggleWide && (
           <button
             type="button"
-            className="hidden sm:inline-flex p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+            className="hidden sm:inline-flex p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
             onClick={onToggleWide}
             title={wide ? t("ai.chat.collapse") : t("ai.chat.expand")}
             aria-label={wide ? t("ai.chat.collapse") : t("ai.chat.expand")}
           >
-            {wide ? (
-              <Minimize2 className="w-4 h-4" />
-            ) : (
-              <Maximize2 className="w-4 h-4" />
-            )}
+            {wide ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
         )}
         <button
           type="button"
-          className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+          className="p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           onClick={() => setOpen(false)}
           title={t("ai.chat.close")}
           aria-label={t("ai.chat.close")}

@@ -99,9 +99,7 @@ The functional equivalent is available for consumers that prefer an explicit pip
 ```ts
 import { transformSong } from "@hosanna/chordpro/parser";
 
-const transformed = transformSong(parseChordPro(source))
-  .transpose(2)
-  .withCapo(3);
+const transformed = transformSong(parseChordPro(source)).transpose(2).withCapo(3);
 ```
 
 The pipeline is extensible: custom transformations can clone a `SongAST`, update its sections or metadata, and return the result for the next operation.
@@ -155,22 +153,16 @@ When you need ChordPro **text** back (for saving or MCP proposals) without losin
 ```ts
 import { transposeChordProSource } from "@hosanna/chordpro/parser";
 
-const { content, semitones, fromKey, toKey } = transposeChordProSource(
-  source,
-  { toKey: "A" },
-);
+const { content, semitones, fromKey, toKey } = transposeChordProSource(source, { toKey: "A" });
 // or: transposeChordProSource(source, 2)
 ```
 
-This rewrites `[chords]` (including timings like `[Am@2x]`) and `{key:}` / `{original_key:}` while preserving lyrics, variants, comments, and unknown directives.
+This rewrites `[chords]` and `{key:}` / `{original_key:}` while preserving lyrics, variants, comments, and unknown directives.
 
 ## Capability manifest
 
 ```ts
-import {
-  getChordProCapabilities,
-  explainChordProDirective,
-} from "@hosanna/chordpro/parser";
+import { getChordProCapabilities, explainChordProDirective } from "@hosanna/chordpro/parser";
 
 const manifest = getChordProCapabilities();
 const version = explainChordProDirective("start_of_version");

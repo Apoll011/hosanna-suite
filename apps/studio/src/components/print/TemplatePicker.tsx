@@ -53,30 +53,29 @@ interface TemplateThumbnailProps {
 }
 
 /** A real, miniature render of the template — not a hand-drawn mock-up. */
-const TemplateThumbnail = React.memo<TemplateThumbnailProps>(
-  function TemplateThumbnail({ family, showChords, brand }) {
-    const info = TEMPLATE_FAMILIES.find((f) => f.id === family);
-    return (
-      <div
-        className="hp-thumb aspect-[4/3] overflow-hidden bg-white p-[7px]"
-        aria-hidden="true"
-      >
-        <PrintDocument
-          items={SAMPLE_ITEMS}
-          options={{
-            ...DEFAULT_PRINT_OPTIONS,
-            ...info?.presets,
-            templateFamily: family,
-            showChords,
-            fontSize: 5,
-            pageBreakBetweenItems: false,
-          }}
-          brand={brand}
-        />
-      </div>
-    );
-  },
-);
+const TemplateThumbnail = React.memo<TemplateThumbnailProps>(function TemplateThumbnail({
+  family,
+  showChords,
+  brand,
+}) {
+  const info = TEMPLATE_FAMILIES.find((f) => f.id === family);
+  return (
+    <div className="hp-thumb aspect-4/3 overflow-hidden bg-white p-1.75" aria-hidden="true">
+      <PrintDocument
+        items={SAMPLE_ITEMS}
+        options={{
+          ...DEFAULT_PRINT_OPTIONS,
+          ...info?.presets,
+          templateFamily: family,
+          showChords,
+          fontSize: 5,
+          pageBreakBetweenItems: false,
+        }}
+        brand={brand}
+      />
+    </div>
+  );
+});
 
 interface TemplatePickerProps {
   value: PrintTemplateFamily;
@@ -111,18 +110,14 @@ export const TemplatePicker: React.FC<TemplatePickerProps> = ({
             disabled={disabled}
             onClick={() => onSelect(family.id)}
             title={t(`print.templates.${family.id}.description`)}
-            className={`group relative text-left rounded-[var(--radius-md)] border overflow-hidden transition-all disabled:cursor-default ${
+            className={`group relative text-left rounded-md border overflow-hidden transition-all disabled:cursor-default ${
               selected
                 ? "border-m3-primary ring-2 ring-m3-primary/25"
                 : "border-m3-border hover:border-m3-secondary/60 enabled:cursor-pointer"
             }`}
           >
             <div className="border-b border-m3-border/70 transition-opacity group-enabled:group-hover:opacity-90">
-              <TemplateThumbnail
-                family={family.id}
-                showChords={showChords}
-                brand={brand}
-              />
+              <TemplateThumbnail family={family.id} showChords={showChords} brand={brand} />
             </div>
             <div className="px-2.5 py-1.5 bg-m3-card">
               <div className="text-xs font-semibold text-m3-text truncate">
@@ -133,7 +128,7 @@ export const TemplatePicker: React.FC<TemplatePickerProps> = ({
               </div>
             </div>
             {selected && (
-              <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-m3-primary text-white flex items-center justify-center shadow-[var(--shadow-sm)]">
+              <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-m3-primary text-white flex items-center justify-center shadow-sm">
                 <Check className="w-3 h-3" strokeWidth={3} />
               </span>
             )}

@@ -6,12 +6,7 @@
 import { useI18n } from "@/src/lib/i18n";
 import { Minus, Plus } from "lucide-react";
 import React, { useId } from "react";
-import {
-  clampFontSize,
-  DEFAULT_PRINT_OPTIONS,
-  FONT_SIZE_MAX,
-  FONT_SIZE_MIN,
-} from "./options";
+import { clampFontSize, DEFAULT_PRINT_OPTIONS, FONT_SIZE_MAX, FONT_SIZE_MIN } from "./options";
 import { getTemplateFamilyInfo } from "./templateFamilies";
 import { TemplatePicker } from "./TemplatePicker";
 import {
@@ -25,14 +20,9 @@ import {
 
 /* ── Small controls ─────────────────────────────────────────────── */
 
-const Group: React.FC<{ title: string; children: React.ReactNode }> = ({
-  title,
-  children,
-}) => (
+const Group: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <section className="space-y-2.5">
-    <h3 className="text-[11px] font-bold uppercase tracking-wider text-m3-secondary">
-      {title}
-    </h3>
+    <h3 className="text-[11px] font-bold uppercase tracking-wider text-m3-secondary">{title}</h3>
     {children}
   </section>
 );
@@ -45,29 +35,14 @@ interface ToggleRowProps {
   disabled?: boolean;
 }
 
-const ToggleRow: React.FC<ToggleRowProps> = ({
-  label,
-  hint,
-  checked,
-  onChange,
-  disabled,
-}) => {
+const ToggleRow: React.FC<ToggleRowProps> = ({ label, hint, checked, onChange, disabled }) => {
   const id = useId();
   return (
-    <div
-      className={`flex items-center justify-between gap-3 py-1 ${disabled ? "opacity-50" : ""}`}
-    >
-      <label
-        htmlFor={id}
-        className={`min-w-0 ${disabled ? "" : "cursor-pointer"}`}
-      >
-        <span className="block text-[13px] font-medium text-m3-text leading-tight">
-          {label}
-        </span>
+    <div className={`flex items-center justify-between gap-3 py-1 ${disabled ? "opacity-50" : ""}`}>
+      <label htmlFor={id} className={`min-w-0 ${disabled ? "" : "cursor-pointer"}`}>
+        <span className="block text-[13px] font-medium text-m3-text leading-tight">{label}</span>
         {hint && (
-          <span className="block text-[11px] text-m3-secondary leading-snug mt-0.5">
-            {hint}
-          </span>
+          <span className="block text-[11px] text-m3-secondary leading-snug mt-0.5">{hint}</span>
         )}
       </label>
       <button
@@ -112,7 +87,7 @@ function Segmented<T extends string>({
       <div
         role="radiogroup"
         aria-label={label}
-        className="grid gap-1 p-1 rounded-[var(--radius-md)] bg-m3-sidebar border border-m3-border/60"
+        className="grid gap-1 p-1 rounded-md bg-m3-sidebar border border-m3-border/60"
         style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
       >
         {options.map((opt) => {
@@ -125,9 +100,9 @@ function Segmented<T extends string>({
               aria-checked={active}
               disabled={disabled}
               onClick={() => onChange(opt.value)}
-              className={`min-h-8 px-2 rounded-[var(--radius-sm)] text-xs font-semibold transition-colors ${
+              className={`min-h-8 px-2 rounded-sm text-xs font-semibold transition-colors ${
                 active
-                  ? "bg-m3-card text-m3-text shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-text shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               } ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
@@ -151,9 +126,7 @@ const FontSizeControl: React.FC<{
   return (
     <div className={disabled ? "opacity-50" : ""}>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[13px] font-medium text-m3-text">
-          {t("print.options.fontSize")}
-        </span>
+        <span className="text-[13px] font-medium text-m3-text">{t("print.options.fontSize")}</span>
         <div className="flex items-center gap-0.5">
           <button
             type="button"
@@ -185,11 +158,9 @@ const FontSizeControl: React.FC<{
         step={1}
         value={value}
         disabled={disabled}
-        onInput={(e) =>
-          onChange(clampFontSize(Number((e.target as HTMLInputElement).value)))
-        }
+        onInput={(e) => onChange(clampFontSize(Number((e.target as HTMLInputElement).value)))}
         aria-label={t("print.options.fontSize")}
-        className="w-full accent-[var(--m3-primary)] cursor-pointer disabled:cursor-not-allowed"
+        className="w-full accent-(--m3-primary) cursor-pointer disabled:cursor-not-allowed"
       />
       {value !== DEFAULT_PRINT_OPTIONS.fontSize && !disabled && (
         <button
@@ -336,9 +307,7 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
               }
               checked={options.pageBreakBetweenItems}
               onChange={(v) => onChange({ pageBreakBetweenItems: v })}
-              disabled={
-                disabled || (context.hasSongContainers && !options.includeSongs)
-              }
+              disabled={disabled || (context.hasSongContainers && !options.includeSongs)}
             />
           </div>
         </div>
@@ -395,7 +364,7 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
               maxLength={160}
               placeholder={t("print.options.footerPlaceholder")}
               onChange={(e) => onChange({ customFooter: e.target.value })}
-              className="w-full text-[13px] px-3 py-2 rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar text-m3-text placeholder:text-m3-secondary/70 focus:outline-none focus:ring-2 focus:ring-m3-primary/30 focus:border-m3-primary disabled:opacity-50"
+              className="w-full text-[13px] px-3 py-2 rounded-md border border-m3-border bg-m3-sidebar text-m3-text placeholder:text-m3-secondary/70 focus:outline-none focus:ring-2 focus:ring-m3-primary/30 focus:border-m3-primary disabled:opacity-50"
             />
           </label>
         </div>
@@ -423,11 +392,7 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
         </p>
       </Group>
 
-      {wide ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">{groups}</div>
-      ) : (
-        groups
-      )}
+      {wide ? <div className="grid grid-cols-1 md:grid-cols-3 gap-6">{groups}</div> : groups}
     </div>
   );
 };

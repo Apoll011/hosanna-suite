@@ -94,9 +94,7 @@ export type SendNotificationsResult = {
 };
 
 export const notificationsApi = {
-  async create(
-    input: CreateNotificationInput,
-  ): Promise<CreateNotificationResult> {
+  async create(input: CreateNotificationInput): Promise<CreateNotificationResult> {
     return (await unwrapApiResult(
       await getApiClient().openapi.POST("/notifications", {
         body: input as {
@@ -139,19 +137,14 @@ export const notificationsApi = {
             description: recipient.description ?? input.description,
             ...(input.href ? { href: input.href } : {}),
             channel: "both",
-            ...(Object.keys(fcmData).length > 0
-              ? { fcm: { data: fcmData } }
-              : {}),
+            ...(Object.keys(fcmData).length > 0 ? { fcm: { data: fcmData } } : {}),
           });
           return { userId: recipient.userId, ok: true as const, error: "" };
         } catch (err) {
           return {
             userId: recipient.userId,
             ok: false as const,
-            error:
-              err instanceof Error && err.message
-                ? err.message
-                : "notification failed",
+            error: err instanceof Error && err.message ? err.message : "notification failed",
           };
         }
       }),
@@ -160,9 +153,7 @@ export const notificationsApi = {
     const succeededUserIds = settled.filter((r) => r.ok).map((r) => r.userId);
     return {
       sent: succeededUserIds.length,
-      failed: settled
-        .filter((r) => !r.ok)
-        .map((r) => ({ userId: r.userId, error: r.error })),
+      failed: settled.filter((r) => !r.ok).map((r) => ({ userId: r.userId, error: r.error })),
       succeededUserIds,
     };
   },

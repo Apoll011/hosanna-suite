@@ -5,11 +5,7 @@
 
 export type AiDestructiveConfirmation = {
   action:
-    | "delete_song"
-    | "delete_service"
-    | "delete_folder"
-    | "delete_collection"
-    | "delete_agenda";
+    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
   id: string;
   title: string;
   detail?: string;
@@ -17,9 +13,7 @@ export type AiDestructiveConfirmation = {
 };
 
 /** Extract a destructive Confirm-card payload from a tool result. */
-export function extractDestructiveConfirmation(
-  output: unknown,
-): AiDestructiveConfirmation | null {
+export function extractDestructiveConfirmation(output: unknown): AiDestructiveConfirmation | null {
   let parsed: unknown = output;
   if (typeof output === "string") {
     try {
@@ -29,8 +23,7 @@ export function extractDestructiveConfirmation(
     }
   }
   if (!parsed || typeof parsed !== "object") return null;
-  const confirmation = (parsed as { confirmation?: Record<string, unknown> })
-    .confirmation;
+  const confirmation = (parsed as { confirmation?: Record<string, unknown> }).confirmation;
   if (!confirmation || typeof confirmation !== "object") return null;
   const action = confirmation.action;
   const id = confirmation.id;
@@ -51,11 +44,9 @@ export function extractDestructiveConfirmation(
     action: action as AiDestructiveConfirmation["action"],
     id,
     title: typeof title === "string" && title.trim() ? title : id,
-    detail:
-      typeof confirmation.detail === "string" ? confirmation.detail : undefined,
+    detail: typeof confirmation.detail === "string" ? confirmation.detail : undefined,
     folderAction:
-      confirmation.folderAction === "delete_songs" ||
-      confirmation.folderAction === "move_to_root"
+      confirmation.folderAction === "delete_songs" || confirmation.folderAction === "move_to_root"
         ? confirmation.folderAction
         : undefined,
   };
@@ -96,8 +87,7 @@ export function extractSongProposal(output: unknown): {
     content,
     title: obj.proposal?.title,
     artist: obj.proposal?.artist,
-    diffPreview:
-      typeof obj.diff?.preview === "string" ? obj.diff.preview : undefined,
+    diffPreview: typeof obj.diff?.preview === "string" ? obj.diff.preview : undefined,
   };
 }
 

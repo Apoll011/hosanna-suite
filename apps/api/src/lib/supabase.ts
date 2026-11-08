@@ -37,10 +37,7 @@ export function isExternalImageUrl(value: string): boolean {
 /**
  * Uploads a base64 image to Supabase Storage and returns the public URL.
  */
-export async function uploadBase64Avatar(
-  userId: string,
-  base64: string,
-): Promise<string> {
+export async function uploadBase64Avatar(userId: string, base64: string): Promise<string> {
   let mimeType = "image/png";
   let rawBase64 = base64;
 
@@ -55,12 +52,10 @@ export async function uploadBase64Avatar(
   const filePath = `${userId}/avatar.${ext}`;
   const buffer = Buffer.from(rawBase64, "base64");
 
-  const { error } = await supabase.storage
-    .from(AVATAR_BUCKET)
-    .upload(filePath, buffer, {
-      contentType: mimeType,
-      upsert: true,
-    });
+  const { error } = await supabase.storage.from(AVATAR_BUCKET).upload(filePath, buffer, {
+    contentType: mimeType,
+    upsert: true,
+  });
 
   if (error) {
     console.error("[supabase] avatar upload failed:", error);
@@ -78,15 +73,10 @@ export async function uploadBase64Avatar(
  * Downloads an image from an external URL, uploads it to Supabase Storage,
  * and returns the public URL.
  */
-export async function uploadUrlAvatar(
-  userId: string,
-  imageUrl: string,
-): Promise<string> {
+export async function uploadUrlAvatar(userId: string, imageUrl: string): Promise<string> {
   const response = await fetch(imageUrl);
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch avatar from URL: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`Failed to fetch avatar from URL: ${response.status} ${response.statusText}`);
   }
 
   const contentType = response.headers.get("content-type") || "image/png";
@@ -94,12 +84,10 @@ export async function uploadUrlAvatar(
   const filePath = `${userId}/avatar.${ext}`;
   const buffer = Buffer.from(await response.arrayBuffer());
 
-  const { error } = await supabase.storage
-    .from(AVATAR_BUCKET)
-    .upload(filePath, buffer, {
-      contentType,
-      upsert: true,
-    });
+  const { error } = await supabase.storage.from(AVATAR_BUCKET).upload(filePath, buffer, {
+    contentType,
+    upsert: true,
+  });
 
   if (error) {
     console.error("[supabase] avatar URL upload failed:", error);

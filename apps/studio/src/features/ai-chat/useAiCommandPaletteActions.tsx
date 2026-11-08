@@ -24,8 +24,7 @@ export function useAiCommandPaletteActions() {
   const setOpen = chat?.setOpen;
   const newChat = chat?.newChat;
   const { t } = useI18n();
-  const { searchQuery, registerDynamicActions, unregisterDynamicActions } =
-    useCommandPalette();
+  const { searchQuery, registerDynamicActions, unregisterDynamicActions } = useCommandPalette();
 
   useEffect(() => {
     if (!visible || !send || !setOpen || !newChat) {

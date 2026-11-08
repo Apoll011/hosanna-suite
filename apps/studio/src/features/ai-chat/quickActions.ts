@@ -85,12 +85,7 @@ const BY_KIND: Record<string, ChipId[]> = {
     "completeMeta",
     "explainSelection",
   ],
-  service_editor: [
-    "reviewPlan",
-    "suggestSongs",
-    "fixSongRefs",
-    "completeStructure",
-  ],
+  service_editor: ["reviewPlan", "suggestSongs", "fixSongRefs", "completeStructure"],
   songs_list: ["createSong", "organizeFolders", "searchHelp"],
   services_list: ["planService", "upcomingAgenda"],
   explorer: ["organizeFolders", "createSong", "searchHelp"],
@@ -99,12 +94,7 @@ const BY_KIND: Record<string, ChipId[]> = {
   trash: ["reviewTrash", "general"],
 };
 
-const GENERAL: ChipId[] = [
-  "general",
-  "createSong",
-  "planService",
-  "organizeFolders",
-];
+const GENERAL: ChipId[] = ["general", "createSong", "planService", "organizeFolders"];
 
 export function chipsForContext(ctx: PageContextSnapshot): QuickChip[] {
   const ids = (ctx.kind && BY_KIND[ctx.kind]) || GENERAL;
@@ -115,8 +105,6 @@ export function chipsForContext(ctx: PageContextSnapshot): QuickChip[] {
 export function allChips(ctx: PageContextSnapshot): QuickChip[] {
   const first = chipsForContext(ctx);
   const seen = new Set(first.map((c) => c.id));
-  const rest = (Object.keys(ICONS) as ChipId[])
-    .filter((id) => !seen.has(id))
-    .map(chip);
+  const rest = (Object.keys(ICONS) as ChipId[]).filter((id) => !seen.has(id)).map(chip);
   return [...first, ...rest];
 }

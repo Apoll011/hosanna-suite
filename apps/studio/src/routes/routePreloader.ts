@@ -12,9 +12,7 @@ export interface LazyPreloadableComponent<T> extends React.LazyExoticComponent<
 
 export const prefetchQueue: Array<() => Promise<unknown>> = [];
 
-export const lazyImport = <T>(
-  componentImport: LazyImportFn<T>,
-): LazyPreloadableComponent<T> => {
+export const lazyImport = <T>(componentImport: LazyImportFn<T>): LazyPreloadableComponent<T> => {
   prefetchQueue.push(componentImport);
 
   let cachedPromise: Promise<{ default: React.ComponentType<T> }> | null = null;
@@ -220,7 +218,7 @@ export const routePreloaders: Array<{
     pattern: /\/accept-invitation(\/|\?|#|$)/,
     preload: () => AcceptInvitationPage.preload(),
   },
-  { pattern: /\/agenda(\/|\?|#|$)/, preload: () => DemoPage.preload() },
+  { pattern: /\/agenda(\/|\?|#|$)/, preload: () => AgendaPage.preload() },
   { pattern: /\/demo(\/|\?|#|$)/, preload: () => DemoPage.preload() },
   {
     pattern: /\/onboarding(\/|\?|#|$)/,

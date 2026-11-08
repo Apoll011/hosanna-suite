@@ -35,12 +35,7 @@ export function printDocumentClassName(options: PrintOptions): string {
     .join(" ");
 }
 
-export const PrintDocument: React.FC<PrintDocumentProps> = ({
-  items,
-  title,
-  options,
-  brand,
-}) => {
+export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, options, brand }) => {
   const { t, tc } = useI18n();
   const showCover = items.length > 2 && !!title;
   const pack = !options.pageBreakBetweenItems;
@@ -85,8 +80,7 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({
         <div className="hp-song-pack" key={`pack-${start}`}>
           {group.map((songItem, groupIndex) => {
             if (songItem.type !== "song") return null;
-            const showChurch =
-              !showCover && songOrdinal === 0 && groupIndex === 0;
+            const showChurch = !showCover && songOrdinal === 0 && groupIndex === 0;
             songOrdinal += 1;
             return (
               <SongPrintView
@@ -106,8 +100,7 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({
 
     switch (item.type) {
       case "song": {
-        const showChurch =
-          !showCover && (topLevelSongCount <= 1 || songOrdinal === 0);
+        const showChurch = !showCover && (topLevelSongCount <= 1 || songOrdinal === 0);
         songOrdinal += 1;
         body.push(
           <SongPrintView
@@ -176,9 +169,7 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({
   return (
     <div
       className={printDocumentClassName(options)}
-      style={
-        documentStyleVars(options, brand.accentColor) as React.CSSProperties
-      }
+      style={documentStyleVars(options, brand.accentColor) as React.CSSProperties}
     >
       {showCover && (
         <PrintSheet

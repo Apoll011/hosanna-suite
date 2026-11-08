@@ -89,8 +89,7 @@ const POKE_REACTIONS: { mood: LogosMood; ms: number }[] = [
 /** Moods where nothing else is going on, so he is free to fidget. */
 const isResting = (m: LogosMood) => m === "idle" || m === "helping";
 /** Moods a poke may interrupt (never real work or an error). */
-const isPokeable = (m: LogosMood) =>
-  isResting(m) || m === "happy" || m === "sleeping";
+const isPokeable = (m: LogosMood) => isResting(m) || m === "happy" || m === "sleeping";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -120,14 +119,7 @@ function Note({
   return (
     <g className={`logos-note ${className}`}>
       <g transform={`translate(${x} ${y})`}>
-        <ellipse
-          cx="0"
-          cy="0"
-          rx="4.6"
-          ry="3.4"
-          transform="rotate(-22)"
-          fill={color}
-        />
+        <ellipse cx="0" cy="0" rx="4.6" ry="3.4" transform="rotate(-22)" fill={color} />
         <path
           d="M3.9 -1.6 V-16 q0 3.4 6.4 5.4"
           fill="none"
@@ -155,10 +147,7 @@ function Heart({
   return (
     <g className={`logos-heart ${className}`}>
       <g transform={`translate(${x} ${y}) scale(${s})`}>
-        <path
-          d="M0 5 C-10 -1 -6.5 -9.5 0 -4.6 C6.5 -9.5 10 -1 0 5 Z"
-          fill="#FF5C86"
-        />
+        <path d="M0 5 C-10 -1 -6.5 -9.5 0 -4.6 C6.5 -9.5 10 -1 0 5 Z" fill="#FF5C86" />
         <ellipse
           cx="-3.2"
           cy="-3.4"
@@ -289,8 +278,7 @@ export const LogosMascot: React.FC<Props> = ({
     };
   }, [track, playAct]);
 
-  const resting: LogosMood =
-    track && asleep && isResting(mood) ? "sleeping" : mood;
+  const resting: LogosMood = track && asleep && isResting(mood) ? "sleeping" : mood;
   const shown: LogosMood = reaction ?? resting;
   const fidget = !reaction && isResting(shown);
   const pokeable = isPokeable(resting);
@@ -338,10 +326,7 @@ export const LogosMascot: React.FC<Props> = ({
     window.clearTimeout(petTimer.current);
     const now = performance.now();
     const prev = pokes.current[pokes.current.length - 1];
-    pokes.current = [
-      ...pokes.current.filter((at) => now - at < POKE_WINDOW_MS),
-      now,
-    ];
+    pokes.current = [...pokes.current.filter((at) => now - at < POKE_WINDOW_MS), now];
     const count = pokes.current.length;
     const go = (mood: LogosMood, ms: number) => {
       lastPoke.current = mood;
@@ -579,29 +564,10 @@ export const LogosMascot: React.FC<Props> = ({
           </clipPath>
         </defs>
 
-        <circle
-          className="logos-aura"
-          cx="80"
-          cy="80"
-          r="84"
-          fill={ref("aura")}
-        />
-        <circle
-          className="logos-glow"
-          cx="80"
-          cy="80"
-          r="76"
-          fill={ref("glow")}
-        />
+        <circle className="logos-aura" cx="80" cy="80" r="84" fill={ref("aura")} />
+        <circle className="logos-glow" cx="80" cy="80" r="76" fill={ref("glow")} />
         {!flat && (
-          <ellipse
-            className="logos-shadow"
-            cx="80"
-            cy="148"
-            rx="34"
-            ry="5.5"
-            fill="#0A2540"
-          />
+          <ellipse className="logos-shadow" cx="80" cy="148" rx="34" ry="5.5" fill="#0A2540" />
         )}
 
         {/* musical extras — separate layers, driven by mood */}
@@ -618,28 +584,12 @@ export const LogosMascot: React.FC<Props> = ({
         </g>
         <g className="logos-waves" fill="none" strokeLinecap="round">
           <g stroke={GOLD}>
-            <path
-              className="logos-wave-1"
-              d="M7 66 Q1.5 78 7 90"
-              strokeWidth="2.6"
-            />
-            <path
-              className="logos-wave-2"
-              d="M1 59 Q-8 78 1 97"
-              strokeWidth="2.2"
-            />
+            <path className="logos-wave-1" d="M7 66 Q1.5 78 7 90" strokeWidth="2.6" />
+            <path className="logos-wave-2" d="M1 59 Q-8 78 1 97" strokeWidth="2.2" />
           </g>
           <g stroke={GOLD}>
-            <path
-              className="logos-wave-1"
-              d="M153 66 Q158.5 78 153 90"
-              strokeWidth="2.6"
-            />
-            <path
-              className="logos-wave-2"
-              d="M159 59 Q168 78 159 97"
-              strokeWidth="2.2"
-            />
+            <path className="logos-wave-1" d="M153 66 Q158.5 78 153 90" strokeWidth="2.6" />
+            <path className="logos-wave-2" d="M159 59 Q168 78 159 97" strokeWidth="2.2" />
           </g>
         </g>
         <g
@@ -649,16 +599,8 @@ export const LogosMascot: React.FC<Props> = ({
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path
-            className="logos-z-a"
-            d="M118 40 h11 l-11 13 h11"
-            strokeWidth="3"
-          />
-          <path
-            className="logos-z-b"
-            d="M134 24 h8 l-8 9.5 h8"
-            strokeWidth="2.4"
-          />
+          <path className="logos-z-a" d="M118 40 h11 l-11 13 h11" strokeWidth="3" />
+          <path className="logos-z-b" d="M134 24 h8 l-8 9.5 h8" strokeWidth="2.4" />
         </g>
         <g
           className="logos-anger"
@@ -729,21 +671,8 @@ export const LogosMascot: React.FC<Props> = ({
               <g>
                 {[66, 94].map((x) => (
                   <g key={x}>
-                    <rect
-                      x={x - 3}
-                      y="122"
-                      width="6"
-                      height="16"
-                      rx="3"
-                      fill={ref("leg")}
-                    />
-                    <ellipse
-                      cx={x}
-                      cy="140.5"
-                      rx="11.5"
-                      ry="5.4"
-                      fill={ref("leg")}
-                    />
+                    <rect x={x - 3} y="122" width="6" height="16" rx="3" fill={ref("leg")} />
+                    <ellipse cx={x} cy="140.5" rx="11.5" ry="5.4" fill={ref("leg")} />
                     <path
                       d={`M${x - 5} 142.5 v-4 M${x} 143.5 v-4.5 M${x + 5} 142.5 v-4`}
                       stroke="#D77A1D"
@@ -751,14 +680,7 @@ export const LogosMascot: React.FC<Props> = ({
                       strokeLinecap="round"
                       opacity="0.7"
                     />
-                    <ellipse
-                      cx={x - 3}
-                      cy="138.6"
-                      rx="5"
-                      ry="1.6"
-                      fill="#fff"
-                      opacity="0.35"
-                    />
+                    <ellipse cx={x - 3} cy="138.6" rx="5" ry="1.6" fill="#fff" opacity="0.35" />
                   </g>
                 ))}
               </g>
@@ -797,18 +719,9 @@ export const LogosMascot: React.FC<Props> = ({
 
               {/* little crest */}
               <g className="logos-crest">
-                <path
-                  d="M80 22 C74 12 70 8 66 9 C70 14 72 19 74 23 Z"
-                  fill={SKY}
-                />
-                <path
-                  d="M80 22 C80 11 82 5 87 4 C85 10 85 17 84 23 Z"
-                  fill="#2B9DE0"
-                />
-                <path
-                  d="M82 23 C88 14 93 12 97 14 C93 17 90 20 87 24 Z"
-                  fill={SKY}
-                />
+                <path d="M80 22 C74 12 70 8 66 9 C70 14 72 19 74 23 Z" fill={SKY} />
+                <path d="M80 22 C80 11 82 5 87 4 C85 10 85 17 84 23 Z" fill="#2B9DE0" />
+                <path d="M82 23 C88 14 93 12 97 14 C93 17 90 20 87 24 Z" fill={SKY} />
               </g>
 
               {/* headphones: band */}
@@ -844,20 +757,8 @@ export const LogosMascot: React.FC<Props> = ({
               <g className="logos-face">
                 {/* rosy cheeks */}
                 <g fill="#FF8CA8">
-                  <ellipse
-                    className="logos-blush"
-                    cx="46"
-                    cy="92"
-                    rx="7.4"
-                    ry="4.4"
-                  />
-                  <ellipse
-                    className="logos-blush"
-                    cx="114"
-                    cy="92"
-                    rx="7.4"
-                    ry="4.4"
-                  />
+                  <ellipse className="logos-blush" cx="46" cy="92" rx="7.4" ry="4.4" />
+                  <ellipse className="logos-blush" cx="114" cy="92" rx="7.4" ry="4.4" />
                 </g>
                 {/* eyebrows — only visible when the mood needs them */}
                 <g
@@ -867,14 +768,8 @@ export const LogosMascot: React.FC<Props> = ({
                   strokeWidth="3.2"
                   strokeLinecap="round"
                 >
-                  <path
-                    className="logos-brow logos-brow-l"
-                    d="M53.5 60 Q62 55.5 70.5 60"
-                  />
-                  <path
-                    className="logos-brow logos-brow-r"
-                    d="M89.5 60 Q98 55.5 106.5 60"
-                  />
+                  <path className="logos-brow logos-brow-l" d="M53.5 60 Q62 55.5 70.5 60" />
+                  <path className="logos-brow logos-brow-r" d="M89.5 60 Q98 55.5 106.5 60" />
                 </g>
                 <g className="logos-eyes">
                   <g className="logos-look">
@@ -889,13 +784,7 @@ export const LogosMascot: React.FC<Props> = ({
                           transform={`rotate(${i === 0 ? 7 : -7} ${cx} 75)`}
                         />
                         <circle cx={cx - 2.8} cy="70.4" r="3.1" fill="#fff" />
-                        <circle
-                          cx={cx + 2.8}
-                          cy="80.2"
-                          r="1.5"
-                          fill="#fff"
-                          opacity="0.85"
-                        />
+                        <circle cx={cx + 2.8} cy="80.2" r="1.5" fill="#fff" opacity="0.85" />
                       </g>
                     ))}
                   </g>
@@ -967,22 +856,8 @@ export const LogosMascot: React.FC<Props> = ({
                 </g>
                 {/* cool: shades slide down over the eyes */}
                 <g className="logos-shades">
-                  <rect
-                    x="48"
-                    y="63"
-                    width="28"
-                    height="20"
-                    rx="8.5"
-                    fill={ref("lens")}
-                  />
-                  <rect
-                    x="84"
-                    y="63"
-                    width="28"
-                    height="20"
-                    rx="8.5"
-                    fill={ref("lens")}
-                  />
+                  <rect x="48" y="63" width="28" height="20" rx="8.5" fill={ref("lens")} />
+                  <rect x="84" y="63" width="28" height="20" rx="8.5" fill={ref("lens")} />
                   <path
                     d="M75 69 Q80 65.5 85 69"
                     fill="none"
@@ -1018,10 +893,7 @@ export const LogosMascot: React.FC<Props> = ({
                     fill="#F26B6B"
                   />
                   <g className="logos-beak-low">
-                    <path
-                      d="M71.5 91 Q71.5 99.5 80 99.5 Q88.5 99.5 88.5 91 Z"
-                      fill="#DB7418"
-                    />
+                    <path d="M71.5 91 Q71.5 99.5 80 99.5 Q88.5 99.5 88.5 91 Z" fill="#DB7418" />
                   </g>
                   <path
                     d="M69.5 88.5 Q69.5 79.5 80 79.5 Q90.5 79.5 90.5 88.5 Q90.5 93.6 80 93.6 Q69.5 93.6 69.5 88.5 Z"
@@ -1055,20 +927,9 @@ export const LogosMascot: React.FC<Props> = ({
         {/* dizzy stars circling the head (front layer) */}
         <g className="logos-dizzy-stars">
           {[0, 1, 2].map((i) => (
-            <g
-              key={i}
-              className="logos-star-x"
-              style={{ animationDelay: `${-i * 0.8}s` }}
-            >
-              <g
-                className="logos-star-y"
-                style={{ animationDelay: `${-0.6 - i * 0.8}s` }}
-              >
-                <path
-                  d={SPARK}
-                  transform="translate(80 22)"
-                  fill={i === 1 ? CYAN : GOLD}
-                />
+            <g key={i} className="logos-star-x" style={{ animationDelay: `${-i * 0.8}s` }}>
+              <g className="logos-star-y" style={{ animationDelay: `${-0.6 - i * 0.8}s` }}>
+                <path d={SPARK} transform="translate(80 22)" fill={i === 1 ? CYAN : GOLD} />
               </g>
             </g>
           ))}

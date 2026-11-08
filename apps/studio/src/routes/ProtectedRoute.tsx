@@ -11,8 +11,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { isDemoMode } from "../demo/index";
 
 export const ProtectedRoute: React.FC = () => {
-  const { isAuthenticated, isLoading, organization, hasAcceptedTrial } =
-    useAuth();
+  const { isAuthenticated, isLoading, organization, hasAcceptedTrial } = useAuth();
   const location = useLocation();
   const { t } = useI18n();
 
@@ -41,11 +40,7 @@ export const ProtectedRoute: React.FC = () => {
   // must finish onboarding before entering the studio. Once a subscription
   // record exists — even if the trial expired or the payment stopped — the
   // org counts as having accepted the trial and is allowed in.
-  if (
-    organization &&
-    hasAcceptedTrial === false &&
-    location.pathname !== "/onboarding"
-  ) {
+  if (organization && hasAcceptedTrial === false && location.pathname !== "/onboarding") {
     return <Navigate to="/onboarding" replace />;
   }
 

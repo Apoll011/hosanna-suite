@@ -46,10 +46,7 @@ const MAX_TENANTS = 2_048;
 
 class SyncCacheService {
   private legacyStore = new Map<string, LegacyCacheEntry>();
-  private checkpointStore = new Map<
-    string,
-    Map<ReplicatedCollection, CheckpointEntry>
-  >();
+  private checkpointStore = new Map<string, Map<ReplicatedCollection, CheckpointEntry>>();
 
   /**
    * Fast-path check: returns true if the server knows for certain that
@@ -116,9 +113,7 @@ class SyncCacheService {
     }
 
     tenantMap.set(collection, {
-      checkpoint: checkpoint
-        ? { updatedAt: checkpoint.updatedAt, id: checkpoint.id }
-        : null,
+      checkpoint: checkpoint ? { updatedAt: checkpoint.updatedAt, id: checkpoint.id } : null,
       cachedAt: Date.now(),
     });
   }

@@ -37,9 +37,7 @@ export function payloadHash(payload: unknown): string {
   const normalized = JSON.stringify(payload ?? null, (_k, v) => {
     if (v && typeof v === "object" && !Array.isArray(v)) {
       return Object.fromEntries(
-        Object.entries(v as Record<string, unknown>).sort(([a], [b]) =>
-          a.localeCompare(b),
-        ),
+        Object.entries(v as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)),
       );
     }
     return v;
