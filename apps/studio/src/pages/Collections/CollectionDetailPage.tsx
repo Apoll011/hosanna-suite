@@ -8,7 +8,7 @@ import {
   ConfirmDialog,
   EmptyState,
   Spinner,
-  TablePagination,
+  Table,
 } from "@/src/components/common";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
@@ -355,10 +355,10 @@ export const CollectionDetailPage: React.FC = () => {
     <div
       ref={containerRef}
       onMouseDown={handleMouseDown}
-      className="flex-1 flex flex-col h-full overflow-y-auto bg-m3-bg select-none"
+      className="flex-1 flex flex-col h-full overflow-hidden bg-m3-bg select-none"
     >
       {/* Identity strip */}
-      <div className="relative w-full overflow-hidden border-b border-m3-border">
+      <div className="relative w-full overflow-hidden border-b border-m3-border shrink-0">
         {collection.image ? (
           <img
             src={collection.image}
@@ -502,38 +502,39 @@ export const CollectionDetailPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 px-4 sm:px-6 py-4">
-        {paginatedSongs.length === 0 ? (
-          <EmptyState
-            icon={<Music2 className="w-8 h-8" />}
-            title={
-              songsInCollection.length === 0
-                ? t("collectionsPage.emptyTitle")
-                : t("collectionsPage.noSearchResultsTitle")
-            }
-            description={
-              songsInCollection.length === 0
-                ? t("collectionsPage.emptyDesc")
-                : t("collectionsPage.noSearchResultsDesc", {
-                    query: searchQuery,
-                  })
-            }
-            actionLabel={
-              !isFiltering && canUpdateCollection
-                ? t("collectionsPage.addSongs")
-                : undefined
-            }
-            onAction={
-              !isFiltering && canUpdateCollection
-                ? () => setIsAddSongsModalOpen(true)
-                : undefined
-            }
-          />
-        ) : (
-          /* Song table */
-          <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-sm overflow-hidden flex flex-col transition-all">
-            {/* Column headers */}
-            <div className="grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 border-b border-m3-border bg-m3-sidebar/40">
+      <div className="flex-1 min-h-0 flex flex-col px-4 sm:px-6 py-4">
+        <Table
+          empty={
+            paginatedSongs.length === 0 ? (
+              <EmptyState
+                icon={<Music2 className="w-8 h-8" />}
+                title={
+                  songsInCollection.length === 0
+                    ? t("collectionsPage.emptyTitle")
+                    : t("collectionsPage.noSearchResultsTitle")
+                }
+                description={
+                  songsInCollection.length === 0
+                    ? t("collectionsPage.emptyDesc")
+                    : t("collectionsPage.noSearchResultsDesc", {
+                        query: searchQuery,
+                      })
+                }
+                actionLabel={
+                  !isFiltering && canUpdateCollection
+                    ? t("collectionsPage.addSongs")
+                    : undefined
+                }
+                onAction={
+                  !isFiltering && canUpdateCollection
+                    ? () => setIsAddSongsModalOpen(true)
+                    : undefined
+                }
+              />
+            ) : undefined
+          }
+          header={
+            <div className="grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 border-b border-m3-border bg-m3-sidebar/40 shrink-0">
               <span className="text-label text-center">#</span>
               <span className="text-label">{t("songsPage.titlePath")}</span>
               <span className="hidden sm:block text-label text-right">
@@ -543,115 +544,114 @@ export const CollectionDetailPage: React.FC = () => {
                 {t("songsPage.actions")}
               </span>
             </div>
+          }
+          pagination={{
+            page: currentPage,
+            totalItems: totalSongs,
+            itemsPerPage,
+            onPageChange: setCurrentPage,
+            onItemsPerPageChange: setItemsPerPage,
+            itemLabel: t("songsPage.songsWord"),
+            emptyLabel: t("songsPage.zeroSongs"),
+          }}
+        >
+          <div className="divide-y divide-m3-border/30 text-sm font-semibold">
+            {paginatedSongs.map((song, index) => {
+              const globalIndex =
+                (currentPage - 1) * effectivePerPage + index + 1;
+              const keyMatch = song.content
+                ?.match(/\{key:\s*([^}]+)\}/i)?.[1]
+                ?.trim();
+              const isSelected = selectedSongIds.has(song.id);
 
-            <div className="divide-y divide-m3-border/30 text-sm font-semibold">
-              {paginatedSongs.map((song, index) => {
-                const globalIndex =
-                  (currentPage - 1) * effectivePerPage + index + 1;
-                const keyMatch = song.content
-                  ?.match(/\{key:\s*([^}]+)\}/i)?.[1]
-                  ?.trim();
-                const isSelected = selectedSongIds.has(song.id);
+              return (
+                <div
+                  key={song.id}
+                  data-item-id={song.id}
+                  onClick={(e) => handleSongClick(e, song)}
+                  onDoubleClick={() =>
+                    navigate(`${slugPrefix}/songs/${song.id}`)
+                  }
+                  onContextMenu={(e) => openContextMenu(e, song)}
+                  className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 transition-colors select-none cursor-pointer ${
+                    isSelected
+                      ? "bg-m3-primary/5 ring-2 ring-inset ring-m3-primary/30 text-m3-primary"
+                      : "text-m3-text hover:bg-m3-hover/50"
+                  }`}
+                >
+                  <span className="text-center text-caption tabular-nums">
+                    {globalIndex}
+                  </span>
 
-                return (
-                  <div
-                    key={song.id}
-                    data-item-id={song.id}
-                    onClick={(e) => handleSongClick(e, song)}
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/songs/${song.id}`)
-                    }
-                    onContextMenu={(e) => openContextMenu(e, song)}
-                    className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 transition-colors select-none cursor-pointer ${
-                      isSelected
-                        ? "bg-m3-primary/5 ring-2 ring-inset ring-m3-primary/30 text-m3-primary"
-                        : "text-m3-text hover:bg-m3-hover/50"
-                    }`}
-                  >
-                    <span className="text-center text-caption tabular-nums">
-                      {globalIndex}
+                  <div className="flex flex-col min-w-0">
+                    <span className="truncate font-semibold">
+                      {song.title}
                     </span>
-
-                    <div className="flex flex-col min-w-0">
-                      <span className="truncate font-semibold">
-                        {song.title}
-                      </span>
-                      <span className="text-caption mt-0.5 truncate">
-                        {song.artist || "—"}
-                      </span>
-                    </div>
-
-                    <div className="hidden sm:flex items-center gap-1.5 flex-wrap justify-end">
-                      {keyMatch && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
-                          {keyMatch}
-                        </span>
-                      )}
-                      {song.tags?.slice(0, 2).map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                      {(song.tags?.length ?? 0) > 2 && (
-                        <span className="text-caption">
-                          +{(song.tags?.length ?? 0) - 2}
-                        </span>
-                      )}
-                    </div>
-
-                    <div
-                      className="flex items-center justify-end gap-1"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        type="button"
-                        onClick={() =>
-                          navigate(`${slugPrefix}/songs/${song.id}`)
-                        }
-                        className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                        title={t("collectionsPage.viewSong")}
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </button>
-                      <Can permission="collection.update">
-                        <button
-                          type="button"
-                          onClick={() => setSongToRemove(song)}
-                          className="p-1.5 text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                          title={t("collectionsPage.removeFromCollection")}
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </Can>
-                      <button
-                        type="button"
-                        onClick={(e) => openContextMenu(e, song)}
-                        className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
-                        title={t("explorer.moreOptions")}
-                      >
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
-                    </div>
+                    <span className="text-caption mt-0.5 truncate">
+                      {song.artist || "—"}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
 
-            <TablePagination
-              page={currentPage}
-              totalItems={totalSongs}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setCurrentPage}
-              onItemsPerPageChange={setItemsPerPage}
-              itemLabel={t("songsPage.songsWord")}
-              emptyLabel={t("songsPage.zeroSongs")}
-            />
+                  <div className="hidden sm:flex items-center gap-1.5 flex-wrap justify-end">
+                    {keyMatch && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
+                        {keyMatch}
+                      </span>
+                    )}
+                    {song.tags?.slice(0, 2).map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {(song.tags?.length ?? 0) > 2 && (
+                      <span className="text-caption">
+                        +{(song.tags?.length ?? 0) - 2}
+                      </span>
+                    )}
+                  </div>
+
+                  <div
+                    className="flex items-center justify-end gap-1"
+                    onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigate(`${slugPrefix}/songs/${song.id}`)
+                      }
+                      className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                      title={t("collectionsPage.viewSong")}
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </button>
+                    <Can permission="collection.update">
+                      <button
+                        type="button"
+                        onClick={() => setSongToRemove(song)}
+                        className="p-1.5 text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                        title={t("collectionsPage.removeFromCollection")}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </Can>
+                    <button
+                      type="button"
+                      onClick={(e) => openContextMenu(e, song)}
+                      className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+                      title={t("explorer.moreOptions")}
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        )}
+        </Table>
       </div>
 
       {/* ── MODALS ───────────────────────────────────────────────────────────── */}

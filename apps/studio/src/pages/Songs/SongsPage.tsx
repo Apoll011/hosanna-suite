@@ -7,8 +7,7 @@ import { OverflowTagList } from "@/src/components/OverflowTagList";
 import {
   Badge,
   EmptyState,
-  Spinner,
-  TablePagination,
+  Table,
 } from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
@@ -391,22 +390,23 @@ export const SongsPage: React.FC<SongsPageProps> = ({
       ref={containerRef}
       data-tour="songs-list"
       onMouseDown={handleWorkspaceMouseDown}
-      className="flex-1 flex flex-col w-full mx-auto space-y-4 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-4 sm:p-8 max-w-7xl"
+      className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-300 overflow-hidden h-full relative select-none p-4 sm:p-8 max-w-7xl"
     >
-      {/* Main Content Area: Grid / Table View */}
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden flex flex-col flex-1 transition-colors">
-        {songsQuery.isLoading ? (
-          <div className="flex-1 flex items-center justify-center p-12 min-h-64">
-            <Spinner label={t("songsPage.loading")} />
-          </div>
-        ) : songsQuery.isError ? (
-          <div className="p-12 text-center text-m3-danger font-bold">
-            {t("songsPage.loadError", {
-              error: (songsQuery.error as unknown as Error).message,
-            })}
-          </div>
-        ) : songsData.length === 0 ? (
-          <div className="p-8">
+      <Table
+        stickyHeader
+        isLoading={songsQuery.isLoading}
+        loadingLabel={t("songsPage.loading")}
+        error={
+          songsQuery.isError
+            ? t("songsPage.loadError", {
+                error: (songsQuery.error as unknown as Error).message,
+              })
+            : undefined
+        }
+        empty={
+          !songsQuery.isLoading &&
+          !songsQuery.isError &&
+          songsData.length === 0 ? (
             <EmptyState
               icon={<Music className="w-12 h-12 text-m3-primary opacity-40" />}
               title={t("songsPage.noResults")}
@@ -418,177 +418,173 @@ export const SongsPage: React.FC<SongsPageProps> = ({
               actionLabel={emptyStateAction}
               onAction={() => openModal?.("create-song")}
             />
-          </div>
-        ) : (
-          /* Table View Layout */
-          <div className="overflow-x-auto flex-1">
-            <table className="w-full text-left border-collapse select-none">
-              <thead>
-                <tr className="bg-m3-sidebar/40 border-b border-m3-border text-label">
-                  <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
-                    {t("songsPage.titlePath")}
-                  </th>
-                  <th
-                    className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.artist")}
-                  </th>
-                  <th
-                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.folder")}
-                  </th>
-                  <th
-                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.tags")}
-                  </th>
-                  <th
-                    className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
-                    {t("songsPage.updatedAt")}
-                  </th>
-                  <th
-                    className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}
-                  >
-                    <span className="sr-only">{t("songsPage.actions")}</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                className={`divide-y divide-m3-border/40 ${
-                  isCompact ? "text-xs" : "text-[13px]"
-                } font-medium`}
-              >
-                {songsData.map((song) => {
-                  const folderName = folderMap.get(song.folderId || "");
-                  const isSelected = selectedSongIds.has(song.id);
-
-                  return (
-                    <tr
-                      key={song.id}
-                      data-item-id={song.id}
-                      data-item-type="song"
-                      className={`transition-colors group cursor-pointer ${
-                        isSelected
-                          ? "bg-m3-primary/10 text-m3-primary"
-                          : "hover:bg-m3-hover/50 text-m3-text"
-                      }`}
-                      onClick={(e) => handleSongClick(e, song)}
-                      onDoubleClick={() =>
-                        navigate(`${slugPrefix}/songs/${song.id}`)
-                      }
-                      onContextMenu={(e) => openContextMenu(e, song)}
-                    >
-                      <td
-                        className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-xs sm:max-w-md`}
-                      >
-                        <div className="flex flex-col min-w-0">
-                          <span className="truncate font-semibold text-m3-text">
-                            {song.title}
-                          </span>
-                          <span className="sm:hidden text-caption truncate mt-0.5">
-                            {song.artist || "—"}
-                          </span>
-                          {song.path && (
-                            <span className="hidden sm:block text-label opacity-60 mt-0.5 truncate">
-                              {song.path.split("/")[0]}/
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td
-                        className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-m3-secondary max-w-40 truncate font-normal`}
-                      >
-                        {song.artist || "—"}
-                      </td>
-
-                      <td
-                        className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                      >
-                        {folderName ? (
-                          <Badge variant="sky">{folderName}</Badge>
-                        ) : (
-                          <span className="text-label opacity-40 italic">
-                            {t("songsPage.root")}
-                          </span>
-                        )}
-                      </td>
-
-                      <td
-                        className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-56`}
-                      >
-                        <OverflowTagList tags={song.tags} />
-                      </td>
-
-                      <td
-                        className={`hidden md:table-cell tabular-nums ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-caption whitespace-nowrap`}
-                      >
-                        {new Date(song.updatedAt).toLocaleDateString(locale)}
-                      </td>
-
-                      <td
-                        className={`${isCompact ? "py-2.5 px-3" : "py-3 px-4"} text-right`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="flex items-center justify-end gap-0.5">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              navigate(`${slugPrefix}/songs/${song.id}`)
-                            }
-                            title={t("songsPage.openEditor")}
-                            aria-label={t("songsPage.openEditor")}
-                            className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                          >
-                            <FileText className="w-4 h-4" />
-                          </button>
-                          <Can permission="song.update">
-                            <button
-                              type="button"
-                              onClick={() => setMoveSongTarget?.(song)}
-                              title={t("songsPage.move")}
-                              aria-label={t("songsPage.move")}
-                              className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                            >
-                              <FolderInput className="w-4 h-4" />
-                            </button>
-                          </Can>
-                          <Can permission="song.delete">
-                            <button
-                              type="button"
-                              onClick={() => setDeleteSongTarget?.(song)}
-                              title={t("songsPage.delete")}
-                              aria-label={t("songsPage.delete")}
-                              className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </Can>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <TablePagination
-          page={page}
-          totalItems={totalSongs}
-          itemsPerPage={itemsPerPage}
-          onPageChange={setPage}
-          onItemsPerPageChange={(size) => {
+          ) : undefined
+        }
+        pagination={{
+          page,
+          totalItems: totalSongs,
+          itemsPerPage,
+          onPageChange: setPage,
+          onItemsPerPageChange: (size) => {
             setItemsPerPage(size);
             setPage(1);
-          }}
-          itemLabel={t("songsPage.songsWord")}
-          emptyLabel={t("songsPage.zeroSongs")}
-        />
-      </div>
+          },
+          itemLabel: t("songsPage.songsWord"),
+          emptyLabel: t("songsPage.zeroSongs"),
+        }}
+      >
+        <table className="w-full text-left border-collapse select-none">
+          <thead>
+            <tr className="bg-m3-sidebar/40 border-b border-m3-border text-label">
+              <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
+                {t("songsPage.titlePath")}
+              </th>
+              <th
+                className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+              >
+                {t("songsPage.artist")}
+              </th>
+              <th
+                className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+              >
+                {t("songsPage.folder")}
+              </th>
+              <th
+                className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+              >
+                {t("songsPage.tags")}
+              </th>
+              <th
+                className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+              >
+                {t("songsPage.updatedAt")}
+              </th>
+              <th
+                className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}
+              >
+                <span className="sr-only">{t("songsPage.actions")}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            className={`divide-y divide-m3-border/40 ${
+              isCompact ? "text-xs" : "text-[13px]"
+            } font-medium`}
+          >
+            {songsData.map((song) => {
+              const folderName = folderMap.get(song.folderId || "");
+              const isSelected = selectedSongIds.has(song.id);
+
+              return (
+                <tr
+                  key={song.id}
+                  data-item-id={song.id}
+                  data-item-type="song"
+                  className={`transition-colors group cursor-pointer ${
+                    isSelected
+                      ? "bg-m3-primary/10 text-m3-primary"
+                      : "hover:bg-m3-hover/50 text-m3-text"
+                  }`}
+                  onClick={(e) => handleSongClick(e, song)}
+                  onDoubleClick={() =>
+                    navigate(`${slugPrefix}/songs/${song.id}`)
+                  }
+                  onContextMenu={(e) => openContextMenu(e, song)}
+                >
+                  <td
+                    className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-xs sm:max-w-md`}
+                  >
+                    <div className="flex flex-col min-w-0">
+                      <span className="truncate font-semibold text-m3-text">
+                        {song.title}
+                      </span>
+                      <span className="sm:hidden text-caption truncate mt-0.5">
+                        {song.artist || "—"}
+                      </span>
+                      {song.path && (
+                        <span className="hidden sm:block text-label opacity-60 mt-0.5 truncate">
+                          {song.path.split("/")[0]}/
+                        </span>
+                      )}
+                    </div>
+                  </td>
+
+                  <td
+                    className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-m3-secondary max-w-40 truncate font-normal`}
+                  >
+                    {song.artist || "—"}
+                  </td>
+
+                  <td
+                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+                  >
+                    {folderName ? (
+                      <Badge variant="sky">{folderName}</Badge>
+                    ) : (
+                      <span className="text-label opacity-40 italic">
+                        {t("songsPage.root")}
+                      </span>
+                    )}
+                  </td>
+
+                  <td
+                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-56`}
+                  >
+                    <OverflowTagList tags={song.tags} />
+                  </td>
+
+                  <td
+                    className={`hidden md:table-cell tabular-nums ${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-caption whitespace-nowrap`}
+                  >
+                    {new Date(song.updatedAt).toLocaleDateString(locale)}
+                  </td>
+
+                  <td
+                    className={`${isCompact ? "py-2.5 px-3" : "py-3 px-4"} text-right`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-center justify-end gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(`${slugPrefix}/songs/${song.id}`)
+                        }
+                        title={t("songsPage.openEditor")}
+                        aria-label={t("songsPage.openEditor")}
+                        className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </button>
+                      <Can permission="song.update">
+                        <button
+                          type="button"
+                          onClick={() => setMoveSongTarget?.(song)}
+                          title={t("songsPage.move")}
+                          aria-label={t("songsPage.move")}
+                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                        >
+                          <FolderInput className="w-4 h-4" />
+                        </button>
+                      </Can>
+                      <Can permission="song.delete">
+                        <button
+                          type="button"
+                          onClick={() => setDeleteSongTarget?.(song)}
+                          title={t("songsPage.delete")}
+                          aria-label={t("songsPage.delete")}
+                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </Can>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Table>
 
       {/* Floating Context Menu */}
       {contextMenu && (
