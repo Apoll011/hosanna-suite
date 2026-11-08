@@ -193,21 +193,21 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
   if (activeProviders.length === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-slate-400" />
+          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
+            <Link2 className="w-4 h-4 text-m3-secondary" />
             {t("settings.account.socialAccounts.title")}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-m3-secondary mt-0.5">
             {t("settings.account.socialAccounts.desc")}
           </p>
         </div>
         <button
           onClick={() => void fetchAccounts()}
           disabled={isLoading}
-          className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer disabled:opacity-50"
+          className="p-1.5 text-m3-secondary hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-50"
           title={t("settings.account.activeSessions.refreshTitle")}
         >
           <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
@@ -215,7 +215,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
       </div>
 
       {isLoading ? (
-        <div className="py-6 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+        <div className="py-6 text-center text-xs text-m3-secondary flex items-center justify-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin text-m3-primary" />
           {t("settings.account.socialAccounts.loading")}
         </div>
@@ -233,15 +233,15 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
             return (
               <div
                 key={provider.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/40 gap-3"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl border border-m3-border/80 bg-m3-sidebar/50 gap-3"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shadow-xs shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-m3-card border border-m3-border flex items-center justify-center shadow-xs shrink-0">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      <span className="text-sm font-semibold text-m3-text">
                         {provider.name}
                       </span>
                       {isConnected ? (
@@ -250,12 +250,12 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
                           {t("settings.account.socialAccounts.connected")}
                         </span>
                       ) : (
-                        <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+                        <span className="text-[11px] font-medium text-m3-secondary">
                           {t("settings.account.socialAccounts.notConnected")}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-m3-secondary mt-0.5">
                       {provider.id === "google"
                         ? t("settings.account.socialAccounts.googleDesc")
                         : t("settings.account.socialAccounts.providerDesc", {

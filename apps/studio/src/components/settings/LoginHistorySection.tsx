@@ -272,15 +272,15 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
     scope === "self" && (events?.length ?? 0) < total && !isLoading;
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
       <div className="flex items-center justify-between mb-4 gap-3">
         {!hideHeader ? (
           <div className="min-w-0">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-              <History className="w-4 h-4 text-slate-400" />
+            <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
+              <History className="w-4 h-4 text-m3-secondary" />
               {resolvedTitle}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-m3-secondary mt-0.5">
               {resolvedDesc}
             </p>
           </div>
@@ -291,7 +291,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
           type="button"
           onClick={() => void fetchLogs(0, false)}
           disabled={isLoading}
-          className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer disabled:opacity-50"
+          className="p-1.5 text-m3-secondary hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-50"
           title={t("common.refresh")}
         >
           <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
@@ -348,18 +348,18 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
             return (
               <div
                 key={`${log.eventKey}-${log.createdAt}-${idx}`}
-                className="p-3 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-100 dark:border-slate-800/60 flex items-start gap-3"
+                className="p-3 bg-m3-sidebar rounded-xl border border-m3-border flex items-start gap-3"
               >
-                <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shrink-0">
+                <div className="p-2 bg-m3-card rounded-lg border border-m3-border shrink-0">
                   <DeviceIcon className="w-4 h-4 text-m3-primary" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-800 dark:text-slate-100">
-                      <EventIcon className="w-3 h-3 text-slate-400" />
+                      <EventIcon className="w-3 h-3 text-m3-secondary" />
                       {t(labelKey)}
                     </span>
-                    <span className="text-[10px] text-slate-400 tabular-nums">
+                    <span className="text-[10px] text-m3-secondary tabular-nums">
                       {formatWhen(log.createdAt)}
                     </span>
                   </div>
@@ -375,14 +375,14 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
                     </p>
                   )}
                   <p
-                    className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate"
+                    className="text-xs text-m3-secondary mt-0.5 truncate"
                     title={ua ?? undefined}
                   >
                     {deviceTitle ||
                       ua ||
                       t("settings.account.activeSessions.browserSession")}
                   </p>
-                  <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                  <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
                     {t("loginHistory.meta", {
                       ip: ip || t("settings.account.activeSessions.currentIp"),
                       location:

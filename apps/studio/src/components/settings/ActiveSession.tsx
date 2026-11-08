@@ -57,20 +57,20 @@ export const ActiveSessionsSection: React.FC = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <MonitorSmartphone className="w-4 h-4 text-slate-400" />
+          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
+            <MonitorSmartphone className="w-4 h-4 text-m3-secondary" />
             {t("settings.account.activeSessions.title")}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-m3-secondary mt-0.5">
             {t("settings.account.activeSessions.desc")}
           </p>
         </div>
         <button
           onClick={() => refetch()}
-          className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="p-1.5 text-m3-secondary hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-m3-hover transition-colors"
           title={t("settings.account.activeSessions.refreshTitle")}
         >
           <RefreshCw className="w-4 h-4" />
@@ -78,7 +78,7 @@ export const ActiveSessionsSection: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <div className="py-6 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+        <div className="py-6 text-center text-xs text-m3-secondary flex items-center justify-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin text-m3-primary" />
           {t("settings.account.activeSessions.loading")}
         </div>
@@ -116,20 +116,20 @@ export const ActiveSessionsSection: React.FC = () => {
               return (
                 <div
                   key={sess.id || idx}
-                  className="p-3 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-100 dark:border-slate-800/60 flex items-center justify-between gap-3"
+                  className="p-3 bg-m3-sidebar rounded-xl border border-m3-border flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shrink-0">
+                    <div className="p-2 bg-m3-card rounded-lg border border-m3-border shrink-0">
                       <DeviceIcon className="w-4 h-4 text-m3-primary" />
                     </div>
                     <div className="min-w-0">
                       <p
-                        className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate"
+                        className="text-xs font-bold text-m3-text truncate"
                         title={sess.userAgent ?? undefined}
                       >
                         {title}
                       </p>
-                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                      <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
                         {t("settings.account.activeSessions.ip", {
                           ip:
                             sess.ipAddress ||

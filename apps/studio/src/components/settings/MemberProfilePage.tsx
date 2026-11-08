@@ -121,14 +121,14 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
       <button
         type="button"
         onClick={onBack}
-        className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
+        className="flex items-center gap-2 text-xs font-semibold text-m3-secondary hover:text-slate-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
       >
         <ArrowLeft className="w-4 h-4" />
         {t("settings.memberProfile.backToList")}
       </button>
 
       {/* Profile Hero */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
+      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] overflow-hidden shadow-xs">
         <div className="h-24 bg-linear-to-r from-sky-700 via-indigo-700 to-slate-800 relative" />
 
         <div className="px-6 pb-6">
@@ -163,14 +163,14 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
                 {member.name}
               </h2>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className="text-xs text-slate-500 dark:text-slate-400">
+                <span className="text-xs text-m3-secondary">
                   {member.email}
                 </span>
-                <span className="text-slate-300 dark:text-slate-700">·</span>
+                <span className="text-m3-secondary dark:text-slate-700">·</span>
                 {getRoleBadge(member.role, t)}
               </div>
               {joinedDate && (
-                <div className="flex items-center gap-1.5 mt-2 text-[11px] text-slate-400">
+                <div className="flex items-center gap-1.5 mt-2 text-[11px] text-m3-secondary">
                   <CalendarDays className="w-3.5 h-3.5" />
                   {t("settings.memberProfile.memberSince", {
                     date: joinedDate,
@@ -212,9 +212,9 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
 
       {/* Role Management Card */}
       <Can permission="member.update">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-3">
+        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
               <Shield className="w-4 h-4 text-m3-primary" />
               {t("settings.memberProfile.rbacTitle")}
             </h3>
@@ -235,7 +235,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
-                className="w-full h-11 px-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold"
+                className="w-full h-11 px-3 bg-m3-sidebar border border-m3-border rounded-xl text-xs font-semibold"
               >
                 <Can permission="organization.update">
                   <option value="owner">{t("settings.roles.owner")}</option>
@@ -284,7 +284,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
           ) : (
             <p className="text-xs text-slate-500">
               {t("settings.memberProfile.currentRole")}{" "}
-              <strong className="text-slate-800 dark:text-slate-200">
+              <strong className="text-m3-text">
                 {getRoleLabel(member.role, t)}
               </strong>
             </p>
@@ -300,7 +300,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
           title={t("settings.memberProfile.removeConfirmTitle")}
         >
           <div className="space-y-4 pt-2">
-            <p className="text-xs text-slate-600 dark:text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-m3-secondary">
               {t("settings.memberProfile.removeConfirmText", {
                 name: member.name || "",
               })}
@@ -335,7 +335,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
           title={t("settings.memberProfile.leaveConfirmTitle")}
         >
           <div className="space-y-4 pt-2">
-            <p className="text-xs text-slate-600 dark:text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-m3-secondary">
               {t("settings.memberProfile.leaveConfirmText")}
             </p>
             <div className="flex justify-end gap-2">

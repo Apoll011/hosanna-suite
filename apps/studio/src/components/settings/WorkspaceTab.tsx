@@ -761,7 +761,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
           {/* Card Footer (Actions) */}
           {canManageOrg && (
-            <div className="px-6 py-4 bg-m3-sidebar/70 dark:bg-m3-card/70 border-t border-m3-border/60 flex justify-end items-center gap-3">
+            <div className="px-6 py-4 bg-m3-sidebar/70 border-t border-m3-border/60 flex justify-end items-center gap-3">
               {isEditing ? (
                 <>
                   <Button
@@ -824,7 +824,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Export Area */}
               <Can permission="backup.export">
-                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar/50 dark:bg-m3-bg justify-between">
+                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
                   <div className="flex items-start gap-3.5 mb-4">
                     <div className="p-2.5 bg-m3-primary/10 text-m3-primary rounded-xl shrink-0">
                       <Download className="w-5 h-5" />
@@ -861,7 +861,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
               {/* Import Area */}
               <Can permission="backup.import">
-                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar/50 dark:bg-m3-bg justify-between">
+                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
                   <div className="flex items-start gap-3.5 mb-4">
                     <div className="p-2.5 bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-xl shrink-0">
                       <Upload className="w-5 h-5" />

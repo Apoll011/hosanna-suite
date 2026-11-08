@@ -71,21 +71,21 @@ export const ResponsibilityCategoriesCard: React.FC<
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-xs overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+      <div className="px-6 py-5 border-b border-m3-border bg-m3-sidebar/50">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
               <Users className="w-5 h-5 text-emerald-500" />
               {t("settings.general.responsibilities.title")}
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-sm text-m3-secondary mt-1">
               {t("settings.general.responsibilities.desc")}
             </p>
           </div>
           {categories.length > 0 && (
-            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-full shrink-0">
+            <span className="text-xs font-bold text-m3-secondary bg-m3-card border border-m3-border px-3 py-1.5 rounded-full shrink-0">
               {tc("settings.general.responsibilities.count", categories.length)}
             </span>
           )}
@@ -101,7 +101,7 @@ export const ResponsibilityCategoriesCard: React.FC<
             return (
               <div
                 key={c.id}
-                className="flex items-center justify-between gap-2 p-2 rounded-xl border border-slate-200 dark:border-slate-800"
+                className="flex items-center justify-between gap-2 p-2 rounded-xl border border-m3-border"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div
@@ -109,7 +109,7 @@ export const ResponsibilityCategoriesCard: React.FC<
                   >
                     <Icon className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  <span className="text-xs font-bold text-m3-text truncate">
                     {c.label}
                   </span>
                 </div>
@@ -117,7 +117,7 @@ export const ResponsibilityCategoriesCard: React.FC<
                   type="button"
                   onClick={() => onRemove(c.id)}
                   disabled={disabled}
-                  className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-1.5 text-m3-secondary hover:text-rose-500 rounded-lg transition-colors cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
                   title={t("settings.general.responsibilities.remove")}
                   aria-label={t("settings.general.responsibilities.remove")}
                 >
@@ -127,14 +127,14 @@ export const ResponsibilityCategoriesCard: React.FC<
             );
           })}
           {categories.length === 0 && (
-            <p className="text-xs text-slate-400 text-center py-4">
+            <p className="text-xs text-m3-secondary text-center py-4">
               {t("settings.general.responsibilities.empty")}
             </p>
           )}
         </div>
 
         {/* Create new category */}
-        <div className="border-t border-slate-100 dark:border-slate-800 pt-5 space-y-3">
+        <div className="border-t border-m3-border pt-5 space-y-3">
           <p className="text-label text-m3-text">
             {t("settings.general.responsibilities.newLabel")}
           </p>
@@ -222,7 +222,7 @@ export const ResponsibilityCategoriesCard: React.FC<
           </div>
         </div>
 
-        <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+        <p className="text-[11px] font-medium text-m3-secondary">
           {t("settings.general.responsibilities.hint")}
         </p>
       </div>
