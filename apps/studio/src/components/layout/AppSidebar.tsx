@@ -185,7 +185,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               disabled={!isSidebarCollapsed}
               title={isSidebarCollapsed ? t("sidebar.expand") : undefined}
               aria-label={isSidebarCollapsed ? t("sidebar.expand") : undefined}
-              className={`w-11 h-11 rounded-md flex items-center justify-center border border-m3-border/50 bg-m3-card text-m3-secondary shadow-[var(--shadow-sm)] shrink-0 relative group transition-colors duration-200 ${
+              className={`w-11 h-11 rounded-md flex items-center justify-center border border-m3-border/50 bg-m3-card text-m3-secondary shadow-sm shrink-0 relative group transition-colors duration-200 ${
                 isSidebarCollapsed
                   ? "cursor-pointer hover:bg-m3-hover hover:border-m3-border hover:text-m3-text"
                   : ""
@@ -260,7 +260,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           {/* Workspace Switcher Popover */}
           {hasMultipleOrgs && isOrgMenuOpen && (
             <div
-              className="absolute top-full left-0 right-0 mt-2 z-50 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150"
+              className="absolute top-full left-0 right-0 mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150"
               role="menu"
             >
               <p className="px-2.5 pt-1.5 pb-1 text-label">
@@ -279,13 +279,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                         void onSwitchOrganization(o);
                       }
                     }}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-[var(--radius-md)] text-left transition-colors ${
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left transition-colors ${
                       isActive
                         ? "bg-m3-primary/10 text-m3-primary cursor-default"
                         : "text-m3-text hover:bg-m3-hover cursor-pointer"
                     }`}
                   >
-                    <div className="w-7 h-7 rounded-[var(--radius-md)] shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-[11px] font-semibold text-m3-primary">
+                    <div className="w-7 h-7 rounded-md shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-[11px] font-semibold text-m3-primary">
                       {o.logo ? (
                         <img
                           src={o.logo}
@@ -586,13 +586,13 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               data-tour="nav-user-menu"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               title={isSidebarCollapsed ? user.name : undefined}
-              className="w-full flex items-center justify-between p-2 min-h-10 rounded-[var(--radius-md)] hover:bg-m3-hover transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between p-2 min-h-10 rounded-md hover:bg-m3-hover transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 <div
                   className={`w-8 h-8 rounded-full bg-linear-to-tr ${getAvatarGradient(
                     user.name,
-                  )} flex items-center justify-center text-white font-semibold text-xs shadow-[var(--shadow-sm)] shrink-0`}
+                  )} flex items-center justify-center text-white font-semibold text-xs shadow-sm shrink-0`}
                 >
                   {user.image ? (
                     <img
@@ -631,7 +631,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </button>
 
             {isUserMenuOpen && (
-              <div className="absolute bottom-full left-0 mb-2 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-50 p-2 space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-150">
+              <div className="absolute bottom-full left-0 mb-2 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-150">
                 {canViewLibraryHealth && (
                   <button
                     onClick={() => {
@@ -639,7 +639,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                       navigate(`${slugPrefix}/analytics`);
                       if (window.innerWidth < 768) setIsSidebarOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
                     <BarChart3 className="w-4 h-4 text-m3-secondary" />
                     {t("sidebar.openAnalytics")}
@@ -651,7 +651,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                     navigate(`${slugPrefix}/organization`);
                     if (window.innerWidth < 768) setIsSidebarOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                 >
                   <Building2 className="w-4 h-4 text-m3-secondary" />
                   {t("sidebar.openOrganization")}
@@ -662,7 +662,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                     navigate(`${slugPrefix}/settings`);
                     if (window.innerWidth < 768) setIsSidebarOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                 >
                   <Settings className="w-4 h-4 text-m3-secondary" />
                   {t("sidebar.openSettings")}
@@ -673,7 +673,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                     setIsUserMenuOpen(false);
                     logout();
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-semibold text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-semibold text-m3-danger hover:bg-m3-danger/10 rounded-md transition-colors cursor-pointer text-left"
                 >
                   <LogOut className="w-4 h-4 text-m3-danger" />
                   {t("sidebar.logout")}
