@@ -4,7 +4,12 @@
  */
 
 import { OverflowTagList } from "@/src/components/OverflowTagList";
-import { Badge, EmptyState, Spinner } from "@/src/components/common";
+import {
+  Badge,
+  EmptyState,
+  Spinner,
+  TablePagination,
+} from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
@@ -13,8 +18,6 @@ import { usePermissionValue } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Song } from "@/src/types";
 import {
-  ChevronLeft,
-  ChevronRight,
   FileText,
   FolderInput,
   Music,
@@ -238,7 +241,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const totalSongs = filteredSongs.length;
   const effectivePerPage =
     itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
-  const totalPages = Math.max(1, Math.ceil(totalSongs / effectivePerPage));
 
   // Reset page when filters change
   useEffect(() => {
@@ -574,113 +576,18 @@ export const SongsPage: React.FC<SongsPageProps> = ({
           </div>
         )}
 
-        {/* Clean, Modern Pagination & Status Footer Bar */}
-        <div className="px-4 py-3 bg-m3-sidebar/30 border-t border-m3-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          {/* Left: Summary & Per-Page selector */}
-          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-            <span className="text-m3-secondary font-medium">
-              {totalSongs === 0 ? (
-                t("songsPage.zeroSongs")
-              ) : (
-                <>
-                  {t("songsPage.showing")}{" "}
-                  <strong className="font-bold text-m3-text">
-                    {itemsPerPage === 0 ? 1 : (page - 1) * effectivePerPage + 1}
-                  </strong>{" "}
-                  {t("songsPage.to")}{" "}
-                  <strong className="font-bold text-m3-text">
-                    {itemsPerPage === 0
-                      ? totalSongs
-                      : Math.min(page * effectivePerPage, totalSongs)}
-                  </strong>{" "}
-                  {t("songsPage.of")}{" "}
-                  <strong className="font-bold text-m3-text">
-                    {totalSongs}
-                  </strong>{" "}
-                  {t("songsPage.songsWord")}
-                </>
-              )}
-            </span>
-
-            <div className="flex items-center gap-1.5 bg-m3-card border border-m3-border rounded-xl px-2.5 py-1 shadow-[var(--shadow-sm)]">
-              <span className="text-label">{t("songsPage.display")}</span>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
-                  setPage(1);
-                }}
-                className="bg-transparent font-bold text-m3-text focus:outline-none cursor-pointer text-xs"
-              >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={0}>
-                  {t("songsPage.allPages", { count: totalSongs })}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          {/* Right: numbered page switcher (same pattern as collection table) */}
-          {totalPages > 1 && (
-            <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-[var(--shadow-sm)]">
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-                className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                title={t("songsPage.prevPage")}
-                aria-label={t("songsPage.prevPage")}
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((p) => {
-                  if (totalPages <= 7) return true;
-                  if (p === 1 || p === totalPages) return true;
-                  return Math.abs(p - page) <= 1;
-                })
-                .map((p, idx, arr) => {
-                  const prev = arr[idx - 1];
-                  const showEllipsis = prev !== undefined && p - prev > 1;
-                  return (
-                    <React.Fragment key={p}>
-                      {showEllipsis && (
-                        <span className="px-1 text-m3-secondary opacity-50">
-                          …
-                        </span>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setPage(p)}
-                        aria-current={page === p ? "page" : undefined}
-                        className={`w-7 h-7 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                          page === p
-                            ? "bg-m3-primary text-white shadow-sm"
-                            : "hover:bg-m3-hover text-m3-text"
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    </React.Fragment>
-                  );
-                })}
-
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page >= totalPages}
-                className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                title={t("songsPage.nextPage")}
-                aria-label={t("songsPage.nextPage")}
-              >
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          )}
-        </div>
+        <TablePagination
+          page={page}
+          totalItems={totalSongs}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setPage}
+          onItemsPerPageChange={(size) => {
+            setItemsPerPage(size);
+            setPage(1);
+          }}
+          itemLabel={t("songsPage.songsWord")}
+          emptyLabel={t("songsPage.zeroSongs")}
+        />
       </div>
 
       {/* Floating Context Menu */}

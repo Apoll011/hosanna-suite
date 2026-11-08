@@ -52,6 +52,16 @@ export const pt = {
     refresh: "Atualizar",
   },
 
+  table: {
+    showing: "A mostrar",
+    to: "a",
+    of: "de",
+    display: "Exibir:",
+    all: "Todos ({count})",
+    prevPage: "Página Anterior",
+    nextPage: "Página Seguinte",
+  },
+
   sidebar: {
     mainMenu: "Menu Principal",
     drive: "Drive da {name}",

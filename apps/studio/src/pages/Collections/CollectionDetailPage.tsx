@@ -8,6 +8,7 @@ import {
   ConfirmDialog,
   EmptyState,
   Spinner,
+  TablePagination,
 } from "@/src/components/common";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
@@ -28,8 +29,6 @@ import {
 } from "@/src/utils/folderCustomization";
 import {
   CheckSquare,
-  ChevronLeft,
-  ChevronRight,
   Edit2,
   ExternalLink,
   FolderKanban,
@@ -88,7 +87,7 @@ export const CollectionDetailPage: React.FC = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const [itemsPerPage, setItemsPerPage] = useState(50);
 
   // Modals & menus
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -172,11 +171,17 @@ export const CollectionDetailPage: React.FC = () => {
 
   // Pagination
   const totalSongs = filteredSongs.length;
-  const totalPages = Math.ceil(totalSongs / itemsPerPage) || 1;
+  const effectivePerPage =
+    itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
   const paginatedSongs = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredSongs.slice(start, start + itemsPerPage);
-  }, [filteredSongs, currentPage]);
+    if (itemsPerPage === 0) return filteredSongs;
+    const start = (currentPage - 1) * effectivePerPage;
+    return filteredSongs.slice(start, start + effectivePerPage);
+  }, [filteredSongs, currentPage, effectivePerPage, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
   const handleUpdate = async (data: {
     name: string;
@@ -542,7 +547,7 @@ export const CollectionDetailPage: React.FC = () => {
             <div className="divide-y divide-m3-border/30 text-sm font-semibold">
               {paginatedSongs.map((song, index) => {
                 const globalIndex =
-                  (currentPage - 1) * itemsPerPage + index + 1;
+                  (currentPage - 1) * effectivePerPage + index + 1;
                 const keyMatch = song.content
                   ?.match(/\{key:\s*([^}]+)\}/i)?.[1]
                   ?.trim();
@@ -636,73 +641,15 @@ export const CollectionDetailPage: React.FC = () => {
               })}
             </div>
 
-            {/* Pagination footer */}
-            {totalPages > 1 && (
-              <div className="px-4 py-3 bg-m3-sidebar/30 border-t border-m3-border flex items-center justify-between text-xs">
-                <span className="text-m3-secondary font-medium">
-                  {t("collectionsPage.paginationInfo", {
-                    from: Math.min(
-                      (currentPage - 1) * itemsPerPage + 1,
-                      totalSongs,
-                    ),
-                    to: Math.min(currentPage * itemsPerPage, totalSongs),
-                    total: totalSongs,
-                  })}
-                </span>
-                <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-xs">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage <= 1}
-                    className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter((p) => {
-                      if (totalPages <= 7) return true;
-                      if (p === 1 || p === totalPages) return true;
-                      return Math.abs(p - currentPage) <= 1;
-                    })
-                    .map((p, idx, arr) => {
-                      const prev = arr[idx - 1];
-                      const showEllipsis = prev && p - prev > 1;
-                      return (
-                        <React.Fragment key={p}>
-                          {showEllipsis && (
-                            <span className="px-1 text-m3-secondary opacity-50">
-                              …
-                            </span>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setCurrentPage(p)}
-                            className={`w-7 h-7 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                              currentPage === p
-                                ? "bg-m3-primary text-white shadow-sm"
-                                : "hover:bg-m3-hover text-m3-text"
-                            }`}
-                          >
-                            {p}
-                          </button>
-                        </React.Fragment>
-                      );
-                    })}
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
-                    disabled={currentPage >= totalPages}
-                    className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
+            <TablePagination
+              page={currentPage}
+              totalItems={totalSongs}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setCurrentPage}
+              onItemsPerPageChange={setItemsPerPage}
+              itemLabel={t("songsPage.songsWord")}
+              emptyLabel={t("songsPage.zeroSongs")}
+            />
           </div>
         )}
       </div>

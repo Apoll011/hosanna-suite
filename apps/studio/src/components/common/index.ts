@@ -8,5 +8,7 @@ export { PageHeader } from "./PageHeader";
 export { Pagination } from "./Pagination";
 export { Spinner } from "./Spinner";
 export { Surface } from "./Surface";
+export { TablePagination } from "./TablePagination";
+export type { TablePaginationProps } from "./TablePagination";
 export { Tabs } from "./Tabs";
 export type { TabItem } from "./Tabs";

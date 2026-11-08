@@ -54,6 +54,16 @@ export const es: typeof pt = {
     refresh: "Actualizar",
   },
 
+  table: {
+    showing: "Mostrando",
+    to: "a",
+    of: "de",
+    display: "Mostrar:",
+    all: "Todos ({count})",
+    prevPage: "Página Anterior",
+    nextPage: "Página Siguiente",
+  },
+
   sidebar: {
     mainMenu: "Menú Principal",
     drive: "Drive de {name}",
