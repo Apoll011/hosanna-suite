@@ -196,15 +196,19 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast 
                   <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                 </div>
               )}
-              <div className="text-2xl mb-2" aria-hidden="true">
-                🌐
+              <div className="flex items-center gap-3 pr-6">
+                <span className="text-2xl shrink-0" aria-hidden="true">
+                  🌐
+                </span>
+                <div className="min-w-0 text-left">
+                  <span className="block font-semibold text-sm text-m3-text">
+                    {t("settings.appearance.languageAuto")}
+                  </span>
+                  <span className="block mt-0.5 text-caption">
+                    {t("settings.appearance.languageAutoDesc")}
+                  </span>
+                </div>
               </div>
-              <span className="block font-semibold text-sm text-m3-text">
-                {t("settings.appearance.languageAuto")}
-              </span>
-              <span className="block mt-1 text-caption">
-                {t("settings.appearance.languageAutoDesc")}
-              </span>
             </button>
 
             {LANGUAGES.map((lang) => {
@@ -222,11 +226,17 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast 
                       <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                     </div>
                   )}
-                  <div className="text-2xl mb-2" aria-hidden="true">
-                    {lang.flag}
+                  <div className="flex items-center gap-3 pr-6">
+                    <span className="text-2xl shrink-0" aria-hidden="true">
+                      {lang.flag}
+                    </span>
+                    <div className="min-w-0 text-left">
+                      <span className="block font-semibold text-sm text-m3-text">
+                        {lang.nativeLabel}
+                      </span>
+                      <span className="block mt-0.5 text-caption">{lang.englishLabel}</span>
+                    </div>
                   </div>
-                  <span className="block font-semibold text-sm text-m3-text">{lang.nativeLabel}</span>
-                  <span className="block mt-1 text-caption">{lang.englishLabel}</span>
                 </button>
               );
             })}
