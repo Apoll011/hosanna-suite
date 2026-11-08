@@ -7,14 +7,17 @@ import {
 } from "@/src/components/common";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
-import { usePermissionValue } from "@/src/lib/permissions/client";
+import { useCan, usePermissionValue } from "@/src/lib/permissions/client";
+import { Can } from "@/src/lib/permissions/components";
 import { Service } from "@/src/types";
 import {
   Archive,
   ArchiveRestore,
   Calendar,
+  CheckSquare,
   Copy,
   Edit2,
+  Plus,
   Printer,
   Trash2,
   X,
@@ -88,6 +91,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     (context.archivedServicesQuery as typeof localArchivedServicesQuery) ??
     localArchivedServicesQuery;
 
+  const { granted: canCreateService } = useCan("service.create");
   const { value: emptyStateAction } = usePermissionValue(
     "service.create",
     t("servicesPage.createFirstService"),
@@ -308,23 +312,34 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
   // ─── Context menu opener ──────────────────────────────────────────────────
   const openContextMenu = useCallback(
-    (e: React.MouseEvent, service: Service) => {
+    (e: React.MouseEvent, service?: Service) => {
       e.preventDefault();
       e.stopPropagation();
 
-      if (!selectedServiceIds.has(service.id)) {
-        setSelectedServiceIds(new Set([service.id]));
-        setLastClickedId(service.id);
+      if (service) {
+        if (!selectedServiceIds.has(service.id)) {
+          setSelectedServiceIds(new Set([service.id]));
+          setLastClickedId(service.id);
+        }
       }
 
       const x = Math.max(12, Math.min(e.clientX, window.innerWidth - 240));
       const y = Math.max(12, Math.min(e.clientY, window.innerHeight - 320));
-      const isMulti =
-        selectedServiceIds.size > 1 && selectedServiceIds.has(service.id);
+      const isMulti = service
+        ? selectedServiceIds.size > 1 && selectedServiceIds.has(service.id)
+        : false;
 
-      setContextMenu({ x, y, service, isMulti });
+      setContextMenu({ x, y, service: service ?? null, isMulti });
     },
     [selectedServiceIds],
+  );
+
+  const handleCanvasContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      if ((e.target as HTMLElement).closest("[data-item-id]")) return;
+      openContextMenu(e);
+    },
+    [openContextMenu],
   );
 
   // ─── Service actions ──────────────────────────────────────────────────────
@@ -472,15 +487,43 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     return (
       <div
         className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-500 overflow-y-auto h-full p-4 sm:p-8 max-w-7xl"
-        onContextMenu={(e) => e.preventDefault()}
+        onContextMenu={handleCanvasContextMenu}
       >
         <EmptyState
           icon={<Calendar className="w-12 h-12 text-m3-primary opacity-40" />}
           title={t("servicesPage.noServicesTitle")}
           description={t("servicesPage.noServicesDesc")}
           actionLabel={emptyStateAction}
-          onAction={() => setIsCreateModalOpen(true)}
+          onAction={
+            canCreateService ? () => setIsCreateModalOpen(true) : undefined
+          }
         />
+        {contextMenu && contextMenu.service === null && (
+          <div
+            style={{ top: contextMenu.y, left: contextMenu.x }}
+            className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <div className="px-3 py-1.5 text-label text-m3-secondary border-b border-m3-border mb-0.5 truncate">
+              {t("common.services")}
+            </div>
+            <Can permission="service.create">
+              <button
+                type="button"
+                onClick={() => {
+                  setContextMenu(null);
+                  setIsCreateModalOpen(true);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+              >
+                <Plus className="w-4 h-4 text-m3-secondary shrink-0" />
+                <span>{t("addressBar.newService")}</span>
+              </button>
+            </Can>
+          </div>
+        )}
         <Modal
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
@@ -500,7 +543,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     <div
       className="flex-1 flex flex-col w-full mx-auto space-y-6 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-4 sm:p-8 max-w-7xl"
       onMouseDown={handleWorkspaceMouseDown}
-      onContextMenu={(e) => e.preventDefault()}
+      onContextMenu={handleCanvasContextMenu}
       ref={containerRef}
     >
       {/* ── Services Content (Grid / List Views) ── */}
@@ -721,9 +764,42 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
           style={{ top: contextMenu.y, left: contextMenu.x }}
           className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
           onContextMenu={(e) => e.preventDefault()}
         >
-          {contextMenu.isMulti ? (
+          {contextMenu.service === null ? (
+            <>
+              <div className="px-3 py-1.5 text-label text-m3-secondary border-b border-m3-border mb-0.5 truncate">
+                {t("common.services")}
+              </div>
+              <Can permission="service.create">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setContextMenu(null);
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                >
+                  <Plus className="w-4 h-4 text-m3-secondary shrink-0" />
+                  <span>{t("addressBar.newService")}</span>
+                </button>
+              </Can>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedServiceIds(
+                    new Set(allVisibleServices.map((s) => s.id)),
+                  );
+                  setContextMenu(null);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+              >
+                <CheckSquare className="w-4 h-4 text-m3-secondary shrink-0" />
+                <span>{t("explorer.contextMenu.selectAll")}</span>
+              </button>
+            </>
+          ) : contextMenu.isMulti ? (
             <>
               <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 flex items-center justify-between">
                 <span>{t("servicesPage.multiSelect")}</span>
@@ -788,7 +864,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 <span>{t("servicesPage.deselect")}</span>
               </button>
             </>
-          ) : contextMenu.service ? (
+          ) : (
             <>
               <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
                 {contextMenu.service.name}
@@ -871,7 +947,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 <span>{t("servicesPage.deleteService")}</span>
               </button>
             </>
-          ) : null}
+          )}
         </div>
       )}
 
