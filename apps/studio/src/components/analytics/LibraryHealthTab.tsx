@@ -31,7 +31,10 @@ export interface LibraryHealthTabProps {
   active: boolean;
 }
 
-function criterionLabel(t: (key: string) => string, criterion: ScoreMissingCriterion): string {
+function criterionLabel(
+  t: (key: `analytics.libraryHealth.criteria.${ScoreMissingCriterion}`) => string,
+  criterion: ScoreMissingCriterion,
+): string {
   return t(`analytics.libraryHealth.criteria.${criterion}`);
 }
 
