@@ -409,14 +409,15 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
                 <p className="text-base font-semibold text-m3-text">••••••••••••</p>
               )}
             </div>
+
+            <div className="border-t border-m3-border pt-6">
+              <TwoFactorSection embedded />
+            </div>
           </div>
         </Surface>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
-        <SocialAccountsSection />
-        <TwoFactorSection />
-      </div>
+      <SocialAccountsSection />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
         <ActiveSessionsSection />

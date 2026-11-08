@@ -201,7 +201,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
           {t("settings.account.socialAccounts.loading")}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {activeProviders.map((provider) => {
             const Icon = provider.icon;
             const linkedAccount = accounts.find(
