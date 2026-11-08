@@ -226,192 +226,198 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
         </div>
       </Surface>
 
-      <Surface>
-        <div className="flex items-center justify-between mb-2">
-          <label className="text-label">{t("settings.account.profile.displayName")}</label>
-          {!isEditingName && (
-            <button
-              onClick={() => {
-                setDraftName(displayUser?.name || "");
-                setIsEditingName(true);
-              }}
-              className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <PenLine className="w-3.5 h-3.5" />
-              {t("settings.account.profile.edit")}
-            </button>
-          )}
-        </div>
-
-        {isEditingName ? (
-          <div className="space-y-3 pt-1">
-            <Input
-              value={draftName}
-              onChange={(e) => setDraftName(e.target.value)}
-              placeholder={t("settings.account.profile.namePlaceholder")}
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={() => setIsEditingName(false)}>
-                {t("common.cancel")}
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleSaveName}
-                icon={<Save className="w-4 h-4" />}
-              >
-                {t("common.save")}
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <p className="text-base font-semibold text-m3-text">{displayUser?.name || "—"}</p>
-        )}
-      </Surface>
-
-      <Surface>
-        <div className="flex items-center justify-between mb-2">
-          <label className="text-label">{t("settings.account.profile.emailAddress")}</label>
-          {!isEditingEmail && (
-            <button
-              onClick={() => {
-                setDraftEmail(displayUser?.email || "");
-                setIsEditingEmail(true);
-              }}
-              className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <PenLine className="w-3.5 h-3.5" />
-              {t("settings.account.profile.changeEmail")}
-            </button>
-          )}
-        </div>
-
-        {isEditingEmail ? (
-          <div className="space-y-3 pt-1">
-            <Input
-              type="email"
-              value={draftEmail}
-              onChange={(e) => setDraftEmail(e.target.value)}
-              placeholder={t("settings.account.profile.emailPlaceholder")}
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(false)}>
-                {t("common.cancel")}
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleSaveEmail}
-                icon={<Save className="w-4 h-4" />}
-              >
-                {t("settings.account.profile.saveEmail")}
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <p className="text-base font-semibold text-m3-text">{displayUser?.email || "—"}</p>
-        )}
-      </Surface>
-
-      <Surface>
-        <div className="flex items-center justify-between mb-2">
-          <label className="text-label flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-m3-primary" />
-            {t("settings.account.profile.password")}
-          </label>
-          {!isEditingPassword && (
-            <button
-              onClick={() => setIsEditingPassword(true)}
-              className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <KeyRound className="w-3.5 h-3.5" />
-              {t("settings.account.profile.changePassword")}
-            </button>
-          )}
-        </div>
-
-        {isEditingPassword ? (
-          <div className="space-y-4 pt-2">
-            <Input
-              type="password"
-              label={t("settings.account.profile.currentPassword")}
-              value={draftOldPassword}
-              onChange={(e) => setDraftOldPassword(e.target.value)}
-            />
-            <Input
-              type="password"
-              label={t("settings.account.profile.newPassword")}
-              value={draftNewPassword}
-              onChange={(e) => setDraftNewPassword(e.target.value)}
-            />
-            <Input
-              type="password"
-              label={t("settings.account.profile.confirmNewPassword")}
-              value={draftConfirmPassword}
-              onChange={(e) => setDraftConfirmPassword(e.target.value)}
-            />
-
-            <div className="flex justify-end gap-2 pt-2">
-              <Button
-                variant="outline"
-                size="sm"
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Surface className="h-full">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-label">{t("settings.account.profile.displayName")}</label>
+            {!isEditingName && (
+              <button
                 onClick={() => {
-                  setIsEditingPassword(false);
-                  setDraftOldPassword("");
-                  setDraftNewPassword("");
-                  setDraftConfirmPassword("");
+                  setDraftName(displayUser?.name || "");
+                  setIsEditingName(true);
                 }}
+                className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
               >
-                {t("common.cancel")}
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handleSavePassword}
-                icon={<Save className="w-4 h-4" />}
+                <PenLine className="w-3.5 h-3.5" />
+                {t("settings.account.profile.edit")}
+              </button>
+            )}
+          </div>
+
+          {isEditingName ? (
+            <div className="space-y-3 pt-1">
+              <Input
+                value={draftName}
+                onChange={(e) => setDraftName(e.target.value)}
+                placeholder={t("settings.account.profile.namePlaceholder")}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" size="sm" onClick={() => setIsEditingName(false)}>
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleSaveName}
+                  icon={<Save className="w-4 h-4" />}
+                >
+                  {t("common.save")}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-base font-semibold text-m3-text">{displayUser?.name || "—"}</p>
+          )}
+        </Surface>
+
+        <Surface className="h-full">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-label">{t("settings.account.profile.emailAddress")}</label>
+            {!isEditingEmail && (
+              <button
+                onClick={() => {
+                  setDraftEmail(displayUser?.email || "");
+                  setIsEditingEmail(true);
+                }}
+                className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
               >
-                {t("settings.account.profile.updatePassword")}
-              </Button>
+                <PenLine className="w-3.5 h-3.5" />
+                {t("settings.account.profile.changeEmail")}
+              </button>
+            )}
+          </div>
+
+          {isEditingEmail ? (
+            <div className="space-y-3 pt-1">
+              <Input
+                type="email"
+                value={draftEmail}
+                onChange={(e) => setDraftEmail(e.target.value)}
+                placeholder={t("settings.account.profile.emailPlaceholder")}
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(false)}>
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleSaveEmail}
+                  icon={<Save className="w-4 h-4" />}
+                >
+                  {t("settings.account.profile.saveEmail")}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-base font-semibold text-m3-text">{displayUser?.email || "—"}</p>
+          )}
+        </Surface>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Surface className="h-full">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-label flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-m3-primary" />
+              {t("settings.account.profile.password")}
+            </label>
+            {!isEditingPassword && (
+              <button
+                onClick={() => setIsEditingPassword(true)}
+                className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                {t("settings.account.profile.changePassword")}
+              </button>
+            )}
+          </div>
+
+          {isEditingPassword ? (
+            <div className="space-y-4 pt-2">
+              <Input
+                type="password"
+                label={t("settings.account.profile.currentPassword")}
+                value={draftOldPassword}
+                onChange={(e) => setDraftOldPassword(e.target.value)}
+              />
+              <Input
+                type="password"
+                label={t("settings.account.profile.newPassword")}
+                value={draftNewPassword}
+                onChange={(e) => setDraftNewPassword(e.target.value)}
+              />
+              <Input
+                type="password"
+                label={t("settings.account.profile.confirmNewPassword")}
+                value={draftConfirmPassword}
+                onChange={(e) => setDraftConfirmPassword(e.target.value)}
+              />
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setIsEditingPassword(false);
+                    setDraftOldPassword("");
+                    setDraftNewPassword("");
+                    setDraftConfirmPassword("");
+                  }}
+                >
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleSavePassword}
+                  icon={<Save className="w-4 h-4" />}
+                >
+                  {t("settings.account.profile.updatePassword")}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <p className="text-base font-semibold text-m3-text">••••••••••••</p>
+          )}
+        </Surface>
+
+        <Surface className="h-full">
+          <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2 mb-4">
+            <Info className="w-4 h-4 text-m3-secondary" />
+            {t("settings.account.profile.accountInfo")}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
+              <span className="text-label block mb-1">{t("settings.account.profile.userId")}</span>
+              <p className="text-xs font-mono text-m3-text truncate">{displayUser?.id || "—"}</p>
+            </div>
+            <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
+              <span className="text-label block mb-1">{t("settings.account.profile.role")}</span>
+              {getRoleBadge((displayUser as { role?: string })?.role || "member", t)}
+            </div>
+            <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
+              <span className="text-label block mb-1">
+                {t("settings.account.profile.accountStatus")}
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                {t("settings.account.profile.active")}
+              </span>
             </div>
           </div>
-        ) : (
-          <p className="text-base font-semibold text-m3-text">••••••••••••</p>
-        )}
-      </Surface>
+        </Surface>
+      </div>
 
-      <SocialAccountsSection />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+        <SocialAccountsSection />
+        <TwoFactorSection />
+      </div>
 
-      <TwoFactorSection />
-
-      <ActiveSessionsSection />
-
-      <LoginHistorySection scope="self" active={active} />
-
-      <Surface>
-        <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2 mb-4">
-          <Info className="w-4 h-4 text-m3-secondary" />
-          {t("settings.account.profile.accountInfo")}
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
-            <span className="text-label block mb-1">{t("settings.account.profile.userId")}</span>
-            <p className="text-xs font-mono text-m3-text truncate">{displayUser?.id || "—"}</p>
-          </div>
-          <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
-            <span className="text-label block mb-1">{t("settings.account.profile.role")}</span>
-            {getRoleBadge((displayUser as { role?: string })?.role || "member", t)}
-          </div>
-          <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
-            <span className="text-label block mb-1">
-              {t("settings.account.profile.accountStatus")}
-            </span>
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              {t("settings.account.profile.active")}
-            </span>
-          </div>
-        </div>
-      </Surface>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+        <ActiveSessionsSection />
+        <LoginHistorySection scope="self" active={active} />
+      </div>
     </div>
   );
 };
