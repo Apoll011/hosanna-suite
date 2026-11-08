@@ -76,6 +76,9 @@
     },
     "format": {
       "cache": false
+    },
+    "fix": {
+      "cache": false
     }
   }
 }

@@ -54,6 +54,8 @@ pnpm dev
 | `pnpm typecheck` | Clean typecheck |
 | `pnpm test` | Package + API unit/contract tests |
 | `pnpm lint` | ESLint (apps still have a baseline of prettier/hook warnings) |
+| `pnpm format` | Prettier write across the workspace |
+| `pnpm fix` | Autofix Tailwind canonical classes + ESLint + Prettier |
 | `pnpm db:generate` | Prisma client |
 | `pnpm db:migrate` | `prisma migrate deploy` |
 | `pnpm db:migrate:dev` | Create/apply a migration in development |
