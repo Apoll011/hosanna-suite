@@ -64,7 +64,7 @@ const MoveFolderTreeItem: React.FC<{
     <div className="flex flex-col w-full">
       <label
         style={{ paddingLeft: `${12 + node.level * 16}px` }}
-        className={`flex items-center gap-2.5 p-2.5 border rounded-[var(--radius-md)] transition-colors cursor-pointer ${
+        className={`flex items-center gap-2.5 p-2.5 border rounded-md transition-colors cursor-pointer ${
           isSelected
             ? "bg-m3-primary/10 border-m3-primary/40"
             : "border-m3-border hover:bg-m3-hover"
@@ -196,7 +196,7 @@ export const MoveSongModal: React.FC<MoveSongModalProps> = ({
         )}
 
         <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
-          <label className="flex items-center gap-3 p-3 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-hover">
+          <label className="flex items-center gap-3 p-3 border border-m3-border rounded-md cursor-pointer hover:bg-m3-hover">
             <input
               type="radio"
               name="moveSongTreeRadio"

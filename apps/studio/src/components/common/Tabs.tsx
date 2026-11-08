@@ -37,7 +37,7 @@ export const Tabs: React.FC<TabsProps> = ({
       className={`flex items-center gap-1 overflow-x-auto hide-scrollbar ${
         variant === "underline"
           ? "border-b border-m3-border"
-          : "p-1 rounded-[var(--radius-md)] bg-m3-sidebar/80"
+          : "p-1 rounded-md bg-m3-sidebar/80"
       } ${className}`}
     >
       {items.map((item) => {

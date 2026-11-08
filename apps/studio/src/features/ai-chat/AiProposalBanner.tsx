@@ -27,7 +27,7 @@ export const AiProposalBanner: React.FC<AiProposalBannerProps> = ({
 
   return (
     <div className="absolute inset-x-0 top-0 z-20 flex flex-col pointer-events-none">
-      <div className="pointer-events-auto mx-2 mt-2 rounded-[var(--radius-lg)] border border-m3-primary/40 bg-m3-card shadow-[var(--shadow-lg)] overflow-hidden">
+      <div className="pointer-events-auto mx-2 mt-2 rounded-lg border border-m3-primary/40 bg-m3-card shadow-lg overflow-hidden">
         <div className="flex items-center gap-2 px-3 py-2 border-b border-m3-border">
           <Sparkles className="w-4 h-4 text-m3-primary shrink-0" />
           <div className="flex-1 min-w-0">

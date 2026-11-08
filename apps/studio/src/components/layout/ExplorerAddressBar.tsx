@@ -429,7 +429,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                 <button
                   type="button"
                   onClick={() => onSearchChange("")}
-                  className="p-1.5 min-h-8 min-w-8 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                  className="p-1.5 min-h-8 min-w-8 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md cursor-pointer transition-colors"
                   title={t("addressBar.clearSearch")}
                   aria-label={t("addressBar.clearSearch")}
                 >
@@ -440,7 +440,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsSearchHelpOpen(true)}
-                  className="p-1.5 min-h-8 min-w-8 text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                  className="p-1.5 min-h-8 min-w-8 text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
                   title={
                     locale === "pt"
                       ? "Guia de sintaxe de pesquisa (Liqe / Lucene)"
@@ -505,7 +505,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             {isPlusMenuOpen && (
               <div
                 data-tour="create-menu"
-                className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-50 p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200"
               >
                 <div className="px-4 py-2 text-label">
                   {t("addressBar.createNew")}
@@ -516,9 +516,9 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       setIsPlusMenuOpen(false);
                       onOpenModal("create-song");
                     }}
-                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
-                    <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <Music className="w-4 h-4" />
                     </div>
                     {t("addressBar.newSong")}
@@ -530,9 +530,9 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       setIsPlusMenuOpen(false);
                       onOpenModal("cifra-import");
                     }}
-                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
-                    <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <Music2 className="w-4 h-4" />
                     </div>
                     {t("addressBar.importSongs")}
@@ -544,9 +544,9 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       setIsPlusMenuOpen(false);
                       onOpenModal("create-service");
                     }}
-                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
-                    <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <Calendar className="w-4 h-4" />
                     </div>
                     {t("addressBar.newService")}
@@ -558,9 +558,9 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       setIsPlusMenuOpen(false);
                       onOpenModal("create-folder");
                     }}
-                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
-                    <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <FolderPlus className="w-4 h-4" />
                     </div>
                     {t("addressBar.newFolder")}
@@ -572,9 +572,9 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       setIsPlusMenuOpen(false);
                       onOpenModal("create-collection");
                     }}
-                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
-                    <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <LibraryBig className="w-4 h-4" />
                     </div>
                     {t("addressBar.newCollection")}
@@ -586,9 +586,9 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       setIsPlusMenuOpen(false);
                       onOpenModal("create-event");
                     }}
-                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer text-left"
+                    className="w-full flex items-center gap-4 px-4 py-3 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                   >
-                    <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <CalendarPlus className="w-4 h-4" />
                     </div>
                     {t("agenda.newEvent")}

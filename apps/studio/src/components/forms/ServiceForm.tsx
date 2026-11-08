@@ -126,7 +126,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
           value={formData.notes}
           onChange={handleChange}
           disabled={isLoading}
-          className="w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary hover:border-m3-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary hover:border-m3-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 

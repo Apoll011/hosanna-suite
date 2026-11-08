@@ -380,7 +380,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       {/* 1. PERFIL E IDENTIDADE DA ORGANIZAÇÃO      */}
       {/* ========================================== */}
       <form id="org-main-form" onSubmit={handleSaveOrganization}>
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+        <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
           {/* Card Header */}
           <div className="px-6 py-5 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
             <div>
@@ -407,7 +407,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
             <div className="flex flex-col md:flex-row gap-8 items-start">
               {/* Logo Upload Box */}
               <div className="flex flex-col items-center gap-3 shrink-0 mx-auto md:mx-0">
-                <div className="relative group w-32 h-32 rounded-[var(--radius-xl)] bg-m3-sidebar flex items-center justify-center border-2 border-dashed border-m3-border overflow-hidden shadow-inner">
+                <div className="relative group w-32 h-32 rounded-xl bg-m3-sidebar flex items-center justify-center border-2 border-dashed border-m3-border overflow-hidden shadow-inner">
                   {displayLogo ? (
                     <img
                       src={displayLogo}
@@ -571,7 +571,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
               </div>
 
               {isEditing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-m3-sidebar/70 dark:bg-m3-sidebar/40 p-5 rounded-[var(--radius-xl)] border border-m3-border/70 dark:border-m3-border">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-m3-sidebar/70 dark:bg-m3-sidebar/40 p-5 rounded-xl border border-m3-border/70 dark:border-m3-border">
                   {/* Cor de Destaque */}
                   <div className="space-y-3">
                     <label className="text-label text-m3-text block">
@@ -650,7 +650,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                   {/* Toggle de Marca & Live Preview */}
                   <div className="flex flex-col justify-between space-y-4">
                     <label
-                      className={`flex items-start gap-3 p-3.5 bg-m3-card border border-m3-border rounded-[var(--radius-md)] transition-colors ${
+                      className={`flex items-start gap-3 p-3.5 bg-m3-card border border-m3-border rounded-md transition-colors ${
                         !isSavingOrganization
                           ? "cursor-pointer hover:border-m3-border"
                           : "opacity-70 cursor-not-allowed"
@@ -686,7 +686,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                       </span>
                       <div className="flex items-center gap-2">
                         <span
-                          className="px-2.5 py-1 rounded-md text-white font-medium text-[11px] shadow-[var(--shadow-sm)]"
+                          className="px-2.5 py-1 rounded-md text-white font-medium text-[11px] shadow-sm"
                           style={{
                             backgroundColor: draftAppearance.accentColor,
                           }}
@@ -709,10 +709,10 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 p-3.5 rounded-xl border border-m3-border/60 bg-m3-sidebar/50 dark:bg-m3-sidebar/30">
                     <div
-                      className="w-10 h-10 rounded-xl border border-white/20 shadow-[var(--shadow-sm)] shrink-0 flex items-center justify-center"
+                      className="w-10 h-10 rounded-xl border border-white/20 shadow-sm shrink-0 flex items-center justify-center"
                       style={{ backgroundColor: displayAccentColor }}
                     >
-                      <Palette className="w-5 h-5 text-white drop-shadow-[var(--shadow-sm)]" />
+                      <Palette className="w-5 h-5 text-white drop-shadow-(--shadow-sm)" />
                     </div>
                     <div>
                       <span className="text-xs text-m3-secondary uppercase font-semibold tracking-wider block">
@@ -809,7 +809,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       {/* 2. CÓPIAS DE SEGURANÇA & DADOS             */}
       {/* ========================================== */}
       <CanAny permissions={["backup.export", "backup.import"]}>
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+        <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
             <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
               <ShieldAlert className="w-5 h-5 text-m3-primary" />
@@ -900,7 +900,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
         </div>
       </CanAny>
       {organizations.length > 1 && (
-        <section className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+        <section className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
             <h2 className="text-lg font-bold text-m3-text flex items-center gap-2">
               <Layers className="w-5 h-5 text-m3-primary" />
@@ -917,7 +917,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 return (
                   <li
                     key={org.id}
-                    className={`flex items-center justify-between gap-4 p-3.5 rounded-[var(--radius-xl)] border transition-colors ${
+                    className={`flex items-center justify-between gap-4 p-3.5 rounded-xl border transition-colors ${
                       isCurrent
                         ? "border-m3-primary/30 bg-m3-primary/4 dark:bg-m3-primary/10"
                         : "border-m3-border bg-m3-card hover:border-m3-border"

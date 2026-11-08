@@ -137,7 +137,7 @@ export const TwoFactorSection: React.FC = () => {
   };
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">

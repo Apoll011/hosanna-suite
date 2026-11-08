@@ -274,7 +274,7 @@ const LibrarySongItem: React.FC<LibrarySongItemProps> = ({
           type="button"
           onClick={() => onAdd(song.id)}
           disabled={isPending}
-          className="min-w-11 min-h-11 inline-flex items-center justify-center rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary hover:bg-m3-primary/20 disabled:opacity-50 transition-colors cursor-pointer"
+          className="min-w-11 min-h-11 inline-flex items-center justify-center rounded-md bg-m3-primary/10 text-m3-primary hover:bg-m3-primary/20 disabled:opacity-50 transition-colors cursor-pointer"
           aria-label={t("serviceDetailPage.addSong")}
         >
           {isPending ? (
@@ -560,7 +560,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
               ref={menuButtonRef}
               type="button"
               onClick={toggleMenu}
-              className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] transition-colors cursor-pointer"
+              className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer"
               aria-label={t("explorer.moreOptions")}
               aria-expanded={menuOpen}
               aria-haspopup="menu"
@@ -570,13 +570,13 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
             {menuOpen && menuPos && (
               <>
                 <div
-                  className="fixed inset-0 z-[70]"
+                  className="fixed inset-0 z-70"
                   onClick={() => setMenuOpen(false)}
                 />
                 <div
                   role="menu"
                   style={{ top: menuPos.top, left: menuPos.left }}
-                  className="fixed z-[80] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+                  className="fixed z-80 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="px-3 py-1.5 text-label text-m3-secondary border-b border-m3-border mb-0.5 truncate">
@@ -1555,7 +1555,7 @@ export const ServiceDetailPage: React.FC = () => {
                 setReadingMode(false);
                 setPreviewElement(null);
               }}
-              className={`min-h-8 px-2.5 text-xs font-semibold rounded-[var(--radius-sm)] cursor-pointer transition-colors ${
+              className={`min-h-8 px-2.5 text-xs font-semibold rounded-sm cursor-pointer transition-colors ${
                 readingMode
                   ? "text-m3-secondary hover:text-m3-text"
                   : "bg-m3-primary text-white"
@@ -1567,7 +1567,7 @@ export const ServiceDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={enterReadingMode}
-              className={`min-h-8 px-2.5 text-xs font-semibold rounded-[var(--radius-sm)] cursor-pointer transition-colors ${
+              className={`min-h-8 px-2.5 text-xs font-semibold rounded-sm cursor-pointer transition-colors ${
                 readingMode
                   ? "bg-m3-primary text-white"
                   : "text-m3-secondary hover:text-m3-text"
@@ -1612,7 +1612,7 @@ export const ServiceDetailPage: React.FC = () => {
             </Button>
           )}
           <div
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-m3-card border border-m3-border/60 shadow-[var(--shadow-sm)]"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-m3-card border border-m3-border/60 shadow-sm"
             title={syncMeta.label}
           >
             <span
@@ -1697,7 +1697,7 @@ export const ServiceDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={handleOpenLibrary}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-9 h-16 flex items-center justify-center bg-m3-card border border-l-0 border-m3-border rounded-r-[var(--radius-xl)] shadow-[var(--shadow-md)] text-m3-primary hover:bg-m3-primary/10 hover:border-m3-primary/40 transition-colors group cursor-pointer"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-9 h-16 flex items-center justify-center bg-m3-card border border-l-0 border-m3-border rounded-r-xl shadow-md text-m3-primary hover:bg-m3-primary/10 hover:border-m3-primary/40 transition-colors group cursor-pointer"
               title={t("serviceDetailPage.viewLibrary")}
               aria-label={t("serviceDetailPage.viewLibrary")}
             >
@@ -1806,7 +1806,7 @@ export const ServiceDetailPage: React.FC = () => {
         transition-all duration-300 ease-out
         ${
           !showLibrary && !previewElement
-            ? "rounded-[var(--radius-xl)] border border-m3-border shadow-[var(--shadow-sm)]"
+            ? "rounded-xl border border-m3-border shadow-sm"
             : ""
         }`}
               >
@@ -1816,7 +1816,7 @@ export const ServiceDetailPage: React.FC = () => {
                       {t("serviceDetailPage.serviceOrder")}
                     </h2>
                     {orgSettings.services.showServiceDuration && (
-                      <span className="text-xs font-semibold text-m3-secondary bg-m3-background px-2.5 py-1 rounded-full border border-m3-border/50 shadow-[var(--shadow-sm)]">
+                      <span className="text-xs font-semibold text-m3-secondary bg-m3-background px-2.5 py-1 rounded-full border border-m3-border/50 shadow-sm">
                         {t("serviceDetailPage.totalDuration")}:{" "}
                         {formatDuration(totalDurationSeconds)}
                       </span>
@@ -1826,35 +1826,35 @@ export const ServiceDetailPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => openAddModal("welcome")}
-                      className="px-2.5 py-1 text-caption font-semibold rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
+                      className="px-2.5 py-1 text-caption font-semibold rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
                     >
                       + {t("serviceDetailPage.addWelcome")}
                     </button>
                     <button
                       type="button"
                       onClick={() => openAddModal("scripture")}
-                      className="px-2.5 py-1 text-caption font-semibold rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
+                      className="px-2.5 py-1 text-caption font-semibold rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
                     >
                       + {t("serviceDetailPage.addScripture")}
                     </button>
                     <button
                       type="button"
                       onClick={() => openAddModal("message")}
-                      className="px-2.5 py-1 text-caption font-semibold rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
+                      className="px-2.5 py-1 text-caption font-semibold rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
                     >
                       + {t("serviceDetailPage.addMessage")}
                     </button>
                     <button
                       type="button"
                       onClick={() => openAddModal("announcement")}
-                      className="px-2.5 py-1 text-caption font-semibold rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
+                      className="px-2.5 py-1 text-caption font-semibold rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
                     >
                       + {t("serviceDetailPage.addAnnouncement")}
                     </button>
                     <button
                       type="button"
                       onClick={() => openAddModal("custom")}
-                      className="px-2.5 py-1 text-caption font-semibold rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
+                      className="px-2.5 py-1 text-caption font-semibold rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border hover:bg-m3-hover hover:text-m3-text transition-colors cursor-pointer"
                     >
                       + {t("serviceDetailPage.addCustom")}
                     </button>
@@ -1930,11 +1930,11 @@ export const ServiceDetailPage: React.FC = () => {
 
                 <div
                   ref={dropContainerRef}
-                  className={`flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 flex flex-col gap-3 relative custom-scrollbar transition-colors ${isDropTargetActive ? "bg-m3-primary/5 ring-2 ring-m3-primary/20 rounded-[var(--radius-xl)]" : ""}`}
+                  className={`flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 flex flex-col gap-3 relative custom-scrollbar transition-colors ${isDropTargetActive ? "bg-m3-primary/5 ring-2 ring-m3-primary/20 rounded-xl" : ""}`}
                 >
                   {elements.length === 0 ? (
-                    <div className="m-auto text-center rounded-[var(--radius-xl)] border border-dashed border-m3-border flex flex-col items-center justify-center p-12 shrink-0">
-                      <div className="w-12 h-12 rounded-[var(--radius-xl)] flex items-center justify-center bg-m3-primary/10 text-m3-primary mb-3">
+                    <div className="m-auto text-center rounded-xl border border-dashed border-m3-border flex flex-col items-center justify-center p-12 shrink-0">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-m3-primary/10 text-m3-primary mb-3">
                         <Music className="w-6 h-6" />
                       </div>
                       <h4 className="text-sm font-bold text-m3-text">
@@ -1946,13 +1946,13 @@ export const ServiceDetailPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={handleOpenLibrary}
-                        className="mt-4 px-3 py-2 text-xs font-semibold rounded-[var(--radius-md)] border border-m3-primary/30 text-m3-primary hover:bg-m3-primary/5 transition-colors cursor-pointer"
+                        className="mt-4 px-3 py-2 text-xs font-semibold rounded-md border border-m3-primary/30 text-m3-primary hover:bg-m3-primary/5 transition-colors cursor-pointer"
                       >
                         {t("serviceDetailPage.viewLibrary")}
                       </button>
                     </div>
                   ) : (
-                    <div className="flex flex-col rounded-[var(--radius-lg)] border border-m3-border divide-y divide-m3-border/70 overflow-visible">
+                    <div className="flex flex-col rounded-lg border border-m3-border divide-y divide-m3-border/70 overflow-visible">
                       {elements.map((el, i) => (
                         <ServiceRow
                           key={el.id}

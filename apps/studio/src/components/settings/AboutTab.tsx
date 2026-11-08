@@ -80,7 +80,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
   ];
   return (
     <div className="space-y-6">
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs space-y-4">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-start gap-4">
             <div className="p-3 bg-sky-50 dark:bg-sky-950/50 rounded-xl shrink-0">
@@ -168,7 +168,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
       </div>
 
       {/* Import Formats */}
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs space-y-4">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs space-y-4">
         <h3 className="text-sm font-bold text-m3-text border-b border-m3-border pb-3 flex items-center gap-2">
           <FileUp className="w-4 h-4 text-m3-primary" />
           {t("settings.about.supportedFormats")}
@@ -199,7 +199,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
       </div>
 
       {/* Open Source Licenses Accordion */}
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
         <button
           onClick={() => setShowLicenses(!showLicenses)}
           className="w-full flex items-center justify-between text-left cursor-pointer"

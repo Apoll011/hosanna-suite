@@ -128,11 +128,11 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
                 ? t("agenda.changeLinkedService")
                 : t("agenda.searchServiceToLink")
           }
-          className="w-full min-h-11 pl-10 pr-3 bg-m3-card border border-m3-border rounded-[var(--radius-md)] text-sm font-semibold text-m3-text placeholder:font-medium placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary transition-colors"
+          className="w-full min-h-11 pl-10 pr-3 bg-m3-card border border-m3-border rounded-md text-sm font-semibold text-m3-text placeholder:font-medium placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary transition-colors"
         />
 
         {open && filtered.length > 0 && (
-          <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto bg-m3-card border border-m3-border rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] p-1.5">
+          <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto bg-m3-card border border-m3-border rounded-lg shadow-lg p-1.5">
             {filtered.map((s, i) => (
               <button
                 key={s.id}
@@ -142,11 +142,11 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
                   pick(s.id);
                 }}
                 onMouseEnter={() => setHighlight(i)}
-                className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-[var(--radius-md)] text-left transition-colors cursor-pointer ${
+                className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left transition-colors cursor-pointer ${
                   i === highlight ? "bg-m3-hover" : "hover:bg-m3-hover/60"
                 }`}
               >
-                <span className="w-6 h-6 rounded-[var(--radius-sm)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                <span className="w-6 h-6 rounded-sm bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                   <Link2 className="w-3.5 h-3.5" />
                 </span>
                 <span className="flex-1 min-w-0">
@@ -171,8 +171,8 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
       )}
 
       {linked && (
-        <div className="flex items-center gap-3 rounded-[var(--radius-lg)] border border-m3-primary/25 bg-m3-primary/5 p-3">
-          <span className="w-9 h-9 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+        <div className="flex items-center gap-3 rounded-lg border border-m3-primary/25 bg-m3-primary/5 p-3">
+          <span className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
             <Link2 className="w-4 h-4" />
           </span>
           <div className="min-w-0 flex-1">
@@ -189,7 +189,7 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
             type="button"
             onClick={() => onChange(null)}
             title={t("agenda.removeLink")}
-            className="inline-flex items-center justify-center min-h-10 min-w-10 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 transition-colors cursor-pointer shrink-0"
+            className="inline-flex items-center justify-center min-h-10 min-w-10 rounded-md text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
           </button>

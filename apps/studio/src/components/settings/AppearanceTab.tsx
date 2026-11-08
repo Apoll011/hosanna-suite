@@ -143,7 +143,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               {t("settings.appearance.themeDesc")}
             </p>
           </div>
-          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
             <User className="w-3.5 h-3.5" />
             {t("settings.appearance.personalPreference")}
           </span>
@@ -163,14 +163,14 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 className={`${optionCard(selected)} p-5`}
               >
                 {selected && (
-                  <div className="absolute top-4 right-4 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center shadow-[var(--shadow-sm)]">
+                  <div className="absolute top-4 right-4 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center shadow-sm">
                     <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                   </div>
                 )}
 
                 <div className="flex items-center justify-between mb-4">
                   <div
-                    className={`inline-flex rounded-[var(--radius-md)] p-2.5 bg-linear-to-br border border-m3-border/50 ${item.previewBg}`}
+                    className={`inline-flex rounded-md p-2.5 bg-linear-to-br border border-m3-border/50 ${item.previewBg}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
@@ -199,7 +199,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               {t("settings.appearance.languageDesc")}
             </p>
           </div>
-          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
             <User className="w-3.5 h-3.5" />
             {t("settings.appearance.personalPreference")}
           </span>
@@ -269,7 +269,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
           </p>
         </div>
 
-        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
+        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-md cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
           <div className="flex items-center h-5 mt-0.5">
             <input
               type="checkbox"
@@ -301,13 +301,13 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               {t("settings.appearance.studioDesc")}
             </p>
           </div>
-          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+          <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
             <Smartphone className="w-3.5 h-3.5" />
             {t("settings.appearance.onDevice")}
           </span>
         </div>
 
-        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
+        <label className="flex items-start gap-4 p-4 border border-m3-border rounded-md cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
           <div className="flex items-center h-5 mt-0.5">
             <input
               type="checkbox"
@@ -340,14 +340,14 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                 {t("settings.appearance.songScoreDesc")}
               </p>
             </div>
-            <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 shrink-0">
+            <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
               <BarChart2 className="w-3.5 h-3.5" />
               {t("settings.appearance.songScoreBadge")}
             </span>
           </div>
 
           <div className="space-y-5">
-            <label className="flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
+            <label className="flex items-start gap-4 p-4 border border-m3-border rounded-md cursor-pointer hover:bg-m3-sidebar/80 transition-colors">
               <div className="flex items-center h-5 mt-0.5">
                 <input
                   type="checkbox"
@@ -406,14 +406,14 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
                         type="button"
                         onClick={() => updateSetting("songScoreLayout", opt.id)}
                         aria-pressed={selected}
-                        className={`group relative rounded-[var(--radius-lg)] border p-4 text-left transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/50 ${
+                        className={`group relative rounded-lg border p-4 text-left transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/50 ${
                           selected
-                            ? "border-amber-400 bg-amber-50/60 dark:bg-amber-400/5 ring-2 ring-amber-400/25 shadow-[var(--shadow-sm)]"
+                            ? "border-amber-400 bg-amber-50/60 dark:bg-amber-400/5 ring-2 ring-amber-400/25 shadow-sm"
                             : "border-m3-border hover:border-m3-primary/40 bg-m3-sidebar/40"
                         }`}
                       >
                         {selected && (
-                          <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-amber-400 flex items-center justify-center shadow-[var(--shadow-sm)]">
+                          <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-amber-400 flex items-center justify-center shadow-sm">
                             <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                           </div>
                         )}

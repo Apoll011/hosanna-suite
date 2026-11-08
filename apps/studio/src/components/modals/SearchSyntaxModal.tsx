@@ -182,7 +182,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="bg-m3-card rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
+        className="bg-m3-card rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -219,7 +219,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
         {/* Modal Body */}
         <div className="overflow-y-auto p-6 space-y-6">
           {/* Quick Intro Banner */}
-          <div className="p-4 bg-m3-primary/5 rounded-[var(--radius-xl)] border border-m3-primary/20 flex items-start gap-3">
+          <div className="p-4 bg-m3-primary/5 rounded-xl border border-m3-primary/20 flex items-start gap-3">
             <Sparkles className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
             <div className="text-xs text-m3-secondary leading-relaxed">
               <p className="font-bold text-m3-text mb-1">
@@ -241,7 +241,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
                 onClick={() => setFilterCat(c.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-colors cursor-pointer ${
                   filterCat === c.id
-                    ? "bg-m3-primary text-white shadow-[var(--shadow-sm)]"
+                    ? "bg-m3-primary text-white shadow-sm"
                     : "bg-m3-sidebar text-m3-secondary hover:bg-m3-hover"
                 }`}
               >
@@ -300,7 +300,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
                 </span>
               </div>
 
-              <div className="border border-m3-border rounded-[var(--radius-xl)] overflow-hidden divide-y divide-m3-border/60 bg-m3-card text-xs">
+              <div className="border border-m3-border rounded-xl overflow-hidden divide-y divide-m3-border/60 bg-m3-card text-xs">
                 {SEARCHABLE_FIELDS.map(([field, descPt, descEn]) => (
                   <div
                     key={field}

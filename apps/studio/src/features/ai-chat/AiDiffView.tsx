@@ -18,7 +18,7 @@ export const AiDiffView: React.FC<AiDiffViewProps> = ({
 
   return (
     <div
-      className={`rounded-[var(--radius-md)] border border-m3-border overflow-hidden bg-m3-sidebar/60 ${className}`}
+      className={`rounded-md border border-m3-border overflow-hidden bg-m3-sidebar/60 ${className}`}
     >
       <pre className="text-[11px] leading-relaxed font-mono overflow-x-auto p-2.5 max-h-64 overflow-y-auto m-0">
         {lines.map((line, i) => {

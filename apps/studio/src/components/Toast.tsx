@@ -30,7 +30,7 @@ export const ToastContainer: React.FC = () => {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="pointer-events-auto flex items-start justify-between gap-4 p-5 bg-m3-card/80 backdrop-blur-xl border border-m3-border/50 rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] shadow-black/20 animate-in slide-in-from-right-10 duration-300"
+          className="pointer-events-auto flex items-start justify-between gap-4 p-5 bg-m3-card/80 backdrop-blur-xl border border-m3-border/50 rounded-xl shadow-lg shadow-black/20 animate-in slide-in-from-right-10 duration-300"
         >
           <div className="flex items-start gap-4 flex-1">
             <div className="mt-0.5">{icons[toast.type]}</div>
@@ -58,7 +58,7 @@ export const ToastContainer: React.FC = () => {
                       toast.action?.onClick();
                       removeToast(toast.id);
                     }}
-                    className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-m3-primary text-white hover:bg-m3-primary/90 transition-colors cursor-pointer shadow-[var(--shadow-sm)]"
+                    className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-m3-primary text-white hover:bg-m3-primary/90 transition-colors cursor-pointer shadow-sm"
                   >
                     {toast.action.label}
                   </button>

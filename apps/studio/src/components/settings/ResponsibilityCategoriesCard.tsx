@@ -71,7 +71,7 @@ export const ResponsibilityCategoriesCard: React.FC<
   };
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-xs overflow-hidden">
+    <div className="bg-m3-card border border-m3-border rounded-xl shadow-xs overflow-hidden">
       {/* Header */}
       <div className="px-6 py-5 border-b border-m3-border bg-m3-sidebar/50">
         <div className="flex items-center justify-between gap-4">
@@ -169,7 +169,7 @@ export const ResponsibilityCategoriesCard: React.FC<
                       type="button"
                       onClick={() => setIcon(opt)}
                       disabled={disabled}
-                      className={`inline-flex items-center justify-center min-h-10 min-w-10 rounded-[var(--radius-md)] border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                      className={`inline-flex items-center justify-center min-h-10 min-w-10 rounded-md border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                         isSelected
                           ? "border-m3-primary bg-m3-primary/10 text-m3-primary"
                           : "border-m3-border text-m3-secondary hover:bg-m3-hover"
@@ -198,7 +198,7 @@ export const ResponsibilityCategoriesCard: React.FC<
                       type="button"
                       onClick={() => setColor(opt)}
                       disabled={disabled}
-                      className={`min-h-10 min-w-10 rounded-[var(--radius-md)] border-2 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${colors.bg} ${
+                      className={`min-h-10 min-w-10 rounded-md border-2 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${colors.bg} ${
                         isSelected ? "border-m3-text" : "border-transparent"
                       }`}
                       aria-label={opt}

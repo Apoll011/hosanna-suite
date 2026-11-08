@@ -184,7 +184,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <div className="w-16 h-16 rounded-full bg-linear-to-tr from-sky-600 to-indigo-600 flex items-center justify-center font-semibold text-white text-xl overflow-hidden shadow-[var(--shadow-sm)]">
+              <div className="w-16 h-16 rounded-full bg-linear-to-tr from-sky-600 to-indigo-600 flex items-center justify-center font-semibold text-white text-xl overflow-hidden shadow-sm">
                 {displayUser?.image ||
                 (displayUser as { logo?: string })?.logo ? (
                   <img
@@ -212,7 +212,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
                 type="button"
                 onClick={() => avatarInputRef.current?.click()}
                 disabled={isCompressingAvatar}
-                className="absolute bottom-0 right-0 p-1.5 bg-m3-primary text-white rounded-full shadow-[var(--shadow-sm)] hover:bg-m3-primary/90 transition-colors cursor-pointer"
+                className="absolute bottom-0 right-0 p-1.5 bg-m3-primary text-white rounded-full shadow-sm hover:bg-m3-primary/90 transition-colors cursor-pointer"
                 title={t("settings.account.profile.changeAvatarTitle")}
               >
                 <Camera className="w-3.5 h-3.5" />
@@ -427,7 +427,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
           {t("settings.account.profile.accountInfo")}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-3 bg-m3-sidebar/60 rounded-[var(--radius-md)] border border-m3-border">
+          <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
             <span className="text-label block mb-1">
               {t("settings.account.profile.userId")}
             </span>
@@ -435,7 +435,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
               {displayUser?.id || "—"}
             </p>
           </div>
-          <div className="p-3 bg-m3-sidebar/60 rounded-[var(--radius-md)] border border-m3-border">
+          <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
             <span className="text-label block mb-1">
               {t("settings.account.profile.role")}
             </span>
@@ -444,7 +444,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
               t,
             )}
           </div>
-          <div className="p-3 bg-m3-sidebar/60 rounded-[var(--radius-md)] border border-m3-border">
+          <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
             <span className="text-label block mb-1">
               {t("settings.account.profile.accountStatus")}
             </span>

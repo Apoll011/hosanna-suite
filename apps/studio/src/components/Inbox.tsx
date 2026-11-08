@@ -254,7 +254,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
   };
 
   return (
-    <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] overflow-hidden flex flex-col max-h-130 animate-in fade-in zoom-in-95 duration-200">
+    <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-130 animate-in fade-in zoom-in-95 duration-200">
       {/* Header */}
       <div className="p-4 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
         <div className="flex items-center gap-2">
@@ -352,7 +352,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
                       : "hover:bg-m3-hover"
                   }`}
                 >
-                  <div className="p-2 rounded-xl bg-m3-card border border-m3-border/60 dark:border-m3-border/60 shadow-[var(--shadow-sm)] shrink-0 mt-0.5">
+                  <div className="p-2 rounded-xl bg-m3-card border border-m3-border/60 dark:border-m3-border/60 shadow-sm shrink-0 mt-0.5">
                     {getIcon(notif.type)}
                   </div>
 
@@ -467,7 +467,7 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
       >
         <Bell className="w-5 h-5" />
         {inbox.unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-red-500 text-white text-[10px] font-semibold rounded-full flex items-center justify-center shadow-[var(--shadow-sm)] animate-pulse">
+          <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-red-500 text-white text-[10px] font-semibold rounded-full flex items-center justify-center shadow-sm animate-pulse">
             {inbox.unreadCount > 9 ? "9+" : inbox.unreadCount}
           </span>
         )}

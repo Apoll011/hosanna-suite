@@ -204,7 +204,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         </div>
         <button
           type="button"
-          className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+          className="p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           onClick={newChat}
           title={t("ai.chat.new")}
           aria-label={t("ai.chat.new")}
@@ -220,7 +220,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         {onToggleWide && (
           <button
             type="button"
-            className="hidden sm:inline-flex p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+            className="hidden sm:inline-flex p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
             onClick={onToggleWide}
             title={wide ? t("ai.chat.collapse") : t("ai.chat.expand")}
             aria-label={wide ? t("ai.chat.collapse") : t("ai.chat.expand")}
@@ -234,7 +234,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         )}
         <button
           type="button"
-          className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
+          className="p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           onClick={() => setOpen(false)}
           title={t("ai.chat.close")}
           aria-label={t("ai.chat.close")}

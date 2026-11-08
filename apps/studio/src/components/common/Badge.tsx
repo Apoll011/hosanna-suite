@@ -51,7 +51,7 @@ export const Badge: React.FC<BadgeProps> = React.memo(
 
     return (
       <span
-        className={`inline-flex items-center rounded-[var(--radius-sm)] border ${VARIANT_MAP[variant]} ${sizeMap[size]} ${className}`}
+        className={`inline-flex items-center rounded-sm border ${VARIANT_MAP[variant]} ${sizeMap[size]} ${className}`}
       >
         {children}
       </span>

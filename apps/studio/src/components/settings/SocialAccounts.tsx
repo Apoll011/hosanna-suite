@@ -193,7 +193,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
   if (activeProviders.length === 0) return null;
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">

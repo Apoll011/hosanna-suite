@@ -57,7 +57,7 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 shadow-[var(--shadow-sm)]">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-5 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-label">{t("common.details")}</h3>
           {canUpdate && (
@@ -149,7 +149,7 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
       </div>
 
       {canNotify && (
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 shadow-[var(--shadow-sm)]">
+        <div className="bg-m3-card border border-m3-border rounded-xl p-5 shadow-sm">
           <h3 className="text-label mb-3 flex items-center gap-1.5">
             <Bell className="w-3.5 h-3.5" />
             {t("agenda.notifications")}

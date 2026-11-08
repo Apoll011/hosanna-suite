@@ -554,7 +554,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                         }
                         title={t("songsPage.openEditor")}
                         aria-label={t("songsPage.openEditor")}
-                        className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                        className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
                       >
                         <FileText className="w-4 h-4" />
                       </button>
@@ -564,7 +564,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                           onClick={() => setMoveSongTarget?.(song)}
                           title={t("songsPage.move")}
                           aria-label={t("songsPage.move")}
-                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
                         >
                           <FolderInput className="w-4 h-4" />
                         </button>
@@ -575,7 +575,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                           onClick={() => setDeleteSongTarget?.(song)}
                           title={t("songsPage.delete")}
                           aria-label={t("songsPage.delete")}
-                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                          className="hidden md:inline-flex min-h-10 min-w-10 items-center justify-center text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-md cursor-pointer transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -593,7 +593,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
         >
           {contextMenu.isMulti ? (

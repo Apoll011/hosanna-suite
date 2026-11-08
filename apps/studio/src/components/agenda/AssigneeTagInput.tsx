@@ -162,12 +162,12 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
         {assignees.map((a) => (
           <span
             key={a.id}
-            className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-[var(--radius-pill)] bg-m3-sidebar text-xs font-semibold text-m3-text"
+            className="flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-(--radius-pill) bg-m3-sidebar text-xs font-semibold text-m3-text"
           >
             <Avatar assignee={a} className="w-5 h-5 text-[9px]" />
             {a.name}
             {a.memberId && (
-              <span className="text-label text-m3-primary bg-m3-primary/10 border border-m3-primary/20 px-1.5 py-0.5 rounded-[var(--radius-pill)]">
+              <span className="text-label text-m3-primary bg-m3-primary/10 border border-m3-primary/20 px-1.5 py-0.5 rounded-(--radius-pill)">
                 {t("agenda.memberBadge")}
               </span>
             )}
@@ -194,19 +194,19 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
             onFocus={() => setOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder={t("agenda.assigneePlaceholder")}
-            className="flex-1 min-h-10 px-3 bg-m3-card border border-m3-border rounded-[var(--radius-md)] text-xs font-semibold text-m3-text placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary transition-colors"
+            className="flex-1 min-h-10 px-3 bg-m3-card border border-m3-border rounded-md text-xs font-semibold text-m3-text placeholder:text-m3-input focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary transition-colors"
           />
           <button
             type="button"
             onClick={addFromDraft}
-            className="px-3 min-h-10 rounded-[var(--radius-md)] border border-m3-border text-xs font-semibold text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+            className="px-3 min-h-10 rounded-md border border-m3-border text-xs font-semibold text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
           >
             {t("agenda.add")}
           </button>
         </div>
 
         {open && filtered.length > 0 && (
-          <div className="absolute z-20 mt-1 w-full max-h-52 overflow-y-auto bg-m3-card border border-m3-border rounded-[var(--radius-lg)] shadow-[var(--shadow-lg)] p-1.5">
+          <div className="absolute z-20 mt-1 w-full max-h-52 overflow-y-auto bg-m3-card border border-m3-border rounded-lg shadow-lg p-1.5">
             {filtered.map((s, i) => (
               <button
                 key={s.id}
@@ -216,7 +216,7 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
                   addAssignee(s);
                 }}
                 onMouseEnter={() => setHighlight(i)}
-                className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-[var(--radius-md)] text-left transition-colors cursor-pointer ${
+                className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left transition-colors cursor-pointer ${
                   i === highlight ? "bg-m3-hover" : "hover:bg-m3-hover/60"
                 }`}
               >

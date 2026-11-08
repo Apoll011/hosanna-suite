@@ -212,7 +212,7 @@ const EarlyAccessPanel: React.FC = () => {
   );
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-5">
       <div className="flex items-start justify-between mb-4">
         <SectionHeading
           icon={FlaskConical}
@@ -497,7 +497,7 @@ const SupportPanel: React.FC = () => {
 
   if (!posthog) {
     return (
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-5">
         <SectionHeading
           icon={HelpCircle}
           title={t("settings.features.support.title")}
@@ -512,7 +512,7 @@ const SupportPanel: React.FC = () => {
 
   if (!available) {
     return (
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5">
+      <div className="bg-m3-card border border-m3-border rounded-xl p-5">
         <SectionHeading
           icon={HelpCircle}
           title={t("settings.features.support.title")}
@@ -536,7 +536,7 @@ const SupportPanel: React.FC = () => {
         : t("settings.features.support.subtitle");
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] overflow-hidden">
+    <div className="bg-m3-card border border-m3-border rounded-xl overflow-hidden">
       {/* Header */}
       <div className="flex items-start gap-2 px-5 pt-5 pb-3">
         {view !== "tickets" && (

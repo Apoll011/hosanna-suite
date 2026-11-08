@@ -116,9 +116,9 @@ export const FolderTreeItemNode: React.FC<{
     return (
       <div className="flex flex-col w-full">
         <div
-          className={`w-full flex items-center justify-between py-2 pr-3 rounded-[var(--radius-xl)] text-[13px] font-bold transition-colors cursor-pointer group ${
+          className={`w-full flex items-center justify-between py-2 pr-3 rounded-xl text-[13px] font-bold transition-colors cursor-pointer group ${
             isActive
-              ? "bg-m3-primary/10 text-m3-primary border border-m3-primary/20 shadow-[var(--shadow-sm)]"
+              ? "bg-m3-primary/10 text-m3-primary border border-m3-primary/20 shadow-sm"
               : "text-m3-secondary hover:bg-m3-hover hover:text-m3-text"
           }`}
           style={{ paddingLeft: `${8 + node.level * 16}px` }}

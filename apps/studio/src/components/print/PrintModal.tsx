@@ -269,11 +269,11 @@ const PrintModalContent: React.FC<{
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="bg-m3-card sm:border border-m3-border sm:rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] flex flex-col w-full max-w-[1440px] h-full sm:h-[94vh] overflow-hidden"
+        className="bg-m3-card sm:border border-m3-border sm:rounded-xl shadow-lg flex flex-col w-full max-w-360 h-full sm:h-[94vh] overflow-hidden"
       >
         {/* ── Top bar ── */}
         <div className="px-3 sm:px-5 py-2.5 border-b border-m3-border flex items-center gap-2 sm:gap-3 shrink-0">
-          <div className="hidden sm:flex p-2 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary shrink-0">
+          <div className="hidden sm:flex p-2 rounded-md bg-m3-primary/10 text-m3-primary shrink-0">
             <Printer className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
@@ -370,7 +370,7 @@ const PrintModalContent: React.FC<{
               </div>
             </div>
 
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-0.5 px-1.5 py-1 rounded-full bg-m3-card/95 border border-m3-border shadow-[var(--shadow-md)] backdrop-blur">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-0.5 px-1.5 py-1 rounded-full bg-m3-card/95 border border-m3-border shadow-md backdrop-blur">
               <button
                 type="button"
                 className={pillButton}
@@ -421,7 +421,7 @@ const PrintModalContent: React.FC<{
 
           {/* ── Options sidebar ── */}
           <div
-            className={`${mobileView === "options" ? "flex" : "hidden"} lg:flex w-full lg:w-[360px] shrink-0 flex-col border-l border-m3-border bg-m3-card min-h-0`}
+            className={`${mobileView === "options" ? "flex" : "hidden"} lg:flex w-full lg:w-90 shrink-0 flex-col border-l border-m3-border bg-m3-card min-h-0`}
           >
             <div className="flex-1 overflow-y-auto p-4 sm:p-5">
               <PrintOptionsPanel

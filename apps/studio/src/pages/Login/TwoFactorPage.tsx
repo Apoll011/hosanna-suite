@@ -128,11 +128,11 @@ export const TwoFactorPage: React.FC = () => {
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Method selector tabs */}
-        <div className="flex rounded-[var(--radius-md)] bg-m3-sidebar/80 p-1 border border-m3-border/60">
+        <div className="flex rounded-md bg-m3-sidebar/80 p-1 border border-m3-border/60">
           <button
             type="button"
             onClick={() => handleSwitchMethod("totp")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               method === "totp"
                 ? "bg-m3-card text-m3-primary shadow-xs"
                 : "text-m3-secondary hover:text-m3-text"
@@ -144,7 +144,7 @@ export const TwoFactorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleSwitchMethod("otp")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               method === "otp"
                 ? "bg-m3-card text-m3-primary shadow-xs"
                 : "text-m3-secondary hover:text-m3-text"
@@ -156,7 +156,7 @@ export const TwoFactorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleSwitchMethod("backup")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--radius-sm)] text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-sm text-xs sm:text-sm font-medium transition-all cursor-pointer ${
               method === "backup"
                 ? "bg-m3-card text-m3-primary shadow-xs"
                 : "text-m3-secondary hover:text-m3-text"
@@ -316,7 +316,7 @@ function OtpInput({
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKey(i, e)}
           onFocus={(e) => e.target.select()}
-          className="w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-medium rounded-[var(--radius-md)] border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
+          className="w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-medium rounded-md border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
         />
       ))}
     </div>

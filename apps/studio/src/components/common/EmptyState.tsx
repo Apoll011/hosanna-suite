@@ -22,10 +22,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   onAction,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-10 sm:p-12 text-center rounded-[var(--radius-lg)] border border-dashed border-m3-border bg-m3-sidebar/40 my-4 h-full min-h-[12rem]">
+    <div className="flex flex-col items-center justify-center p-10 sm:p-12 text-center rounded-lg border border-dashed border-m3-border bg-m3-sidebar/40 my-4 h-full min-h-48">
       {icon && (
         <div
-          className="p-3 bg-m3-hover rounded-[var(--radius-md)] text-m3-secondary mb-4"
+          className="p-3 bg-m3-hover rounded-md text-m3-secondary mb-4"
           aria-hidden="true"
         >
           {icon}

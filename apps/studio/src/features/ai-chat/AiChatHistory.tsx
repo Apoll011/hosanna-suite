@@ -68,14 +68,14 @@ export const AiChatHistory: React.FC<Props> = ({
         aria-haspopup="listbox"
         title={t("ai.chat.history")}
         aria-label={t("ai.chat.history")}
-        className={`p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text ${
+        className={`p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text ${
           open ? "bg-m3-hover text-m3-text" : ""
         }`}
       >
         <History className="w-4 h-4" />
       </button>
       {open && (
-        <div className="logos-msg-in absolute right-0 top-full mt-1.5 w-[min(300px,80vw)] max-h-80 overflow-auto rounded-[var(--radius-lg)] border border-m3-border bg-m3-card shadow-xl p-1 z-20">
+        <div className="logos-msg-in absolute right-0 top-full mt-1.5 w-[min(300px,80vw)] max-h-80 overflow-auto rounded-lg border border-m3-border bg-m3-card shadow-xl p-1 z-20">
           {threads.length === 0 ? (
             <p className="m-0 px-3 py-4 text-center text-[12px] text-m3-secondary">
               {t("ai.chat.historyEmpty")}
@@ -85,7 +85,7 @@ export const AiChatHistory: React.FC<Props> = ({
               {threads.map((th) => (
                 <li
                   key={th.id}
-                  className={`group/th flex items-center rounded-[var(--radius-md)] ${
+                  className={`group/th flex items-center rounded-md ${
                     th.id === activeId
                       ? "bg-m3-primary/10"
                       : "hover:bg-m3-hover"
@@ -116,7 +116,7 @@ export const AiChatHistory: React.FC<Props> = ({
                     onClick={() => onDelete(th.id)}
                     title={t("ai.chat.historyDelete")}
                     aria-label={t("ai.chat.historyDelete")}
-                    className="mr-1 p-1.5 rounded-[var(--radius-sm)] text-m3-secondary opacity-0 group-hover/th:opacity-100 focus-visible:opacity-100 pointer-coarse:opacity-100 hover:text-red-500 hover:bg-red-500/10"
+                    className="mr-1 p-1.5 rounded-sm text-m3-secondary opacity-0 group-hover/th:opacity-100 focus-visible:opacity-100 pointer-coarse:opacity-100 hover:text-red-500 hover:bg-red-500/10"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

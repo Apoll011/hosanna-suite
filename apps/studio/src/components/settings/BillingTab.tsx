@@ -86,7 +86,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
 
   if (!canAccessBilling) {
     return (
-      <div className="max-w-4xl mx-auto w-full bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-8 text-center">
+      <div className="max-w-4xl mx-auto w-full bg-m3-card border border-m3-border rounded-xl p-8 text-center">
         <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
         <h3 className="text-base font-bold text-m3-text">
           {t("settings.billing.noAccessTitle")}
@@ -159,7 +159,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden">
+      <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
           <div>
             <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
@@ -311,7 +311,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({
               )}
             </div>
           ) : (
-            <div className="border border-m3-primary/20 dark:border-m3-primary/30 bg-m3-primary/5 dark:bg-m3-primary/10 rounded-[var(--radius-xl)] p-6">
+            <div className="border border-m3-primary/20 dark:border-m3-primary/30 bg-m3-primary/5 dark:bg-m3-primary/10 rounded-xl p-6">
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                   <h4 className="text-base font-semibold text-m3-text">

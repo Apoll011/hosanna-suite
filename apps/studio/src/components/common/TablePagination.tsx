@@ -88,7 +88,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           )}
         </span>
 
-        <div className="flex items-center gap-1.5 bg-m3-card border border-m3-border rounded-xl px-2.5 py-1 shadow-[var(--shadow-sm)]">
+        <div className="flex items-center gap-1.5 bg-m3-card border border-m3-border rounded-xl px-2.5 py-1 shadow-sm">
           <span className="text-label">{t("table.display")}</span>
           <select
             value={itemsPerPage}
@@ -107,7 +107,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-[var(--shadow-sm)]">
+        <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-sm">
           <button
             type="button"
             onClick={() => onPageChange(Math.max(1, page - 1))}

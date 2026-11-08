@@ -104,7 +104,7 @@ export const SettingsPage: React.FC = () => {
         <PageHeader title={t("common.settings")} />
 
         {!isOnline && (
-          <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-[var(--radius-lg)] text-amber-700 dark:text-amber-300 text-xs">
+          <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-700 dark:text-amber-300 text-xs">
             <CloudOff className="w-5 h-5 shrink-0 text-amber-500" />
             <div>
               <span className="font-semibold block">

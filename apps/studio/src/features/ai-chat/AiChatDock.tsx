@@ -112,7 +112,7 @@ export const AiChatDock: React.FC = () => {
       style={{ ["--ai-w" as string]: `${width}px` }}
       className={`${
         open
-          ? "fixed inset-0 z-50 sm:static sm:z-auto sm:w-[var(--ai-w)] border-l border-m3-border"
+          ? "fixed inset-0 z-50 sm:static sm:z-auto sm:w-(--ai-w) border-l border-m3-border"
           : "w-0 border-l-0"
       } h-full shrink-0 overflow-hidden relative ${
         dragging
@@ -135,7 +135,7 @@ export const AiChatDock: React.FC = () => {
           className="hidden sm:block absolute left-0 top-0 bottom-0 w-1.5 -ml-0.5 z-10 cursor-col-resize hover:bg-m3-primary/30 focus-visible:bg-m3-primary/40 transition-colors"
         />
       )}
-      <div className="h-full w-full sm:w-[var(--ai-w)]">
+      <div className="h-full w-full sm:w-(--ai-w)">
         {(open || everOpened) && (
           <Suspense fallback={null}>
             <AiChatPanel wide={wide} onToggleWide={toggleWide} />

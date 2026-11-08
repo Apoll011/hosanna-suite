@@ -72,7 +72,7 @@ export const ResponsibilityRow: React.FC<ResponsibilityRowProps> = ({
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="inline-flex items-center justify-center min-h-10 min-w-10 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center min-h-10 min-w-10 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
               title={t("agenda.moreOptions")}
             >
               <MoreVertical className="w-4 h-4" />

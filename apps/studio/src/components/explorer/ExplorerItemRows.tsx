@@ -112,7 +112,7 @@ export const FolderTableRow: React.FC<FolderTableRowProps> = React.memo(
           <td className={cellPadding}>
             {typeof averageScore === "number" ? (
               songScoreLayout === "bar" || songScoreLayout === "dots" ? (
-                <div className="min-w-[80px] max-w-[120px]">
+                <div className="min-w-20 max-w-30">
                   <SongScoreVisualizer
                     score={averageScore}
                     layout={songScoreLayout}
@@ -245,7 +245,7 @@ export const SongTableRow: React.FC<SongTableRowProps> = React.memo(
           <td className={cellPadding}>
             {hasScore ? (
               songScoreLayout === "bar" || songScoreLayout === "dots" ? (
-                <div className="min-w-[80px] max-w-[120px]">
+                <div className="min-w-20 max-w-30">
                   <SongScoreVisualizer
                     score={scoreValue!}
                     layout={songScoreLayout}

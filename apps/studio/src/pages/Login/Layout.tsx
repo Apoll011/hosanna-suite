@@ -80,7 +80,7 @@ export default function LoginLayout({
 
       {/* Main Center Stage */}
       <main className="flex-1 w-full flex items-center justify-center p-2 sm:p-3 md:p-4 z-10">
-        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-[var(--radius-xl)] sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
+        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-xl sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
           <div className="flex flex-col items-center text-center mb-7 sm:mb-8 select-none">
             <h1 className="text-title text-m3-text">
               {headerTitle || "Hosanna Studio"}
@@ -92,14 +92,14 @@ export default function LoginLayout({
           </div>
 
           {redirectMessage && (
-            <div className="mb-5 p-3 rounded-[var(--radius-md)] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-medium flex items-center gap-2.5 animate-in fade-in duration-200">
+            <div className="mb-5 p-3 rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-medium flex items-center gap-2.5 animate-in fade-in duration-200">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>{redirectMessage}</span>
             </div>
           )}
 
           {errorMsg && (
-            <div className="mb-5 p-3 rounded-[var(--radius-md)] bg-m3-danger/10 border border-m3-danger/30 text-m3-danger text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-in fade-in duration-200">
+            <div className="mb-5 p-3 rounded-md bg-m3-danger/10 border border-m3-danger/30 text-m3-danger text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-in fade-in duration-200">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span className="flex-1 leading-snug">{errorMsg}</span>
             </div>

@@ -23,7 +23,7 @@ const components = {
     return (
       <a
         {...props}
-        className="text-m3-primary underline underline-offset-2 decoration-m3-primary/40 hover:decoration-m3-primary break-words"
+        className="text-m3-primary underline underline-offset-2 decoration-m3-primary/40 hover:decoration-m3-primary wrap-break-word"
         rel={external ? "nofollow noopener noreferrer" : props.rel}
         target={external ? "_blank" : props.target}
       />
@@ -121,7 +121,7 @@ const components = {
       <div className="group/code relative my-2">
         <pre
           {...rest}
-          className="max-h-60 overflow-auto rounded-[var(--radius-md)] border border-m3-border bg-m3-card px-2.5 py-2 pr-9 text-[11px] font-mono leading-snug"
+          className="max-h-60 overflow-auto rounded-md border border-m3-border bg-m3-card px-2.5 py-2 pr-9 text-[11px] font-mono leading-snug"
         >
           {children}
         </pre>
@@ -134,7 +134,7 @@ const components = {
   },
   table(props) {
     return (
-      <div className="my-2 w-full overflow-x-auto rounded-[var(--radius-md)] border border-m3-border">
+      <div className="my-2 w-full overflow-x-auto rounded-md border border-m3-border">
         <table
           {...props}
           className="w-full border-collapse text-left text-[12px]"

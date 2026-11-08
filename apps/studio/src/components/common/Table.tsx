@@ -47,7 +47,7 @@ export const Table: React.FC<TableProps> = ({
 }) => {
   return (
     <div
-      className={`bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] overflow-hidden flex flex-col flex-1 min-h-0 transition-colors ${className}`}
+      className={`bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden flex flex-col flex-1 min-h-0 transition-colors ${className}`}
       {...props}
     >
       {isLoading ? (

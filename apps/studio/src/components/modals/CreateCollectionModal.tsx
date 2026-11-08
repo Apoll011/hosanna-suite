@@ -255,7 +255,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
 
         {/* Cover Image Upload */}
         <div>
-          <label className="block text-xs font-semibold text-m3-secondary dark:text-m3-secondary mb-1.5 flex items-center gap-1.5">
+          <label className="block text-xs font-semibold text-m3-secondary dark:text-m3-secondary mb-1.5 items-center gap-1.5">
             <ImageIcon className="w-3.5 h-3.5 text-m3-primary" />
             <span>
               {locale === "pt"

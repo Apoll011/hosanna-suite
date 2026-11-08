@@ -158,10 +158,10 @@ export const AiBillingCard: React.FC<AiBillingCardProps> = ({
   }
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/40 overflow-hidden">
+    <div className="rounded-md border border-m3-border bg-m3-sidebar/40 overflow-hidden">
       <div className="flex items-start justify-between gap-3 px-3.5 py-3 border-b border-m3-border/80">
         <div className="flex items-start gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
             <Wallet className="w-4 h-4" />
           </div>
           <div className="min-w-0">

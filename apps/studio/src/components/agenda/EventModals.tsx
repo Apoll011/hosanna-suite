@@ -291,7 +291,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                     key={opt}
                     type="button"
                     onClick={() => setForm((f) => ({ ...f, type: opt }))}
-                    className="px-2.5 h-7 rounded-[var(--radius-md)] text-[11px] font-semibold border border-m3-border text-m3-secondary hover:border-m3-primary/50 hover:text-m3-primary transition-colors cursor-pointer"
+                    className="px-2.5 h-7 rounded-md text-[11px] font-semibold border border-m3-border text-m3-secondary hover:border-m3-primary/50 hover:text-m3-primary transition-colors cursor-pointer"
                   >
                     {opt}
                   </button>
@@ -350,7 +350,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
               >
                 <Minus className="w-4 h-4" />
               </IconButton>
-              <div className="flex-1 h-11 flex items-center justify-center gap-2 bg-m3-sidebar border border-m3-border rounded-[var(--radius-md)]">
+              <div className="flex-1 h-11 flex items-center justify-center gap-2 bg-m3-sidebar border border-m3-border rounded-md">
                 <Clock3 className="w-4 h-4 text-m3-secondary" />
                 <span className="text-sm font-bold tabular-nums">
                   {formatDuration(form.durationMinutes, t)}
@@ -403,7 +403,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                 setForm((f) => ({ ...f, notes: e.target.value }))
               }
               placeholder={t("agenda.notesPlaceholder")}
-              className="w-full h-20 p-3 bg-m3-sidebar border border-m3-border rounded-[var(--radius-md)] text-xs font-medium focus:outline-none focus:border-m3-primary transition-colors resize-none"
+              className="w-full h-20 p-3 bg-m3-sidebar border border-m3-border rounded-md text-xs font-medium focus:outline-none focus:border-m3-primary transition-colors resize-none"
             />
           </div>
         </section>
@@ -426,7 +426,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                 <button
                   type="button"
                   onClick={onDelete}
-                  className="h-10 px-4 rounded-[var(--radius-md)] bg-m3-danger hover:opacity-90 text-white text-sm font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="h-10 px-4 rounded-md bg-m3-danger hover:opacity-90 text-white text-sm font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                   {t("common.confirm")}
@@ -541,7 +541,7 @@ export const AddResponsibilityModal: React.FC<AddResponsibilityModalProps> = ({
                       key={c.id}
                       type="button"
                       onClick={() => setCategoryId(c.id)}
-                      className={`flex items-center justify-between gap-3 px-3.5 h-11 rounded-[var(--radius-md)] border text-sm font-bold transition-colors cursor-pointer ${
+                      className={`flex items-center justify-between gap-3 px-3.5 h-11 rounded-md border text-sm font-bold transition-colors cursor-pointer ${
                         selected
                           ? "border-m3-primary bg-m3-primary/10 text-m3-primary"
                           : "border-m3-border text-m3-secondary hover:border-m3-primary/40"

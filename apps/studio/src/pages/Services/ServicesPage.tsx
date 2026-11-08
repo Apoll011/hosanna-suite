@@ -501,7 +501,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         {contextMenu && contextMenu.service === null && (
           <div
             style={{ top: contextMenu.y, left: contextMenu.x }}
-            className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+            className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
@@ -516,7 +516,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setContextMenu(null);
                   setIsCreateModalOpen(true);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Plus className="w-4 h-4 text-m3-secondary shrink-0" />
                 <span>{t("addressBar.newService")}</span>
@@ -762,7 +762,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
           onContextMenu={(e) => e.preventDefault()}
@@ -779,7 +779,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                     setContextMenu(null);
                     setIsCreateModalOpen(true);
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
                 >
                   <Plus className="w-4 h-4 text-m3-secondary shrink-0" />
                   <span>{t("addressBar.newService")}</span>
@@ -793,7 +793,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   );
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <CheckSquare className="w-4 h-4 text-m3-secondary shrink-0" />
                 <span>{t("explorer.contextMenu.selectAll")}</span>
@@ -815,7 +815,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   }
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-m3-secondary" />
                 <span>
@@ -829,7 +829,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setIsBatchArchiveOpen(true);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Archive className="w-4 h-4 text-m3-secondary" />
                 <span>
@@ -843,7 +843,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setIsBatchDeleteOpen(true);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 text-m3-danger" />
                 <span>
@@ -858,7 +858,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setSelectedServiceIds(new Set());
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <X className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.deselect")}</span>
@@ -875,7 +875,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   navigate(`${slugPrefix}/services/${contextMenu.service!.id}`);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Calendar className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.openService")}</span>
@@ -886,7 +886,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setEditTarget(contextMenu.service);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Edit2 className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.editNameDate")}</span>
@@ -897,7 +897,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   handleDuplicateService(contextMenu.service!);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Copy className="w-4 h-4 text-m3-secondary" />
                 <span>{t("servicesPage.duplicate")}</span>
@@ -910,7 +910,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   }
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-m3-secondary" />
                 <span>{t("print.buttons.printServiceShort")}</span>
@@ -920,7 +920,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 onClick={() => {
                   handleArchiveToggle(contextMenu.service!);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
               >
                 {contextMenu.service.archived ? (
                   <ArchiveRestore className="w-4 h-4 text-m3-secondary" />
@@ -941,7 +941,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   setDeleteTarget(contextMenu.service);
                   setContextMenu(null);
                 }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
+                className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer"
               >
                 <Trash2 className="w-4 h-4 text-m3-danger" />
                 <span>{t("servicesPage.deleteService")}</span>

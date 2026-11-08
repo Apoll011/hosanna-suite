@@ -75,7 +75,7 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
         aria-label={t("sidebar.switchWorkspace")}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="p-2.5 rounded-full bg-m3-card/80 backdrop-blur-md border border-m3-border text-m3-text shadow-[var(--shadow-lg)] transition-colors inline-flex items-center gap-1.5"
+        className="p-2.5 rounded-full bg-m3-card/80 backdrop-blur-md border border-m3-border text-m3-text shadow-lg transition-colors inline-flex items-center gap-1.5"
       >
         <Building2 className="w-5 h-5 shrink-0" />
         <span className="text-xs font-bold max-w-24 truncate hidden sm:inline">
@@ -89,7 +89,7 @@ export function WorkspaceSwitcher({ className = "" }: { className?: string }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-[var(--radius-xl)] border border-m3-border/60 bg-m3-card p-1.5 shadow-[var(--shadow-lg)] ring-1 ring-black/5 dark:ring-white/5 z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-xl border border-m3-border/60 bg-m3-card p-1.5 shadow-lg ring-1 ring-black/5 dark:ring-white/5 z-50 animate-in fade-in zoom-in-95 duration-150">
           <p className="px-3 pt-1.5 pb-1 text-label text-m3-secondary">
             {t("sidebar.switchWorkspace")}
           </p>

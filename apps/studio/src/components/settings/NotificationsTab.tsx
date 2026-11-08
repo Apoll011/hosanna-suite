@@ -287,7 +287,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
   if (!canSend || permissionError || !organization) {
     return (
       <Surface className="max-w-xl mx-auto w-full text-center p-10">
-        <div className="w-12 h-12 mx-auto rounded-[var(--radius-lg)] bg-m3-sidebar text-m3-secondary flex items-center justify-center mb-4">
+        <div className="w-12 h-12 mx-auto rounded-lg bg-m3-sidebar text-m3-secondary flex items-center justify-center mb-4">
           <Lock className="w-5 h-5" />
         </div>
         <h3 className="text-title text-m3-text">
@@ -339,7 +339,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
               </p>
             </div>
             <div className="p-5 space-y-4">
-              <div className="grid grid-cols-2 gap-2 p-1 rounded-[var(--radius-md)] bg-m3-sidebar">
+              <div className="grid grid-cols-2 gap-2 p-1 rounded-md bg-m3-sidebar">
                 {(
                   [
                     {
@@ -367,9 +367,9 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                           setQuery("");
                         }
                       }}
-                      className={`flex items-center justify-center gap-2 min-h-10 px-3 rounded-[var(--radius-sm)] text-sm font-medium transition-colors cursor-pointer ${
+                      className={`flex items-center justify-center gap-2 min-h-10 px-3 rounded-sm text-sm font-medium transition-colors cursor-pointer ${
                         activeOpt
-                          ? "bg-m3-card text-m3-text shadow-[var(--shadow-sm)]"
+                          ? "bg-m3-card text-m3-text shadow-sm"
                           : "text-m3-secondary hover:text-m3-text"
                       }`}
                     >
@@ -382,8 +382,8 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
 
               {isOrgTarget ? (
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] bg-m3-sidebar/70 border border-m3-border">
-                    <div className="w-9 h-9 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                  <div className="flex items-center gap-3 p-3 rounded-md bg-m3-sidebar/70 border border-m3-border">
+                    <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                       <Building2 className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
@@ -415,7 +415,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                             key={role}
                             type="button"
                             onClick={() => toggleRole(role)}
-                            className={`px-2.5 py-1 rounded-[var(--radius-md)] text-xs font-medium border transition-colors cursor-pointer ${
+                            className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
                               isSelected
                                 ? "bg-m3-primary text-white border-m3-primary"
                                 : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
@@ -431,7 +431,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                   </div>
                 </div>
               ) : recipient ? (
-                <div className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] border border-m3-primary/30 bg-m3-primary/5">
+                <div className="flex items-center gap-3 p-3 rounded-md border border-m3-primary/30 bg-m3-primary/5">
                   <div
                     className={`w-9 h-9 rounded-full bg-linear-to-tr ${getAvatarGradient(
                       recipient.name,
@@ -460,7 +460,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     type="button"
                     onClick={() => setRecipient(null)}
                     title={t("settings.notifications.recipient.clear")}
-                    className="p-2 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
+                    className="p-2 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -476,10 +476,10 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                       placeholder={t(
                         "settings.notifications.recipient.searchPlaceholder",
                       )}
-                      className="w-full pl-9 pr-3 min-h-10 bg-m3-card border border-m3-border rounded-[var(--radius-md)] text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
+                      className="w-full pl-9 pr-3 min-h-10 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
                     />
                   </div>
-                  <div className="max-h-56 overflow-y-auto rounded-[var(--radius-md)] border border-m3-border divide-y divide-m3-border/60">
+                  <div className="max-h-56 overflow-y-auto rounded-md border border-m3-border divide-y divide-m3-border/60">
                     {isLoadingMembers ? (
                       <div className="py-8 flex items-center justify-center gap-2 text-sm text-m3-secondary">
                         <Loader2 className="w-4 h-4 animate-spin text-m3-primary" />
@@ -565,14 +565,14 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                         key={opt.value}
                         type="button"
                         onClick={() => setChannel(opt.value)}
-                        className={`flex flex-col items-start gap-1.5 p-3 rounded-[var(--radius-md)] border text-left transition-colors cursor-pointer ${
+                        className={`flex flex-col items-start gap-1.5 p-3 rounded-md border text-left transition-colors cursor-pointer ${
                           activeCh
                             ? "border-m3-primary bg-m3-primary/5"
                             : "border-m3-border hover:border-m3-primary/40"
                         }`}
                       >
                         <span
-                          className={`w-8 h-8 rounded-[var(--radius-md)] flex items-center justify-center ${
+                          className={`w-8 h-8 rounded-md flex items-center justify-center ${
                             activeCh
                               ? "bg-m3-primary text-white"
                               : "bg-m3-sidebar text-m3-secondary"
@@ -626,7 +626,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                           key={preset.value}
                           type="button"
                           onClick={() => setTypePreset(preset.value)}
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--radius-md)] text-xs font-medium border transition-colors cursor-pointer ${
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
                             isActive
                               ? "bg-m3-primary text-white border-m3-primary"
                               : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
@@ -666,7 +666,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                   placeholder={t(
                     "settings.notifications.content.descriptionPlaceholder",
                   )}
-                  className="w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary resize-y"
+                  className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary resize-y"
                 />
               </div>
 
@@ -697,9 +697,9 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
               {(isOrgTarget ||
                 channel === "inbox" ||
                 channel === "both") && (
-                <div className="p-3.5 rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/40">
+                <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/40">
                   <div className="flex gap-3 items-start">
-                    <div className="p-2 rounded-[var(--radius-md)] bg-m3-card border border-m3-border text-m3-primary shrink-0">
+                    <div className="p-2 rounded-md bg-m3-card border border-m3-border text-m3-primary shrink-0">
                       {previewIcon}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -721,7 +721,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
               )}
 
               {!isOrgTarget && channel !== "inbox" && (
-                <div className="rounded-[var(--radius-md)] border border-m3-border bg-m3-text text-m3-card p-3.5">
+                <div className="rounded-md border border-m3-border bg-m3-text text-m3-card p-3.5">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-4 h-4 rounded bg-m3-primary flex items-center justify-center">
                       <Bell className="w-2.5 h-2.5 text-white" />

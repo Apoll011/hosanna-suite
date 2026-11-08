@@ -24,7 +24,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
   const { t } = useI18n();
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-4 shadow-[var(--shadow-sm)]">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-label">{t("agenda.dayEvents")}</h3>
         <span className="text-caption bg-m3-sidebar/60 rounded-full px-2 py-0.5">
@@ -45,7 +45,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
               <button
                 key={event.id}
                 onClick={() => onSelectEvent(event.id)}
-                className={`w-full text-left rounded-[var(--radius-md)] p-3 border transition-colors cursor-pointer flex items-center justify-between gap-2 ${
+                className={`w-full text-left rounded-md p-3 border transition-colors cursor-pointer flex items-center justify-between gap-2 ${
                   isSelected
                     ? "bg-m3-primary/10 border-m3-primary/20"
                     : "border-transparent hover:bg-m3-hover"

@@ -339,7 +339,7 @@ export const TeamsPage: React.FC = () => {
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-caption bg-m3-sidebar text-m3-secondary border border-m3-border px-2.5 py-1 rounded-[var(--radius-md)] flex items-center gap-1">
+            <span className="text-caption bg-m3-sidebar text-m3-secondary border border-m3-border px-2.5 py-1 rounded-md flex items-center gap-1">
               <Shield className="w-3.5 h-3.5" />
               {isLeaderOfTeam
                 ? t("teamsPage.teamManagerBadge")
@@ -348,8 +348,8 @@ export const TeamsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 sm:p-8 shadow-[var(--shadow-sm)]">
-          <span className="text-label text-m3-secondary bg-m3-sidebar px-2.5 py-1 rounded-[var(--radius-md)]">
+        <div className="bg-m3-card border border-m3-border rounded-xl p-6 sm:p-8 shadow-sm">
+          <span className="text-label text-m3-secondary bg-m3-sidebar px-2.5 py-1 rounded-md">
             {selectedTeam.slug}
           </span>
           <h1 className="text-display text-m3-text mt-3 mb-1">
@@ -360,7 +360,7 @@ export const TeamsPage: React.FC = () => {
           </p>
 
           <div className="flex flex-wrap gap-3 mt-5 text-caption">
-            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-[var(--radius-md)]">
+            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-md">
               <Crown className="w-4 h-4 text-amber-500" />
               <span>
                 {t("teamsPage.leaderLabel", {
@@ -368,7 +368,7 @@ export const TeamsPage: React.FC = () => {
                 })}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-[var(--radius-md)]">
+            <div className="flex items-center gap-1.5 bg-m3-sidebar border border-m3-border px-3 py-1.5 rounded-md">
               <Users className="w-4 h-4 text-m3-primary" />
               <span>
                 {t("teamsPage.membersCount", { count: members.length })}
@@ -398,7 +398,7 @@ export const TeamsPage: React.FC = () => {
               )}
             </div>
 
-            <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] divide-y divide-m3-border/60 overflow-hidden shadow-[var(--shadow-sm)]">
+            <div className="bg-m3-card border border-m3-border rounded-xl divide-y divide-m3-border/60 overflow-hidden shadow-sm">
               {members.map((member) => (
                 <div
                   key={member.id}
@@ -468,7 +468,7 @@ export const TeamsPage: React.FC = () => {
               {t("teamsPage.teamPermissionsTitle")}
             </h2>
 
-            <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 space-y-4 shadow-[var(--shadow-sm)]">
+            <div className="bg-m3-card border border-m3-border rounded-xl p-5 space-y-4 shadow-sm">
               <p className="text-xs text-m3-secondary leading-relaxed">
                 {t("teamsPage.teamPermissionsDesc")}
               </p>
@@ -625,7 +625,7 @@ export const TeamsPage: React.FC = () => {
       />
 
       {/* Search & Stats */}
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-m3-card p-4 border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)]">
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-m3-card p-4 border border-m3-border rounded-xl shadow-sm">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-m3-secondary absolute left-3 top-3.5" />
           <input
@@ -648,7 +648,7 @@ export const TeamsPage: React.FC = () => {
           <div
             key={team.id}
             onClick={() => setSelectedTeam(team)}
-            className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 hover:border-m3-primary/50 hover:shadow-[var(--shadow-md)] transition-colors cursor-pointer group flex flex-col justify-between relative"
+            className="bg-m3-card border border-m3-border rounded-xl p-5 hover:border-m3-primary/50 hover:shadow-md transition-colors cursor-pointer group flex flex-col justify-between relative"
           >
             <div>
               <div className="flex items-start justify-between gap-2 mb-3">

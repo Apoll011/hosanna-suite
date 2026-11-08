@@ -55,7 +55,7 @@ export const PrintingSettingsCard: React.FC<PrintingSettingsCardProps> = ({
     );
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-sm overflow-hidden transition-all mt-6">
+    <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden transition-all mt-6">
       <div className="px-6 py-5 border-b border-m3-border flex items-center justify-between gap-4 bg-m3-sidebar/50">
         <div>
           <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">

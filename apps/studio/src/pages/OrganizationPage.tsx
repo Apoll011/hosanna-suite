@@ -225,7 +225,7 @@ export const OrganizationPage: React.FC = () => {
         <PageHeader title={t("common.organization")} />
 
         {!isOnline && (
-          <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-[var(--radius-lg)] text-amber-700 dark:text-amber-300 text-xs">
+          <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-700 dark:text-amber-300 text-xs">
             <CloudOff className="w-5 h-5 shrink-0 text-amber-500" />
             <div>
               <span className="font-semibold block">
@@ -313,7 +313,7 @@ export const OrganizationPage: React.FC = () => {
         title={t("settings.restore.confirmTitle")}
       >
         <div className="flex flex-col gap-4">
-          <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-[var(--radius-md)] flex items-start gap-3 text-xs text-amber-800 dark:text-amber-300">
+          <div className="p-3.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-md flex items-start gap-3 text-xs text-amber-800 dark:text-amber-300">
             <AlertTriangle className="w-5 h-5 shrink-0 text-amber-500 mt-0.5" />
             <div>
               <strong className="font-semibold">
@@ -329,7 +329,7 @@ export const OrganizationPage: React.FC = () => {
                 {t("settings.restore.summary")}
               </span>
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="p-2 bg-m3-card rounded-[var(--radius-md)] border border-m3-border">
+                <div className="p-2 bg-m3-card rounded-md border border-m3-border">
                   <span className="block text-lg font-semibold text-m3-primary tabular-nums">
                     {restoreStats.songs}
                   </span>
@@ -337,7 +337,7 @@ export const OrganizationPage: React.FC = () => {
                     {t("settings.restore.songs")}
                   </span>
                 </div>
-                <div className="p-2 bg-m3-card rounded-[var(--radius-md)] border border-m3-border">
+                <div className="p-2 bg-m3-card rounded-md border border-m3-border">
                   <span className="block text-lg font-semibold text-amber-500 tabular-nums">
                     {restoreStats.folders}
                   </span>
@@ -345,7 +345,7 @@ export const OrganizationPage: React.FC = () => {
                     {t("settings.restore.folders")}
                   </span>
                 </div>
-                <div className="p-2 bg-m3-card rounded-[var(--radius-md)] border border-m3-border">
+                <div className="p-2 bg-m3-card rounded-md border border-m3-border">
                   <span className="block text-lg font-semibold text-emerald-500 tabular-nums">
                     {restoreStats.services}
                   </span>

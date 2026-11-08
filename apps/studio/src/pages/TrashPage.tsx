@@ -105,7 +105,7 @@ export const TrashPage: React.FC = () => {
         title={t("common.trash")}
         description={t("trashPage.emptyDesc")}
       />
-      <div className="overflow-x-auto border border-m3-border/40 rounded-[var(--radius-xl)] bg-m3-card shadow-sm">
+      <div className="overflow-x-auto border border-m3-border/40 rounded-xl bg-m3-card shadow-sm">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-m3-sidebar/40 border-b border-m3-border">

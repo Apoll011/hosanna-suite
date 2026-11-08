@@ -544,7 +544,7 @@ export const CollectionDetailPage: React.FC = () => {
                       onClick={() =>
                         navigate(`${slugPrefix}/songs/${song.id}`)
                       }
-                      className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                      className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md cursor-pointer transition-colors"
                       title={t("collectionsPage.viewSong")}
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -553,7 +553,7 @@ export const CollectionDetailPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSongToRemove(song)}
-                        className="p-1.5 text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-[var(--radius-md)] cursor-pointer transition-colors"
+                        className="p-1.5 text-m3-secondary hover:text-m3-danger hover:bg-m3-danger/10 rounded-md cursor-pointer transition-colors"
                         title={t("collectionsPage.removeFromCollection")}
                       >
                         <X className="w-3.5 h-3.5" />
@@ -562,7 +562,7 @@ export const CollectionDetailPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={(e) => openContextMenu(e, song)}
-                      className="p-1.5 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+                      className="p-1.5 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
                       title={t("explorer.moreOptions")}
                     >
                       <MoreHorizontal className="w-4 h-4" />
@@ -651,7 +651,7 @@ export const CollectionDetailPage: React.FC = () => {
           <div
             data-song-context-menu
             style={{ top: contextMenu.y, left: contextMenu.x }}
-            className="fixed z-[100] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+            className="fixed z-100 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}

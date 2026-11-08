@@ -128,7 +128,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
       </button>
 
       {/* Profile Hero */}
-      <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] overflow-hidden shadow-xs">
+      <div className="bg-m3-card border border-m3-border rounded-xl overflow-hidden shadow-xs">
         <div className="h-24 bg-linear-to-r from-sky-700 via-indigo-700 to-slate-800 relative" />
 
         <div className="px-6 pb-6">
@@ -151,7 +151,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
               )}
             </div>
             {isSelf && (
-              <span className="mb-2 text-label text-m3-primary bg-m3-primary/10 px-2 py-1 rounded-[var(--radius-sm)] border border-m3-primary/20">
+              <span className="mb-2 text-label text-m3-primary bg-m3-primary/10 px-2 py-1 rounded-sm border border-m3-primary/20">
                 {t("common.you")}
               </span>
             )}
@@ -212,7 +212,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
 
       {/* Role Management Card */}
       <Can permission="member.update">
-        <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-5 shadow-xs space-y-3">
+        <div className="bg-m3-card border border-m3-border rounded-xl p-5 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
               <Shield className="w-4 h-4 text-m3-primary" />

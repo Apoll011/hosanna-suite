@@ -264,7 +264,7 @@ export const FoldersPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef?.current?.click()}
-                  className="text-sm font-medium text-m3-primary hover:underline flex items-center gap-1.5 cursor-pointer bg-m3-primary/10 px-4 py-2 rounded-[var(--radius-md)] border border-m3-primary/25 hover:bg-m3-primary/15 transition-colors"
+                  className="text-sm font-medium text-m3-primary hover:underline flex items-center gap-1.5 cursor-pointer bg-m3-primary/10 px-4 py-2 rounded-md border border-m3-primary/25 hover:bg-m3-primary/15 transition-colors"
                 >
                   <Upload className="w-3.5 h-3.5" />
                   <span>{t("foldersPage.dragOrClick")}</span>

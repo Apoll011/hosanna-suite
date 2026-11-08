@@ -59,7 +59,7 @@ export const AiConfirmCard: React.FC<{
   })();
 
   return (
-    <div className="my-1.5 rounded-[var(--radius-md)] border border-amber-500/40 bg-amber-500/5 overflow-hidden">
+    <div className="my-1.5 rounded-md border border-amber-500/40 bg-amber-500/5 overflow-hidden">
       <div className="flex items-start gap-2 px-2.5 py-2">
         <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
         <div className="min-w-0 flex-1 space-y-0.5">
@@ -89,14 +89,14 @@ export const AiConfirmCard: React.FC<{
             <button
               type="button"
               onClick={() => void onConfirm()}
-              className="text-[11px] px-2.5 py-1 rounded-[var(--radius-md)] bg-m3-danger text-white hover:opacity-90"
+              className="text-[11px] px-2.5 py-1 rounded-md bg-m3-danger text-white hover:opacity-90"
             >
               {t("ai.chat.confirm")}
             </button>
             <button
               type="button"
               onClick={() => setStatus("declined")}
-              className="text-[11px] px-2.5 py-1 rounded-[var(--radius-md)] border border-m3-border text-m3-text hover:bg-m3-sidebar"
+              className="text-[11px] px-2.5 py-1 rounded-md border border-m3-border text-m3-text hover:bg-m3-sidebar"
             >
               {t("ai.chat.decline")}
             </button>

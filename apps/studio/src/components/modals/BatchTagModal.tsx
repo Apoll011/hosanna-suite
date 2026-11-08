@@ -123,7 +123,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
               onClick={() => setMode("append")}
               className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer ${
                 mode === "append"
-                  ? "bg-m3-card text-m3-primary shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-primary shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -134,7 +134,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
               onClick={() => setMode("replace")}
               className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer ${
                 mode === "replace"
-                  ? "bg-m3-card text-amber-600 dark:text-amber-400 shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-amber-600 dark:text-amber-400 shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -145,7 +145,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
               onClick={() => setMode("remove")}
               className={`py-2 px-2.5 rounded-lg text-xs font-bold transition-colors text-center cursor-pointer ${
                 mode === "remove"
-                  ? "bg-m3-card text-m3-danger shadow-[var(--shadow-sm)]"
+                  ? "bg-m3-card text-m3-danger shadow-sm"
                   : "text-m3-secondary hover:text-m3-text"
               }`}
             >
@@ -174,7 +174,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
                   onClick={() => togglePresetTag(cat)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer select-none ${
                     isSelected
-                      ? "bg-m3-primary text-white shadow-[var(--shadow-sm)]"
+                      ? "bg-m3-primary text-white shadow-sm"
                       : "bg-m3-card text-m3-text border border-m3-border hover:border-m3-primary"
                   }`}
                 >

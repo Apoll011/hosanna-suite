@@ -132,7 +132,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             <p className="text-muted mt-1">{t("settings.general.desc")}</p>
           </div>
           {!canManageOrg && (
-            <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-[var(--radius-md)] flex items-center gap-1.5 font-semibold shrink-0">
+            <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold shrink-0">
               <Lock className="w-3.5 h-3.5" />
               {t("settings.general.readOnly")}
             </span>
@@ -231,7 +231,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 return (
                   <label
                     key={day.value}
-                    className={`flex flex-col p-3 rounded-[var(--radius-md)] border transition-colors cursor-pointer ${
+                    className={`flex flex-col p-3 rounded-md border transition-colors cursor-pointer ${
                       isChecked
                         ? "border-m3-primary bg-m3-primary/5 text-m3-primary ring-1 ring-m3-primary/30"
                         : "border-m3-border hover:bg-m3-sidebar text-m3-text"
@@ -335,7 +335,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             ).map((toggle) => (
               <label
                 key={toggle.id}
-                className={`flex items-start gap-4 p-4 border border-m3-border rounded-[var(--radius-md)] transition-colors ${
+                className={`flex items-start gap-4 p-4 border border-m3-border rounded-md transition-colors ${
                   canManageOrg && !isSaving
                     ? "cursor-pointer hover:bg-m3-sidebar/80"
                     : "opacity-75 cursor-not-allowed"

@@ -311,7 +311,7 @@ function Hero() {
 
         {/* Mockups — eager LCP image (not Suspense-lazy) */}
         <div className="pointer-events-none relative z-0 mx-auto -mt-10 max-w-6xl">
-          <div className="relative aspect-[1400/972]">
+          <div className="relative aspect-1400/972">
             <HeroDashboardMockup alt={t("landing.hero.dashboardAlt")} />
           </div>
         </div>

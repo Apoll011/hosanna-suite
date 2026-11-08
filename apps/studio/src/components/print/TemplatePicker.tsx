@@ -58,7 +58,7 @@ const TemplateThumbnail = React.memo<TemplateThumbnailProps>(
     const info = TEMPLATE_FAMILIES.find((f) => f.id === family);
     return (
       <div
-        className="hp-thumb aspect-[4/3] overflow-hidden bg-white p-[7px]"
+        className="hp-thumb aspect-4/3 overflow-hidden bg-white p-1.75"
         aria-hidden="true"
       >
         <PrintDocument
@@ -111,7 +111,7 @@ export const TemplatePicker: React.FC<TemplatePickerProps> = ({
             disabled={disabled}
             onClick={() => onSelect(family.id)}
             title={t(`print.templates.${family.id}.description`)}
-            className={`group relative text-left rounded-[var(--radius-md)] border overflow-hidden transition-all disabled:cursor-default ${
+            className={`group relative text-left rounded-md border overflow-hidden transition-all disabled:cursor-default ${
               selected
                 ? "border-m3-primary ring-2 ring-m3-primary/25"
                 : "border-m3-border hover:border-m3-secondary/60 enabled:cursor-pointer"
@@ -133,7 +133,7 @@ export const TemplatePicker: React.FC<TemplatePickerProps> = ({
               </div>
             </div>
             {selected && (
-              <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-m3-primary text-white flex items-center justify-center shadow-[var(--shadow-sm)]">
+              <span className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-m3-primary text-white flex items-center justify-center shadow-sm">
                 <Check className="w-3 h-3" strokeWidth={3} />
               </span>
             )}

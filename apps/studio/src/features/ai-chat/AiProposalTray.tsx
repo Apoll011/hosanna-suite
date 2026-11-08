@@ -136,7 +136,7 @@ export const AiProposalTray: React.FC = () => {
             return (
               <li
                 key={p.key}
-                className="logos-msg-in flex items-center gap-2 rounded-[var(--radius-md)] border border-m3-border bg-m3-card px-2 py-1.5"
+                className="logos-msg-in flex items-center gap-2 rounded-md border border-m3-border bg-m3-card px-2 py-1.5"
               >
                 <Icon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 <div className="min-w-0 flex-1">
@@ -165,7 +165,7 @@ export const AiProposalTray: React.FC = () => {
                     </button>
                     <button
                       type="button"
-                      className={`${iconBtn} !text-m3-success hover:!bg-m3-success/10`}
+                      className={`${iconBtn} text-m3-success! hover:bg-m3-success/10!`}
                       title={t("ai.chat.accept")}
                       aria-label={t("ai.chat.accept")}
                       disabled={busy !== null}

@@ -272,7 +272,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
     scope === "self" && (events?.length ?? 0) < total && !isLoading;
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-[var(--radius-xl)] p-6 shadow-xs">
+    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
       <div className="flex items-center justify-between mb-4 gap-3">
         {!hideHeader ? (
           <div className="min-w-0">

@@ -103,7 +103,7 @@ function SectionCard({
     <Surface padding="none" className="overflow-hidden">
       <div className="px-5 py-4 border-b border-m3-border flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-[var(--radius-md)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
             {icon}
           </div>
           <div className="min-w-0">
@@ -291,7 +291,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-m3-border bg-m3-card">
+      <div className="relative overflow-hidden rounded-xl border border-m3-border bg-m3-card">
         <div className="absolute inset-0 bg-linear-to-br from-m3-primary/10 via-transparent to-m3-sidebar pointer-events-none" />
         <div className="relative p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-5">
           <div className="shrink-0 flex items-center justify-center">
@@ -312,17 +312,17 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             </p>
             <div className="flex flex-wrap items-center gap-2 mt-3">
               {ready ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[var(--radius-md)] bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   {t("ai.settings.statusOn")}
                 </span>
               ) : settings?.configured ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[var(--radius-md)] bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
                   <CircleOff className="w-3.5 h-3.5" />
                   {t("ai.settings.statusPaused")}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-[var(--radius-md)] bg-m3-sidebar text-m3-secondary border border-m3-border">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border">
                   <KeyRound className="w-3.5 h-3.5" />
                   {t("ai.settings.statusSetup")}
                 </span>
@@ -336,13 +336,13 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             </div>
           </div>
           {settings ? (
-            <label className="flex items-center gap-3 shrink-0 self-start sm:self-center cursor-pointer rounded-[var(--radius-md)] border border-m3-border bg-m3-card/80 px-3.5 py-2.5">
+            <label className="flex items-center gap-3 shrink-0 self-start sm:self-center cursor-pointer rounded-md border border-m3-border bg-m3-card/80 px-3.5 py-2.5">
               <span className="text-sm font-medium text-m3-text">
                 {t("ai.settings.enabled")}
               </span>
               <input
                 type="checkbox"
-                className="w-4 h-4 accent-[var(--color-m3-primary)]"
+                className="w-4 h-4 accent-m3-primary"
                 checked={enabled}
                 disabled={!settings.configured && !apiKey.trim()}
                 onChange={(e) => setEnabled(e.currentTarget.checked)}
@@ -360,7 +360,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       ) : (
         <>
           {!settings.encryptionReady && (
-            <div className="rounded-[var(--radius-md)] border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
               {t("ai.settings.encryptionMissing")}
             </div>
           )}
@@ -396,7 +396,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                       role="radio"
                       aria-checked={selected}
                       onClick={() => handleProviderChange(p)}
-                      className={`group relative text-left rounded-[var(--radius-lg)] border p-3.5 transition-all cursor-pointer ${
+                      className={`group relative text-left rounded-lg border p-3.5 transition-all cursor-pointer ${
                         selected
                           ? `border-m3-primary bg-m3-primary/5 ring-2 ${meta.ring}`
                           : "border-m3-border hover:border-m3-primary/40 hover:bg-m3-sidebar/40"
@@ -609,7 +609,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               </span>
             </label>
 
-            <label className="flex items-center justify-between gap-3 rounded-[var(--radius-md)] border border-m3-border px-3.5 py-3 cursor-pointer hover:bg-m3-sidebar/40 transition-colors">
+            <label className="flex items-center justify-between gap-3 rounded-md border border-m3-border px-3.5 py-3 cursor-pointer hover:bg-m3-sidebar/40 transition-colors">
               <div>
                 <span className="text-sm font-medium text-m3-text block">
                   {t("ai.settings.memoryEnabled")}
@@ -620,13 +620,13 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               </div>
               <input
                 type="checkbox"
-                className="w-4 h-4 accent-[var(--color-m3-primary)]"
+                className="w-4 h-4 accent-m3-primary"
                 checked={memoryEnabled}
                 onChange={(e) => setMemoryEnabled(e.currentTarget.checked)}
               />
             </label>
 
-            <div className="rounded-[var(--radius-md)] border border-m3-border overflow-hidden">
+            <div className="rounded-md border border-m3-border overflow-hidden">
               <button
                 type="button"
                 className="w-full flex items-center justify-between gap-2 px-3.5 py-3 text-left hover:bg-m3-sidebar/60 transition-colors cursor-pointer"
@@ -658,7 +658,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                     </div>
                     <input
                       type="range"
-                      className="w-full accent-[var(--color-m3-primary)]"
+                      className="w-full accent-m3-primary"
                       min={settings.limits.maxToolCalls.min}
                       max={settings.limits.maxToolCalls.max}
                       step={1}
@@ -698,7 +698,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                     </div>
                     <input
                       type="range"
-                      className="w-full accent-[var(--color-m3-primary)]"
+                      className="w-full accent-m3-primary"
                       min={settings.limits.temperature.min}
                       max={settings.limits.temperature.max}
                       step={0.1}

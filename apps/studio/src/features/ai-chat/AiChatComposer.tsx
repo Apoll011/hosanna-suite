@@ -120,7 +120,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(
           <div
             role="listbox"
             aria-label={t("ai.chat.quickActions")}
-            className="absolute bottom-full left-0 right-0 mb-1.5 max-h-56 overflow-auto rounded-[var(--radius-lg)] border border-m3-border bg-m3-card shadow-lg p-1 z-10"
+            className="absolute bottom-full left-0 right-0 mb-1.5 max-h-56 overflow-auto rounded-lg border border-m3-border bg-m3-card shadow-lg p-1 z-10"
           >
             {slashItems.length === 0 ? (
               <p className="m-0 px-2.5 py-2 text-[12px] text-m3-secondary">
@@ -137,7 +137,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(
                     aria-selected={i === slashIndex}
                     onMouseEnter={() => setSlashIndex(i)}
                     onClick={() => pickSlash(i)}
-                    className={`w-full flex items-center gap-2.5 px-2 py-1.5 rounded-[var(--radius-md)] text-left ${
+                    className={`w-full flex items-center gap-2.5 px-2 py-1.5 rounded-md text-left ${
                       i === slashIndex ? "bg-m3-primary/10" : ""
                     }`}
                   >
@@ -157,7 +157,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(
           </div>
         )}
 
-        <div className="flex items-end gap-2 rounded-[var(--radius-lg)] border border-m3-border bg-m3-bg px-2.5 py-2 focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 transition-shadow">
+        <div className="flex items-end gap-2 rounded-lg border border-m3-border bg-m3-bg px-2.5 py-2 focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 transition-shadow">
           <textarea
             ref={areaRef}
             rows={1}

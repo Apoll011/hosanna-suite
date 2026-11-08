@@ -171,7 +171,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
-            <div className="p-3.5 rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/60">
+            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
               <span className="block text-2xl font-semibold text-m3-text tabular-nums">
                 {summary.songCount}
               </span>
@@ -179,7 +179,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                 {t("analytics.libraryHealth.statSongs")}
               </span>
             </div>
-            <div className="p-3.5 rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/60">
+            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
               <span className="block text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 {summary.healthyCount}
               </span>
@@ -187,7 +187,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                 {t("analytics.libraryHealth.statHealthy")}
               </span>
             </div>
-            <div className="p-3.5 rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/60 col-span-2 sm:col-span-1">
+            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60 col-span-2 sm:col-span-1">
               <span className="block text-2xl font-semibold text-amber-600 dark:text-amber-400 tabular-nums">
                 {summary.issueCount}
               </span>
@@ -235,7 +235,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                     <button
                       type="button"
                       onClick={() => toggleCategory(category.criterion)}
-                      className="flex-1 flex items-center justify-between gap-3 px-3 py-4 text-left hover:bg-m3-sidebar/80 rounded-[var(--radius-md)] transition-colors cursor-pointer min-w-0"
+                      className="flex-1 flex items-center justify-between gap-3 px-3 py-4 text-left hover:bg-m3-sidebar/80 rounded-md transition-colors cursor-pointer min-w-0"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         {isOpen ? (
@@ -262,7 +262,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                           </span>
                         </div>
                       </div>
-                      <span className="text-xs font-semibold tabular-nums px-2.5 py-1 rounded-[var(--radius-md)] bg-amber-500/10 text-amber-700 dark:text-amber-300 shrink-0">
+                      <span className="text-xs font-semibold tabular-nums px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 shrink-0">
                         {category.songs.length}
                       </span>
                     </button>
@@ -300,9 +300,9 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                               <button
                                 type="button"
                                 onClick={() => openSong(song.id)}
-                                className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] text-left hover:bg-m3-primary/5 border border-transparent hover:border-m3-primary/20 transition-colors cursor-pointer group min-w-0"
+                                className="flex-1 flex items-center gap-3 px-3 py-2.5 rounded-md text-left hover:bg-m3-primary/5 border border-transparent hover:border-m3-primary/20 transition-colors cursor-pointer group min-w-0"
                               >
-                                <div className="w-8 h-8 rounded-[var(--radius-md)] bg-m3-sidebar flex items-center justify-center shrink-0 group-hover:bg-m3-primary/10">
+                                <div className="w-8 h-8 rounded-md bg-m3-sidebar flex items-center justify-center shrink-0 group-hover:bg-m3-primary/10">
                                   <Music2 className="w-4 h-4 text-m3-secondary group-hover:text-m3-primary" />
                                 </div>
                                 <div className="flex-1 min-w-0">

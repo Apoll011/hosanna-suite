@@ -74,7 +74,7 @@ export const OAuthConsentPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-m3-bg p-4">
       <Surface className="w-full max-w-md p-6 space-y-5">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-m3-primary/10 text-m3-primary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center">
             <Shield className="w-5 h-5" />
           </div>
           <div>
@@ -88,7 +88,7 @@ export const OAuthConsentPage: React.FC = () => {
         </div>
 
         {scope && (
-          <div className="rounded-[var(--radius-md)] border border-m3-border bg-m3-sidebar/40 px-3 py-2 text-xs text-m3-text">
+          <div className="rounded-md border border-m3-border bg-m3-sidebar/40 px-3 py-2 text-xs text-m3-text">
             <span className="font-medium block mb-1">
               {t("oauth.consent.scopes")}
             </span>

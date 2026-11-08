@@ -107,7 +107,7 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
     <div
       data-tour="explorer-context-menu"
       style={{ top: contextMenu.y, left: contextMenu.x }}
-      className="fixed z-[80] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+      className="fixed z-80 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >
@@ -306,7 +306,7 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
               onClearSelection();
               onClose();
             }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-secondary hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
           >
             <X className="w-4 h-4 text-m3-secondary" />
             <span>{t("explorer.contextMenu.deselect")}</span>

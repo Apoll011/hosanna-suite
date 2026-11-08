@@ -104,7 +104,7 @@ const MiniDiff: React.FC<{ original: string; modified: string }> = ({
             >
               {line.type === "insert" ? "+" : line.type === "delete" ? "−" : ""}
             </span>
-            <span className="min-w-0 flex-1 whitespace-pre-wrap break-words pr-2">
+            <span className="min-w-0 flex-1 whitespace-pre-wrap wrap-break-word pr-2">
               {line.text === ""
                 ? "\u00a0"
                 : segmentLine(line.text, line.ranges).map((seg, j) => (
@@ -117,7 +117,7 @@ const MiniDiff: React.FC<{ original: string; modified: string }> = ({
                         seg.syntax === "directive" ? "text-m3-secondary" : "",
                         seg.syntax === "comment" ? "text-m3-input italic" : "",
                         seg.changed
-                          ? `${MARK_TONE[line.type]} rounded-[2px]`
+                          ? `${MARK_TONE[line.type]} rounded-xs`
                           : "",
                       ].join(" ")}
                     >
@@ -193,7 +193,7 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> =
             };
 
     return (
-      <div className="logos-msg-in mt-1.5 rounded-[var(--radius-lg)] border border-m3-primary/30 bg-m3-card overflow-hidden">
+      <div className="logos-msg-in mt-1.5 rounded-lg border border-m3-primary/30 bg-m3-card overflow-hidden">
         <div className="flex items-center gap-2 px-2.5 py-1.5 border-b border-m3-border/70">
           <Music className="w-3.5 h-3.5 text-m3-primary shrink-0" />
           <div className="min-w-0 flex-1">
@@ -242,7 +242,7 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> =
               {live && !inEditor && song && (
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-1.5 py-1 rounded-[var(--radius-sm)] hover:bg-m3-hover"
+                  className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-1.5 py-1 rounded-sm hover:bg-m3-hover"
                   onClick={() => setReview(live)}
                   title={t("ai.chat.proposals.fullReview")}
                 >
@@ -253,7 +253,7 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> =
               {live && !inEditor && (
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-1.5 py-1 rounded-[var(--radius-sm)] hover:bg-m3-hover"
+                  className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-1.5 py-1 rounded-sm hover:bg-m3-hover"
                   onClick={() => openInEditor(live)}
                   title={t("ai.chat.proposals.openEditor")}
                 >

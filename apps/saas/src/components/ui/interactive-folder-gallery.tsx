@@ -33,7 +33,7 @@ function PhotoLightbox({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-primary/90 backdrop-blur-sm p-6"
+          className="fixed inset-0 z-200 flex items-center justify-center bg-primary/90 backdrop-blur-sm p-6"
           onClick={onClose}
         >
           <motion.div
@@ -108,7 +108,7 @@ export function InteractiveFolderGallery({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="w-[800px] max-w-full aspect-[320/510] relative rounded-2xl overflow-hidden bg-muted/20 border border-border/50"
+            className="w-200 max-w-full aspect-320/510 relative rounded-2xl overflow-hidden bg-muted/20 border border-border/50"
           >
             <img
               src={activePhoto.image}
@@ -139,7 +139,7 @@ export function InteractiveFolderGallery({
           <button
             key={photo.id}
             onClick={() => setIndex(i)}
-            className={`relative w-[100px] h-[58px] rounded-lg overflow-hidden transition-all duration-300 ${index === i
+            className={`relative w-25 h-14.5 rounded-lg overflow-hidden transition-all duration-300 ${index === i
               ? "border-2 border-primary shadow-sm ring-2 ring-primary/20 ring-offset-2 ring-offset-background"
               : "border border-border/40 opacity-60 hover:opacity-100 hover:border-border"
               }`}
@@ -174,7 +174,7 @@ export function MobileFolderGallery({ photos }: { photos: GalleryPhoto[] }) {
 
   return (
     <div className="relative w-full">
-      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-border">
+      <div className="relative aspect-3/4 w-full overflow-hidden rounded-2xl border border-border">
         <img
           key={photo.id}
           src={photo.image}

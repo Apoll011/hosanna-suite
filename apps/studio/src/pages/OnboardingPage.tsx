@@ -332,7 +332,7 @@ export const OnboardingPage: React.FC = () => {
 
       {/* Main Center Stage */}
       <main className="flex-1 w-full flex items-center justify-center p-2 sm:p-3 md:p-4 z-10">
-        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-[var(--radius-xl)] sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
+        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-xl sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
           {/* Header Brand & Titles */}
           <div className="flex flex-col items-center text-center mb-7 sm:mb-8 select-none">
             <h1 className="text-title text-m3-text">{getHeaderTitle()}</h1>
@@ -345,7 +345,7 @@ export const OnboardingPage: React.FC = () => {
           </div>
 
           {errorMsg && (
-            <div className="mb-5 p-3 rounded-[var(--radius-md)] bg-m3-danger/10 border border-m3-danger/30 text-m3-danger text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-in fade-in duration-200">
+            <div className="mb-5 p-3 rounded-md bg-m3-danger/10 border border-m3-danger/30 text-m3-danger text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-in fade-in duration-200">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-m3-danger" />
               <span className="flex-1 leading-snug">{errorMsg}</span>
             </div>
@@ -354,7 +354,7 @@ export const OnboardingPage: React.FC = () => {
           {/* Mode: Trial */}
           {mode === "trial" && newOrg && (
             <div className="text-center space-y-5">
-              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-[var(--radius-lg)] p-4 text-left space-y-2.5">
+              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-4 text-left space-y-2.5">
                 {(
                   [
                     "onboarding.trial.features.sync",
@@ -371,7 +371,7 @@ export const OnboardingPage: React.FC = () => {
               </div>
 
               {/* Billing interval choice */}
-              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-[var(--radius-lg)] p-3">
+              <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-3">
                 <div className="flex items-center gap-2 bg-m3-card border border-m3-border rounded-full p-1 mb-3">
                   <button
                     type="button"
@@ -473,7 +473,7 @@ export const OnboardingPage: React.FC = () => {
                       return (
                         <div
                           key={inv.id}
-                          className="p-4 bg-m3-primary/5 border border-m3-primary/25 rounded-[var(--radius-lg)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
+                          className="p-4 bg-m3-primary/5 border border-m3-primary/25 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
                         >
                           <div className="space-y-0.5">
                             <div className="flex items-center gap-2">
@@ -527,7 +527,7 @@ export const OnboardingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setMode("create")}
-                  className="w-full flex items-center p-4 border border-m3-border hover:border-m3-primary rounded-[var(--radius-lg)] transition-all group text-left bg-transparent hover:bg-m3-hover cursor-pointer"
+                  className="w-full flex items-center p-4 border border-m3-border hover:border-m3-primary rounded-lg transition-all group text-left bg-transparent hover:bg-m3-hover cursor-pointer"
                 >
                   <div className="w-10 h-10 bg-m3-primary/10 text-m3-primary rounded-full flex items-center justify-center mr-3.5 transition-colors">
                     <PlusCircle className="w-5 h-5" />

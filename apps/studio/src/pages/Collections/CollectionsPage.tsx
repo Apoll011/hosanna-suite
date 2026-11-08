@@ -322,7 +322,7 @@ export const CollectionsPage: React.FC = () => {
         </div>
       ) : mode === "list" ? (
         <div className={isCompact ? "p-3" : "p-6"}>
-          <div className="bg-m3-card border border-m3-border rounded-[var(--radius-lg)] overflow-hidden divide-y divide-m3-border/60">
+          <div className="bg-m3-card border border-m3-border rounded-lg overflow-hidden divide-y divide-m3-border/60">
             {filteredCollections.map((collection) => (
               <CollectionRow
                 key={collection.id}
@@ -361,7 +361,7 @@ export const CollectionsPage: React.FC = () => {
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-[80] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+          className="fixed z-80 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
           onContextMenu={(e) => e.preventDefault()}
@@ -579,7 +579,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
         onDoubleClick();
       }}
       onContextMenu={onContextMenu}
-      className={`group relative rounded-[var(--radius-lg)] border bg-m3-card overflow-hidden transition-colors duration-200 cursor-pointer flex flex-col ${
+      className={`group relative rounded-lg border bg-m3-card overflow-hidden transition-colors duration-200 cursor-pointer flex flex-col ${
         isSelected
           ? "border-m3-primary/40 bg-m3-primary/5 ring-2 ring-m3-primary/30"
           : "border-m3-border/80 hover:border-m3-primary/40"
@@ -607,7 +607,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
       >
         <div className="flex items-start gap-3">
           <div
-            className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-[var(--radius-md)] flex items-center justify-center shrink-0 border`}
+            className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md flex items-center justify-center shrink-0 border`}
             style={{
               backgroundColor: `${colorStyle.colorHex}18`,
               color: colorStyle.colorHex,
@@ -636,7 +636,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
               onContextMenu(e);
             }}
             onDoubleClick={(e) => e.stopPropagation()}
-            className={`min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer ${
+            className={`min-h-10 min-w-10 inline-flex items-center justify-center rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer ${
               isSelected
                 ? "opacity-100"
                 : "opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
@@ -687,11 +687,11 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
         <img
           src={collection.image}
           alt=""
-          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-[var(--radius-md)] object-cover shrink-0 bg-m3-sidebar`}
+          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md object-cover shrink-0 bg-m3-sidebar`}
         />
       ) : (
         <div
-          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-[var(--radius-md)] flex items-center justify-center shrink-0 border`}
+          className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md flex items-center justify-center shrink-0 border`}
           style={{
             backgroundColor: `${colorStyle.colorHex}18`,
             color: colorStyle.colorHex,
@@ -722,7 +722,7 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
           e.stopPropagation();
           onContextMenu(e);
         }}
-        className="min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
+        className="min-h-10 min-w-10 inline-flex items-center justify-center rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
         aria-label={t("explorer.moreOptions")}
       >
         <MoreHorizontal className="w-4 h-4" />
