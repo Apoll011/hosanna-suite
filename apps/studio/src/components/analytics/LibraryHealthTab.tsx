@@ -207,9 +207,9 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
           </div>
         </Surface>
 
-        <Surface padding="none" className="overflow-hidden h-full">
-          <div className="flex flex-col h-full divide-y divide-m3-border">
-            <div className="flex-1 flex items-center gap-4 px-5 py-4 min-h-0">
+        <Surface padding="none" className="overflow-hidden">
+          <div className="flex flex-col divide-y divide-m3-border">
+            <div className="flex items-center gap-4 px-5 py-4">
               <div className="w-14 h-14 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
                 <Music2 className="w-7 h-7" />
               </div>
@@ -223,7 +223,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
               </div>
             </div>
 
-            <div className="flex-1 flex items-center gap-4 px-5 py-4 min-h-0">
+            <div className="flex items-center gap-4 px-5 py-4">
               <div className="w-14 h-14 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
@@ -242,7 +242,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
               </div>
             </div>
 
-            <div className="flex-1 flex items-center gap-4 px-5 py-4 min-h-0">
+            <div className="flex items-center gap-4 px-5 py-4">
               <div className="w-14 h-14 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-7 h-7" />
               </div>
