@@ -2547,6 +2547,9 @@ export const es: typeof pt = {
       encryptionMissing:
         "Falta AI_SETTINGS_ENCRYPTION_KEY en el servidor. Configúrala antes de guardar claves.",
       provider: "Proveedor",
+      providerHint: "Elige quién sirve los modelos.",
+      defaultEndpoint: "API predeterminada",
+      customEndpoint: "URL personalizada",
       nativeWebOn: "Admite búsqueda web y lectura de páginas.",
       nativeWebOff: "La búsqueda web usa DuckDuckGo con este proveedor.",
       baseUrl: "URL base de la API",
@@ -2559,8 +2562,10 @@ export const es: typeof pt = {
       modelPlaceholder: "p. ej. gpt-4o-mini",
       apiKey: "Clave de API",
       apiKeyPlaceholder: "Pega tu clave de API",
-      apiKeyConfiguredPlaceholder: "Déjalo vacío para mantener la clave actual",
-      keyStatusConfigured: "Configurada.",
+      apiKeyConfiguredPlaceholder: "Enfoca para reemplazar la clave actual",
+      apiKeyReplaceHint:
+        "Clave guardada. Haz clic en el campo para reemplazarla.",
+      keyStatusConfigured: "Guardada",
       keyStatusMissing: "No definida.",
       keyNeverReturned: "La clave nunca se devuelve al navegador.",
       enabled: "Activar asistente",
@@ -2582,7 +2587,14 @@ export const es: typeof pt = {
       instructionsPlaceholder:
         "p. ej. Preferimos tonalidades de G a D. Títulos en Title Case.",
       memoryTitle: "Memoria",
-      memoryDesc: "Notas recordadas en los chats de la organización.",
+      memoryDesc: "Notas recordadas en los chats.",
+      memoryOrgTitle: "Memoria de la organización",
+      memoryOrgDesc: "Notas compartidas por toda la organización.",
+      memoryOrgPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
+      memoryPersonalTitle: "Memoria individual",
+      memoryPersonalDesc:
+        "Notas de tu cuenta — solo para ti, no se comparten con la organización.",
+      memoryPersonalPlaceholder: "p. ej. Prefiero setlists más cortos.",
       memoryEnabled: "Activar memoria",
       memoryEnabledDesc:
         "Incluye las notas en el contexto y permite actualizarlas.",
@@ -2593,6 +2605,7 @@ export const es: typeof pt = {
       memoryClear: "Borrar todo",
       memorySourceAi: "Guardado por Logos",
       memorySourceAdmin: "Añadido por un administrador",
+      memorySourceUser: "Añadido por ti",
       memoryCount: "{count}/{max} notas",
       memoryError: "No se pudo actualizar la memoria.",
       clearKey: "Quitar clave",

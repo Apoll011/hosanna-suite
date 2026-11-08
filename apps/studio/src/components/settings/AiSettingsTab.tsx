@@ -10,6 +10,7 @@ import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import {
   Bot,
+  Check,
   CheckCircle2,
   ChevronDown,
   CircleOff,
@@ -18,7 +19,7 @@ import {
   Lock,
   Save,
   Settings2,
-  Trash2,
+  Sparkles,
   Zap,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
@@ -39,34 +40,58 @@ const selectClass =
 const inputClass =
   "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
 
+const API_KEY_MASK = "••••••••••••••••••••••••";
+
 const PROVIDER_META: Record<
   AiProvider,
-  { label: string; hint: string; accent: string }
+  {
+    label: string;
+    hint: string;
+    monogram: string;
+    tint: string;
+    ring: string;
+    usesDefaultEndpoint: boolean;
+  }
 > = {
   openai: {
-    label: "OpenAI",
-    hint: "GPT models",
-    accent: "from-emerald-500/15 to-teal-500/5",
+    label: "ChatGPT",
+    hint: "OpenAI GPT models",
+    monogram: "GPT",
+    tint: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+    ring: "ring-emerald-500/40",
+    usesDefaultEndpoint: true,
   },
   anthropic: {
     label: "Anthropic",
-    hint: "Claude",
-    accent: "from-amber-500/15 to-orange-500/5",
+    hint: "Claude models",
+    monogram: "Cl",
+    tint: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
+    ring: "ring-amber-500/40",
+    usesDefaultEndpoint: true,
   },
   google: {
     label: "Gemini",
     hint: "Google AI",
-    accent: "from-sky-500/15 to-blue-500/5",
+    monogram: "G",
+    tint: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
+    ring: "ring-sky-500/40",
+    usesDefaultEndpoint: true,
   },
   deepseek: {
     label: "DeepSeek",
     hint: "Search + fetch",
-    accent: "from-violet-500/15 to-indigo-500/5",
+    monogram: "DS",
+    tint: "bg-violet-500/15 text-violet-700 dark:text-violet-300",
+    ring: "ring-violet-500/40",
+    usesDefaultEndpoint: true,
   },
   openai_compatible: {
     label: "Custom",
-    hint: "OpenAI-compatible",
-    accent: "from-stone-500/15 to-zinc-500/5",
+    hint: "Your own endpoint",
+    monogram: "API",
+    tint: "bg-stone-500/15 text-stone-700 dark:text-stone-300",
+    ring: "ring-stone-500/40",
+    usesDefaultEndpoint: false,
   },
 };
 
@@ -121,6 +146,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
   const [customModel, setCustomModel] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [apiKey, setApiKey] = useState("");
+  const [apiKeyEditing, setApiKeyEditing] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
   const [maxToolCalls, setMaxToolCalls] = useState(12);
   const [temperature, setTemperature] = useState<number | null>(null);
@@ -142,7 +168,9 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         setProvider(data.provider);
         setModel(data.model);
         setEnabled(data.enabled);
-        setBaseUrl(data.baseUrl ?? "");
+        setBaseUrl(
+          data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "",
+        );
         setMaxToolCalls(data.maxToolCalls);
         setTemperature(data.temperature);
         setMaxOutputTokens(
@@ -150,6 +178,8 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         );
         setInstructions(data.instructions ?? "");
         setMemoryEnabled(data.memoryEnabled);
+        setApiKey("");
+        setApiKeyEditing(false);
         const presets = data.modelPresets[data.provider] ?? [];
         setCustomModel(!presets.includes(data.model));
       })
@@ -199,15 +229,14 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
     if (nextPresets.length > 0 && !customModel) {
       setModel(nextPresets[0]!);
     }
-    const def = settings?.defaultBaseUrls?.[next];
-    if (def) setBaseUrl(def);
-    else if (next !== "openai_compatible") setBaseUrl("");
+    if (next === "openai_compatible") {
+      setBaseUrl(settings?.baseUrl ?? settings?.defaultBaseUrls?.[next] ?? "");
+    } else {
+      setBaseUrl("");
+    }
   };
 
-  const needsBaseUrl =
-    provider === "openai_compatible" ||
-    provider === "deepseek" ||
-    provider === "openai";
+  const isCustomProvider = provider === "openai_compatible";
 
   const handleSave = async () => {
     setSaving(true);
@@ -217,7 +246,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         model: model.trim(),
         enabled,
         ...(apiKey.trim() ? { apiKey: apiKey.trim() } : {}),
-        ...(needsBaseUrl
+        ...(isCustomProvider
           ? { baseUrl: baseUrl.trim() || null }
           : { baseUrl: null }),
         maxToolCalls,
@@ -230,6 +259,10 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       });
       setSettings(data);
       setApiKey("");
+      setApiKeyEditing(false);
+      setBaseUrl(
+        data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "",
+      );
       setBillingRefreshKey((k) => k + 1);
       dispatchAiSettingsChanged();
       showToast?.(t("ai.settings.saved"), "success");
@@ -248,6 +281,8 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       const data = await aiApi.clearKey();
       setSettings(data);
       setEnabled(false);
+      setApiKey("");
+      setApiKeyEditing(false);
       dispatchAiSettingsChanged();
       showToast?.(t("ai.settings.keyCleared"), "success");
     } catch (err: unknown) {
@@ -261,10 +296,10 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
 
   const providers = settings?.providers ?? [];
   const ready = Boolean(settings?.configured && enabled);
+  const showMaskedKey = Boolean(settings?.configured) && !apiKeyEditing;
 
   return (
     <div className="max-w-4xl mx-auto w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      {/* Hero status */}
       <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-m3-border bg-m3-card">
         <div className="absolute inset-0 bg-linear-to-br from-m3-primary/10 via-transparent to-m3-sidebar pointer-events-none" />
         <div className="relative p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-5">
@@ -337,10 +372,21 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             desc={t("ai.settings.connectionDesc")}
           >
             <div>
-              <span className="text-label text-m3-text block mb-2">
-                {t("ai.settings.provider")}
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="flex items-end justify-between gap-3 mb-3">
+                <div>
+                  <span className="text-label text-m3-text block">
+                    {t("ai.settings.provider")}
+                  </span>
+                  <p className="text-caption text-m3-secondary mt-0.5">
+                    {t("ai.settings.providerHint")}
+                  </p>
+                </div>
+              </div>
+              <div
+                className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2.5"
+                role="radiogroup"
+                aria-label={t("ai.settings.provider")}
+              >
                 {providers.map((p) => {
                   const meta = PROVIDER_META[p];
                   const selected = provider === p;
@@ -348,40 +394,63 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                     <button
                       key={p}
                       type="button"
+                      role="radio"
+                      aria-checked={selected}
                       onClick={() => handleProviderChange(p)}
-                      className={`relative text-left rounded-[var(--radius-md)] border p-3 transition-colors cursor-pointer overflow-hidden ${
+                      className={`group relative text-left rounded-[var(--radius-lg)] border p-3.5 transition-all cursor-pointer ${
                         selected
-                          ? "border-m3-primary bg-m3-primary/5"
-                          : "border-m3-border hover:border-m3-primary/40"
+                          ? `border-m3-primary bg-m3-primary/5 ring-2 ${meta.ring}`
+                          : "border-m3-border hover:border-m3-primary/40 hover:bg-m3-sidebar/40"
                       }`}
                     >
-                      <div
-                        className={`absolute inset-0 bg-linear-to-br ${meta.accent} pointer-events-none`}
-                      />
-                      <div className="relative">
+                      <div className="flex items-start gap-3">
                         <span
-                          className={`block text-sm font-semibold ${
-                            selected ? "text-m3-primary" : "text-m3-text"
-                          }`}
+                          className={`w-11 h-11 rounded-[var(--radius-md)] flex items-center justify-center text-[11px] font-bold tracking-wide shrink-0 ${meta.tint}`}
                         >
-                          {meta.label}
+                          {meta.monogram}
                         </span>
-                        <span className="block text-caption text-m3-secondary mt-0.5">
-                          {meta.hint}
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={`block text-sm font-semibold truncate ${
+                                selected ? "text-m3-primary" : "text-m3-text"
+                              }`}
+                            >
+                              {meta.label}
+                            </span>
+                            {selected ? (
+                              <Check className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                            ) : null}
+                          </span>
+                          <span className="block text-caption text-m3-secondary mt-0.5">
+                            {meta.hint}
+                          </span>
+                          {meta.usesDefaultEndpoint ? (
+                            <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-sidebar text-m3-secondary border border-m3-border">
+                              {t("ai.settings.defaultEndpoint")}
+                            </span>
+                          ) : (
+                            <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                              {t("ai.settings.customEndpoint")}
+                            </span>
+                          )}
                         </span>
                       </div>
                     </button>
                   );
                 })}
               </div>
-              <p className="text-caption text-m3-secondary mt-2">
-                {settings.nativeWebCapabilities?.[provider]?.search
-                  ? t("ai.settings.nativeWebOn")
-                  : t("ai.settings.nativeWebOff")}
+              <p className="text-caption text-m3-secondary mt-2.5 flex items-start gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                <span>
+                  {settings.nativeWebCapabilities?.[provider]?.search
+                    ? t("ai.settings.nativeWebOn")
+                    : t("ai.settings.nativeWebOff")}
+                </span>
               </p>
             </div>
 
-            {needsBaseUrl && (
+            {isCustomProvider ? (
               <label className="block space-y-1.5">
                 <span className="text-label text-m3-text">
                   {t("ai.settings.baseUrl")}
@@ -390,18 +459,14 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                   className={inputClass}
                   value={baseUrl}
                   onChange={(e) => setBaseUrl(e.currentTarget.value)}
-                  placeholder={
-                    provider === "openai_compatible"
-                      ? t("ai.settings.baseUrlRequiredPlaceholder")
-                      : t("ai.settings.baseUrlPlaceholder")
-                  }
-                  required={provider === "openai_compatible"}
+                  placeholder={t("ai.settings.baseUrlRequiredPlaceholder")}
+                  required
                 />
                 <span className="text-caption text-m3-secondary">
                   {t("ai.settings.baseUrlHint")}
                 </span>
               </label>
-            )}
+            ) : null}
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
@@ -443,30 +508,60 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               )}
             </div>
 
-            <label className="block space-y-1.5">
-              <span className="text-label text-m3-text flex items-center gap-2">
-                <KeyRound className="w-3.5 h-3.5" />
-                {t("ai.settings.apiKey")}
-              </span>
-              <input
-                className={inputClass}
-                type="password"
-                autoComplete="off"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.currentTarget.value)}
-                placeholder={
-                  settings.configured
-                    ? t("ai.settings.apiKeyConfiguredPlaceholder")
-                    : t("ai.settings.apiKeyPlaceholder")
-                }
-              />
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-label text-m3-text flex items-center gap-2">
+                  <KeyRound className="w-3.5 h-3.5" />
+                  {t("ai.settings.apiKey")}
+                </span>
+                {settings.configured ? (
+                  <button
+                    type="button"
+                    className="text-xs text-m3-danger hover:underline cursor-pointer disabled:opacity-50"
+                    disabled={clearing || saving}
+                    onClick={() => void handleClearKey()}
+                  >
+                    {t("ai.settings.clearKey")}
+                  </button>
+                ) : null}
+              </div>
+              <div className="relative">
+                <input
+                  className={`${inputClass} ${showMaskedKey ? "tracking-[0.18em] text-m3-secondary" : "font-mono"}`}
+                  type={showMaskedKey ? "text" : "password"}
+                  autoComplete="off"
+                  spellCheck={false}
+                  readOnly={showMaskedKey}
+                  value={showMaskedKey ? API_KEY_MASK : apiKey}
+                  onFocus={() => {
+                    if (showMaskedKey) {
+                      setApiKeyEditing(true);
+                      setApiKey("");
+                    }
+                  }}
+                  onChange={(e) => {
+                    setApiKeyEditing(true);
+                    setApiKey(e.currentTarget.value);
+                  }}
+                  placeholder={
+                    settings.configured
+                      ? t("ai.settings.apiKeyConfiguredPlaceholder")
+                      : t("ai.settings.apiKeyPlaceholder")
+                  }
+                />
+                {showMaskedKey ? (
+                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-caption text-m3-secondary">
+                    {t("ai.settings.keyStatusConfigured")}
+                  </span>
+                ) : null}
+              </div>
               <span className="text-caption text-m3-secondary">
                 {settings.configured
-                  ? t("ai.settings.keyStatusConfigured")
+                  ? t("ai.settings.apiKeyReplaceHint")
                   : t("ai.settings.keyStatusMissing")}{" "}
                 {t("ai.settings.keyNeverReturned")}
               </span>
-            </label>
+            </div>
 
             {settings.configured &&
             settings.provider === "deepseek" &&
@@ -476,6 +571,23 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                 showToast={showToast}
               />
             ) : null}
+
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
+              <Button
+                variant="primary"
+                size="sm"
+                isLoading={saving}
+                icon={<Save className="w-4 h-4" />}
+                onClick={() => void handleSave()}
+                disabled={
+                  clearing ||
+                  !model.trim() ||
+                  (isCustomProvider && !baseUrl.trim())
+                }
+              >
+                {t("common.save")}
+              </Button>
+            </div>
           </SectionCard>
 
           <SectionCard
@@ -628,26 +740,8 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                 </div>
               ) : null}
             </div>
-          </SectionCard>
 
-          {memoryEnabled ? (
-            <AiMemoryPanel limits={settings.limits} showToast={showToast} />
-          ) : null}
-
-          <div className="sticky bottom-4 z-10">
-            <div className="flex flex-wrap items-center justify-end gap-2 rounded-[var(--radius-xl)] border border-m3-border bg-m3-card/95 backdrop-blur-sm px-4 py-3 shadow-[var(--shadow-md)]">
-              {settings.configured && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  isLoading={clearing}
-                  icon={<Trash2 className="w-4 h-4" />}
-                  onClick={() => void handleClearKey()}
-                  disabled={saving}
-                >
-                  {t("ai.settings.clearKey")}
-                </Button>
-              )}
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
               <Button
                 variant="primary"
                 size="sm"
@@ -657,13 +751,28 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                 disabled={
                   clearing ||
                   !model.trim() ||
-                  (provider === "openai_compatible" && !baseUrl.trim())
+                  (isCustomProvider && !baseUrl.trim())
                 }
               >
                 {t("common.save")}
               </Button>
             </div>
-          </div>
+          </SectionCard>
+
+          {memoryEnabled ? (
+            <div className="space-y-4">
+              <AiMemoryPanel
+                scope="organization"
+                limits={settings.limits}
+                showToast={showToast}
+              />
+              <AiMemoryPanel
+                scope="personal"
+                limits={settings.limits}
+                showToast={showToast}
+              />
+            </div>
+          ) : null}
         </>
       )}
     </div>

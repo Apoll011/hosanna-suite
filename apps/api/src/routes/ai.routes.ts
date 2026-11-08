@@ -76,7 +76,7 @@ aiRouter.get(
   "/memory",
   requirePermission("ai.use"),
   asyncHandler(async (req, res) => {
-    res.json({ items: await memory.list(req.orgId!) });
+    res.json({ items: await memory.listOrg(req.orgId!) });
   }),
 );
 
@@ -85,7 +85,7 @@ aiRouter.post(
   requirePermission("ai.manage"),
   validate({ body: addAiMemorySchema }),
   asyncHandler(async (req, res) => {
-    const item = await memory.add(req.orgId!, req.body.content, {
+    const item = await memory.addOrg(req.orgId!, req.body.content, {
       source: "admin",
       userId: req.user?.id,
     });
@@ -94,10 +94,56 @@ aiRouter.post(
 );
 
 aiRouter.delete(
-  "/memory/:id",
+  "/memory",
   requirePermission("ai.manage"),
   asyncHandler(async (req, res) => {
-    const removed = await memory.remove(req.orgId!, String(req.params.id));
+    const cleared = await memory.clearOrg(req.orgId!);
+    res.json({ cleared });
+  }),
+);
+
+// Personal routes before /memory/:id so "personal" is not captured as an id.
+aiRouter.get(
+  "/memory/personal",
+  requirePermission("ai.use"),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    res.json({ items: await memory.listPersonal(req.user.id) });
+  }),
+);
+
+aiRouter.post(
+  "/memory/personal",
+  requirePermission("ai.use"),
+  validate({ body: addAiMemorySchema }),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    const item = await memory.addPersonal(req.user.id, req.body.content, {
+      source: "user",
+    });
+    res.status(item.duplicate ? 200 : 201).json(item);
+  }),
+);
+
+aiRouter.delete(
+  "/memory/personal",
+  requirePermission("ai.use"),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    const cleared = await memory.clearPersonal(req.user.id);
+    res.json({ cleared });
+  }),
+);
+
+aiRouter.delete(
+  "/memory/personal/:id",
+  requirePermission("ai.use"),
+  asyncHandler(async (req, res) => {
+    if (!req.user?.id) throw AppError.unauthorized("Authentication required");
+    const removed = await memory.removePersonal(
+      req.user.id,
+      String(req.params.id),
+    );
     if (!removed)
       throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
     res.status(204).end();
@@ -105,11 +151,13 @@ aiRouter.delete(
 );
 
 aiRouter.delete(
-  "/memory",
+  "/memory/:id",
   requirePermission("ai.manage"),
   asyncHandler(async (req, res) => {
-    const cleared = await memory.clear(req.orgId!);
-    res.json({ cleared });
+    const removed = await memory.removeOrg(req.orgId!, String(req.params.id));
+    if (!removed)
+      throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
+    res.status(204).end();
   }),
 );
 

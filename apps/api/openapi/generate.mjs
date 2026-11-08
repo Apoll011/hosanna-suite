@@ -704,7 +704,7 @@ add('/ai/billing', 'get', op('AI provider billing/balance', {
   tags: ['AI'], operationId: 'getAiBilling', security: session,
   responses: jsonResp(200, { type: 'object', additionalProperties: true }),
 }));
-add('/ai/memory', 'get', op('List AI memory', {
+add('/ai/memory', 'get', op('List organization AI memory', {
   tags: ['AI'], operationId: 'listAiMemory', security: session,
   responses: jsonResp(200, {
     type: 'object',
@@ -718,23 +718,59 @@ add('/ai/memory', 'get', op('List AI memory', {
             content: { type: 'string' },
             source: { type: 'string' },
             createdAt: { type: 'string', format: 'date-time' },
+            scope: { type: 'string' },
           },
         },
       },
     },
   }),
 }));
-add('/ai/memory', 'post', op('Add AI memory', {
+add('/ai/memory', 'post', op('Add organization AI memory', {
   tags: ['AI'], operationId: 'createAiMemory', security: session,
   requestBody: jsonBody({ type: 'object', required: ['content'], properties: { content: { type: 'string' } } }),
   responses: jsonResp(200, { type: 'object', additionalProperties: true }),
 }));
-add('/ai/memory', 'delete', op('Clear all AI memory', {
+add('/ai/memory', 'delete', op('Clear organization AI memory', {
   tags: ['AI'], operationId: 'clearAiMemory', security: session,
   responses: jsonResp(200, { type: 'object', properties: { cleared: { type: 'integer' } } }),
 }));
-add('/ai/memory/{id}', 'delete', op('Delete AI memory item', {
+add('/ai/memory/{id}', 'delete', op('Delete organization AI memory item', {
   tags: ['AI'], operationId: 'deleteAiMemory', security: session,
+  parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+  responses: { '204': { description: 'Deleted' } },
+}));
+add('/ai/memory/personal', 'get', op('List personal AI memory', {
+  tags: ['AI'], operationId: 'listPersonalAiMemory', security: session,
+  responses: jsonResp(200, {
+    type: 'object',
+    properties: {
+      items: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            content: { type: 'string' },
+            source: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+            scope: { type: 'string' },
+          },
+        },
+      },
+    },
+  }),
+}));
+add('/ai/memory/personal', 'post', op('Add personal AI memory', {
+  tags: ['AI'], operationId: 'createPersonalAiMemory', security: session,
+  requestBody: jsonBody({ type: 'object', required: ['content'], properties: { content: { type: 'string' } } }),
+  responses: jsonResp(200, { type: 'object', additionalProperties: true }),
+}));
+add('/ai/memory/personal', 'delete', op('Clear personal AI memory', {
+  tags: ['AI'], operationId: 'clearPersonalAiMemory', security: session,
+  responses: jsonResp(200, { type: 'object', properties: { cleared: { type: 'integer' } } }),
+}));
+add('/ai/memory/personal/{id}', 'delete', op('Delete personal AI memory item', {
+  tags: ['AI'], operationId: 'deletePersonalAiMemory', security: session,
   parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
   responses: { '204': { description: 'Deleted' } },
 }));

@@ -6,10 +6,21 @@
 import { aiApi, type AiLimits, type AiMemoryItem } from "@/src/api/ai";
 import { Button, Surface } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
-import { Brain, Loader2, Plus, Sparkles, Trash2, User } from "lucide-react";
+import {
+  Brain,
+  Building2,
+  Loader2,
+  Plus,
+  Sparkles,
+  Trash2,
+  User,
+} from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
+export type AiMemoryScope = "organization" | "personal";
+
 export interface AiMemoryPanelProps {
+  scope: AiMemoryScope;
   limits: AiLimits;
   showToast?: (
     text: string,
@@ -17,8 +28,24 @@ export interface AiMemoryPanelProps {
   ) => void;
 }
 
-/** Org-wide notes the assistant remembers (admin CRUD, applied instantly). */
+const SCOPE_API = {
+  organization: {
+    list: aiApi.listMemory,
+    add: aiApi.addMemory,
+    remove: aiApi.removeMemory,
+    clear: aiApi.clearMemory,
+  },
+  personal: {
+    list: aiApi.listPersonalMemory,
+    add: aiApi.addPersonalMemory,
+    remove: aiApi.removePersonalMemory,
+    clear: aiApi.clearPersonalMemory,
+  },
+} as const;
+
+/** Notes the assistant remembers — org-wide or account-scoped. */
 export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
+  scope,
   limits,
   showToast,
 }) => {
@@ -26,6 +53,8 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
   const [items, setItems] = useState<AiMemoryItem[] | null>(null);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  const api = SCOPE_API[scope];
+  const isOrg = scope === "organization";
 
   const fail = useCallback(
     (err: unknown) => {
@@ -39,8 +68,9 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
 
   useEffect(() => {
     let cancelled = false;
-    void aiApi
-      .listMemory()
+    setItems(null);
+    void SCOPE_API[scope]
+      .list()
       .then((r) => {
         if (!cancelled) setItems(r.items);
       })
@@ -53,14 +83,14 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
     return () => {
       cancelled = true;
     };
-  }, [fail]);
+  }, [scope, fail]);
 
   const add = async () => {
     const content = draft.trim();
     if (!content) return;
     setBusy(true);
     try {
-      const item = await aiApi.addMemory(content);
+      const item = await api.add(content);
       setItems((prev) =>
         prev?.some((p) => p.id === item.id) ? prev : [...(prev ?? []), item],
       );
@@ -75,7 +105,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
   const remove = async (id: string) => {
     setBusy(true);
     try {
-      await aiApi.removeMemory(id);
+      await api.remove(id);
       setItems((prev) => prev?.filter((p) => p.id !== id) ?? null);
     } catch (err) {
       fail(err);
@@ -87,7 +117,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
   const clear = async () => {
     setBusy(true);
     try {
-      await aiApi.clearMemory();
+      await api.clear();
       setItems([]);
     } catch (err) {
       fail(err);
@@ -98,19 +128,24 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
 
   const count = items?.length ?? 0;
   const full = count >= limits.memoryMaxEntries;
+  const Icon = isOrg ? Building2 : User;
 
   return (
     <Surface className="p-6 space-y-5">
       <div className="flex items-start gap-3">
         <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
-          <Brain className="w-5 h-5" />
+          <Icon className="w-5 h-5" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-title text-m3-text">
-            {t("ai.settings.memoryTitle")}
+            {isOrg
+              ? t("ai.settings.memoryOrgTitle")
+              : t("ai.settings.memoryPersonalTitle")}
           </h2>
           <p className="text-muted mt-1 text-sm">
-            {t("ai.settings.memoryDesc")}
+            {isOrg
+              ? t("ai.settings.memoryOrgDesc")
+              : t("ai.settings.memoryPersonalDesc")}
           </p>
         </div>
         <div className="shrink-0 flex flex-col items-end gap-1.5 pt-1">
@@ -144,7 +179,11 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
           maxLength={limits.memoryEntryMaxChars}
           disabled={busy || full}
           onChange={(e) => setDraft(e.currentTarget.value)}
-          placeholder={t("ai.settings.memoryPlaceholder")}
+          placeholder={
+            isOrg
+              ? t("ai.settings.memoryOrgPlaceholder")
+              : t("ai.settings.memoryPersonalPlaceholder")
+          }
         />
         <Button
           type="submit"
@@ -186,7 +225,9 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
                   title={
                     item.source === "ai"
                       ? t("ai.settings.memorySourceAi")
-                      : t("ai.settings.memorySourceAdmin")
+                      : isOrg
+                        ? t("ai.settings.memorySourceAdmin")
+                        : t("ai.settings.memorySourceUser")
                   }
                 >
                   {item.source === "ai" ? (

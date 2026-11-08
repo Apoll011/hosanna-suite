@@ -200,6 +200,33 @@ export const aiApi = {
     return { cleared: data?.cleared ?? 0 };
   },
 
+  listPersonalMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
+    const data = await getApiClient().request<{ items?: AiMemoryItem[] }>(
+      "/ai/memory/personal",
+    );
+    return { items: data?.items ?? [] };
+  },
+
+  addPersonalMemory: async (content: string): Promise<AiMemoryItem> =>
+    getApiClient().request<AiMemoryItem>("/ai/memory/personal", {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    }),
+
+  removePersonalMemory: async (id: string): Promise<void> => {
+    await getApiClient().request(`/ai/memory/personal/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    });
+  },
+
+  clearPersonalMemory: async (): Promise<{ cleared: number }> => {
+    const data = await getApiClient().request<{ cleared?: number }>(
+      "/ai/memory/personal",
+      { method: "DELETE" },
+    );
+    return { cleared: data?.cleared ?? 0 };
+  },
+
   confirmAction: async (
     body: AiConfirmAction,
   ): Promise<{ confirmed: boolean }> => {
