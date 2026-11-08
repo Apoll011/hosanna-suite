@@ -136,13 +136,13 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
 
   return (
     <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-start">
-        <Surface padding="none" className="relative overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch">
+        <Surface padding="none" className="relative overflow-hidden h-full">
           <div
             className={`absolute inset-0 bg-linear-to-br ${healthTone.soft} pointer-events-none`}
           />
-          <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6">
-            <div className="relative w-36 h-36 sm:w-40 sm:h-40 shrink-0">
+          <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5 h-full">
+            <div className="relative w-32 h-32 sm:w-36 sm:h-36 shrink-0">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
                 <circle
                   cx="60"
@@ -207,25 +207,25 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
           </div>
         </Surface>
 
-        <Surface padding="none" className="overflow-hidden">
-          <div className="flex flex-col divide-y divide-m3-border">
-            <div className="flex items-center gap-4 px-5 py-4">
-              <div className="w-14 h-14 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
-                <Music2 className="w-7 h-7" />
+        <Surface padding="none" className="overflow-hidden h-full">
+          <div className="flex flex-col h-full divide-y divide-m3-border">
+            <div className="flex-1 flex items-center gap-3 px-4 py-2.5">
+              <div className="w-10 h-10 rounded-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                <Music2 className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
                 <span className="text-caption block">
                   {t("analytics.libraryHealth.statSongs")}
                 </span>
-                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-m3-text leading-tight mt-0.5">
+                <span className="block text-2xl font-semibold tabular-nums tracking-tight text-m3-text leading-tight">
                   {summary.songCount}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 px-5 py-4">
-              <div className="w-14 h-14 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-7 h-7" />
+            <div className="flex-1 flex items-center gap-3 px-4 py-2.5">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
@@ -236,15 +236,15 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
                     {healthyShare}%
                   </span>
                 </div>
-                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-emerald-400 leading-tight mt-0.5">
+                <span className="block text-2xl font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-emerald-400 leading-tight">
                   {summary.healthyCount}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 px-5 py-4">
-              <div className="w-14 h-14 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-7 h-7" />
+            <div className="flex-1 flex items-center gap-3 px-4 py-2.5">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
@@ -253,7 +253,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
                     {issueShare}%
                   </span>
                 </div>
-                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-amber-600 dark:text-amber-400 leading-tight mt-0.5">
+                <span className="block text-2xl font-semibold tabular-nums tracking-tight text-amber-600 dark:text-amber-400 leading-tight">
                   {summary.issueCount}
                 </span>
               </div>
