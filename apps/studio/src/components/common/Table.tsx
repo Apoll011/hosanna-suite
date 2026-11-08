@@ -20,22 +20,18 @@ export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Replaces the body when set (e.g. EmptyState). */
   empty?: React.ReactNode;
   /**
-   * Optional fixed header above the scroll region (column labels for
-   * non-<table> layouts). Stays visible while body content scrolls.
+   * Fixed column header above the vertical scroll region.
+   * Stays visible while rows scroll; vertical scrollbar starts below it.
    */
   header?: React.ReactNode;
-  /** Extra classes for the scrollable body wrapper. */
+  /** Extra classes for the vertical scroll body wrapper. */
   bodyClassName?: string;
-  /**
-   * When true, sticky-pins native `<thead th>` cells inside the scroll body
-   * (song-library style HTML tables).
-   */
-  stickyHeader?: boolean;
 }
 
 /**
- * Full-height table shell: card fills available space, body scrolls,
- * pagination stays pinned at the bottom.
+ * Full-height table shell: card fills available space, body scrolls
+ * vertically under a pinned header, pagination stays at the bottom.
+ * Horizontal overflow is shared by header + body so columns stay aligned.
  */
 export const Table: React.FC<TableProps> = ({
   pagination,
@@ -45,7 +41,6 @@ export const Table: React.FC<TableProps> = ({
   empty,
   header,
   bodyClassName = "",
-  stickyHeader = false,
   className = "",
   children,
   ...props
@@ -66,18 +61,14 @@ export const Table: React.FC<TableProps> = ({
       ) : empty != null ? (
         <div className="flex-1 overflow-y-auto min-h-0 p-8">{empty}</div>
       ) : (
-        <>
-          {header}
+        <div className="flex-1 min-h-0 overflow-x-auto flex flex-col">
+          {header != null && <div className="shrink-0">{header}</div>}
           <div
-            className={`flex-1 min-h-0 overflow-auto ${
-              stickyHeader
-                ? "[&_thead_th]:sticky [&_thead_th]:top-0 [&_thead_th]:z-10 [&_thead_th]:bg-m3-sidebar/95 [&_thead_th]:backdrop-blur-sm"
-                : ""
-            } ${bodyClassName}`}
+            className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden ${bodyClassName}`}
           >
             {children}
           </div>
-        </>
+        </div>
       )}
 
       {pagination && !isLoading && error == null && (

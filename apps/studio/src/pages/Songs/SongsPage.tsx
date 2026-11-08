@@ -393,7 +393,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
       className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-300 overflow-hidden h-full relative select-none p-4 sm:p-8 max-w-7xl"
     >
       <Table
-        stickyHeader
         isLoading={songsQuery.isLoading}
         loadingLabel={t("songsPage.loading")}
         error={
@@ -420,6 +419,42 @@ export const SongsPage: React.FC<SongsPageProps> = ({
             />
           ) : undefined
         }
+        header={
+          <table className="w-full text-left border-collapse select-none">
+            <thead>
+              <tr className="bg-m3-sidebar/40 border-b border-m3-border text-label">
+                <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
+                  {t("songsPage.titlePath")}
+                </th>
+                <th
+                  className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+                >
+                  {t("songsPage.artist")}
+                </th>
+                <th
+                  className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+                >
+                  {t("songsPage.folder")}
+                </th>
+                <th
+                  className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+                >
+                  {t("songsPage.tags")}
+                </th>
+                <th
+                  className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
+                >
+                  {t("songsPage.updatedAt")}
+                </th>
+                <th
+                  className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}
+                >
+                  <span className="sr-only">{t("songsPage.actions")}</span>
+                </th>
+              </tr>
+            </thead>
+          </table>
+        }
         pagination={{
           page,
           totalItems: totalSongs,
@@ -434,38 +469,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
         }}
       >
         <table className="w-full text-left border-collapse select-none">
-          <thead>
-            <tr className="bg-m3-sidebar/40 border-b border-m3-border text-label">
-              <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
-                {t("songsPage.titlePath")}
-              </th>
-              <th
-                className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-              >
-                {t("songsPage.artist")}
-              </th>
-              <th
-                className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-              >
-                {t("songsPage.folder")}
-              </th>
-              <th
-                className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-              >
-                {t("songsPage.tags")}
-              </th>
-              <th
-                className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-              >
-                {t("songsPage.updatedAt")}
-              </th>
-              <th
-                className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}
-              >
-                <span className="sr-only">{t("songsPage.actions")}</span>
-              </th>
-            </tr>
-          </thead>
           <tbody
             className={`divide-y divide-m3-border/40 ${
               isCompact ? "text-xs" : "text-[13px]"

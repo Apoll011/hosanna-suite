@@ -49,7 +49,8 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
     view !== "explorer" &&
     view !== "services" &&
     view !== "songs" &&
-    view !== "collections"
+    view !== "collections" &&
+    view !== "collection-detail"
   )
     return null;
 
@@ -118,7 +119,9 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
         </div>
 
         {/* Filter Pop-Up Panel Trigger Button */}
-        {(view === "explorer" || view === "songs") && (
+        {(view === "explorer" ||
+          view === "songs" ||
+          view === "collection-detail") && (
           <button
             onClick={onOpenFilterPanel}
             className={`flex items-center gap-2 px-4 py-1.5 min-h-10 rounded-[var(--radius-md)] border text-label transition-colors cursor-pointer relative ${
@@ -167,8 +170,8 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
 
       {/* Right Side: View Mode Toggle & Density Selector */}
       <div className="flex items-center gap-2.5">
-        {/* View Mode Toggle (hidden in Songs view) */}
-        {view !== "songs" && (
+        {/* View Mode Toggle (hidden on song tables) */}
+        {view !== "songs" && view !== "collection-detail" && (
           <div
             role="group"
             aria-label={t("toolbar.viewMode")}

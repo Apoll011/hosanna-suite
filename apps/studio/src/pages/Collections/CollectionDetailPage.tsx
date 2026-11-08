@@ -46,6 +46,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { useOutletContext, useParams } from "react-router-dom";
 
 const MENU_ITEM =
@@ -65,9 +66,19 @@ export const CollectionDetailPage: React.FC = () => {
     id || null,
   );
 
-  const { searchQuery } = useOutletContext<{
-    searchQuery: string;
-  }>();
+  const {
+    searchQuery = "",
+    sortBy = "title",
+    sortOrder = "asc",
+    selectedKey = "",
+    selectedTag = "",
+  } = useOutletContext<{
+    searchQuery?: string;
+    sortBy?: "title" | "artist" | "updatedAt" | "number";
+    sortOrder?: "asc" | "desc";
+    selectedKey?: string | null;
+    selectedTag?: string | null;
+  }>() ?? {};
 
   const {
     updateCollection,
@@ -135,12 +146,12 @@ export const CollectionDetailPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Reset page when search changes
+  // Reset page when search / filters / sort change
   useEffect(() => {
     setCurrentPage(1);
     setSelectedSongIds(new Set());
     setLastClickedId(null);
-  }, [searchQuery]);
+  }, [searchQuery, sortBy, sortOrder, selectedKey, selectedTag]);
 
   // Songs in this collection (union of both sides of the relationship)
   const songsInCollection = useMemo(() => {
@@ -154,7 +165,7 @@ export const CollectionDetailPage: React.FC = () => {
     );
   }, [collection, allSongs]);
 
-  // Apply both global and local search filters
+  // Search, key/tag filters, and sort
   const filteredSongs = useMemo(() => {
     let result = songsInCollection;
     const gq = searchQuery.trim().toLowerCase();
@@ -166,8 +177,48 @@ export const CollectionDetailPage: React.FC = () => {
           s.tags?.some((tag) => tag.toLowerCase().includes(gq)),
       );
     }
+    if (selectedKey) {
+      result = result.filter((s) => {
+        const k = s.content?.match(/\{key:\s*([^}]+)\}/i)?.[1]?.trim();
+        return k === selectedKey;
+      });
+    }
+    if (selectedTag) {
+      result = result.filter((s) => s.tags?.includes(selectedTag));
+    }
+
+    if (result.length > 1) {
+      result = [...result].sort((a, b) => {
+        let valA: string | number = "";
+        let valB: string | number = "";
+        if (sortBy === "artist") {
+          valA = a.artist?.toLowerCase() ?? "";
+          valB = b.artist?.toLowerCase() ?? "";
+        } else if (sortBy === "updatedAt") {
+          valA = new Date(a.updatedAt).getTime();
+          valB = new Date(b.updatedAt).getTime();
+        } else if (sortBy === "number") {
+          valA = a.song_number ?? Infinity;
+          valB = b.song_number ?? Infinity;
+        } else {
+          valA = a.title?.toLowerCase() ?? "";
+          valB = b.title?.toLowerCase() ?? "";
+        }
+        if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+        if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+
     return result;
-  }, [songsInCollection, searchQuery]);
+  }, [
+    songsInCollection,
+    searchQuery,
+    selectedKey,
+    selectedTag,
+    sortBy,
+    sortOrder,
+  ]);
 
   // Pagination
   const totalSongs = filteredSongs.length;
@@ -349,7 +400,8 @@ export const CollectionDetailPage: React.FC = () => {
   const IconComp = getFolderIconComponent(collection.icon);
   const colorStyle = getFolderColorStyle(collection.color);
   const songCount = songsInCollection.length;
-  const isFiltering = searchQuery.trim() !== "";
+  const isFiltering =
+    searchQuery.trim() !== "" || Boolean(selectedKey) || Boolean(selectedTag);
 
   return (
     <div
@@ -357,24 +409,25 @@ export const CollectionDetailPage: React.FC = () => {
       onMouseDown={handleMouseDown}
       className="flex-1 flex flex-col h-full overflow-hidden bg-m3-bg select-none"
     >
-      {/* Identity strip */}
-      <div className="relative w-full overflow-hidden border-b border-m3-border shrink-0">
-        {collection.image ? (
-          <img
-            src={collection.image}
-            alt=""
-            aria-hidden
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
-          />
-        ) : (
-          <div
-            className="absolute inset-0 opacity-40"
-            style={{
-              background: `linear-gradient(90deg, ${colorStyle.colorHex}22 0%, ${colorStyle.colorHex}55 100%)`,
-            }}
-          />
-        )}
-        <div className="absolute inset-0 bg-m3-card/80 backdrop-blur-sm" />
+      {/* Identity strip — overflow only on the media layer so menus aren't clipped */}
+      <div className="relative w-full border-b border-m3-border shrink-0">
+        <div className="absolute inset-0 overflow-hidden" aria-hidden>
+          {collection.image ? (
+            <img
+              src={collection.image}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover opacity-30"
+            />
+          ) : (
+            <div
+              className="absolute inset-0 opacity-40"
+              style={{
+                background: `linear-gradient(90deg, ${colorStyle.colorHex}22 0%, ${colorStyle.colorHex}55 100%)`,
+              }}
+            />
+          )}
+          <div className="absolute inset-0 bg-m3-card/80 backdrop-blur-sm" />
+        </div>
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4">
           <div
@@ -441,7 +494,7 @@ export const CollectionDetailPage: React.FC = () => {
                 <MoreHorizontal className="w-4 h-4" />
               </button>
               {isHeaderMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-30 p-1.5 space-y-0.5 hosanna-enter">
+                <div className="absolute right-0 top-full mt-2 w-52 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-50 p-1.5 space-y-0.5 hosanna-enter">
                   <Can permission="export.pdf">
                     <button
                       type="button"
@@ -725,124 +778,126 @@ export const CollectionDetailPage: React.FC = () => {
 
       <MarqueeSelectionBox box={selectionBox} />
 
-      {contextMenu && (
-        <div
-          data-collection-context-menu
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-          className="fixed z-50 w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          onContextMenu={(e) => e.preventDefault()}
-        >
-          {selectedSongIds.size > 1 &&
-          contextMenu.songId &&
-          selectedSongIds.has(contextMenu.songId) ? (
-            <>
-              <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 flex items-center justify-between">
-                <span>{t("songsPage.multiSelect")}</span>
-                <span className="text-caption">{selectedSongIds.size}</span>
-              </div>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
-                  setContextMenu(null);
-                }}
-              >
-                <CheckSquare className={MENU_ICON} />
-                <span>{t("explorer.contextMenu.selectAll")}</span>
-              </button>
-              <Can permission="collection.update">
+      {contextMenu &&
+        createPortal(
+          <div
+            data-collection-context-menu
+            style={{ top: contextMenu.y, left: contextMenu.x }}
+            className="fixed z-[100] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            {selectedSongIds.size > 1 &&
+            contextMenu.songId &&
+            selectedSongIds.has(contextMenu.songId) ? (
+              <>
+                <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 flex items-center justify-between">
+                  <span>{t("songsPage.multiSelect")}</span>
+                  <span className="text-caption">{selectedSongIds.size}</span>
+                </div>
                 <button
                   type="button"
-                  className={MENU_ITEM_DANGER}
+                  className={MENU_ITEM}
                   onClick={() => {
-                    setPendingRemoveIds(Array.from(selectedSongIds));
+                    setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
                     setContextMenu(null);
                   }}
                 >
-                  <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
-                  <span>{t("collectionsPage.removeFromCollection")}</span>
+                  <CheckSquare className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.selectAll")}</span>
                 </button>
-              </Can>
-              <div className="my-1 border-t border-m3-border" />
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set());
-                  setLastClickedId(null);
-                  setContextMenu(null);
-                }}
-              >
-                <X className={MENU_ICON} />
-                <span>{t("songsPage.deselect")}</span>
-              </button>
-            </>
-          ) : contextMenu.songId ? (
-            <>
-              <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
-                {filteredSongs.find((s) => s.id === contextMenu.songId)
-                  ?.title ?? ""}
-              </div>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  navigate(`${slugPrefix}/songs/${contextMenu.songId}`);
-                  setContextMenu(null);
-                }}
-              >
-                <Music2 className={MENU_ICON} />
-                <span>{t("collectionsPage.viewSong")}</span>
-              </button>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
-                  setContextMenu(null);
-                }}
-              >
-                <CheckSquare className={MENU_ICON} />
-                <span>{t("explorer.contextMenu.selectAll")}</span>
-              </button>
-              <Can permission="collection.update">
+                <Can permission="collection.update">
+                  <button
+                    type="button"
+                    className={MENU_ITEM_DANGER}
+                    onClick={() => {
+                      setPendingRemoveIds(Array.from(selectedSongIds));
+                      setContextMenu(null);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
+                    <span>{t("collectionsPage.removeFromCollection")}</span>
+                  </button>
+                </Can>
                 <div className="my-1 border-t border-m3-border" />
                 <button
                   type="button"
-                  className={MENU_ITEM_DANGER}
+                  className={MENU_ITEM}
                   onClick={() => {
-                    const song = filteredSongs.find(
-                      (s) => s.id === contextMenu.songId,
-                    );
-                    if (song) setSongToRemove(song);
+                    setSelectedSongIds(new Set());
+                    setLastClickedId(null);
                     setContextMenu(null);
                   }}
                 >
-                  <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
-                  <span>{t("collectionsPage.removeFromCollection")}</span>
+                  <X className={MENU_ICON} />
+                  <span>{t("songsPage.deselect")}</span>
                 </button>
-              </Can>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                className={MENU_ITEM}
-                onClick={() => {
-                  setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
-                  setContextMenu(null);
-                }}
-              >
-                <CheckSquare className={MENU_ICON} />
-                <span>{t("explorer.contextMenu.selectAll")}</span>
-              </button>
-            </>
-          )}
-        </div>
-      )}
+              </>
+            ) : contextMenu.songId ? (
+              <>
+                <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
+                  {filteredSongs.find((s) => s.id === contextMenu.songId)
+                    ?.title ?? ""}
+                </div>
+                <button
+                  type="button"
+                  className={MENU_ITEM}
+                  onClick={() => {
+                    navigate(`${slugPrefix}/songs/${contextMenu.songId}`);
+                    setContextMenu(null);
+                  }}
+                >
+                  <Music2 className={MENU_ICON} />
+                  <span>{t("collectionsPage.viewSong")}</span>
+                </button>
+                <button
+                  type="button"
+                  className={MENU_ITEM}
+                  onClick={() => {
+                    setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
+                    setContextMenu(null);
+                  }}
+                >
+                  <CheckSquare className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.selectAll")}</span>
+                </button>
+                <Can permission="collection.update">
+                  <div className="my-1 border-t border-m3-border" />
+                  <button
+                    type="button"
+                    className={MENU_ITEM_DANGER}
+                    onClick={() => {
+                      const song = filteredSongs.find(
+                        (s) => s.id === contextMenu.songId,
+                      );
+                      if (song) setSongToRemove(song);
+                      setContextMenu(null);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
+                    <span>{t("collectionsPage.removeFromCollection")}</span>
+                  </button>
+                </Can>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className={MENU_ITEM}
+                  onClick={() => {
+                    setSelectedSongIds(new Set(filteredSongs.map((s) => s.id)));
+                    setContextMenu(null);
+                  }}
+                >
+                  <CheckSquare className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.selectAll")}</span>
+                </button>
+              </>
+            )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

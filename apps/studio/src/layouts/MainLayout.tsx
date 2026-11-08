@@ -435,7 +435,10 @@ export const MainLayout: React.FC = () => {
   );
 
   const isSearchingOrFiltering = Boolean(searchQuery.trim());
-  const activeFiltersCount = searchQuery.trim() ? 1 : 0;
+  const activeFiltersCount =
+    (searchQuery.trim() ? 1 : 0) +
+    (selectedKey ? 1 : 0) +
+    (selectedTag ? 1 : 0);
 
   // Filtered Folders & Files
   const filteredSubfolders = useMemo(() => {
