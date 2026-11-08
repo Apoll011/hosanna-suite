@@ -5,10 +5,29 @@
 
 import { Button } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
+import { Can } from "@/src/lib/permissions/components";
 import { Service } from "@/src/types";
-import { Archive, ArrowUpDown, Filter, LayoutGrid, List } from "lucide-react";
-import React from "react";
+import {
+  Archive,
+  ArrowUpDown,
+  Edit2,
+  Filter,
+  LayoutGrid,
+  List,
+  MoreHorizontal,
+  Plus,
+  Printer,
+  Trash2,
+} from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
+
+export interface CollectionToolbarActions {
+  onAddSongs: () => void;
+  onPrint: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}
 
 interface ExplorerToolbarProps {
   view: ViewName;
@@ -27,7 +46,14 @@ interface ExplorerToolbarProps {
   density: "comfortable" | "compact";
   onDensityChange: (d: "comfortable" | "compact") => void;
   onOpenFilterPanel: () => void;
+  collectionActions?: CollectionToolbarActions | null;
 }
+
+const MENU_ITEM =
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
+const MENU_ITEM_DANGER =
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
+const MENU_ICON = "w-4 h-4 text-m3-secondary shrink-0";
 
 export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   view,
@@ -43,8 +69,30 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   density,
   onDensityChange,
   onOpenFilterPanel,
+  collectionActions = null,
 }) => {
   const { t } = useI18n();
+  const [isCollectionMenuOpen, setIsCollectionMenuOpen] = useState(false);
+  const collectionMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isCollectionMenuOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (
+        collectionMenuRef.current &&
+        !collectionMenuRef.current.contains(e.target as Node)
+      ) {
+        setIsCollectionMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [isCollectionMenuOpen]);
+
+  useEffect(() => {
+    setIsCollectionMenuOpen(false);
+  }, [view, collectionActions]);
+
   if (
     view !== "explorer" &&
     view !== "services" &&
@@ -168,8 +216,113 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
         )}
       </div>
 
-      {/* Right Side: View Mode Toggle & Density Selector */}
+      {/* Right Side: Collection actions / View Mode / Density */}
       <div className="flex items-center gap-2.5">
+        {view === "collection-detail" && collectionActions && (
+          <div
+            ref={collectionMenuRef}
+            className="flex items-center gap-2 shrink-0"
+          >
+            <Can permission="export.pdf">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                icon={<Printer className="w-3.5 h-3.5" />}
+                onClick={collectionActions.onPrint}
+                title={t("print.buttons.printCollection")}
+              >
+                <span className="hidden sm:inline">{t("common.print")}</span>
+              </Button>
+            </Can>
+            <Can permission="collection.update">
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                icon={<Plus className="w-3.5 h-3.5" />}
+                onClick={collectionActions.onAddSongs}
+              >
+                {t("collectionsPage.addSongs")}
+              </Button>
+            </Can>
+            <div className="relative">
+              <button
+                type="button"
+                data-collection-context-menu
+                onClick={() => setIsCollectionMenuOpen((v) => !v)}
+                className="p-2 min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+                title={t("explorer.moreOptions")}
+                aria-expanded={isCollectionMenuOpen}
+                aria-haspopup="menu"
+              >
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
+              {isCollectionMenuOpen && (
+                <div
+                  data-collection-context-menu
+                  role="menu"
+                  className="absolute right-0 top-full mt-2 w-52 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-50 p-1.5 space-y-0.5 hosanna-enter"
+                >
+                  <Can permission="export.pdf">
+                    <button
+                      type="button"
+                      className={MENU_ITEM}
+                      onClick={() => {
+                        setIsCollectionMenuOpen(false);
+                        collectionActions.onPrint();
+                      }}
+                    >
+                      <Printer className={MENU_ICON} />
+                      {t("print.buttons.printCollection")}
+                    </button>
+                  </Can>
+                  <Can permission="collection.update">
+                    <button
+                      type="button"
+                      className={MENU_ITEM}
+                      onClick={() => {
+                        setIsCollectionMenuOpen(false);
+                        collectionActions.onEdit();
+                      }}
+                    >
+                      <Edit2 className={MENU_ICON} />
+                      {t("collectionsPage.editCollection")}
+                    </button>
+                  </Can>
+                  <Can permission="collection.update">
+                    <button
+                      type="button"
+                      className={MENU_ITEM}
+                      onClick={() => {
+                        setIsCollectionMenuOpen(false);
+                        collectionActions.onAddSongs();
+                      }}
+                    >
+                      <Plus className={MENU_ICON} />
+                      {t("collectionsPage.addSongs")}
+                    </button>
+                  </Can>
+                  <Can permission="collection.delete">
+                    <div className="my-1 h-px bg-m3-border mx-1" />
+                    <button
+                      type="button"
+                      className={MENU_ITEM_DANGER}
+                      onClick={() => {
+                        setIsCollectionMenuOpen(false);
+                        collectionActions.onDelete();
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
+                      {t("collectionsPage.deleteTitle")}
+                    </button>
+                  </Can>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* View Mode Toggle (hidden on song tables) */}
         {view !== "songs" && view !== "collection-detail" && (
           <div

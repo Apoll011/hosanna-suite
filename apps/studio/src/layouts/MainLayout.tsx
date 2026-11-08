@@ -31,6 +31,7 @@ import {
   ExplorerContextMenu,
   ExplorerModals,
   ExplorerToolbar,
+  type CollectionToolbarActions,
 } from "../components/layout";
 import { ToastContainer } from "../components/Toast";
 import { ProductTourController } from "../components/tour/ProductTourController";
@@ -1007,6 +1008,14 @@ export const MainLayout: React.FC = () => {
       collections.find((c) => c.id === currentCollectionId)?.name ?? undefined,
     [collections, currentCollectionId],
   );
+  const [collectionToolbarActions, setCollectionToolbarActions] =
+    useState<CollectionToolbarActions | null>(null);
+
+  useEffect(() => {
+    if (view !== "collection-detail") {
+      setCollectionToolbarActions(null);
+    }
+  }, [view, currentCollectionId]);
 
   useEffect(() => {
     aiContextBridge.setExplorer({
@@ -1800,6 +1809,7 @@ export const MainLayout: React.FC = () => {
               density={density}
               onDensityChange={handleDensityChange}
               onOpenFilterPanel={() => openModal("filter")}
+              collectionActions={collectionToolbarActions}
             />
 
             {/* Main Content Area */}
@@ -1838,6 +1848,7 @@ export const MainLayout: React.FC = () => {
                   hideHeader: true,
                   selectedKey,
                   selectedTag,
+                  setCollectionToolbarActions,
                   containerRef,
                   handleWorkspaceMouseDown,
                   handleCanvasContextMenu,

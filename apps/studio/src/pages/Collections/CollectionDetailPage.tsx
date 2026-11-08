@@ -4,12 +4,12 @@
  */
 
 import {
-  Button,
   ConfirmDialog,
   EmptyState,
   Spinner,
   Table,
 } from "@/src/components/common";
+import type { CollectionToolbarActions } from "@/src/components/layout";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
 import { AddSongsToCollectionModal } from "@/src/components/modals/AddSongsToCollectionModal";
@@ -24,18 +24,11 @@ import { useCan } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Song } from "@/src/types";
 import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "@/src/utils/folderCustomization";
-import {
   CheckSquare,
-  Edit2,
   ExternalLink,
   FolderKanban,
   MoreHorizontal,
   Music2,
-  Plus,
-  Printer,
   Trash2,
   X,
 } from "lucide-react";
@@ -72,12 +65,16 @@ export const CollectionDetailPage: React.FC = () => {
     sortOrder = "asc",
     selectedKey = "",
     selectedTag = "",
+    setCollectionToolbarActions,
   } = useOutletContext<{
     searchQuery?: string;
     sortBy?: "title" | "artist" | "updatedAt" | "number";
     sortOrder?: "asc" | "desc";
     selectedKey?: string | null;
     selectedTag?: string | null;
+    setCollectionToolbarActions?: (
+      actions: CollectionToolbarActions | null,
+    ) => void;
   }>() ?? {};
 
   const {
@@ -106,7 +103,6 @@ export const CollectionDetailPage: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [songToRemove, setSongToRemove] = useState<Song | null>(null);
   const [pendingRemoveIds, setPendingRemoveIds] = useState<string[]>([]);
-  const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false);
   const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(
     new Set(),
   );
@@ -116,7 +112,6 @@ export const CollectionDetailPage: React.FC = () => {
     y: number;
     songId: string | null;
   } | null>(null);
-  const headerMenuRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { selectionBox, handleMouseDown } = useMarqueeSelection({
@@ -131,14 +126,8 @@ export const CollectionDetailPage: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        headerMenuRef.current &&
-        !headerMenuRef.current.contains(e.target as Node)
-      ) {
-        setIsHeaderMenuOpen(false);
-      }
       const target = e.target as HTMLElement | null;
-      if (!target?.closest?.("[data-collection-context-menu]")) {
+      if (!target?.closest?.("[data-song-context-menu]")) {
         setContextMenu(null);
       }
     };
@@ -164,6 +153,25 @@ export const CollectionDetailPage: React.FC = () => {
           song.collectionIds.includes(collection.id)),
     );
   }, [collection, allSongs]);
+
+  // Register collection actions on the explorer toolbar (replaces the old identity header)
+  useEffect(() => {
+    if (!collection || !setCollectionToolbarActions) return;
+    setCollectionToolbarActions({
+      onAddSongs: () => setIsAddSongsModalOpen(true),
+      onPrint: () => {
+        void printCollection(collection, songsInCollection);
+      },
+      onEdit: () => setIsEditModalOpen(true),
+      onDelete: () => setIsDeleteDialogOpen(true),
+    });
+    return () => setCollectionToolbarActions(null);
+  }, [
+    collection,
+    songsInCollection,
+    printCollection,
+    setCollectionToolbarActions,
+  ]);
 
   // Search, key/tag filters, and sort
   const filteredSongs = useMemo(() => {
@@ -397,9 +405,6 @@ export const CollectionDetailPage: React.FC = () => {
     );
   }
 
-  const IconComp = getFolderIconComponent(collection.icon);
-  const colorStyle = getFolderColorStyle(collection.color);
-  const songCount = songsInCollection.length;
   const isFiltering =
     searchQuery.trim() !== "" || Boolean(selectedKey) || Boolean(selectedTag);
 
@@ -409,152 +414,6 @@ export const CollectionDetailPage: React.FC = () => {
       onMouseDown={handleMouseDown}
       className="flex-1 flex flex-col h-full overflow-hidden bg-m3-bg select-none"
     >
-      {/* Identity strip — overflow only on the media layer so menus aren't clipped */}
-      <div className="relative w-full border-b border-m3-border shrink-0">
-        <div className="absolute inset-0 overflow-hidden" aria-hidden>
-          {collection.image ? (
-            <img
-              src={collection.image}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover opacity-30"
-            />
-          ) : (
-            <div
-              className="absolute inset-0 opacity-40"
-              style={{
-                background: `linear-gradient(90deg, ${colorStyle.colorHex}22 0%, ${colorStyle.colorHex}55 100%)`,
-              }}
-            />
-          )}
-          <div className="absolute inset-0 bg-m3-card/80 backdrop-blur-sm" />
-        </div>
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4">
-          <div
-            className="w-12 h-12 rounded-[var(--radius-lg)] flex items-center justify-center text-white shrink-0 border border-white/20"
-            style={{ backgroundColor: colorStyle.colorHex }}
-          >
-            <IconComp className="w-6 h-6" />
-          </div>
-          <div className="flex flex-col min-w-0 flex-1">
-            <h1 className="text-display text-m3-text truncate">
-              {collection.name}
-            </h1>
-            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-              <span className="text-caption">
-                {t(
-                  `collectionsPage.songCount.${songCount === 1 ? "one" : "other"}`,
-                  { count: songCount },
-                )}
-              </span>
-              {collection.description && (
-                <>
-                  <span className="text-m3-border">·</span>
-                  <span className="text-caption line-clamp-1">
-                    {collection.description}
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div ref={headerMenuRef} className="flex items-center gap-2 shrink-0">
-            <Can permission="export.pdf">
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                icon={<Printer className="w-3.5 h-3.5" />}
-                onClick={() =>
-                  void printCollection(collection, songsInCollection)
-                }
-                title={t("print.buttons.printCollection")}
-              >
-                <span className="hidden sm:inline">{t("common.print")}</span>
-              </Button>
-            </Can>
-            <Can permission="collection.update">
-              <Button
-                type="button"
-                variant="primary"
-                size="sm"
-                icon={<Plus className="w-3.5 h-3.5" />}
-                onClick={() => setIsAddSongsModalOpen(true)}
-              >
-                {t("collectionsPage.addSongs")}
-              </Button>
-            </Can>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsHeaderMenuOpen((v) => !v)}
-                className="p-2 min-h-10 min-w-10 inline-flex items-center justify-center rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
-                title={t("explorer.moreOptions")}
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
-              {isHeaderMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] z-50 p-1.5 space-y-0.5 hosanna-enter">
-                  <Can permission="export.pdf">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        void printCollection(collection, songsInCollection);
-                      }}
-                      className={MENU_ITEM}
-                    >
-                      <Printer className={MENU_ICON} />
-                      {t("print.buttons.printCollection")}
-                    </button>
-                  </Can>
-                  <Can permission="collection.update">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        setIsEditModalOpen(true);
-                      }}
-                      className={MENU_ITEM}
-                    >
-                      <Edit2 className={MENU_ICON} />
-                      {t("collectionsPage.editCollection")}
-                    </button>
-                  </Can>
-                  <Can permission="collection.update">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        setIsAddSongsModalOpen(true);
-                      }}
-                      className={MENU_ITEM}
-                    >
-                      <Plus className={MENU_ICON} />
-                      {t("collectionsPage.addSongs")}
-                    </button>
-                  </Can>
-                  <Can permission="collection.delete">
-                    <div className="my-1 h-px bg-m3-border mx-1" />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsHeaderMenuOpen(false);
-                        setIsDeleteDialogOpen(true);
-                      }}
-                      className={MENU_ITEM_DANGER}
-                    >
-                      <Trash2 className="w-4 h-4 text-m3-danger shrink-0" />
-                      {t("collectionsPage.deleteTitle")}
-                    </button>
-                  </Can>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="flex-1 min-h-0 flex flex-col px-4 sm:px-6 py-4">
         <Table
           empty={
@@ -781,7 +640,7 @@ export const CollectionDetailPage: React.FC = () => {
       {contextMenu &&
         createPortal(
           <div
-            data-collection-context-menu
+            data-song-context-menu
             style={{ top: contextMenu.y, left: contextMenu.x }}
             className="fixed z-[100] w-56 bg-m3-card border border-m3-border rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
             onClick={(e) => e.stopPropagation()}
