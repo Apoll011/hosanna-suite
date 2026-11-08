@@ -504,7 +504,7 @@ importers:
         specifier: ^17.8.0
         version: 17.14.0
       prettier:
-        specifier: ^3.7.3
+        specifier: ^3.9.10
         version: 3.9.10
       tailwindcss:
         specifier: ^4.1.14
