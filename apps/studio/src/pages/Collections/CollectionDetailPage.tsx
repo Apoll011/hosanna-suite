@@ -65,6 +65,7 @@ export const CollectionDetailPage: React.FC = () => {
     sortOrder = "asc",
     selectedKey = "",
     selectedTag = "",
+    density = "comfortable",
     setCollectionToolbarActions,
   } = useOutletContext<{
     searchQuery?: string;
@@ -72,10 +73,14 @@ export const CollectionDetailPage: React.FC = () => {
     sortOrder?: "asc" | "desc";
     selectedKey?: string | null;
     selectedTag?: string | null;
+    density?: "comfortable" | "compact";
     setCollectionToolbarActions?: (
       actions: CollectionToolbarActions | null,
     ) => void;
   }>() ?? {};
+  const isCompact = density === "compact";
+  const rowPad = isCompact ? "px-4 py-2.5" : "px-6 py-3.5";
+  const rowText = isCompact ? "text-xs" : "text-sm";
 
   const {
     updateCollection,
@@ -446,7 +451,9 @@ export const CollectionDetailPage: React.FC = () => {
             ) : undefined
           }
           header={
-            <div className="grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 border-b border-m3-border bg-m3-sidebar/40 shrink-0">
+            <div
+              className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center border-b border-m3-border bg-m3-sidebar/40 shrink-0 ${rowPad}`}
+            >
               <span className="text-label text-center">#</span>
               <span className="text-label">{t("songsPage.titlePath")}</span>
               <span className="hidden sm:block text-label text-right">
@@ -467,7 +474,9 @@ export const CollectionDetailPage: React.FC = () => {
             emptyLabel: t("songsPage.zeroSongs"),
           }}
         >
-          <div className="divide-y divide-m3-border/30 text-sm font-semibold">
+          <div
+            className={`divide-y divide-m3-border/30 font-semibold ${rowText}`}
+          >
             {paginatedSongs.map((song, index) => {
               const globalIndex =
                 (currentPage - 1) * effectivePerPage + index + 1;
@@ -485,7 +494,7 @@ export const CollectionDetailPage: React.FC = () => {
                     navigate(`${slugPrefix}/songs/${song.id}`)
                   }
                   onContextMenu={(e) => openContextMenu(e, song)}
-                  className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center px-6 py-3.5 transition-colors select-none cursor-pointer ${
+                  className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center transition-colors select-none cursor-pointer ${rowPad} ${
                     isSelected
                       ? "bg-m3-primary/5 ring-2 ring-inset ring-m3-primary/30 text-m3-primary"
                       : "text-m3-text hover:bg-m3-hover/50"
