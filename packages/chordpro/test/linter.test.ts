@@ -3,10 +3,9 @@ import assert from "node:assert/strict";
 import { lintChordPro } from "../src/parser/linter";
 
 describe("ChordPro linter", () => {
-  it("reports malformed brackets and timing", () => {
-    const diagnostics = lintChordPro("[C Lyrics\n[G@bad]text");
+  it("reports malformed brackets", () => {
+    const diagnostics = lintChordPro("[C Lyrics\n[G]text");
     assert.ok(diagnostics.some((d) => d.code === "unclosed-bracket"));
-    assert.ok(diagnostics.some((d) => d.code === "malformed-timing"));
   });
 
   it("reports structural block errors", () => {
@@ -17,7 +16,7 @@ describe("ChordPro linter", () => {
 
   it("accepts valid annotations and chords", () => {
     const diagnostics = lintChordPro(
-      "{start_of_verse}\n[Cmaj7@2x]Hello\n{end_of_verse}",
+      "{start_of_verse}\n[Cmaj7]Hello\n{end_of_verse}",
     );
     assert.equal(diagnostics.length, 0);
   });

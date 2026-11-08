@@ -369,7 +369,7 @@ const FEATURES: ChordProFeatureCapability[] = [
     id: "inline_chords",
     name: "Inline chords",
     support: "implemented",
-    description: "[G] lyrics with optional timing [Am@2x].",
+    description: "[G] lyrics with inline chord markers.",
   },
   {
     id: "sections",

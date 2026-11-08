@@ -162,7 +162,7 @@ const { content, semitones, fromKey, toKey } = transposeChordProSource(
 // or: transposeChordProSource(source, 2)
 ```
 
-This rewrites `[chords]` (including timings like `[Am@2x]`) and `{key:}` / `{original_key:}` while preserving lyrics, variants, comments, and unknown directives.
+This rewrites `[chords]` and `{key:}` / `{original_key:}` while preserving lyrics, variants, comments, and unknown directives.
 
 ## Capability manifest
 

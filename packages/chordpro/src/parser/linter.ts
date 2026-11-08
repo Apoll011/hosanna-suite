@@ -6,9 +6,9 @@
  * anything), which is the right behavior for *rendering* a song. The linter
  * instead walks the same syntax looking for the mistakes people actually
  * make while writing ChordPro — unclosed directives/brackets, mismatched
- * section blocks, unknown chord symbols, malformed timing annotations — and
- * reports them as line/column-addressed diagnostics an editor can surface
- * as squiggly underlines and gutter markers.
+ * section blocks, unknown chord symbols — and reports them as
+ * line/column-addressed diagnostics an editor can surface as squiggly
+ * underlines and gutter markers.
  */
 
 import { analyzeChordSymbol } from "./chordDictionary";
@@ -84,29 +84,15 @@ function analyzeBracketContent(
   // Inline annotations, e.g. [* Bass fill], are free text — not a chord.
   if (trimmed.startsWith("*")) return [];
 
-  const timingMatch = trimmed.match(/^(.+?)@(.*)$/);
-  const chordPart = timingMatch ? timingMatch[1] : trimmed;
   const diagnostics: ChordProDiagnostic[] = [];
-
-  if (timingMatch && !/^[0-9]*\.?[0-9]+x$/i.test(timingMatch[2])) {
-    diagnostics.push({
-      line: lineIdx,
-      column: startCol,
-      endColumn: endCol,
-      severity: "warning",
-      message: `Anotação de duração mal formatada em "[${trimmed}]" — use algo como [${chordPart}@2x].`,
-      code: "malformed-timing",
-    });
-  }
-
-  const analysis = analyzeChordSymbol(chordPart);
+  const analysis = analyzeChordSymbol(trimmed);
   if (!analysis.hasValidRoot) {
     diagnostics.push({
       line: lineIdx,
       column: startCol,
       endColumn: endCol,
       severity: "warning",
-      message: `Acorde não reconhecido: "${chordPart}".`,
+      message: `Acorde não reconhecido: "${trimmed}".`,
       code: "unknown-chord-root",
     });
   } else if (!analysis.qualityRecognized) {
@@ -115,7 +101,7 @@ function analyzeBracketContent(
       column: startCol,
       endColumn: endCol,
       severity: "warning",
-      message: `Qualidade de acorde não reconhecida em "${chordPart}" (assumida como maior).`,
+      message: `Qualidade de acorde não reconhecida em "${trimmed}" (assumida como maior).`,
       code: "unknown-chord-quality",
     });
   }

@@ -3,7 +3,6 @@ import { attachSongTransformations } from "./transformations";
 export interface SegmentAST {
   chord: string;
   text: string;
-  timing?: number;
 }
 
 export interface MeasureAST {
@@ -97,8 +96,6 @@ export interface SongAST {
   score(): import("./score").SongScore;
 }
 
-const TIMING_REGEX = /^(.+?)@([0-9]*\.?[0-9]+)x$/;
-
 // Trailing "|style" or "|style=name" suffix on a comment directive's value,
 // e.g. "{comment_box: Segue com calma|warning}" or
 // "{ci: Improviso livre|style=tip}". Lets each comment type carry its own
@@ -119,39 +116,25 @@ function parseCommentValue(value: string): {
   return { text: value };
 }
 
-function parseChordTiming(rawChord: string): {
-  chord: string;
-  timing?: number;
-} {
-  const match = rawChord.match(TIMING_REGEX);
-  if (match) return { chord: match[1], timing: parseFloat(match[2]) };
-  return { chord: rawChord };
-}
-
 export function parseLineSegments(lineText: string): SegmentAST[] {
   const segments: SegmentAST[] = [];
   const regex = /\[([^\]]+)\]/g;
   let match;
   let lastIndex = 0;
   let currentChord = "";
-  let currentTiming: number | undefined;
 
   while ((match = regex.exec(lineText)) !== null) {
-    const rawChord = match[1];
-    const { chord, timing } = parseChordTiming(rawChord);
+    const chord = match[1];
     const textBefore = lineText.slice(lastIndex, match.index);
 
     if (lastIndex === 0 && textBefore === "") {
       currentChord = chord;
-      currentTiming = timing;
     } else {
       segments.push({
         chord: currentChord,
         text: textBefore,
-        timing: currentTiming,
       });
       currentChord = chord;
-      currentTiming = timing;
     }
     lastIndex = regex.lastIndex;
   }
@@ -160,7 +143,6 @@ export function parseLineSegments(lineText: string): SegmentAST[] {
   segments.push({
     chord: currentChord,
     text: remainingText,
-    timing: currentTiming,
   });
 
   return segments;
@@ -578,7 +560,6 @@ export function parseChordProDocument(content: string): ChordProDocument {
           currentChords.push({
             chord: seg.chord,
             text: "",
-            timing: seg.timing,
           });
           hasSeenChord = true;
         }

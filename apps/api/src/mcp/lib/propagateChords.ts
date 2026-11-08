@@ -58,7 +58,7 @@ const VERSION_START = new Set(["start_of_version", "sov_ver"]);
 const VERSION_END = new Set(["end_of_version", "eov_ver"]);
 
 export type ChordAnchor = {
-  /** Chord text inside brackets (may include timing, e.g. Am@2x). */
+  /** Chord text inside brackets. */
   chord: string;
   /** Index into the lyric-only string where this chord sits. */
   at: number;

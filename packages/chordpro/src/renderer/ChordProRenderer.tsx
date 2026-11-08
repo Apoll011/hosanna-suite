@@ -775,21 +775,14 @@ const ChordSectionRenderer = React.memo(
             <span className="flex items-baseline gap-1.5">
               {measure.chords.map((chordSeg, cIdx) => {
                 const transposed = transposeChord(chordSeg.chord, transpose);
-                const timing = chordSeg.timing ?? 1;
 
                 return (
                   <span
                     key={cIdx}
                     className="font-mono text-[14px] text-slate-600 dark:text-slate-400 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
                     onClick={() => onChordClick?.(transposed)}
-                    title={timing !== 1 ? `Duração: ${timing}x` : undefined}
                   >
                     {transposed}
-                    {timing !== 1 && (
-                      <sub className="text-[9px] text-slate-400 dark:text-slate-600 ml-px">
-                        {timing}×
-                      </sub>
-                    )}
                   </span>
                 );
               })}

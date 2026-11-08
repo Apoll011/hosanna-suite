@@ -10,10 +10,10 @@ import {
 } from "../src/parser/parser";
 
 describe("ChordPro parser", () => {
-  it("parses inline chords, timings, and lyric text", () => {
-    const segments = parseLineSegments("[C@2x]Hello [G]world");
+  it("parses inline chords and lyric text", () => {
+    const segments = parseLineSegments("[C]Hello [G]world");
     assert.equal(segments.length, 2);
-    assert.deepEqual(segments[0], { chord: "C", text: "Hello ", timing: 2 });
+    assert.deepEqual(segments[0], { chord: "C", text: "Hello " });
     assert.equal(segments[1].chord, "G");
     assert.equal(segments[1].text, "world");
   });

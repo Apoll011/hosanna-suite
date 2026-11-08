@@ -68,13 +68,6 @@ function rewriteKeyDirectives(source: string, semitones: number): string {
 function rewriteChordBrackets(source: string, semitones: number): string {
   if (semitones === 0) return source;
   return source.replace(/\[([^\]]+)\]/g, (_match, chord: string) => {
-    // Preserve timing annotations like [Am@2x]
-    const timingMatch = chord.match(/^(.+?)(@.+)$/);
-    if (timingMatch) {
-      const base = timingMatch[1];
-      const timing = timingMatch[2];
-      return `[${transposeChord(base, semitones)}${timing}]`;
-    }
     return `[${transposeChord(chord, semitones)}]`;
   });
 }

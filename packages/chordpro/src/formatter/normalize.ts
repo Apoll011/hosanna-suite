@@ -48,11 +48,6 @@ function normalizeChordBracket(
 ): string {
   const trimmedContent = raw.trim();
 
-  // Check for timing annotation e.g. G@2x
-  const timingMatch = trimmedContent.match(/^(.+?)(@[0-9]*\.?[0-9]+x)$/);
-  const chordPart = timingMatch ? timingMatch[1] : trimmedContent;
-  const timingSuffix = timingMatch ? timingMatch[2] : "";
-
   // Check for inline annotation [* ...]
   if (trimmedContent.startsWith("*")) {
     const normalized = "[" + trimmedContent + "]";
@@ -68,22 +63,22 @@ function normalizeChordBracket(
   }
 
   // Not a valid recognized chord — preserve original text (do not convert [hello] or [Verse])
-  if (!isValidChord(chordPart)) {
+  if (!isValidChord(trimmedContent)) {
     return "[" + raw + "]";
   }
 
   // Normalize the chord content
-  const { result: normalized, changed } = normalizeChordContent(chordPart, {
+  const { result: normalized, changed } = normalizeChordContent(trimmedContent, {
     normalizeNotationAliases: options.normalizeNotationAliases,
   });
 
   const before = "[" + raw + "]";
-  const after = "[" + normalized + timingSuffix + "]";
+  const after = "[" + normalized + "]";
 
   if (changed || trimmedContent !== raw) {
     let changeType: FormatChange["type"] = "chord_spacing";
-    if (normalized !== chordPart.trim()) {
-      if (/^[a-g]/.test(chordPart.trim())) {
+    if (normalized !== trimmedContent.trim()) {
+      if (/^[a-g]/.test(trimmedContent.trim())) {
         changeType = "chord_root_case";
       } else if (normalized.includes("#") || normalized.includes("b")) {
         changeType = "unicode";

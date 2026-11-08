@@ -32,14 +32,14 @@ describe("transposeChordProSource", () => {
     assert.match(result.content, /\[A\]Praise \[D\]Him/);
   });
 
-  it("preserves timing annotations and variants", () => {
+  it("preserves variants while transposing chords", () => {
     const source = `{key: C}
 {start_of_version: Acoustic}
-[Am@2x]softly
+[Am]softly
 {end_of_version}
 `;
     const result = transposeChordProSource(source, 2);
-    assert.match(result.content, /\[Bm@2x\]softly/);
+    assert.match(result.content, /\[Bm\]softly/);
     assert.match(result.content, /\{start_of_version: Acoustic\}/);
   });
 

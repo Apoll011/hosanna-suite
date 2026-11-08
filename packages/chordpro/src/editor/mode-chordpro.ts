@@ -142,17 +142,6 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
               regex: "(\\[\\s*\\*)(.*?)(\\])",
             },
 
-            // Chord with timing annotation e.g. [Em@2x] or [C@0.5x]
-            {
-              token: [
-                "punctuation.tag",
-                "constant.language.bold",
-                "keyword.operator.timing",
-                "punctuation.tag",
-              ],
-              regex: "(\\[)([^\\]@]+)(@[0-9]*\\.?[0-9]+x)(\\])",
-            },
-
             // Chords e.g. [C#maj7/F]
             {
               token: [

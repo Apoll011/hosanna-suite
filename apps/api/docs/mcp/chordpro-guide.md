@@ -84,13 +84,11 @@ Named arrangements live in version blocks:
 
 Style suffixes use `|style` or `|style=name`. The TypeScript renderer honors styles; keep them when editing.
 
-## Inline chords and timings
+## Inline chords
 
 ```chordpro
-[G]Hello [Am@2x]world
+[G]Hello [Am]world
 ```
-
-`@Nx` timing annotations are preserved by source-preserving transpose.
 
 ## Completing chords (propagate)
 
@@ -103,7 +101,7 @@ Style suffixes use `|style` or `|style=name`. The TypeScript renderer honors sty
 
 ## Validation
 
-Use `lintChordPro` / MCP `chordpro_validate` for unclosed braces/brackets, block mismatches, empty/unknown chords, malformed timing, and numeric capo/tempo issues.
+Use `lintChordPro` / MCP `chordpro_validate` for unclosed braces/brackets, block mismatches, empty/unknown chords, and numeric capo/tempo issues.
 
 ## Not fully supported
 
