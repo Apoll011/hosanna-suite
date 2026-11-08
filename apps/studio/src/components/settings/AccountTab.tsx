@@ -271,118 +271,6 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
         </Surface>
 
         <Surface className="h-full">
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-label">{t("settings.account.profile.emailAddress")}</label>
-            {!isEditingEmail && (
-              <button
-                onClick={() => {
-                  setDraftEmail(displayUser?.email || "");
-                  setIsEditingEmail(true);
-                }}
-                className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <PenLine className="w-3.5 h-3.5" />
-                {t("settings.account.profile.changeEmail")}
-              </button>
-            )}
-          </div>
-
-          {isEditingEmail ? (
-            <div className="space-y-3 pt-1">
-              <Input
-                type="email"
-                value={draftEmail}
-                onChange={(e) => setDraftEmail(e.target.value)}
-                placeholder={t("settings.account.profile.emailPlaceholder")}
-              />
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(false)}>
-                  {t("common.cancel")}
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={handleSaveEmail}
-                  icon={<Save className="w-4 h-4" />}
-                >
-                  {t("settings.account.profile.saveEmail")}
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <p className="text-base font-semibold text-m3-text">{displayUser?.email || "—"}</p>
-          )}
-        </Surface>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Surface className="h-full">
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-label flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-m3-primary" />
-              {t("settings.account.profile.password")}
-            </label>
-            {!isEditingPassword && (
-              <button
-                onClick={() => setIsEditingPassword(true)}
-                className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <KeyRound className="w-3.5 h-3.5" />
-                {t("settings.account.profile.changePassword")}
-              </button>
-            )}
-          </div>
-
-          {isEditingPassword ? (
-            <div className="space-y-4 pt-2">
-              <Input
-                type="password"
-                label={t("settings.account.profile.currentPassword")}
-                value={draftOldPassword}
-                onChange={(e) => setDraftOldPassword(e.target.value)}
-              />
-              <Input
-                type="password"
-                label={t("settings.account.profile.newPassword")}
-                value={draftNewPassword}
-                onChange={(e) => setDraftNewPassword(e.target.value)}
-              />
-              <Input
-                type="password"
-                label={t("settings.account.profile.confirmNewPassword")}
-                value={draftConfirmPassword}
-                onChange={(e) => setDraftConfirmPassword(e.target.value)}
-              />
-
-              <div className="flex justify-end gap-2 pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setIsEditingPassword(false);
-                    setDraftOldPassword("");
-                    setDraftNewPassword("");
-                    setDraftConfirmPassword("");
-                  }}
-                >
-                  {t("common.cancel")}
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={handleSavePassword}
-                  icon={<Save className="w-4 h-4" />}
-                >
-                  {t("settings.account.profile.updatePassword")}
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <p className="text-base font-semibold text-m3-text">••••••••••••</p>
-          )}
-        </Surface>
-
-        <Surface className="h-full">
           <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2 mb-4">
             <Info className="w-4 h-4 text-m3-secondary" />
             {t("settings.account.profile.accountInfo")}
@@ -408,6 +296,120 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
           </div>
         </Surface>
       </div>
+
+      <Surface>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-label">{t("settings.account.profile.emailAddress")}</label>
+              {!isEditingEmail && (
+                <button
+                  onClick={() => {
+                    setDraftEmail(displayUser?.email || "");
+                    setIsEditingEmail(true);
+                  }}
+                  className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <PenLine className="w-3.5 h-3.5" />
+                  {t("settings.account.profile.changeEmail")}
+                </button>
+              )}
+            </div>
+
+            {isEditingEmail ? (
+              <div className="space-y-3 pt-1">
+                <Input
+                  type="email"
+                  value={draftEmail}
+                  onChange={(e) => setDraftEmail(e.target.value)}
+                  placeholder={t("settings.account.profile.emailPlaceholder")}
+                />
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(false)}>
+                    {t("common.cancel")}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleSaveEmail}
+                    icon={<Save className="w-4 h-4" />}
+                  >
+                    {t("settings.account.profile.saveEmail")}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-base font-semibold text-m3-text">{displayUser?.email || "—"}</p>
+            )}
+          </div>
+
+          <div className="lg:border-l lg:border-m3-border lg:pl-8">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-label flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-m3-primary" />
+                {t("settings.account.profile.password")}
+              </label>
+              {!isEditingPassword && (
+                <button
+                  onClick={() => setIsEditingPassword(true)}
+                  className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <KeyRound className="w-3.5 h-3.5" />
+                  {t("settings.account.profile.changePassword")}
+                </button>
+              )}
+            </div>
+
+            {isEditingPassword ? (
+              <div className="space-y-4 pt-2">
+                <Input
+                  type="password"
+                  label={t("settings.account.profile.currentPassword")}
+                  value={draftOldPassword}
+                  onChange={(e) => setDraftOldPassword(e.target.value)}
+                />
+                <Input
+                  type="password"
+                  label={t("settings.account.profile.newPassword")}
+                  value={draftNewPassword}
+                  onChange={(e) => setDraftNewPassword(e.target.value)}
+                />
+                <Input
+                  type="password"
+                  label={t("settings.account.profile.confirmNewPassword")}
+                  value={draftConfirmPassword}
+                  onChange={(e) => setDraftConfirmPassword(e.target.value)}
+                />
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setIsEditingPassword(false);
+                      setDraftOldPassword("");
+                      setDraftNewPassword("");
+                      setDraftConfirmPassword("");
+                    }}
+                  >
+                    {t("common.cancel")}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleSavePassword}
+                    icon={<Save className="w-4 h-4" />}
+                  >
+                    {t("settings.account.profile.updatePassword")}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-base font-semibold text-m3-text">••••••••••••</p>
+            )}
+          </div>
+        </div>
+      </Surface>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
         <SocialAccountsSection />
