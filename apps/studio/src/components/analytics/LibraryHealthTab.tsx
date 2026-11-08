@@ -136,12 +136,12 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
 
   return (
     <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch">
-        <Surface padding="none" className="relative overflow-hidden h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-start">
+        <Surface padding="none" className="relative overflow-hidden">
           <div
             className={`absolute inset-0 bg-linear-to-br ${healthTone.soft} pointer-events-none`}
           />
-          <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6 h-full">
+          <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6">
             <div className="relative w-36 h-36 sm:w-40 sm:h-40 shrink-0">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
                 <circle
@@ -208,57 +208,53 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
         </Surface>
 
         <Surface padding="none" className="overflow-hidden h-full">
-          <div className="grid grid-cols-1 sm:grid-cols-3 h-full divide-y sm:divide-y-0 sm:divide-x divide-m3-border">
-            <div className="p-5 flex flex-col justify-between gap-4 min-h-28">
-              <div className="flex items-center justify-between gap-2">
-                <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center">
-                  <Music2 className="w-4 h-4" />
-                </div>
+          <div className="flex flex-col h-full divide-y divide-m3-border">
+            <div className="flex-1 flex items-center gap-4 px-5 py-4 min-h-0">
+              <div className="w-14 h-14 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                <Music2 className="w-7 h-7" />
               </div>
-              <div>
-                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-m3-text">
-                  {summary.songCount}
-                </span>
-                <span className="text-caption mt-1 block">
+              <div className="min-w-0 flex-1">
+                <span className="text-caption block">
                   {t("analytics.libraryHealth.statSongs")}
                 </span>
+                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-m3-text leading-tight mt-0.5">
+                  {summary.songCount}
+                </span>
               </div>
             </div>
 
-            <div className="p-5 flex flex-col justify-between gap-4 min-h-28">
-              <div className="flex items-center justify-between gap-2">
-                <div className="w-9 h-9 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-                <span className="text-caption tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
-                  {healthyShare}%
-                </span>
+            <div className="flex-1 flex items-center gap-4 px-5 py-4 min-h-0">
+              <div className="w-14 h-14 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-7 h-7" />
               </div>
-              <div>
-                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-emerald-400">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-caption">
+                    {t("analytics.libraryHealth.statHealthy")}
+                  </span>
+                  <span className="text-caption tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
+                    {healthyShare}%
+                  </span>
+                </div>
+                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-emerald-400 leading-tight mt-0.5">
                   {summary.healthyCount}
                 </span>
-                <span className="text-caption mt-1 block">
-                  {t("analytics.libraryHealth.statHealthy")}
-                </span>
               </div>
             </div>
 
-            <div className="p-5 flex flex-col justify-between gap-4 min-h-28">
-              <div className="flex items-center justify-between gap-2">
-                <div className="w-9 h-9 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                  <AlertTriangle className="w-4 h-4" />
-                </div>
-                <span className="text-caption tabular-nums font-medium text-amber-600 dark:text-amber-400">
-                  {issueShare}%
-                </span>
+            <div className="flex-1 flex items-center gap-4 px-5 py-4 min-h-0">
+              <div className="w-14 h-14 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-7 h-7" />
               </div>
-              <div>
-                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-amber-600 dark:text-amber-400">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-caption">{t("analytics.libraryHealth.statIssues")}</span>
+                  <span className="text-caption tabular-nums font-medium text-amber-600 dark:text-amber-400">
+                    {issueShare}%
+                  </span>
+                </div>
+                <span className="block text-3xl font-semibold tabular-nums tracking-tight text-amber-600 dark:text-amber-400 leading-tight mt-0.5">
                   {summary.issueCount}
-                </span>
-                <span className="text-caption mt-1 block">
-                  {t("analytics.libraryHealth.statIssues")}
                 </span>
               </div>
             </div>
