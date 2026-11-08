@@ -13,7 +13,7 @@
     "test": "turbo run test",
     "clean": "turbo run clean",
     "format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore",
-    "fix:tailwind": "tailwind-lint --auto --fix",
+    "fix:tailwind": "pnpm --filter @hosanna/studio --filter @hosanna/saas exec tailwint --fix --timeout 120000",
     "fix:eslint": "turbo run fix --continue",
     "fix": "pnpm run fix:tailwind; pnpm run fix:eslint; pnpm run format",
     "docker:up": "docker compose up --build -d",
@@ -25,7 +25,9 @@
   },
   "prettier": "./packages/config/prettier.json",
   "devDependencies": {
+    "@tailwindcss/language-server": "^0.16.0",
     "prettier": "^3.7.3",
+    "tailwint": "^1.1.16",
     "turbo": "^2.11.10",
     "typescript": "catalog:"
   }
