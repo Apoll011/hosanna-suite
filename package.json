@@ -26,7 +26,6 @@
   "prettier": "./packages/config/prettier.json",
   "devDependencies": {
     "prettier": "^3.7.3",
-    "tailwind-lint": "^0.17.0",
     "turbo": "^2.11.10",
     "typescript": "catalog:"
   }
