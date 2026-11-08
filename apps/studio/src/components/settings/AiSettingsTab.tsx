@@ -5,11 +5,13 @@
 
 import { aiApi, type AiProvider, type AiSettingsPublic } from "@/src/api/ai";
 import { Button, Spinner, Surface } from "@/src/components/common";
-import { dispatchAiSettingsChanged } from "@/src/features/ai-chat";
+import {
+  dispatchAiSettingsChanged,
+  LogosMascot,
+} from "@/src/features/ai-chat";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import {
-  Bot,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -25,6 +27,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { AiBillingCard } from "./AiBillingCard";
 import { AiMemoryPanel } from "./AiMemoryPanel";
+import { AiProviderLogoBadge } from "./AiProviderLogo";
 
 export interface AiSettingsTabProps {
   active: boolean;
@@ -47,8 +50,6 @@ const PROVIDER_META: Record<
   {
     label: string;
     hint: string;
-    monogram: string;
-    tint: string;
     ring: string;
     usesDefaultEndpoint: boolean;
   }
@@ -56,40 +57,30 @@ const PROVIDER_META: Record<
   openai: {
     label: "ChatGPT",
     hint: "OpenAI GPT models",
-    monogram: "GPT",
-    tint: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
     ring: "ring-emerald-500/40",
     usesDefaultEndpoint: true,
   },
   anthropic: {
     label: "Anthropic",
     hint: "Claude models",
-    monogram: "Cl",
-    tint: "bg-amber-500/15 text-amber-800 dark:text-amber-300",
     ring: "ring-amber-500/40",
     usesDefaultEndpoint: true,
   },
   google: {
     label: "Gemini",
     hint: "Google AI",
-    monogram: "G",
-    tint: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
     ring: "ring-sky-500/40",
     usesDefaultEndpoint: true,
   },
   deepseek: {
     label: "DeepSeek",
     hint: "Search + fetch",
-    monogram: "DS",
-    tint: "bg-violet-500/15 text-violet-700 dark:text-violet-300",
     ring: "ring-violet-500/40",
     usesDefaultEndpoint: true,
   },
   openai_compatible: {
     label: "Custom",
     hint: "Your own endpoint",
-    monogram: "API",
-    tint: "bg-stone-500/15 text-stone-700 dark:text-stone-300",
     ring: "ring-stone-500/40",
     usesDefaultEndpoint: false,
   },
@@ -303,8 +294,16 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-m3-border bg-m3-card">
         <div className="absolute inset-0 bg-linear-to-br from-m3-primary/10 via-transparent to-m3-sidebar pointer-events-none" />
         <div className="relative p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-5">
-          <div className="w-14 h-14 rounded-[var(--radius-lg)] bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-[var(--shadow-md)]">
-            <Bot className="w-7 h-7" />
+          <div className="shrink-0 flex items-center justify-center">
+            <LogosMascot
+              flat
+              interactive
+              track
+              antics="calm"
+              size={72}
+              mood={ready ? "happy" : settings?.configured ? "sleeping" : "idle"}
+              label={t("ai.settings.title")}
+            />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-title text-m3-text">{t("ai.settings.title")}</h2>
@@ -404,11 +403,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <span
-                          className={`w-11 h-11 rounded-[var(--radius-md)] flex items-center justify-center text-[11px] font-bold tracking-wide shrink-0 ${meta.tint}`}
-                        >
-                          {meta.monogram}
-                        </span>
+                        <AiProviderLogoBadge provider={p} />
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-2">
                             <span
