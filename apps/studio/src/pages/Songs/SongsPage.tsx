@@ -15,8 +15,6 @@ import { Song } from "@/src/types";
 import {
   ChevronLeft,
   ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   FileText,
   FolderInput,
   Music,
@@ -109,7 +107,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     undefined,
   );
 
-  const [jumpPageInput, setJumpPageInput] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState<number>(50);
 
   // Modals & Target delegates from layout context
@@ -330,15 +327,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     window.addEventListener("click", handleClickOutside);
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
-
-  const handleJumpPage = (e: React.FormEvent) => {
-    e.preventDefault();
-    const targetPage = parseInt(jumpPageInput, 10);
-    if (!isNaN(targetPage) && targetPage >= 1 && targetPage <= totalPages) {
-      setPage(targetPage);
-      setJumpPageInput("");
-    }
-  };
 
   const handleSongClick = useCallback(
     (e: React.MouseEvent, song: Song) => {
@@ -634,64 +622,62 @@ export const SongsPage: React.FC<SongsPageProps> = ({
             </div>
           </div>
 
-          {/* Right: Clean Page Controls */}
+          {/* Right: numbered page switcher (same pattern as collection table) */}
           {totalPages > 1 && (
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-              {/* Navigation button group */}
-              <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-[var(--shadow-sm)]">
-                <button
-                  type="button"
-                  onClick={() => setPage(1)}
-                  disabled={page <= 1}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.firstPage")}
-                >
-                  <ChevronsLeft className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage(page - 1)}
-                  disabled={page <= 1}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.prevPage")}
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                </button>
+            <div className="flex items-center gap-1 bg-m3-card border border-m3-border rounded-xl p-1 shadow-[var(--shadow-sm)]">
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                title={t("songsPage.prevPage")}
+                aria-label={t("songsPage.prevPage")}
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
 
-                <span className="px-2 font-bold text-m3-text flex items-center text-xs whitespace-nowrap">
-                  <form onSubmit={handleJumpPage} className="flex items-center">
-                    <input
-                      type="number"
-                      min={1}
-                      max={totalPages}
-                      placeholder={String(page)}
-                      value={jumpPageInput}
-                      onChange={(e) => setJumpPageInput(e.target.value)}
-                      className="w-5 bg-transparent text-center font-bold text-m3-text focus:outline-none border-b border-m3-border focus:border-m3-primary text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                  </form>{" "}
-                  / {totalPages}
-                </span>
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((p) => {
+                  if (totalPages <= 7) return true;
+                  if (p === 1 || p === totalPages) return true;
+                  return Math.abs(p - page) <= 1;
+                })
+                .map((p, idx, arr) => {
+                  const prev = arr[idx - 1];
+                  const showEllipsis = prev !== undefined && p - prev > 1;
+                  return (
+                    <React.Fragment key={p}>
+                      {showEllipsis && (
+                        <span className="px-1 text-m3-secondary opacity-50">
+                          …
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setPage(p)}
+                        aria-current={page === p ? "page" : undefined}
+                        className={`w-7 h-7 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                          page === p
+                            ? "bg-m3-primary text-white shadow-sm"
+                            : "hover:bg-m3-hover text-m3-text"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    </React.Fragment>
+                  );
+                })}
 
-                <button
-                  type="button"
-                  onClick={() => setPage(page + 1)}
-                  disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.nextPage")}
-                >
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPage(totalPages)}
-                  disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-                  title={t("songsPage.lastPage")}
-                >
-                  <ChevronsRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+                className="p-1.5 rounded-lg text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                title={t("songsPage.nextPage")}
+                aria-label={t("songsPage.nextPage")}
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           )}
         </div>
