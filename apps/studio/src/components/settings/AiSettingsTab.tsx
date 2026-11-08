@@ -86,15 +86,17 @@ function SectionCard({
   icon,
   action,
   children,
+  className = "",
 }: {
   title: string;
   desc?: string;
   icon: React.ReactNode;
   action?: React.ReactNode;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <Surface padding="none" className="overflow-hidden">
+    <Surface padding="none" className={`overflow-hidden ${className}`}>
       <div className="px-5 py-4 border-b border-m3-border flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0">
           <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
@@ -261,7 +263,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
   const showMaskedKey = Boolean(settings?.configured) && !apiKeyEditing;
 
   return (
-    <div className="max-w-4xl mx-auto w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="relative overflow-hidden rounded-xl border border-m3-border bg-m3-card">
         <div className="absolute inset-0 bg-linear-to-br from-m3-primary/10 via-transparent to-m3-sidebar pointer-events-none" />
         <div className="relative p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center gap-5">
@@ -331,7 +333,9 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
             </div>
           )}
 
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
           <SectionCard
+            className="h-full"
             icon={<Zap className="w-4 h-4" />}
             title={t("ai.settings.connectionTitle")}
             desc={t("ai.settings.connectionDesc")}
@@ -535,6 +539,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
           </SectionCard>
 
           <SectionCard
+            className="h-full"
             icon={<Settings2 className="w-4 h-4" />}
             title={t("ai.settings.behaviorTitle")}
             desc={t("ai.settings.behaviorDesc")}
@@ -690,9 +695,10 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
               </Button>
             </div>
           </SectionCard>
+          </div>
 
           {memoryEnabled ? (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
               <AiMemoryPanel scope="organization" limits={settings.limits} showToast={showToast} />
               <AiMemoryPanel scope="personal" limits={settings.limits} showToast={showToast} />
             </div>

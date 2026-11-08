@@ -351,7 +351,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
     : currentAppearance.showBranding;
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
       {/* ========================================== */}
       {/* 1. PERFIL E IDENTIDADE DA ORGANIZAÇÃO      */}
       {/* ========================================== */}
@@ -767,166 +767,166 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       {/* ========================================== */}
       {/* 2. CÓPIAS DE SEGURANÇA & DADOS             */}
       {/* ========================================== */}
-      <CanAny permissions={["backup.export", "backup.import"]}>
-        <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
-            <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-m3-primary" />
-              {t("settings.workspace.backupTitle")}
-            </h3>
-            <p className="text-sm text-m3-secondary mt-1">{t("settings.workspace.backupDesc")}</p>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+        <CanAny permissions={["backup.export", "backup.import"]}>
+          <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden h-full flex flex-col">
+            <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
+              <h3 className="text-lg font-bold text-m3-text flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-m3-primary" />
+                {t("settings.workspace.backupTitle")}
+              </h3>
+              <p className="text-sm text-m3-secondary mt-1">{t("settings.workspace.backupDesc")}</p>
+            </div>
 
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Export Area */}
-              <Can permission="backup.export">
-                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
-                  <div className="flex items-start gap-3.5 mb-4">
-                    <div className="p-2.5 bg-m3-primary/10 text-m3-primary rounded-xl shrink-0">
-                      <Download className="w-5 h-5" />
+            <div className="p-6 flex-1">
+              <div className="grid grid-cols-1 gap-4 h-full">
+                <Can permission="backup.export">
+                  <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
+                    <div className="flex items-start gap-3.5 mb-4">
+                      <div className="p-2.5 bg-m3-primary/10 text-m3-primary rounded-xl shrink-0">
+                        <Download className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-m3-text">
+                          {t("settings.workspace.exportData")}
+                        </h4>
+                        <p className="text-xs text-m3-secondary mt-0.5">
+                          {t("settings.workspace.exportDesc")}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-m3-text">
-                        {t("settings.workspace.exportData")}
-                      </h4>
-                      <p className="text-xs text-m3-secondary mt-0.5">
-                        {t("settings.workspace.exportDesc")}
-                      </p>
-                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full justify-center"
+                      onClick={handleBackup}
+                      disabled={isDownloading}
+                      icon={
+                        isDownloading ? (
+                          <Loader2 className="w-4 h-4 animate-spin text-m3-primary" />
+                        ) : (
+                          <Download className="w-4 h-4 text-m3-primary" />
+                        )
+                      }
+                    >
+                      {isDownloading
+                        ? t("settings.workspace.exportProcessing")
+                        : t("settings.workspace.exportDownloadBtn")}
+                    </Button>
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full justify-center"
-                    onClick={handleBackup}
-                    disabled={isDownloading}
-                    icon={
-                      isDownloading ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-m3-primary" />
-                      ) : (
-                        <Download className="w-4 h-4 text-m3-primary" />
-                      )
-                    }
-                  >
-                    {isDownloading
-                      ? t("settings.workspace.exportProcessing")
-                      : t("settings.workspace.exportDownloadBtn")}
-                  </Button>
-                </div>
-              </Can>
+                </Can>
 
-              {/* Import Area */}
-              <Can permission="backup.import">
-                <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
-                  <div className="flex items-start gap-3.5 mb-4">
-                    <div className="p-2.5 bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-xl shrink-0">
-                      <Upload className="w-5 h-5" />
+                <Can permission="backup.import">
+                  <div className="flex flex-col p-4 rounded-xl border border-m3-border bg-m3-sidebar justify-between">
+                    <div className="flex items-start gap-3.5 mb-4">
+                      <div className="p-2.5 bg-emerald-100 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-xl shrink-0">
+                        <Upload className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-m3-text">
+                          {t("settings.workspace.restoreData")}
+                        </h4>
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5 flex items-center gap-1">
+                          <Info className="w-3.5 h-3.5 shrink-0" />
+                          {t("settings.workspace.restoreWarning")}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-m3-text">
-                        {t("settings.workspace.restoreData")}
-                      </h4>
-                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5 flex items-center gap-1">
-                        <Info className="w-3.5 h-3.5 shrink-0" />
-                        {t("settings.workspace.restoreWarning")}
-                      </p>
-                    </div>
+
+                    <input
+                      ref={restoreInputRef}
+                      type="file"
+                      accept=".hosanna"
+                      onChange={handleRestoreFile}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full justify-center"
+                      onClick={() => restoreInputRef.current?.click()}
+                      icon={<Upload className="w-4 h-4 text-emerald-500" />}
+                    >
+                      {t("settings.workspace.restoreUploadBtn")}
+                    </Button>
                   </div>
-
-                  <input
-                    ref={restoreInputRef}
-                    type="file"
-                    accept=".hosanna"
-                    onChange={handleRestoreFile}
-                    className="hidden"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full justify-center"
-                    onClick={() => restoreInputRef.current?.click()}
-                    icon={<Upload className="w-4 h-4 text-emerald-500" />}
-                  >
-                    {t("settings.workspace.restoreUploadBtn")}
-                  </Button>
-                </div>
-              </Can>
+                </Can>
+              </div>
             </div>
           </div>
-        </div>
-      </CanAny>
-      {organizations.length > 1 && (
-        <section className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
-            <h2 className="text-lg font-bold text-m3-text flex items-center gap-2">
-              <Layers className="w-5 h-5 text-m3-primary" />
-              {t("settings.workspace.switchOrgTitle")}
-            </h2>
-            <p className="text-sm text-m3-secondary mt-1">
-              {t("settings.workspace.switchOrgDesc")}
-            </p>
-          </div>
-          <div className="p-6">
-            <ul className="space-y-2.5">
-              {organizations.map((org) => {
-                const isCurrent = org.id === organization?.id;
-                return (
-                  <li
-                    key={org.id}
-                    className={`flex items-center justify-between gap-4 p-3.5 rounded-xl border transition-colors ${
-                      isCurrent
-                        ? "border-m3-primary/30 bg-m3-primary/4 dark:bg-m3-primary/10"
-                        : "border-m3-border bg-m3-card hover:border-m3-border"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3.5 min-w-0">
-                      <div className="w-11 h-11 rounded-xl shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-sm font-semibold text-m3-primary">
-                        {org.logo ? (
-                          <img
-                            src={org.logo}
-                            alt={org.name || ""}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          (org.name?.trim().charAt(0) || "·").toUpperCase()
-                        )}
+        </CanAny>
+        {organizations.length > 1 && (
+          <section className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden h-full flex flex-col">
+            <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">
+              <h2 className="text-lg font-bold text-m3-text flex items-center gap-2">
+                <Layers className="w-5 h-5 text-m3-primary" />
+                {t("settings.workspace.switchOrgTitle")}
+              </h2>
+              <p className="text-sm text-m3-secondary mt-1">
+                {t("settings.workspace.switchOrgDesc")}
+              </p>
+            </div>
+            <div className="p-6 flex-1">
+              <ul className="space-y-2.5">
+                {organizations.map((org) => {
+                  const isCurrent = org.id === organization?.id;
+                  return (
+                    <li
+                      key={org.id}
+                      className={`flex items-center justify-between gap-4 p-3.5 rounded-xl border transition-colors ${
+                        isCurrent
+                          ? "border-m3-primary/30 bg-m3-primary/4 dark:bg-m3-primary/10"
+                          : "border-m3-border bg-m3-card hover:border-m3-border"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        <div className="w-11 h-11 rounded-xl shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-sm font-semibold text-m3-primary">
+                          {org.logo ? (
+                            <img
+                              src={org.logo}
+                              alt={org.name || ""}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            (org.name?.trim().charAt(0) || "·").toUpperCase()
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-m3-text truncate">{org.name}</p>
+                          <p className="text-xs text-m3-secondary font-mono truncate">@{org.slug}</p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-bold text-m3-text truncate">{org.name}</p>
-                        <p className="text-xs text-m3-secondary font-mono truncate">@{org.slug}</p>
-                      </div>
-                    </div>
 
-                    {isCurrent ? (
-                      <span className="shrink-0 inline-flex items-center gap-1.5 text-label text-emerald-600 dark:text-emerald-400 bg-emerald-100/70 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full">
-                        <Check className="w-3 h-3" />
-                        {t("settings.workspace.currentOrg")}
-                      </span>
-                    ) : (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled={switchingOrgId !== null}
-                        icon={
-                          switchingOrgId === org.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : undefined
-                        }
-                        onClick={() => handleSwitchWorkspace(org)}
-                      >
-                        {switchingOrgId === org.id
-                          ? t("settings.workspace.switchingOrg")
-                          : t("settings.workspace.switchOrg")}
-                      </Button>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </section>
-      )}
+                      {isCurrent ? (
+                        <span className="shrink-0 inline-flex items-center gap-1.5 text-label text-emerald-600 dark:text-emerald-400 bg-emerald-100/70 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full">
+                          <Check className="w-3 h-3" />
+                          {t("settings.workspace.currentOrg")}
+                        </span>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={switchingOrgId !== null}
+                          icon={
+                            switchingOrgId === org.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : undefined
+                          }
+                          onClick={() => handleSwitchWorkspace(org)}
+                        >
+                          {switchingOrgId === org.id
+                            ? t("settings.workspace.switchingOrg")
+                            : t("settings.workspace.switchOrg")}
+                        </Button>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 };

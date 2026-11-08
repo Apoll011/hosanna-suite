@@ -68,7 +68,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
 
   if (!canAccessBilling) {
     return (
-      <div className="max-w-4xl mx-auto w-full bg-m3-card border border-m3-border rounded-xl p-8 text-center">
+      <div className="w-full bg-m3-card border border-m3-border rounded-xl p-8 text-center">
         <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
         <h3 className="text-base font-bold text-m3-text">{t("settings.billing.noAccessTitle")}</h3>
         <p className="text-sm text-m3-secondary mt-1">{t("settings.billing.noAccessDesc")}</p>
@@ -135,7 +135,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
   );
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
         <div className="px-6 py-5 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
           <div>

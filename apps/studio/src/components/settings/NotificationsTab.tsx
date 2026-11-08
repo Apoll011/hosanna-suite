@@ -292,7 +292,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
   return (
     <form
       onSubmit={handleSend}
-      className="max-w-5xl mx-auto w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
     >
       <div>
         <h2 className="text-title text-m3-text flex items-center gap-2">
