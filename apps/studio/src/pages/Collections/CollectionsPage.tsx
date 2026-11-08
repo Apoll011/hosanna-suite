@@ -3,12 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  Badge,
-  ConfirmDialog,
-  EmptyState,
-  Spinner,
-} from "@/src/components/common";
+import { Badge, ConfirmDialog, EmptyState, Spinner } from "@/src/components/common";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
 import { CreateCollectionModal } from "@/src/components/modals/CreateCollectionModal";
@@ -20,10 +15,7 @@ import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Collection } from "@/src/types";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "@/src/utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "@/src/utils/folderCustomization";
 import {
   CheckSquare,
   Edit2,
@@ -35,13 +27,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 
 type CollectionSortBy = "updatedAt" | "title" | "number";
@@ -61,14 +47,13 @@ export const CollectionsPage: React.FC = () => {
   const { granted: canDeleteCollection } = useCan("collection.delete");
   const { granted: canPrint } = useCan("export.pdf");
 
-  const { searchQuery, sortBy, sortOrder, viewMode, density } =
-    useOutletContext<{
-      searchQuery: string;
-      sortBy: CollectionSortBy;
-      sortOrder?: "asc" | "desc";
-      viewMode?: "grid" | "list";
-      density?: "comfortable" | "compact";
-    }>();
+  const { searchQuery, sortBy, sortOrder, viewMode, density } = useOutletContext<{
+    searchQuery: string;
+    sortBy: CollectionSortBy;
+    sortOrder?: "asc" | "desc";
+    viewMode?: "grid" | "list";
+    density?: "comfortable" | "compact";
+  }>();
 
   const order = sortOrder ?? "asc";
   const mode = viewMode ?? "grid";
@@ -85,9 +70,7 @@ export const CollectionsPage: React.FC = () => {
   } = useCollections();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingCollection, setEditingCollection] = useState<Collection | null>(
-    null,
-  );
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
@@ -186,9 +169,7 @@ export const CollectionsPage: React.FC = () => {
     e.stopPropagation();
     if (collection) {
       setSelectedIds((prev) =>
-        prev.has(collection.id) && prev.size > 1
-          ? prev
-          : new Set([collection.id]),
+        prev.has(collection.id) && prev.size > 1 ? prev : new Set([collection.id]),
       );
       setLastClickedId(collection.id);
     }
@@ -235,9 +216,7 @@ export const CollectionsPage: React.FC = () => {
       }
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "a") {
@@ -257,21 +236,13 @@ export const CollectionsPage: React.FC = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [
-    filteredCollections,
-    selectedIds,
-    openCollection,
-    canDeleteCollection,
-    requestDelete,
-  ]);
+  }, [filteredCollections, selectedIds, openCollection, canDeleteCollection, requestDelete]);
 
   const menuCollection = contextMenu?.id
     ? filteredCollections.find((c) => c.id === contextMenu.id)
     : undefined;
   const menuIsMulti = selectedIds.size > 1 && Boolean(contextMenu?.id);
-  const deletingCollection = filteredCollections.find((c) =>
-    pendingDeleteIds.includes(c.id),
-  );
+  const deletingCollection = filteredCollections.find((c) => pendingDeleteIds.includes(c.id));
 
   if (isLoading) {
     return (
@@ -296,9 +267,7 @@ export const CollectionsPage: React.FC = () => {
           <EmptyState
             icon={<LibraryBig className="w-8 h-8" />}
             title={
-              searchQuery
-                ? t("foldersPage.noResults")
-                : t("collectionsPage.noCollectionsAvailable")
+              searchQuery ? t("foldersPage.noResults") : t("collectionsPage.noCollectionsAvailable")
             }
             description={
               searchQuery
@@ -309,14 +278,10 @@ export const CollectionsPage: React.FC = () => {
                 : t("collectionsPage.createCollectionFirst")
             }
             actionLabel={
-              !searchQuery && canCreateCollection
-                ? t("addressBar.newCollection")
-                : undefined
+              !searchQuery && canCreateCollection ? t("addressBar.newCollection") : undefined
             }
             onAction={
-              !searchQuery && canCreateCollection
-                ? () => setIsCreateModalOpen(true)
-                : undefined
+              !searchQuery && canCreateCollection ? () => setIsCreateModalOpen(true) : undefined
             }
           />
         </div>
@@ -403,11 +368,7 @@ export const CollectionsPage: React.FC = () => {
                 <Badge variant="accent">{selectedIds.size}</Badge>
               </div>
               <Can permission="export.pdf">
-                <button
-                  type="button"
-                  className={MENU_ITEM}
-                  onClick={printSelected}
-                >
+                <button type="button" className={MENU_ITEM} onClick={printSelected}>
                   <Printer className={MENU_ICON} />
                   <span>{t("common.print")}</span>
                 </button>
@@ -587,9 +548,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
     >
       {collection.image && (
         <div
-          className={`relative w-full overflow-hidden bg-m3-sidebar ${
-            isCompact ? "h-24" : "h-36"
-          }`}
+          className={`relative w-full overflow-hidden bg-m3-sidebar ${isCompact ? "h-24" : "h-36"}`}
         >
           <img
             src={collection.image}
@@ -602,9 +561,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
         </div>
       )}
 
-      <div
-        className={`relative flex-1 flex flex-col ${isCompact ? "px-3 py-2.5" : "px-4 py-3.5"}`}
-      >
+      <div className={`relative flex-1 flex flex-col ${isCompact ? "px-3 py-2.5" : "px-4 py-3.5"}`}>
         <div className="flex items-start gap-3">
           <div
             className={`${isCompact ? "w-8 h-8" : "w-10 h-10"} rounded-md flex items-center justify-center shrink-0 border`}
@@ -623,10 +580,9 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
               {collection.name}
             </h4>
             <span className="text-caption mt-0.5 block">
-              {t(
-                `collectionsPage.songCount.${songCount === 1 ? "one" : "other"}`,
-                { count: songCount },
-              )}
+              {t(`collectionsPage.songCount.${songCount === 1 ? "one" : "other"}`, {
+                count: songCount,
+              })}
             </span>
           </div>
           <button
@@ -702,9 +658,7 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div
-          className={`${isCompact ? "text-xs" : "text-sm"} font-medium truncate`}
-        >
+        <div className={`${isCompact ? "text-xs" : "text-sm"} font-medium truncate`}>
           {collection.name}
         </div>
         {!isCompact && collection.description && (

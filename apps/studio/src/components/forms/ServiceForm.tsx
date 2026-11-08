@@ -38,11 +38,7 @@ interface ServiceFormProps {
     date?: string;
     notes?: string;
   };
-  onSubmit: (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => Promise<void>;
+  onSubmit: (data: { name: string; date: string; notes: string }) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
 }
@@ -64,9 +60,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -131,12 +125,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
       </div>
 
       <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onCancel}
-          disabled={isLoading}
-        >
+        <Button type="button" variant="ghost" onClick={onCancel} disabled={isLoading}>
           {t("common.cancel")}
         </Button>
         <Button type="submit" variant="primary" isLoading={isLoading}>

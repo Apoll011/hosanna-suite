@@ -15,12 +15,7 @@ import React, { useEffect, useState } from "react";
 interface CustomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: {
-    title: string;
-    content: string;
-    notes: string;
-    duration: number;
-  }) => void;
+  onSave: (data: { title: string; content: string; notes: string; duration: number }) => void;
   initial?: {
     title: string;
     content: string;
@@ -29,19 +24,12 @@ interface CustomModalProps {
   };
 }
 
-export const CustomModal: React.FC<CustomModalProps> = ({
-  isOpen,
-  onClose,
-  onSave,
-  initial,
-}) => {
+export const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, onSave, initial }) => {
   const { t } = useI18n();
   const [title, setTitle] = useState(initial?.title || "");
   const [content, setContent] = useState(initial?.content || "");
   const [notes, setNotes] = useState(initial?.notes || "");
-  const [duration, setDuration] = useState(
-    secondsToDurationInput(initial?.duration),
-  );
+  const [duration, setDuration] = useState(secondsToDurationInput(initial?.duration));
 
   // Snapshot form fields only when the modal opens — do not depend on
   // `initial` identity, or parent re-renders reset in-progress edits.
@@ -55,11 +43,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
   }, [isOpen]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t("serviceModals.custom.modalTitle")}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={t("serviceModals.custom.modalTitle")}>
       <div className="space-y-4 py-2">
         <div
           className="flex items-center gap-3 p-3 rounded-xl"
@@ -75,9 +59,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
             <p className="text-xs font-bold" style={{ color: "#475569" }}>
               {t("serviceModals.custom.badgeTitle")}
             </p>
-            <p className="text-[11px] text-slate-500">
-              {t("serviceModals.custom.badgeDesc")}
-            </p>
+            <p className="text-[11px] text-slate-500">{t("serviceModals.custom.badgeDesc")}</p>
           </div>
         </div>
 
@@ -97,9 +79,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.custom.contentLabel")}
-            <span className="font-normal text-slate-400 ml-1">
-              ({t("common.details")})
-            </span>
+            <span className="font-normal text-slate-400 ml-1">({t("common.details")})</span>
           </label>
           <textarea
             rows={3}
@@ -113,9 +93,7 @@ export const CustomModal: React.FC<CustomModalProps> = ({
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.custom.notesLabel")}
-            <span className="font-normal text-slate-400 ml-1">
-              ({t("common.details")})
-            </span>
+            <span className="font-normal text-slate-400 ml-1">({t("common.details")})</span>
           </label>
           <textarea
             rows={2}

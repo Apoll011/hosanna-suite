@@ -12,11 +12,7 @@ interface PrintSheetProps {
 }
 
 /** Sheet unit: with page-breaks on, short sheets pin the footer to the page bottom. */
-export const PrintSheet: React.FC<PrintSheetProps> = ({
-  children,
-  footer,
-  className = "",
-}) => (
+export const PrintSheet: React.FC<PrintSheetProps> = ({ children, footer, className = "" }) => (
   <article className={`hp-sheet ${className}`.trim()}>
     <div className="hp-sheet-body">{children}</div>
     {footer}

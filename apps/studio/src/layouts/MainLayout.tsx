@@ -6,13 +6,7 @@
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import { ConversionResult } from "@hosanna/chordpro";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { EventFormValue } from "../components/agenda/EventModals";
@@ -55,11 +49,7 @@ import { useCollections } from "../hooks/useCollections";
 import { useFolders } from "../hooks/useFolders";
 import { usePersonalSettings } from "../hooks/usePersonalSettings";
 import { useServices } from "../hooks/useServices";
-import {
-  invalidateSongsCache,
-  useSearchableSongs,
-  useSongs,
-} from "../hooks/useSongs";
+import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
 import { songImportRegistry } from "../lib/import";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
@@ -71,8 +61,7 @@ export const MainLayout: React.FC = () => {
   const { navigate } = useAppNavigate();
   const location = useLocation();
   const { t } = useI18n();
-  const { user, logout, organization, organizations, switchOrganization } =
-    useAuth();
+  const { user, logout, organization, organizations, switchOrganization } = useAuth();
 
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
   const view = useMemo(
@@ -171,10 +160,7 @@ export const MainLayout: React.FC = () => {
 
   // Queries & Mutations — one includeArchived query; derive active vs archived.
   const { servicesQuery, createService, deleteService } = useServices(true);
-  const allServices = useMemo(
-    () => servicesQuery.data || [],
-    [servicesQuery.data],
-  );
+  const allServices = useMemo(() => servicesQuery.data || [], [servicesQuery.data]);
 
   const [showArchived, setShowArchived] = useState(false);
   const archivedServices = useMemo(
@@ -182,17 +168,10 @@ export const MainLayout: React.FC = () => {
     [showArchived, allServices],
   );
 
-  const {
-    foldersQuery,
-    createFolder,
-    renameFolder,
-    customizeFolder,
-    moveFolder,
-    deleteFolder,
-  } = useFolders();
+  const { foldersQuery, createFolder, renameFolder, customizeFolder, moveFolder, deleteFolder } =
+    useFolders();
 
-  const { songsQuery, moveSong, deleteSong, updateBatchTags, createSong } =
-    useSongs();
+  const { songsQuery, moveSong, deleteSong, updateBatchTags, createSong } = useSongs();
 
   const { items: trashItems } = useTrash();
 
@@ -236,11 +215,7 @@ export const MainLayout: React.FC = () => {
   const handleViewModeChange = useCallback(
     (mode: "grid" | "list") => {
       updateSetting("viewMode", mode);
-      if (
-        view === "settings" ||
-        view === "organization" ||
-        view === "analytics"
-      ) {
+      if (view === "settings" || view === "organization" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
     },
@@ -260,27 +235,18 @@ export const MainLayout: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string>("");
 
-  const [sortBy, setSortBy] = useState<
-    "title" | "artist" | "updatedAt" | "number"
-  >("number");
+  const [sortBy, setSortBy] = useState<"title" | "artist" | "updatedAt" | "number">("number");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   // Unified Modal State
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
-  const openModal = useCallback(
-    (modal: ActiveModal) => setActiveModal(modal),
-    [],
-  );
+  const openModal = useCallback((modal: ActiveModal) => setActiveModal(modal), []);
   const closeModal = useCallback(() => setActiveModal(null), []);
 
   const handleSearchChange = useCallback(
     (val: string) => {
       setSearchQuery(val);
-      if (
-        view === "settings" ||
-        view === "organization" ||
-        view === "analytics"
-      ) {
+      if (view === "settings" || view === "organization" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
     },
@@ -291,11 +257,7 @@ export const MainLayout: React.FC = () => {
     (sb: "title" | "artist" | "updatedAt" | "number", so: "asc" | "desc") => {
       setSortBy(sb);
       setSortOrder(so);
-      if (
-        view === "settings" ||
-        view === "organization" ||
-        view === "analytics"
-      ) {
+      if (view === "settings" || view === "organization" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
     },
@@ -311,10 +273,8 @@ export const MainLayout: React.FC = () => {
     if (prevPath !== currPath) {
       const getDomain = (path: string) => {
         if (path === "/songs" || path.startsWith("/songs/")) return "songs";
-        if (path === "/services" || path.startsWith("/services/"))
-          return "services";
-        if (path === "/folders" || path.startsWith("/folders/"))
-          return "explorer";
+        if (path === "/services" || path.startsWith("/services/")) return "services";
+        if (path === "/folders" || path.startsWith("/folders/")) return "explorer";
         if (path.startsWith("/settings")) return "settings";
         if (path.startsWith("/organization")) return "organization";
         if (path.startsWith("/analytics")) return "analytics";
@@ -328,8 +288,7 @@ export const MainLayout: React.FC = () => {
         (prevDomain === "songs" || prevDomain === "explorer") &&
         (currDomain === "songs" || currDomain === "explorer");
 
-      const isServiceDomain =
-        prevDomain === "services" && currDomain === "services";
+      const isServiceDomain = prevDomain === "services" && currDomain === "services";
 
       const keepSearch = isSongDomain || isServiceDomain;
 
@@ -345,19 +304,12 @@ export const MainLayout: React.FC = () => {
   }, [location.pathname]);
 
   // Data Memos
-  const allFolders = useMemo(
-    () => foldersQuery.data?.folders || [],
-    [foldersQuery.data?.folders],
-  );
-  const allSongs = useMemo(
-    () => songsQuery.data?.songs || [],
-    [songsQuery.data?.songs],
-  );
+  const allFolders = useMemo(() => foldersQuery.data?.folders || [], [foldersQuery.data?.folders]);
+  const allSongs = useMemo(() => songsQuery.data?.songs || [], [songsQuery.data?.songs]);
   const { searchableSongs } = useSearchableSongs(allFolders);
 
   const totalSongs = songsQuery.data?.total || 0;
-  const totalServices =
-    servicesQuery.data?.filter((s) => !s.archived).length || 0;
+  const totalServices = servicesQuery.data?.filter((s) => !s.archived).length || 0;
   const rootSongsCount = foldersQuery.data?.rootSongsCount || 0;
   const rootFoldersCount = foldersQuery.data?.folders?.length || 0;
 
@@ -377,9 +329,7 @@ export const MainLayout: React.FC = () => {
   const getFolderPathString = useCallback(
     (folderId: string | null | undefined): string => {
       const trail = getFolderAncestors(folderId, allFolders);
-      return trail.length > 0
-        ? trail.map((f) => f.name).join(" / ")
-        : t("common.root");
+      return trail.length > 0 ? trail.map((f) => f.name).join(" / ") : t("common.root");
     },
     [allFolders, t],
   );
@@ -397,8 +347,7 @@ export const MainLayout: React.FC = () => {
     [currentFolderId, allFolders],
   );
 
-  const currentSongId =
-    view === "song-editor" ? location.pathname.split("/").pop() : null;
+  const currentSongId = view === "song-editor" ? location.pathname.split("/").pop() : null;
   const currentSong = useMemo(
     () => allSongs.find((s) => s.id === currentSongId),
     [allSongs, currentSongId],
@@ -428,8 +377,7 @@ export const MainLayout: React.FC = () => {
     return `${title}${ext}`;
   }, [currentSong]);
 
-  const currentServiceId =
-    view === "service-editor" ? location.pathname.split("/").pop() : null;
+  const currentServiceId = view === "service-editor" ? location.pathname.split("/").pop() : null;
   const currentService = useMemo(
     () => allServices.find((s) => s.id === currentServiceId),
     [allServices, currentServiceId],
@@ -437,9 +385,7 @@ export const MainLayout: React.FC = () => {
 
   const isSearchingOrFiltering = Boolean(searchQuery.trim());
   const activeFiltersCount =
-    (searchQuery.trim() ? 1 : 0) +
-    (selectedKey ? 1 : 0) +
-    (selectedTag ? 1 : 0);
+    (searchQuery.trim() ? 1 : 0) + (selectedKey ? 1 : 0) + (selectedTag ? 1 : 0);
 
   // Filtered Folders & Files
   const filteredSubfolders = useMemo(() => {
@@ -501,10 +447,7 @@ export const MainLayout: React.FC = () => {
       // 1. If searching with a query, filter with Liqe across SearchableSong dataset
       let matchedSongIds: Set<string> | null = null;
       if (searchQuery.trim()) {
-        const liqeMatches = filterSearchableSongsWithLiqe(
-          searchableSongs,
-          searchQuery,
-        );
+        const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, searchQuery);
         matchedSongIds = new Set(liqeMatches.map((s) => s.id));
       }
 
@@ -515,8 +458,7 @@ export const MainLayout: React.FC = () => {
           }
         }
 
-        if (selectedTag && (!s.tags || !s.tags.includes(selectedTag)))
-          return false;
+        if (selectedTag && (!s.tags || !s.tags.includes(selectedTag))) return false;
 
         if (matchedSongIds !== null && !matchedSongIds.has(s.id)) {
           return false;
@@ -558,12 +500,8 @@ export const MainLayout: React.FC = () => {
   ]);
 
   // Selection State
-  const [selectedFolderIds, setSelectedFolderIds] = useState<Set<string>>(
-    new Set(),
-  );
-  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedFolderIds, setSelectedFolderIds] = useState<Set<string>>(new Set());
+  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
 
   const viewItems = useMemo(() => {
@@ -718,12 +656,7 @@ export const MainLayout: React.FC = () => {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (
-        !isMouseDownRef.current ||
-        !startPosRef.current ||
-        !containerRef.current
-      )
-        return;
+      if (!isMouseDownRef.current || !startPosRef.current || !containerRef.current) return;
 
       const startX = startPosRef.current.x;
       const startY = startPosRef.current.y;
@@ -739,8 +672,7 @@ export const MainLayout: React.FC = () => {
         marqueeActiveRef.current = true;
         setSelectionBox({ x: left, y: top, width, height });
 
-        const itemEls =
-          containerRef.current.querySelectorAll<HTMLElement>("[data-item-id]");
+        const itemEls = containerRef.current.querySelectorAll<HTMLElement>("[data-item-id]");
         const nextFolders = new Set(initialSelectionRef.current.folders);
         const nextSongs = new Set(initialSelectionRef.current.songs);
 
@@ -814,40 +746,26 @@ export const MainLayout: React.FC = () => {
   const [renameTarget, setRenameTarget] = useState<Folder | null>(null);
   const [customizeTarget, setCustomizeTarget] = useState<Folder | null>(null);
   const [moveFolderTarget, setMoveFolderTarget] = useState<Folder | null>(null);
-  const [targetParentFolderId, setTargetParentFolderId] = useState<
-    string | null
-  >(null);
+  const [targetParentFolderId, setTargetParentFolderId] = useState<string | null>(null);
 
   const [deleteTarget, setDeleteTarget] = useState<Folder | null>(null);
-  const [deleteAcao, setDeleteAcao] = useState<"move_to_root" | "delete_songs">(
-    "move_to_root",
-  );
+  const [deleteAcao, setDeleteAcao] = useState<"move_to_root" | "delete_songs">("move_to_root");
   const [confirmFolderName, setConfirmFolderName] = useState("");
 
   const [moveSongTarget, setMoveSongTarget] = useState<Song | null>(null);
-  const [targetSongFolderId, setTargetSongFolderId] = useState<string | null>(
-    null,
-  );
+  const [targetSongFolderId, setTargetSongFolderId] = useState<string | null>(null);
   const [deleteSongTarget, setDeleteSongTarget] = useState<Song | null>(null);
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
-  const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [_isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [isInternalDragActive, setIsInternalDragActive] = useState(false);
-  const [dropTargetFolderId, setDropTargetFolderId] = useState<string | null>(
-    null,
-  );
-  const {
-    collections,
-    createCollection,
-    addSongsToCollection,
-    getCollectionSongs,
-  } = useCollections();
+  const [dropTargetFolderId, setDropTargetFolderId] = useState<string | null>(null);
+  const { collections, createCollection, addSongsToCollection, getCollectionSongs } =
+    useCollections();
 
   // Studio AI: navigate / open print-PDF modal from tool directives
   useEffect(() => {
@@ -895,14 +813,8 @@ export const MainLayout: React.FC = () => {
           break;
         case "route":
           if (detail.route) {
-            const path = detail.route.startsWith("/")
-              ? detail.route
-              : `/${detail.route}`;
-            navigate(
-              path.startsWith(slugPrefix) || !slugPrefix
-                ? path
-                : `${slugPrefix}${path}`,
-            );
+            const path = detail.route.startsWith("/") ? detail.route : `/${detail.route}`;
+            navigate(path.startsWith(slugPrefix) || !slugPrefix ? path : `${slugPrefix}${path}`);
           }
           break;
         default:
@@ -1004,8 +916,7 @@ export const MainLayout: React.FC = () => {
   const currentCollectionId =
     view === "collection-detail" ? location.pathname.split("/").pop() : null;
   const currentCollectionName = useMemo(
-    () =>
-      collections.find((c) => c.id === currentCollectionId)?.name ?? undefined,
+    () => collections.find((c) => c.id === currentCollectionId)?.name ?? undefined,
     [collections, currentCollectionId],
   );
   const [collectionToolbarActions, setCollectionToolbarActions] =
@@ -1027,14 +938,8 @@ export const MainLayout: React.FC = () => {
     return () => {
       aiContextBridge.setExplorer(null);
     };
-  }, [
-    currentFolderId,
-    currentCollectionId,
-    selectedSongIds,
-    selectedFolderIds,
-  ]);
-  const [addToCollectionTarget, setAddToCollectionTarget] =
-    useState<Song | null>(null);
+  }, [currentFolderId, currentCollectionId, selectedSongIds, selectedFolderIds]);
+  const [addToCollectionTarget, setAddToCollectionTarget] = useState<Song | null>(null);
 
   const handleCreateCollectionSubmit = useCallback(
     async (data: {
@@ -1110,9 +1015,7 @@ export const MainLayout: React.FC = () => {
       e.stopPropagation();
 
       const isAlreadySelected =
-        type === "folder"
-          ? selectedFolderIds.has(item.id)
-          : selectedSongIds.has(item.id);
+        type === "folder" ? selectedFolderIds.has(item.id) : selectedSongIds.has(item.id);
 
       if (!isAlreadySelected) {
         if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
@@ -1184,9 +1087,7 @@ export const MainLayout: React.FC = () => {
 
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "a") {
@@ -1204,14 +1105,10 @@ export const MainLayout: React.FC = () => {
 
         if (totalSelectedCount === 1) {
           if (selectedFolderIds.size === 1) {
-            const folder = allFolders.find(
-              (f) => f.id === Array.from(selectedFolderIds)[0],
-            );
+            const folder = allFolders.find((f) => f.id === Array.from(selectedFolderIds)[0]);
             if (folder) setDeleteTarget(folder);
           } else {
-            const song = allSongs.find(
-              (s) => s.id === Array.from(selectedSongIds)[0],
-            );
+            const song = allSongs.find((s) => s.id === Array.from(selectedSongIds)[0]);
             if (song) setDeleteSongTarget(song);
           }
         } else {
@@ -1308,10 +1205,7 @@ export const MainLayout: React.FC = () => {
 
   const handleDeleteFolderSubmit = async () => {
     if (!deleteTarget) return;
-    if (
-      deleteAcao === "delete_songs" &&
-      confirmFolderName.trim() !== deleteTarget.name.trim()
-    ) {
+    if (deleteAcao === "delete_songs" && confirmFolderName.trim() !== deleteTarget.name.trim()) {
       showToast(t("layout.folderNameMismatch"), "error");
       return;
     }
@@ -1375,11 +1269,7 @@ export const MainLayout: React.FC = () => {
     }
   };
 
-  const handleCreateServiceSubmit = async (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => {
+  const handleCreateServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
     try {
       const newService = await createService({
         name: data.name,
@@ -1452,9 +1342,7 @@ export const MainLayout: React.FC = () => {
     ],
   );
 
-  const handleBatchDeleteConfirm = async (
-    folderAction: "move_to_root" | "delete_songs",
-  ) => {
+  const handleBatchDeleteConfirm = async (folderAction: "move_to_root" | "delete_songs") => {
     const folderList = Array.from(selectedFolderIds);
     const songList = Array.from(selectedSongIds);
 
@@ -1465,17 +1353,11 @@ export const MainLayout: React.FC = () => {
       await deleteSong(sId);
     }
 
-    showToast(
-      t("layout.deletedItems", { count: folderList.length + songList.length }),
-      "success",
-    );
+    showToast(t("layout.deletedItems", { count: folderList.length + songList.length }), "success");
     clearSelection();
   };
 
-  const handleBatchTagConfirm = async (
-    tags: string[],
-    mode: "append" | "replace" | "remove",
-  ) => {
+  const handleBatchTagConfirm = async (tags: string[], mode: "append" | "replace" | "remove") => {
     const songList = Array.from(selectedSongIds);
     if (songList.length === 0) return;
     await updateBatchTags({ songIds: songList, tags, mode });
@@ -1485,9 +1367,7 @@ export const MainLayout: React.FC = () => {
   // File Upload
   const showToastImportResult = (result: ProviderImportResult) => {
     if (result.created > 0) {
-      const targetFolderName = currentFolder
-        ? currentFolder.name
-        : t("layout.rootDirectory");
+      const targetFolderName = currentFolder ? currentFolder.name : t("layout.rootDirectory");
       showToast(
         t("layout.uploadSuccess", {
           count: result.created,
@@ -1535,9 +1415,7 @@ export const MainLayout: React.FC = () => {
     setIsUploadingFiles(false);
   };
 
-  const handleChordProFileUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChordProFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       await processAndUploadFiles(Array.from(files));
@@ -1578,8 +1456,7 @@ export const MainLayout: React.FC = () => {
 
   const handleItemDragStart = useCallback(
     (e: React.DragEvent, id: string, type: "folder" | "song") => {
-      const isSelected =
-        type === "folder" ? selectedFolderIds.has(id) : selectedSongIds.has(id);
+      const isSelected = type === "folder" ? selectedFolderIds.has(id) : selectedSongIds.has(id);
 
       if (!isSelected) {
         if (type === "folder") {
@@ -1688,13 +1565,10 @@ export const MainLayout: React.FC = () => {
     [isInternalDragActive, disabledFolderIdsForBatchMove],
   );
 
-  const handleFolderDragLeave = useCallback(
-    (e: React.DragEvent, folderId: string) => {
-      e.stopPropagation();
-      setDropTargetFolderId((prev) => (prev === folderId ? null : prev));
-    },
-    [],
-  );
+  const handleFolderDragLeave = useCallback((e: React.DragEvent, folderId: string) => {
+    e.stopPropagation();
+    setDropTargetFolderId((prev) => (prev === folderId ? null : prev));
+  }, []);
 
   const handleFolderDrop = useCallback(
     async (e: React.DragEvent, folderId: string) => {
@@ -1704,16 +1578,11 @@ export const MainLayout: React.FC = () => {
       setDropTargetFolderId(null);
       setIsInternalDragActive(false);
 
-      if (!wasInternalDrag || disabledFolderIdsForBatchMove.has(folderId))
-        return;
+      if (!wasInternalDrag || disabledFolderIdsForBatchMove.has(folderId)) return;
 
       await handleBatchMoveConfirm(folderId);
     },
-    [
-      isInternalDragActive,
-      disabledFolderIdsForBatchMove,
-      handleBatchMoveConfirm,
-    ],
+    [isInternalDragActive, disabledFolderIdsForBatchMove, handleBatchMoveConfirm],
   );
 
   const totalItemsCount = filteredSubfolders.length + filteredFiles.length;
@@ -1880,9 +1749,7 @@ export const MainLayout: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-m3-primary shadow-sm" />
-                    {currentFolder
-                      ? `/${currentFolder.name}`
-                      : t("layout.rootLocation")}
+                    {currentFolder ? `/${currentFolder.name}` : t("layout.rootLocation")}
                   </span>
                 </div>
                 <div className="flex items-center gap-6">
@@ -1891,9 +1758,7 @@ export const MainLayout: React.FC = () => {
                       count: filteredSubfolders.length,
                     })}
                   </span>
-                  <span>
-                    {t("layout.statusFiles", { count: filteredFiles.length })}
-                  </span>
+                  <span>{t("layout.statusFiles", { count: filteredFiles.length })}</span>
                   <span className="text-m3-primary font-medium">
                     {t("layout.statusTotal", { count: totalItemsCount })}
                   </span>
@@ -1912,9 +1777,7 @@ export const MainLayout: React.FC = () => {
       <BatchActionFloatingBar
         selectedCount={totalSelectedCount}
         itemLabel={t("layout.items")}
-        onTag={
-          selectedSongIds.size > 0 ? () => openModal("batch-tag") : undefined
-        }
+        onTag={selectedSongIds.size > 0 ? () => openModal("batch-tag") : undefined}
         onMove={
           selectedSongIds.size > 0 || selectedFolderIds.size > 0
             ? () => openModal("batch-move")
@@ -1929,12 +1792,8 @@ export const MainLayout: React.FC = () => {
               songs: allSongs
                 .filter((s) => s.folderId === f.id)
                 .sort((a, b) => {
-                  if ((a.song_number || Infinity) < (b.song_number || Infinity))
-                    return -1;
-                  else if (
-                    (a.song_number || Infinity) > (b.song_number || Infinity)
-                  )
-                    return 1;
+                  if ((a.song_number || Infinity) < (b.song_number || Infinity)) return -1;
+                  else if ((a.song_number || Infinity) > (b.song_number || Infinity)) return 1;
                   return -1;
                 }),
             }));
@@ -2006,12 +1865,8 @@ export const MainLayout: React.FC = () => {
             const fSongs = allSongs
               .filter((s) => s.folderId === folderId)
               .sort((a, b) => {
-                if ((a.song_number || Infinity) < (b.song_number || Infinity))
-                  return -1;
-                else if (
-                  (a.song_number || Infinity) > (b.song_number || Infinity)
-                )
-                  return 1;
+                if ((a.song_number || Infinity) < (b.song_number || Infinity)) return -1;
+                else if ((a.song_number || Infinity) > (b.song_number || Infinity)) return 1;
                 return -1;
               });
             printFolder(f, fSongs);
@@ -2123,11 +1978,7 @@ export const MainLayout: React.FC = () => {
     <AiChatProvider>
       <HosannaCommandPalette
         slugPrefix={organization?.slug || ""}
-        isDataLoading={
-          songsQuery.isLoading ||
-          foldersQuery.isLoading ||
-          servicesQuery.isLoading
-        }
+        isDataLoading={songsQuery.isLoading || foldersQuery.isLoading || servicesQuery.isLoading}
         searchSongsDb={async (query) => {
           if (songsQuery.isLoading || !songsQuery.data?.songs) return [];
           const lowerQuery = query.toLowerCase().trim();
@@ -2136,9 +1987,7 @@ export const MainLayout: React.FC = () => {
           for (const song of allSongsList) {
             const matchTitle = song.title?.toLowerCase().includes(lowerQuery);
             const matchArtist = song.artist?.toLowerCase().includes(lowerQuery);
-            const matchTags = song.tags?.some((t: string) =>
-              t.toLowerCase().includes(lowerQuery),
-            );
+            const matchTags = song.tags?.some((t: string) => t.toLowerCase().includes(lowerQuery));
 
             if (matchTitle || matchArtist || matchTags) {
               matches.push(song);
@@ -2167,9 +2016,7 @@ export const MainLayout: React.FC = () => {
           const matches: Service[] = [];
           for (const service of rawServices) {
             const matchName = service.name?.toLowerCase().includes(lowerQuery);
-            const matchNotes = service.notes
-              ?.toLowerCase()
-              .includes(lowerQuery);
+            const matchNotes = service.notes?.toLowerCase().includes(lowerQuery);
 
             if (matchName || matchNotes) {
               matches.push(service);

@@ -57,10 +57,7 @@ Lyrics
     );
     assert.equal(selectVersion(document, "live").name, "Live");
     assert.equal(slugifyVariantName("  Versão Ao Vivo! "), "versao-ao-vivo");
-    assert.match(
-      buildChordProText({ title: "Song", key: "G" }, "[G]Lyrics"),
-      /\{key: G\}/,
-    );
+    assert.match(buildChordProText({ title: "Song", key: "G" }, "[G]Lyrics"), /\{key: G\}/);
     assert.equal(parseChordPro("{title: Song}").analyze().sections, 0);
   });
 });
@@ -70,10 +67,7 @@ describe("key_note / tag / chorus directives", () => {
     const song = parseChordPro(
       "{title: X}\n{key_note: Verso 4 e final modulam para D (meio tom acima)}",
     );
-    assert.equal(
-      song.metadata.keyNote,
-      "Verso 4 e final modulam para D (meio tom acima)",
-    );
+    assert.equal(song.metadata.keyNote, "Verso 4 e final modulam para D (meio tom acima)");
   });
 
   it("accumulates repeated {tag} directives", () => {

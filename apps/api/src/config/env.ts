@@ -115,8 +115,7 @@ function assertMcpResourceUrlForRuntime(): void {
     throw new Error(`MCP_RESOURCE_URL is not a valid URL: ${url}`);
   }
   const host = parsed.hostname.toLowerCase();
-  const isLoopback =
-    host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const isLoopback = host === "localhost" || host === "127.0.0.1" || host === "::1";
   const isProd = env.nodeEnv === "production" || Boolean(process.env.VERCEL);
   if (isProd && (isLoopback || parsed.protocol !== "https:")) {
     throw new Error(

@@ -12,15 +12,11 @@ import React, { useCallback, useEffect, useState } from "react";
 export interface AiBillingCardProps {
   /** Bump after a successful save so the card refetches. */
   refreshKey?: number;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 function formatMoney(amount: string, currency: string): string {
-  const symbol =
-    currency === "CNY" ? "¥" : currency === "USD" ? "$" : `${currency} `;
+  const symbol = currency === "CNY" ? "¥" : currency === "USD" ? "$" : `${currency} `;
   return `${symbol}${amount}`;
 }
 
@@ -35,10 +31,7 @@ function formatFetchedAt(iso: string, locale: string): string {
   }
 }
 
-export const AiBillingCard: React.FC<AiBillingCardProps> = ({
-  refreshKey = 0,
-  showToast,
-}) => {
+export const AiBillingCard: React.FC<AiBillingCardProps> = ({ refreshKey = 0, showToast }) => {
   const { t, locale } = useI18n();
   const [data, setData] = useState<AiBillingResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,8 +44,7 @@ export const AiBillingCard: React.FC<AiBillingCardProps> = ({
       const next = await aiApi.getBilling();
       setData(next);
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : t("ai.settings.billing.loadError");
+      const message = err instanceof Error ? err.message : t("ai.settings.billing.loadError");
       setError(message);
       setData(null);
       showToast?.(message, "error");
@@ -89,13 +81,9 @@ export const AiBillingCard: React.FC<AiBillingCardProps> = ({
       <div className="space-y-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-caption text-m3-secondary">
-              {t("ai.settings.billing.total")}
-            </p>
+            <p className="text-caption text-m3-secondary">{t("ai.settings.billing.total")}</p>
             <p className="text-2xl sm:text-3xl font-semibold tabular-nums tracking-tight text-m3-text mt-0.5">
-              {primary
-                ? formatMoney(primary.totalBalance, primary.currency)
-                : "—"}
+              {primary ? formatMoney(primary.totalBalance, primary.currency) : "—"}
             </p>
           </div>
           <span
@@ -114,17 +102,13 @@ export const AiBillingCard: React.FC<AiBillingCardProps> = ({
         {primary ? (
           <div className="grid grid-cols-2 gap-3">
             <div className="min-w-0">
-              <p className="text-caption text-m3-secondary">
-                {t("ai.settings.billing.granted")}
-              </p>
+              <p className="text-caption text-m3-secondary">{t("ai.settings.billing.granted")}</p>
               <p className="text-sm font-medium tabular-nums text-m3-text mt-0.5">
                 {formatMoney(primary.grantedBalance, primary.currency)}
               </p>
             </div>
             <div className="min-w-0">
-              <p className="text-caption text-m3-secondary">
-                {t("ai.settings.billing.toppedUp")}
-              </p>
+              <p className="text-caption text-m3-secondary">{t("ai.settings.billing.toppedUp")}</p>
               <p className="text-sm font-medium tabular-nums text-m3-text mt-0.5">
                 {formatMoney(primary.toppedUpBalance, primary.currency)}
               </p>
@@ -135,10 +119,7 @@ export const AiBillingCard: React.FC<AiBillingCardProps> = ({
         {data.balances.length > 1 ? (
           <ul className="space-y-1.5 pt-1 border-t border-m3-border/60">
             {data.balances.slice(1).map((b) => (
-              <li
-                key={b.currency}
-                className="flex items-center justify-between gap-2 text-sm"
-              >
+              <li key={b.currency} className="flex items-center justify-between gap-2 text-sm">
                 <span className="text-m3-secondary">{b.currency}</span>
                 <span className="tabular-nums font-medium text-m3-text">
                   {formatMoney(b.totalBalance, b.currency)}
@@ -165,12 +146,8 @@ export const AiBillingCard: React.FC<AiBillingCardProps> = ({
             <Wallet className="w-4 h-4" />
           </div>
           <div className="min-w-0">
-            <h3 className="text-sm font-medium text-m3-text">
-              {t("ai.settings.billing.title")}
-            </h3>
-            <p className="text-caption text-m3-secondary mt-0.5">
-              {t("ai.settings.billing.desc")}
-            </p>
+            <h3 className="text-sm font-medium text-m3-text">{t("ai.settings.billing.title")}</h3>
+            <p className="text-caption text-m3-secondary mt-0.5">{t("ai.settings.billing.desc")}</p>
           </div>
         </div>
         <Button

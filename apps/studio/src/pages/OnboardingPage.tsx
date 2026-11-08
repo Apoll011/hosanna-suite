@@ -28,11 +28,7 @@ import { useAppNavigate } from "../hooks/useAppNavigate";
 import { useSubscription } from "../hooks/useSubscription";
 import { authClient } from "../lib/authClient";
 import { posthog } from "../lib/posthog";
-import {
-  fetchPlanPricing,
-  PLAN_PRICING,
-  type PlanPricing,
-} from "../lib/subscriptions";
+import { fetchPlanPricing, PLAN_PRICING, type PlanPricing } from "../lib/subscriptions";
 import { GoogleTextField } from "./Login/components/GoogleTextField";
 import { LanguageSelector } from "./Login/components/LanguageSelector";
 import { WorkspaceSwitcher } from "./Login/components/WorkspaceSwitcher";
@@ -57,14 +53,11 @@ export const OnboardingPage: React.FC = () => {
     void fetchPlanPricing().then(setPlanPricing);
   }, []);
   const { t, language } = useI18n();
-  const { hasStarted, pendingAction, refresh, startCheckout } =
-    useSubscription();
+  const { hasStarted, pendingAction, refresh, startCheckout } = useSubscription();
   const [mode, setMode] = useState<"choose" | "create" | "trial">("choose");
   const [orgName, setOrgName] = useState("");
   const [orgSlug, setOrgSlug] = useState("");
-  const [slugStatus, setSlugStatus] = useState<
-    "idle" | "checking" | "available" | "taken"
-  >("idle");
+  const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -96,9 +89,7 @@ export const OnboardingPage: React.FC = () => {
   }, [orgSlug]);
 
   // Newly-created org, kept around just long enough to offer the trial step
-  const [newOrg, setNewOrg] = useState<{ id: string; slug: string } | null>(
-    null,
-  );
+  const [newOrg, setNewOrg] = useState<{ id: string; slug: string } | null>(null);
   const [annual, setAnnual] = useState(false);
 
   // Invitations state
@@ -338,9 +329,7 @@ export const OnboardingPage: React.FC = () => {
             <h1 className="text-title text-m3-text">{getHeaderTitle()}</h1>
 
             {getHeaderSubtitle() && (
-              <p className="mt-1.5 text-muted max-w-sm">
-                {getHeaderSubtitle()}
-              </p>
+              <p className="mt-1.5 text-muted max-w-sm">{getHeaderSubtitle()}</p>
             )}
           </div>
 
@@ -378,9 +367,7 @@ export const OnboardingPage: React.FC = () => {
                     onClick={() => setAnnual(false)}
                     disabled={pendingAction === "checkout"}
                     className={`flex-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer disabled:opacity-50 ${
-                      !annual
-                        ? "bg-m3-primary text-white shadow-xs"
-                        : "text-m3-secondary"
+                      !annual ? "bg-m3-primary text-white shadow-xs" : "text-m3-secondary"
                     }`}
                   >
                     {t("settings.billing.monthly")}
@@ -390,9 +377,7 @@ export const OnboardingPage: React.FC = () => {
                     onClick={() => setAnnual(true)}
                     disabled={pendingAction === "checkout"}
                     className={`flex-1 px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer disabled:opacity-50 ${
-                      annual
-                        ? "bg-m3-primary text-white shadow-xs"
-                        : "text-m3-secondary"
+                      annual ? "bg-m3-primary text-white shadow-xs" : "text-m3-secondary"
                     }`}
                   >
                     {t("settings.billing.annual")}
@@ -400,14 +385,10 @@ export const OnboardingPage: React.FC = () => {
                 </div>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-2xl font-semibold text-m3-text">
-                    {annual
-                      ? planPricing.annual.amount
-                      : planPricing.monthly.amount}
+                    {annual ? planPricing.annual.amount : planPricing.monthly.amount}
                   </span>
                   <span className="text-xs sm:text-sm text-m3-secondary">
-                    {annual
-                      ? planPricing.annual.period
-                      : planPricing.monthly.period}
+                    {annual ? planPricing.annual.period : planPricing.monthly.period}
                   </span>
                 </div>
                 {annual && (
@@ -428,9 +409,7 @@ export const OnboardingPage: React.FC = () => {
               >
                 {t("onboarding.trial.startBtn")}
               </Button>
-              <p className="text-xs text-m3-secondary">
-                {t("onboarding.trial.note")}
-              </p>
+              <p className="text-xs text-m3-secondary">{t("onboarding.trial.note")}</p>
 
               <div className="pt-2 text-center">
                 <button
@@ -451,10 +430,7 @@ export const OnboardingPage: React.FC = () => {
               {/* Section: Pending Invitations */}
               {isFetchingInvitations ? (
                 <div className="flex items-center justify-center p-4">
-                  <Spinner
-                    size="sm"
-                    label={t("settings.members.loadingInvites")}
-                  />
+                  <Spinner size="sm" label={t("settings.members.loadingInvites")} />
                 </div>
               ) : invitations.length > 0 ? (
                 <div className="space-y-3">
@@ -520,9 +496,7 @@ export const OnboardingPage: React.FC = () => {
 
               {/* Action options */}
               <div className="space-y-3">
-                {invitations.length > 0 && (
-                  <h3 className="text-label px-1">Outras Opções</h3>
-                )}
+                {invitations.length > 0 && <h3 className="text-label px-1">Outras Opções</h3>}
 
                 <button
                   type="button"
@@ -536,9 +510,7 @@ export const OnboardingPage: React.FC = () => {
                     <h3 className="font-medium text-m3-text text-sm">
                       {t("onboarding.createOrgTab")}
                     </h3>
-                    <p className="text-xs text-m3-secondary">
-                      {t("onboarding.step1Desc")}
-                    </p>
+                    <p className="text-xs text-m3-secondary">{t("onboarding.step1Desc")}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-m3-secondary group-hover:text-m3-primary group-hover:translate-x-0.5 transition-all" />
                 </button>
@@ -571,13 +543,9 @@ export const OnboardingPage: React.FC = () => {
               <GoogleTextField
                 label={t("onboarding.slugLabel")}
                 value={orgSlug}
-                onChange={(e) =>
-                  setOrgSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))
-                }
+                onChange={(e) => setOrgSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"))}
                 required
-                error={
-                  slugStatus === "taken" ? t("onboarding.slugTaken") : undefined
-                }
+                error={slugStatus === "taken" ? t("onboarding.slugTaken") : undefined}
                 helperText={
                   slugStatus === "checking"
                     ? t("onboarding.checkingSlug")
@@ -609,10 +577,7 @@ export const OnboardingPage: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={
-                    isLoading ||
-                    !orgName.trim() ||
-                    !orgSlug.trim() ||
-                    slugStatus !== "available"
+                    isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"
                   }
                   isLoading={isLoading}
                   className="rounded-full px-6"

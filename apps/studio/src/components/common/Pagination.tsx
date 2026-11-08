@@ -24,12 +24,8 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   if (totalPages <= 1) return null;
 
-  const from =
-    total !== undefined && limit !== undefined ? (page - 1) * limit + 1 : null;
-  const to =
-    total !== undefined && limit !== undefined
-      ? Math.min(page * limit, total)
-      : null;
+  const from = total !== undefined && limit !== undefined ? (page - 1) * limit + 1 : null;
+  const to = total !== undefined && limit !== undefined ? Math.min(page * limit, total) : null;
 
   return (
     <nav

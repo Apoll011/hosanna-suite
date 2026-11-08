@@ -4,16 +4,7 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import {
-  Bell,
-  Building2,
-  CheckCheck,
-  CreditCard,
-  Info,
-  Shield,
-  Users,
-  X,
-} from "lucide-react";
+import { Bell, Building2, CheckCheck, CreditCard, Info, Shield, Users, X } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export type InboxNotification = {
@@ -47,12 +38,8 @@ export type InboxFetchClient = {
       data: { count: number } | null;
       error: unknown;
     }>;
-    markRead: (input: {
-      id: string;
-    }) => Promise<{ data: unknown; error: unknown }>;
-    markAllRead: (input: {
-      organizationId?: string;
-    }) => Promise<{ data: unknown; error: unknown }>;
+    markRead: (input: { id: string }) => Promise<{ data: unknown; error: unknown }>;
+    markAllRead: (input: { organizationId?: string }) => Promise<{ data: unknown; error: unknown }>;
   };
 };
 
@@ -65,10 +52,7 @@ export type UseInboxOptions = {
   organizationId?: string;
 };
 
-export function useInbox(
-  client: InboxFetchClient,
-  options: UseInboxOptions = {},
-) {
+export function useInbox(client: InboxFetchClient, options: UseInboxOptions = {}) {
   const { pollInterval = 30_000, pageSize = 20, organizationId } = options;
 
   const [notifications, setNotifications] = useState<InboxNotification[]>([]);
@@ -135,9 +119,7 @@ export function useInbox(
   const markRead = useCallback(async (id: string) => {
     const target = notificationsRef.current.find((n) => n.id === id);
     if (target && !target.read) {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-      );
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
       setUnreadCount((count) => Math.max(0, count - 1));
     }
     if (clientRef.current?.inbox?.markRead) {
@@ -149,9 +131,7 @@ export function useInbox(
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
     if (clientRef.current?.inbox?.markAllRead) {
-      await clientRef.current.inbox.markAllRead(
-        organizationId ? { organizationId } : {},
-      );
+      await clientRef.current.inbox.markAllRead(organizationId ? { organizationId } : {});
     }
   }, [organizationId]);
 
@@ -213,9 +193,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
 }) => {
   const { t } = useI18n();
   const [filter, setFilter] = useState<"all" | "unread">("all");
-  const [selectedNotif, setSelectedNotif] = useState<InboxNotification | null>(
-    null,
-  );
+  const [selectedNotif, setSelectedNotif] = useState<InboxNotification | null>(null);
 
   const filteredNotifications = inbox.notifications.filter((n) => {
     if (filter === "unread") return !n.read;
@@ -262,9 +240,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
             <Bell className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-m3-text">
-              {t("misc.inbox.title")}
-            </h3>
+            <h3 className="text-sm font-bold text-m3-text">{t("misc.inbox.title")}</h3>
             <p className="text-[11px] text-m3-secondary">
               {t("misc.inbox.unreadCount", { count: inbox.unreadCount })}
             </p>
@@ -279,9 +255,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
               className="p-1.5 text-xs text-m3-primary hover:bg-m3-primary/10 rounded-lg transition-colors flex items-center gap-1 font-semibold cursor-pointer"
             >
               <CheckCheck className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">
-                {t("misc.inbox.readAll")}
-              </span>
+              <span className="hidden sm:inline">{t("misc.inbox.readAll")}</span>
             </button>
           )}
           {onClose && (
@@ -323,9 +297,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
       <div className="flex-1 overflow-y-auto divide-y divide-m3-border/60 custom-scrollbar">
         {inbox.isLoading && inbox.notifications.length === 0 ? (
           <div className="p-8 text-center text-m3-secondary">
-            <p className="text-xs font-semibold animate-pulse">
-              {t("misc.inbox.loading")}
-            </p>
+            <p className="text-xs font-semibold animate-pulse">{t("misc.inbox.loading")}</p>
           </div>
         ) : filteredNotifications.length === 0 ? (
           <div className="p-8 text-center text-m3-secondary">
@@ -347,9 +319,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
                     setSelectedNotif(notif);
                   }}
                   className={`p-3 transition-colors cursor-pointer flex gap-3 items-start group ${
-                    !notif.read
-                      ? "bg-m3-primary/5 hover:bg-m3-hover"
-                      : "hover:bg-m3-hover"
+                    !notif.read ? "bg-m3-primary/5 hover:bg-m3-hover" : "hover:bg-m3-hover"
                   }`}
                 >
                   <div className="p-2 rounded-xl bg-m3-card border border-m3-border/60 dark:border-m3-border/60 shadow-sm shrink-0 mt-0.5">
@@ -358,9 +328,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
-                      <span className="text-xs font-bold text-m3-text truncate">
-                        {notif.title}
-                      </span>
+                      <span className="text-xs font-bold text-m3-text truncate">{notif.title}</span>
                       {!notif.read && (
                         <span className="w-2 h-2 rounded-full bg-m3-primary shrink-0" />
                       )}
@@ -406,9 +374,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
               {t("common.close")}
             </button>
           </div>
-          <h4 className="text-xs font-bold text-m3-text mb-1">
-            {selectedNotif.title}
-          </h4>
+          <h4 className="text-xs font-bold text-m3-text mb-1">{selectedNotif.title}</h4>
           {(selectedNotif.body || selectedNotif.message) && (
             <p className="text-xs text-m3-secondary leading-relaxed">
               {selectedNotif.body || selectedNotif.message}
@@ -447,10 +413,7 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };

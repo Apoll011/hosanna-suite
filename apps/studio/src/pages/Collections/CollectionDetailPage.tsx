@@ -3,12 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  ConfirmDialog,
-  EmptyState,
-  Spinner,
-  Table,
-} from "@/src/components/common";
+import { ConfirmDialog, EmptyState, Spinner, Table } from "@/src/components/common";
 import type { CollectionToolbarActions } from "@/src/components/layout";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
@@ -32,13 +27,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useOutletContext, useParams } from "react-router-dom";
 
@@ -55,9 +44,7 @@ export const CollectionDetailPage: React.FC = () => {
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
 
-  const { data: collection, isLoading: isCollectionLoading } = useCollection(
-    id || null,
-  );
+  const { data: collection, isLoading: isCollectionLoading } = useCollection(id || null);
 
   const {
     searchQuery = "",
@@ -74,9 +61,7 @@ export const CollectionDetailPage: React.FC = () => {
     selectedKey?: string | null;
     selectedTag?: string | null;
     density?: "comfortable" | "compact";
-    setCollectionToolbarActions?: (
-      actions: CollectionToolbarActions | null,
-    ) => void;
+    setCollectionToolbarActions?: (actions: CollectionToolbarActions | null) => void;
   }>() ?? {};
   const isCompact = density === "compact";
   const rowPad = isCompact ? "px-4 py-2.5" : "px-6 py-3.5";
@@ -108,9 +93,7 @@ export const CollectionDetailPage: React.FC = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [songToRemove, setSongToRemove] = useState<Song | null>(null);
   const [pendingRemoveIds, setPendingRemoveIds] = useState<string[]>([]);
-  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -154,8 +137,7 @@ export const CollectionDetailPage: React.FC = () => {
     return allSongs.filter(
       (song) =>
         songIdSet.has(song.id) ||
-        (Array.isArray(song.collectionIds) &&
-          song.collectionIds.includes(collection.id)),
+        (Array.isArray(song.collectionIds) && song.collectionIds.includes(collection.id)),
     );
   }, [collection, allSongs]);
 
@@ -171,12 +153,7 @@ export const CollectionDetailPage: React.FC = () => {
       onDelete: () => setIsDeleteDialogOpen(true),
     });
     return () => setCollectionToolbarActions(null);
-  }, [
-    collection,
-    songsInCollection,
-    printCollection,
-    setCollectionToolbarActions,
-  ]);
+  }, [collection, songsInCollection, printCollection, setCollectionToolbarActions]);
 
   // Search, key/tag filters, and sort
   const filteredSongs = useMemo(() => {
@@ -224,19 +201,11 @@ export const CollectionDetailPage: React.FC = () => {
     }
 
     return result;
-  }, [
-    songsInCollection,
-    searchQuery,
-    selectedKey,
-    selectedTag,
-    sortBy,
-    sortOrder,
-  ]);
+  }, [songsInCollection, searchQuery, selectedKey, selectedTag, sortBy, sortOrder]);
 
   // Pagination
   const totalSongs = filteredSongs.length;
-  const effectivePerPage =
-    itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
+  const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
   const paginatedSongs = useMemo(() => {
     if (itemsPerPage === 0) return filteredSongs;
     const start = (currentPage - 1) * effectivePerPage;
@@ -312,9 +281,7 @@ export const CollectionDetailPage: React.FC = () => {
         const a = ids.indexOf(lastClickedId);
         const b = ids.indexOf(song.id);
         if (a !== -1 && b !== -1) {
-          setSelectedSongIds(
-            new Set(ids.slice(Math.min(a, b), Math.max(a, b) + 1)),
-          );
+          setSelectedSongIds(new Set(ids.slice(Math.min(a, b), Math.max(a, b) + 1)));
         } else {
           setSelectedSongIds(new Set([song.id]));
         }
@@ -351,9 +318,7 @@ export const CollectionDetailPage: React.FC = () => {
       }
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "a") {
@@ -378,13 +343,7 @@ export const CollectionDetailPage: React.FC = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [
-    filteredSongs,
-    selectedSongIds,
-    canUpdateCollection,
-    navigate,
-    slugPrefix,
-  ]);
+  }, [filteredSongs, selectedSongIds, canUpdateCollection, navigate, slugPrefix]);
 
   // ── Loading ─────────────────────────────────────────────────────────────────
   if (isCollectionLoading) {
@@ -410,8 +369,7 @@ export const CollectionDetailPage: React.FC = () => {
     );
   }
 
-  const isFiltering =
-    searchQuery.trim() !== "" || Boolean(selectedKey) || Boolean(selectedTag);
+  const isFiltering = searchQuery.trim() !== "" || Boolean(selectedKey) || Boolean(selectedTag);
 
   return (
     <div
@@ -438,9 +396,7 @@ export const CollectionDetailPage: React.FC = () => {
                       })
                 }
                 actionLabel={
-                  !isFiltering && canUpdateCollection
-                    ? t("collectionsPage.addSongs")
-                    : undefined
+                  !isFiltering && canUpdateCollection ? t("collectionsPage.addSongs") : undefined
                 }
                 onAction={
                   !isFiltering && canUpdateCollection
@@ -456,12 +412,8 @@ export const CollectionDetailPage: React.FC = () => {
             >
               <span className="text-label text-center">#</span>
               <span className="text-label">{t("songsPage.titlePath")}</span>
-              <span className="hidden sm:block text-label text-right">
-                {t("songsPage.tags")}
-              </span>
-              <span className="text-label text-right">
-                {t("songsPage.actions")}
-              </span>
+              <span className="hidden sm:block text-label text-right">{t("songsPage.tags")}</span>
+              <span className="text-label text-right">{t("songsPage.actions")}</span>
             </div>
           }
           pagination={{
@@ -474,15 +426,10 @@ export const CollectionDetailPage: React.FC = () => {
             emptyLabel: t("songsPage.zeroSongs"),
           }}
         >
-          <div
-            className={`divide-y divide-m3-border/30 font-semibold ${rowText}`}
-          >
+          <div className={`divide-y divide-m3-border/30 font-semibold ${rowText}`}>
             {paginatedSongs.map((song, index) => {
-              const globalIndex =
-                (currentPage - 1) * effectivePerPage + index + 1;
-              const keyMatch = song.content
-                ?.match(/\{key:\s*([^}]+)\}/i)?.[1]
-                ?.trim();
+              const globalIndex = (currentPage - 1) * effectivePerPage + index + 1;
+              const keyMatch = song.content?.match(/\{key:\s*([^}]+)\}/i)?.[1]?.trim();
               const isSelected = selectedSongIds.has(song.id);
 
               return (
@@ -490,9 +437,7 @@ export const CollectionDetailPage: React.FC = () => {
                   key={song.id}
                   data-item-id={song.id}
                   onClick={(e) => handleSongClick(e, song)}
-                  onDoubleClick={() =>
-                    navigate(`${slugPrefix}/songs/${song.id}`)
-                  }
+                  onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
                   onContextMenu={(e) => openContextMenu(e, song)}
                   className={`grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2rem_1fr_auto_6.5rem] gap-3 items-center transition-colors select-none cursor-pointer ${rowPad} ${
                     isSelected
@@ -500,17 +445,11 @@ export const CollectionDetailPage: React.FC = () => {
                       : "text-m3-text hover:bg-m3-hover/50"
                   }`}
                 >
-                  <span className="text-center text-caption tabular-nums">
-                    {globalIndex}
-                  </span>
+                  <span className="text-center text-caption tabular-nums">{globalIndex}</span>
 
                   <div className="flex flex-col min-w-0">
-                    <span className="truncate font-semibold">
-                      {song.title}
-                    </span>
-                    <span className="text-caption mt-0.5 truncate">
-                      {song.artist || "—"}
-                    </span>
+                    <span className="truncate font-semibold">{song.title}</span>
+                    <span className="text-caption mt-0.5 truncate">{song.artist || "—"}</span>
                   </div>
 
                   <div className="hidden sm:flex items-center gap-1.5 flex-wrap justify-end">
@@ -528,9 +467,7 @@ export const CollectionDetailPage: React.FC = () => {
                       </span>
                     ))}
                     {(song.tags?.length ?? 0) > 2 && (
-                      <span className="text-caption">
-                        +{(song.tags?.length ?? 0) - 2}
-                      </span>
+                      <span className="text-caption">+{(song.tags?.length ?? 0) - 2}</span>
                     )}
                   </div>
 
@@ -541,9 +478,7 @@ export const CollectionDetailPage: React.FC = () => {
                   >
                     <button
                       type="button"
-                      onClick={() =>
-                        navigate(`${slugPrefix}/songs/${song.id}`)
-                      }
+                      onClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
                       className="p-1.5 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md cursor-pointer transition-colors"
                       title={t("collectionsPage.viewSong")}
                     >
@@ -705,8 +640,7 @@ export const CollectionDetailPage: React.FC = () => {
             ) : contextMenu.songId ? (
               <>
                 <div className="px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate">
-                  {filteredSongs.find((s) => s.id === contextMenu.songId)
-                    ?.title ?? ""}
+                  {filteredSongs.find((s) => s.id === contextMenu.songId)?.title ?? ""}
                 </div>
                 <button
                   type="button"
@@ -736,9 +670,7 @@ export const CollectionDetailPage: React.FC = () => {
                     type="button"
                     className={MENU_ITEM_DANGER}
                     onClick={() => {
-                      const song = filteredSongs.find(
-                        (s) => s.id === contextMenu.songId,
-                      );
+                      const song = filteredSongs.find((s) => s.id === contextMenu.songId);
                       if (song) setSongToRemove(song);
                       setContextMenu(null);
                     }}

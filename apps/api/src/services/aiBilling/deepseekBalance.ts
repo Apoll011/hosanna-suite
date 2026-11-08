@@ -15,10 +15,7 @@ type DeepSeekBalanceRaw = {
 
 /** Strip trailing `/v1` so `/user/balance` hits the API origin. */
 export function deepseekApiOrigin(baseUrl: string | null): string {
-  const raw = (baseUrl?.trim() || "https://api.deepseek.com").replace(
-    /\/+$/,
-    "",
-  );
+  const raw = (baseUrl?.trim() || "https://api.deepseek.com").replace(/\/+$/, "");
   return raw.replace(/\/v1$/i, "");
 }
 
@@ -67,9 +64,7 @@ export async function fetchDeepSeekBalance(opts: {
   }
 
   if (res.status === 401 || res.status === 403) {
-    throw AppError.badRequest(
-      "DeepSeek rejected the API key. Check the key in AI settings.",
-    );
+    throw AppError.badRequest("DeepSeek rejected the API key. Check the key in AI settings.");
   }
   if (res.status === 429) {
     throw new AppError(
@@ -91,11 +86,7 @@ export async function fetchDeepSeekBalance(opts: {
   try {
     raw = (await res.json()) as DeepSeekBalanceRaw;
   } catch {
-    throw new AppError(
-      502,
-      "INTERNAL_ERROR",
-      "DeepSeek returned an invalid balance response.",
-    );
+    throw new AppError(502, "INTERNAL_ERROR", "DeepSeek returned an invalid balance response.");
   }
 
   const balances: AiBalanceInfo[] = (raw.balance_infos ?? []).map((b) => ({

@@ -24,12 +24,7 @@ function firstName(name: string | undefined | null): string {
  * Empty conversation: Logos (poke, pet or wake him), greeting and localized
  * suggestions.
  */
-export const AiChatEmpty: React.FC<Props> = ({
-  chips,
-  mood,
-  disabled,
-  onPick,
-}) => {
+export const AiChatEmpty: React.FC<Props> = ({ chips, mood, disabled, onPick }) => {
   const { t } = useI18n();
   const { user } = useAuth();
 
@@ -104,9 +99,7 @@ export const AiChatEmpty: React.FC<Props> = ({
               <span className="min-w-0 flex-1">
                 <span
                   className={`block font-medium text-m3-text ${
-                    dense
-                      ? "text-[12px] leading-tight line-clamp-2"
-                      : "text-[13px] truncate"
+                    dense ? "text-[12px] leading-tight line-clamp-2" : "text-[13px] truncate"
                   }`}
                 >
                   {t(chip.labelKey)}

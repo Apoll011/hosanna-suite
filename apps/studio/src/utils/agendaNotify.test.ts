@@ -1,12 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type {
-  AgendaEvent,
-  Assignee,
-  Responsibility,
-  ResponsibilityCategory,
-} from "../types";
+import type { AgendaEvent, Assignee, Responsibility, ResponsibilityCategory } from "../types";
 import {
   collectUnnotifiedAssignments,
   groupAssignees,
@@ -25,11 +20,11 @@ const categories: Record<string, ResponsibilityCategory> = {
   },
 };
 
-const responsibility = (
-  id: string,
-  categoryId: string,
-  assignees: Assignee[],
-): Responsibility => ({ id, categoryId, assignees });
+const responsibility = (id: string, categoryId: string, assignees: Assignee[]): Responsibility => ({
+  id,
+  categoryId,
+  assignees,
+});
 
 const buildEvent = (): AgendaEvent => ({
   id: "evt-1",
@@ -40,9 +35,7 @@ const buildEvent = (): AgendaEvent => ({
   durationMinutes: 90,
   reminder: { enabled: false, label: "" },
   responsibilities: [
-    responsibility("r1", "guitar", [
-      { id: "m1", memberId: "m1", name: "Rita", notified: false },
-    ]),
+    responsibility("r1", "guitar", [{ id: "m1", memberId: "m1", name: "Rita", notified: false }]),
     responsibility("r2", "vocals", [
       { id: "m1", memberId: "m1", name: "Rita", notified: false },
       { id: "m2", memberId: "m2", name: "João", notified: true },
@@ -94,18 +87,12 @@ test("only members accepted by the API are marked as notified", () => {
 test("marking is a no-op when nothing succeeded", () => {
   const event = buildEvent();
 
-  assert.equal(
-    markMembersNotified(event.responsibilities, []),
-    event.responsibilities,
-  );
+  assert.equal(markMembersNotified(event.responsibilities, []), event.responsibilities);
 });
 
 test("a newly assigned person starts pending, even if notified elsewhere", () => {
   // This responsibility previously had nobody → the join is a NEW assignment.
-  const merged = mergeAssigneeNotificationState(
-    [],
-    [{ id: "m1", memberId: "m1", name: "Rita" }],
-  );
+  const merged = mergeAssigneeNotificationState([], [{ id: "m1", memberId: "m1", name: "Rita" }]);
 
   assert.equal(merged[0].notified, false);
 });

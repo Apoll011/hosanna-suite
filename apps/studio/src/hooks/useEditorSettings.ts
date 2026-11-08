@@ -82,10 +82,7 @@ export function useEditorSettings() {
     [],
   );
 
-  const resetSettings = useCallback(
-    () => setState(() => DEFAULT_EDITOR_SETTINGS),
-    [],
-  );
+  const resetSettings = useCallback(() => setState(() => DEFAULT_EDITOR_SETTINGS), []);
 
   return { settings, updateSetting, resetSettings };
 }

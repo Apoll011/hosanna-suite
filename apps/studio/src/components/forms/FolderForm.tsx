@@ -16,10 +16,7 @@ interface FolderFormProps {
 }
 
 // Extracted validation logic to a pure function for better testability
-const validateFolderName = (
-  name: string,
-  t: (key: string) => string,
-): string | undefined => {
+const validateFolderName = (name: string, t: (key: string) => string): string | undefined => {
   const trimmedName = name.trim();
 
   if (!trimmedName) {
@@ -78,12 +75,7 @@ export const FolderForm: React.FC<FolderFormProps> = ({
       />
 
       <div className="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onCancel}
-          disabled={isLoading}
-        >
+        <Button type="button" variant="ghost" onClick={onCancel} disabled={isLoading}>
           {t("common.cancel")}
         </Button>
         <Button type="submit" variant="primary" isLoading={isLoading}>

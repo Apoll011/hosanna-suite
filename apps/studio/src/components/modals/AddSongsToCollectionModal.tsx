@@ -17,14 +17,16 @@ interface AddSongsToCollectionModalProps {
   onAddSongs: (songIds: string[]) => Promise<void>;
 }
 
-export const AddSongsToCollectionModal: React.FC<
-  AddSongsToCollectionModalProps
-> = ({ isOpen, onClose, collection, allSongs, onAddSongs }) => {
+export const AddSongsToCollectionModal: React.FC<AddSongsToCollectionModalProps> = ({
+  isOpen,
+  onClose,
+  collection,
+  allSongs,
+  onAddSongs,
+}) => {
   const { t, locale } = useI18n();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const existingSongIds = useMemo(() => {
@@ -132,9 +134,7 @@ export const AddSongsToCollectionModal: React.FC<
           ) : (
             availableSongs.map((song) => {
               const isSelected = selectedSongIds.has(song.id);
-              const keyMatch = song.content
-                ?.match(/\{key:\s*([^}]+)\}/i)?.[1]
-                ?.trim();
+              const keyMatch = song.content?.match(/\{key:\s*([^}]+)\}/i)?.[1]?.trim();
 
               return (
                 <div

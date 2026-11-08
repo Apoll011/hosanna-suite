@@ -4,22 +4,12 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import {
-  AgendaEvent,
-  Assignee,
-  ReminderSettings,
-  Responsibility,
-} from "@/src/types";
+import { AgendaEvent, Assignee, ReminderSettings, Responsibility } from "@/src/types";
 import { mergeAssigneeNotificationState } from "@/src/utils/agendaNotify";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useSync } from "../contexts/SyncContext";
-import {
-  AgendaEventDocType,
-  getDatabase,
-  getPurgeAt,
-  validateAgendaEventRules,
-} from "../db";
+import { AgendaEventDocType, getDatabase, getPurgeAt, validateAgendaEventRules } from "../db";
 import { useOrgSettings } from "./useOrgSettings";
 
 const DEFAULT_REMINDER: ReminderSettings = {
@@ -30,9 +20,7 @@ const DEFAULT_REMINDER: ReminderSettings = {
 const newId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
 
 const byDateThenTime = (a: AgendaEvent, b: AgendaEvent) =>
-  a.date === b.date
-    ? a.time.localeCompare(b.time)
-    : a.date.localeCompare(b.date);
+  a.date === b.date ? a.time.localeCompare(b.time) : a.date.localeCompare(b.date);
 
 let cachedEvents: AgendaEvent[] | null = null;
 
@@ -90,9 +78,7 @@ export function useAgenda() {
           })
           .$.subscribe((docs) => {
             if (!isSubscribed) return;
-            const data = docs
-              .map((d) => d.toJSON() as AgendaEvent)
-              .sort(byDateThenTime);
+            const data = docs.map((d) => d.toJSON() as AgendaEvent).sort(byDateThenTime);
             cachedEvents = data;
             setEvents(data);
             setIsLoading(false);
@@ -119,8 +105,7 @@ export function useAgenda() {
   );
 
   const getResponsibilitiesForEvent = useCallback(
-    (eventId: string) =>
-      events.find((ev) => ev.id === eventId)?.responsibilities ?? [],
+    (eventId: string) => events.find((ev) => ev.id === eventId)?.responsibilities ?? [],
     [events],
   );
 
@@ -161,8 +146,7 @@ export function useAgenda() {
   // here — but using the persisted set keeps the cleanup honest even if a
   // draft were ever introduced.
   const persistedCategoryIds = useMemo(
-    () =>
-      new Set(savedSettings.agenda.responsibilityCategories.map((c) => c.id)),
+    () => new Set(savedSettings.agenda.responsibilityCategories.map((c) => c.id)),
     [savedSettings.agenda.responsibilityCategories],
   );
 
@@ -190,9 +174,7 @@ export function useAgenda() {
 
         const now = new Date().toISOString();
         for (const doc of live) {
-          const kept = doc.responsibilities.filter((r) =>
-            persistedCategoryIds.has(r.categoryId),
-          );
+          const kept = doc.responsibilities.filter((r) => persistedCategoryIds.has(r.categoryId));
           if (kept.length !== doc.responsibilities.length) {
             await doc.patch({
               responsibilities: kept,
@@ -263,10 +245,7 @@ export function useAgenda() {
         const db = await getDatabase();
         const doc = await db.agendaEvents.findOne(id).exec();
         if (!doc) {
-          showToast(
-            t("hooks.agenda.saveError", { error: "Event not found" }),
-            "error",
-          );
+          showToast(t("hooks.agenda.saveError", { error: "Event not found" }), "error");
           throw new Error("Event not found");
         }
 
@@ -289,16 +268,13 @@ export function useAgenda() {
         if (patch.date !== undefined) next.date = patch.date;
         if (patch.type !== undefined) next.type = patch.type;
         if (patch.time !== undefined) next.time = patch.time;
-        if (patch.durationMinutes !== undefined)
-          next.durationMinutes = patch.durationMinutes;
-        if (patch.location !== undefined)
-          next.location = patch.location ?? null;
+        if (patch.durationMinutes !== undefined) next.durationMinutes = patch.durationMinutes;
+        if (patch.location !== undefined) next.location = patch.location ?? null;
         if (patch.notes !== undefined) next.notes = patch.notes ?? null;
         if (patch.linkedServiceId !== undefined)
           next.linkedServiceId = patch.linkedServiceId ?? null;
         if (patch.reminder !== undefined) next.reminder = patch.reminder;
-        if (patch.responsibilities !== undefined)
-          next.responsibilities = patch.responsibilities;
+        if (patch.responsibilities !== undefined) next.responsibilities = patch.responsibilities;
 
         await doc.patch(next);
         showToast(t("hooks.agenda.updated"), "success");
@@ -382,10 +358,7 @@ export function useAgenda() {
    * shows its own feedback, and a second "saved" toast would be noise.
    */
   const setResponsibilities = useCallback(
-    async (
-      eventId: string,
-      responsibilities: Responsibility[],
-    ): Promise<void> => {
+    async (eventId: string, responsibilities: Responsibility[]): Promise<void> => {
       try {
         const db = await getDatabase();
         const doc = await db.agendaEvents.findOne(eventId).exec();
@@ -406,20 +379,14 @@ export function useAgenda() {
   );
 
   const addResponsibility = useCallback(
-    async (
-      eventId: string,
-      categoryId: string,
-      assignees: Assignee[] = [],
-    ): Promise<string> => {
+    async (eventId: string, categoryId: string, assignees: Assignee[] = []): Promise<string> => {
       const id = newId("resp");
       // Every assignee on a brand-new responsibility starts pending, so the
       // next "notify" press reaches them exactly once.
       const responsibility: Responsibility = {
         id,
         categoryId,
-        assignees: assignees.map((a) =>
-          a.notified === undefined ? { ...a, notified: false } : a,
-        ),
+        assignees: assignees.map((a) => (a.notified === undefined ? { ...a, notified: false } : a)),
       };
       try {
         const db = await getDatabase();
@@ -445,17 +412,12 @@ export function useAgenda() {
   );
 
   const updateResponsibilityAssignees = useCallback(
-    async (
-      eventId: string,
-      respId: string,
-      assignees: Assignee[],
-    ): Promise<void> => {
+    async (eventId: string, respId: string, assignees: Assignee[]): Promise<void> => {
       try {
         const db = await getDatabase();
         const doc = await db.agendaEvents.findOne(eventId).exec();
         if (!doc) return;
-        const previous =
-          doc.responsibilities.find((r) => r.id === respId)?.assignees ?? [];
+        const previous = doc.responsibilities.find((r) => r.id === respId)?.assignees ?? [];
         await doc.patch({
           responsibilities: doc.responsibilities.map((r) =>
             r.id === respId
@@ -463,10 +425,7 @@ export function useAgenda() {
                   ...r,
                   // Stayers keep their notification state; anyone newly
                   // assigned starts at `notified: false` again.
-                  assignees: mergeAssigneeNotificationState(
-                    previous,
-                    assignees,
-                  ),
+                  assignees: mergeAssigneeNotificationState(previous, assignees),
                 }
               : r,
           ),

@@ -44,13 +44,7 @@ songRouter.put(
   validate({ body: batchTagsSchema }),
   asyncHandler(async (req, res) => {
     const service = new SongService(req.db!, req.orgId!, req.locale);
-    res.json(
-      await service.batchUpdateTags(
-        req.body.songIds,
-        req.body.tags,
-        req.body.mode,
-      ),
-    );
+    res.json(await service.batchUpdateTags(req.body.songIds, req.body.tags, req.body.mode));
   }),
 );
 
@@ -75,10 +69,7 @@ songRouter.get(
     const song = await service.getById(req.params.id);
     const filename = song.path?.split("/").pop() || `${song.title}.pro`;
     res.setHeader("Content-Type", "text/vnd.chordpro; charset=utf-8");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="${filename.replace(/"/g, "")}"`,
-    );
+    res.setHeader("Content-Disposition", `attachment; filename="${filename.replace(/"/g, "")}"`);
     res.send(song.content);
   }),
 );
@@ -102,13 +93,7 @@ songRouter.put(
   asyncHandler(async (req, res) => {
     const service = new SongService(req.db!, req.orgId!, req.locale);
     const { updatedAt, ...patch } = req.body;
-    res.json(
-      await service.update(
-        req.params.id,
-        updatedAt ?? new Date().toISOString(),
-        patch,
-      ),
-    );
+    res.json(await service.update(req.params.id, updatedAt ?? new Date().toISOString(), patch));
   }),
 );
 
@@ -133,12 +118,7 @@ songRouter.put(
     const service = new SongService(req.db!, req.orgId!, req.locale);
     const { updatedAt, folderId, newPath } = req.body;
     res.json(
-      await service.move(
-        req.params.id,
-        updatedAt ?? new Date().toISOString(),
-        folderId,
-        newPath,
-      ),
+      await service.move(req.params.id, updatedAt ?? new Date().toISOString(), folderId, newPath),
     );
   }),
 );

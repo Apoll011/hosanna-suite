@@ -3,12 +3,7 @@
  * No UI dependencies.
  */
 
-import type {
-  FormatChange,
-  FormatOptions,
-  FormatResult,
-  FormatWarning,
-} from "./types";
+import type { FormatChange, FormatOptions, FormatResult, FormatWarning } from "./types";
 import { normalizeLine } from "./normalize";
 
 // ---------------------------------------------------------------------------
@@ -29,10 +24,7 @@ const DEFAULT_OPTIONS: Required<FormatOptions> = {
 /**
  * Normalize line endings to LF (\n).
  */
-function normalizeLineEndings(
-  content: string,
-  changes: FormatChange[],
-): string {
+function normalizeLineEndings(content: string, changes: FormatChange[]): string {
   const original = content;
   // CRLF -> LF, then CR -> LF
   const normalized = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
@@ -49,10 +41,7 @@ function normalizeLineEndings(
 /**
  * Remove leading blank lines from the document.
  */
-function trimLeadingBlankLines(
-  lines: string[],
-  changes: FormatChange[],
-): string[] {
+function trimLeadingBlankLines(lines: string[], changes: FormatChange[]): string[] {
   let start = 0;
   while (start < lines.length && lines[start].trim() === "") {
     start++;
@@ -71,10 +60,7 @@ function trimLeadingBlankLines(
 /**
  * Remove trailing blank lines from the document.
  */
-function trimTrailingBlankLines(
-  lines: string[],
-  changes: FormatChange[],
-): string[] {
+function trimTrailingBlankLines(lines: string[], changes: FormatChange[]): string[] {
   let end = lines.length;
   while (end > 0 && lines[end - 1].trim() === "") {
     end--;
@@ -145,10 +131,7 @@ function collapseExcessiveBlankLines(
  *   console.log(`Formatted ${result.changes.length} changes`);
  * }
  */
-export function formatChordPro(
-  content: string,
-  options?: FormatOptions,
-): FormatResult {
+export function formatChordPro(content: string, options?: FormatOptions): FormatResult {
   const opts: Required<FormatOptions> = { ...DEFAULT_OPTIONS, ...options };
   const allChanges: FormatChange[] = [];
   const allWarnings: FormatWarning[] = [];
@@ -169,11 +152,7 @@ export function formatChordPro(
   // --- Step 5: Normalize each line ---
   const normalizedLines: string[] = [];
   for (let i = 0; i < lines.length; i++) {
-    const {
-      content: normalizedLine,
-      changes,
-      warnings,
-    } = normalizeLine(lines[i], i + 1, opts);
+    const { content: normalizedLine, changes, warnings } = normalizeLine(lines[i], i + 1, opts);
     normalizedLines.push(normalizedLine);
     allChanges.push(...changes);
     allWarnings.push(...warnings);

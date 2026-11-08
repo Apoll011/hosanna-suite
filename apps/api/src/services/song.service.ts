@@ -7,10 +7,7 @@ import { SongRepository } from "../repositories/song.repository.js";
 import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
 import { AppError } from "../utils/errors.js";
 import { lyricsMatchQuery, normalizeLyricQuery } from "../lib/lyricSearch.js";
-import {
-  createSongSchema,
-  listSongsQuerySchema,
-} from "../validators/song.validators.js";
+import { createSongSchema, listSongsQuerySchema } from "../validators/song.validators.js";
 import { syncCache } from "./syncCache.service.js";
 
 type ListQuery = z.infer<typeof listSongsQuerySchema>;
@@ -18,11 +15,7 @@ type CreateInput = z.infer<typeof createSongSchema>;
 
 const KEY_DIRECTIVE = /\{key:\s*([^}]+)\}/i;
 
-function assertUnchanged(
-  current: { updatedAt: Date },
-  clientUpdatedAt: Date,
-  locale: string,
-) {
+function assertUnchanged(current: { updatedAt: Date }, clientUpdatedAt: Date, locale: string) {
   if (current.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
     throw AppError.conflict(t(locale, "conflict.song"));
   }
@@ -87,12 +80,9 @@ export class SongService {
     if (query.search) {
       const q = query.search;
       const or: Prisma.SongWhereInput[] = [];
-      if (fields.title)
-        or.push({ title: { contains: q, mode: "insensitive" } });
-      if (fields.artist)
-        or.push({ artist: { contains: q, mode: "insensitive" } });
-      if (fields.content)
-        or.push({ content: { contains: q, mode: "insensitive" } });
+      if (fields.title) or.push({ title: { contains: q, mode: "insensitive" } });
+      if (fields.artist) or.push({ artist: { contains: q, mode: "insensitive" } });
+      if (fields.content) or.push({ content: { contains: q, mode: "insensitive" } });
       if (fields.tags) or.push({ tags: { hasSome: [q] } });
       if (or.length > 0) where.OR = or;
     }
@@ -107,8 +97,7 @@ export class SongService {
       );
       const extraMatches = allSongs.filter(
         (s) =>
-          s.tags.some((t) => t.toLowerCase().includes(q)) &&
-          !result.some((r) => r.id === s.id),
+          s.tags.some((t) => t.toLowerCase().includes(q)) && !result.some((r) => r.id === s.id),
       );
       result = [...result, ...extraMatches];
     }
@@ -147,10 +136,7 @@ export class SongService {
   async getById(id: string): Promise<Song> {
     const song = await this.songRepo.findById(id);
     if (!song || song.deleted)
-      throw AppError.notFound(
-        "SONG_NOT_FOUND",
-        t(this.locale, "song.not_found"),
-      );
+      throw AppError.notFound("SONG_NOT_FOUND", t(this.locale, "song.not_found"));
     return song;
   }
 
@@ -158,12 +144,7 @@ export class SongService {
    * Search lyrics ignoring ChordPro chord markers / directives.
    * "Pois só Tu és o Deus eterno" matches "Pois [D9]só Tu és o [C#m]Deus eterno".
    */
-  async searchLyrics(opts: {
-    query: string;
-    folder?: string;
-    page?: number;
-    limit?: number;
-  }) {
+  async searchLyrics(opts: { query: string; folder?: string; page?: number; limit?: number }) {
     const q = normalizeLyricQuery(opts.query);
     if (!q) {
       return { songs: [] as Song[], total: 0, page: 1, totalPages: 0 };
@@ -192,9 +173,7 @@ export class SongService {
 
     const candidates = await this.songRepo.findMany(where, {});
     const matched = candidates.filter((s) => lyricsMatchQuery(s.content, q));
-    matched.sort((a, b) =>
-      a.title.localeCompare(b.title, undefined, { sensitivity: "base" }),
-    );
+    matched.sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
 
     const page = opts.page && opts.page > 0 ? opts.page : 1;
     const limit = Math.min(Math.max(opts.limit ?? 20, 1), 100);
@@ -209,11 +188,7 @@ export class SongService {
   }
 
   async create(input: CreateInput) {
-    const path = await this.computePath(
-      input.title,
-      input.folderId,
-      input.path,
-    );
+    const path = await this.computePath(input.title, input.folderId, input.path);
     this.invalidateCache();
     if (input.folderId) {
       this.folderRepo.touch(input.folderId);
@@ -238,9 +213,7 @@ export class SongService {
         id: uuid(),
         title: item.title,
         artist: item.artist || varios,
-        content:
-          item.content ||
-          `{title: ${item.title}}\n{artist: ${item.artist || varios}}\n\n`,
+        content: item.content || `{title: ${item.title}}\n{artist: ${item.artist || varios}}\n\n`,
         folderId: item.folderId ?? null,
         song_number: item.song_number ?? null,
         path: await this.computePath(item.title, item.folderId, item.path),
@@ -259,18 +232,13 @@ export class SongService {
     return { created, count: created.count };
   }
 
-  async batchUpdateTags(
-    songIds: string[],
-    tags: string[],
-    mode: "append" | "replace" | "remove",
-  ) {
+  async batchUpdateTags(songIds: string[], tags: string[], mode: "append" | "replace" | "remove") {
     const existing = await this.songRepo.findMany({ id: { in: songIds } }, {});
     let updatedCount = 0;
     for (const song of existing) {
       let newTags = [...song.tags];
       if (mode === "replace") newTags = [...new Set(tags)];
-      else if (mode === "remove")
-        newTags = newTags.filter((t) => !tags.includes(t));
+      else if (mode === "remove") newTags = newTags.filter((t) => !tags.includes(t));
       else
         tags.forEach((t) => {
           if (!newTags.includes(t)) newTags.push(t);
@@ -296,9 +264,7 @@ export class SongService {
     if (patch.tags !== undefined) data.tags = patch.tags;
     if (patch.song_number !== undefined) data.song_number = patch.song_number;
     if (patch.folderId !== undefined) {
-      data.folder = patch.folderId
-        ? { connect: { id: patch.folderId } }
-        : { disconnect: true };
+      data.folder = patch.folderId ? { connect: { id: patch.folderId } } : { disconnect: true };
       this.folderRepo.touch(patch.folderId!);
     }
     this.invalidateCache();
@@ -319,10 +285,7 @@ export class SongService {
   async restore(id: string) {
     const song = await this.songRepo.findById(id);
     if (!song || !song.deleted)
-      throw AppError.notFound(
-        "SONG_NOT_FOUND",
-        t(this.locale, "song.not_found"),
-      );
+      throw AppError.notFound("SONG_NOT_FOUND", t(this.locale, "song.not_found"));
     await this.songRepo.update(id, { deleted: false, purgeAt: null });
     this.invalidateCache();
     return this.songRepo.findById(id);
@@ -332,12 +295,7 @@ export class SongService {
     return this.songRepo.findMany({ deleted: true }, {});
   }
 
-  async move(
-    id: string,
-    updatedAt: Date,
-    folderId: string | null,
-    newPath?: string,
-  ) {
+  async move(id: string, updatedAt: Date, folderId: string | null, newPath?: string) {
     const current = await this.getById(id);
     assertUnchanged(current, updatedAt, this.locale);
     this.invalidateCache();

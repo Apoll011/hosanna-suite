@@ -21,16 +21,9 @@ interface AssigneeTagInputProps {
   manualSuggestions?: Assignee[];
 }
 
-const manualId = () =>
-  `manual-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+const manualId = () => `manual-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
 
-function Avatar({
-  assignee,
-  className,
-}: {
-  assignee: Assignee;
-  className: string;
-}) {
+function Avatar({ assignee, className }: { assignee: Assignee; className: string }) {
   return (
     <span
       className={`${className} rounded-full flex items-center justify-center font-extrabold text-white shrink-0 bg-linear-to-tr ${getAvatarGradient(
@@ -38,11 +31,7 @@ function Avatar({
       )} overflow-hidden`}
     >
       {assignee.avatarUrl ? (
-        <img
-          src={assignee.avatarUrl}
-          alt={assignee.name}
-          className="w-full h-full object-cover"
-        />
+        <img src={assignee.avatarUrl} alt={assignee.name} className="w-full h-full object-cover" />
       ) : (
         getInitials(assignee.name)
       )}
@@ -72,9 +61,7 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
   // member (a member link always wins over a free-typed name).
   const suggestions = useMemo<Assignee[]>(() => {
     const members = organization?.members ?? [];
-    const memberNames = new Set(
-      members.map((m) => m.user.name.trim().toLowerCase()),
-    );
+    const memberNames = new Set(members.map((m) => m.user.name.trim().toLowerCase()));
     const memberSuggestions: Assignee[] = members.map((m) => ({
       id: m.id,
       memberId: m.id,
@@ -83,18 +70,13 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
       // field instead of storing null (the UI falls back to initials).
       avatarUrl: m.user.image ?? undefined,
     }));
-    const manual = manualSuggestions.filter(
-      (a) => !memberNames.has(a.name.trim().toLowerCase()),
-    );
+    const manual = manualSuggestions.filter((a) => !memberNames.has(a.name.trim().toLowerCase()));
     return [...memberSuggestions, ...manual];
   }, [organization?.members, manualSuggestions]);
 
   const q = draft.trim().toLowerCase();
   const filtered = useMemo(
-    () =>
-      q
-        ? suggestions.filter((s) => s.name.toLowerCase().includes(q))
-        : suggestions,
+    () => (q ? suggestions.filter((s) => s.name.toLowerCase().includes(q)) : suggestions),
     [suggestions, q],
   );
 
@@ -134,9 +116,7 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
       setHighlight((h) => (filtered.length ? (h + 1) % filtered.length : 0));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlight((h) =>
-        filtered.length ? (h - 1 + filtered.length) % filtered.length : 0,
-      );
+      setHighlight((h) => (filtered.length ? (h - 1 + filtered.length) % filtered.length : 0));
     } else if (e.key === "Escape") {
       setOpen(false);
     } else {
@@ -225,9 +205,7 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
                   {s.name}
                 </span>
                 <span className="text-label shrink-0">
-                  {s.memberId
-                    ? t("agenda.memberBadge")
-                    : t("agenda.otherEvents")}
+                  {s.memberId ? t("agenda.memberBadge") : t("agenda.otherEvents")}
                 </span>
               </button>
             ))}

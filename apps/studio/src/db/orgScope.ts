@@ -42,15 +42,9 @@ function hasLocalDocs(db: HosanaDatabase): boolean {
 }
 
 /** Read the org slug currently stamped onto local IDB data (if any). */
-export async function getLocalOrgSlug(
-  db: HosanaDatabase,
-): Promise<string | null> {
+export async function getLocalOrgSlug(db: HosanaDatabase): Promise<string | null> {
   try {
-    const row = await idbGet<MetaRow>(
-      getIdb(db),
-      META_STORE,
-      META_ORG_SLUG_KEY,
-    );
+    const row = await idbGet<MetaRow>(getIdb(db), META_STORE, META_ORG_SLUG_KEY);
     const value = row?.value?.trim();
     return value ? value : null;
   } catch {
@@ -58,10 +52,7 @@ export async function getLocalOrgSlug(
   }
 }
 
-async function setLocalOrgSlug(
-  db: HosanaDatabase,
-  orgSlug: string,
-): Promise<void> {
+async function setLocalOrgSlug(db: HosanaDatabase, orgSlug: string): Promise<void> {
   await idbPut<MetaRow>(getIdb(db), META_STORE, {
     key: META_ORG_SLUG_KEY,
     value: orgSlug,
@@ -72,9 +63,7 @@ async function setLocalOrgSlug(
  * Wipe every domain collection. Does not touch the meta store — callers set
  * the new slug after clearing.
  */
-export async function clearAllLocalCollections(
-  db: HosanaDatabase,
-): Promise<void> {
+export async function clearAllLocalCollections(db: HosanaDatabase): Promise<void> {
   await Promise.all([
     db.songs.remove(),
     db.folders.remove(),

@@ -37,10 +37,7 @@ interface ExplorerToolbarProps {
   archivedServices: Service[];
   sortBy: "title" | "artist" | "updatedAt" | "number";
   sortOrder: "asc" | "desc";
-  onSortChange: (
-    sb: "title" | "artist" | "updatedAt" | "number",
-    so: "asc" | "desc",
-  ) => void;
+  onSortChange: (sb: "title" | "artist" | "updatedAt" | "number", so: "asc" | "desc") => void;
   viewMode: "grid" | "list";
   onViewModeChange: (mode: "grid" | "list") => void;
   density: "comfortable" | "compact";
@@ -78,10 +75,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   useEffect(() => {
     if (!isCollectionMenuOpen) return;
     const onDown = (e: MouseEvent) => {
-      if (
-        collectionMenuRef.current &&
-        !collectionMenuRef.current.contains(e.target as Node)
-      ) {
+      if (collectionMenuRef.current && !collectionMenuRef.current.contains(e.target as Node)) {
         setIsCollectionMenuOpen(false);
       }
     };
@@ -119,22 +113,14 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
               onSortChange(sb, so);
             }}
             className="bg-transparent font-medium text-m3-text cursor-pointer text-(length:--text-label)"
-            title={
-              view === "services"
-                ? t("toolbar.sortServices")
-                : t("toolbar.sortFiles")
-            }
+            title={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
           >
             {view === "services" ? (
               <>
-                <option
-                  value={`${sortBy !== "title" ? sortBy : "updatedAt"}-desc`}
-                >
+                <option value={`${sortBy !== "title" ? sortBy : "updatedAt"}-desc`}>
                   {t("toolbar.dateDesc")}
                 </option>
-                <option
-                  value={`${sortBy !== "title" ? sortBy : "updatedAt"}-asc`}
-                >
+                <option value={`${sortBy !== "title" ? sortBy : "updatedAt"}-asc`}>
                   {t("toolbar.dateAsc")}
                 </option>
                 <option value="title-asc">{t("toolbar.nameAsc")}</option>
@@ -143,9 +129,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
             ) : view === "collections" ? (
               <>
                 <option value="number-asc">{t("toolbar.songNumberAsc")}</option>
-                <option value="number-desc">
-                  {t("toolbar.songNumberDesc")}
-                </option>
+                <option value="number-desc">{t("toolbar.songNumberDesc")}</option>
                 <option value="title-asc">{t("toolbar.nameAsc")}</option>
                 <option value="title-desc">{t("toolbar.nameDesc")}</option>
                 <option value="updatedAt-asc">{t("toolbar.dateAsc")}</option>
@@ -167,9 +151,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
         </div>
 
         {/* Filter Pop-Up Panel Trigger Button */}
-        {(view === "explorer" ||
-          view === "songs" ||
-          view === "collection-detail") && (
+        {(view === "explorer" || view === "songs" || view === "collection-detail") && (
           <button
             onClick={onOpenFilterPanel}
             className={`flex items-center gap-2 px-4 py-1.5 min-h-10 rounded-md border text-label transition-colors cursor-pointer relative ${
@@ -199,11 +181,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
                 ? "bg-m3-primary/10 border-m3-primary/30 text-m3-primary"
                 : "bg-m3-card border-m3-border text-m3-secondary hover:bg-m3-hover hover:text-m3-text hover:border-m3-primary/30"
             }`}
-            title={
-              showArchived
-                ? t("toolbar.hideArchived")
-                : t("toolbar.showArchived")
-            }
+            title={showArchived ? t("toolbar.hideArchived") : t("toolbar.showArchived")}
           >
             <Archive className="w-4 h-4" />
             <span>{t("toolbar.archived")}</span>
@@ -342,9 +320,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           <LayoutGrid className="w-4 h-4 text-m3-primary shrink-0" />
           <select
             value={density}
-            onChange={(e) =>
-              onDensityChange(e.target.value as "comfortable" | "compact")
-            }
+            onChange={(e) => onDensityChange(e.target.value as "comfortable" | "compact")}
             className="bg-transparent font-medium text-m3-text cursor-pointer text-(length:--text-label)"
             title={t("toolbar.density")}
           >

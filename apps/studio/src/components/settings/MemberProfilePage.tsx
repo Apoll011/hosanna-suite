@@ -38,15 +38,9 @@ interface MemberProfilePageProps {
   onBack: () => void;
   onRemove: (member: { id: string; [key: string]: unknown }) => void;
   onApprove?: (id: string) => void;
-  onRoleChange?: (
-    member: { id: string; [key: string]: unknown },
-    newRole: string,
-  ) => Promise<void>;
+  onRoleChange?: (member: { id: string; [key: string]: unknown }, newRole: string) => Promise<void>;
   isApproving?: boolean;
-  showToast: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
@@ -112,8 +106,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
   };
 
   const joinedDate = formatDate(member.createdAt);
-  const isPromotingToOwner =
-    selectedRole === "owner" && selectedRole !== member.role;
+  const isPromotingToOwner = selectedRole === "owner" && selectedRole !== member.role;
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 pb-10">
@@ -139,11 +132,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
               )} flex items-center justify-center`}
             >
               {member.logo || member.image ? (
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
+                <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-2xl font-semibold text-white">
                   {getInitials(member.name || "?")}
@@ -163,9 +152,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
                 {member.name}
               </h2>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className="text-xs text-m3-secondary">
-                  {member.email}
-                </span>
+                <span className="text-xs text-m3-secondary">{member.email}</span>
                 <span className="text-m3-secondary dark:text-slate-700">·</span>
                 {getRoleBadge(member.role, t)}
               </div>
@@ -241,9 +228,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
                   <option value="owner">{t("settings.roles.owner")}</option>
                 </Can>
                 <option value="admin">{t("settings.roles.admin")}</option>
-                <option value="teamLeader">
-                  {t("settings.roles.teamLeader")}
-                </option>
+                <option value="teamLeader">{t("settings.roles.teamLeader")}</option>
                 <option value="editor">{t("settings.roles.editor")}</option>
                 <option value="musician">{t("settings.roles.musician")}</option>
                 <option value="guest">{t("settings.roles.guest")}</option>
@@ -284,9 +269,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
           ) : (
             <p className="text-xs text-slate-500">
               {t("settings.memberProfile.currentRole")}{" "}
-              <strong className="text-m3-text">
-                {getRoleLabel(member.role, t)}
-              </strong>
+              <strong className="text-m3-text">{getRoleLabel(member.role, t)}</strong>
             </p>
           )}
         </div>
@@ -306,10 +289,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
               })}
             </p>
             <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setShowRemoveConfirm(false)}
-              >
+              <Button variant="outline" onClick={() => setShowRemoveConfirm(false)}>
                 {t("common.back")}
               </Button>
               <Button
@@ -339,10 +319,7 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
               {t("settings.memberProfile.leaveConfirmText")}
             </p>
             <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setShowLeaveConfirm(false)}
-              >
+              <Button variant="outline" onClick={() => setShowLeaveConfirm(false)}>
                 {t("common.back")}
               </Button>
               <Button

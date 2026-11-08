@@ -59,12 +59,7 @@ function lastSunday(from: Date = new Date()): Date {
 
 const LOCALE_DATA = {
   pt: {
-    folders: [
-      "Hinos Clássicos",
-      "Louvores Contemporâneos",
-      "Natal e Páscoa",
-      "Especiais",
-    ],
+    folders: ["Hinos Clássicos", "Louvores Contemporâneos", "Natal e Páscoa", "Especiais"],
     songs: [
       {
         title: "Digno És",
@@ -121,17 +116,8 @@ const LOCALE_DATA = {
         tags: ["adoração", "contemporâneo"],
       },
     ],
-    collections: [
-      "Favoritos da Igreja",
-      "Setlist do Culto",
-      "Louvores de Oração",
-    ],
-    services: [
-      "Culto Dominical",
-      "Culto da Manhã",
-      "Culto da Tarde",
-      "Culto Especial",
-    ],
+    collections: ["Favoritos da Igreja", "Setlist do Culto", "Louvores de Oração"],
+    services: ["Culto Dominical", "Culto da Manhã", "Culto da Tarde", "Culto Especial"],
     serviceNotes: [
       "Verificar o sistema de som antes do culto.",
       "Preparar o ambiente com antecedência.",
@@ -152,13 +138,7 @@ const LOCALE_DATA = {
       "Culto de Oração e Jejum",
       "Evento de Celebração",
     ],
-    locations: [
-      "Templo Principal",
-      "Salão de Reuniões",
-      "Sala de Ensaio",
-      null,
-      "Praça Central",
-    ],
+    locations: ["Templo Principal", "Salão de Reuniões", "Sala de Ensaio", null, "Praça Central"],
     elementTitles: {
       welcome: "Boas-vindas",
       scripture: "Leitura Bíblica",
@@ -166,13 +146,7 @@ const LOCALE_DATA = {
       announcement: "Avisos",
       custom: "Momento Especial",
     },
-    passages: [
-      "João 3:16",
-      "Salmos 23",
-      "Romanos 8:28",
-      "Filipenses 4:13",
-      "Isaías 40:31",
-    ],
+    passages: ["João 3:16", "Salmos 23", "Romanos 8:28", "Filipenses 4:13", "Isaías 40:31"],
     sermonTitles: [
       "A Graça de Deus",
       "O Poder da Fé",
@@ -181,12 +155,7 @@ const LOCALE_DATA = {
     ],
   },
   en: {
-    folders: [
-      "Classic Hymns",
-      "Contemporary Worship",
-      "Christmas & Easter",
-      "Special Songs",
-    ],
+    folders: ["Classic Hymns", "Contemporary Worship", "Christmas & Easter", "Special Songs"],
     songs: [
       {
         title: "Worthy is the Lamb",
@@ -240,12 +209,7 @@ const LOCALE_DATA = {
       },
     ],
     collections: ["Church Favorites", "Weekend Setlist", "Prayer Worship"],
-    services: [
-      "Sunday Service",
-      "Morning Service",
-      "Evening Service",
-      "Special Service",
-    ],
+    services: ["Sunday Service", "Morning Service", "Evening Service", "Special Service"],
     serviceNotes: [
       "Check the sound system before the service.",
       "Prepare the environment in advance.",
@@ -266,13 +230,7 @@ const LOCALE_DATA = {
       "Prayer and Fasting Service",
       "Celebration Event",
     ],
-    locations: [
-      "Main Sanctuary",
-      "Meeting Hall",
-      "Rehearsal Room",
-      null,
-      "Town Square",
-    ],
+    locations: ["Main Sanctuary", "Meeting Hall", "Rehearsal Room", null, "Town Square"],
     elementTitles: {
       welcome: "Welcome",
       scripture: "Scripture Reading",
@@ -280,27 +238,11 @@ const LOCALE_DATA = {
       announcement: "Announcements",
       custom: "Special Moment",
     },
-    passages: [
-      "John 3:16",
-      "Psalm 23",
-      "Romans 8:28",
-      "Philippians 4:13",
-      "Isaiah 40:31",
-    ],
-    sermonTitles: [
-      "God's Grace",
-      "The Power of Faith",
-      "Spiritual Renewal",
-      "God's Promise",
-    ],
+    passages: ["John 3:16", "Psalm 23", "Romans 8:28", "Philippians 4:13", "Isaiah 40:31"],
+    sermonTitles: ["God's Grace", "The Power of Faith", "Spiritual Renewal", "God's Promise"],
   },
   es: {
-    folders: [
-      "Himnos Clásicos",
-      "Alabanza Contemporánea",
-      "Navidad y Pascua",
-      "Especiales",
-    ],
+    folders: ["Himnos Clásicos", "Alabanza Contemporánea", "Navidad y Pascua", "Especiales"],
     songs: [
       {
         title: "Digno Eres",
@@ -361,17 +303,8 @@ const LOCALE_DATA = {
         tags: ["adoración", "contemporáneo"],
       },
     ],
-    collections: [
-      "Favoritos de la Iglesia",
-      "Lista del Culto",
-      "Alabanza de Oración",
-    ],
-    services: [
-      "Culto Dominical",
-      "Culto Matutino",
-      "Culto Vespertino",
-      "Culto Especial",
-    ],
+    collections: ["Favoritos de la Iglesia", "Lista del Culto", "Alabanza de Oración"],
+    services: ["Culto Dominical", "Culto Matutino", "Culto Vespertino", "Culto Especial"],
     serviceNotes: [
       "Verificar el sistema de sonido antes del culto.",
       "Preparar el ambiente con anticipación.",
@@ -392,13 +325,7 @@ const LOCALE_DATA = {
       "Culto de Oración y Ayuno",
       "Evento de Celebración",
     ],
-    locations: [
-      "Templo Principal",
-      "Salón de Reuniones",
-      "Sala de Ensayo",
-      null,
-      "Plaza Central",
-    ],
+    locations: ["Templo Principal", "Salón de Reuniones", "Sala de Ensayo", null, "Plaza Central"],
     elementTitles: {
       welcome: "Bienvenida",
       scripture: "Lectura Bíblica",
@@ -406,13 +333,7 @@ const LOCALE_DATA = {
       announcement: "Avisos",
       custom: "Momento Especial",
     },
-    passages: [
-      "Juan 3:16",
-      "Salmos 23",
-      "Romanos 8:28",
-      "Filipenses 4:13",
-      "Isaías 40:31",
-    ],
+    passages: ["Juan 3:16", "Salmos 23", "Romanos 8:28", "Filipenses 4:13", "Isaías 40:31"],
     sermonTitles: [
       "La Gracia de Dios",
       "El Poder de la Fe",
@@ -443,8 +364,7 @@ const SAMPLE_CHORD_PROGRESSIONS = [
 ];
 
 function makeSongContent(title: string, artist: string, idx: number): string {
-  const progression =
-    SAMPLE_CHORD_PROGRESSIONS[idx % SAMPLE_CHORD_PROGRESSIONS.length];
+  const progression = SAMPLE_CHORD_PROGRESSIONS[idx % SAMPLE_CHORD_PROGRESSIONS.length];
   const [c1, c2, c3, c4] = progression.split("  ").map((c) => `[${c}]`);
   return [
     `{title: ${title}}`,
@@ -887,8 +807,7 @@ export function generateDemoData(locale: string): DemoData {
       title: s.title,
       artist: s.artist,
       content,
-      folderId:
-        folderAssignment[i] === null ? null : folderIds[folderAssignment[i]],
+      folderId: folderAssignment[i] === null ? null : folderIds[folderAssignment[i]],
       path:
         folderAssignment[i] === null
           ? `${s.title.replace(/\s/g, "_")}.chopro`
@@ -906,13 +825,10 @@ export function generateDemoData(locale: string): DemoData {
   const collectionIdsBySong = new Map<string, Set<string>>();
   const collections: CollectionDocType[] = L.collections.map((name, i) => {
     const collectionId = crypto.randomUUID();
-    const songIdsForCollection = collectionSongIndexes[i].map(
-      (idx) => songIds[idx],
-    );
+    const songIdsForCollection = collectionSongIndexes[i].map((idx) => songIds[idx]);
 
     for (const songId of songIdsForCollection) {
-      const nextCollectionIds =
-        collectionIdsBySong.get(songId) ?? new Set<string>();
+      const nextCollectionIds = collectionIdsBySong.get(songId) ?? new Set<string>();
       nextCollectionIds.add(collectionId);
       collectionIdsBySong.set(songId, nextCollectionIds);
     }
@@ -963,12 +879,8 @@ export function generateDemoData(locale: string): DemoData {
           ? L.sermonTitles[pos % L.sermonTitles.length]
           : L.elementTitles[type],
     position: pos,
-    ...(type === "song" && songIdx !== undefined
-      ? { songId: songIds[songIdx], duration: 5 }
-      : {}),
-    ...(type === "scripture"
-      ? { passage: L.passages[pos % L.passages.length], duration: 5 }
-      : {}),
+    ...(type === "song" && songIdx !== undefined ? { songId: songIds[songIdx], duration: 5 } : {}),
+    ...(type === "scripture" ? { passage: L.passages[pos % L.passages.length], duration: 5 } : {}),
     ...(type === "message" ? { duration: 40 } : {}),
     ...(type === "welcome" || type === "announcement" ? { duration: 5 } : {}),
   });

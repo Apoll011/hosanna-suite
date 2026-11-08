@@ -41,18 +41,14 @@ export function openIDB(
       // Clears the singleton so the next getDatabase() reopens a fresh
       // connection instead of reusing this closed one.
       const onConnectionClosed = (reason: string) => {
-        console.warn(
-          `[hosana-idb] connection closed (${reason}) — resetting singleton`,
-        );
+        console.warn(`[hosana-idb] connection closed (${reason}) — resetting singleton`);
         _resetDatabase?.();
       };
 
       // If another tab opens a newer DB version it will be blocked by us.
       // Close gracefully so the upgrade can proceed without wiping stores.
       db.onversionchange = () => {
-        console.warn(
-          "[hosana-idb] versionchange received — closing connection to allow upgrade",
-        );
+        console.warn("[hosana-idb] versionchange received — closing connection to allow upgrade");
         db.close();
         onConnectionClosed("versionchange");
       };
@@ -82,11 +78,7 @@ export function openIDB(
   });
 }
 
-export function idbGet<T>(
-  db: IDBDatabase,
-  store: string,
-  key: string,
-): Promise<T | undefined> {
+export function idbGet<T>(db: IDBDatabase, store: string, key: string): Promise<T | undefined> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(store, "readonly");
     const req = tx.objectStore(store).get(key);
@@ -120,11 +112,7 @@ export function idbGetAllByIndex<T>(
 }
 
 /** Atomically put multiple records in a single readwrite transaction. */
-export function idbBulkPut<T>(
-  db: IDBDatabase,
-  store: string,
-  docs: T[],
-): Promise<void> {
+export function idbBulkPut<T>(db: IDBDatabase, store: string, docs: T[]): Promise<void> {
   if (docs.length === 0) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(store, "readwrite");
@@ -137,11 +125,7 @@ export function idbBulkPut<T>(
 }
 
 /** Put a single record. */
-export function idbPut<T>(
-  db: IDBDatabase,
-  store: string,
-  doc: T,
-): Promise<void> {
+export function idbPut<T>(db: IDBDatabase, store: string, doc: T): Promise<void> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(store, "readwrite");
     tx.objectStore(store).put(doc);
@@ -152,11 +136,7 @@ export function idbPut<T>(
 }
 
 /** Delete a single record by key. */
-export function idbDelete(
-  db: IDBDatabase,
-  store: string,
-  key: string,
-): Promise<void> {
+export function idbDelete(db: IDBDatabase, store: string, key: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(store, "readwrite");
     tx.objectStore(store).delete(key);
@@ -167,11 +147,7 @@ export function idbDelete(
 }
 
 /** Atomically delete multiple records in a single readwrite transaction. */
-export function idbBulkDelete(
-  db: IDBDatabase,
-  store: string,
-  keys: string[],
-): Promise<void> {
+export function idbBulkDelete(db: IDBDatabase, store: string, keys: string[]): Promise<void> {
   if (keys.length === 0) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(store, "readwrite");

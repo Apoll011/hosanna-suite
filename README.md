@@ -2,19 +2,19 @@
 
 pnpm + Turborepo monorepo for the Hosanna web platform:
 
-| Path | Package | Role |
-| --- | --- | --- |
-| `apps/saas` | `@hosanna/saas` | Marketing site ([hosanna.live](https://hosanna.live)) |
-| `apps/studio` | `@hosanna/studio` | Studio PWA ([studio.hosanna.live](https://studio.hosanna.live)) |
-| `apps/api` | `@hosanna/api` | REST + MCP API ([api.hosanna.live](https://api.hosanna.live)) |
-| `packages/chordpro` | `@hosanna/chordpro` | ChordPro parser / renderer / editor |
-| `packages/db` | `@hosanna/db` | Prisma schema, migrations, client |
-| `packages/auth` | `@hosanna/auth` | Shared Better Auth RBAC statements & roles |
-| `packages/types` | `@hosanna/types` | OpenAPI contract + generated TS types |
-| `packages/i18n` | `@hosanna/i18n` | Shared UI language model |
-| `packages/ui` | `@hosanna/ui` | Shared `cn()` + provider icons |
-| `packages/brand` | `@hosanna/brand` | Shared favicon / apple-touch / OG assets |
-| `packages/config` | `@hosanna/config` | Shared tsconfig + Prettier |
+| Path                | Package             | Role                                                            |
+| ------------------- | ------------------- | --------------------------------------------------------------- |
+| `apps/saas`         | `@hosanna/saas`     | Marketing site ([hosanna.live](https://hosanna.live))           |
+| `apps/studio`       | `@hosanna/studio`   | Studio PWA ([studio.hosanna.live](https://studio.hosanna.live)) |
+| `apps/api`          | `@hosanna/api`      | REST + MCP API ([api.hosanna.live](https://api.hosanna.live))   |
+| `packages/chordpro` | `@hosanna/chordpro` | ChordPro parser / renderer / editor                             |
+| `packages/db`       | `@hosanna/db`       | Prisma schema, migrations, client                               |
+| `packages/auth`     | `@hosanna/auth`     | Shared Better Auth RBAC statements & roles                      |
+| `packages/types`    | `@hosanna/types`    | OpenAPI contract + generated TS types                           |
+| `packages/i18n`     | `@hosanna/i18n`     | Shared UI language model                                        |
+| `packages/ui`       | `@hosanna/ui`       | Shared `cn()` + provider icons                                  |
+| `packages/brand`    | `@hosanna/brand`    | Shared favicon / apple-touch / OG assets                        |
+| `packages/config`   | `@hosanna/config`   | Shared tsconfig + Prettier                                      |
 
 **Not in this repo:** the Flutter musician app and the Astro blog — those stay separate.
 
@@ -48,19 +48,19 @@ pnpm dev
 
 ## Common scripts
 
-| Command | What it does |
-| --- | --- |
-| `pnpm build` | `turbo run build` across the workspace |
-| `pnpm typecheck` | Clean typecheck |
-| `pnpm test` | Package + API unit/contract tests |
-| `pnpm lint` | ESLint (apps still have a baseline of prettier/hook warnings) |
-| `pnpm format` | Prettier write across the workspace |
-| `pnpm fix` | Autofix Tailwind canonical classes + ESLint + Prettier |
-| `pnpm db:generate` | Prisma client |
-| `pnpm db:migrate` | `prisma migrate deploy` |
-| `pnpm db:migrate:dev` | Create/apply a migration in development |
-| `pnpm docker:up` | Build & start Postgres + API + Studio |
-| `pnpm docker:down` | Stop the stack |
+| Command               | What it does                                                  |
+| --------------------- | ------------------------------------------------------------- |
+| `pnpm build`          | `turbo run build` across the workspace                        |
+| `pnpm typecheck`      | Clean typecheck                                               |
+| `pnpm test`           | Package + API unit/contract tests                             |
+| `pnpm lint`           | ESLint (apps still have a baseline of prettier/hook warnings) |
+| `pnpm format`         | Prettier write across the workspace                           |
+| `pnpm fix`            | Autofix Tailwind canonical classes + ESLint + Prettier        |
+| `pnpm db:generate`    | Prisma client                                                 |
+| `pnpm db:migrate`     | `prisma migrate deploy`                                       |
+| `pnpm db:migrate:dev` | Create/apply a migration in development                       |
+| `pnpm docker:up`      | Build & start Postgres + API + Studio                         |
+| `pnpm docker:down`    | Stop the stack                                                |
 
 ## Docker (db + api + studio)
 

@@ -1,11 +1,5 @@
 import { analyzeSong } from "./analysis";
-import type {
-  ChordProVersion,
-  LineAST,
-  SectionAST,
-  SegmentAST,
-  SongAST,
-} from "./parser";
+import type { ChordProVersion, LineAST, SectionAST, SegmentAST, SongAST } from "./parser";
 import { scoreSong } from "./score";
 import { transposeChord } from "./transpose";
 
@@ -62,18 +56,12 @@ function cloneSong(song: SongAST): SongAST {
   return attachSongTransformations(clone);
 }
 
-function forEachVersion(
-  song: SongAST,
-  callback: (version: ChordProVersion) => void,
-) {
+function forEachVersion(song: SongAST, callback: (version: ChordProVersion) => void) {
   if (song.default) callback(song.default);
   for (const variant of song.variants ?? []) callback(variant);
 }
 
-function forEachSegment(
-  song: SongAST,
-  callback: (segment: SegmentAST) => void,
-) {
+function forEachSegment(song: SongAST, callback: (segment: SegmentAST) => void) {
   forEachVersion(song, (version) => {
     for (const section of version.body) {
       for (const line of section.lines) {
@@ -140,10 +128,7 @@ export function attachSongTransformations(song: SongAST): SongAST {
       });
       forEachVersion(next, (version) => {
         if (version.metadata.key)
-          version.metadata.key = transposeChord(
-            version.metadata.key,
-            semitones,
-          );
+          version.metadata.key = transposeChord(version.metadata.key, semitones);
       });
     });
   target.withCapo = (capo) =>
@@ -185,12 +170,8 @@ export function attachSongTransformations(song: SongAST): SongAST {
               continue;
             }
             if (line.segments) {
-              const text = line.segments
-                .map((segment) => segment.text)
-                .join("");
-              line.segments = [
-                { chord: "", text: cleanText ? cleanLyrics(text) : text },
-              ];
+              const text = line.segments.map((segment) => segment.text).join("");
+              line.segments = [{ chord: "", text: cleanText ? cleanLyrics(text) : text }];
             }
           }
         }

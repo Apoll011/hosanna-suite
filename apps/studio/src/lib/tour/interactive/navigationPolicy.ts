@@ -11,9 +11,7 @@ import type { OnboardingEventName } from "./events";
 
 let activeWaitFor: OnboardingEventName | null = null;
 
-export function setActiveOnboardingWaitFor(
-  name: OnboardingEventName | null,
-): void {
+export function setActiveOnboardingWaitFor(name: OnboardingEventName | null): void {
   activeWaitFor = name;
 }
 

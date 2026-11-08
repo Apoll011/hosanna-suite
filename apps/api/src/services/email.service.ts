@@ -23,9 +23,7 @@ export interface SendEmailOptions {
   tags?: Array<{ name: string; value: string }>;
 }
 
-export interface SendTemplateEmailOptions<
-  T extends Record<string, any> = Record<string, any>,
-> {
+export interface SendTemplateEmailOptions<T extends Record<string, any> = Record<string, any>> {
   to: string | string[];
   template: string;
   variables: T;
@@ -141,12 +139,8 @@ function buildTranslationVars(
     t_otp_expiry: tc("email.otp.expiry"),
 
     // 1.5 password-reset-success
-    t_password_reset_success_subject: tc(
-      "email.password_reset_success.subject",
-    ),
-    t_password_reset_success_heading: tc(
-      "email.password_reset_success.heading",
-    ),
+    t_password_reset_success_subject: tc("email.password_reset_success.subject"),
+    t_password_reset_success_heading: tc("email.password_reset_success.heading"),
     t_password_reset_success_body1: tc("email.password_reset_success.body1"),
     t_password_reset_success_body2: tc("email.password_reset_success.body2"),
 
@@ -157,18 +151,10 @@ function buildTranslationVars(
     t_account_locked_body2: tc("email.account_locked.body2"),
 
     // 2.1 change-email-verification
-    t_change_email_verification_subject: tc(
-      "email.change_email_verification.subject",
-    ),
-    t_change_email_verification_heading: tc(
-      "email.change_email_verification.heading",
-    ),
-    t_change_email_verification_body1: tc(
-      "email.change_email_verification.body1",
-    ),
-    t_change_email_verification_body2: tc(
-      "email.change_email_verification.body2",
-    ),
+    t_change_email_verification_subject: tc("email.change_email_verification.subject"),
+    t_change_email_verification_heading: tc("email.change_email_verification.heading"),
+    t_change_email_verification_body1: tc("email.change_email_verification.body1"),
+    t_change_email_verification_body2: tc("email.change_email_verification.body2"),
     t_change_email_verification_cta: tc("email.change_email_verification.cta"),
 
     // 2.2 email-changed-success
@@ -193,9 +179,7 @@ function buildTranslationVars(
     // 3.2 join-request-received
     t_join_request_received_subject: tc("email.join_request_received.subject"),
     t_join_request_received_heading: tc("email.join_request_received.heading"),
-    t_join_request_received_salutation: tc(
-      "email.join_request_received.salutation",
-    ),
+    t_join_request_received_salutation: tc("email.join_request_received.salutation"),
     t_join_request_received_body1: tc("email.join_request_received.body1"),
     t_join_request_received_body2: tc("email.join_request_received.body2"),
 
@@ -209,9 +193,7 @@ function buildTranslationVars(
     // 3.4 join-request-denied
     t_join_request_denied_subject: tc("email.join_request_denied.subject"),
     t_join_request_denied_heading: tc("email.join_request_denied.heading"),
-    t_join_request_denied_salutation: tc(
-      "email.join_request_denied.salutation",
-    ),
+    t_join_request_denied_salutation: tc("email.join_request_denied.salutation"),
     t_join_request_denied_body1: tc("email.join_request_denied.body1"),
     t_join_request_denied_body2: tc("email.join_request_denied.body2"),
 
@@ -233,9 +215,7 @@ function buildTranslationVars(
     // 3.7 removed-from-church
     t_removed_from_church_subject: tc("email.removed_from_church.subject"),
     t_removed_from_church_heading: tc("email.removed_from_church.heading"),
-    t_removed_from_church_salutation: tc(
-      "email.removed_from_church.salutation",
-    ),
+    t_removed_from_church_salutation: tc("email.removed_from_church.salutation"),
     t_removed_from_church_body1: tc("email.removed_from_church.body1"),
 
     // 4.1 billing-trial-started
@@ -287,24 +267,17 @@ function normalizeVariables(
   // Name normalization
   if (normalized.first_name === undefined) {
     normalized.first_name =
-      variables.firstName ||
-      (variables.name ? String(variables.name).split(" ")[0] : "");
+      variables.firstName || (variables.name ? String(variables.name).split(" ")[0] : "");
   }
 
   // Dashboard / Workspace URL normalization
   if (normalized.dashboard_url === undefined) {
     normalized.dashboard_url =
-      variables.dashboardUrl ||
-      variables.appUrl ||
-      env.publicAppUrl ||
-      "https://hosanna.live";
+      variables.dashboardUrl || variables.appUrl || env.publicAppUrl || "https://hosanna.live";
   }
   if (normalized.workspace_url === undefined) {
     normalized.workspace_url =
-      variables.workspaceUrl ||
-      variables.appUrl ||
-      env.publicAppUrl ||
-      "https://hosanna.live";
+      variables.workspaceUrl || variables.appUrl || env.publicAppUrl || "https://hosanna.live";
   }
   if (normalized.workspace_settings_url === undefined) {
     normalized.workspace_settings_url =
@@ -319,8 +292,7 @@ function normalizeVariables(
     normalized.reset_link = variables.resetLink || variables.url || "";
   }
   if (normalized.confirm_email_link === undefined) {
-    normalized.confirm_email_link =
-      variables.confirmEmailLink || variables.url || "";
+    normalized.confirm_email_link = variables.confirmEmailLink || variables.url || "";
   }
   if (normalized.invite_link === undefined) {
     normalized.invite_link = variables.inviteLink || variables.inviteUrl || "";
@@ -329,37 +301,25 @@ function normalizeVariables(
   // 2FA code normalization
   if (normalized["2fa_code"] === undefined) {
     normalized["2fa_code"] =
-      variables.twoFactorCode ||
-      variables.otp ||
-      variables.code ||
-      variables["2faCode"] ||
-      "";
+      variables.twoFactorCode || variables.otp || variables.code || variables["2faCode"] || "";
   }
 
   // Time / Expiry normalization
   if (normalized.expiry_time === undefined) {
     normalized.expiry_time =
-      variables.expiryTime ||
-      variables.expireMinutes ||
-      variables.expiresIn ||
-      "60";
+      variables.expiryTime || variables.expireMinutes || variables.expiresIn || "60";
   }
   if (normalized.lockout_minutes === undefined) {
-    normalized.lockout_minutes =
-      variables.lockoutMinutes || variables.lockout_minutes || "15";
+    normalized.lockout_minutes = variables.lockoutMinutes || variables.lockout_minutes || "15";
   }
 
   // Church / Org normalization
   if (normalized.church_name === undefined) {
     normalized.church_name =
-      variables.churchName ||
-      variables.organizationName ||
-      variables.orgName ||
-      "Hosanna";
+      variables.churchName || variables.organizationName || variables.orgName || "Hosanna";
   }
   if (normalized.inviter_name === undefined) {
-    normalized.inviter_name =
-      variables.inviterName || variables.senderName || "A leader";
+    normalized.inviter_name = variables.inviterName || variables.senderName || "A leader";
   }
   if (normalized.new_role === undefined) {
     normalized.new_role = variables.newRole || variables.role || "Member";
@@ -389,9 +349,7 @@ export function registerEmailTemplate(
   options?: { defaultSubject?: string; wrapWithLayout?: boolean },
 ): void {
   const wrap = options?.wrapWithLayout ?? true;
-  const fullHtml = wrap
-    ? CARD_LAYOUT.replace("{{{body}}}", bodyContent)
-    : bodyContent;
+  const fullHtml = wrap ? CARD_LAYOUT.replace("{{{body}}}", bodyContent) : bodyContent;
 
   rawTemplates.set(name, {
     subject: options?.defaultSubject,
@@ -769,10 +727,7 @@ export function renderEmailTemplate<T extends Record<string, any>>(
     // If not a pre-registered template name, treat templateNameOrHtml as raw Handlebars HTML
     const htmlToCompile = templateNameOrHtml.includes("<html")
       ? templateNameOrHtml
-      : CARD_LAYOUT.replace(
-          "{{{body}}}",
-          `<div class="content">${templateNameOrHtml}</div>`,
-        );
+      : CARD_LAYOUT.replace("{{{body}}}", `<div class="content">${templateNameOrHtml}</div>`);
 
     compiled = Handlebars.compile(htmlToCompile);
   }
@@ -843,9 +798,9 @@ export async function sendEmail(options: SendEmailOptions) {
  * });
  * ```
  */
-export async function sendTemplateEmail<
-  T extends Record<string, any> = Record<string, any>,
->(options: SendTemplateEmailOptions<T>) {
+export async function sendTemplateEmail<T extends Record<string, any> = Record<string, any>>(
+  options: SendTemplateEmailOptions<T>,
+) {
   const locale = options.locale || DEFAULT_LOCALE;
   const normVars = normalizeVariables(options.variables, locale);
   const registered = rawTemplates.get(options.template);

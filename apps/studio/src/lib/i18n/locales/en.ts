@@ -281,8 +281,7 @@ export const en: typeof pt = {
         active: "Active",
       },
       planName: "Hosanna Cloud",
-      planDesc:
-        "Cloud sync, automatic backups, and priority support for your organization.",
+      planDesc: "Cloud sync, automatic backups, and priority support for your organization.",
       monthly: "Monthly",
       annual: "Annual",
       // Shown next to the price when the annual option is selected. Based on
@@ -309,8 +308,7 @@ export const en: typeof pt = {
       manage: "Manage billing",
       manageDesc: "Update your payment method, view invoices, or cancel.",
       startTrial: "Start 14-day free trial",
-      trialNote:
-        "A card is required to start. You won't be charged during the 14-day trial.",
+      trialNote: "A card is required to start. You won't be charged during the 14-day trial.",
       // Used when the org already used its free trial (re-subscribing after
       // cancel): Stripe does not grant a second trial, so don't promise one.
       subscribe: "Subscribe now",
@@ -372,8 +370,7 @@ export const en: typeof pt = {
       "Account, organization, and member settings require an internet connection and are disabled.",
     appearance: {
       themeTitle: "Theme & Application Appearance",
-      themeDesc:
-        "Customize the color scheme and brightness of the interface on your screen.",
+      themeDesc: "Customize the color scheme and brightness of the interface on your screen.",
       personalPreference: "Personal Preference",
       light: "Light Mode",
       lightDesc: "Bright environments and printing.",
@@ -390,8 +387,7 @@ export const en: typeof pt = {
       languageAuto: "Automatic",
       languageAutoDesc: "Follow organization or browser",
       navigationTitle: "Navigation & Structure",
-      navigationDesc:
-        "Adjust how repertoires and folders are arranged in your workspace.",
+      navigationDesc: "Adjust how repertoires and folders are arranged in your workspace.",
       showFolderTree: "Show Hierarchical Folder Tree",
       showFolderTreeDesc:
         "Displays the complete structure of folders and subfolders in the left sidebar.",
@@ -402,12 +398,10 @@ export const en: typeof pt = {
       showChordsDesc:
         "Automatically enables the chord line (ChordPro) when opening song viewer, rehearsal, and projection mode for musicians.",
       songScoreTitle: "Song Score",
-      songScoreDesc:
-        "Show a quality score indicator on each song card in the explorer.",
+      songScoreDesc: "Show a quality score indicator on each song card in the explorer.",
       songScoreBadge: "Explorer",
       showSongScore: "Show song score",
-      showSongScoreDesc:
-        "Display a completeness score on each song card in the explorer.",
+      showSongScoreDesc: "Display a completeness score on each song card in the explorer.",
       songScoreStyle: "Visualization style",
       scoreLayout: {
         ring: "Ring",
@@ -442,8 +436,7 @@ export const en: typeof pt = {
       sunday: "Sunday",
       sundayDesc: "Traditional",
       durationsTitle: "Default Moment Durations (MM:SS)",
-      durationsDesc:
-        "Enter average times in minutes and seconds to estimate service duration.",
+      durationsDesc: "Enter average times in minutes and seconds to estimate service duration.",
       songLabel: "Song / Music",
       sermonLabel: "Preaching / Sermon",
       suggestions: "Suggestions:",
@@ -455,8 +448,7 @@ export const en: typeof pt = {
       showNotesDesc:
         "Allows leaders and team to add key, dynamic, and observation notes to each item.",
       autoSave: "Save Drafts Automatically (Autosave)",
-      autoSaveDesc:
-        "Continuously saves changes while preparing and reordering the musical lineup.",
+      autoSaveDesc: "Continuously saves changes while preparing and reordering the musical lineup.",
       reset: "Reset Values",
       saving: "Saving preferences...",
       save: "Save Preferences",
@@ -587,8 +579,7 @@ export const en: typeof pt = {
         newPassword: "New Password",
         confirmNewPassword: "Confirm New Password",
         currentPasswordRequired: "Please enter your current password.",
-        passwordMinLength:
-          "The new password must be at least 6 characters long.",
+        passwordMinLength: "The new password must be at least 6 characters long.",
         passwordMismatch: "Passwords do not match.",
         passwordChanged: "Password changed successfully!",
         passwordChangeError: "Error changing password: {error}",
@@ -607,8 +598,7 @@ export const en: typeof pt = {
       disableBtn: "Disable 2FA",
       setupModalTitle: "Set Up 2FA",
       disableModalTitle: "Disable 2FA",
-      passwordStepDesc:
-        "To enable two-factor authentication, confirm your current password:",
+      passwordStepDesc: "To enable two-factor authentication, confirm your current password:",
       passwordLabel: "Password",
       continue: "Continue",
       setupStep1:
@@ -621,8 +611,7 @@ export const en: typeof pt = {
       backupWarning:
         "Store these recovery codes in a safe place (such as a password manager). They are the only way to access your account if you lose your phone.",
       backupSavedBtn: "I have stored the codes safely",
-      disableStepDesc:
-        "To disable two-factor authentication, confirm your password:",
+      disableStepDesc: "To disable two-factor authentication, confirm your password:",
       passwordRequired: "Please enter your password.",
       codeRequired: "Please enter the verification code.",
       enableError: "Error enabling 2FA: {error}",
@@ -743,11 +732,9 @@ export const en: typeof pt = {
       saved: "Organization and visual identity updated successfully!",
       saveError: "Error updating organization: {error}",
       backupTitle: "Backup & Data",
-      backupDesc:
-        "Export or restore all repertoires and services in a secure HOSANNA file.",
+      backupDesc: "Export or restore all repertoires and services in a secure HOSANNA file.",
       exportData: "Export Data",
-      exportDesc:
-        "Download a full HOSANNA backup containing songs, service plans, and folders.",
+      exportDesc: "Download a full HOSANNA backup containing songs, service plans, and folders.",
       exportProcessing: "Processing backup...",
       exportDownloadBtn: "Download Backup (.hosanna)",
       exportSuccess: "Backup downloaded successfully!",
@@ -760,8 +747,7 @@ export const en: typeof pt = {
     about: {
       title: "About Hosanna Studio",
       controlPanel: "Control Panel",
-      copyright:
-        "© {year} Embrace & Tiago Inês. Code under Apache 2.0 license.",
+      copyright: "© {year} Embrace & Tiago Inês. Code under Apache 2.0 license.",
       studioVersion: "Studio Version",
       openSourceBanner:
         "This project is <strong>open-source</strong>! We believe in free software to equip and support communities.",
@@ -779,12 +765,10 @@ export const en: typeof pt = {
   tour: {
     product: {
       missedTitle: "Product tour available",
-      missedDesc:
-        "There’s a guided tour of the essential features. Would you like to see it now?",
+      missedDesc: "There’s a guided tour of the essential features. Would you like to see it now?",
       missedAction: "Start tour",
       unavailableTitle: "Tour unavailable",
-      unavailableDesc:
-        "Couldn’t start the tour on this screen. Go back to Drive and try again.",
+      unavailableDesc: "Couldn’t start the tour on this screen. Go back to Drive and try again.",
       controls: {
         next: "Next",
         previous: "Back",
@@ -805,18 +789,15 @@ export const en: typeof pt = {
       },
       library: {
         title: "Library",
-        description:
-          "See every song in one place, regardless of which folder it’s in.",
+        description: "See every song in one place, regardless of which folder it’s in.",
       },
       collections: {
         title: "Collections",
-        description:
-          "Group songs into reusable lists for rehearsals or themes.",
+        description: "Group songs into reusable lists for rehearsals or themes.",
       },
       services: {
         title: "Services",
-        description:
-          "Build your order of worship with songs, notes, and service moments.",
+        description: "Build your order of worship with songs, notes, and service moments.",
       },
       agenda: {
         title: "Agenda",
@@ -876,15 +857,13 @@ export const en: typeof pt = {
         },
         drive: {
           title: "Drive",
-          description:
-            "Folders organize your library. You can drag songs between folders later.",
+          description: "Folders organize your library. You can drag songs between folders later.",
         },
       },
       songs: {
         create: {
           title: "Create a song",
-          description:
-            "Use + → New song. Next the tour will ask you to open it in the editor.",
+          description: "Use + → New song. Next the tour will ask you to open it in the editor.",
         },
         open: {
           title: "Open a song",
@@ -915,8 +894,7 @@ export const en: typeof pt = {
         },
         save: {
           title: "Save your changes",
-          description:
-            "Try a snippet or a chord, then save (Ctrl+S or the button) to continue.",
+          description: "Try a snippet or a chord, then save (Ctrl+S or the button) to continue.",
         },
       },
       collections: {
@@ -926,13 +904,11 @@ export const en: typeof pt = {
         },
         create: {
           title: "Create a collection",
-          description:
-            "Create a collection (e.g. “Christmas”) to group reusable songs.",
+          description: "Create a collection (e.g. “Christmas”) to group reusable songs.",
         },
         backToDrive: {
           title: "Back to Drive",
-          description:
-            "Now go back to Drive — we’ll use the same shortcuts as a file explorer.",
+          description: "Now go back to Drive — we’ll use the same shortcuts as a file explorer.",
         },
         selection: {
           title: "Select like a file explorer",
@@ -941,18 +917,15 @@ export const en: typeof pt = {
         },
         openFolder: {
           title: "Open a folder",
-          description:
-            "Double-click a folder (or select it and press Enter) to open it.",
+          description: "Double-click a folder (or select it and press Enter) to open it.",
         },
         selectAll: {
           title: "Select all",
-          description:
-            "Inside the folder, press Ctrl+A (⌘+A on Mac) to select every item.",
+          description: "Inside the folder, press Ctrl+A (⌘+A on Mac) to select every item.",
         },
         contextMenu: {
           title: "Context menu",
-          description:
-            "With the selection active, right-click one of the selected items.",
+          description: "With the selection active, right-click one of the selected items.",
         },
         addSongs: {
           title: "Add to collection",
@@ -1017,10 +990,8 @@ export const en: typeof pt = {
     moveError: "Error moving items. Changes were reverted.",
     songCreated: "Song created successfully!",
     songImported: "Song imported successfully!",
-    folderNameMismatch:
-      "The entered folder name does not match the folder name.",
-    uploadSuccess:
-      '{count} {type} file(s) uploaded successfully to "{folder}"!',
+    folderNameMismatch: "The entered folder name does not match the folder name.",
+    uploadSuccess: '{count} {type} file(s) uploaded successfully to "{folder}"!',
     uploadError: "Error uploading {count} {type} file(s)",
     uploadIgnored: "Ignored {count} {type} file(s)",
   },
@@ -1040,8 +1011,7 @@ export const en: typeof pt = {
   trashPage: {
     loading: "Loading trash...",
     emptyTitle: "Trash is empty",
-    emptyDesc:
-      "Deleted items appear here for 30 days before being permanently removed.",
+    emptyDesc: "Deleted items appear here for 30 days before being permanently removed.",
     deletedAt: "Deleted on",
     permanentDeletion: "Permanent deletion",
     restore: "Restore",
@@ -1091,17 +1061,13 @@ export const en: typeof pt = {
     archiveService: "Archive Service",
     activateService: "Activate Service",
     deleteService: "Delete Service",
-    deleteServiceMessage:
-      'Are you sure you want to delete the service "{name}"?',
-    archiveServiceMessage:
-      'Are you sure you want to {action} the service "{name}"?',
+    deleteServiceMessage: 'Are you sure you want to delete the service "{name}"?',
+    archiveServiceMessage: 'Are you sure you want to {action} the service "{name}"?',
     deleteAllTitle: "Delete {count} Services",
-    deleteAllMessage:
-      "Are you sure you want to permanently delete {count} selected services?",
+    deleteAllMessage: "Are you sure you want to permanently delete {count} selected services?",
     deleteAll: "Delete All",
     archiveAllTitle: "Archive {count} Services",
-    archiveAllMessage:
-      "Are you sure you want to archive {count} selected services?",
+    archiveAllMessage: "Are you sure you want to archive {count} selected services?",
     archiveAll: "Archive All",
   },
 
@@ -1127,8 +1093,7 @@ export const en: typeof pt = {
     removeSongMessage:
       'Do you want to remove "{title}" from this collection? The song will remain in the library.',
     emptyTitle: "This collection does not have songs yet",
-    emptyDesc:
-      "Add songs from your library to organize them in this collection.",
+    emptyDesc: "Add songs from your library to organize them in this collection.",
     noSearchResultsTitle: "No matching songs found",
     noSearchResultsDesc: 'No songs found for "{query}".',
     paginationInfo: "{from} to {to} of {total} songs",
@@ -1158,8 +1123,7 @@ export const en: typeof pt = {
     selectCollectionPrompt: "Select destination collection:",
     noCollectionsAvailable: "No collections found.",
     deleteManyTitle: "Delete collections",
-    deleteManyMessage:
-      "Move {count} collections to the trash? The songs stay in the library.",
+    deleteManyMessage: "Move {count} collections to the trash? The songs stay in the library.",
     createCollectionFirst: "Create a collection first to add songs.",
   },
 
@@ -1260,8 +1224,7 @@ export const en: typeof pt = {
       removalBody:
         "Your responsibilities for {event} have been updated.\n\nDate: {date}\n\nRemoved:\n{list}",
       eventCancelledTitle: "{event} has been cancelled",
-      eventCancelledBody:
-        'The event "{event}" scheduled for {date} has been cancelled.',
+      eventCancelledBody: 'The event "{event}" scheduled for {date} has been cancelled.',
       dateTitle: "The date of {event} has changed",
       dateBody: "New date:\n{date}",
       locationTitle: "The location of {event} has changed",
@@ -1279,8 +1242,7 @@ export const en: typeof pt = {
       notifyDeleteLabel: "Notify all assigned users",
       notifyDeleteHint: {
         one: "1 assigned user will be notified that the event was cancelled.",
-        other:
-          "{count} assigned users will be notified that the event was cancelled.",
+        other: "{count} assigned users will be notified that the event was cancelled.",
       },
     },
     editAssignments: "Edit assignments",
@@ -1298,8 +1260,7 @@ export const en: typeof pt = {
     linkedServiceMissing:
       "The linked service no longer exists — choose another one or remove the link.",
     removeLink: "Remove link",
-    noServicesToLink:
-      "There are no services yet. Create one in Services to link it.",
+    noServicesToLink: "There are no services yet. Create one in Services to link it.",
     elementsCount: {
       one: "{count} element",
       other: "{count} elements",
@@ -1330,8 +1291,7 @@ export const en: typeof pt = {
       specialEvent: "Special Event",
     },
     allResponsibilitiesAdded: "All responsibilities have already been added",
-    createCategoriesInSettings:
-      "You can create new categories in Settings → Server.",
+    createCategoriesInSettings: "You can create new categories in Settings → Server.",
     category: "Category",
     categoryHint: "Choose the service area to assign.",
     assignTo: "Assign to",
@@ -1429,8 +1389,7 @@ export const en: typeof pt = {
     serviceTitlePlaceholder: "e.g. Sunday Morning Service",
     scheduledDate: "Scheduled Date",
     planningNotes: "General Planning Notes",
-    planningNotesPlaceholder:
-      "e.g. Theme: Grace and Hope. Band rehearsal at 8:15.",
+    planningNotesPlaceholder: "e.g. Theme: Grace and Hope. Band rehearsal at 8:15.",
     saveService: "Save Service Plan",
     unknownArtist: "Unknown Artist",
     untitled: "Untitled",
@@ -1464,8 +1423,7 @@ export const en: typeof pt = {
     writeToConfirm: 'Type "{name}" to confirm',
     deleteItems: "Delete {count} Item(s)",
     batchTagTitle: "Batch Tag {count} Song(s)",
-    selectCategories:
-      "Select predefined categories or enter custom tags to assign to",
+    selectCategories: "Select predefined categories or enter custom tags to assign to",
     selectedSongs: "{count} selected song(s)",
     applyMode: "Application Mode",
     add: "Add",
@@ -1493,12 +1451,10 @@ export const en: typeof pt = {
     thirdPartyProvidersTitle: "Import Chords & 3rd-Party Providers",
     tabOnline: "Online Link",
     tabRawText: "Raw Cifra Text",
-    pasteLink:
-      "Paste the direct link to the chord page from a supported provider.",
+    pasteLink: "Paste the direct link to the chord page from a supported provider.",
     songLink: "Song / Chord Link",
     pleaseEnterLink: "Please enter a valid chord link.",
-    pleaseEnterValidLink:
-      "Please enter a link from a supported provider ({providers}).",
+    pleaseEnterValidLink: "Please enter a link from a supported provider ({providers}).",
     errorGetCifra: "Error retrieving chords: {error}",
     cifraNotFound: "Chords not found.",
     unexpectedError: "An unexpected error occurred while importing chords.",
@@ -1506,10 +1462,8 @@ export const en: typeof pt = {
     importCifra: "Import Chords",
     confirmKeyword: "DELETE",
     showChordProOnlyLabel: "Only show ChordPro",
-    showChordProOnlyHint:
-      "Skip saving the song and just generate the ChordPro text to copy",
-    chordProPreviewHint:
-      "Here's the generated ChordPro. Copy it wherever you need.",
+    showChordProOnlyHint: "Skip saving the song and just generate the ChordPro text to copy",
+    chordProPreviewHint: "Here's the generated ChordPro. Copy it wherever you need.",
     generateChordPro: "Generate ChordPro",
     copyChordPro: "Copy ChordPro",
     copied: "Copied!",
@@ -1517,8 +1471,7 @@ export const en: typeof pt = {
     rawTextDesc:
       "Paste plain text with chords placed directly over lyrics. It will be converted into ChordPro format.",
     rawTextLabel: "Cifra Text (Chords & Lyrics)",
-    rawTextPlaceholder:
-      "Paste chords and lyrics here (chords on line above lyrics)...",
+    rawTextPlaceholder: "Paste chords and lyrics here (chords on line above lyrics)...",
     songTitle: "Song Title",
     songTitlePlaceholder: "e.g. Salvador Maravilhoso",
     artist: "Artist",
@@ -1583,11 +1536,9 @@ export const en: typeof pt = {
       rootTopLevel: "Root Directory (Top Level)",
       moveFolderBtn: "Move Folder",
       deleteFolderTitle: 'Delete Folder "{folder}"',
-      selectDeleteFolderOption:
-        "Select how to handle contents inside this folder:",
+      selectDeleteFolderOption: "Select how to handle contents inside this folder:",
       moveContentsToRoot: "Move Contents to Root (Recommended)",
-      moveContentsToRootDesc:
-        "Keeps the song sheets in the library without folder category.",
+      moveContentsToRootDesc: "Keeps the song sheets in the library without folder category.",
       deleteFolderAndContents: "Delete folder and all contents inside",
       deleteFolderAndContentsDesc:
         "Permanently deletes the folder AND all song files and subfolders and their contents.",
@@ -1672,8 +1623,7 @@ export const en: typeof pt = {
       syncing: "Syncing...",
       syncingTooltip: "Syncing local data with the server...",
       offline: "Offline",
-      offlineTooltip:
-        "Offline mode. Changes will be synced when you reconnect.",
+      offlineTooltip: "Offline mode. Changes will be synced when you reconnect.",
       error: "Sync error",
       errorTooltip: "Sync error. Click to try again.",
       synced: "Synced",
@@ -1690,8 +1640,7 @@ export const en: typeof pt = {
       tipDesc:
         "When inserting a snippet, placeholder text is selected. Simply type over it. Press <key>TAB</key> again to jump to the next field!",
       shortcutsTitle: "Keyboard Shortcuts",
-      shortcutsDesc:
-        "Speed up editing and navigation without taking your hands off the keyboard.",
+      shortcutsDesc: "Speed up editing and navigation without taking your hands off the keyboard.",
     },
   },
 
@@ -1720,8 +1669,7 @@ export const en: typeof pt = {
     memberRemoved: "Member removed from team.",
     leaderAssigned: "{name} is now the Team Leader!",
     teamPermissionsTitle: "Team Permissions",
-    teamPermissionsDesc:
-      "Team permissions are limited by general organization policies.",
+    teamPermissionsDesc: "Team permissions are limited by general organization policies.",
     manageSongs: "Manage Songs",
     manageSongsDesc: "Create and edit repertoire",
     manageServices: "Manage Services",
@@ -1809,8 +1757,7 @@ export const en: typeof pt = {
     songsLibrary: "Song Library",
     dragToList: "Drag to list",
     generalNotesPlaceholder: "e.g. Rehearsal at 8:30...",
-    noGeneralNotes:
-      "No general service notes. Click to add helpful information.",
+    noGeneralNotes: "No general service notes. Click to add helpful information.",
     editGeneralNotes: "Edit General Notes",
     openLibraryToSearch: "Open library and search",
     unknownSong: "Unknown Song",
@@ -1847,16 +1794,14 @@ export const en: typeof pt = {
     bible: {
       modalTitle: "Scripture Reading",
       badgeTitle: "Scripture",
-      badgeDesc:
-        "Search a scripture passage, choose translation, and add to service.",
+      badgeDesc: "Search a scripture passage, choose translation, and add to service.",
       titleLabel: "Title",
       titlePlaceholder: "e.g. Scripture Reading",
       translationLabel: "Translation",
       loadingTranslations: "Loading translations...",
       passageLabel: "Scripture Passage",
       passagePlaceholder: "e.g. Psalm 23:1-6, John 3:16, 1 John 1:9",
-      acceptedFormats:
-        "Accepted formats: Psalm 23, John 3:16, Genesis 1:1-5, 1 John 3:16",
+      acceptedFormats: "Accepted formats: Psalm 23, John 3:16, Genesis 1:1-5, 1 John 3:16",
       searchBtn: "Search",
       searchingBtn: "Searching...",
       usePassageBtn: "Use this Passage",
@@ -1869,8 +1814,7 @@ export const en: typeof pt = {
       chapterNotFoundError: "Chapter not found in this translation.",
       noVersesError: "No verses found in the specified range.",
       timeoutError: "Search timed out. Please try again.",
-      genericError:
-        "Error fetching passage. Please check your internet connection.",
+      genericError: "Error fetching passage. Please check your internet connection.",
     },
     custom: {
       modalTitle: "Custom Element",
@@ -1890,8 +1834,7 @@ export const en: typeof pt = {
       titleLabel: "Sermon Title",
       titlePlaceholder: "e.g. Walking by Faith",
       summaryLabel: "Summary / Main Points",
-      summaryPlaceholder:
-        "e.g. Introduction on faith, 3 points on trusting God...",
+      summaryPlaceholder: "e.g. Introduction on faith, 3 points on trusting God...",
       notesLabel: "Notes",
       notesPlaceholder: "e.g. Preacher: Pastor John. Duration: ~30min.",
     },
@@ -1917,8 +1860,7 @@ export const en: typeof pt = {
     welcomeTitle: "Welcome to Hosanna Studio!",
     welcomeSubtitle: "Let's set up your worship and praise workspace.",
     step1Title: "Create or Join an Organization",
-    step1Desc:
-      "An organization is the shared space for your church or ministry.",
+    step1Desc: "An organization is the shared space for your church or ministry.",
     createOrgTab: "Create New Organization",
     joinOrgTab: "Join with Invitation",
     orgNameLabel: "Organization Name",
@@ -1930,8 +1872,7 @@ export const en: typeof pt = {
     checkingSlug: "Checking availability...",
     createOrgBtn: "Create & Continue",
     creatingOrgBtn: "Creating organization...",
-    joinInviteDesc:
-      "If you received an invitation by email, you can accept it directly.",
+    joinInviteDesc: "If you received an invitation by email, you can accept it directly.",
     checkInvitesBtn: "Check Invitations",
     step2Title: "Quick Customization",
     step2Desc: "Choose initial preferences for your team.",
@@ -1953,10 +1894,8 @@ export const en: typeof pt = {
 
   auth: {
     captcha: {
-      pending:
-        "Waiting for security verification. Please try again in a moment.",
-      failed:
-        "Security verification failed. Please reload the page and try again.",
+      pending: "Waiting for security verification. Please try again in a moment.",
+      failed: "Security verification failed. Please reload the page and try again.",
     },
     error: {
       title: "Sign-in interrupted",
@@ -2010,8 +1949,7 @@ export const en: typeof pt = {
       sendingBtn: "Sending...",
       backToLogin: "Back to login",
       emailSentTitle: "Link sent!",
-      emailSentDesc:
-        "If an account exists with this email, you will receive instructions shortly.",
+      emailSentDesc: "If an account exists with this email, you will receive instructions shortly.",
     },
     resetPassword: {
       title: "Set New Password",
@@ -2136,8 +2074,7 @@ export const en: typeof pt = {
       saveDefault: "Save as default",
       savedDefault: "Organization print defaults updated.",
       saveDefaultError: "Couldn't save the print defaults.",
-      pdfHint:
-        "To get a PDF, choose “Save as PDF” as the destination in the print dialog.",
+      pdfHint: "To get a PDF, choose “Save as PDF” as the destination in the print dialog.",
     },
     options: {
       groups: {
@@ -2181,15 +2118,13 @@ export const en: typeof pt = {
       pageNumbers: "Page numbers",
       pageNumbersHint: "In the bottom corner of each sheet.",
       accentColor: "Brand colour",
-      accentColorHint:
-        "Hosana sky on headers and chords. Turn off for black & white.",
+      accentColorHint: "Hosana sky on headers and chords. Turn off for black & white.",
       footer: "Footer note",
       footerPlaceholder: "e.g. CCLI License #12345",
     },
     settingsCard: {
       title: "Templates & Printing",
-      description:
-        "Organization defaults for printing songs, folders, service plans and rosters.",
+      description: "Organization defaults for printing songs, folders, service plans and rosters.",
       testModel: "Preview",
       editHint: "Click “Edit” to change the defaults.",
     },
@@ -2209,14 +2144,12 @@ export const en: typeof pt = {
       contemporary: {
         name: "Stage",
         tagline: "High contrast",
-        description:
-          "Big titles, bold chords and key/tempo boxes you can read from a music stand.",
+        description: "Big titles, bold chords and key/tempo boxes you can read from a music stand.",
       },
       compact: {
         name: "Compact",
         tagline: "Saves paper",
-        description:
-          "One-line header, minimal spacing and two columns to fit the most on a sheet.",
+        description: "One-line header, minimal spacing and two columns to fit the most on a sheet.",
       },
       elegant: {
         name: "Elegant",
@@ -2364,8 +2297,7 @@ export const en: typeof pt = {
         collections: "Collections",
         uniqueTags: "Unique tags",
         estimatedData: "Estimated data size",
-        estimatedDataHint:
-          "Approximate size of synced documents on this device",
+        estimatedDataHint: "Approximate size of synced documents on this device",
         members: "Members",
         pendingInvites: "Pending invitations",
         roleCount: "{role}",
@@ -2452,8 +2384,7 @@ export const en: typeof pt = {
 
   loginHistory: {
     title: "Login history",
-    personalDesc:
-      "Recent sign-ins on your account, with device and location when available.",
+    personalDesc: "Recent sign-ins on your account, with device and location when available.",
     orgDesc: "Sign-in activity for every member of this organization.",
     loading: "Loading history...",
     loadError: "Couldn't load login history.",
@@ -2489,8 +2420,7 @@ export const en: typeof pt = {
       listTitle: "Organization sign-ins",
       listDesc: "Recent authentication events from members of this workspace.",
       noAccessTitle: "No access",
-      noAccessDesc:
-        "Only owners and admins can view organization login activity.",
+      noAccessDesc: "Only owners and admins can view organization login activity.",
     },
   },
 
@@ -2559,16 +2489,14 @@ export const en: typeof pt = {
       maxOutputTokensHint: "Leave empty for the model default.",
       instructions: "Organization instructions",
       instructionsHint: "Included in every conversation.",
-      instructionsPlaceholder:
-        "e.g. Prefer keys from G to D. Write titles in Title Case.",
+      instructionsPlaceholder: "e.g. Prefer keys from G to D. Write titles in Title Case.",
       memoryTitle: "Memory",
       memoryDesc: "Notes remembered across chats.",
       memoryOrgTitle: "Organization memory",
       memoryOrgDesc: "Shared notes for everyone in this organization.",
       memoryOrgPlaceholder: "e.g. Worship team prefers G major.",
       memoryPersonalTitle: "Individual memory",
-      memoryPersonalDesc:
-        "Account-scoped notes for you only — not shared with the org.",
+      memoryPersonalDesc: "Account-scoped notes for you only — not shared with the org.",
       memoryPersonalPlaceholder: "e.g. I prefer shorter setlists.",
       memoryEnabled: "Enable memory",
       memoryEnabledDesc: "Include notes in context and allow updates.",
@@ -2596,8 +2524,7 @@ export const en: typeof pt = {
         unavailable: "Balance may be insufficient",
         refreshedAt: "Updated {time}",
         notConfigured: "Save an API key to see your balance.",
-        cryptoMissing:
-          "Server encryption is not configured, so balance cannot be fetched.",
+        cryptoMissing: "Server encryption is not configured, so balance cannot be fetched.",
         unsupported: "Balance is only available for DeepSeek.",
       },
     },
@@ -2676,8 +2603,7 @@ export const en: typeof pt = {
       editMessage: "Edit and resend",
       stopped: "Stopped",
       truncatedNotice: "Logos reached its step limit for this reply.",
-      toolLimitNotice:
-        "Logos used all {limit} tool calls allowed for this reply.",
+      toolLimitNotice: "Logos used all {limit} tool calls allowed for this reply.",
       jumpToLatest: "Jump to latest",
       errorGeneric: "Something went wrong. Please try again.",
       youLabel: "You",
@@ -2820,8 +2746,7 @@ export const en: typeof pt = {
           "Review my folders and give each a fitting color and icon so every type is easy to tell apart. Apply it in one batch.",
         upcomingAgenda:
           "Show my upcoming agenda events and point out anything missing (responsibilities, songs, notes).",
-        reviewTrash:
-          "List what is in the trash and tell me what is safe to restore or leave.",
+        reviewTrash: "List what is in the trash and tell me what is safe to restore or leave.",
         general:
           "What can you help me with in Hosanna Studio (songs, services, ChordPro, library)?",
       },

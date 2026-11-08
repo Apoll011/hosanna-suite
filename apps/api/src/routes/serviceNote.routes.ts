@@ -66,9 +66,7 @@ serviceNoteRouter.put(
     body: updateServiceNoteSchema,
   }),
   asyncHandler(async (req, res) => {
-    res.json(
-      await notesOf(req).update(req.params.id, req.params.noteId, req.body),
-    );
+    res.json(await notesOf(req).update(req.params.id, req.params.noteId, req.body));
   }),
 );
 

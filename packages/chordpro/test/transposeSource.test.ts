@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  getChordProCapabilities,
-  explainChordProDirective,
-} from "../src/parser/capabilities";
+import { getChordProCapabilities, explainChordProDirective } from "../src/parser/capabilities";
 import { transposeChordProSource } from "../src/parser/transposeSource";
 
 describe("transposeChordProSource", () => {

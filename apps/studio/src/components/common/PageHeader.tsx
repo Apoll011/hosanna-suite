@@ -28,15 +28,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     >
       <div className="min-w-0">
         <h1 className="text-display text-m3-text">{title}</h1>
-        {description && (
-          <p className="text-muted mt-1 max-w-2xl text-pretty">{description}</p>
-        )}
+        {description && <p className="text-muted mt-1 max-w-2xl text-pretty">{description}</p>}
       </div>
-      {actions && (
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
-          {actions}
-        </div>
-      )}
+      {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
     </header>
   );
 };

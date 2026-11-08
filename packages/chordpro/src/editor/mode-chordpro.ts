@@ -9,27 +9,16 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
     }
   }
 
-  if (
-    !ace ||
-    typeof ace.define !== "function" ||
-    (ace as any)._chordproModeRegistered
-  ) {
+  if (!ace || typeof ace.define !== "function" || (ace as any)._chordproModeRegistered) {
     return;
   }
 
   (ace as any).define(
     "ace/mode/chordpro_highlight_rules",
-    [
-      "require",
-      "exports",
-      "module",
-      "ace/lib/oop",
-      "ace/mode/text_highlight_rules",
-    ],
+    ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"],
     (require: any, exports: any) => {
       const oop = require("ace/lib/oop");
-      const TextHighlightRules =
-        require("ace/mode/text_highlight_rules").TextHighlightRules;
+      const TextHighlightRules = require("ace/mode/text_highlight_rules").TextHighlightRules;
 
       const ChordproHighlightRules = function (this: any) {
         // Regex Building Blocks
@@ -67,8 +56,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
                 "string",
                 "punctuation.tag",
               ],
-              regex:
-                rStart + "(start_of_[a-z_]+|so[a-z])" + rSep + "(.*?)" + rEnd,
+              regex: rStart + "(start_of_[a-z_]+|so[a-z])" + rSep + "(.*?)" + rEnd,
               caseInsensitive: true,
             },
             {
@@ -123,10 +111,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
             // Standalone Directives (e.g. column_break, new_page)
             {
               token: ["punctuation.tag", "keyword.operator", "punctuation.tag"],
-              regex:
-                rStart +
-                "(column_break|cb|new_page|np|new_song|ns|chorus|repeat)" +
-                rEnd,
+              regex: rStart + "(column_break|cb|new_page|np|new_song|ns|chorus|repeat)" + rEnd,
               caseInsensitive: true,
             },
 
@@ -144,11 +129,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
 
             // Chords e.g. [C#maj7/F]
             {
-              token: [
-                "punctuation.tag",
-                "constant.language.bold",
-                "punctuation.tag",
-              ],
+              token: ["punctuation.tag", "constant.language.bold", "punctuation.tag"],
               regex: "(\\[)([^\\]]+)(\\])",
             },
 
@@ -200,14 +181,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
 
   (ace as any).define(
     "ace/mode/folding/chordpro",
-    [
-      "require",
-      "exports",
-      "module",
-      "ace/lib/oop",
-      "ace/range",
-      "ace/mode/folding/fold_mode",
-    ],
+    ["require", "exports", "module", "ace/lib/oop", "ace/range", "ace/mode/folding/fold_mode"],
     (require: any, exports: any) => {
       const oop = require("ace/lib/oop");
       const Range = require("ace/range").Range;
@@ -219,8 +193,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
       (function (this: any) {
         this.foldingStartMarker =
           /\{\s*(so(?<short>[a-z_]+)|start_of_(?<long>[a-z_]+))(:.*?)?\s*\}/i;
-        this.foldingStopMarker =
-          /\{\s*(eo(?<short>[a-z_]+)|end_of_(?<long>[a-z_]+))\s*\}/i;
+        this.foldingStopMarker = /\{\s*(eo(?<short>[a-z_]+)|end_of_(?<long>[a-z_]+))\s*\}/i;
 
         // Maps short codes to their long equivalents so {soc} matches {end_of_chorus}
         const mapBlockName = (name: string): string => {
@@ -243,12 +216,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
           if (match && match.groups) {
             const rawName = match.groups["short"] || match.groups["long"];
             if (!rawName) return;
-            return this.getRegionBlock(
-              session,
-              line,
-              row,
-              mapBlockName(rawName),
-            );
+            return this.getRegionBlock(session, line, row, mapBlockName(rawName));
           }
         };
 
@@ -269,18 +237,14 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
 
             if (m && m.groups) {
               const rawEndName = m.groups["short"] || m.groups["long"];
-              if (
-                rawEndName &&
-                mapBlockName(rawEndName) === normalizedStartName
-              ) {
+              if (rawEndName && mapBlockName(rawEndName) === normalizedStartName) {
                 hasMatch = true;
                 break;
               }
             }
           }
 
-          if (hasMatch)
-            return new Range(startRow, startColumn, row, line.length);
+          if (hasMatch) return new Range(startRow, startColumn, row, line.length);
         };
       }).call(FoldMode.prototype);
     },

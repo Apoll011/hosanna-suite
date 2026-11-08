@@ -51,10 +51,7 @@ async function nativeAuthForTools(authInfo?: AuthInfo) {
   return resolveNativeWebAuth(ctx.orgId);
 }
 
-export function registerLibraryTools(
-  server: McpServer,
-  authInfo?: AuthInfo,
-): void {
+export function registerLibraryTools(server: McpServer, authInfo?: AuthInfo): void {
   server.registerTool(
     "folders_list",
     {
@@ -66,9 +63,7 @@ export function registerLibraryTools(
     },
     async ({ parentId }) => {
       try {
-        return jsonResult(
-          await listFolders(requireMcpContext(authInfo), parentId),
-        );
+        return jsonResult(await listFolders(requireMcpContext(authInfo), parentId));
       } catch (error) {
         return errorResult(error);
       }
@@ -126,9 +121,7 @@ export function registerLibraryTools(
     },
     async (args) => {
       try {
-        return jsonResult(
-          await updateFolder(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await updateFolder(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -148,9 +141,7 @@ export function registerLibraryTools(
     },
     async (args) => {
       try {
-        return jsonResult(
-          await deleteFolder(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await deleteFolder(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -253,9 +244,7 @@ export function registerLibraryTools(
     },
     async (args) => {
       try {
-        return jsonResult(
-          await updateCollection(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await updateCollection(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -271,9 +260,7 @@ export function registerLibraryTools(
     },
     async ({ collectionId }) => {
       try {
-        return jsonResult(
-          await deleteCollection(requireMcpContext(authInfo), collectionId),
-        );
+        return jsonResult(await deleteCollection(requireMcpContext(authInfo), collectionId));
       } catch (error) {
         return errorResult(error);
       }
@@ -292,9 +279,7 @@ export function registerLibraryTools(
     },
     async (args) => {
       try {
-        return jsonResult(
-          await collectionAddSongs(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await collectionAddSongs(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -305,8 +290,7 @@ export function registerLibraryTools(
     "collections_remove_songs",
     {
       title: "Remove songs from collection",
-      description:
-        "Disconnect songs from a collection (does not delete songs).",
+      description: "Disconnect songs from a collection (does not delete songs).",
       inputSchema: z.object({
         collectionId: z.string().uuid(),
         songIds: z.array(z.string().uuid()).min(1),
@@ -314,9 +298,7 @@ export function registerLibraryTools(
     },
     async (args) => {
       try {
-        return jsonResult(
-          await collectionRemoveSongs(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await collectionRemoveSongs(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -329,10 +311,7 @@ export function registerLibraryTools(
       title: "List agenda events",
       description: "List upcoming organization agenda events.",
       inputSchema: z.object({
-        from: z
-          .string()
-          .optional()
-          .describe("YYYY-MM-DD lower bound (defaults to today)"),
+        from: z.string().optional().describe("YYYY-MM-DD lower bound (defaults to today)"),
         limit: z.number().int().min(1).max(50).optional(),
       }),
     },
@@ -354,9 +333,7 @@ export function registerLibraryTools(
     },
     async ({ eventId }) => {
       try {
-        return jsonResult(
-          await getAgendaEvent(requireMcpContext(authInfo), eventId),
-        );
+        return jsonResult(await getAgendaEvent(requireMcpContext(authInfo), eventId));
       } catch (error) {
         return errorResult(error);
       }
@@ -366,10 +343,7 @@ export function registerLibraryTools(
   const agendaAssigneeSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(1),
-    memberId: z
-      .string()
-      .optional()
-      .describe("Better Auth member id from members_list / me"),
+    memberId: z.string().optional().describe("Better Auth member id from members_list / me"),
     avatarUrl: z.string().optional(),
   });
   const agendaResponsibilitySchema = z.object({
@@ -377,9 +351,7 @@ export function registerLibraryTools(
     categoryId: z
       .string()
       .min(1)
-      .describe(
-        "From org_get.responsibilityCategories (leader, musicians, preacher, …)",
-      ),
+      .describe("From org_get.responsibilityCategories (leader, musicians, preacher, …)"),
     assignees: z.array(agendaAssigneeSchema).default([]),
   });
 
@@ -402,9 +374,7 @@ export function registerLibraryTools(
         type: z
           .string()
           .min(1)
-          .describe(
-            'Free string, e.g. "Culto Dominical", "Ensaio", "Rehearsal"',
-          ),
+          .describe('Free string, e.g. "Culto Dominical", "Ensaio", "Rehearsal"'),
         durationMinutes: z.number().int().positive().max(900).optional(),
         location: z.string().optional(),
         notes: z.string().optional(),
@@ -461,9 +431,7 @@ export function registerLibraryTools(
     },
     async (args) => {
       try {
-        return jsonResult(
-          await updateAgendaEvent(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await updateAgendaEvent(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -479,9 +447,7 @@ export function registerLibraryTools(
     },
     async ({ eventId }) => {
       try {
-        return jsonResult(
-          await deleteAgendaEvent(requireMcpContext(authInfo), eventId),
-        );
+        return jsonResult(await deleteAgendaEvent(requireMcpContext(authInfo), eventId));
       } catch (error) {
         return errorResult(error);
       }
@@ -497,10 +463,7 @@ export function registerLibraryTools(
       inputSchema: z.object({
         page: z.number().int().positive().optional().default(1),
         limit: z.number().int().positive().max(50).optional().default(20),
-        type: z
-          .enum(["all", "songs", "folders", "services"])
-          .optional()
-          .default("all"),
+        type: z.enum(["all", "songs", "folders", "services"]).optional().default("all"),
       }),
     },
     async ({ page, limit, type }) => {
@@ -553,10 +516,7 @@ export function registerLibraryTools(
             id: s.id,
             name: s.name,
             updatedAt: s.updatedAt.toISOString(),
-            purgeAt:
-              "purgeAt" in s && s.purgeAt instanceof Date
-                ? s.purgeAt.toISOString()
-                : null,
+            purgeAt: "purgeAt" in s && s.purgeAt instanceof Date ? s.purgeAt.toISOString() : null,
           })),
         );
         return jsonResult({
@@ -602,26 +562,20 @@ export function registerLibraryTools(
       timedToolResult("library_overview", async () => {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.access");
-        const [
-          folders,
-          collections,
-          songPage,
-          trashedSongs,
-          trashedFolders,
-          trashedServices,
-        ] = await Promise.all([
-          listFolders(ctx),
-          listCollections(ctx),
-          songService(ctx).list({
-            page: 1,
-            limit: 1,
-            sortBy: "title",
-            sortOrder: "asc",
-          }),
-          songService(ctx).listTrashed(),
-          folderService(ctx).listTrashed(),
-          serviceService(ctx).listTrashed(),
-        ]);
+        const [folders, collections, songPage, trashedSongs, trashedFolders, trashedServices] =
+          await Promise.all([
+            listFolders(ctx),
+            listCollections(ctx),
+            songService(ctx).list({
+              page: 1,
+              limit: 1,
+              sortBy: "title",
+              sortOrder: "asc",
+            }),
+            songService(ctx).listTrashed(),
+            folderService(ctx).listTrashed(),
+            serviceService(ctx).listTrashed(),
+          ]);
         return {
           folders: { count: folders.count },
           collections: { count: collections.count },

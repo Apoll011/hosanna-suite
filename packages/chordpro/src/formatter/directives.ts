@@ -167,9 +167,7 @@ export interface ParsedDirective {
  * Parse the interior of a {…} directive block.
  * Returns null if the string doesn't look like a valid directive.
  */
-export function parseDirectiveContent(
-  interior: string,
-): ParsedDirective | null {
+export function parseDirectiveContent(interior: string): ParsedDirective | null {
   const trimmed = interior.trim();
   if (!trimmed) return null;
 
@@ -190,10 +188,8 @@ export function parseDirectiveContent(
 
   const lowerName = rawName.toLowerCase();
   const resolvedName = DIRECTIVE_ALIAS_MAP[lowerName] ?? lowerName;
-  const wasAlias =
-    resolvedName !== lowerName && lowerName in DIRECTIVE_ALIAS_MAP;
-  const isKnown =
-    KNOWN_DIRECTIVES.has(resolvedName) || resolvedName.startsWith("x_");
+  const wasAlias = resolvedName !== lowerName && lowerName in DIRECTIVE_ALIAS_MAP;
+  const isKnown = KNOWN_DIRECTIVES.has(resolvedName) || resolvedName.startsWith("x_");
 
   return {
     name: resolvedName,
@@ -235,9 +231,7 @@ export function buildDirectiveLine(
   parsed: ParsedDirective,
   options: { expandDirectiveAliases: boolean },
 ): string {
-  const name = options.expandDirectiveAliases
-    ? parsed.name
-    : parsed.rawName.toLowerCase();
+  const name = options.expandDirectiveAliases ? parsed.name : parsed.rawName.toLowerCase();
   const normalizedValue = normalizeDirectiveValue(parsed.name, parsed.value);
 
   if (!parsed.hasColon || parsed.value === "") {
@@ -250,10 +244,7 @@ export function buildDirectiveLine(
  * Detect if a line looks like a malformed directive (e.g. missing colon,
  * or a brace mismatch) and emit appropriate warnings.
  */
-export function detectMalformedDirective(
-  line: string,
-  lineNumber: number,
-): FormatWarning | null {
+export function detectMalformedDirective(line: string, lineNumber: number): FormatWarning | null {
   // Looks like it starts with { but doesn't end with }
   const trimmed = line.trim();
   if (trimmed.startsWith("{") && !trimmed.endsWith("}")) {

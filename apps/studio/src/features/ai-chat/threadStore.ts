@@ -33,10 +33,7 @@ function openDb(): Promise<IDBDatabase> {
     req.onupgradeneeded = () => {
       const db = req.result;
       if (!db.objectStoreNames.contains(META)) {
-        db.createObjectStore(META, { keyPath: "key" }).createIndex(
-          "scope",
-          "scope",
-        );
+        db.createObjectStore(META, { keyPath: "key" }).createIndex("scope", "scope");
       }
       if (!db.objectStoreNames.contains(THREADS)) {
         db.createObjectStore(THREADS, { keyPath: "key" });
@@ -105,10 +102,7 @@ export const threadStore = {
     try {
       const db = await openDb();
       const rec = await wrap<ThreadRecord | undefined>(
-        db
-          .transaction(THREADS, "readonly")
-          .objectStore(THREADS)
-          .get(k(scope, id)),
+        db.transaction(THREADS, "readonly").objectStore(THREADS).get(k(scope, id)),
       );
       return rec?.thread ?? null;
     } catch {

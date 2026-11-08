@@ -16,15 +16,11 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const currentLang: LanguageMeta =
-    LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
+  const currentLang: LanguageMeta = LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -33,10 +29,7 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
   }, []);
 
   return (
-    <div
-      className={`relative inline-block text-left ${className}`}
-      ref={dropdownRef}
-    >
+    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}

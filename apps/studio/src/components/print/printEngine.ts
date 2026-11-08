@@ -3,11 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  buildPageCss,
-  PRINT_DOCUMENT_CSS,
-  PRINT_FONTS_URL,
-} from "./printStyles";
+import { buildPageCss, PRINT_DOCUMENT_CSS, PRINT_FONTS_URL } from "./printStyles";
 import { PrintOptions } from "./types";
 
 const IFRAME_ID = "hosana-print-iframe";
@@ -16,10 +12,7 @@ const READY_TIMEOUT_MS = 2500;
 const escapeHtml = (value: string) =>
   value.replace(
     /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ] as string,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string,
   );
 
 function withTimeout(promise: Promise<unknown>, ms: number): Promise<void> {

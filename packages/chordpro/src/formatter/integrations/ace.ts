@@ -118,11 +118,7 @@ function applyFormattedDocument(editor: any, result: FormatResult): void {
  * Apply formatted content for a selection-based format operation.
  * Replaces only the selected range and tries to restore the selection.
  */
-function applyFormattedSelection(
-  editor: any,
-  range: AceRangeLike,
-  result: FormatResult,
-): void {
+function applyFormattedSelection(editor: any, range: AceRangeLike, result: FormatResult): void {
   if (!result.changed) return;
 
   const session = editor.session;
@@ -164,10 +160,7 @@ function applyFormattedSelection(
  *
  * @returns The FormatResult from the core formatter, useful for UI feedback.
  */
-export function formatAceDocument(
-  editor: any,
-  options?: FormatOptions,
-): FormatResult | null {
+export function formatAceDocument(editor: any, options?: FormatOptions): FormatResult | null {
   const content = getDocumentContent(editor);
   if (content === null) return null;
 
@@ -185,19 +178,12 @@ export function formatAceDocument(
  *
  * @returns The FormatResult from the core formatter.
  */
-export function formatAceSelection(
-  editor: any,
-  options?: FormatOptions,
-): FormatResult | null {
+export function formatAceSelection(editor: any, options?: FormatOptions): FormatResult | null {
   if (!editor) return null;
 
-  const selection =
-    typeof editor.getSelection === "function" ? editor.getSelection() : null;
+  const selection = typeof editor.getSelection === "function" ? editor.getSelection() : null;
 
-  const hasSelection =
-    selection &&
-    typeof selection.isEmpty === "function" &&
-    !selection.isEmpty();
+  const hasSelection = selection && typeof selection.isEmpty === "function" && !selection.isEmpty();
 
   if (!hasSelection) {
     return formatAceDocument(editor, options);
@@ -234,11 +220,7 @@ export function registerFormatShortcut(
   onResult?: (result: FormatResult) => void,
   options?: FormatOptions,
 ): void {
-  if (
-    !editor ||
-    !editor.commands ||
-    typeof editor.commands.addCommand !== "function"
-  ) {
+  if (!editor || !editor.commands || typeof editor.commands.addCommand !== "function") {
     return;
   }
 

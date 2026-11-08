@@ -38,11 +38,7 @@ export function diffSequences<T>(
   let prefix = 0;
   while (prefix < n && prefix < m && eq(a[prefix], b[prefix])) prefix++;
   let suffix = 0;
-  while (
-    suffix < n - prefix &&
-    suffix < m - prefix &&
-    eq(a[n - 1 - suffix], b[m - 1 - suffix])
-  ) {
+  while (suffix < n - prefix && suffix < m - prefix && eq(a[n - 1 - suffix], b[m - 1 - suffix])) {
     suffix++;
   }
 
@@ -78,11 +74,7 @@ function replaceAll(n: number, m: number): SequenceOp[] {
   return ops;
 }
 
-function myers<T>(
-  a: readonly T[],
-  b: readonly T[],
-  eq: (x: T, y: T) => boolean,
-): SequenceOp[] {
+function myers<T>(a: readonly T[], b: readonly T[], eq: (x: T, y: T) => boolean): SequenceOp[] {
   const n = a.length;
   const m = b.length;
   if (n === 0 && m === 0) return [];
@@ -378,8 +370,7 @@ export function resolveHunks(
   diff: DiffResult,
   rejected: ReadonlySet<number> | readonly number[] = [],
 ): string {
-  const rejectedSet =
-    rejected instanceof Set ? rejected : new Set(rejected as readonly number[]);
+  const rejectedSet = rejected instanceof Set ? rejected : new Set(rejected as readonly number[]);
   if (rejectedSet.size === 0) return diff.modifiedText;
   if (diff.hunks.length > 0 && rejectedSet.size >= diff.hunks.length) {
     let all = true;
@@ -390,15 +381,11 @@ export function resolveHunks(
   const out: string[] = [];
   for (const line of diff.lines) {
     if (line.type === "equal") out.push(line.text);
-    else if (line.type === "delete" && rejectedSet.has(line.hunk))
-      out.push(line.text);
-    else if (line.type === "insert" && !rejectedSet.has(line.hunk))
-      out.push(line.text);
+    else if (line.type === "delete" && rejectedSet.has(line.hunk)) out.push(line.text);
+    else if (line.type === "insert" && !rejectedSet.has(line.hunk)) out.push(line.text);
   }
   const joined = out.join("\n");
-  return diff.modifiedText.replace(/\r\n?/g, "\n").endsWith("\n")
-    ? `${joined}\n`
-    : joined;
+  return diff.modifiedText.replace(/\r\n?/g, "\n").endsWith("\n") ? `${joined}\n` : joined;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -449,17 +436,15 @@ export function buildItems(
     const foldable = run.length - head - tail;
 
     if (foldable > 1 && !expanded.has(i + head)) {
-      run.slice(0, head).forEach((line) =>
-        items.push({ kind: "line", line, hunkStart: false }),
-      );
+      run.slice(0, head).forEach((line) => items.push({ kind: "line", line, hunkStart: false }));
       items.push({
         kind: "fold",
         id: i + head,
         lines: run.slice(head, run.length - tail),
       });
-      run.slice(run.length - tail).forEach((line) =>
-        items.push({ kind: "line", line, hunkStart: false }),
-      );
+      run
+        .slice(run.length - tail)
+        .forEach((line) => items.push({ kind: "line", line, hunkStart: false }));
     } else {
       run.forEach((line) => items.push({ kind: "line", line, hunkStart: false }));
     }

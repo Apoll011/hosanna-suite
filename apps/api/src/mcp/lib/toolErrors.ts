@@ -126,8 +126,7 @@ export function mapToolError(
     }
   }
 
-  const message =
-    error instanceof Error ? error.message : String(error ?? "Unknown error");
+  const message = error instanceof Error ? error.message : String(error ?? "Unknown error");
   const lower = message.toLowerCase();
   if (lower.includes("permission") || lower.includes("forbidden")) {
     return toolError({
@@ -146,11 +145,7 @@ export function mapToolError(
   if (lower.includes("not found")) {
     return toolError({ code: "not_found", message, retryable: false });
   }
-  if (
-    lower.includes("rate") ||
-    lower.includes("429") ||
-    lower.includes("too many")
-  ) {
+  if (lower.includes("rate") || lower.includes("429") || lower.includes("too many")) {
     return toolError({
       code: "rate_limited",
       message,

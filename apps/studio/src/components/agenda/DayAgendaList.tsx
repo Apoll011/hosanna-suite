@@ -33,9 +33,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
       </div>
 
       {events.length === 0 ? (
-        <p className="text-xs text-m3-secondary py-4 text-center">
-          {t("agenda.noEventsForDay")}
-        </p>
+        <p className="text-xs text-m3-secondary py-4 text-center">{t("agenda.noEventsForDay")}</p>
       ) : (
         <div className="space-y-2">
           {events.map((event) => {
@@ -61,9 +59,7 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
                     {event.time}
                     <span className="font-bold truncate">{event.title}</span>
                   </div>
-                  <p className="text-[11px] text-m3-secondary mt-0.5 truncate">
-                    {event.type}
-                  </p>
+                  <p className="text-[11px] text-m3-secondary mt-0.5 truncate">{event.type}</p>
                 </div>
                 <div className="flex items-center gap-1 text-[11px] font-bold text-m3-secondary shrink-0">
                   <Users className="w-3.5 h-3.5" />

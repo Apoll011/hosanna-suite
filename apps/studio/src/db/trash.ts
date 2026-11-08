@@ -14,13 +14,7 @@ export function getPurgeAt(): string {
 export async function purgeExpiredTrash(db: HosanaDatabase): Promise<void> {
   const nowIso = new Date().toISOString();
 
-  const targets = [
-    db.folders,
-    db.songs,
-    db.collections,
-    db.services,
-    db.agendaEvents,
-  ] as const;
+  const targets = [db.folders, db.songs, db.collections, db.services, db.agendaEvents] as const;
 
   for (const collection of targets) {
     const expired = await collection

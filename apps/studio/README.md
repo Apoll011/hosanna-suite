@@ -21,7 +21,6 @@ pnpm --filter @hosanna/studio deploy:production   # → studio / studio.hosanna.
 
 CI: `deploy-studio-preview.yml` (develop → Preview env), `deploy-studio-production.yml` (main → Production env).
 
-
 ### SEO / Search Console
 
 - `public/sitemap.xml` → https://studio.hosanna.live/sitemap.xml (demo, signup, login)
@@ -49,25 +48,25 @@ It talks to the Hosanna API for all data. This repo is a static frontend (Vite);
 
 ## Product features (shipped)
 
-| Area | Details |
-| --- | --- |
-| **Library** | ChordPro songs with structured metadata (key, capo, tempo, artist, CCLI, song number, …) |
-| **Editor** | ChordPro editing with Hosanna’s chord tooling (`@hosanna` / hosanna-chordpro) |
-| **Drive / folders** | Familiar folder browsing for large repertoires |
-| **Collections** | Cross-cutting groupings (unlike folders, membership is many-to-many) |
-| **Services** | Drag-and-drop order, notes, and sharing with the whole worship team |
-| **Print** | Print templates for **song**, **songbook**, **service**, and **agenda event** |
-| **Teams** | People, roles, and access control for the org |
-| **Agendas** | Scheduling and reminders around services and duties |
-| **AI** | Org AI settings, song import from photo/PDF, Studio AI assistant |
-| **Imports** | ChordPro + third-party chord sources (e.g. CifraClub-style providers) |
-| **Library health** | Admin insights and auto-fixes (duration, YouTube id, …) |
-| **Auth** | Better Auth — email, social sign-in, 2FA, org management |
-| **Search** | Fast find + keyboard command palette |
-| **PWA** | Installable progressive web app |
-| **Demo** | Try Studio without registering (`/demo`) |
-| **Analytics** | Usage, setlist insights, library health (PostHog + in-app) |
-| **Backups** | Organization library backup download |
+| Area                | Details                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| **Library**         | ChordPro songs with structured metadata (key, capo, tempo, artist, CCLI, song number, …) |
+| **Editor**          | ChordPro editing with Hosanna’s chord tooling (`@hosanna` / hosanna-chordpro)            |
+| **Drive / folders** | Familiar folder browsing for large repertoires                                           |
+| **Collections**     | Cross-cutting groupings (unlike folders, membership is many-to-many)                     |
+| **Services**        | Drag-and-drop order, notes, and sharing with the whole worship team                      |
+| **Print**           | Print templates for **song**, **songbook**, **service**, and **agenda event**            |
+| **Teams**           | People, roles, and access control for the org                                            |
+| **Agendas**         | Scheduling and reminders around services and duties                                      |
+| **AI**              | Org AI settings, song import from photo/PDF, Studio AI assistant                         |
+| **Imports**         | ChordPro + third-party chord sources (e.g. CifraClub-style providers)                    |
+| **Library health**  | Admin insights and auto-fixes (duration, YouTube id, …)                                  |
+| **Auth**            | Better Auth — email, social sign-in, 2FA, org management                                 |
+| **Search**          | Fast find + keyboard command palette                                                     |
+| **PWA**             | Installable progressive web app                                                          |
+| **Demo**            | Try Studio without registering (`/demo`)                                                 |
+| **Analytics**       | Usage, setlist insights, library health (PostHog + in-app)                               |
+| **Backups**         | Organization library backup download                                                     |
 
 Mobile companions (separate repo): per-musician transpose/capo, metronome, auto-scroll, **song** PDF, AI chart import, offline sync.
 
@@ -116,14 +115,14 @@ npm install
 npm run dev
 ```
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Vite dev server |
-| `npm run build` | Production build |
+| Command                             | Description              |
+| ----------------------------------- | ------------------------ |
+| `npm run dev`                       | Vite dev server          |
+| `npm run build`                     | Production build         |
 | `npm run preview` / `npm run start` | Preview production build |
-| `npm run typecheck` | TypeScript |
-| `npm run lint` | ESLint |
-| `npm run clean` | Remove build output |
+| `npm run typecheck`                 | TypeScript               |
+| `npm run lint`                      | ESLint                   |
+| `npm run clean`                     | Remove build output      |
 
 Environment variables go in a local Vite `.env` (API URL, auth, analytics). Do not commit secrets.
 

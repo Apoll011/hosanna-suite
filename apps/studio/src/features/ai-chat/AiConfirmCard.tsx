@@ -63,24 +63,14 @@ export const AiConfirmCard: React.FC<{
       <div className="flex items-start gap-2 px-2.5 py-2">
         <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
         <div className="min-w-0 flex-1 space-y-0.5">
-          <p className="text-[12px] font-semibold text-m3-text m-0">
-            {actionLabel}
-          </p>
-          <p className="text-[12px] text-m3-text m-0 truncate">
-            {confirmation.title}
-          </p>
+          <p className="text-[12px] font-semibold text-m3-text m-0">{actionLabel}</p>
+          <p className="text-[12px] text-m3-text m-0 truncate">{confirmation.title}</p>
           {confirmation.detail ? (
-            <p className="text-[11px] text-m3-secondary m-0">
-              {confirmation.detail}
-            </p>
+            <p className="text-[11px] text-m3-secondary m-0">{confirmation.detail}</p>
           ) : (
-            <p className="text-[11px] text-m3-secondary m-0">
-              {t("ai.chat.confirmTrashHint")}
-            </p>
+            <p className="text-[11px] text-m3-secondary m-0">{t("ai.chat.confirmTrashHint")}</p>
           )}
-          {error ? (
-            <p className="text-[11px] text-red-500 m-0">{error}</p>
-          ) : null}
+          {error ? <p className="text-[11px] text-red-500 m-0">{error}</p> : null}
         </div>
       </div>
       <div className="flex items-center gap-1.5 px-2.5 pb-2">

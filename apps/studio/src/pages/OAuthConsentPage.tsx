@@ -62,9 +62,7 @@ export const OAuthConsentPage: React.FC = () => {
       }
       setError(t("oauth.consent.genericError"));
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : t("oauth.consent.genericError"),
-      );
+      setError(err instanceof Error ? err.message : t("oauth.consent.genericError"));
     } finally {
       setBusy(false);
     }
@@ -78,9 +76,7 @@ export const OAuthConsentPage: React.FC = () => {
             <Shield className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-title text-m3-text">
-              {t("oauth.consent.title")}
-            </h1>
+            <h1 className="text-title text-m3-text">{t("oauth.consent.title")}</h1>
             <p className="text-sm text-m3-secondary mt-1">
               {t("oauth.consent.desc", { client: clientId })}
             </p>
@@ -89,9 +85,7 @@ export const OAuthConsentPage: React.FC = () => {
 
         {scope && (
           <div className="rounded-md border border-m3-border bg-m3-sidebar/40 px-3 py-2 text-xs text-m3-text">
-            <span className="font-medium block mb-1">
-              {t("oauth.consent.scopes")}
-            </span>
+            <span className="font-medium block mb-1">{t("oauth.consent.scopes")}</span>
             <code className="break-all">{scope}</code>
           </div>
         )}
@@ -103,20 +97,10 @@ export const OAuthConsentPage: React.FC = () => {
         )}
 
         <div className="flex items-center justify-end gap-2 pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={busy}
-            onClick={() => void submit(false)}
-          >
+          <Button variant="outline" size="sm" disabled={busy} onClick={() => void submit(false)}>
             {t("oauth.consent.deny")}
           </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            isLoading={busy}
-            onClick={() => void submit(true)}
-          >
+          <Button variant="primary" size="sm" isLoading={busy} onClick={() => void submit(true)}>
             {t("oauth.consent.allow")}
           </Button>
         </div>

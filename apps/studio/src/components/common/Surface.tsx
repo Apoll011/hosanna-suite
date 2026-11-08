@@ -34,10 +34,7 @@ export const Surface: React.FC<SurfaceProps> = ({
   ...props
 }) => {
   return (
-    <Tag
-      className={`${VARIANT[variant]} ${PADDING[padding]} ${className}`}
-      {...props}
-    >
+    <Tag className={`${VARIANT[variant]} ${PADDING[padding]} ${className}`} {...props}>
       {children}
     </Tag>
   );

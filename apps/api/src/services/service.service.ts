@@ -1,19 +1,12 @@
 import { v4 as uuid } from "uuid";
 import type { OrgScopedPrisma } from "../database/prisma.js";
 import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
-import {
-  ServiceRepository,
-  ServiceWithSongs,
-} from "../repositories/service.repository.js";
+import { ServiceRepository, ServiceWithSongs } from "../repositories/service.repository.js";
 import { SongRepository } from "../repositories/song.repository.js";
 import { AppError } from "../utils/errors.js";
 import { syncCache } from "./syncCache.service.js";
 
-function assertUnchanged(
-  current: { updatedAt: Date },
-  clientUpdatedAt: Date,
-  locale: string,
-) {
+function assertUnchanged(current: { updatedAt: Date }, clientUpdatedAt: Date, locale: string) {
   if (current.updatedAt.getTime() !== clientUpdatedAt.getTime()) {
     throw AppError.conflict(t(locale, "conflict.service"));
   }
@@ -105,12 +98,8 @@ export class ServiceService {
       /** When true, omit element bodies (MCP search). Studio API keeps full rows. */
       metadataOnly?: boolean;
     } = {},
-  ): Promise<
-    ReturnType<typeof serialize>[] | ReturnType<typeof serializeListRow>[]
-  > {
-    const mode: boolean | "all" = body.includeArchived
-      ? "all"
-      : (body.archived ?? false);
+  ): Promise<ReturnType<typeof serialize>[] | ReturnType<typeof serializeListRow>[]> {
+    const mode: boolean | "all" = body.includeArchived ? "all" : (body.archived ?? false);
     const services = await this.serviceRepo.findAll(mode);
     if (body.metadataOnly) {
       return services.map(serializeListRow);
@@ -121,10 +110,7 @@ export class ServiceService {
   async getById(id: string) {
     const service = await this.serviceRepo.findById(id);
     if (!service || service.deleted)
-      throw AppError.notFound(
-        "SERVICE_NOT_FOUND",
-        t(this.locale, "service.not_found"),
-      );
+      throw AppError.notFound("SERVICE_NOT_FOUND", t(this.locale, "service.not_found"));
     return service;
   }
 
@@ -137,12 +123,7 @@ export class ServiceService {
     return serializeForMcp(await this.getById(id));
   }
 
-  async create(input: {
-    name: string;
-    date: Date;
-    notes?: string;
-    elements?: any;
-  }) {
+  async create(input: { name: string; date: Date; notes?: string; elements?: any }) {
     const created = await this.serviceRepo.create({
       id: uuid(),
       name: input.name,
@@ -191,10 +172,7 @@ export class ServiceService {
   async restore(id: string) {
     const service = await this.serviceRepo.findById(id);
     if (!service || !service.deleted)
-      throw AppError.notFound(
-        "SERVICE_NOT_FOUND",
-        t(this.locale, "service.not_found"),
-      );
+      throw AppError.notFound("SERVICE_NOT_FOUND", t(this.locale, "service.not_found"));
     await this.serviceRepo.update(id, { deleted: false, purgeAt: null });
     this.invalidateCache();
     return serialize((await this.serviceRepo.findById(id))!);

@@ -16,20 +16,19 @@ export class BackupService {
   ) {}
 
   async export() {
-    const [folders, songs, services, collections, agendaEvents] =
-      await Promise.all([
-        this.db.folder.findMany({ where: { deleted: false } }),
-        this.db.song.findMany({
-          where: { deleted: false },
-          include: { collections: { select: { id: true } } },
-        }),
-        this.db.service.findMany({ where: { deleted: false } }),
-        this.db.collection.findMany({
-          where: { deleted: false },
-          include: { songs: { select: { id: true } } },
-        }),
-        this.db.agendaEvent.findMany({ where: { deleted: false } }),
-      ]);
+    const [folders, songs, services, collections, agendaEvents] = await Promise.all([
+      this.db.folder.findMany({ where: { deleted: false } }),
+      this.db.song.findMany({
+        where: { deleted: false },
+        include: { collections: { select: { id: true } } },
+      }),
+      this.db.service.findMany({ where: { deleted: false } }),
+      this.db.collection.findMany({
+        where: { deleted: false },
+        include: { songs: { select: { id: true } } },
+      }),
+      this.db.agendaEvent.findMany({ where: { deleted: false } }),
+    ]);
 
     return {
       version: BACKUP_VERSION,
@@ -55,30 +54,18 @@ export class BackupService {
    */
   async restore(backup: any) {
     if (!backup || typeof backup !== "object") {
-      throw new AppError(
-        400,
-        "INVALID_BACKUP_FILE",
-        t(this.locale, "backup.invalid_file"),
-      );
+      throw new AppError(400, "INVALID_BACKUP_FILE", t(this.locale, "backup.invalid_file"));
     }
 
     const foldersIn = Array.isArray(backup.folders) ? backup.folders : null;
     const songsIn = Array.isArray(backup.songs) ? backup.songs : null;
     const servicesIn = Array.isArray(backup.services) ? backup.services : null;
     // Older backups (v2.1) omit these — treat as empty arrays.
-    const collectionsIn = Array.isArray(backup.collections)
-      ? backup.collections
-      : [];
-    const agendaIn = Array.isArray(backup.agendaEvents)
-      ? backup.agendaEvents
-      : [];
+    const collectionsIn = Array.isArray(backup.collections) ? backup.collections : [];
+    const agendaIn = Array.isArray(backup.agendaEvents) ? backup.agendaEvents : [];
 
     if (!foldersIn || !songsIn || !servicesIn) {
-      throw new AppError(
-        400,
-        "INVALID_BACKUP_FILE",
-        t(this.locale, "backup.missing_arrays"),
-      );
+      throw new AppError(400, "INVALID_BACKUP_FILE", t(this.locale, "backup.missing_arrays"));
     }
 
     const folders = sortFoldersParentsFirst(foldersIn.filter(isLiveRow));
@@ -132,9 +119,7 @@ export class BackupService {
       }
 
       for (const s of songs) {
-        const collectionIds: string[] = Array.isArray(s.collectionIds)
-          ? s.collectionIds
-          : [];
+        const collectionIds: string[] = Array.isArray(s.collectionIds) ? s.collectionIds : [];
         await tx.song.create({
           data: {
             id: s.id,

@@ -4,12 +4,7 @@ import { Folder, Song } from "@/src/types";
 import { FolderOpen, Upload } from "lucide-react";
 import React from "react";
 import { useOutletContext } from "react-router-dom";
-import {
-  FolderGridCard,
-  FolderTableRow,
-  SongGridCard,
-  SongTableRow,
-} from "../components/explorer";
+import { FolderGridCard, FolderTableRow, SongGridCard, SongTableRow } from "../components/explorer";
 import { useAuth } from "../contexts/AuthContext";
 import { useAppNavigate } from "../hooks/useAppNavigate";
 import { usePersonalSettings } from "../hooks/usePersonalSettings";
@@ -24,17 +19,9 @@ interface FolderExplorerContext {
   isSearchingOrFiltering: boolean;
   currentFolder: Folder | undefined;
   searchQuery: string;
-  handleItemClick: (
-    e: React.MouseEvent,
-    id: string,
-    type: "folder" | "song",
-  ) => void;
+  handleItemClick: (e: React.MouseEvent, id: string, type: "folder" | "song") => void;
   handleSelectFolder: (id: string | null) => void;
-  handleContextMenu: (
-    e: React.MouseEvent,
-    type: "folder" | "song",
-    item: Folder | Song,
-  ) => void;
+  handleContextMenu: (e: React.MouseEvent, type: "folder" | "song", item: Folder | Song) => void;
   getFolderPathString: (folderId: string | null | undefined) => string;
   selectedFolderIds: Set<string>;
   selectedSongIds: Set<string>;
@@ -60,11 +47,7 @@ interface FolderExplorerContext {
   isInternalDragActive: boolean;
   dropTargetFolderId: string | null;
   dragDisabledFolderIds: Set<string>;
-  handleItemDragStart: (
-    e: React.DragEvent,
-    id: string,
-    type: "folder" | "song",
-  ) => void;
+  handleItemDragStart: (e: React.DragEvent, id: string, type: "folder" | "song") => void;
   handleItemDragEnd: () => void;
   handleFolderDragOver: (e: React.DragEvent, folderId: string) => void;
   handleFolderDragLeave: (e: React.DragEvent, folderId: string) => void;
@@ -191,9 +174,7 @@ export const FoldersPage: React.FC = () => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`flex-1 p-6 overflow-y-auto bg-m3-bg dark:bg-m3-bg relative transition-all select-none min-h-75 h-full ${
-        isDraggingOver
-          ? "ring-4 ring-inset ring-m3-primary bg-m3-primary/5"
-          : ""
+        isDraggingOver ? "ring-4 ring-inset ring-m3-primary bg-m3-primary/5" : ""
       }`}
     >
       {/* Drag Over Overlay (só para upload externo, nunca durante drag interno) */}
@@ -203,14 +184,10 @@ export const FoldersPage: React.FC = () => {
             <div className="w-16 h-16 rounded-3xl bg-m3-primary text-white flex items-center justify-center shadow-lg mb-3 animate-bounce">
               <Upload className="w-8 h-8" />
             </div>
-            <h3 className="text-title text-m3-primary">
-              {t("foldersPage.dropHere")}
-            </h3>
+            <h3 className="text-title text-m3-primary">{t("foldersPage.dropHere")}</h3>
             <p className="text-caption mt-1">
               {t("foldersPage.dropHereDesc", {
-                folder: currentFolder
-                  ? currentFolder.name
-                  : t("layout.rootDirectory"),
+                folder: currentFolder ? currentFolder.name : t("layout.rootDirectory"),
               })}
             </p>
           </div>
@@ -225,17 +202,11 @@ export const FoldersPage: React.FC = () => {
         <div className="h-full flex flex-col items-center justify-center">
           <EmptyState
             icon={<FolderOpen className="w-8 h-8" />}
-            title={
-              searchQuery
-                ? t("foldersPage.noResults")
-                : t("foldersPage.emptyTitle")
-            }
+            title={searchQuery ? t("foldersPage.noResults") : t("foldersPage.emptyTitle")}
             description={
               searchQuery
                 ? t("foldersPage.noResultsDesc", {
-                    folder: currentFolder
-                      ? currentFolder.name
-                      : t("common.root"),
+                    folder: currentFolder ? currentFolder.name : t("common.root"),
                     query: searchQuery,
                   })
                 : currentFolderId === null
@@ -244,15 +215,9 @@ export const FoldersPage: React.FC = () => {
                       folder: currentFolder?.name || "",
                     })
             }
-            actionLabel={
-              !searchQuery && canCreateSong
-                ? t("addressBar.newSong")
-                : undefined
-            }
+            actionLabel={!searchQuery && canCreateSong ? t("addressBar.newSong") : undefined}
             onAction={
-              !searchQuery && canCreateSong
-                ? () => setIsCreateSongModalOpen(true)
-                : undefined
+              !searchQuery && canCreateSong ? () => setIsCreateSongModalOpen(true) : undefined
             }
           />
           {!searchQuery && (
@@ -328,32 +293,22 @@ export const FoldersPage: React.FC = () => {
             <table className="w-full text-left border-collapse select-none">
               <thead>
                 <tr className="bg-m3-sidebar/40 border-b border-m3-border">
-                  <th
-                    className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}
-                  >
+                  <th className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}>
                     {t("common.name")}
                   </th>
-                  <th
-                    className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}
-                  >
+                  <th className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}>
                     {t("common.type")}
                   </th>
                   {isSearchingOrFiltering && (
-                    <th
-                      className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}
-                    >
+                    <th className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}>
                       {t("common.location")}
                     </th>
                   )}
-                  <th
-                    className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}
-                  >
+                  <th className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}>
                     {t("common.details")}
                   </th>
                   {showSongScore && (
-                    <th
-                      className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}
-                    >
+                    <th className={`text-label ${isCompact ? "py-2.5 px-4" : "py-3.5 px-6"}`}>
                       {t("common.score")}
                     </th>
                   )}
@@ -380,12 +335,8 @@ export const FoldersPage: React.FC = () => {
                     density={density}
                     onClick={(e) => handleItemClick(e, folder.id, "folder")}
                     onDoubleClick={() => handleSelectFolder(folder.id)}
-                    onContextMenu={(e) =>
-                      handleContextMenu(e, "folder", folder)
-                    }
-                    onDragStart={(e) =>
-                      handleItemDragStart(e, folder.id, "folder")
-                    }
+                    onContextMenu={(e) => handleContextMenu(e, "folder", folder)}
+                    onDragStart={(e) => handleItemDragStart(e, folder.id, "folder")}
                     onDragEnd={handleItemDragEnd}
                     onDragOver={(e) => handleFolderDragOver(e, folder.id)}
                     onDragLeave={(e) => handleFolderDragLeave(e, folder.id)}
@@ -407,9 +358,7 @@ export const FoldersPage: React.FC = () => {
                     showSongScore={showSongScore}
                     songScoreLayout={personalSettings.songScoreLayout}
                     onClick={(e) => handleItemClick(e, song.id, "song")}
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/songs/${song.id}`)
-                    }
+                    onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
                     onContextMenu={(e) => handleContextMenu(e, "song", song)}
                     onDragStart={(e) => handleItemDragStart(e, song.id, "song")}
                     onDragEnd={handleItemDragEnd}

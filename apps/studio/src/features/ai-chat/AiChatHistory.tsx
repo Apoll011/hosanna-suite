@@ -30,12 +30,7 @@ function relativeTime(ts: number, locale: string): string {
 }
 
 /** Header popover listing saved conversations. */
-export const AiChatHistory: React.FC<Props> = ({
-  threads,
-  activeId,
-  onOpen,
-  onDelete,
-}) => {
+export const AiChatHistory: React.FC<Props> = ({ threads, activeId, onOpen, onDelete }) => {
   const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -86,9 +81,7 @@ export const AiChatHistory: React.FC<Props> = ({
                 <li
                   key={th.id}
                   className={`group/th flex items-center rounded-md ${
-                    th.id === activeId
-                      ? "bg-m3-primary/10"
-                      : "hover:bg-m3-hover"
+                    th.id === activeId ? "bg-m3-primary/10" : "hover:bg-m3-hover"
                   }`}
                 >
                   <button

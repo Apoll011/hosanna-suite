@@ -8,9 +8,9 @@ Marketing site for **Hosanna** — a ChordPro **songbook** and **worship plannin
 
 Musicians get a mobile songbook with transpose, capo, chord diagrams, metronome, auto-scroll, PDF export, AI chart import, and offline sync. Leaders get **Hosanna Studio** to manage the library, plan services, and run the team.
 
-- Site: https://hosanna.live  
-- Studio: https://studio.hosanna.live  
-- Mobile: https://github.com/Apoll011/Hosanna  
+- Site: https://hosanna.live
+- Studio: https://studio.hosanna.live
+- Mobile: https://github.com/Apoll011/Hosanna
 
 This repo is the public landing page (TanStack Router + Vite), not the app backends.
 
@@ -43,13 +43,13 @@ When comparing songbook apps, Hosanna is the option that combines **stage tools*
 
 ## Site structure
 
-| Route | Content |
-| --- | --- |
-| `/` | Landing: features, how it works, pricing, FAQ, app stores |
-| `/chordpro` | ChordPro training guide for worship teams |
-| `/about` | Founders / story |
-| `/contact` | Contact form |
-| `/privacy`, `/terms` | Legal (localized markdown) |
+| Route                | Content                                                   |
+| -------------------- | --------------------------------------------------------- |
+| `/`                  | Landing: features, how it works, pricing, FAQ, app stores |
+| `/chordpro`          | ChordPro training guide for worship teams                 |
+| `/about`             | Founders / story                                          |
+| `/contact`           | Contact form                                              |
+| `/privacy`, `/terms` | Legal (localized markdown)                                |
 
 Copy lives in `src/lib/i18n/locales/{pt,en,es}.ts`. SEO shells: `index.html`, `src/lib/seo.ts`.
 
@@ -70,8 +70,8 @@ Requires Node.js + npm. Configure `VITE_DASHBOARD_URL` (and related vars) via `.
 
 ## Related repos
 
-| Repo | Role |
-| --- | --- |
-| [Hosanna](https://github.com/Apoll011/Hosanna) | Flutter musician app |
-| [hosanna-studio](https://github.com/Apoll011/hosanna-studio) | Studio dashboard |
-| [Hosanna-server](https://github.com/Apoll011/Hosanna-server) | API |
+| Repo                                                         | Role                 |
+| ------------------------------------------------------------ | -------------------- |
+| [Hosanna](https://github.com/Apoll011/Hosanna)               | Flutter musician app |
+| [hosanna-studio](https://github.com/Apoll011/hosanna-studio) | Studio dashboard     |
+| [Hosanna-server](https://github.com/Apoll011/Hosanna-server) | API                  |

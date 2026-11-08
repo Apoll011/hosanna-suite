@@ -3,20 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  ensureOrgScopedData,
-  getDatabase,
-  resetReplication,
-  setupReplication,
-} from "../db";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { ensureOrgScopedData, getDatabase, resetReplication, setupReplication } from "../db";
 import type { ReplicationManager } from "../db";
 import { SyncStatus } from "../types";
 import { useAuth } from "./AuthContext";
@@ -52,10 +40,7 @@ interface ShowToastOptions {
 interface SyncContextType {
   syncStatus: SyncStatus;
   toasts: ToastMessage[];
-  showToast: (
-    textOrOptions: string | ShowToastOptions,
-    type?: ToastMessage["type"],
-  ) => void;
+  showToast: (textOrOptions: string | ShowToastOptions, type?: ToastMessage["type"]) => void;
   removeToast: (id: string) => void;
   triggerSyncCheck: () => Promise<void>;
   lastSyncedAt: Date | null;
@@ -63,9 +48,7 @@ interface SyncContextType {
 
 const SyncContext = createContext<SyncContextType | undefined>(undefined);
 
-export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>("synced");
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
@@ -73,9 +56,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Track auto-dismiss timers so they can be cleared on manual dismissal
   // and on unmount, preventing setState-after-unmount warnings.
-  const toastTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
-    new Map(),
-  );
+  const toastTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const removeToast = useCallback((id: string) => {
     // Cancel the auto-dismiss timer if the user dismisses manually
@@ -98,10 +79,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const showToast = useCallback(
-    (
-      textOrOptions: string | ShowToastOptions,
-      type: ToastMessage["type"] = "info",
-    ) => {
+    (textOrOptions: string | ShowToastOptions, type: ToastMessage["type"] = "info") => {
       const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
       let toastItem: ToastMessage;
 
@@ -121,8 +99,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setToasts((prev) => [...prev, toastItem]);
 
-      const duration =
-        toastItem.duration !== undefined ? toastItem.duration : 4000;
+      const duration = toastItem.duration !== undefined ? toastItem.duration : 4000;
       if (duration > 0) {
         const timer = setTimeout(() => {
           toastTimersRef.current.delete(id);
@@ -202,10 +179,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({
 
         repl.start({ forceFullPull: scope.cleared });
       } catch (err) {
-        console.error(
-          "[SyncContext] Failed to initialize DB / Replication:",
-          err,
-        );
+        console.error("[SyncContext] Failed to initialize DB / Replication:", err);
         if (isMounted) setSyncStatus("error" as SyncStatus);
       }
     }

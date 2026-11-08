@@ -87,9 +87,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
               <Info className="w-6 h-6 text-m3-primary" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-m3-text">
-                {t("settings.about.title")}
-              </h3>
+              <h3 className="text-base font-bold text-m3-text">{t("settings.about.title")}</h3>
               <p className="text-xs text-m3-secondary mt-0.5">
                 {t("settings.about.controlPanel")}{" "}
                 {organization?.name ? `• ${organization.name}` : ""}
@@ -105,9 +103,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
             <span className="text-[10px] uppercase font-bold tracking-wider text-m3-secondary block">
               {t("settings.about.studioVersion")}
             </span>
-            <span className="text-sm font-mono font-bold text-m3-text">
-              {APP_VERSION}
-            </span>
+            <span className="text-sm font-mono font-bold text-m3-text">{APP_VERSION}</span>
           </div>
         </div>
 
@@ -183,9 +179,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <FileText className="w-3.5 h-3.5 text-m3-primary" />
-                  <span className="text-xs font-semibold text-m3-text">
-                    {provider.name}
-                  </span>
+                  <span className="text-xs font-semibold text-m3-text">{provider.name}</span>
                 </div>
                 {provider.description && (
                   <p className="text-[11px] text-slate-500 leading-relaxed">
@@ -223,9 +217,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
                 key={idx}
                 className="flex items-center justify-between text-xs py-1.5 border-b border-slate-50 dark:border-slate-800/40 last:border-none"
               >
-                <span className="font-semibold text-m3-text">
-                  {dep.name}
-                </span>
+                <span className="font-semibold text-m3-text">{dep.name}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-m3-secondary">{dep.type}</span>
                   <span className="px-2 py-0.5 text-[10px] font-mono bg-m3-sidebar text-m3-secondary rounded-md">

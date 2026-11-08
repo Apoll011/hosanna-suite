@@ -34,9 +34,7 @@ export const AiProposalBanner: React.FC<AiProposalBannerProps> = ({
             <p className="text-xs font-semibold text-m3-text truncate">
               {title || t("ai.chat.proposalTitle")}
             </p>
-            <p className="text-[10px] text-m3-secondary truncate">
-              {t("ai.chat.proposalHint")}
-            </p>
+            <p className="text-[10px] text-m3-secondary truncate">{t("ai.chat.proposalHint")}</p>
           </div>
           <Button
             variant="outline"
@@ -57,10 +55,7 @@ export const AiProposalBanner: React.FC<AiProposalBannerProps> = ({
         </div>
         {diffPreview && (
           <div className="max-h-40 overflow-auto">
-            <AiDiffView
-              preview={diffPreview}
-              className="border-0 rounded-none"
-            />
+            <AiDiffView preview={diffPreview} className="border-0 rounded-none" />
           </div>
         )}
       </div>

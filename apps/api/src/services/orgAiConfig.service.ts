@@ -1,15 +1,10 @@
 import { prisma } from "../database/prisma.js";
-import {
-  decryptSecret,
-  encryptSecret,
-  isAiCryptoConfigured,
-} from "../lib/aiCrypto.js";
+import { decryptSecret, encryptSecret, isAiCryptoConfigured } from "../lib/aiCrypto.js";
 import { NATIVE_WEB_CAPABILITIES } from "../mcp/lib/nativeWebCapabilities.js";
 import { AppError } from "../utils/errors.js";
 import { AI_LIMITS, clampInt } from "./aiBehavior.js";
 
-export type AiProvider =
-  "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
+export type AiProvider = "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
 
 export const AI_PROVIDERS: AiProvider[] = [
   "openai",
@@ -21,21 +16,16 @@ export const AI_PROVIDERS: AiProvider[] = [
 
 export const AI_MODEL_PRESETS: Record<AiProvider, string[]> = {
   openai: ["gpt-4o-mini", "gpt-4o", "o4-mini"],
-  anthropic: [
-    "claude-sonnet-4-5",
-    "claude-haiku-4-5-20251001",
-    "claude-opus-4-5",
-  ],
+  anthropic: ["claude-sonnet-4-5", "claude-haiku-4-5-20251001", "claude-opus-4-5"],
   google: ["gemini-2.5-flash", "gemini-2.5-pro"],
   deepseek: ["deepseek-flash", "deepseek-chat", "deepseek-reasoner"],
   openai_compatible: ["gpt-4o-mini", "llama-3.3-70b", "qwen-plus"],
 };
 
-export const AI_PROVIDER_DEFAULT_BASE_URL: Partial<Record<AiProvider, string>> =
-  {
-    deepseek: "https://api.deepseek.com",
-    openai: "https://api.openai.com/v1",
-  };
+export const AI_PROVIDER_DEFAULT_BASE_URL: Partial<Record<AiProvider, string>> = {
+  deepseek: "https://api.deepseek.com",
+  openai: "https://api.openai.com/v1",
+};
 
 function assertProvider(provider: string): asserts provider is AiProvider {
   if (!AI_PROVIDERS.includes(provider as AiProvider)) {
@@ -43,16 +33,11 @@ function assertProvider(provider: string): asserts provider is AiProvider {
   }
 }
 
-function normalizeBaseUrl(
-  provider: AiProvider,
-  raw?: string | null,
-): string | null {
+function normalizeBaseUrl(provider: AiProvider, raw?: string | null): string | null {
   const trimmed = raw?.trim() || null;
   if (provider === "openai_compatible") {
     if (!trimmed) {
-      throw AppError.badRequest(
-        "baseUrl is required for openai_compatible providers.",
-      );
+      throw AppError.badRequest("baseUrl is required for openai_compatible providers.");
     }
   }
   if (!trimmed) {
@@ -107,9 +92,7 @@ export function publicAiSettings(
       search: nativeWeb.search,
       fetch: nativeWeb.fetch,
       note: nativeWeb.note,
-      active: Boolean(
-        row?.enabled && row?.apiKeyCiphertext && nativeWeb.search,
-      ),
+      active: Boolean(row?.enabled && row?.apiKeyCiphertext && nativeWeb.search),
     },
   };
 }
@@ -138,8 +121,7 @@ export class OrgAiConfigService {
     const existing = await prisma.orgAiConfig.findUnique({ where: { orgId } });
     const provider = input.provider ?? existing?.provider ?? "openai";
     assertProvider(provider);
-    const model =
-      input.model?.trim() || existing?.model || AI_MODEL_PRESETS[provider][0];
+    const model = input.model?.trim() || existing?.model || AI_MODEL_PRESETS[provider][0];
 
     const baseUrl =
       input.baseUrl !== undefined
@@ -162,8 +144,7 @@ export class OrgAiConfigService {
       apiKeyTag = enc.tag;
     }
 
-    const enabled =
-      input.enabled ?? existing?.enabled ?? Boolean(apiKeyCiphertext);
+    const enabled = input.enabled ?? existing?.enabled ?? Boolean(apiKeyCiphertext);
 
     const behavior = {
       ...(input.maxToolCalls !== undefined && {
@@ -193,9 +174,7 @@ export class OrgAiConfigService {
               ),
       }),
       ...(input.instructions !== undefined && {
-        instructions:
-          input.instructions?.trim().slice(0, AI_LIMITS.instructionsMaxChars) ||
-          null,
+        instructions: input.instructions?.trim().slice(0, AI_LIMITS.instructionsMaxChars) || null,
       }),
       ...(input.memoryEnabled !== undefined && {
         memoryEnabled: input.memoryEnabled,
@@ -260,9 +239,7 @@ export class OrgAiConfigService {
     }
     assertProvider(row.provider);
     if (!isAiCryptoConfigured()) {
-      throw AppError.badRequest(
-        "AI_SETTINGS_ENCRYPTION_KEY is not configured.",
-      );
+      throw AppError.badRequest("AI_SETTINGS_ENCRYPTION_KEY is not configured.");
     }
     const apiKey = decryptSecret({
       ciphertext: row.apiKeyCiphertext,
@@ -287,18 +264,14 @@ export class OrgAiConfigService {
   }> {
     const row = await prisma.orgAiConfig.findUnique({ where: { orgId } });
     if (!row?.enabled) {
-      throw AppError.badRequest(
-        "AI assistant is disabled for this organization.",
-      );
+      throw AppError.badRequest("AI assistant is disabled for this organization.");
     }
     if (!row.apiKeyCiphertext || !row.apiKeyIv || !row.apiKeyTag) {
       throw AppError.badRequest("AI API key is not configured.");
     }
     assertProvider(row.provider);
     if (!isAiCryptoConfigured()) {
-      throw AppError.badRequest(
-        "AI_SETTINGS_ENCRYPTION_KEY is not configured.",
-      );
+      throw AppError.badRequest("AI_SETTINGS_ENCRYPTION_KEY is not configured.");
     }
     const apiKey = decryptSecret({
       ciphertext: row.apiKeyCiphertext,

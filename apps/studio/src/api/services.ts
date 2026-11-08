@@ -35,10 +35,7 @@ export const servicesApi = {
     return created as unknown as Service;
   },
 
-  updateService: async (
-    id: string,
-    data: Partial<Service>,
-  ): Promise<Service> => {
+  updateService: async (id: string, data: Partial<Service>): Promise<Service> => {
     const updated = await unwrapApiResult(
       await getApiClient().openapi.PUT("/services/{id}", {
         params: { path: { id } },

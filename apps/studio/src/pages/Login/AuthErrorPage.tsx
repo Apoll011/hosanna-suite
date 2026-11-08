@@ -36,9 +36,7 @@ export const AuthErrorPage: React.FC = () => {
       errorMsg={errorMsg}
     >
       <div className="space-y-4">
-        <p className="text-body-sm text-m3-text-secondary">
-          {t("auth.error.hint")}
-        </p>
+        <p className="text-body-sm text-m3-text-secondary">{t("auth.error.hint")}</p>
         <AppLink to="/login" className="block">
           <Button type="button" className="w-full">
             {t("auth.error.backToLogin")}

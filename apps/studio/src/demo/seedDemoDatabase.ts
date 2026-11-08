@@ -16,14 +16,10 @@ import { isDemoSeeded, markDemoSeeded } from "./index";
  * @param db     The live HosanaDatabase instance.
  * @param locale Browser locale string (e.g. "pt-BR", "en-US", "es").
  */
-export async function seedDemoDatabase(
-  db: HosanaDatabase,
-  locale: string,
-): Promise<void> {
+export async function seedDemoDatabase(db: HosanaDatabase, locale: string): Promise<void> {
   if (isDemoSeeded()) return;
 
-  const { folders, songs, collections, services, agendaEvents } =
-    generateDemoData(locale);
+  const { folders, songs, collections, services, agendaEvents } = generateDemoData(locale);
 
   // Engine collections require `T & Record<string, unknown>`; domain types
   // (Folder/Song/…) are structurally compatible at runtime.

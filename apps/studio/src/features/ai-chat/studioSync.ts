@@ -40,10 +40,7 @@ function outputRequestsSync(output: unknown): boolean {
       const parsed = JSON.parse(output) as { studioSync?: boolean };
       return parsed.studioSync === true;
     } catch {
-      return (
-        output.includes('"studioSync":true') ||
-        output.includes('"studioSync": true')
-      );
+      return output.includes('"studioSync":true') || output.includes('"studioSync": true');
     }
   }
   if (typeof output !== "object") return false;
@@ -59,10 +56,7 @@ function outputRequestsSync(output: unknown): boolean {
   return false;
 }
 
-export function shouldStudioSyncAfterTool(
-  toolName: string,
-  output?: unknown,
-): boolean {
+export function shouldStudioSyncAfterTool(toolName: string, output?: unknown): boolean {
   const name = normalizeToolName(toolName);
   if (STUDIO_SYNC_AFTER_TOOLS.has(name)) return true;
   return outputRequestsSync(output);

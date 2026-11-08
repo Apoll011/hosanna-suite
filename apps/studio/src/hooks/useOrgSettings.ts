@@ -115,19 +115,16 @@ function parseOrgSettings(metadata: OrgMetadataStructure): OrgSettings {
       weekStartsOn: g.weekStartsOn ?? DEFAULT_ORG_SETTINGS.general.weekStartsOn,
     },
     services: {
-      sermonDuration:
-        dur.sermon ?? DEFAULT_ORG_SETTINGS.services.sermonDuration,
+      sermonDuration: dur.sermon ?? DEFAULT_ORG_SETTINGS.services.sermonDuration,
       songDuration: dur.song ?? DEFAULT_ORG_SETTINGS.services.songDuration,
       showNotes: svc.showNotes ?? DEFAULT_ORG_SETTINGS.services.showNotes,
       showServiceDuration:
-        svc.showServiceDuration ??
-        DEFAULT_ORG_SETTINGS.services.showServiceDuration,
+        svc.showServiceDuration ?? DEFAULT_ORG_SETTINGS.services.showServiceDuration,
       autoSave: svc.autoSave ?? DEFAULT_ORG_SETTINGS.services.autoSave,
     },
     agenda: {
       responsibilityCategories:
-        agenda.responsibilityCategories ??
-        DEFAULT_ORG_SETTINGS.agenda.responsibilityCategories,
+        agenda.responsibilityCategories ?? DEFAULT_ORG_SETTINGS.agenda.responsibilityCategories,
     },
     print: resolveOrgPrintSettings(s.print),
   };
@@ -154,9 +151,7 @@ export interface UseOrgSettingsReturn {
   /** Persist to backend */
   save: () => Promise<void>;
   /** Stage a new responsibility category (persisted on `save`) */
-  addResponsibilityCategory: (
-    category: Omit<ResponsibilityCategory, "id">,
-  ) => void;
+  addResponsibilityCategory: (category: Omit<ResponsibilityCategory, "id">) => void;
   /** Stage removal of a responsibility category (persisted on `save`) */
   removeResponsibilityCategory: (id: string) => void;
 }
@@ -165,16 +160,13 @@ export function useOrgSettings(): UseOrgSettingsReturn {
   const { organization, refetch } = useAuth();
 
   const [settings, setSettings] = useState<OrgSettings>(DEFAULT_ORG_SETTINGS);
-  const [savedSettings, setSavedSettings] =
-    useState<OrgSettings>(DEFAULT_ORG_SETTINGS);
+  const [savedSettings, setSavedSettings] = useState<OrgSettings>(DEFAULT_ORG_SETTINGS);
   const [isSaving, setIsSaving] = useState(false);
 
   // Sync from organization whenever it changes
   useEffect(() => {
     if (organization) {
-      const parsed = parseOrgSettings(
-        (organization.metadata as OrgMetadataStructure) ?? {},
-      );
+      const parsed = parseOrgSettings((organization.metadata as OrgMetadataStructure) ?? {});
       setSettings(parsed);
       setSavedSettings(parsed);
     }
@@ -197,18 +189,13 @@ export function useOrgSettings(): UseOrgSettingsReturn {
 
   const reset = () => setSettings(savedSettings);
 
-  const addResponsibilityCategory = (
-    category: Omit<ResponsibilityCategory, "id">,
-  ) => {
+  const addResponsibilityCategory = (category: Omit<ResponsibilityCategory, "id">) => {
     const id = `cat-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     setSettings((prev) => ({
       ...prev,
       agenda: {
         ...prev.agenda,
-        responsibilityCategories: [
-          ...prev.agenda.responsibilityCategories,
-          { ...category, id },
-        ],
+        responsibilityCategories: [...prev.agenda.responsibilityCategories, { ...category, id }],
       },
     }));
   };
@@ -218,9 +205,7 @@ export function useOrgSettings(): UseOrgSettingsReturn {
       ...prev,
       agenda: {
         ...prev.agenda,
-        responsibilityCategories: prev.agenda.responsibilityCategories.filter(
-          (c) => c.id !== id,
-        ),
+        responsibilityCategories: prev.agenda.responsibilityCategories.filter((c) => c.id !== id),
       },
     }));
   };
@@ -229,8 +214,7 @@ export function useOrgSettings(): UseOrgSettingsReturn {
     if (!organization) return;
     setIsSaving(true);
     try {
-      const currentMetadata =
-        (organization.metadata as OrgMetadataStructure) ?? {};
+      const currentMetadata = (organization.metadata as OrgMetadataStructure) ?? {};
 
       await authClient.organization.update({
         data: {
@@ -256,8 +240,7 @@ export function useOrgSettings(): UseOrgSettingsReturn {
               },
               agenda: {
                 ...currentMetadata.settings?.agenda,
-                responsibilityCategories:
-                  settings.agenda.responsibilityCategories,
+                responsibilityCategories: settings.agenda.responsibilityCategories,
               },
               print: {
                 ...currentMetadata.settings?.print,

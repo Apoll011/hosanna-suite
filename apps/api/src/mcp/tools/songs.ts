@@ -15,16 +15,9 @@ import {
   mirroredMetadataWarnings,
   validateChordProContent,
 } from "../lib/chordproGate.js";
-import {
-  clipContent,
-  FULL_CONTENT_MAX,
-  SEARCH_CONTENT_MAX,
-} from "../lib/contentClip.js";
+import { clipContent, FULL_CONTENT_MAX, SEARCH_CONTENT_MAX } from "../lib/contentClip.js";
 import { summarizeDiff } from "../lib/diff.js";
-import {
-  FOLDER_SONGS_MAX_LIMIT,
-  listSongsInFolder,
-} from "../lib/folderSongs.js";
+import { FOLDER_SONGS_MAX_LIMIT, listSongsInFolder } from "../lib/folderSongs.js";
 import { withClientRequestId } from "../lib/idempotency.js";
 import { propagateVerseChords } from "../lib/propagateChords.js";
 import { transposeChordProSource } from "../lib/transposeSource.js";
@@ -55,10 +48,7 @@ function serializeSong(song: {
   };
 }
 
-export function registerSongTools(
-  server: McpServer,
-  authInfo?: AuthInfo,
-): void {
+export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void {
   server.registerTool(
     "songs_search",
     {
@@ -66,14 +56,8 @@ export function registerSongTools(
       description:
         "Search the org library by title/artist/lyrics/tags (combined). key is exact metadata key string (not enharmonic-normalized). Default page=1, limit=20 (max 100). includeContent clips bodies to 8k chars and sets truncated.",
       inputSchema: z.object({
-        search: z
-          .string()
-          .optional()
-          .describe("Matches title, artist, lyrics content, and tags"),
-        key: z
-          .string()
-          .optional()
-          .describe("Exact key filter as stored (e.g. Db not C#)"),
+        search: z.string().optional().describe("Matches title, artist, lyrics content, and tags"),
+        key: z.string().optional().describe("Exact key filter as stored (e.g. Db not C#)"),
         tag: z.string().optional(),
         folder: z.string().optional().describe("Folder id filter"),
         page: z.number().int().positive().optional().default(1),
@@ -95,8 +79,7 @@ export function registerSongTools(
           sortBy: "title",
           sortOrder: "asc",
         });
-        const nextPage =
-          result.page < result.totalPages ? result.page + 1 : null;
+        const nextPage = result.page < result.totalPages ? result.page + 1 : null;
         return jsonResult({
           total: result.total,
           page: result.page,
@@ -139,26 +122,15 @@ export function registerSongTools(
           .optional()
           .describe('Folder id; null/"root"/omitted = library root'),
         recursive: z.boolean().optional().default(false),
-        sortBy: z
-          .enum(["title", "artist", "updatedAt", "song_number"])
-          .optional()
-          .default("title"),
+        sortBy: z.enum(["title", "artist", "updatedAt", "song_number"]).optional().default("title"),
         sortOrder: z.enum(["asc", "desc"]).optional().default("asc"),
         page: z.number().int().positive().optional().default(1),
-        limit: z
-          .number()
-          .int()
-          .positive()
-          .max(FOLDER_SONGS_MAX_LIMIT)
-          .optional()
-          .default(50),
+        limit: z.number().int().positive().max(FOLDER_SONGS_MAX_LIMIT).optional().default(50),
       }),
     },
     async (args) => {
       try {
-        return jsonResult(
-          await listSongsInFolder(requireMcpContext(authInfo), args),
-        );
+        return jsonResult(await listSongsInFolder(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }
@@ -172,10 +144,7 @@ export function registerSongTools(
       description:
         'Search lyrics after stripping ChordPro chords and directives. Query "Pois só Tu és o Deus eterno" matches "Pois [D9]só Tu és o [C#m]Deus eterno". Prefer this over songs_search when the user quotes plain lyrics.',
       inputSchema: z.object({
-        query: z
-          .string()
-          .min(1)
-          .describe("Plain lyrics / phrase without chord markers"),
+        query: z.string().min(1).describe("Plain lyrics / phrase without chord markers"),
         folder: z.string().optional().describe("Folder id filter"),
         page: z.number().int().positive().optional().default(1),
         limit: z.number().int().positive().max(100).optional().default(20),
@@ -192,8 +161,7 @@ export function registerSongTools(
           page: args.page,
           limit: args.limit,
         });
-        const nextPage =
-          result.page < result.totalPages ? result.page + 1 : null;
+        const nextPage = result.page < result.totalPages ? result.page + 1 : null;
         return jsonResult({
           total: result.total,
           page: result.page,
@@ -434,8 +402,7 @@ export function registerSongTools(
           artist: args.artist ?? meta.artist ?? current.artist,
           content,
           tags: args.tags ?? current.tags,
-          folderId:
-            args.folderId === undefined ? current.folderId : args.folderId,
+          folderId: args.folderId === undefined ? current.folderId : args.folderId,
           song_number:
             args.song_number === undefined
               ? (meta.song_number ?? current.song_number)
@@ -522,11 +489,7 @@ export function registerSongTools(
         .object({
           songId: z.string().uuid(),
           toKey: z.string().optional().describe("Target key, e.g. D or Bb"),
-          semitones: z
-            .number()
-            .int()
-            .optional()
-            .describe("Signed semitone shift, e.g. 2 or -5"),
+          semitones: z.number().int().optional().describe("Signed semitone shift, e.g. 2 or -5"),
         })
         .superRefine((v, ctx) => {
           const hasKey = v.toKey != null && String(v.toKey).trim() !== "";
@@ -585,9 +548,7 @@ export function registerSongTools(
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.update");
         const current = await songService(ctx).getById(songId);
-        const { content: draftContent, ...report } = propagateVerseChords(
-          current.content,
-        );
+        const { content: draftContent, ...report } = propagateVerseChords(current.content);
         return jsonResult({
           draft: {
             id: current.id,
@@ -630,10 +591,7 @@ export function registerSongTools(
           .optional()
           .default(false)
           .describe("Allow save despite ChordPro lint errors"),
-        clientRequestId: z
-          .string()
-          .optional()
-          .describe("Idempotency key to dedupe retries"),
+        clientRequestId: z.string().optional().describe("Idempotency key to dedupe retries"),
       }),
     },
     async (args) => {
@@ -652,10 +610,7 @@ export function registerSongTools(
               song_number: args.song_number,
               content: args.content,
             });
-            if (
-              (!validation.ok || metadataWarnings.length > 0) &&
-              !args.allowInvalid
-            ) {
+            if ((!validation.ok || metadataWarnings.length > 0) && !args.allowInvalid) {
               return jsonResult(
                 {
                   error: true,
@@ -706,18 +661,14 @@ export function registerSongTools(
               );
             }
             try {
-              const updated = await songService(ctx).update(
-                args.songId,
-                new Date(args.updatedAt),
-                {
-                  title: args.title,
-                  artist: args.artist,
-                  content: args.content,
-                  folderId: args.folderId,
-                  tags: args.tags,
-                  song_number: args.song_number,
-                },
-              );
+              const updated = await songService(ctx).update(args.songId, new Date(args.updatedAt), {
+                title: args.title,
+                artist: args.artist,
+                content: args.content,
+                folderId: args.folderId,
+                tags: args.tags,
+                song_number: args.song_number,
+              });
               return jsonResult({
                 status: "saved",
                 saved: true,
@@ -727,9 +678,7 @@ export function registerSongTools(
             } catch (error) {
               let current: unknown;
               try {
-                current = serializeSong(
-                  await songService(ctx).getById(args.songId),
-                );
+                current = serializeSong(await songService(ctx).getById(args.songId));
               } catch {
                 /* ignore */
               }
@@ -748,8 +697,7 @@ export function registerSongTools(
     "songs_move",
     {
       title: "Move song",
-      description:
-        "Move a song to another folder (or root). Requires updatedAt.",
+      description: "Move a song to another folder (or root). Requires updatedAt.",
       inputSchema: z.object({
         songId: z.string().uuid(),
         updatedAt: z.string(),
@@ -762,11 +710,7 @@ export function registerSongTools(
         requirePermission(ctx, "song.update");
         requireWriteEntitlement(ctx);
         try {
-          const moved = await songService(ctx).move(
-            songId,
-            new Date(updatedAt),
-            folderId,
-          );
+          const moved = await songService(ctx).move(songId, new Date(updatedAt), folderId);
           return jsonResult({
             moved: true,
             song: serializeSong(moved),

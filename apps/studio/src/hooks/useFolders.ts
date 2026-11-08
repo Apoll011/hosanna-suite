@@ -22,9 +22,7 @@ let cachedRootSongsCount: number = 0;
 export function useFolders() {
   const { showToast } = useSync();
   const [folders, setFolders] = useState<Folder[]>(() => cachedFolders ?? []);
-  const [rootSongsCount, setRootSongsCount] = useState<number>(
-    () => cachedRootSongsCount,
-  );
+  const [rootSongsCount, setRootSongsCount] = useState<number>(() => cachedRootSongsCount);
   const [isLoading, setIsLoading] = useState(() => cachedFolders === null);
   const [isCreating, setIsCreating] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
@@ -117,10 +115,7 @@ export function useFolders() {
         return result;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
-          showToast(
-            (err as Error).message || "Failed to create folder",
-            "error",
-          );
+          showToast((err as Error).message || "Failed to create folder", "error");
         throw err;
       } finally {
         setIsCreating(false);
@@ -134,11 +129,7 @@ export function useFolders() {
       setIsRenaming(true);
       try {
         const db = await getDatabase();
-        const { folderDoc, songsToUpdate } = await validateFolderRename(
-          db,
-          id,
-          name,
-        );
+        const { folderDoc, songsToUpdate } = await validateFolderRename(db, id, name);
 
         const now = new Date().toISOString();
         await folderDoc.patch({
@@ -157,10 +148,7 @@ export function useFolders() {
         showToast("Folder renamed", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
-          showToast(
-            (err as Error).message || "Failed to rename folder",
-            "error",
-          );
+          showToast((err as Error).message || "Failed to rename folder", "error");
         throw err;
       } finally {
         setIsRenaming(false);
@@ -193,10 +181,7 @@ export function useFolders() {
         showToast("Pasta personalizada com sucesso", "success");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
-          showToast(
-            (err as Error).message || "Falha ao personalizar pasta",
-            "error",
-          );
+          showToast((err as Error).message || "Falha ao personalizar pasta", "error");
         throw err;
       }
     },
@@ -204,14 +189,7 @@ export function useFolders() {
   );
 
   const moveFolder = useCallback(
-    async ({
-      id,
-      parentId,
-    }: {
-      id: string;
-      parentId: string | null;
-      updatedAt?: string;
-    }) => {
+    async ({ id, parentId }: { id: string; parentId: string | null; updatedAt?: string }) => {
       setIsMoving(true);
       try {
         const db = await getDatabase();
@@ -263,13 +241,7 @@ export function useFolders() {
   );
 
   const deleteFolder = useCallback(
-    async ({
-      id,
-      action,
-    }: {
-      id: string;
-      action: "delete_songs" | "move_to_root";
-    }) => {
+    async ({ id, action }: { id: string; action: "delete_songs" | "move_to_root" }) => {
       setIsDeleting(true);
       try {
         const db = await getDatabase();

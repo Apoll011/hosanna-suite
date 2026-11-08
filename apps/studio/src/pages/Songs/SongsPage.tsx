@@ -4,11 +4,7 @@
  */
 
 import { OverflowTagList } from "@/src/components/OverflowTagList";
-import {
-  Badge,
-  EmptyState,
-  Table,
-} from "@/src/components/common";
+import { Badge, EmptyState, Table } from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
@@ -16,21 +12,8 @@ import { useI18n } from "@/src/lib/i18n";
 import { usePermissionValue } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
 import { Song } from "@/src/types";
-import {
-  FileText,
-  FolderInput,
-  Music,
-  Tag,
-  Trash2,
-  X,
-} from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FileText, FolderInput, Music, Tag, Trash2, X } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFolders } from "../../hooks/useFolders";
@@ -58,27 +41,20 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const { settings } = usePersonalSettings();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<
-    string,
-    unknown
-  >;
+  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<string, unknown>;
 
   // Density from context with the unified personal-settings fallback
-  const contextDensity = context.density as
-    "comfortable" | "compact" | undefined;
+  const contextDensity = context.density as "comfortable" | "compact" | undefined;
 
   const density = contextDensity ?? settings.explorerDensity;
   const isCompact = density === "compact";
 
   // Search & Filter props resolution
   const contextSearchQuery = context.searchQuery as string | undefined;
-  const contextSortBy = context.sortBy as
-    "title" | "artist" | "updatedAt" | "number" | undefined;
+  const contextSortBy = context.sortBy as "title" | "artist" | "updatedAt" | "number" | undefined;
   const contextSortOrder = context.sortOrder as "asc" | "desc" | undefined;
-  const actualSelectedKey =
-    selectedKey ?? (context.selectedKey as string | null) ?? "";
-  const actualSelectedTag =
-    selectedTag ?? (context.selectedTag as string | null) ?? "";
+  const actualSelectedKey = selectedKey ?? (context.selectedKey as string | null) ?? "";
+  const actualSelectedTag = selectedTag ?? (context.selectedTag as string | null) ?? "";
 
   const [page, setPage] = useState(1);
 
@@ -113,23 +89,17 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 
   // Modals & Target delegates from layout context
   const openModal = context.openModal as ((modal: string) => void) | undefined;
-  const setMoveSongTarget = context.setMoveSongTarget as
-    ((song: Song | null) => void) | undefined;
+  const setMoveSongTarget = context.setMoveSongTarget as ((song: Song | null) => void) | undefined;
   const setDeleteSongTarget = context.setDeleteSongTarget as
     ((song: Song | null) => void) | undefined;
 
-  const contextSelectedSongIds = context.selectedSongIds as
-    Set<string> | undefined;
+  const contextSelectedSongIds = context.selectedSongIds as Set<string> | undefined;
   const contextSetSelectedSongIds = context.setSelectedSongIds as
     React.Dispatch<React.SetStateAction<Set<string>>> | undefined;
 
-  const [localSelectedSongIds, setLocalSelectedSongIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [localSelectedSongIds, setLocalSelectedSongIds] = useState<Set<string>>(new Set());
   const selectedSongIds = contextSelectedSongIds ?? localSelectedSongIds;
-  const setSelectedSongIds = useCallback<
-    React.Dispatch<React.SetStateAction<Set<string>>>
-  >(
+  const setSelectedSongIds = useCallback<React.Dispatch<React.SetStateAction<Set<string>>>>(
     (action) => {
       if (contextSetSelectedSongIds) {
         contextSetSelectedSongIds(action);
@@ -156,10 +126,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const { foldersQuery } = useFolders();
 
   const folders = useMemo(
-    () =>
-      Array.isArray(foldersQuery.data?.folders)
-        ? foldersQuery.data.folders
-        : [],
+    () => (Array.isArray(foldersQuery.data?.folders) ? foldersQuery.data.folders : []),
     [foldersQuery.data?.folders],
   );
 
@@ -181,10 +148,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     let result = allSongs;
 
     if (finalSearchQuery.trim()) {
-      const liqeMatches = filterSearchableSongsWithLiqe(
-        searchableSongs,
-        finalSearchQuery,
-      );
+      const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, finalSearchQuery);
       const matchedIds = new Set(liqeMatches.map((s) => s.id));
       result = result.filter((song) => matchedIds.has(song.id));
     }
@@ -238,8 +202,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   ]);
 
   const totalSongs = filteredSongs.length;
-  const effectivePerPage =
-    itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
+  const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
 
   // Reset page when filters change
   useEffect(() => {
@@ -263,26 +226,23 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   }, [filteredSongs, page, effectivePerPage, itemsPerPage]);
 
   // Rubberband marquee selection
-  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } =
-    useMarqueeSelection({
-      containerRef,
-      enabled: true,
-      selectedIds: selectedSongIds,
-      onSelectionChange: setSelectedSongIds,
-      onClearSelection: () => {
-        setSelectedSongIds(new Set());
-        setLastClickedId(null);
-      },
-    });
+  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } = useMarqueeSelection({
+    containerRef,
+    enabled: true,
+    selectedIds: selectedSongIds,
+    onSelectionChange: setSelectedSongIds,
+    onClearSelection: () => {
+      setSelectedSongIds(new Set());
+      setLastClickedId(null);
+    },
+  });
 
   // Keyboard navigation & Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if (e.key === "Escape") {
@@ -313,14 +273,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    songsData,
-    selectedSongIds,
-    allSongs,
-    setSelectedSongIds,
-    setDeleteSongTarget,
-    openModal,
-  ]);
+  }, [songsData, selectedSongIds, allSongs, setSelectedSongIds, setDeleteSongTarget, openModal]);
 
   // Outside click to close context menu
   useEffect(() => {
@@ -363,14 +316,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
         setLastClickedId(song.id);
       }
     },
-    [
-      navigate,
-      slugPrefix,
-      lastClickedId,
-      selectedSongIds,
-      songsData,
-      setSelectedSongIds,
-    ],
+    [navigate, slugPrefix, lastClickedId, selectedSongIds, songsData, setSelectedSongIds],
   );
 
   const openContextMenu = useCallback(
@@ -403,16 +349,12 @@ export const SongsPage: React.FC<SongsPageProps> = ({
             : undefined
         }
         empty={
-          !songsQuery.isLoading &&
-          !songsQuery.isError &&
-          songsData.length === 0 ? (
+          !songsQuery.isLoading && !songsQuery.isError && songsData.length === 0 ? (
             <EmptyState
               icon={<Music className="w-12 h-12 text-m3-primary opacity-40" />}
               title={t("songsPage.noResults")}
               description={
-                finalSearchQuery
-                  ? t("songsPage.noResultsDesc")
-                  : t("songsPage.emptyDesc")
+                finalSearchQuery ? t("songsPage.noResultsDesc") : t("songsPage.emptyDesc")
               }
               actionLabel={emptyStateAction}
               onAction={() => openModal?.("create-song")}
@@ -426,29 +368,19 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                 <th className={isCompact ? "py-2.5 px-4" : "py-3 px-5"}>
                   {t("songsPage.titlePath")}
                 </th>
-                <th
-                  className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                >
+                <th className={`hidden sm:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
                   {t("songsPage.artist")}
                 </th>
-                <th
-                  className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                >
+                <th className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
                   {t("songsPage.folder")}
                 </th>
-                <th
-                  className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                >
+                <th className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
                   {t("songsPage.tags")}
                 </th>
-                <th
-                  className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                >
+                <th className={`hidden md:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
                   {t("songsPage.updatedAt")}
                 </th>
-                <th
-                  className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}
-                >
+                <th className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} text-right`}>
                   <span className="sr-only">{t("songsPage.actions")}</span>
                 </th>
               </tr>
@@ -489,18 +421,12 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                       : "hover:bg-m3-hover/50 text-m3-text"
                   }`}
                   onClick={(e) => handleSongClick(e, song)}
-                  onDoubleClick={() =>
-                    navigate(`${slugPrefix}/songs/${song.id}`)
-                  }
+                  onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
                   onContextMenu={(e) => openContextMenu(e, song)}
                 >
-                  <td
-                    className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-xs sm:max-w-md`}
-                  >
+                  <td className={`${isCompact ? "py-2.5 px-4" : "py-3 px-5"} max-w-xs sm:max-w-md`}>
                     <div className="flex flex-col min-w-0">
-                      <span className="truncate font-semibold text-m3-text">
-                        {song.title}
-                      </span>
+                      <span className="truncate font-semibold text-m3-text">{song.title}</span>
                       <span className="sm:hidden text-caption truncate mt-0.5">
                         {song.artist || "—"}
                       </span>
@@ -518,15 +444,11 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                     {song.artist || "—"}
                   </td>
 
-                  <td
-                    className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}
-                  >
+                  <td className={`hidden lg:table-cell ${isCompact ? "py-2.5 px-4" : "py-3 px-5"}`}>
                     {folderName ? (
                       <Badge variant="sky">{folderName}</Badge>
                     ) : (
-                      <span className="text-label opacity-40 italic">
-                        {t("songsPage.root")}
-                      </span>
+                      <span className="text-label opacity-40 italic">{t("songsPage.root")}</span>
                     )}
                   </td>
 
@@ -549,9 +471,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                     <div className="flex items-center justify-end gap-0.5">
                       <button
                         type="button"
-                        onClick={() =>
-                          navigate(`${slugPrefix}/songs/${song.id}`)
-                        }
+                        onClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
                         title={t("songsPage.openEditor")}
                         aria-label={t("songsPage.openEditor")}
                         className="min-h-10 min-w-10 inline-flex items-center justify-center text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
@@ -613,9 +533,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
                 >
                   <Tag className="w-4 h-4 text-m3-secondary" />
-                  <span>
-                    {t("songsPage.tagCount", { count: selectedSongIds.size })}
-                  </span>
+                  <span>{t("songsPage.tagCount", { count: selectedSongIds.size })}</span>
                 </button>
 
                 <button
@@ -627,9 +545,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
                 >
                   <FolderInput className="w-4 h-4 text-m3-secondary" />
-                  <span>
-                    {t("songsPage.moveCount", { count: selectedSongIds.size })}
-                  </span>
+                  <span>{t("songsPage.moveCount", { count: selectedSongIds.size })}</span>
                 </button>
               </Can>
 

@@ -131,9 +131,7 @@ export const ActiveSessionsSection: React.FC = () => {
                       </p>
                       <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
                         {t("settings.account.activeSessions.ip", {
-                          ip:
-                            sess.ipAddress ||
-                            t("settings.account.activeSessions.currentIp"),
+                          ip: sess.ipAddress || t("settings.account.activeSessions.currentIp"),
                           date: new Date(sess.createdAt).toLocaleDateString(),
                         })}
                       </p>

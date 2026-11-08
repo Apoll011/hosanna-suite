@@ -51,8 +51,7 @@ export const SyncStatusBadge: React.FC<SyncStatusBadgeProps> = ({
                 }),
               })
             : t("misc.syncStatus.syncedTooltipNoTime"),
-          bgClass:
-            "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+          bgClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
         };
     }
   };

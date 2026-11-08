@@ -15,11 +15,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = React.memo(
   React.forwardRef<HTMLInputElement, InputProps>(
     ({ label, error, icon, helperText, className = "", id, ...props }, ref) => {
-      const inputId =
-        id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+      const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
       const errorId = error && inputId ? `${inputId}-error` : undefined;
-      const helperId =
-        helperText && !error && inputId ? `${inputId}-helper` : undefined;
+      const helperId = helperText && !error && inputId ? `${inputId}-helper` : undefined;
 
       return (
         <div className="w-full flex flex-col gap-1.5">
@@ -53,11 +51,7 @@ export const Input = React.memo(
             />
           </div>
           {error && (
-            <span
-              id={errorId}
-              className="text-xs text-m3-danger font-medium"
-              role="alert"
-            >
+            <span id={errorId} className="text-xs text-m3-danger font-medium" role="alert">
               {error}
             </span>
           )}

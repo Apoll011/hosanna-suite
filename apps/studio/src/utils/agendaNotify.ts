@@ -12,12 +12,7 @@
  * API only delivers through FCM.
  */
 
-import type {
-  AgendaEvent,
-  Assignee,
-  Responsibility,
-  ResponsibilityCategory,
-} from "@/src/types";
+import type { AgendaEvent, Assignee, Responsibility, ResponsibilityCategory } from "@/src/types";
 
 /** One user's set of responsibilities inside an event (one push each). */
 export type AssignmentGroup = {
@@ -39,11 +34,7 @@ export const responsibilityLabel = (
 export const bulletList = (labels: string[]): string =>
   labels.map((label) => `• ${label}`).join("\n");
 
-const pushLabel = (
-  map: Map<string, AssignmentGroup>,
-  memberId: string,
-  label: string,
-) => {
+const pushLabel = (map: Map<string, AssignmentGroup>, memberId: string, label: string) => {
   const group = map.get(memberId);
   if (!group) {
     map.set(memberId, { memberId, labels: [label] });
@@ -68,11 +59,7 @@ export function collectUnnotifiedAssignments(
 ): AssignmentGroup[] {
   const groups = new Map<string, AssignmentGroup>();
   for (const responsibility of event.responsibilities) {
-    const label = responsibilityLabel(
-      responsibility,
-      categoriesById,
-      fallbackLabel,
-    );
+    const label = responsibilityLabel(responsibility, categoriesById, fallbackLabel);
     for (const assignee of responsibility.assignees) {
       if (!assignee.memberId) continue;
       if (assignee.notified === true) continue;
@@ -128,9 +115,7 @@ export function markMembersNotified(
   return responsibilities.map((responsibility) => ({
     ...responsibility,
     assignees: responsibility.assignees.map((assignee) =>
-      assignee.memberId &&
-      sent.has(assignee.memberId) &&
-      assignee.notified !== true
+      assignee.memberId && sent.has(assignee.memberId) && assignee.notified !== true
         ? { ...assignee, notified: true }
         : assignee,
     ),
@@ -152,12 +137,8 @@ export function mergeAssigneeNotificationState(
     const notified = stateByKey.get(assigneeKey(assignee));
     if (notified === undefined) {
       // New assignment → starts pending.
-      return assignee.notified === undefined
-        ? { ...assignee, notified: false }
-        : assignee;
+      return assignee.notified === undefined ? { ...assignee, notified: false } : assignee;
     }
-    return assignee.notified === notified
-      ? assignee
-      : { ...assignee, notified };
+    return assignee.notified === notified ? assignee : { ...assignee, notified };
   });
 }

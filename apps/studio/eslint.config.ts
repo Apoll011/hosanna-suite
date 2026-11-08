@@ -8,14 +8,7 @@ import globals from "globals";
 
 export default [
   {
-    ignores: [
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-      "coverage/**",
-      "android/**",
-      ".agents/**",
-    ],
+    ignores: ["node_modules/**", "dist/**", "build/**", "coverage/**", "android/**", ".agents/**"],
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],

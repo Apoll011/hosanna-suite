@@ -81,17 +81,12 @@ export const ULTIMATE_GUITAR_PROVIDER: OnlineChordProvider = {
  * Built-in online providers. More providers can be added here
  * or registered dynamically at runtime via registerOnlineChordProvider().
  */
-const providersRegistry: OnlineChordProvider[] = [
-  CIFRA_CLUB_PROVIDER,
-  ULTIMATE_GUITAR_PROVIDER,
-];
+const providersRegistry: OnlineChordProvider[] = [CIFRA_CLUB_PROVIDER, ULTIMATE_GUITAR_PROVIDER];
 
 /**
  * Register an additional chord provider supported by the backend server.
  */
-export function registerOnlineChordProvider(
-  provider: OnlineChordProvider,
-): void {
+export function registerOnlineChordProvider(provider: OnlineChordProvider): void {
   const index = providersRegistry.findIndex((p) => p.id === provider.id);
   if (index >= 0) {
     providersRegistry[index] = provider;
@@ -114,9 +109,7 @@ export function detectProvider(rawUrl: string): OnlineChordProvider | null {
   try {
     const normalized = rawUrl.trim();
     if (!normalized) return null;
-    const url = new URL(
-      normalized.startsWith("http") ? normalized : `https://${normalized}`,
-    );
+    const url = new URL(normalized.startsWith("http") ? normalized : `https://${normalized}`);
     const hostname = url.hostname.toLowerCase();
 
     for (const provider of providersRegistry) {
@@ -125,9 +118,7 @@ export function detectProvider(rawUrl: string): OnlineChordProvider | null {
       }
       if (
         provider.domains.some(
-          (d) =>
-            hostname === d.toLowerCase() ||
-            hostname.endsWith(`.${d.toLowerCase()}`),
+          (d) => hostname === d.toLowerCase() || hostname.endsWith(`.${d.toLowerCase()}`),
         )
       ) {
         return provider;
@@ -150,9 +141,7 @@ export function parseUrlFallback(rawUrl: string): {
   try {
     const normalized = rawUrl.trim();
     if (!normalized) return { artist: "", title: "", provider: null };
-    const url = new URL(
-      normalized.startsWith("http") ? normalized : `https://${normalized}`,
-    );
+    const url = new URL(normalized.startsWith("http") ? normalized : `https://${normalized}`);
     const provider = detectProvider(rawUrl);
 
     if (provider?.parseUrlFallback) {

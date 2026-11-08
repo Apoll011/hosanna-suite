@@ -115,13 +115,9 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
         <>
           <div className={MENU_HEADER}>
             <span>
-              {currentFolder
-                ? currentFolder.name
-                : t("explorer.contextMenu.rootDirectory")}
+              {currentFolder ? currentFolder.name : t("explorer.contextMenu.rootDirectory")}
             </span>
-            <span className="text-caption font-normal">
-              {t("explorer.contextMenu.options")}
-            </span>
+            <span className="text-caption font-normal">{t("explorer.contextMenu.options")}</span>
           </div>
 
           <Can permission="folder.create">
@@ -400,9 +396,7 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
             <>
               <button
                 onClick={() => {
-                  navigate(
-                    `${slugPrefix}/songs/${(contextMenu.item as Song).id}`,
-                  );
+                  navigate(`${slugPrefix}/songs/${(contextMenu.item as Song).id}`);
                   onClose();
                 }}
                 className={MENU_ITEM}

@@ -22,14 +22,7 @@ function getStrength(password: string): number {
   return REQUIREMENTS.filter((r) => r.test(password)).length;
 }
 
-const STRENGTH_LABELS = [
-  "",
-  "Muito fraca",
-  "Fraca",
-  "Razoável",
-  "Forte",
-  "Muito forte",
-];
+const STRENGTH_LABELS = ["", "Muito fraca", "Fraca", "Razoável", "Forte", "Muito forte"];
 const STRENGTH_COLORS = [
   "",
   "bg-rose-500",
@@ -58,9 +51,7 @@ export function PasswordStrengthMeter({ password }: { password: string }) {
           <div
             key={i}
             className={`flex-1 rounded-full transition-all duration-300 ${
-              i < strength
-                ? STRENGTH_COLORS[strength]
-                : "bg-slate-200 dark:bg-slate-700"
+              i < strength ? STRENGTH_COLORS[strength] : "bg-slate-200 dark:bg-slate-700"
             }`}
           />
         ))}

@@ -6,8 +6,7 @@
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";
 
-export type AiProvider =
-  "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
+export type AiProvider = "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
 
 export type NativeWebCapability = {
   search: boolean;
@@ -137,24 +136,16 @@ export type AiBillingResponse =
 
 export type AiConfirmAction = {
   action:
-    | "delete_song"
-    | "delete_service"
-    | "delete_folder"
-    | "delete_collection"
-    | "delete_agenda";
+    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
   id: string;
   folderAction?: "move_to_root" | "delete_songs";
 };
 
 export const aiApi = {
   getSettings: async (): Promise<AiSettingsPublic> =>
-    (await unwrapApiResult(
-      await getApiClient().openapi.GET("/ai/settings"),
-    )) as AiSettingsPublic,
+    (await unwrapApiResult(await getApiClient().openapi.GET("/ai/settings"))) as AiSettingsPublic,
 
-  updateSettings: async (
-    input: UpdateAiSettingsInput,
-  ): Promise<AiSettingsPublic> =>
+  updateSettings: async (input: UpdateAiSettingsInput): Promise<AiSettingsPublic> =>
     (await unwrapApiResult(
       await getApiClient().openapi.PUT("/ai/settings", {
         body: input as { [key: string]: unknown },
@@ -167,14 +158,10 @@ export const aiApi = {
     )) as AiSettingsPublic,
 
   getBilling: async (): Promise<AiBillingResponse> =>
-    (await unwrapApiResult(
-      await getApiClient().openapi.GET("/ai/billing"),
-    )) as AiBillingResponse,
+    (await unwrapApiResult(await getApiClient().openapi.GET("/ai/billing"))) as AiBillingResponse,
 
   listMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
-    const data = await unwrapApiResult(
-      await getApiClient().openapi.GET("/ai/memory"),
-    );
+    const data = await unwrapApiResult(await getApiClient().openapi.GET("/ai/memory"));
     return { items: (data?.items ?? []) as AiMemoryItem[] };
   },
 
@@ -194,16 +181,12 @@ export const aiApi = {
   },
 
   clearMemory: async (): Promise<{ cleared: number }> => {
-    const data = await unwrapApiResult(
-      await getApiClient().openapi.DELETE("/ai/memory"),
-    );
+    const data = await unwrapApiResult(await getApiClient().openapi.DELETE("/ai/memory"));
     return { cleared: data?.cleared ?? 0 };
   },
 
   listPersonalMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
-    const data = await getApiClient().request<{ items?: AiMemoryItem[] }>(
-      "/ai/memory/personal",
-    );
+    const data = await getApiClient().request<{ items?: AiMemoryItem[] }>("/ai/memory/personal");
     return { items: data?.items ?? [] };
   },
 
@@ -220,16 +203,13 @@ export const aiApi = {
   },
 
   clearPersonalMemory: async (): Promise<{ cleared: number }> => {
-    const data = await getApiClient().request<{ cleared?: number }>(
-      "/ai/memory/personal",
-      { method: "DELETE" },
-    );
+    const data = await getApiClient().request<{ cleared?: number }>("/ai/memory/personal", {
+      method: "DELETE",
+    });
     return { cleared: data?.cleared ?? 0 };
   },
 
-  confirmAction: async (
-    body: AiConfirmAction,
-  ): Promise<{ confirmed: boolean }> => {
+  confirmAction: async (body: AiConfirmAction): Promise<{ confirmed: boolean }> => {
     const data = await unwrapApiResult(
       await getApiClient().openapi.POST("/ai/confirm", {
         body,
@@ -247,18 +227,15 @@ export const aiApi = {
     locale?: string;
     signal?: AbortSignal;
   }): Promise<Response> => {
-    const { data, error, response } = await getApiClient().openapi.POST(
-      "/ai/chat",
-      {
-        body: {
-          messages: body.messages as { [key: string]: unknown }[],
-          context: body.context as { [key: string]: unknown } | undefined,
-          locale: body.locale as "pt" | "en" | "es" | undefined,
-        },
-        parseAs: "stream",
-        signal: body.signal,
+    const { data, error, response } = await getApiClient().openapi.POST("/ai/chat", {
+      body: {
+        messages: body.messages as { [key: string]: unknown }[],
+        context: body.context as { [key: string]: unknown } | undefined,
+        locale: body.locale as "pt" | "en" | "es" | undefined,
       },
-    );
+      parseAs: "stream",
+      signal: body.signal,
+    });
 
     if (!response.ok) {
       await unwrapApiResult({ data, error, response });

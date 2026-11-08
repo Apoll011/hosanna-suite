@@ -126,9 +126,7 @@ function toDateKeyInTz(date: Date, timeZone: string): string {
 /** Adds whole calendar days to a YYYY-MM-DD key, immune to DST shifts. */
 function addDaysToDateKey(dateKey: string, days: number): string {
   const [year, month, day] = dateKey.split("-").map(Number);
-  return new Date(Date.UTC(year, month - 1, day + days))
-    .toISOString()
-    .slice(0, 10);
+  return new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
 }
 
 /** Date keys (YYYY-MM-DD) for the reminder offsets in the org timezone. */
@@ -153,24 +151,17 @@ function parseOrgMetadata(metadata: unknown): OrgMeta {
  * Builds a `categoryId → label` map once per org: the org's own configured
  * categories take precedence over the built-in locale tables.
  */
-function buildCategoryLabels(
-  meta: OrgMeta,
-  locale: string,
-): Map<string, string> {
+function buildCategoryLabels(meta: OrgMeta, locale: string): Map<string, string> {
   const labels = new Map<string, string>();
 
   const builtIn = (
-    RESPONSIBILITIES as unknown as Record<
-      string,
-      readonly ResponsibilityCategory[]
-    >
+    RESPONSIBILITIES as unknown as Record<string, readonly ResponsibilityCategory[]>
   )[resolveResponsibilityLocale(locale)];
   for (const category of builtIn ?? []) {
     labels.set(category.id, category.label);
   }
 
-  for (const category of meta.settings?.agenda?.responsibilityCategories ??
-    []) {
+  for (const category of meta.settings?.agenda?.responsibilityCategories ?? []) {
     if (category?.id && category.label) labels.set(category.id, category.label);
   }
 
@@ -220,23 +211,18 @@ async function mapWithConcurrency<T>(
 ): Promise<void> {
   if (items.length === 0) return;
   let cursor = 0;
-  const workers = Array.from(
-    { length: Math.min(limit, items.length) },
-    async () => {
-      while (cursor < items.length) {
-        const item = items[cursor++];
-        await fn(item);
-      }
-    },
-  );
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (cursor < items.length) {
+      const item = items[cursor++];
+      await fn(item);
+    }
+  });
   await Promise.all(workers);
 }
 
 // ── Main job ────────────────────────────────────────────────────────────────
 
-export async function runAgendaReminders(
-  now: Date = new Date(),
-): Promise<AgendaReminderResult> {
+export async function runAgendaReminders(now: Date = new Date()): Promise<AgendaReminderResult> {
   const result: AgendaReminderResult = {
     eventsChecked: 0,
     notificationsSent: 0,
@@ -255,8 +241,7 @@ export async function runAgendaReminders(
   for (const org of organizations) {
     try {
       const meta = parseOrgMetadata(org.metadata);
-      const locale =
-        meta.settings?.general?.locale ?? meta.locale ?? DEFAULT_LOCALE;
+      const locale = meta.settings?.general?.locale ?? meta.locale ?? DEFAULT_LOCALE;
       const timezone = meta.settings?.general?.timezone ?? DEFAULT_TIMEZONE;
       const i18nLocale = resolveI18nLocale(locale);
       const categoryLabels = buildCategoryLabels(meta, locale);
@@ -295,9 +280,7 @@ export async function runAgendaReminders(
         for (const responsibility of responsibilities) {
           if (!Array.isArray(responsibility?.assignees)) continue;
 
-          const label =
-            categoryLabels.get(responsibility.categoryId) ??
-            responsibility.categoryId;
+          const label = categoryLabels.get(responsibility.categoryId) ?? responsibility.categoryId;
 
           for (const assignee of responsibility.assignees) {
             if (!assignee?.memberId) continue; // manual (non-member) assignees
@@ -318,18 +301,13 @@ export async function runAgendaReminders(
 
       if (eventsWithAssignees.length === 0) continue;
 
-      const memberToUser = await resolveMemberUserIds(
-        org.id,
-        candidateMemberIds,
-      );
+      const memberToUser = await resolveMemberUserIds(org.id, candidateMemberIds);
 
       for (const { event, labelsByMemberId } of eventsWithAssignees) {
         result.eventsChecked++;
 
         const daysUntil =
-          event.date === targetKeys[0]
-            ? REMINDER_OFFSETS_DAYS[0]
-            : REMINDER_OFFSETS_DAYS[1];
+          event.date === targetKeys[0] ? REMINDER_OFFSETS_DAYS[0] : REMINDER_OFFSETS_DAYS[1];
 
         for (const [memberId, labels] of labelsByMemberId) {
           const userId = memberToUser.get(memberId);
@@ -451,11 +429,7 @@ export async function runAgendaReminders(
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-function dispatchKey(d: {
-  eventId: string;
-  userId: string;
-  daysUntil: number;
-}): string {
+function dispatchKey(d: { eventId: string; userId: string; daysUntil: number }): string {
   return `${d.eventId}\u0000${d.userId}\u0000${d.daysUntil}`;
 }
 
@@ -493,11 +467,7 @@ function buildPayload(reminder: PendingReminder): FcmPayload {
   };
 }
 
-function recordError(
-  result: AgendaReminderResult,
-  scope: string,
-  err: unknown,
-): void {
+function recordError(result: AgendaReminderResult, scope: string, err: unknown): void {
   const message = `[agenda-reminders] ${scope}: ${
     err instanceof Error ? err.message : String(err)
   }`;
@@ -522,10 +492,6 @@ function resolveResponsibilityLocale(locale: string): string {
 }
 
 /** t() with a relaxed key type so callers stay readable. */
-function tKey(
-  locale: string,
-  key: string,
-  vars?: Record<string, string | number>,
-): string {
+function tKey(locale: string, key: string, vars?: Record<string, string | number>): string {
   return t(locale, key as TranslationKey, vars);
 }

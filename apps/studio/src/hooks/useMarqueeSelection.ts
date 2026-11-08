@@ -52,11 +52,7 @@ export function useMarqueeSelection({
     if (!enabled) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (
-        !isMouseDownRef.current ||
-        !startPosRef.current ||
-        !containerRef.current
-      ) {
+      if (!isMouseDownRef.current || !startPosRef.current || !containerRef.current) {
         return;
       }
 
@@ -70,8 +66,7 @@ export function useMarqueeSelection({
       if (width > 4 || height > 4) {
         setSelectionBox({ x: left, y: top, width, height });
 
-        const itemEls =
-          containerRef.current.querySelectorAll<HTMLElement>("[data-item-id]");
+        const itemEls = containerRef.current.querySelectorAll<HTMLElement>("[data-item-id]");
         const next = new Set(initialSelectionRef.current);
 
         itemEls.forEach((el) => {

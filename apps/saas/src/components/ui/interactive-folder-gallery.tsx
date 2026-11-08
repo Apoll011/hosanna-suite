@@ -18,13 +18,7 @@ export interface InteractiveFolderGalleryProps {
 /* ------------------------------------------------------------------ */
 /*  Shared lightbox                                                   */
 /* ------------------------------------------------------------------ */
-function PhotoLightbox({
-  photo,
-  onClose,
-}: {
-  photo: GalleryPhoto | null;
-  onClose: () => void;
-}) {
+function PhotoLightbox({ photo, onClose }: { photo: GalleryPhoto | null; onClose: () => void }) {
   return (
     <AnimatePresence>
       {photo && (
@@ -84,7 +78,9 @@ export function InteractiveFolderGallery({
   const activePhoto = photos[index];
 
   return (
-    <div className={`w-full py-8 md:py-16 flex flex-col items-center justify-center bg-transparent ${className || ""}`}>
+    <div
+      className={`w-full py-8 md:py-16 flex flex-col items-center justify-center bg-transparent ${className || ""}`}
+    >
       {/* Heading & Description */}
       <div className="text-center mb-10 max-w-lg mx-auto px-4">
         {title && (
@@ -139,17 +135,20 @@ export function InteractiveFolderGallery({
           <button
             key={photo.id}
             onClick={() => setIndex(i)}
-            className={`relative w-25 h-14.5 rounded-lg overflow-hidden transition-all duration-300 ${index === i
-              ? "border-2 border-primary shadow-sm ring-2 ring-primary/20 ring-offset-2 ring-offset-background"
-              : "border border-border/40 opacity-60 hover:opacity-100 hover:border-border"
-              }`}
+            className={`relative w-25 h-14.5 rounded-lg overflow-hidden transition-all duration-300 ${
+              index === i
+                ? "border-2 border-primary shadow-sm ring-2 ring-primary/20 ring-offset-2 ring-offset-background"
+                : "border border-border/40 opacity-60 hover:opacity-100 hover:border-border"
+            }`}
           >
             <img
               src={photo.image}
               alt={photo.caption || `Thumbnail ${i + 1}`}
               className="w-full h-full object-cover"
             />
-            <div className={`absolute inset-0 bg-black/5 transition-opacity ${index === i ? "opacity-0" : "opacity-100"}`} />
+            <div
+              className={`absolute inset-0 bg-black/5 transition-opacity ${index === i ? "opacity-0" : "opacity-100"}`}
+            />
           </button>
         ))}
       </div>
@@ -216,8 +215,9 @@ export function MobileFolderGallery({ photos }: { photos: GalleryPhoto[] }) {
             type="button"
             onClick={() => setIndex(i)}
             aria-label={`Go to screenshot ${i + 1}`}
-            className={`h-2.5 w-2.5 rounded-full transition-colors ${i === index ? "bg-white" : "bg-white/40"
-              }`}
+            className={`h-2.5 w-2.5 rounded-full transition-colors ${
+              i === index ? "bg-white" : "bg-white/40"
+            }`}
           />
         ))}
       </div>

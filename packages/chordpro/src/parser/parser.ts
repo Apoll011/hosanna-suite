@@ -17,14 +17,7 @@ export interface MeasureAST {
 export type CommentStyle = "info" | "warning" | "success" | "tip" | string;
 
 export interface LineAST {
-  type:
-    | "lyrics"
-    | "comment"
-    | "comment_italic"
-    | "comment_box"
-    | "tab"
-    | "empty"
-    | "chord-section";
+  type: "lyrics" | "comment" | "comment_italic" | "comment_box" | "tab" | "empty" | "chord-section";
   text?: string;
   /** Only meaningful for comment/comment_italic/comment_box lines. */
   style?: CommentStyle;
@@ -274,18 +267,12 @@ export function parseChordProDocument(content: string): ChordProDocument {
 
         const versionName = value.trim();
         if (!versionName) {
-          errors.push(
-            `Line ${lineNumber}: Empty version name in "{start_of_version}".`,
-          );
+          errors.push(`Line ${lineNumber}: Empty version name in "{start_of_version}".`);
           continue;
         }
 
         const variantId = slugifyVariantName(versionName);
-        if (
-          !variantId ||
-          variantId === "default" ||
-          seenVariantIds.has(variantId)
-        ) {
+        if (!variantId || variantId === "default" || seenVariantIds.has(variantId)) {
           errors.push(
             `Line ${lineNumber}: Duplicate or invalid variant identifier "${variantId || versionName}".`,
           );
@@ -299,9 +286,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
 
         // Previous resolved metadata
         const previousMetadata =
-          variants.length > 0
-            ? variants[variants.length - 1].metadata
-            : defaultContext.metadata;
+          variants.length > 0 ? variants[variants.length - 1].metadata : defaultContext.metadata;
 
         activeVariantContext = {
           isDefault: false,
@@ -328,8 +313,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
 
         commitSectionInContext(activeVariantContext);
         if (!activeVariantContext.metadata.title) {
-          activeVariantContext.metadata.title =
-            defaultContext.metadata.title || "Sem Título";
+          activeVariantContext.metadata.title = defaultContext.metadata.title || "Sem Título";
         }
 
         variants.push({
@@ -391,15 +375,13 @@ export function parseChordProDocument(content: string): ChordProDocument {
           break;
 
         case "end_of_chorus":
-          if (ctx.currentSection?.type === "chorus")
-            commitSectionInContext(ctx);
+          if (ctx.currentSection?.type === "chorus") commitSectionInContext(ctx);
           break;
         case "end_of_verse":
           if (ctx.currentSection?.type === "verse") commitSectionInContext(ctx);
           break;
         case "end_of_bridge":
-          if (ctx.currentSection?.type === "bridge")
-            commitSectionInContext(ctx);
+          if (ctx.currentSection?.type === "bridge") commitSectionInContext(ctx);
           break;
         case "end_of_tab":
           ctx.isTab = false;
@@ -469,9 +451,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
           } else {
             ctx.sections.push({
               type: "comment",
-              lines: [
-                { type: "comment_box", text: `Repetir: ${value || "2"}` },
-              ],
+              lines: [{ type: "comment_box", text: `Repetir: ${value || "2"}` }],
             });
           }
           break;
@@ -493,18 +473,14 @@ export function parseChordProDocument(content: string): ChordProDocument {
         case "tag":
           // Editor-only labels: repeated `{tag: x}` lines accumulate.
           if (value) {
-            ctx.metadata["tag"] = ctx.metadata["tag"]
-              ? `${ctx.metadata["tag"]}, ${value}`
-              : value;
+            ctx.metadata["tag"] = ctx.metadata["tag"] ? `${ctx.metadata["tag"]}, ${value}` : value;
           }
           break;
 
         default:
           if (value) {
             const metaKey = name
-              .replace(/[-_\s]+([a-zA-Z])/g, (_, letter) =>
-                letter.toUpperCase(),
-              )
+              .replace(/[-_\s]+([a-zA-Z])/g, (_, letter) => letter.toUpperCase())
               .replace(/\s+/g, "");
             ctx.metadata[metaKey] = value;
           }
@@ -598,8 +574,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
     );
     commitSectionInContext(activeVariantContext);
     if (!activeVariantContext.metadata.title) {
-      activeVariantContext.metadata.title =
-        defaultContext.metadata.title || "Sem Título";
+      activeVariantContext.metadata.title = defaultContext.metadata.title || "Sem Título";
     }
     variants.push({
       id: activeVariantContext.id,
@@ -624,10 +599,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
   };
 }
 
-export function selectVersion(
-  document: ChordProDocument,
-  versionId?: string,
-): ChordProVersion {
+export function selectVersion(document: ChordProDocument, versionId?: string): ChordProVersion {
   if (!versionId || versionId === "default") {
     return document.default;
   }

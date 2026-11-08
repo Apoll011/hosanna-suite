@@ -7,10 +7,7 @@ import { syncCache } from "../../services/syncCache.service.js";
  * Studio bridge tools. On Studio chat these emit UI directives; on remote MCP
  * hosts they still invalidate server sync cache and document the expectation.
  */
-export function registerStudioTools(
-  server: McpServer,
-  authInfo?: AuthInfo,
-): void {
+export function registerStudioTools(server: McpServer, authInfo?: AuthInfo): void {
   server.registerTool(
     "studio_sync",
     {
@@ -18,10 +15,7 @@ export function registerStudioTools(
       description:
         "Ask Studio to pull replication after library mutations. On remote MCP hosts this invalidates the org sync cache; open Studio tabs refresh on their next poll. Prefer calling after folders/collections/songs/services writes.",
       inputSchema: z.object({
-        reason: z
-          .string()
-          .optional()
-          .describe("Short why, e.g. after_folder_update"),
+        reason: z.string().optional().describe("Short why, e.g. after_folder_update"),
       }),
     },
     async ({ reason }) => {

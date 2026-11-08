@@ -1,27 +1,12 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
-  "globalEnv": [
-    "NODE_ENV"
-  ],
+  "globalEnv": ["NODE_ENV"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build",
-        "^db:generate",
-        "db:generate"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env",
-        ".env.*",
-        "!.env.example"
-      ],
-      "outputs": [
-        "dist/**",
-        ".output/**",
-        "build/**"
-      ],
+      "dependsOn": ["^build", "^db:generate", "db:generate"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*", "!.env.example"],
+      "outputs": ["dist/**", ".output/**", "build/**"],
       "env": [
         "VITE_*",
         "DATABASE_*",
@@ -41,33 +26,19 @@
       "cache": false
     },
     "typecheck": {
-      "dependsOn": [
-        "^build",
-        "^db:generate",
-        "db:generate"
-      ],
+      "dependsOn": ["^build", "^db:generate", "db:generate"],
       "outputs": []
     },
     "lint": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "test": {
-      "dependsOn": [
-        "^build",
-        "^db:generate",
-        "db:generate"
-      ],
+      "dependsOn": ["^build", "^db:generate", "db:generate"],
       "outputs": []
     },
     "dev": {
-      "dependsOn": [
-        "^build",
-        "^db:generate",
-        "db:generate"
-      ],
+      "dependsOn": ["^build", "^db:generate", "db:generate"],
       "cache": false,
       "persistent": true
     },

@@ -16,9 +16,6 @@ describe("cn", () => {
   });
 
   it("supports conditional objects and arrays", () => {
-    assert.equal(
-      cn(["base", { active: true, disabled: false }], "extra"),
-      "base active extra",
-    );
+    assert.equal(cn(["base", { active: true, disabled: false }], "extra"), "base active extra");
   });
 });

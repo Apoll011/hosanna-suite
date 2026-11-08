@@ -59,11 +59,7 @@ export function maybeDispatchStudioActions(_toolName: string, output: unknown) {
     dispatchAiNavigate(detail);
   }
 
-  if (
-    body.studioPrint === true &&
-    typeof body.kind === "string" &&
-    Array.isArray(body.ids)
-  ) {
+  if (body.studioPrint === true && typeof body.kind === "string" && Array.isArray(body.ids)) {
     const ids = body.ids.filter((id): id is string => typeof id === "string");
     if (!ids.length) return;
     const detail: AiPrintDetail = {

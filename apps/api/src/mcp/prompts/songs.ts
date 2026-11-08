@@ -203,8 +203,7 @@ ${HARD_RULES}`),
     "songs_explain_chordpro",
     {
       title: "Explain ChordPro",
-      description:
-        "Explain a ChordPro directive or feature as Hosanna implements it.",
+      description: "Explain a ChordPro directive or feature as Hosanna implements it.",
       argsSchema: z.object({
         topic: z.string().describe("Directive name, feature, or question"),
       }),

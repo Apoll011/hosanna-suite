@@ -23,13 +23,10 @@ const en = {
 
   // ── conflict / optimistic concurrency ──────────────────────────────────
   conflict: {
-    default:
-      "The resource was modified by someone else. Please reload and try again.",
+    default: "The resource was modified by someone else. Please reload and try again.",
     song: "This song was modified by someone else since you last loaded it.",
-    folder:
-      "This folder was modified by someone else since you last loaded it.",
-    service:
-      "This service was modified by someone else since you last loaded it.",
+    folder: "This folder was modified by someone else since you last loaded it.",
+    service: "This service was modified by someone else since you last loaded it.",
   },
 
   // ── songs ───────────────────────────────────────────────────────────────
@@ -75,11 +72,9 @@ const en = {
     backup_restored_description:
       "A full restore imported {{folders}} folder(s), {{songs}} song(s), and {{services}} service(s).",
     trial_started_title: "Free trial started",
-    trial_started_description:
-      "Your free trial has started. Enjoy all Hosanna features!",
+    trial_started_description: "Your free trial has started. Enjoy all Hosanna features!",
     trial_ended_title: "Free trial ended",
-    trial_ended_description:
-      "Your trial has ended and your subscription is now active.",
+    trial_ended_description: "Your trial has ended and your subscription is now active.",
     trial_expired_title: "Free trial expired",
     trial_expired_description:
       "Your trial expired without payment. Renew your subscription to keep access.",
@@ -101,8 +96,7 @@ const en = {
       heading: "Welcome to Hosanna{{#if first_name}}, {{first_name}}{{/if}}!",
       body1:
         "We are thrilled to have you join our community. Hosanna is designed to help you connect, engage, and grow with your church family effortlessly.",
-      body2:
-        "To get started, you can explore your dashboard or set up your profile.",
+      body2: "To get started, you can explore your dashboard or set up your profile.",
       cta: "Go to Dashboard",
     },
     verify_email: {
@@ -111,8 +105,7 @@ const en = {
       body1:
         "Thanks for signing up for Hosanna! Please click the button below to verify your email address and secure your account.",
       cta: "Verify Email",
-      ignore:
-        "If you didn't create an account, you can safely ignore this email.",
+      ignore: "If you didn't create an account, you can safely ignore this email.",
     },
     forgot_password: {
       subject: "Reset your Hosanna password",
@@ -141,8 +134,7 @@ const en = {
       heading: "Account temporarily locked",
       body1:
         "We detected multiple failed login attempts on your account. To protect your security, your account has been temporarily locked.",
-      body2:
-        "You will be able to try logging in again in {{lockout_minutes}} minutes.",
+      body2: "You will be able to try logging in again in {{lockout_minutes}} minutes.",
     },
     change_email_verification: {
       subject: "Verify your new email address - Hosanna",
@@ -170,8 +162,7 @@ const en = {
     church_invitation: {
       subject: "You've been invited to join a church - Hosanna",
       heading: "You've been invited to {{church_name}}",
-      body1:
-        "{{inviter_name}} has invited you to join their workspace on Hosanna.",
+      body1: "{{inviter_name}} has invited you to join their workspace on Hosanna.",
       body2:
         "Join {{church_name}} to connect with your community, view events, and stay up to date.",
       cta: "Accept Invitation",
@@ -182,24 +173,20 @@ const en = {
       salutation: "Hi{{#if first_name}} {{first_name}}{{/if}},",
       body1:
         "Your request to join {{church_name}} has been received and is currently pending admin approval.",
-      body2:
-        "We will notify you via email as soon as an admin reviews your request.",
+      body2: "We will notify you via email as soon as an admin reviews your request.",
     },
     join_request_approved: {
       subject: "You're in! Join request approved - Hosanna",
       heading: "You're in! Request approved",
-      body1:
-        "Great news! Your request to join {{church_name}} has been approved by an admin.",
-      body2:
-        "You can now access the workspace, view members, and get involved.",
+      body1: "Great news! Your request to join {{church_name}} has been approved by an admin.",
+      body2: "You can now access the workspace, view members, and get involved.",
       cta: "Join Workspace",
     },
     join_request_denied: {
       subject: "Update on your join request - Hosanna",
       heading: "Update on your join request",
       salutation: "Hi{{#if first_name}} {{first_name}}{{/if}},",
-      body1:
-        "Your request to join {{church_name}} could not be approved at this time.",
+      body1: "Your request to join {{church_name}} could not be approved at this time.",
       body2:
         "If you believe this was a mistake, please reach out directly to the church administration.",
     },
@@ -207,8 +194,7 @@ const en = {
       subject: "You are now an Admin - Hosanna",
       heading: "You are now an Admin",
       salutation: "Hi{{#if first_name}} {{first_name}}{{/if}},",
-      body1:
-        "Your role in {{church_name}} has been updated. You are now an Admin.",
+      body1: "Your role in {{church_name}} has been updated. You are now an Admin.",
       body2:
         "You now have access to workspace settings, member management, and administrative tools.",
       cta: "View Admin Dashboard",
@@ -233,8 +219,7 @@ const en = {
     billing_trial_started: {
       subject: "Your free trial has started - Hosanna",
       heading: "Your free trial has started",
-      body1:
-        "Your free trial of the {{plan}} plan is now active for {{church_name}}.",
+      body1: "Your free trial of the {{plan}} plan is now active for {{church_name}}.",
       body2: "Explore all Hosanna features during your trial period.",
     },
     billing_trial_ended: {
@@ -247,16 +232,13 @@ const en = {
     billing_trial_expired: {
       subject: "Your free trial has expired - Hosanna",
       heading: "Your free trial has expired",
-      body1:
-        "The trial period for {{church_name}} has expired without a valid payment method.",
-      body2:
-        "To keep access, please renew your subscription from the workspace settings.",
+      body1: "The trial period for {{church_name}} has expired without a valid payment method.",
+      body2: "To keep access, please renew your subscription from the workspace settings.",
     },
     billing_subscribed: {
       subject: "Subscription active - Hosanna",
       heading: "Subscription active",
-      body1:
-        "The {{church_name}} subscription to the {{plan}} plan is now active.",
+      body1: "The {{church_name}} subscription to the {{plan}} plan is now active.",
       body2: "Thank you for choosing Hosanna!",
     },
     billing_canceled: {

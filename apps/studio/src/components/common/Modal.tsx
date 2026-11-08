@@ -115,9 +115,7 @@ export const Modal: React.FC<ModalProps> = ({
           </button>
         </div>
 
-        <div className="px-6 py-5 overflow-y-auto flex-1 overscroll-contain">
-          {children}
-        </div>
+        <div className="px-6 py-5 overflow-y-auto flex-1 overscroll-contain">{children}</div>
 
         {footer && (
           <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-m3-border/50 bg-m3-sidebar/40">

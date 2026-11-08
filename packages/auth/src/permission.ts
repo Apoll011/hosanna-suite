@@ -1,7 +1,4 @@
-import {
-  createAccessControl,
-  type AccessControl,
-} from "better-auth/plugins/access";
+import { createAccessControl, type AccessControl } from "better-auth/plugins/access";
 import { defaultStatements } from "better-auth/plugins/organization/access";
 
 export const statement = {
@@ -36,9 +33,7 @@ export type PermissionRequest = {
   [R in Resource]?: ActionFor<R>[];
 };
 
-export function toPermissionRequest(
-  permission: PermissionString,
-): PermissionRequest {
+export function toPermissionRequest(permission: PermissionString): PermissionRequest {
   const dotIndex = permission.indexOf(".");
   const resource = permission.slice(0, dotIndex) as Resource;
   const action = permission.slice(dotIndex + 1) as ActionFor<typeof resource>;

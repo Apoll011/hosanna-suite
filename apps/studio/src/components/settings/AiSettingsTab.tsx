@@ -5,10 +5,7 @@
 
 import { aiApi, type AiProvider, type AiSettingsPublic } from "@/src/api/ai";
 import { Button, Spinner, Surface } from "@/src/components/common";
-import {
-  dispatchAiSettingsChanged,
-  LogosMascot,
-} from "@/src/features/ai-chat";
+import { dispatchAiSettingsChanged, LogosMascot } from "@/src/features/ai-chat";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import {
@@ -31,10 +28,7 @@ import { AiProviderLogoBadge } from "./AiProviderLogo";
 
 export interface AiSettingsTabProps {
   active: boolean;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 const selectClass =
@@ -108,9 +102,7 @@ function SectionCard({
           </div>
           <div className="min-w-0">
             <h3 className="text-sm font-semibold text-m3-text">{title}</h3>
-            {desc ? (
-              <p className="text-caption text-m3-secondary mt-0.5">{desc}</p>
-            ) : null}
+            {desc ? <p className="text-caption text-m3-secondary mt-0.5">{desc}</p> : null}
           </div>
         </div>
         {action}
@@ -120,10 +112,7 @@ function SectionCard({
   );
 }
 
-export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
-  active,
-  showToast,
-}) => {
+export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast }) => {
   const { t } = useI18n();
   const { granted: canManage, loading: canLoading } = useCan("ai.manage");
 
@@ -159,14 +148,10 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         setProvider(data.provider);
         setModel(data.model);
         setEnabled(data.enabled);
-        setBaseUrl(
-          data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "",
-        );
+        setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
         setMaxToolCalls(data.maxToolCalls);
         setTemperature(data.temperature);
-        setMaxOutputTokens(
-          data.maxOutputTokens != null ? String(data.maxOutputTokens) : "",
-        );
+        setMaxOutputTokens(data.maxOutputTokens != null ? String(data.maxOutputTokens) : "");
         setInstructions(data.instructions ?? "");
         setMemoryEnabled(data.memoryEnabled);
         setApiKey("");
@@ -175,8 +160,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         setCustomModel(!presets.includes(data.model));
       })
       .catch((err: unknown) => {
-        const message =
-          err instanceof Error ? err.message : t("ai.settings.loadError");
+        const message = err instanceof Error ? err.message : t("ai.settings.loadError");
         showToast?.(message, "error");
       })
       .finally(() => {
@@ -187,10 +171,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
     };
   }, [active, canManage, showToast, t]);
 
-  const presets = useMemo(
-    () => settings?.modelPresets[provider] ?? [],
-    [settings, provider],
-  );
+  const presets = useMemo(() => settings?.modelPresets[provider] ?? [], [settings, provider]);
 
   if (!active) return null;
 
@@ -206,9 +187,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
     return (
       <Surface className="max-w-xl mx-auto w-full text-center p-10">
         <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
-        <h3 className="text-title text-m3-text">
-          {t("ai.settings.noAccessTitle")}
-        </h3>
+        <h3 className="text-title text-m3-text">{t("ai.settings.noAccessTitle")}</h3>
         <p className="text-muted mt-1">{t("ai.settings.noAccessDesc")}</p>
       </Surface>
     );
@@ -237,29 +216,22 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
         model: model.trim(),
         enabled,
         ...(apiKey.trim() ? { apiKey: apiKey.trim() } : {}),
-        ...(isCustomProvider
-          ? { baseUrl: baseUrl.trim() || null }
-          : { baseUrl: null }),
+        ...(isCustomProvider ? { baseUrl: baseUrl.trim() || null } : { baseUrl: null }),
         maxToolCalls,
         temperature,
-        maxOutputTokens: maxOutputTokens.trim()
-          ? Number(maxOutputTokens.trim())
-          : null,
+        maxOutputTokens: maxOutputTokens.trim() ? Number(maxOutputTokens.trim()) : null,
         instructions: instructions.trim() || null,
         memoryEnabled,
       });
       setSettings(data);
       setApiKey("");
       setApiKeyEditing(false);
-      setBaseUrl(
-        data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "",
-      );
+      setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
       setBillingRefreshKey((k) => k + 1);
       dispatchAiSettingsChanged();
       showToast?.(t("ai.settings.saved"), "success");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : t("ai.settings.saveError");
+      const message = err instanceof Error ? err.message : t("ai.settings.saveError");
       showToast?.(message, "error");
     } finally {
       setSaving(false);
@@ -277,8 +249,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
       dispatchAiSettingsChanged();
       showToast?.(t("ai.settings.keyCleared"), "success");
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : t("ai.settings.saveError");
+      const message = err instanceof Error ? err.message : t("ai.settings.saveError");
       showToast?.(message, "error");
     } finally {
       setClearing(false);
@@ -307,9 +278,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="text-title text-m3-text">{t("ai.settings.title")}</h2>
-            <p className="text-sm text-m3-secondary mt-1 max-w-xl">
-              {t("ai.settings.desc")}
-            </p>
+            <p className="text-sm text-m3-secondary mt-1 max-w-xl">{t("ai.settings.desc")}</p>
             <div className="flex flex-wrap items-center gap-2 mt-3">
               {ready ? (
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
@@ -329,17 +298,14 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               )}
               {settings?.configured ? (
                 <span className="text-caption text-m3-secondary">
-                  {PROVIDER_META[settings.provider]?.label ?? settings.provider}{" "}
-                  · {settings.model}
+                  {PROVIDER_META[settings.provider]?.label ?? settings.provider} · {settings.model}
                 </span>
               ) : null}
             </div>
           </div>
           {settings ? (
             <label className="flex items-center gap-3 shrink-0 self-start sm:self-center cursor-pointer rounded-md border border-m3-border bg-m3-card/80 px-3.5 py-2.5">
-              <span className="text-sm font-medium text-m3-text">
-                {t("ai.settings.enabled")}
-              </span>
+              <span className="text-sm font-medium text-m3-text">{t("ai.settings.enabled")}</span>
               <input
                 type="checkbox"
                 className="w-4 h-4 accent-m3-primary"
@@ -373,9 +339,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             <div>
               <div className="flex items-end justify-between gap-3 mb-3">
                 <div>
-                  <span className="text-label text-m3-text block">
-                    {t("ai.settings.provider")}
-                  </span>
+                  <span className="text-label text-m3-text block">{t("ai.settings.provider")}</span>
                   <p className="text-caption text-m3-secondary mt-0.5">
                     {t("ai.settings.providerHint")}
                   </p>
@@ -447,9 +411,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
 
             {isCustomProvider ? (
               <label className="block space-y-1.5">
-                <span className="text-label text-m3-text">
-                  {t("ai.settings.baseUrl")}
-                </span>
+                <span className="text-label text-m3-text">{t("ai.settings.baseUrl")}</span>
                 <input
                   className={inputClass}
                   value={baseUrl}
@@ -465,17 +427,13 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-label text-m3-text">
-                  {t("ai.settings.model")}
-                </span>
+                <span className="text-label text-m3-text">{t("ai.settings.model")}</span>
                 <button
                   type="button"
                   className="text-xs text-m3-primary hover:underline cursor-pointer"
                   onClick={() => setCustomModel((v) => !v)}
                 >
-                  {customModel
-                    ? t("ai.settings.usePresets")
-                    : t("ai.settings.customModel")}
+                  {customModel ? t("ai.settings.usePresets") : t("ai.settings.customModel")}
                 </button>
               </div>
               {customModel ? (
@@ -558,13 +516,8 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
               </span>
             </div>
 
-            {settings.configured &&
-            settings.provider === "deepseek" &&
-            provider === "deepseek" ? (
-              <AiBillingCard
-                refreshKey={billingRefreshKey}
-                showToast={showToast}
-              />
+            {settings.configured && settings.provider === "deepseek" && provider === "deepseek" ? (
+              <AiBillingCard refreshKey={billingRefreshKey} showToast={showToast} />
             ) : null}
 
             <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
@@ -574,11 +527,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                 isLoading={saving}
                 icon={<Save className="w-4 h-4" />}
                 onClick={() => void handleSave()}
-                disabled={
-                  clearing ||
-                  !model.trim() ||
-                  (isCustomProvider && !baseUrl.trim())
-                }
+                disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
               >
                 {t("common.save")}
               </Button>
@@ -591,9 +540,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
             desc={t("ai.settings.behaviorDesc")}
           >
             <label className="block space-y-1.5">
-              <span className="text-label text-m3-text">
-                {t("ai.settings.instructions")}
-              </span>
+              <span className="text-label text-m3-text">{t("ai.settings.instructions")}</span>
               <textarea
                 className={`${inputClass} min-h-28 resize-y`}
                 value={instructions}
@@ -663,9 +610,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                       max={settings.limits.maxToolCalls.max}
                       step={1}
                       value={maxToolCalls}
-                      onChange={(e) =>
-                        setMaxToolCalls(Number(e.currentTarget.value))
-                      }
+                      onChange={(e) => setMaxToolCalls(Number(e.currentTarget.value))}
                     />
                     <span className="text-caption text-m3-secondary block">
                       {t("ai.settings.maxToolCallsHint", {
@@ -703,9 +648,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                       max={settings.limits.temperature.max}
                       step={0.1}
                       value={temperature ?? 0.7}
-                      onChange={(e) =>
-                        setTemperature(Number(e.currentTarget.value))
-                      }
+                      onChange={(e) => setTemperature(Number(e.currentTarget.value))}
                     />
                     <span className="text-caption text-m3-secondary block">
                       {t("ai.settings.temperatureHint")}
@@ -723,9 +666,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                       min={settings.limits.maxOutputTokens.min}
                       max={settings.limits.maxOutputTokens.max}
                       value={maxOutputTokens}
-                      onChange={(e) =>
-                        setMaxOutputTokens(e.currentTarget.value)
-                      }
+                      onChange={(e) => setMaxOutputTokens(e.currentTarget.value)}
                       placeholder={t("ai.settings.temperatureDefault")}
                     />
                     <span className="text-caption text-m3-secondary">
@@ -743,11 +684,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
                 isLoading={saving}
                 icon={<Save className="w-4 h-4" />}
                 onClick={() => void handleSave()}
-                disabled={
-                  clearing ||
-                  !model.trim() ||
-                  (isCustomProvider && !baseUrl.trim())
-                }
+                disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
               >
                 {t("common.save")}
               </Button>
@@ -756,16 +693,8 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({
 
           {memoryEnabled ? (
             <div className="space-y-4">
-              <AiMemoryPanel
-                scope="organization"
-                limits={settings.limits}
-                showToast={showToast}
-              />
-              <AiMemoryPanel
-                scope="personal"
-                limits={settings.limits}
-                showToast={showToast}
-              />
+              <AiMemoryPanel scope="organization" limits={settings.limits} showToast={showToast} />
+              <AiMemoryPanel scope="personal" limits={settings.limits} showToast={showToast} />
             </div>
           ) : null}
         </>

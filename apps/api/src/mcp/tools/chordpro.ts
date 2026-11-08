@@ -7,10 +7,7 @@ import {
 } from "@hosanna/chordpro/parser";
 import { formatChordPro } from "@hosanna/chordpro/formatter";
 import { z } from "zod";
-import {
-  explainChordProDirective,
-  getChordProCapabilities,
-} from "../lib/capabilities.js";
+import { explainChordProDirective, getChordProCapabilities } from "../lib/capabilities.js";
 import { validateChordProContent } from "../lib/chordproGate.js";
 import { summarizeDiff } from "../lib/diff.js";
 import { propagateVerseChords } from "../lib/propagateChords.js";
@@ -49,8 +46,7 @@ export function registerChordProTools(server: McpServer): void {
     },
     async ({ content }) => {
       try {
-        const { content: draftContent, ...report } =
-          propagateVerseChords(content);
+        const { content: draftContent, ...report } = propagateVerseChords(content);
         return jsonResult({
           draft: { content: draftContent },
           ...report,
@@ -171,8 +167,7 @@ export function registerChordProTools(server: McpServer): void {
     "chordpro_convert",
     {
       title: "Convert to ChordPro",
-      description:
-        "Convert Ultimate Guitar / Cifra Club / plain chord sheets into ChordPro.",
+      description: "Convert Ultimate Guitar / Cifra Club / plain chord sheets into ChordPro.",
       inputSchema: z.object({
         input: z.string(),
         detailed: z
@@ -217,14 +212,7 @@ export function registerChordProTools(server: McpServer): void {
           .optional()
           .describe("Directive name or alias to explain; omit to list all"),
         category: z
-          .enum([
-            "metadata",
-            "comment",
-            "structure",
-            "notation",
-            "layout",
-            "other",
-          ])
+          .enum(["metadata", "comment", "structure", "notation", "layout", "other"])
           .optional(),
       }),
     },

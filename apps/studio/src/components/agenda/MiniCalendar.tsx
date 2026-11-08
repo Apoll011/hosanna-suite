@@ -115,8 +115,7 @@ export const MiniCalendar: React.FC<MiniCalendarProps> = ({
 
       <div className="grid grid-cols-7 gap-1">
         {cells.map((date, i) => {
-          if (!date)
-            return <div key={`empty-${i}`} className="aspect-square" />;
+          if (!date) return <div key={`empty-${i}`} className="aspect-square" />;
           const iso = toIso(date);
           const isSelected = iso === selectedDate;
           const isToday = iso === todayIso;

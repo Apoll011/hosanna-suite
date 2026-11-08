@@ -9,15 +9,8 @@ import {
   services as serviceService,
   songs as songService,
 } from "../mcp/context.js";
-import {
-  deleteAgendaEvent,
-  deleteCollection,
-  deleteFolder,
-} from "../mcp/lib/libraryCrud.js";
-import {
-  AiChatService,
-  describeChatError,
-} from "../services/aiChat.service.js";
+import { deleteAgendaEvent, deleteCollection, deleteFolder } from "../mcp/lib/libraryCrud.js";
+import { AiChatService, describeChatError } from "../services/aiChat.service.js";
 import { getOrgAiBilling } from "../services/aiBilling/index.js";
 import { OrgAiConfigService } from "../services/orgAiConfig.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -140,12 +133,8 @@ aiRouter.delete(
   requirePermission("ai.use"),
   asyncHandler(async (req, res) => {
     if (!req.user?.id) throw AppError.unauthorized("Authentication required");
-    const removed = await memory.removePersonal(
-      req.user.id,
-      String(req.params.id),
-    );
-    if (!removed)
-      throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
+    const removed = await memory.removePersonal(req.user.id, String(req.params.id));
+    if (!removed) throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
     res.status(204).end();
   }),
 );
@@ -155,8 +144,7 @@ aiRouter.delete(
   requirePermission("ai.manage"),
   asyncHandler(async (req, res) => {
     const removed = await memory.removeOrg(req.orgId!, String(req.params.id));
-    if (!removed)
-      throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
+    if (!removed) throw new AppError(404, "VALIDATION_ERROR", "Memory entry not found");
     res.status(204).end();
   }),
 );
@@ -173,11 +161,7 @@ aiRouter.post(
     void authInfo;
     const body = req.body as {
       action:
-        | "delete_song"
-        | "delete_service"
-        | "delete_folder"
-        | "delete_collection"
-        | "delete_agenda";
+        "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
       id: string;
       folderAction?: "move_to_root" | "delete_songs";
     };
@@ -255,8 +239,7 @@ aiRouter.post(
       originalMessages: messages,
       sendReasoning: true,
       onError: (error) => {
-        if (!abort.signal.aborted)
-          console.error("AI chat stream error:", error);
+        if (!abort.signal.aborted) console.error("AI chat stream error:", error);
         return describeChatError(error);
       },
       messageMetadata: ({ part }) => {
@@ -268,8 +251,7 @@ aiRouter.post(
             finishReason: part.finishReason,
             // Tool budget used up (the model was told to wrap up) or the
             // step safety net hit while it still wanted tools.
-            truncated:
-              budget.limitReached || part.finishReason === "tool-calls",
+            truncated: budget.limitReached || part.finishReason === "tool-calls",
             toolCalls: budget.used,
             toolLimit: budget.max,
             limitReached: budget.limitReached,

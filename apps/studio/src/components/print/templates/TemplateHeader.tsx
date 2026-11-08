@@ -28,9 +28,7 @@ export const TemplateHeader: React.FC<TemplateHeaderProps> = ({
   showChurchIdentity = true,
 }) => {
   const showChurch = showChurchIdentity && options.showChurchHeader;
-  const church = showChurch
-    ? brand.churchName || brand.churchShortName
-    : undefined;
+  const church = showChurch ? brand.churchName || brand.churchShortName : undefined;
   const logo = showChurch && options.showChurchLogo ? brand.churchLogo : null;
 
   return (

@@ -30,9 +30,7 @@ export type StreamEvent =
   | { type: "message-metadata"; messageMetadata?: unknown }
   | { type: string; [key: string]: unknown };
 
-export async function* readUiMessageStream(
-  response: Response,
-): AsyncGenerator<StreamEvent> {
+export async function* readUiMessageStream(response: Response): AsyncGenerator<StreamEvent> {
   if (!response.body) return;
   const reader = response.body.getReader();
   const decoder = new TextDecoder();

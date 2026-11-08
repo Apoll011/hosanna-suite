@@ -64,8 +64,7 @@ function load(): AiProposal[] {
         typeof p === "object" &&
         typeof (p as AiProposal).key === "string" &&
         typeof (p as AiProposal).entityId === "string" &&
-        ((p as AiProposal).kind === "song" ||
-          (p as AiProposal).kind === "service"),
+        ((p as AiProposal).kind === "song" || (p as AiProposal).kind === "service"),
     );
   } catch {
     return [];
@@ -94,9 +93,7 @@ function loadOutcomes(): Record<string, ProposalOutcome> {
   try {
     const raw = sessionStorage.getItem(OUTCOMES_KEY);
     const parsed = raw ? (JSON.parse(raw) as unknown) : null;
-    return parsed && typeof parsed === "object"
-      ? (parsed as Record<string, ProposalOutcome>)
-      : {};
+    return parsed && typeof parsed === "object" ? (parsed as Record<string, ProposalOutcome>) : {};
   } catch {
     return {};
   }
@@ -190,9 +187,7 @@ export const aiProposals = {
   },
 
   resolveAll(keys?: string[], outcome: ProposalOutcome = "declined") {
-    const targets = keys
-      ? proposals.filter((p) => keys.includes(p.key))
-      : proposals;
+    const targets = keys ? proposals.filter((p) => keys.includes(p.key)) : proposals;
     recordOutcomes(targets, outcome);
     const set = new Set(targets.map((p) => p.key));
     commit(proposals.filter((p) => !set.has(p.key)));
@@ -215,51 +210,32 @@ export const aiProposals = {
 
 /** All pending proposals, newest first. */
 export function useAiProposals(): AiProposal[] {
-  return useSyncExternalStore(
-    aiProposals.subscribe,
-    aiProposals.getAll,
-    aiProposals.getAll,
-  );
+  return useSyncExternalStore(aiProposals.subscribe, aiProposals.getAll, aiProposals.getAll);
 }
 
 /** The pending proposal for one song, if any. */
-export function useSongProposal(
-  songId: string | null | undefined,
-): SongProposal | null {
+export function useSongProposal(songId: string | null | undefined): SongProposal | null {
   const getSnapshot = useCallback(
     () =>
-      (songId
-        ? proposals.find((p) => p.key === songKey(songId))
-        : undefined) as SongProposal | undefined,
+      (songId ? proposals.find((p) => p.key === songKey(songId)) : undefined) as
+        SongProposal | undefined,
     [songId],
   );
-  return (
-    useSyncExternalStore(aiProposals.subscribe, getSnapshot, getSnapshot) ??
-    null
-  );
+  return useSyncExternalStore(aiProposals.subscribe, getSnapshot, getSnapshot) ?? null;
 }
 
-export function useServiceProposal(
-  serviceId: string | null | undefined,
-): ServiceProposal | null {
+export function useServiceProposal(serviceId: string | null | undefined): ServiceProposal | null {
   const getSnapshot = useCallback(
     () =>
-      (serviceId
-        ? proposals.find((p) => p.key === serviceKey(serviceId))
-        : undefined) as ServiceProposal | undefined,
+      (serviceId ? proposals.find((p) => p.key === serviceKey(serviceId)) : undefined) as
+        ServiceProposal | undefined,
     [serviceId],
   );
-  return (
-    useSyncExternalStore(aiProposals.subscribe, getSnapshot, getSnapshot) ??
-    null
-  );
+  return useSyncExternalStore(aiProposals.subscribe, getSnapshot, getSnapshot) ?? null;
 }
 
 /** Pending / accepted / declined / stale for one song proposal in the chat. */
-export function useSongProposalStatus(
-  songId: string,
-  content: string,
-): ProposalStatus {
+export function useSongProposalStatus(songId: string, content: string): ProposalStatus {
   const getSnapshot = useCallback(
     () => aiProposals.statusOf(songKey(songId), content),
     [songId, content],

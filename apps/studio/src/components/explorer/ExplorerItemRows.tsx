@@ -4,10 +4,7 @@ import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FileMusic, MoreVertical } from "lucide-react";
 import React from "react";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "../../utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "../../utils/folderCustomization";
 import { SongScoreVisualizer } from "./SongScoreVisualizer";
 
 export interface FolderTableRowProps {
@@ -97,9 +94,7 @@ export const FolderTableRow: React.FC<FolderTableRowProps> = React.memo(
             );
           })()}
         </td>
-        <td className={`${cellPadding} text-m3-secondary opacity-70`}>
-          {t("explorer.folder")}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary opacity-70`}>{t("explorer.folder")}</td>
         {isSearchingOrFiltering && getFolderPathString && (
           <td className={`${cellPadding} text-m3-primary/80`}>
             {getFolderPathString(folder.parentId)}
@@ -229,17 +224,13 @@ export const SongTableRow: React.FC<SongTableRowProps> = React.memo(
             <span className="truncate font-medium">{song.title}</span>
           </div>
         </td>
-        <td className={`${cellPadding} text-m3-secondary opacity-70`}>
-          {t("explorer.cifra")}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary opacity-70`}>{t("explorer.cifra")}</td>
         {isSearchingOrFiltering && getFolderPathString && (
           <td className={`${cellPadding} text-m3-secondary font-medium`}>
             {getFolderPathString(song.folderId)}
           </td>
         )}
-        <td className={`${cellPadding} text-m3-secondary`}>
-          {song.artist || "—"}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary`}>{song.artist || "—"}</td>
 
         {showSongScore && (
           <td className={cellPadding}>

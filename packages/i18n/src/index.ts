@@ -1,16 +1,6 @@
-export {
-  DEFAULT_LANGUAGE,
-  getLanguageMeta,
-  LANGUAGES,
-  type LanguageMeta,
-} from "./languages";
+export { DEFAULT_LANGUAGE, getLanguageMeta, LANGUAGES, type LanguageMeta } from "./languages";
 export { localeToLanguage, resolveLanguage } from "./resolve";
-export {
-  interpolate,
-  lookup,
-  resolveString,
-  type Interpolation,
-} from "./translate";
+export { interpolate, lookup, resolveString, type Interpolation } from "./translate";
 export {
   LANGUAGE_LOCALE,
   type Language,

@@ -118,8 +118,7 @@ export interface FoldersResponse {
 
 export interface ServiceElement {
   id: string;
-  type:
-    "welcome" | "scripture" | "message" | "announcement" | "custom" | "song";
+  type: "welcome" | "scripture" | "message" | "announcement" | "custom" | "song";
   title: string;
   content?: string;
   position?: number;
@@ -259,8 +258,7 @@ export interface FolderNode {
   songId?: string;
 }
 
-export type SyncStatus =
-  "synced" | "syncing" | "error" | "offline" | "local_only";
+export type SyncStatus = "synced" | "syncing" | "error" | "offline" | "local_only";
 
 export interface CifraResult {
   url: string;

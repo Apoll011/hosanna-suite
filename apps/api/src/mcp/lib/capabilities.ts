@@ -15,8 +15,7 @@ export type FeatureSupportLevel = "implemented" | "partial" | "not_implemented";
 export interface ChordProDirectiveCapability {
   name: string;
   aliases?: string[];
-  category:
-    "metadata" | "comment" | "structure" | "notation" | "layout" | "other";
+  category: "metadata" | "comment" | "structure" | "notation" | "layout" | "other";
   support: DirectiveSupportLevel;
   description: string;
   hosannaSpecific?: boolean;
@@ -63,8 +62,7 @@ const DIRECTIVES: ChordProDirectiveCapability[] = [
     name: "composer",
     category: "metadata",
     support: "parsed",
-    description:
-      "Stored as metadata (generic camelCase fallback for unknown names also applies).",
+    description: "Stored as metadata (generic camelCase fallback for unknown names also applies).",
   },
   {
     name: "lyricist",
@@ -109,16 +107,14 @@ const DIRECTIVES: ChordProDirectiveCapability[] = [
     name: "duration",
     category: "metadata",
     support: "parsed",
-    description:
-      "Song duration (Hosanna uses this for service planning defaults).",
+    description: "Song duration (Hosanna uses this for service planning defaults).",
     hosannaSpecific: true,
   },
   {
     name: "song_number",
     category: "metadata",
     support: "parsed",
-    description:
-      "Catalog / hymnal number. Synced to song.song_number in Hosanna.",
+    description: "Catalog / hymnal number. Synced to song.song_number in Hosanna.",
     hosannaSpecific: true,
   },
   {
@@ -164,8 +160,7 @@ const DIRECTIVES: ChordProDirectiveCapability[] = [
     aliases: ["c"],
     category: "comment",
     support: "parsed",
-    description:
-      "Inline comment. Optional style suffix via |style or |style=name (e.g. |warning).",
+    description: "Inline comment. Optional style suffix via |style or |style=name (e.g. |warning).",
     example: "{c: Softly|warning}",
   },
   {
@@ -406,8 +401,7 @@ const FEATURES: ChordProFeatureCapability[] = [
     id: "lint",
     name: "Lint / validation",
     support: "implemented",
-    description:
-      "lintChordPro reports unclosed braces, bad chords, block mismatches, etc.",
+    description: "lintChordPro reports unclosed braces, bad chords, block mismatches, etc.",
   },
   {
     id: "format",
@@ -419,8 +413,7 @@ const FEATURES: ChordProFeatureCapability[] = [
     id: "transpose_ast",
     name: "AST transpose pipeline",
     support: "implemented",
-    description:
-      "parseChordPro(source).transpose(n) and related chainable ops.",
+    description: "parseChordPro(source).transpose(n) and related chainable ops.",
   },
   {
     id: "transpose_source",
@@ -477,7 +470,6 @@ export function explainChordProDirective(
 ): ChordProDirectiveCapability | undefined {
   const needle = nameOrAlias.trim().toLowerCase();
   return DIRECTIVES.find(
-    (d) =>
-      d.name === needle || d.aliases?.some((a) => a.toLowerCase() === needle),
+    (d) => d.name === needle || d.aliases?.some((a) => a.toLowerCase() === needle),
   );
 }

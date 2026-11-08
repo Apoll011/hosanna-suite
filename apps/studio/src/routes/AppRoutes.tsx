@@ -7,14 +7,7 @@ import { Spinner } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import React, { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import {
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { isDemoMode } from "../demo/index";
 import { MainLayout } from "../layouts/MainLayout";
@@ -63,10 +56,7 @@ import {
 
 function canPrefetch(): boolean {
   if (typeof navigator === "undefined") return false;
-  const connection =
-    navigator.connection ||
-    navigator.mozConnection ||
-    navigator.webkitConnection;
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if (!connection) return true;
   if (connection.saveData) return false;
   return !["slow-2g", "2g"].includes(connection.effectiveType || "");
@@ -95,17 +85,11 @@ function prefetchRemainingRoutes() {
   runWhenIdle(step);
 }
 
-const RouteErrorFallback = ({
-  resetErrorBoundary,
-}: {
-  resetErrorBoundary: () => void;
-}) => {
+const RouteErrorFallback = ({ resetErrorBoundary }: { resetErrorBoundary: () => void }) => {
   const { t } = useI18n();
   return (
     <div className="flex flex-col items-center justify-center flex-1 h-full min-h-75 text-center p-6 bg-m3-bg">
-      <h2 className="text-xl font-bold mb-2">
-        {t("routes.errorBoundary.title")}
-      </h2>
+      <h2 className="text-xl font-bold mb-2">{t("routes.errorBoundary.title")}</h2>
       <p className="text-gray-500 mb-4">{t("routes.errorBoundary.desc")}</p>
       <button
         onClick={resetErrorBoundary}
@@ -117,17 +101,11 @@ const RouteErrorFallback = ({
   );
 };
 
-const ErrorFallback = ({
-  resetErrorBoundary,
-}: {
-  resetErrorBoundary: () => void;
-}) => {
+const ErrorFallback = ({ resetErrorBoundary }: { resetErrorBoundary: () => void }) => {
   const { t } = useI18n();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
-      <h2 className="text-xl font-bold mb-2">
-        {t("routes.errorBoundary.title")}
-      </h2>
+      <h2 className="text-xl font-bold mb-2">{t("routes.errorBoundary.title")}</h2>
       <p className="text-gray-500 mb-4">{t("routes.errorBoundary.desc")}</p>
       <button
         onClick={resetErrorBoundary}
@@ -159,12 +137,7 @@ const OrganizationGuard = () => {
       `/${organization.slug}`,
     );
 
-    return (
-      <Navigate
-        to={`${correctPathname}${location.search}${location.hash}`}
-        replace
-      />
-    );
+    return <Navigate to={`${correctPathname}${location.search}${location.hash}`} replace />;
   }
 
   return <Outlet />;
@@ -219,10 +192,7 @@ export const AppRoutes: React.FC = () => {
                 <Route path="songs" element={<SongsPage />} />
                 <Route path="songs/:id" element={<SongEditorPage />} />
                 <Route path="collections" element={<CollectionsPage />} />
-                <Route
-                  path="collections/:id"
-                  element={<CollectionDetailPage />}
-                />
+                <Route path="collections/:id" element={<CollectionDetailPage />} />
                 <Route path="services" element={<ServicesPage />} />
                 <Route path="services/:id" element={<ServiceDetailPage />} />
                 <Route path="teams" element={<TeamsPage />} />

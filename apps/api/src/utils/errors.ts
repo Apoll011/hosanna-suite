@@ -29,12 +29,7 @@ export class AppError extends Error {
   readonly code: ErrorCode;
   readonly details?: unknown;
 
-  constructor(
-    status: number,
-    code: ErrorCode,
-    message: string,
-    details?: unknown,
-  ) {
+  constructor(status: number, code: ErrorCode, message: string, details?: unknown) {
     super(message);
     this.name = "AppError";
     this.status = status;
@@ -54,9 +49,7 @@ export class AppError extends Error {
     return new AppError(401, "UNAUTHORIZED", message);
   }
 
-  static forbidden(
-    message = "You do not have permission to perform this action.",
-  ) {
+  static forbidden(message = "You do not have permission to perform this action.") {
     return new AppError(403, "FORBIDDEN", message);
   }
 
@@ -70,9 +63,7 @@ export class AppError extends Error {
     return new AppError(403, "SUBSCRIPTION_REQUIRED", message);
   }
 
-  static conflict(
-    message = "The resource was modified by someone else. Reload and try again.",
-  ) {
+  static conflict(message = "The resource was modified by someone else. Reload and try again.") {
     return new AppError(409, "CONFLICT", message);
   }
 }

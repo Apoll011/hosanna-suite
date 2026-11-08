@@ -7,11 +7,7 @@ import { Button } from "@/src/components/common";
 import { PRINT_BRAND_ACCENT } from "@/src/components/print/brand";
 import { toOrgPrintSettings } from "@/src/components/print/options";
 import { PrintOptionsPanel } from "@/src/components/print/PrintOptionsPanel";
-import {
-  OrgPrintSettings,
-  PrintBrand,
-  PrintOptions,
-} from "@/src/components/print/types";
+import { OrgPrintSettings, PrintBrand, PrintOptions } from "@/src/components/print/types";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useI18n } from "@/src/lib/i18n";
 import { Eye, Printer } from "lucide-react";
@@ -50,9 +46,7 @@ export const PrintingSettingsCard: React.FC<PrintingSettingsCardProps> = ({
 
   const options: PrintOptions = { ...settings, includeSongs: true };
   const handleChange = (patch: Partial<PrintOptions>) =>
-    onUpdate((prev) =>
-      toOrgPrintSettings({ ...prev, includeSongs: true, ...patch }),
-    );
+    onUpdate((prev) => toOrgPrintSettings({ ...prev, includeSongs: true, ...patch }));
 
   return (
     <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden transition-all mt-6">
@@ -62,9 +56,7 @@ export const PrintingSettingsCard: React.FC<PrintingSettingsCardProps> = ({
             <Printer className="w-5 h-5 text-sky-500" />
             <span>{t("print.settingsCard.title")}</span>
           </h3>
-          <p className="text-sm text-m3-secondary mt-1">
-            {t("print.settingsCard.description")}
-          </p>
+          <p className="text-sm text-m3-secondary mt-1">{t("print.settingsCard.description")}</p>
         </div>
 
         <Button
@@ -81,9 +73,7 @@ export const PrintingSettingsCard: React.FC<PrintingSettingsCardProps> = ({
 
       <div className="p-6">
         {!isEditing && canManageOrg && (
-          <p className="text-xs text-m3-secondary mb-4">
-            {t("print.settingsCard.editHint")}
-          </p>
+          <p className="text-xs text-m3-secondary mb-4">{t("print.settingsCard.editHint")}</p>
         )}
         <PrintOptionsPanel
           options={options}

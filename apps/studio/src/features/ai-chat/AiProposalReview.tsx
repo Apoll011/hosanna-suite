@@ -37,8 +37,7 @@ export const AiProposalReview: React.FC<Props> = ({ proposal, onClose }) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const title =
-    song?.title || proposal.title || t("ai.chat.proposals.untitled");
+  const title = song?.title || proposal.title || t("ai.chat.proposals.untitled");
 
   return createPortal(
     <div

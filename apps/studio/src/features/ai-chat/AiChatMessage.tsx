@@ -66,11 +66,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
           rows={Math.min(8, Math.max(2, draft.split("\n").length))}
           onChange={(e) => setDraft(e.currentTarget.value)}
           onKeyDown={(e) => {
-            if (
-              e.key === "Enter" &&
-              !e.shiftKey &&
-              !e.nativeEvent.isComposing
-            ) {
+            if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
               e.preventDefault();
               submit();
             } else if (e.key === "Escape") {
@@ -132,10 +128,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
 
 /* ------------------------------ reasoning block --------------------------- */
 
-const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({
-  text,
-  live,
-}) => {
+const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({ text, live }) => {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   return (
@@ -146,13 +139,9 @@ const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({
         aria-expanded={open}
         className="inline-flex items-center gap-1.5 text-[12px] text-m3-secondary hover:text-m3-text rounded-md px-1.5 py-1 -mx-1.5 hover:bg-m3-hover/70"
       >
-        <Brain
-          className={`w-3.5 h-3.5 ${live ? "animate-pulse text-m3-primary" : ""}`}
-        />
+        <Brain className={`w-3.5 h-3.5 ${live ? "animate-pulse text-m3-primary" : ""}`} />
         <span>{t("ai.chat.reasoning")}</span>
-        <ChevronRight
-          className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-90" : ""}`}
-        />
+        <ChevronRight className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-90" : ""}`} />
       </button>
       <div className="logos-collapse" data-open={open}>
         <div>
@@ -184,12 +173,7 @@ const AssistantMessage: React.FC<Props> = ({
 
   return (
     <div className="group/msg flex items-start gap-2 w-full">
-      <LogosMascot
-        flat
-        size={26}
-        mood={live ? mood : "idle"}
-        className="mt-0.5"
-      />
+      <LogosMascot flat size={26} mood={live ? mood : "idle"} className="mt-0.5" />
       <div className="min-w-0 flex-1">
         {blocks.length === 0 && live ? (
           <div
@@ -304,9 +288,7 @@ const AssistantMessage: React.FC<Props> = ({
               </button>
             ) : null}
             {duration ? (
-              <span className="ml-1 text-[10px] tabular-nums text-m3-secondary">
-                {duration}
-              </span>
+              <span className="ml-1 text-[10px] tabular-nums text-m3-secondary">{duration}</span>
             ) : null}
           </div>
         ) : null}
@@ -340,16 +322,10 @@ const AssistantMessage: React.FC<Props> = ({
 export const AiChatMessageView = memo(function AiChatMessageView(props: Props) {
   return (
     <div
-      className={`logos-msg-in flex ${
-        props.msg.role === "user" ? "justify-end" : "justify-start"
-      }`}
+      className={`logos-msg-in flex ${props.msg.role === "user" ? "justify-end" : "justify-start"}`}
     >
       {props.msg.role === "user" ? (
-        <UserMessage
-          msg={props.msg}
-          streaming={props.streaming}
-          onEdit={props.onEdit}
-        />
+        <UserMessage msg={props.msg} streaming={props.streaming} onEdit={props.onEdit} />
       ) : (
         <AssistantMessage {...props} />
       )}

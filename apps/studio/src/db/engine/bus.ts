@@ -22,11 +22,7 @@ function busKey(collection: string, scope: string): string {
 }
 
 /** Subscribe to all changes for a collection (scope="*") or a specific doc id. */
-export function subscribe(
-  collection: string,
-  scope: string,
-  fn: Listener,
-): () => void {
+export function subscribe(collection: string, scope: string, fn: Listener): () => void {
   const k = busKey(collection, scope);
   let set = listeners.get(k);
   if (!set) {
@@ -68,10 +64,7 @@ export function notify(collection: string, id: string): void {
  * If `changedIds` is omitted, notifies the collection scope ("*") and all doc
  * listeners for this collection (e.g. after a full collection wipe).
  */
-export function notifyCollection(
-  collection: string,
-  changedIds?: readonly string[],
-): void {
+export function notifyCollection(collection: string, changedIds?: readonly string[]): void {
   // Always notify collection-level subscribers (queries like find())
   const colSet = listeners.get(busKey(collection, "*"));
   if (colSet) {
@@ -111,10 +104,7 @@ export function notifyCollection(
  */
 const localChangeListeners = new Map<string, Set<Listener>>();
 
-export function subscribeLocalChange(
-  collection: string,
-  fn: Listener,
-): () => void {
+export function subscribeLocalChange(collection: string, fn: Listener): () => void {
   let set = localChangeListeners.get(collection);
   if (!set) {
     set = new Set();
@@ -142,10 +132,7 @@ export function notifyLocalChange(collection: string): void {
 type BaselineListener = (previousDoc: Record<string, unknown>) => void;
 const pushBaselineListeners = new Map<string, Set<BaselineListener>>();
 
-export function subscribePushBaseline(
-  collection: string,
-  fn: BaselineListener,
-): () => void {
+export function subscribePushBaseline(collection: string, fn: BaselineListener): () => void {
   let set = pushBaselineListeners.get(collection);
   if (!set) {
     set = new Set();
@@ -158,10 +145,7 @@ export function subscribePushBaseline(
   };
 }
 
-export function notifyPushBaseline(
-  collection: string,
-  previousDoc: Record<string, unknown>,
-): void {
+export function notifyPushBaseline(collection: string, previousDoc: Record<string, unknown>): void {
   const set = pushBaselineListeners.get(collection);
   if (!set) return;
   for (const fn of Array.from(set)) fn(previousDoc);

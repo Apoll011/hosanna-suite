@@ -24,20 +24,14 @@ import {
   type PublishProgressInput,
 } from "../lib/publishProgress.js";
 import { validateServicePlan } from "../lib/serviceElements.js";
-import {
-  serviceElementSchema,
-  serviceElementsSchema,
-} from "../lib/serviceElements.js";
+import { serviceElementSchema, serviceElementsSchema } from "../lib/serviceElements.js";
 
 const dateOnlySchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD")
   .describe("Calendar date YYYY-MM-DD");
 
-export function registerServiceTools(
-  server: McpServer,
-  authInfo?: AuthInfo,
-): void {
+export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): void {
   server.registerTool(
     "services_search",
     {
@@ -62,9 +56,7 @@ export function registerServiceTools(
         if (search?.trim()) {
           const q = search.toLowerCase();
           list = list.filter(
-            (s) =>
-              s.name.toLowerCase().includes(q) ||
-              (s.notes ?? "").toLowerCase().includes(q),
+            (s) => s.name.toLowerCase().includes(q) || (s.notes ?? "").toLowerCase().includes(q),
           );
         }
         return jsonResult({
@@ -95,15 +87,10 @@ export function registerServiceTools(
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.access");
         const service = await serviceService(ctx).getByIdForMcp(serviceId);
-        const validation = await validateServicePlan(
-          service.elements,
-          songService(ctx),
-        );
+        const validation = await validateServicePlan(service.elements, songService(ctx));
         let expandedSongs: unknown[] | undefined;
         if (expandSongs) {
-          const rawElements = Array.isArray(service.elements)
-            ? service.elements
-            : [];
+          const rawElements = Array.isArray(service.elements) ? service.elements : [];
           const ids = [
             ...new Set(
               rawElements
@@ -141,14 +128,10 @@ export function registerServiceTools(
         const missingFromExpand = (expandedSongs ?? [])
           .filter(
             (s): s is { id: string; missing: true } =>
-              Boolean(s) &&
-              typeof s === "object" &&
-              (s as { missing?: boolean }).missing === true,
+              Boolean(s) && typeof s === "object" && (s as { missing?: boolean }).missing === true,
           )
           .map((s) => s.id);
-        const missingSongIds = [
-          ...new Set([...validation.missingSongIds, ...missingFromExpand]),
-        ];
+        const missingSongIds = [...new Set([...validation.missingSongIds, ...missingFromExpand])];
         return jsonResult({
           service,
           validation: {
@@ -187,15 +170,10 @@ export function registerServiceTools(
         for (const id of serviceIds) {
           try {
             const service = await serviceService(ctx).getByIdForMcp(id);
-            const validation = await validateServicePlan(
-              service.elements,
-              songService(ctx),
-            );
+            const validation = await validateServicePlan(service.elements, songService(ctx));
             let expandedSongs: unknown[] | undefined;
             if (expandSongs) {
-              const rawElements = Array.isArray(service.elements)
-                ? service.elements
-                : [];
+              const rawElements = Array.isArray(service.elements) ? service.elements : [];
               const ids = [
                 ...new Set(
                   rawElements
@@ -262,10 +240,7 @@ export function registerServiceTools(
           id: el.id || randomUUID(),
           position: el.position ?? i,
         }));
-        const validation = await validateServicePlan(
-          elements,
-          songService(ctx),
-        );
+        const validation = await validateServicePlan(elements, songService(ctx));
         return jsonResult({
           status: "draft",
           proposal: {
@@ -302,16 +277,9 @@ export function registerServiceTools(
       try {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.update");
-        const current = await serviceService(ctx).getByIdSerialized(
-          args.serviceId,
-        );
-        const elements =
-          args.elements ??
-          (Array.isArray(current.elements) ? current.elements : []);
-        const validation = await validateServicePlan(
-          elements,
-          songService(ctx),
-        );
+        const current = await serviceService(ctx).getByIdSerialized(args.serviceId);
+        const elements = args.elements ?? (Array.isArray(current.elements) ? current.elements : []);
+        const validation = await validateServicePlan(elements, songService(ctx));
         const dateOnly =
           args.date ??
           (current.date instanceof Date
@@ -344,8 +312,7 @@ export function registerServiceTools(
     "services_validate",
     {
       title: "Validate service",
-      description:
-        "Validate service element structure and song references without saving.",
+      description: "Validate service element structure and song references without saving.",
       inputSchema: z.object({
         elements: serviceElementsSchema,
         serviceId: z
@@ -359,10 +326,7 @@ export function registerServiceTools(
       try {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.access");
-        const validation = await validateServicePlan(
-          elements,
-          songService(ctx),
-        );
+        const validation = await validateServicePlan(elements, songService(ctx));
         let existing = null;
         if (serviceId) {
           existing = await serviceService(ctx).getByIdSerialized(serviceId);
@@ -378,8 +342,7 @@ export function registerServiceTools(
     "services_save",
     {
       title: "Save service",
-      description:
-        "Persist a validated service create or update after user approval.",
+      description: "Persist a validated service create or update after user approval.",
       inputSchema: z.object({
         mode: z.enum(["create", "update"]),
         serviceId: z.string().uuid().optional(),
@@ -407,10 +370,7 @@ export function registerServiceTools(
           clientRequestId,
           async () => {
             const elements = args.elements ?? [];
-            const validation = await validateServicePlan(
-              elements,
-              songService(ctx),
-            );
+            const validation = await validateServicePlan(elements, songService(ctx));
             if (!validation.ok && !args.allowInvalid) {
               return jsonResult(
                 {
@@ -430,9 +390,7 @@ export function registerServiceTools(
                 notes: args.notes,
                 elements,
               });
-              const service = await serviceService(ctx).getByIdForMcp(
-                created.id,
-              );
+              const service = await serviceService(ctx).getByIdForMcp(created.id);
               return jsonResult({
                 status: "saved",
                 saved: true,
@@ -446,10 +404,7 @@ export function registerServiceTools(
 
             requirePermission(ctx, "service.update");
             if (!args.serviceId || !args.updatedAt) {
-              return jsonResult(
-                { error: "serviceId and updatedAt are required for update" },
-                true,
-              );
+              return jsonResult({ error: "serviceId and updatedAt are required for update" }, true);
             }
             const updated = await serviceService(ctx).update(
               args.serviceId,
@@ -488,10 +443,7 @@ export function registerServiceTools(
       description:
         "Orchestrate validate → save service → optional linked agenda → verify. Requires clientRequestId for idempotent retries (resumes after partial failure instead of duplicating the service). Granular tools remain available.",
       inputSchema: z.object({
-        clientRequestId: z
-          .string()
-          .min(1)
-          .describe("Required idempotency / resume key"),
+        clientRequestId: z.string().min(1).describe("Required idempotency / resume key"),
         name: z.string().min(1),
         date: dateOnlySchema,
         notes: z.string().optional(),
@@ -529,9 +481,7 @@ export function registerServiceTools(
               .optional(),
           })
           .optional()
-          .describe(
-            "When set, create/link an agenda event after the service saves",
-          ),
+          .describe("When set, create/link an agenda event after the service saves"),
       }),
     },
     async (args) => {
@@ -561,10 +511,7 @@ export function registerServiceTools(
             id: el.id || randomUUID(),
             position: el.position ?? i,
           }));
-          const validation = await validateServicePlan(
-            elements,
-            songService(ctx),
-          );
+          const validation = await validateServicePlan(elements, songService(ctx));
           if (!validation.ok && !args.allowInvalid) {
             return jsonResult(
               {
@@ -597,9 +544,7 @@ export function registerServiceTools(
             steps.push("service_saved");
             report.service = service;
           } else {
-            const service = await serviceService(ctx).getByIdForMcp(
-              progress.serviceId,
-            );
+            const service = await serviceService(ctx).getByIdForMcp(progress.serviceId);
             report.service = service;
             steps.push("service_resumed");
           }
@@ -607,13 +552,12 @@ export function registerServiceTools(
           // Phase 2: agenda (optional)
           if (args.agenda) {
             if (!progress!.eventId) {
-              const assignees = (args.agenda.responsibilities ?? []).flatMap(
-                (r) =>
-                  r.assignees.map((a) => ({
-                    name: a.name,
-                    category: r.categoryId,
-                    memberId: a.memberId,
-                  })),
+              const assignees = (args.agenda.responsibilities ?? []).flatMap((r) =>
+                r.assignees.map((a) => ({
+                  name: a.name,
+                  category: r.categoryId,
+                  memberId: a.memberId,
+                })),
               );
               const toResolve = assignees.filter((a) => !a.memberId);
               const resolution =
@@ -632,10 +576,7 @@ export function registerServiceTools(
                     };
               report.memberResolution = resolution;
 
-              if (
-                !args.allowUnlinkedAssignees &&
-                resolution.unresolved.length > 0
-              ) {
+              if (!args.allowUnlinkedAssignees && resolution.unresolved.length > 0) {
                 return jsonResult({
                   status: "partial",
                   phase: "agenda_blocked_unresolved_members",
@@ -650,22 +591,15 @@ export function registerServiceTools(
               }
 
               const resolvedByName = new Map(
-                resolution.resolved.map((r) => [
-                  r.name.trim().toLowerCase(),
-                  r.memberId,
-                ]),
+                resolution.resolved.map((r) => [r.name.trim().toLowerCase(), r.memberId]),
               );
-              const responsibilities = (args.agenda.responsibilities ?? []).map(
-                (r) => ({
-                  categoryId: r.categoryId,
-                  assignees: r.assignees.map((a) => ({
-                    name: a.name,
-                    memberId:
-                      a.memberId ??
-                      resolvedByName.get(a.name.trim().toLowerCase()),
-                  })),
-                }),
-              );
+              const responsibilities = (args.agenda.responsibilities ?? []).map((r) => ({
+                categoryId: r.categoryId,
+                assignees: r.assignees.map((a) => ({
+                  name: a.name,
+                  memberId: a.memberId ?? resolvedByName.get(a.name.trim().toLowerCase()),
+                })),
+              }));
 
               try {
                 const agendaResult = await createAgendaEvent(ctx, {
@@ -689,10 +623,7 @@ export function registerServiceTools(
                 steps.push("agenda_saved");
                 report.agenda = agendaResult;
               } catch (agendaErr) {
-                const message =
-                  agendaErr instanceof Error
-                    ? agendaErr.message
-                    : String(agendaErr);
+                const message = agendaErr instanceof Error ? agendaErr.message : String(agendaErr);
                 return jsonResult({
                   status: "partial",
                   phase: "agenda_failed",
@@ -710,9 +641,7 @@ export function registerServiceTools(
           }
 
           // Phase 3: verify
-          const verifiedService = await serviceService(ctx).getByIdForMcp(
-            progress!.serviceId,
-          );
+          const verifiedService = await serviceService(ctx).getByIdForMcp(progress!.serviceId);
           const verifiedValidation = await validateServicePlan(
             verifiedService.elements,
             songService(ctx),
@@ -809,9 +738,7 @@ export function registerServiceTools(
         requirePermission(ctx, "service.create");
         requirePermission(ctx, "song.access");
 
-        const search =
-          args.theme?.trim() ||
-          (args.tags?.length ? args.tags.join(" ") : undefined);
+        const search = args.theme?.trim() || (args.tags?.length ? args.tags.join(" ") : undefined);
         const library = await songService(ctx).list({
           search,
           key: args.key,
@@ -868,10 +795,7 @@ export function registerServiceTools(
           });
         }
 
-        const validation = await validateServicePlan(
-          elements,
-          songService(ctx),
-        );
+        const validation = await validateServicePlan(elements, songService(ctx));
 
         return jsonResult({
           proposal: {

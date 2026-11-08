@@ -4,11 +4,7 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import {
-  ResponsibilityCategory,
-  ResponsibilityColor,
-  ResponsibilityIconKey,
-} from "@/src/types";
+import { ResponsibilityCategory, ResponsibilityColor, ResponsibilityIconKey } from "@/src/types";
 import { Plus, Trash2, Users } from "lucide-react";
 import React, { useState } from "react";
 import { COLOR_MAP, ICON_MAP } from "../../utils/iconMap";
@@ -55,9 +51,12 @@ export interface ResponsibilityCategoriesCardProps {
  * staged locally and persisted to the org metadata on save, and the Agenda
  * page reads the same list from `useOrgSettings`.
  */
-export const ResponsibilityCategoriesCard: React.FC<
-  ResponsibilityCategoriesCardProps
-> = ({ disabled = false, categories, onAdd, onRemove }) => {
+export const ResponsibilityCategoriesCard: React.FC<ResponsibilityCategoriesCardProps> = ({
+  disabled = false,
+  categories,
+  onAdd,
+  onRemove,
+}) => {
   const { t, tc } = useI18n();
 
   const [label, setLabel] = useState("");
@@ -109,9 +108,7 @@ export const ResponsibilityCategoriesCard: React.FC<
                   >
                     <Icon className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-bold text-m3-text truncate">
-                    {c.label}
-                  </span>
+                  <span className="text-xs font-bold text-m3-text truncate">{c.label}</span>
                 </div>
                 <button
                   type="button"

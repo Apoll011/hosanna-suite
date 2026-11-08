@@ -4,24 +4,11 @@
  */
 
 import { ConfirmDialog } from "@/src/components/common";
-import {
-  AppleIcon,
-  DiscordIcon,
-  GitHubIcon,
-  GoogleIcon,
-  MicrosoftIcon,
-} from "@hosanna/ui";
+import { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "@hosanna/ui";
 import { useSync } from "@/src/contexts/SyncContext";
 import { authClient } from "@/src/lib/authClient";
 import { useI18n } from "@/src/lib/i18n";
-import {
-  CheckCircle2,
-  ExternalLink,
-  Link2,
-  Loader2,
-  RefreshCw,
-  Unlink,
-} from "lucide-react";
+import { CheckCircle2, ExternalLink, Link2, Loader2, RefreshCw, Unlink } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 export type SocialProviderId =
@@ -101,11 +88,8 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
   const [accounts, setAccounts] = useState<UserAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [linkingProvider, setLinkingProvider] = useState<string | null>(null);
-  const [unlinkingProvider, setUnlinkingProvider] = useState<string | null>(
-    null,
-  );
-  const [providerToUnlink, setProviderToUnlink] =
-    useState<SocialProviderConfig | null>(null);
+  const [unlinkingProvider, setUnlinkingProvider] = useState<string | null>(null);
+  const [providerToUnlink, setProviderToUnlink] = useState<SocialProviderConfig | null>(null);
 
   const fetchAccounts = useCallback(async () => {
     setIsLoading(true);
@@ -171,10 +155,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
           "error",
         );
       } else {
-        showToast(
-          t("settings.account.socialAccounts.unlinkSuccess"),
-          "success",
-        );
+        showToast(t("settings.account.socialAccounts.unlinkSuccess"), "success");
         await fetchAccounts();
       }
     } catch (err: unknown) {
@@ -241,9 +222,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-m3-text">
-                        {provider.name}
-                      </span>
+                      <span className="text-sm font-semibold text-m3-text">{provider.name}</span>
                       {isConnected ? (
                         <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/50">
                           <CheckCircle2 className="w-3 h-3" />
@@ -278,9 +257,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
                       ) : (
                         <Unlink className="w-3.5 h-3.5" />
                       )}
-                      <span>
-                        {t("settings.account.socialAccounts.disconnect")}
-                      </span>
+                      <span>{t("settings.account.socialAccounts.disconnect")}</span>
                     </button>
                   ) : (
                     <button
@@ -294,9 +271,7 @@ export const SocialAccountsSection: React.FC<SocialAccountsSectionProps> = ({
                       ) : (
                         <ExternalLink className="w-3.5 h-3.5" />
                       )}
-                      <span>
-                        {t("settings.account.socialAccounts.connect")}
-                      </span>
+                      <span>{t("settings.account.socialAccounts.connect")}</span>
                     </button>
                   )}
                 </div>

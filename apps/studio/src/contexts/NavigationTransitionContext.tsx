@@ -60,16 +60,11 @@ export const NavigationTransitionProvider: React.FC<{
 
   const isPending = isPreloading || transitionPending;
 
-  return (
-    <Ctx.Provider value={{ navigate: go, isPending }}>{children}</Ctx.Provider>
-  );
+  return <Ctx.Provider value={{ navigate: go, isPending }}>{children}</Ctx.Provider>;
 };
 
 export const useNavTransition = () => {
   const ctx = useContext(Ctx);
-  if (!ctx)
-    throw new Error(
-      "useNavTransition must be used within NavigationTransitionProvider",
-    );
+  if (!ctx) throw new Error("useNavTransition must be used within NavigationTransitionProvider");
   return ctx;
 };

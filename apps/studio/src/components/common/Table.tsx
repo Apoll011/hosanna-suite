@@ -5,10 +5,7 @@
 
 import React from "react";
 import { Spinner } from "./Spinner";
-import {
-  TablePagination,
-  type TablePaginationProps,
-} from "./TablePagination";
+import { TablePagination, type TablePaginationProps } from "./TablePagination";
 
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Pinned footer pagination. Omitted when not needed. */
@@ -63,17 +60,13 @@ export const Table: React.FC<TableProps> = ({
       ) : (
         <div className="flex-1 min-h-0 overflow-x-auto flex flex-col">
           {header != null && <div className="shrink-0">{header}</div>}
-          <div
-            className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden ${bodyClassName}`}
-          >
+          <div className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden ${bodyClassName}`}>
             {children}
           </div>
         </div>
       )}
 
-      {pagination && !isLoading && error == null && (
-        <TablePagination {...pagination} />
-      )}
+      {pagination && !isLoading && error == null && <TablePagination {...pagination} />}
     </div>
   );
 };

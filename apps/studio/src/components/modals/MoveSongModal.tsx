@@ -6,12 +6,7 @@
 import { Button, Modal } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
-import {
-  ChevronDown,
-  ChevronRight,
-  Folder as FolderIcon,
-  HardDrive,
-} from "lucide-react";
+import { ChevronDown, ChevronRight, Folder as FolderIcon, HardDrive } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 interface FolderTreeNode {
@@ -49,13 +44,7 @@ const MoveFolderTreeItem: React.FC<{
   onSelect: (id: string) => void;
   expandedFolderIds: Set<string>;
   toggleExpand: (id: string) => void;
-}> = ({
-  node,
-  selectedFolderId,
-  onSelect,
-  expandedFolderIds,
-  toggleExpand,
-}) => {
+}> = ({ node, selectedFolderId, onSelect, expandedFolderIds, toggleExpand }) => {
   const isSelected = selectedFolderId === node.folder.id;
   const hasChildren = node.children.length > 0;
   const isExpanded = expandedFolderIds.has(node.folder.id);
@@ -142,12 +131,8 @@ export const MoveSongModal: React.FC<MoveSongModalProps> = ({
   isLoading = false,
 }) => {
   const { t } = useI18n();
-  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(
-    initialFolderId || null,
-  );
-  const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(initialFolderId || null);
+  const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
@@ -179,19 +164,14 @@ export const MoveSongModal: React.FC<MoveSongModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={
-        songTitle
-          ? t("modals.moveSongTitle", { title: songTitle })
-          : t("modals.moveSongToFolder")
+        songTitle ? t("modals.moveSongTitle", { title: songTitle }) : t("modals.moveSongToFolder")
       }
     >
       <div className="flex flex-col gap-4">
         {songTitle && (
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {t("modals.chooseDestination")}{" "}
-            <strong className="text-slate-900 dark:text-slate-100">
-              {songTitle}
-            </strong>
-            :
+            <strong className="text-slate-900 dark:text-slate-100">{songTitle}</strong>:
           </p>
         )}
 
@@ -229,11 +209,7 @@ export const MoveSongModal: React.FC<MoveSongModalProps> = ({
           <Button variant="ghost" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button
-            variant="primary"
-            isLoading={isLoading}
-            onClick={handleConfirm}
-          >
+          <Button variant="primary" isLoading={isLoading} onClick={handleConfirm}>
             {t("modals.moveSong")}
           </Button>
         </div>

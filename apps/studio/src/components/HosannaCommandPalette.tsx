@@ -26,10 +26,7 @@ import {
 } from "lucide-react";
 import React, { useMemo } from "react";
 import { CommandAction } from "../command-palette.types";
-import {
-  CommandPaletteProvider,
-  useCommandPalette,
-} from "../contexts/CommandPaletteContext";
+import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
 import { ViewName } from "../layouts/view";
 import { useAiCommandPaletteActions } from "../features/ai-chat/useAiCommandPaletteActions";
 import { useRxDbSearch } from "../hooks/useRxDbSearch";
@@ -324,8 +321,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
           icon: <Move className="w-4 h-4 text-sky-500" />,
           perform: () => {
             setMoveSongTarget(currentSong);
-            if (currentSong.folderId)
-              setTargetSongFolderId(currentSong.folderId);
+            if (currentSong.folderId) setTargetSongFolderId(currentSong.folderId);
           },
         },
         {

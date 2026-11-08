@@ -221,12 +221,8 @@ export async function resolveMembers(
     const raw = entry.name?.trim();
     if (!raw) continue;
     const needle = raw.toLowerCase();
-    const exact = all.filter(
-      (m) => m.user.name.trim().toLowerCase() === needle,
-    );
-    const partial = all.filter((m) =>
-      m.user.name.toLowerCase().includes(needle),
-    );
+    const exact = all.filter((m) => m.user.name.trim().toLowerCase() === needle);
+    const partial = all.filter((m) => m.user.name.toLowerCase().includes(needle));
     const pool = exact.length ? exact : partial;
     const matchKind = exact.length ? ("exact" as const) : ("partial" as const);
 
@@ -405,8 +401,7 @@ export function normalizeResponsibilities(input: unknown): OrgResponsibility[] {
   for (const raw of input) {
     if (!raw || typeof raw !== "object") continue;
     const r = raw as Record<string, unknown>;
-    const categoryId =
-      typeof r.categoryId === "string" ? r.categoryId.trim() : "";
+    const categoryId = typeof r.categoryId === "string" ? r.categoryId.trim() : "";
     if (!categoryId) continue;
     const assigneesRaw = Array.isArray(r.assignees) ? r.assignees : [];
     const assignees: OrgAssignee[] = [];
@@ -415,16 +410,10 @@ export function normalizeResponsibilities(input: unknown): OrgResponsibility[] {
       const asg = a as Record<string, unknown>;
       const name = typeof asg.name === "string" ? asg.name.trim() : "";
       if (!name) continue;
-      const id =
-        typeof asg.id === "string" && asg.id.trim()
-          ? asg.id.trim()
-          : randomUUID();
+      const id = typeof asg.id === "string" && asg.id.trim() ? asg.id.trim() : randomUUID();
       const memberId =
-        typeof asg.memberId === "string" && asg.memberId.trim()
-          ? asg.memberId.trim()
-          : undefined;
-      const avatarUrl =
-        typeof asg.avatarUrl === "string" ? asg.avatarUrl : undefined;
+        typeof asg.memberId === "string" && asg.memberId.trim() ? asg.memberId.trim() : undefined;
+      const avatarUrl = typeof asg.avatarUrl === "string" ? asg.avatarUrl : undefined;
       assignees.push({ id, name, memberId, avatarUrl });
     }
     out.push({

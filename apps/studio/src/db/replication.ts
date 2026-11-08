@@ -47,11 +47,7 @@
 
 import { getApiClient } from "@/src/api";
 import type { HosanaDatabase } from "./database";
-import {
-  getCheckpointDbName,
-  getCheckpointLsPrefix,
-  getEpochLsKey,
-} from "./dbNames";
+import { getCheckpointDbName, getCheckpointLsPrefix, getEpochLsKey } from "./dbNames";
 import { subscribeLocalChange, subscribePushBaseline } from "./engine/bus";
 import { HosanaCollection } from "./engine/collection";
 import { idbClear, idbGet, idbPut, openIDB } from "./engine/idb";
@@ -90,8 +86,7 @@ type SyncableDoc = {
   _deleted?: boolean;
 };
 
-type CollectionName =
-  "songs" | "folders" | "collections" | "services" | "agendaEvents";
+type CollectionName = "songs" | "folders" | "collections" | "services" | "agendaEvents";
 
 const ALL_COLLECTION_NAMES: CollectionName[] = [
   "songs",
@@ -132,13 +127,7 @@ function omitVolatile<T extends Record<string, unknown>>(doc: T): Partial<T> {
 
 function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
-  if (
-    typeof a !== "object" ||
-    typeof b !== "object" ||
-    a === null ||
-    b === null
-  )
-    return false;
+  if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
   if (Array.isArray(a) !== Array.isArray(b)) return false;
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
@@ -148,10 +137,7 @@ function deepEqual(a: unknown, b: unknown): boolean {
   const bKeys = Object.keys(b as object);
   if (aKeys.length !== bKeys.length) return false;
   return aKeys.every((k) =>
-    deepEqual(
-      (a as Record<string, unknown>)[k],
-      (b as Record<string, unknown>)[k],
-    ),
+    deepEqual((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k]),
   );
 }
 
@@ -254,14 +240,10 @@ interface PendingChange<T extends SyncableDoc> {
   fullAssumed: (T & { _deleted: boolean }) | null;
 }
 
-function toChangeRow<T extends SyncableDoc>(
-  change: PendingChange<T>,
-): ChangeRow<T> {
+function toChangeRow<T extends SyncableDoc>(change: PendingChange<T>): ChangeRow<T> {
   return {
     newDocumentState: diffNewDocumentState(change.fullNew, change.fullAssumed),
-    assumedMasterState: change.fullAssumed
-      ? toAssumedMasterState(change.fullAssumed)
-      : null,
+    assumedMasterState: change.fullAssumed ? toAssumedMasterState(change.fullAssumed) : null,
   };
 }
 
@@ -294,10 +276,7 @@ async function pushWithConflictRetry<T extends SyncableDoc>(
 
     const conflicts = (
       Array.isArray(res) ? res : (res as { conflicts?: T[] })?.conflicts || []
-    ).map(
-      (doc) =>
-        ({ ...doc, _deleted: !!doc._deleted }) as T & { _deleted: boolean },
-    );
+    ).map((doc) => ({ ...doc, _deleted: !!doc._deleted }) as T & { _deleted: boolean });
 
     if (conflicts.length === 0) break;
 
@@ -315,8 +294,7 @@ async function pushWithConflictRetry<T extends SyncableDoc>(
       const missingAssumed = change.fullAssumed == null;
       const canRetry =
         attempt < CONFLICT_RETRY_LIMIT &&
-        (missingAssumed ||
-          isSpuriousConflict(change.fullAssumed as T | undefined, serverDoc));
+        (missingAssumed || isSpuriousConflict(change.fullAssumed as T | undefined, serverDoc));
 
       if (canRetry) {
         retryChanges.push({
@@ -371,16 +349,10 @@ async function getCheckpointDb(): Promise<IDBDatabase> {
   return _cpDb;
 }
 
-async function loadCheckpoint(
-  collectionName: CollectionName,
-): Promise<Checkpoint | null> {
+async function loadCheckpoint(collectionName: CollectionName): Promise<Checkpoint | null> {
   try {
     const db = await getCheckpointDb();
-    const row = await idbGet<{ collection: string; cp: Checkpoint }>(
-      db,
-      CP_STORE,
-      collectionName,
-    );
+    const row = await idbGet<{ collection: string; cp: Checkpoint }>(db, CP_STORE, collectionName);
     if (row?.cp) return row.cp;
   } catch {
     _cpDb = null;
@@ -388,9 +360,7 @@ async function loadCheckpoint(
   }
 
   try {
-    const raw = localStorage.getItem(
-      `${getCheckpointLsPrefix()}_${collectionName}`,
-    );
+    const raw = localStorage.getItem(`${getCheckpointLsPrefix()}_${collectionName}`);
     if (raw) {
       const cp = JSON.parse(raw) as Checkpoint;
       void saveCheckpoint(collectionName, cp);
@@ -403,10 +373,7 @@ async function loadCheckpoint(
   return null;
 }
 
-async function saveCheckpoint(
-  collectionName: CollectionName,
-  cp: Checkpoint,
-): Promise<void> {
+async function saveCheckpoint(collectionName: CollectionName, cp: Checkpoint): Promise<void> {
   try {
     const db = await getCheckpointDb();
     await idbPut(db, CP_STORE, { collection: collectionName, cp });
@@ -416,10 +383,7 @@ async function saveCheckpoint(
   }
 
   try {
-    localStorage.setItem(
-      `${getCheckpointLsPrefix()}_${collectionName}`,
-      JSON.stringify(cp),
-    );
+    localStorage.setItem(`${getCheckpointLsPrefix()}_${collectionName}`, JSON.stringify(cp));
   } catch {
     // Storage quota exceeded — non-fatal
   }
@@ -464,9 +428,7 @@ function getServerCache(collectionName: CollectionName): ServerCache {
   return cache;
 }
 
-async function hydrateServerCache(
-  collectionName: CollectionName,
-): Promise<ServerCache> {
+async function hydrateServerCache(collectionName: CollectionName): Promise<ServerCache> {
   const cache = getServerCache(collectionName);
   if (serverCacheHydrated.has(collectionName)) return cache;
 
@@ -489,9 +451,7 @@ async function hydrateServerCache(
   return cache;
 }
 
-async function persistServerCache(
-  collectionName: CollectionName,
-): Promise<void> {
+async function persistServerCache(collectionName: CollectionName): Promise<void> {
   const cache = getServerCache(collectionName);
   try {
     const db = await getCheckpointDb();
@@ -551,9 +511,7 @@ function checkpointToIso(cp: Checkpoint): string {
  *                       beginning — used after an IDB-wipe is detected.
  * @param shouldAbort    Returns true when the manager was stopped mid-sync.
  */
-async function replicateCollection<
-  T extends SyncableDoc & Record<string, unknown>,
->(
+async function replicateCollection<T extends SyncableDoc & Record<string, unknown>>(
   collection: AnyCollection,
   collectionName: CollectionName,
   client: ReturnType<typeof getApiClient>,
@@ -578,8 +536,7 @@ async function replicateCollection<
       _deleted: !!stripped._deleted,
     } as T & { _deleted: boolean };
 
-    const cached = serverCache.get(d.id) as
-      (T & { _deleted: boolean }) | undefined;
+    const cached = serverCache.get(d.id) as (T & { _deleted: boolean }) | undefined;
 
     // Prefer a content/tombstone diff against the last-known server snapshot.
     // This avoids re-pushing every cycle when the pull checkpoint hasn't yet
@@ -596,10 +553,7 @@ async function replicateCollection<
     }
 
     // No baseline yet — fall back to the pull checkpoint watermark.
-    return (
-      !checkpointTs ||
-      (typeof d.updatedAt === "string" && d.updatedAt > checkpointTs)
-    );
+    return !checkpointTs || (typeof d.updatedAt === "string" && d.updatedAt > checkpointTs);
   });
 
   if (toPush.length > 0 && !shouldAbort()) {
@@ -616,9 +570,7 @@ async function replicateCollection<
 
       pushedFull.set(doc.id, newState);
 
-      const cached =
-        (serverCache.get(doc.id) as (T & { _deleted: boolean }) | undefined) ??
-        null;
+      const cached = (serverCache.get(doc.id) as (T & { _deleted: boolean }) | undefined) ?? null;
 
       return {
         fullNew: newState,
@@ -630,11 +582,7 @@ async function replicateCollection<
 
     for (const batch of chunkArray(pendingChanges, PUSH_BATCH)) {
       if (shouldAbort()) return;
-      const conflicts = await pushWithConflictRetry<T>(
-        client,
-        collectionName,
-        batch,
-      );
+      const conflicts = await pushWithConflictRetry<T>(client, collectionName, batch);
       realConflicts.push(...conflicts);
     }
 
@@ -654,9 +602,7 @@ async function replicateCollection<
     }
 
     if (tombstonesToPurge.length > 0) {
-      await (collection as unknown as HosanaCollection<T>)._purgeIds(
-        tombstonesToPurge,
-      );
+      await (collection as unknown as HosanaCollection<T>)._purgeIds(tombstonesToPurge);
     }
 
     // Merge real conflicts (server wins on content)
@@ -674,14 +620,12 @@ async function replicateCollection<
         cacheDirty = true;
       }
       if (deletedIds.length > 0) {
-        await (collection as unknown as HosanaCollection<T>)._purgeIds(
-          deletedIds,
-        );
+        await (collection as unknown as HosanaCollection<T>)._purgeIds(deletedIds);
       }
       if (live.length > 0) {
-        await (
-          collection as unknown as HosanaCollection<T>
-        )._mergeBatchFromServer(live, { force: true });
+        await (collection as unknown as HosanaCollection<T>)._mergeBatchFromServer(live, {
+          force: true,
+        });
       }
     }
   }
@@ -722,14 +666,10 @@ async function replicateCollection<
       }
 
       if (deletedIds.length > 0) {
-        await (collection as unknown as HosanaCollection<T>)._purgeIds(
-          deletedIds,
-        );
+        await (collection as unknown as HosanaCollection<T>)._purgeIds(deletedIds);
       }
       if (live.length > 0) {
-        await (
-          collection as unknown as HosanaCollection<T>
-        )._mergeBatchFromServer(live);
+        await (collection as unknown as HosanaCollection<T>)._mergeBatchFromServer(live);
       }
     }
 
@@ -791,10 +731,7 @@ export async function clearReplicationState(): Promise<void> {
 
   try {
     const cpDb = await getCheckpointDb();
-    await Promise.all([
-      idbClear(cpDb, CP_STORE),
-      idbClear(cpDb, CACHE_STORE),
-    ]);
+    await Promise.all([idbClear(cpDb, CP_STORE), idbClear(cpDb, CACHE_STORE)]);
   } catch {
     _cpDb = null;
     _cpDbName = null;
@@ -808,10 +745,7 @@ export async function clearReplicationState(): Promise<void> {
   }
 }
 
-export function setupReplication(
-  db: HosanaDatabase,
-  orgSlug: string,
-): ReplicationManager {
+export function setupReplication(db: HosanaDatabase, orgSlug: string): ReplicationManager {
   if (replicationManagerInstance) return replicationManagerInstance;
 
   const status$ = makeStatusSubject();
@@ -842,11 +776,7 @@ export function setupReplication(
     const collection = db[name] as unknown as AnyCollection;
     unsubscribePushBaselines.push(
       subscribePushBaseline(name, (previousDoc) => {
-        rememberPushBaseline(
-          name,
-          previousDoc,
-          collection.getLocalFieldNames(),
-        );
+        rememberPushBaseline(name, previousDoc, collection.getLocalFieldNames());
       }),
     );
   }
@@ -1023,9 +953,7 @@ export function setupReplication(
     window.addEventListener("offline", offlineListener);
 
     for (const name of ALL_COLLECTION_NAMES) {
-      unsubscribeLocalChanges.push(
-        subscribeLocalChange(name, scheduleSyncOnSave),
-      );
+      unsubscribeLocalChanges.push(subscribeLocalChange(name, scheduleSyncOnSave));
     }
   };
 

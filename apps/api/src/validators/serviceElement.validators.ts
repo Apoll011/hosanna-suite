@@ -44,9 +44,7 @@ export function validateServiceElements(elements: unknown): {
   if (!parsed.success) {
     return {
       ok: false,
-      errors: parsed.error.issues.map(
-        (i) => `${i.path.join(".") || "elements"}: ${i.message}`,
-      ),
+      errors: parsed.error.issues.map((i) => `${i.path.join(".") || "elements"}: ${i.message}`),
     };
   }
   return { ok: true, elements: parsed.data, errors: [] };

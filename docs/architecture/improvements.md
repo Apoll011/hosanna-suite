@@ -45,19 +45,19 @@ See also: [deploy-report.md](./deploy-report.md).
 
 ## Low / polish (remaining)
 
-| Item                                     | Where                    | Notes                                              |
-| ---------------------------------------- | ------------------------ | -------------------------------------------------- |
-| Coming-soon feature UI                   | Studio `FeaturesTab`     | Left as product tracking (not in this pass)        |
-| Android `google-services.json` committed | Flutter                  | Restrict/rotate API keys in GCP                    |
-| Studio/server patch skew                 | 2.22.3 vs 2.22.2         | Major.minor aligned; patch need not match          |
+| Item                                     | Where                | Notes                                       |
+| ---------------------------------------- | -------------------- | ------------------------------------------- |
+| Coming-soon feature UI                   | Studio `FeaturesTab` | Left as product tracking (not in this pass) |
+| Android `google-services.json` committed | Flutter              | Restrict/rotate API keys in GCP             |
+| Studio/server patch skew                 | 2.22.3 vs 2.22.2     | Major.minor aligned; patch need not match   |
 
 ### Done in OpenAPI / polish follow-up
 
-| Item                              | Status                                                                                         |
-| --------------------------------- | ---------------------------------------------------------------------------------------------- |
-| MCP deprecated error aliases      | **Done** — dropped `stale` / `forbidden` / `validation` / `subscription` / `error`             |
-| Demo org slug collision           | **Done** — reserved `hosanna-demo` + `demo` in Better Auth; Studio `DEMO_ORG_SLUG`             |
-| Flutter CircleAvatar router tests | **Done** — `onForegroundImageError` only when image set; shell tests re-enabled                |
+| Item                              | Status                                                                                                      |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| MCP deprecated error aliases      | **Done** — dropped `stale` / `forbidden` / `validation` / `subscription` / `error`                          |
+| Demo org slug collision           | **Done** — reserved `hosanna-demo` + `demo` in Better Auth; Studio `DEMO_ORG_SLUG`                          |
+| Flutter CircleAvatar router tests | **Done** — `onForegroundImageError` only when image set; shell tests re-enabled                             |
 | OpenAPI 3.1 + typed clients       | **Done on branches** — server `feat/openapi` (`openapi/openapi.yaml`); Studio+Flutter `feat/openapi-client` |
 
 ---

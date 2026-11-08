@@ -45,12 +45,8 @@ export interface PullAllRequest {
 export type MultiPullCheckpoints = Partial<
   Record<ReplicatedCollection, ReplicationCheckpoint | null>
 >;
-export type MultiPullLimits =
-  Partial<Record<ReplicatedCollection, number>> | number;
-export type MultiPullResponse<T> = Record<
-  ReplicatedCollection,
-  PullResponse<T>
->;
+export type MultiPullLimits = Partial<Record<ReplicatedCollection, number>> | number;
+export type MultiPullResponse<T> = Record<ReplicatedCollection, PullResponse<T>>;
 
 export interface PullResponse<T> {
   documents: T[];
@@ -137,23 +133,13 @@ function toWireSong(doc: any): any {
     artist: doc.artist,
     content: doc.content,
     folderId: doc.folderId ?? null,
-    collectionIds:
-      doc.collections?.map((collection: any) => collection.id) ?? [],
+    collectionIds: doc.collections?.map((collection: any) => collection.id) ?? [],
     path: doc.path,
     tags: doc.tags ?? [],
     song_number: doc.song_number ?? null,
-    createdAt:
-      doc.createdAt instanceof Date
-        ? doc.createdAt.toISOString()
-        : doc.createdAt,
-    updatedAt:
-      doc.updatedAt instanceof Date
-        ? doc.updatedAt.toISOString()
-        : doc.updatedAt,
-    purgeAt:
-      doc.purgeAt instanceof Date
-        ? doc.purgeAt.toISOString()
-        : (doc.purgeAt ?? null),
+    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
+    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt,
+    purgeAt: doc.purgeAt instanceof Date ? doc.purgeAt.toISOString() : (doc.purgeAt ?? null),
     isDeleted: Boolean(doc.deleted),
     _deleted: false,
   };
@@ -168,18 +154,9 @@ function toWireFolder(doc: any, songCount = 0, folderCount = 0): any {
     icon: doc.icon,
     songCount: doc._count?.songs ?? songCount,
     folderCount: doc._count?.children ?? folderCount,
-    createdAt:
-      doc.createdAt instanceof Date
-        ? doc.createdAt.toISOString()
-        : doc.createdAt,
-    updatedAt:
-      doc.updatedAt instanceof Date
-        ? doc.updatedAt.toISOString()
-        : doc.updatedAt,
-    purgeAt:
-      doc.purgeAt instanceof Date
-        ? doc.purgeAt.toISOString()
-        : (doc.purgeAt ?? null),
+    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
+    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt,
+    purgeAt: doc.purgeAt instanceof Date ? doc.purgeAt.toISOString() : (doc.purgeAt ?? null),
     isDeleted: Boolean(doc.deleted),
     _deleted: false,
   };
@@ -195,18 +172,9 @@ function toWireCollection(doc: any, songCount = 0): any {
     image: doc.image ?? null,
     songCount: doc._count?.songs ?? songCount,
     songIds: doc.songs?.map((song: any) => song.id) ?? [],
-    createdAt:
-      doc.createdAt instanceof Date
-        ? doc.createdAt.toISOString()
-        : doc.createdAt,
-    updatedAt:
-      doc.updatedAt instanceof Date
-        ? doc.updatedAt.toISOString()
-        : doc.updatedAt,
-    purgeAt:
-      doc.purgeAt instanceof Date
-        ? doc.purgeAt.toISOString()
-        : (doc.purgeAt ?? null),
+    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
+    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt,
+    purgeAt: doc.purgeAt instanceof Date ? doc.purgeAt.toISOString() : (doc.purgeAt ?? null),
     isDeleted: Boolean(doc.deleted),
     _deleted: false,
   };
@@ -220,18 +188,9 @@ function toWireService(doc: any): any {
     notes: doc.notes ?? "",
     elements: doc.elements ?? [],
     archived: Boolean(doc.archived),
-    createdAt:
-      doc.createdAt instanceof Date
-        ? doc.createdAt.toISOString()
-        : doc.createdAt,
-    updatedAt:
-      doc.updatedAt instanceof Date
-        ? doc.updatedAt.toISOString()
-        : doc.updatedAt,
-    purgeAt:
-      doc.purgeAt instanceof Date
-        ? doc.purgeAt.toISOString()
-        : (doc.purgeAt ?? null),
+    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
+    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt,
+    purgeAt: doc.purgeAt instanceof Date ? doc.purgeAt.toISOString() : (doc.purgeAt ?? null),
     isDeleted: Boolean(doc.deleted),
     _deleted: false,
   };
@@ -250,18 +209,9 @@ function toWireAgendaEvent(doc: any): any {
     reminder: doc.reminder ?? DEFAULT_REMINDER,
     linkedServiceId: doc.linkedServiceId ?? null,
     responsibilities: doc.responsibilities ?? [],
-    createdAt:
-      doc.createdAt instanceof Date
-        ? doc.createdAt.toISOString()
-        : doc.createdAt,
-    updatedAt:
-      doc.updatedAt instanceof Date
-        ? doc.updatedAt.toISOString()
-        : doc.updatedAt,
-    purgeAt:
-      doc.purgeAt instanceof Date
-        ? doc.purgeAt.toISOString()
-        : (doc.purgeAt ?? null),
+    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
+    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt,
+    purgeAt: doc.purgeAt instanceof Date ? doc.purgeAt.toISOString() : (doc.purgeAt ?? null),
     isDeleted: Boolean(doc.deleted),
     _deleted: false,
   };
@@ -313,10 +263,7 @@ function assignClientTimestamps(
 }
 
 /** Where clause for optimistic lock: id + assumed updatedAt when present. */
-function optimisticIdWhere(
-  id: string,
-  assumed: any,
-): { id: string; updatedAt?: Date } {
+function optimisticIdWhere(id: string, assumed: any): { id: string; updatedAt?: Date } {
   const assumedAt = assumed ? parseDate(assumed.updatedAt) : null;
   return assumedAt ? { id, updatedAt: assumedAt } : { id };
 }
@@ -325,9 +272,7 @@ function optimisticIdWhere(
 type PushMutationFn = (tx: OrgScopedTx) => Promise<string | null>;
 
 type TombstoneDelegate = {
-  deleteMany: (args: {
-    where: { id: string; updatedAt?: Date };
-  }) => Promise<{ count: number }>;
+  deleteMany: (args: { where: { id: string; updatedAt?: Date } }) => Promise<{ count: number }>;
   findFirst: (args: {
     where: { id: string };
     select: { id: true };
@@ -378,9 +323,7 @@ function enqueueTombstoneMutation(
   ) => Promise<{ count: number }>,
 ): void {
   if (shouldHardDeleteTombstone(doc)) {
-    mutations.push((tx) =>
-      hardDeleteOnTombstone(delegateOf(tx), doc.id, assumed),
-    );
+    mutations.push((tx) => hardDeleteOnTombstone(delegateOf(tx), doc.id, assumed));
     return;
   }
 
@@ -390,11 +333,7 @@ function enqueueTombstoneMutation(
   };
   assignClientTimestamps(deleteData, doc);
   mutations.push(async (tx) => {
-    const result = await updateMany(
-      tx,
-      optimisticIdWhere(doc.id, assumed),
-      deleteData,
-    );
+    const result = await updateMany(tx, optimisticIdWhere(doc.id, assumed), deleteData);
     return result.count === 0 ? doc.id : null;
   });
 }
@@ -512,9 +451,7 @@ async function pullOne(
       syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
-    const documents = docs.map((doc: any) =>
-      toWireCollection(doc, doc.songs?.length ?? 0),
-    );
+    const documents = docs.map((doc: any) => toWireCollection(doc, doc.songs?.length ?? 0));
     return { documents, checkpoint: newCheckpoint };
   }
 
@@ -574,10 +511,7 @@ export async function pullAll(
     if (syncCache.hasNoChanges(tenantId, collection, cp)) {
       response[collection] = { documents: [], checkpoint: cp };
     } else {
-      const limit =
-        typeof limits === "number"
-          ? limits
-          : (limits[collection] ?? DEFAULT_LIMIT);
+      const limit = typeof limits === "number" ? limits : (limits[collection] ?? DEFAULT_LIMIT);
       collectionsToFetch.push({ collection, limit });
     }
   }
@@ -585,13 +519,7 @@ export async function pullAll(
   if (collectionsToFetch.length > 0) {
     const fetchedResults = await Promise.all(
       collectionsToFetch.map(({ collection, limit }) =>
-        pullOne(
-          db,
-          tenantId,
-          collection,
-          checkpoints[collection] ?? null,
-          limit,
-        ),
+        pullOne(db, tenantId, collection, checkpoints[collection] ?? null, limit),
       ),
     );
     for (let i = 0; i < collectionsToFetch.length; i++) {
@@ -665,16 +593,12 @@ async function pushSongs(
         if (doc.content !== undefined) songData.content = doc.content;
         if (doc.folderId !== undefined) songData.folderId = doc.folderId;
         if (doc.path !== undefined) songData.path = doc.path;
-        if (doc.tags !== undefined)
-          songData.tags = Array.isArray(doc.tags) ? doc.tags : [];
-        if (doc.song_number !== undefined)
-          songData.song_number = doc.song_number;
+        if (doc.tags !== undefined) songData.tags = Array.isArray(doc.tags) ? doc.tags : [];
+        if (doc.song_number !== undefined) songData.song_number = doc.song_number;
         applyTrashFields(songData, doc);
         assignClientTimestamps(songData, doc);
 
-        const collectionIds = Array.isArray(doc.collectionIds)
-          ? doc.collectionIds
-          : undefined;
+        const collectionIds = Array.isArray(doc.collectionIds) ? doc.collectionIds : undefined;
 
         mutations.push(async (tx) => {
           const result = await tx.song.updateMany({
@@ -915,8 +839,7 @@ async function pushCollections(
       } else {
         const updateData: Record<string, unknown> = {};
         if (doc.name !== undefined) updateData.name = doc.name;
-        if (doc.description !== undefined)
-          updateData.description = doc.description;
+        if (doc.description !== undefined) updateData.description = doc.description;
         if (doc.color !== undefined) updateData.color = doc.color;
         if (doc.icon !== undefined) updateData.icon = doc.icon;
         if (doc.image !== undefined) updateData.image = doc.image;
@@ -1053,8 +976,7 @@ async function pushServices(
         if (doc.notes !== undefined) serviceData.notes = doc.notes;
         if (doc.elements !== undefined && Array.isArray(doc.elements))
           serviceData.elements = doc.elements;
-        if (doc.archived !== undefined)
-          serviceData.archived = Boolean(doc.archived);
+        if (doc.archived !== undefined) serviceData.archived = Boolean(doc.archived);
         applyTrashFields(serviceData, doc);
         assignClientTimestamps(serviceData, doc);
 
@@ -1168,12 +1090,8 @@ async function pushAgendaEvents(
         if (doc.location !== undefined) eventData.location = doc.location;
         if (doc.notes !== undefined) eventData.notes = doc.notes;
         if (doc.reminder !== undefined) eventData.reminder = doc.reminder;
-        if (doc.linkedServiceId !== undefined)
-          eventData.linkedServiceId = doc.linkedServiceId;
-        if (
-          doc.responsibilities !== undefined &&
-          Array.isArray(doc.responsibilities)
-        ) {
+        if (doc.linkedServiceId !== undefined) eventData.linkedServiceId = doc.linkedServiceId;
+        if (doc.responsibilities !== undefined && Array.isArray(doc.responsibilities)) {
           eventData.responsibilities = doc.responsibilities;
         }
         applyTrashFields(eventData, doc);
@@ -1200,9 +1118,7 @@ async function pushAgendaEvents(
         notes: doc.notes ?? null,
         reminder: doc.reminder ?? DEFAULT_REMINDER,
         linkedServiceId: doc.linkedServiceId ?? null,
-        responsibilities: Array.isArray(doc.responsibilities)
-          ? doc.responsibilities
-          : [],
+        responsibilities: Array.isArray(doc.responsibilities) ? doc.responsibilities : [],
         deleted: Boolean(doc.isDeleted),
         purgeAt: Boolean(doc.isDeleted)
           ? (parseDate(doc.purgeAt) ?? defaultPurgeAt())

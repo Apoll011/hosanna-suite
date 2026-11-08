@@ -6,12 +6,7 @@ export class ApiError extends Error {
   public code?: string;
   public details?: unknown;
 
-  constructor(
-    message: string,
-    status: number,
-    code?: string,
-    details?: unknown,
-  ) {
+  constructor(message: string, status: number, code?: string, details?: unknown) {
     super(message);
     this.name = "ApiError";
     this.status = status;
@@ -36,8 +31,7 @@ function apiErrorFromBody(errorData: unknown, status: number): ApiError {
     if (body.error) {
       if (typeof body.error === "object" && body.error !== null) {
         const err = body.error as Record<string, unknown>;
-        errorMessage =
-          typeof err.message === "string" ? err.message : errorMessage;
+        errorMessage = typeof err.message === "string" ? err.message : errorMessage;
         errorCode = typeof err.code === "string" ? err.code : undefined;
         errorDetails = err.details;
       } else if (typeof body.error === "string") {
@@ -132,10 +126,7 @@ export class ApiClient {
     this.onUnauthorizedCallback = callback;
   }
 
-  public async request<T>(
-    endpoint: string,
-    options: RequestInit = {},
-  ): Promise<T> {
+  public async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const req = await this.request_raw(endpoint, options);
 
     if (req.status === 204) {
@@ -145,10 +136,7 @@ export class ApiClient {
     return req.json();
   }
 
-  public async request_raw(
-    endpoint: string,
-    options: RequestInit = {},
-  ): Promise<Response> {
+  public async request_raw(endpoint: string, options: RequestInit = {}): Promise<Response> {
     const url = endpoint.startsWith("/")
       ? `${this.baseURL}${endpoint}`
       : `${this.baseURL}/${endpoint}`;
@@ -165,10 +153,7 @@ export class ApiClient {
         });
       }
     }
-    if (
-      !requestHeaders["Content-Type"] &&
-      !(options.body instanceof FormData)
-    ) {
+    if (!requestHeaders["Content-Type"] && !(options.body instanceof FormData)) {
       requestHeaders["Content-Type"] = "application/json";
     }
 
@@ -182,8 +167,7 @@ export class ApiClient {
     try {
       response = await fetch(url, config);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to connect to server";
+      const message = err instanceof Error ? err.message : "Failed to connect to server";
       throw new ApiError(`Network Error: ${message}`, 0);
     }
 

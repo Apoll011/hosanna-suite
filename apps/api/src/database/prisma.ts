@@ -107,8 +107,6 @@ export function forOrganization(orgId: string) {
 }
 
 export type OrgScopedPrisma = ReturnType<typeof forOrganization>;
-export type OrgScopedTx = Parameters<
-  Parameters<OrgScopedPrisma["$transaction"]>[0]
->[0];
+export type OrgScopedTx = Parameters<Parameters<OrgScopedPrisma["$transaction"]>[0]>[0];
 
 export { prisma };

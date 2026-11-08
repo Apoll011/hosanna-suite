@@ -44,8 +44,7 @@ export const OverflowTagList: React.FC<OverflowTagListProps> = ({ tags }) => {
 
         // If there are more tags remaining after this one, we must also fit the +N badge
         const hasMoreAfter = i < safeTags.length - 1;
-        const totalNeededWithBadge =
-          widthNeeded + (hasMoreAfter ? gap + badgeWidthEstimate : 0);
+        const totalNeededWithBadge = widthNeeded + (hasMoreAfter ? gap + badgeWidthEstimate : 0);
 
         if (
           totalNeededWithBadge <= containerWidth ||
@@ -91,10 +90,7 @@ export const OverflowTagList: React.FC<OverflowTagListProps> = ({ tags }) => {
       {safeTags.map((tag, index) => {
         const isHidden = isMeasured && index >= visibleCount;
         return (
-          <div
-            key={tag}
-            className={`shrink-0 ${isHidden ? "hidden" : "inline-flex"}`}
-          >
+          <div key={tag} className={`shrink-0 ${isHidden ? "hidden" : "inline-flex"}`}>
             <Badge variant="slate">{tag}</Badge>
           </div>
         );

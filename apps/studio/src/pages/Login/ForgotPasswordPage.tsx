@@ -12,10 +12,7 @@ import React, { useRef, useState } from "react";
 import { authClient } from "../../lib/authClient";
 import LoginLayout from "./Layout";
 import { GoogleTextField } from "./components/GoogleTextField";
-import {
-  TurnstileWidget,
-  type TurnstileHandle,
-} from "./components/TurnstileWidget";
+import { TurnstileWidget, type TurnstileHandle } from "./components/TurnstileWidget";
 
 export const ForgotPasswordPage: React.FC = () => {
   const { navigate } = useAppNavigate();
@@ -157,11 +154,7 @@ export const ForgotPasswordPage: React.FC = () => {
             {t("auth.forgotPassword.backToLogin")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.forgotPassword.sendLinkBtn")}
           </Button>
         </div>

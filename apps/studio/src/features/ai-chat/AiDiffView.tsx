@@ -10,10 +10,7 @@ export interface AiDiffViewProps {
   className?: string;
 }
 
-export const AiDiffView: React.FC<AiDiffViewProps> = ({
-  preview,
-  className = "",
-}) => {
+export const AiDiffView: React.FC<AiDiffViewProps> = ({ preview, className = "" }) => {
   const lines = useMemo(() => preview.split("\n"), [preview]);
 
   return (

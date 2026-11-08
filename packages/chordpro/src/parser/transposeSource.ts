@@ -9,8 +9,7 @@
 import { getNoteValue, transposeChord, transposeNote } from "./transpose";
 
 export type TransposeChordProSourceOptions =
-  | { semitones: number; toKey?: never }
-  | { toKey: string; semitones?: never };
+  { semitones: number; toKey?: never } | { toKey: string; semitones?: never };
 
 export interface TransposeChordProSourceResult {
   content: string;
@@ -19,10 +18,7 @@ export interface TransposeChordProSourceResult {
   toKey: string | null;
 }
 
-function extractKeyDirective(
-  source: string,
-  names: string[],
-): string | null {
+function extractKeyDirective(source: string, names: string[]): string | null {
   for (const name of names) {
     const re = new RegExp(`\\{${name}:\\s*([^}]+)\\}`, "i");
     const match = source.match(re);
@@ -112,10 +108,7 @@ export function transposeChordProSource(
   // When targeting an explicit key, force {key:} to that exact spelling
   if (typeof options !== "number" && "toKey" in options && options.toKey) {
     if (/\{(?:key|k)\s*:/i.test(content)) {
-      content = content.replace(
-        /\{(key|k)\s*:\s*[^}]+\}/i,
-        `{key: ${options.toKey}}`,
-      );
+      content = content.replace(/\{(key|k)\s*:\s*[^}]+\}/i, `{key: ${options.toKey}}`);
     }
   }
 
@@ -124,8 +117,6 @@ export function transposeChordProSource(
     semitones: applied,
     fromKey,
     toKey:
-      typeof options !== "number" && "toKey" in options && options.toKey
-        ? options.toKey
-        : toKey,
+      typeof options !== "number" && "toKey" in options && options.toKey ? options.toKey : toKey,
   };
 }

@@ -114,9 +114,7 @@ function buildPageContext(
       artist: songBridge?.artist,
       updatedAt: songBridge?.updatedAt,
       folderId: songBridge?.folderId ?? explorer?.folderId ?? null,
-      contentExcerpt: truncated
-        ? full.slice(0, EXCERPT_MAX)
-        : full || undefined,
+      contentExcerpt: truncated ? full.slice(0, EXCERPT_MAX) : full || undefined,
       contentTruncated: truncated || undefined,
     };
   }
@@ -192,11 +190,7 @@ function buildPageContext(
   };
 }
 
-function maybeStageProposal(
-  toolName: string,
-  output: unknown,
-  page: PageContextSnapshot,
-) {
+function maybeStageProposal(toolName: string, output: unknown, page: PageContextSnapshot) {
   const song = extractSongProposal(output);
   if (song) {
     const songId = song.id ?? page.songId;
@@ -247,9 +241,7 @@ function contextKey(ctx: PageContextSnapshot): string {
   ]);
 }
 
-export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { organization, user } = useAuth();
   const { language } = useI18n();
   const { granted: canUse } = useCan("ai.use");
@@ -257,8 +249,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const params = useParams<{ id?: string }>();
 
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const scope =
-    organization?.id && user?.id ? `${organization.id}:${user.id}` : null;
+  const scope = organization?.id && user?.id ? `${organization.id}:${user.id}` : null;
 
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<AiChatMessage[]>([]);
@@ -307,8 +298,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const onChanged = () => void refreshSettings();
     window.addEventListener(AI_SETTINGS_CHANGED_EVENT, onChanged);
-    return () =>
-      window.removeEventListener(AI_SETTINGS_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(AI_SETTINGS_CHANGED_EVENT, onChanged);
   }, [refreshSettings]);
 
   /* --------------------------- page context --------------------------- */
@@ -320,9 +310,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const recomputeContext = useCallback(() => {
     const r = routeRef.current;
     const next = buildPageContext(r.pathname, r.slugPrefix, r.params, false);
-    setPageContext((prev) =>
-      contextKey(prev) === contextKey(next) ? prev : next,
-    );
+    setPageContext((prev) => (contextKey(prev) === contextKey(next) ? prev : next));
   }, []);
 
   useEffect(() => {
@@ -395,12 +383,8 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
     if (streaming) {
       hadStreamRef.current = true;
       const last = messages[messages.length - 1];
-      const working = last?.parts.some(
-        (p) => p.type === "tool" && p.tool.status === "running",
-      );
-      const singing = last?.parts.some(
-        (p) => p.type === "text" && p.text.trim().length > 0,
-      );
+      const working = last?.parts.some((p) => p.type === "tool" && p.tool.status === "running");
+      const singing = last?.parts.some((p) => p.type === "text" && p.text.trim().length > 0);
       // Tools running → headphones-on busy; words arriving → singing;
       // otherwise pondering.
       setMood(working ? "working" : singing ? "singing" : "thinking");
@@ -415,14 +399,9 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
       setMood("idle");
       return;
     }
-    const usedTools = last?.parts.some(
-      (p) => p.type === "tool" && p.tool.status === "done",
-    );
+    const usedTools = last?.parts.some((p) => p.type === "tool" && p.tool.status === "done");
     setMood(failed ? "oops" : usedTools ? "celebrating" : "happy");
-    const timer = window.setTimeout(
-      () => setMood("idle"),
-      failed ? 4000 : 2800,
-    );
+    const timer = window.setTimeout(() => setMood("idle"), failed ? 4000 : 2800);
     return () => window.clearTimeout(timer);
   }, [streaming, messages]);
 
@@ -459,11 +438,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!opened || streamingRef.current) return;
     const current = messagesRef.current;
     if (current.length === 0) return;
-    const {
-      scope: sc,
-      threadId: id,
-      threadCreatedAt: created,
-    } = threadRef.current;
+    const { scope: sc, threadId: id, threadCreatedAt: created } = threadRef.current;
     if (sc) {
       const thread: AiThread = {
         id,
@@ -532,9 +507,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
     const toolNames = new Map<string, string>();
 
     const patch = (fn: (m: AiChatMessage) => AiChatMessage) => {
-      setMessages((prev) =>
-        prev.map((m) => (m.id === assistantId ? fn(m) : m)),
-      );
+      setMessages((prev) => prev.map((m) => (m.id === assistantId ? fn(m) : m)));
     };
 
     // Batch text/reasoning deltas to one render per frame.
@@ -545,8 +518,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
     let scheduled = 0;
     const flush = () => {
       if (scheduled) {
-        if (typeof cancelAnimationFrame === "function")
-          cancelAnimationFrame(scheduled);
+        if (typeof cancelAnimationFrame === "function") cancelAnimationFrame(scheduled);
         window.clearTimeout(scheduled);
         scheduled = 0;
       }
@@ -594,10 +566,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
         flush();
         patch((m) => applyStreamEvent(m, event));
 
-        if (
-          event.type === "tool-input-start" ||
-          event.type === "tool-input-available"
-        ) {
+        if (event.type === "tool-input-start" || event.type === "tool-input-available") {
           if (typeof event.toolName === "string") {
             toolNames.set(String(event.toolCallId), event.toolName);
           }
@@ -612,17 +581,12 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
           maybeSyncLibrary(name, event.output);
           maybeDispatchStudioActions(name, event.output);
         } else if (event.type === "error") {
-          setError(
-            typeof event.errorText === "string"
-              ? event.errorText
-              : "AI stream error",
-          );
+          setError(typeof event.errorText === "string" ? event.errorText : "AI stream error");
         }
       }
     } catch (err: unknown) {
       if (!controller.signal.aborted) {
-        const message =
-          err instanceof Error ? err.message : "Failed to reach AI chat";
+        const message = err instanceof Error ? err.message : "Failed to reach AI chat";
         setError(message);
         patch((m) => ({ ...m, error: message }));
       }
@@ -630,10 +594,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
       flush();
       const aborted = controller.signal.aborted;
       patch((m) => {
-        const settled = settleRunningTools(
-          m,
-          aborted ? "stopped" : "interrupted",
-        );
+        const settled = settleRunningTools(m, aborted ? "stopped" : "interrupted");
         return {
           ...settled,
           aborted: settled.aborted || aborted || undefined,
@@ -695,11 +656,7 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!visible) return;
     const onKey = (e: KeyboardEvent) => {
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        e.shiftKey &&
-        e.key.toLowerCase() === "l"
-      ) {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "l") {
         e.preventDefault();
         setOpen((v) => !v);
       }

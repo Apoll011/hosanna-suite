@@ -85,17 +85,12 @@ export function attachChordProLinter(
 
     if (RangeCtor && typeof session.addMarker === "function") {
       for (const d of diagnostics) {
-        const lineText =
-          typeof session.getLine === "function" ? session.getLine(d.line) : "";
+        const lineText = typeof session.getLine === "function" ? session.getLine(d.line) : "";
         const startCol = d.column ?? 0;
-        const endCol =
-          d.endColumn ?? (lineText ? lineText.length : startCol + 1);
+        const endCol = d.endColumn ?? (lineText ? lineText.length : startCol + 1);
         if (endCol <= startCol) continue;
         const range = new RangeCtor(d.line, startCol, d.line, endCol);
-        const className =
-          d.severity === "error"
-            ? "chordpro-lint-error"
-            : "chordpro-lint-warning";
+        const className = d.severity === "error" ? "chordpro-lint-error" : "chordpro-lint-warning";
         try {
           const id = session.addMarker(range, className, "text");
           markerIds.push(id);

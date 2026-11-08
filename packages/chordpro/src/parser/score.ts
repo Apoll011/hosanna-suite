@@ -45,11 +45,7 @@ export function scoreSong(song: SongAST): SongScore {
   addCriterion("chords", analysis.uniqueChords.length > 0, 10);
   addCriterion("title", hasValue(metadata.title), 15);
   addCriterion("artist", hasValue(metadata.artist), 15);
-  addCriterion(
-    "key",
-    hasValue(metadata.key) || hasValue(analysis.detectedKey),
-    5,
-  );
+  addCriterion("key", hasValue(metadata.key) || hasValue(analysis.detectedKey), 5);
   addCriterion("tempo", analysis.tempo !== undefined, 5);
   addCriterion("songNumber", hasValue(metadata.songNumber), 10);
   addCriterion("youtube", hasValue(metadata.youtube), 15);

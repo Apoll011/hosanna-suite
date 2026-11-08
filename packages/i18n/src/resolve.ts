@@ -10,9 +10,7 @@ import type { Language, PersonalLanguage } from "./types";
  * Map an IETF locale tag (e.g. "pt-BR", "en_US", "es-419") to a supported
  * `Language`, or `null` when it is not supported.
  */
-export function localeToLanguage(
-  locale: string | null | undefined,
-): Language | null {
+export function localeToLanguage(locale: string | null | undefined): Language | null {
   if (!locale) return null;
   const base = locale.toLowerCase().split(/[-_]/)[0];
   if (base === "pt" || base === "en" || base === "es") return base;

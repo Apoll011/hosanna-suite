@@ -15,8 +15,7 @@ export async function authInfoFromRequest(
   const user = req.user as AuthorizedUser;
   const entitled = await hasActiveSubscription(req.orgId);
   const token =
-    typeof req.headers.authorization === "string" &&
-    req.headers.authorization.startsWith("Bearer ")
+    typeof req.headers.authorization === "string" && req.headers.authorization.startsWith("Bearer ")
       ? req.headers.authorization.slice(7).trim()
       : "cookie-session";
 

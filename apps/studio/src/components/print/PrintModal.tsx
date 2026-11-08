@@ -28,12 +28,7 @@ import React, {
   useState,
 } from "react";
 import { PRINT_BRAND_ACCENT } from "./brand";
-import {
-  mmToPx,
-  PAGE_MARGINS_MM,
-  PAPER_SIZES,
-  resolvePrintOptions,
-} from "./options";
+import { mmToPx, PAGE_MARGINS_MM, PAPER_SIZES, resolvePrintOptions } from "./options";
 import { PrintOptionsPanel } from "./PrintOptionsPanel";
 import { triggerPrint } from "./printEngine";
 import { ensurePrintStyles } from "./printStyles";
@@ -65,13 +60,7 @@ export const PrintModal: React.FC<PrintModalProps> = ({
   defaultOptions,
 }) => {
   if (!isOpen || !payload || payload.items.length === 0) return null;
-  return (
-    <PrintModalContent
-      payload={payload}
-      onClose={onClose}
-      defaultOptions={defaultOptions}
-    />
-  );
+  return <PrintModalContent payload={payload} onClose={onClose} defaultOptions={defaultOptions} />;
 };
 
 const PrintModalContent: React.FC<{
@@ -91,15 +80,12 @@ const PrintModalContent: React.FC<{
   );
   const [options, setOptions] = useState<PrintOptions>(initialOptions);
   const updateOptions = useCallback(
-    (patch: Partial<PrintOptions>) =>
-      setOptions((prev) => ({ ...prev, ...patch })),
+    (patch: Partial<PrintOptions>) => setOptions((prev) => ({ ...prev, ...patch })),
     [],
   );
   const isDirty = JSON.stringify(options) !== JSON.stringify(initialOptions);
 
-  const [mobileView, setMobileView] = useState<"preview" | "options">(
-    "preview",
-  );
+  const [mobileView, setMobileView] = useState<"preview" | "options">("preview");
   const [isPrinting, setIsPrinting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showGuides, setShowGuides] = useState(true);
@@ -108,8 +94,7 @@ const PrintModalContent: React.FC<{
     const meta = (organization?.metadata as Record<string, unknown>) || {};
     return {
       churchName: organization?.name || "",
-      churchShortName:
-        (meta.shortName as string) || organization?.slug || undefined,
+      churchShortName: (meta.shortName as string) || organization?.slug || undefined,
       churchLogo: organization?.logo || null,
       // Print uses the Hosana brand sky from index.css, not workspace accent.
       accentColor: PRINT_BRAND_ACCENT,
@@ -121,15 +106,12 @@ const PrintModalContent: React.FC<{
   const context = useMemo(() => {
     const items = payload.items;
     const hasSongContainers = items.some(
-      (i) =>
-        i.type === "folder" || i.type === "collection" || i.type === "service",
+      (i) => i.type === "folder" || i.type === "collection" || i.type === "service",
     );
     const hasSongs = items.some(
       (i) =>
         i.type === "song" ||
-        ((i.type === "folder" ||
-          i.type === "collection" ||
-          i.type === "service") &&
+        ((i.type === "folder" || i.type === "collection" || i.type === "service") &&
           (i.songs?.length ?? 0) > 0),
     );
     return {
@@ -277,10 +259,7 @@ const PrintModalContent: React.FC<{
             <Printer className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
-            <h2
-              id={titleId}
-              className="text-[15px] font-semibold text-m3-text truncate"
-            >
+            <h2 id={titleId} className="text-[15px] font-semibold text-m3-text truncate">
               {title}
             </h2>
             <p className="text-xs text-m3-secondary truncate">
@@ -294,21 +273,14 @@ const PrintModalContent: React.FC<{
 
           <button
             type="button"
-            onClick={() =>
-              setMobileView((v) => (v === "preview" ? "options" : "preview"))
-            }
+            onClick={() => setMobileView((v) => (v === "preview" ? "options" : "preview"))}
             className={`lg:hidden ${iconButton} ${mobileView === "options" ? "bg-m3-primary/10 text-m3-primary" : ""}`}
             aria-pressed={mobileView === "options"}
             aria-label={t("print.modal.options")}
           >
             <SlidersHorizontal className="w-5 h-5" />
           </button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="hidden sm:inline-flex"
-          >
+          <Button variant="ghost" size="sm" onClick={onClose} className="hidden sm:inline-flex">
             {t("common.cancel")}
           </Button>
           <Button
@@ -336,10 +308,7 @@ const PrintModalContent: React.FC<{
           <div
             className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex flex-1 min-w-0 flex-col relative bg-slate-200/70 dark:bg-slate-950`}
           >
-            <div
-              ref={canvasRef}
-              className="flex-1 overflow-auto px-6 pt-6 pb-20"
-            >
+            <div ref={canvasRef} className="flex-1 overflow-auto px-6 pt-6 pb-20">
               <div
                 ref={stackRef}
                 className="relative mx-auto w-fit"

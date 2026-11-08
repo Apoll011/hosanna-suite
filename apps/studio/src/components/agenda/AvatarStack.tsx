@@ -14,11 +14,7 @@ interface AvatarStackProps {
   size?: "sm" | "md";
 }
 
-export const AvatarStack: React.FC<AvatarStackProps> = ({
-  assignees,
-  max = 4,
-  size = "sm",
-}) => {
+export const AvatarStack: React.FC<AvatarStackProps> = ({ assignees, max = 4, size = "sm" }) => {
   const { t } = useI18n();
   const dim = size === "sm" ? "w-7 h-7 text-[10px]" : "w-9 h-9 text-xs";
   const visible = assignees.slice(0, max);
@@ -53,9 +49,7 @@ export const AvatarStack: React.FC<AvatarStackProps> = ({
             getInitials(a.name)
           )}
         </div>
-        <span className="text-xs font-bold dark:text-slate-200 truncate min-w-0">
-          {a.name}
-        </span>
+        <span className="text-xs font-bold dark:text-slate-200 truncate min-w-0">{a.name}</span>
       </div>
     );
   }

@@ -24,12 +24,8 @@ export function useRxDbSearch({
   searchServicesDb,
   getFolderPathString,
 }: UseRxDbSearchProps) {
-  const {
-    searchQuery,
-    registerDynamicActions,
-    unregisterDynamicActions,
-    closePalette,
-  } = useCommandPalette();
+  const { searchQuery, registerDynamicActions, unregisterDynamicActions, closePalette } =
+    useCommandPalette();
   const { t, tc, locale } = useI18n();
   const [isDebouncing, setIsDebouncing] = useState(false);
 
@@ -136,7 +132,6 @@ export function useRxDbSearch({
   ]);
 
   return {
-    isSearching:
-      isDebouncing || (searchQuery.trim().length >= 2 && isDataLoading),
+    isSearching: isDebouncing || (searchQuery.trim().length >= 2 && isDataLoading),
   };
 }

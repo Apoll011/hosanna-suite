@@ -23,19 +23,12 @@ import {
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useOrgSettings } from "../../hooks/useOrgSettings";
-import {
-  DurationField,
-  durationInputToSeconds,
-  secondsToDurationInput,
-} from "../DurationField";
+import { DurationField, durationInputToSeconds, secondsToDurationInput } from "../DurationField";
 import { ResponsibilityCategoriesCard } from "./ResponsibilityCategoriesCard";
 
 export interface GeneralTabProps {
   active: boolean;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 const SONG_PRESETS = [
@@ -55,15 +48,10 @@ const SERMON_PRESETS = [
 const selectClass =
   "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
 
-export const GeneralTab: React.FC<GeneralTabProps> = ({
-  active,
-  showToast,
-}) => {
+export const GeneralTab: React.FC<GeneralTabProps> = ({ active, showToast }) => {
   const { organization } = useAuth();
   const { t } = useI18n();
-  const { granted: canManageOrg, loading: canLoading } = useCan(
-    "organization.update",
-  );
+  const { granted: canManageOrg, loading: canLoading } = useCan("organization.update");
 
   const {
     settings,
@@ -108,9 +96,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
     } catch (err) {
       showToast?.(
         t("settings.toast.orgSaveError", {
-          error:
-            (err as { message?: string })?.message ||
-            t("settings.general.commError"),
+          error: (err as { message?: string })?.message || t("settings.general.commError"),
         }),
         "error",
       );
@@ -151,18 +137,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               onChange={(e) => update("general", "locale", e.target.value)}
               className={selectClass}
             >
-              <option value="pt-PT">
-                {t("settings.general.locales.ptPT")}
-              </option>
-              <option value="pt-BR">
-                {t("settings.general.locales.ptBR")}
-              </option>
-              <option value="en-US">
-                {t("settings.general.locales.enUS")}
-              </option>
-              <option value="es-ES">
-                {t("settings.general.locales.esES")}
-              </option>
+              <option value="pt-PT">{t("settings.general.locales.ptPT")}</option>
+              <option value="pt-BR">{t("settings.general.locales.ptBR")}</option>
+              <option value="en-US">{t("settings.general.locales.enUS")}</option>
+              <option value="es-ES">{t("settings.general.locales.esES")}</option>
             </select>
           </div>
 
@@ -178,33 +156,19 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               className={selectClass}
             >
               <optgroup label={t("settings.general.timezones.portugalGroup")}>
-                <option value="Europe/Lisbon">
-                  {t("settings.general.timezones.lisbon")}
-                </option>
-                <option value="Atlantic/Azores">
-                  {t("settings.general.timezones.azores")}
-                </option>
+                <option value="Europe/Lisbon">{t("settings.general.timezones.lisbon")}</option>
+                <option value="Atlantic/Azores">{t("settings.general.timezones.azores")}</option>
               </optgroup>
               <optgroup label={t("settings.general.timezones.brazilGroup")}>
                 <option value="America/Sao_Paulo">
                   {t("settings.general.timezones.saoPaulo")}
                 </option>
-                <option value="America/Manaus">
-                  {t("settings.general.timezones.manaus")}
-                </option>
+                <option value="America/Manaus">{t("settings.general.timezones.manaus")}</option>
               </optgroup>
-              <optgroup
-                label={t("settings.general.timezones.otherRegionsGroup")}
-              >
-                <option value="Europe/London">
-                  {t("settings.general.timezones.london")}
-                </option>
-                <option value="America/New_York">
-                  {t("settings.general.timezones.newYork")}
-                </option>
-                <option value="UTC">
-                  {t("settings.general.timezones.utc")}
-                </option>
+              <optgroup label={t("settings.general.timezones.otherRegionsGroup")}>
+                <option value="Europe/London">{t("settings.general.timezones.london")}</option>
+                <option value="America/New_York">{t("settings.general.timezones.newYork")}</option>
+                <option value="UTC">{t("settings.general.timezones.utc")}</option>
               </optgroup>
             </select>
           </div>
@@ -244,9 +208,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         name="weekStartsOn"
                         disabled={!canManageOrg || isSaving}
                         checked={isChecked}
-                        onChange={() =>
-                          update("general", "weekStartsOn", day.value)
-                        }
+                        onChange={() => update("general", "weekStartsOn", day.value)}
                         className="w-4 h-4 text-m3-primary focus:ring-m3-primary cursor-pointer"
                       />
                     </div>
@@ -265,9 +227,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             <Timer className="w-5 h-5 text-m3-primary" />
             {t("settings.general.durationsTitle")}
           </h3>
-          <p className="text-muted mt-1">
-            {t("settings.general.durationsDesc")}
-          </p>
+          <p className="text-muted mt-1">{t("settings.general.durationsDesc")}</p>
         </div>
 
         <div className="p-5 sm:p-6 space-y-6">
@@ -346,16 +306,12 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                     type="checkbox"
                     disabled={!canManageOrg || isSaving}
                     checked={toggle.checked}
-                    onChange={(e) =>
-                      update("services", toggle.id, e.target.checked)
-                    }
+                    onChange={(e) => update("services", toggle.id, e.target.checked)}
                     className="w-4.5 h-4.5 text-m3-primary border-m3-border rounded focus:ring-m3-primary cursor-pointer"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-m3-text">
-                    {toggle.label}
-                  </span>
+                  <span className="text-sm font-semibold text-m3-text">{toggle.label}</span>
                   <p className="text-caption mt-0.5">{toggle.description}</p>
                 </div>
               </label>
@@ -387,9 +343,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 )
               }
             >
-              {isSaving
-                ? t("settings.general.saving")
-                : t("settings.general.save")}
+              {isSaving ? t("settings.general.saving") : t("settings.general.save")}
             </Button>
           </div>
         )}

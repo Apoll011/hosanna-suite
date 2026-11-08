@@ -15,9 +15,7 @@ describe("ChordPro linter", () => {
   });
 
   it("accepts valid annotations and chords", () => {
-    const diagnostics = lintChordPro(
-      "{start_of_verse}\n[Cmaj7]Hello\n{end_of_verse}",
-    );
+    const diagnostics = lintChordPro("{start_of_verse}\n[Cmaj7]Hello\n{end_of_verse}");
     assert.equal(diagnostics.length, 0);
   });
 });
@@ -29,17 +27,12 @@ describe("ChordPro linter — chorus recall / tags", () => {
   });
 
   it("accepts {chorus} after a chorus block", () => {
-    const d = lintChordPro(
-      "{start_of_chorus}\n[G]Hi\n{end_of_chorus}\n{chorus}",
-    );
+    const d = lintChordPro("{start_of_chorus}\n[G]Hi\n{end_of_chorus}\n{chorus}");
     assert.equal(d.length, 0);
   });
 
   it("warns on empty key_note / tag", () => {
     const d = lintChordPro("{key_note}\n{tag: }\n{key_note: D}");
-    assert.equal(
-      d.filter((x) => x.code === "empty-directive-value").length,
-      2,
-    );
+    assert.equal(d.filter((x) => x.code === "empty-directive-value").length, 2);
   });
 });

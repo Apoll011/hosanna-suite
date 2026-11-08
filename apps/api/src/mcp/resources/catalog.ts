@@ -8,10 +8,7 @@ import {
   serviceElementSchema,
   serviceElementTypeSchema,
 } from "../../validators/serviceElement.validators.js";
-import {
-  explainChordProDirective,
-  getChordProCapabilities,
-} from "../lib/capabilities.js";
+import { explainChordProDirective, getChordProCapabilities } from "../lib/capabilities.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -53,10 +50,7 @@ const SKILL_NAMES = [
   "hosanna-safe-data",
 ] as const;
 
-export function registerResources(
-  server: McpServer,
-  _authInfo?: AuthInfo,
-): void {
+export function registerResources(server: McpServer, _authInfo?: AuthInfo): void {
   server.registerResource(
     "chordpro-guide",
     "hosanna://chordpro/guide",
@@ -110,11 +104,7 @@ export function registerResources(
         mimeType: "text/vnd.chordpro",
       },
       async (uri) =>
-        textResource(
-          uri.href,
-          readDoc(`examples/${example}.chordpro`),
-          "text/vnd.chordpro",
-        ),
+        textResource(uri.href, readDoc(`examples/${example}.chordpro`), "text/vnd.chordpro"),
     );
   }
 
@@ -173,15 +163,7 @@ export function registerResources(
             types: serviceElementTypeSchema.options,
             fields: {
               song: ["id", "type", "title", "songId", "duration", "notes"],
-              scripture: [
-                "id",
-                "type",
-                "title",
-                "passage",
-                "content",
-                "duration",
-                "notes",
-              ],
+              scripture: ["id", "type", "title", "passage", "content", "duration", "notes"],
               other: ["id", "type", "title", "content", "duration", "notes"],
             },
           },
@@ -290,10 +272,7 @@ export function registerResources(
           const text = readFileSync(join(skillsRoot, name, "SKILL.md"), "utf8");
           return textResource(uri.href, text);
         } catch {
-          return textResource(
-            uri.href,
-            `# ${name}\n\nSkill document not found yet.`,
-          );
+          return textResource(uri.href, `# ${name}\n\nSkill document not found yet.`);
         }
       },
     );

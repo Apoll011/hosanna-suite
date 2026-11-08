@@ -98,9 +98,7 @@ function parseLengthSecondsFromWatchHtml(html: string): number | null {
   return null;
 }
 
-async function durationViaYouTubeApi(
-  videoId: string,
-): Promise<YouTubeDurationResult | null> {
+async function durationViaYouTubeApi(videoId: string): Promise<YouTubeDurationResult | null> {
   const key = env.youtubeApiKey;
   if (!key) return null;
 
@@ -112,9 +110,7 @@ async function durationViaYouTubeApi(
   const res = await fetch(url);
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(
-      `${hintForApiStatus(res.status, body)} (${body.slice(0, 160)})`,
-    );
+    throw new Error(`${hintForApiStatus(res.status, body)} (${body.slice(0, 160)})`);
   }
 
   const data = (await res.json()) as {
@@ -136,14 +132,11 @@ async function durationViaYouTubeApi(
   };
 }
 
-async function durationViaWatchPage(
-  videoId: string,
-): Promise<YouTubeDurationResult | null> {
+async function durationViaWatchPage(videoId: string): Promise<YouTubeDurationResult | null> {
   const watch = youtubeWatchUrl(videoId);
   const res = await fetch(watch, {
     headers: {
-      "User-Agent":
-        "Mozilla/5.0 (compatible; HosannaBot/1.0; +https://hosanna.live)",
+      "User-Agent": "Mozilla/5.0 (compatible; HosannaBot/1.0; +https://hosanna.live)",
       "Accept-Language": "en-US,en;q=0.9",
     },
   });
@@ -169,9 +162,7 @@ async function durationViaWatchPage(
  * Prefers YouTube Data API when YOUTUBE_API_KEY is set; falls back to the
  * public watch page (`lengthSeconds`).
  */
-export async function getYouTubeDuration(
-  urlOrId: string,
-): Promise<YouTubeDurationResult> {
+export async function getYouTubeDuration(urlOrId: string): Promise<YouTubeDurationResult> {
   const videoId = extractYouTubeVideoId(urlOrId);
   if (!videoId) {
     throw new Error("Invalid YouTube URL or video id.");
@@ -193,26 +184,18 @@ export async function getYouTubeDuration(
   } catch (err) {
     const pageError = err instanceof Error ? err.message : String(err);
     if (apiError) {
-      throw new Error(
-        `YouTube API failed (${apiError}); watch page also failed (${pageError})`,
-      );
+      throw new Error(`YouTube API failed (${apiError}); watch page also failed (${pageError})`);
     }
     throw new Error(`YouTube watch page failed (${pageError})`);
   }
 
   if (apiError) {
-    throw new Error(
-      `YouTube API failed (${apiError}) and watch page had no lengthSeconds.`,
-    );
+    throw new Error(`YouTube API failed (${apiError}) and watch page had no lengthSeconds.`);
   }
   throw new Error("Could not determine video duration from YouTube.");
 }
 
-function buildQuery(opts: {
-  title?: string;
-  artist?: string;
-  query?: string;
-}): string {
+function buildQuery(opts: { title?: string; artist?: string; query?: string }): string {
   if (opts.query?.trim()) return opts.query.trim();
   return [opts.title?.trim(), opts.artist?.trim()].filter(Boolean).join(" ");
 }
@@ -253,9 +236,7 @@ async function searchViaYouTubeApi(
   const res = await fetch(url);
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(
-      `${hintForApiStatus(res.status, body)} (${body.slice(0, 160)})`,
-    );
+    throw new Error(`${hintForApiStatus(res.status, body)} (${body.slice(0, 160)})`);
   }
   const data = (await res.json()) as {
     items?: Array<{
@@ -294,9 +275,7 @@ async function searchViaWebFallback(
 ): Promise<YouTubeHit[]> {
   // Prefer a natural-language query — `site:` often triggers DuckDuckGo's bot gate.
   // When DeepSeek Search is available, `site:youtube.com` works well.
-  const query = nativeAuth
-    ? `${q} site:youtube.com`.slice(0, 128)
-    : `${q} youtube`;
+  const query = nativeAuth ? `${q} site:youtube.com`.slice(0, 128) : `${q} youtube`;
   const web = await searchWeb({
     query,
     limit: Math.max(limit * 2, 8),
@@ -360,8 +339,7 @@ export async function searchYouTube(opts: {
           : "YouTube API returned no videos for this query.",
       };
     } catch (apiErr) {
-      const apiMessage =
-        apiErr instanceof Error ? apiErr.message : String(apiErr);
+      const apiMessage = apiErr instanceof Error ? apiErr.message : String(apiErr);
       try {
         const hits = await searchViaWebFallback(query, limit, nativeAuth);
         return {
@@ -373,8 +351,7 @@ export async function searchYouTube(opts: {
             : `YouTube API failed (${apiMessage}). Web search also found no youtube.com/watch links.`,
         };
       } catch (webErr) {
-        const webMessage =
-          webErr instanceof Error ? webErr.message : String(webErr);
+        const webMessage = webErr instanceof Error ? webErr.message : String(webErr);
         throw new Error(
           `YouTube API failed (${apiMessage}); web fallback also failed (${webMessage})`,
         );

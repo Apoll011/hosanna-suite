@@ -4,8 +4,7 @@
  */
 
 const MB_BASE = "https://musicbrainz.org/ws/2";
-const USER_AGENT =
-  "HosannaStudio/1.0 (https://hosanna.live; support@hosanna.live)";
+const USER_AGENT = "HosannaStudio/1.0 (https://hosanna.live; support@hosanna.live)";
 /** MusicBrainz asks for ≤1 request/second without an approved app token. */
 const MIN_INTERVAL_MS = 1100;
 const MAX_RETRIES = 3;
@@ -53,9 +52,7 @@ async function fetchMbJson(url: URL): Promise<Response> {
     });
     if (res.ok) return res;
     if (res.status === 503 || res.status === 429) {
-      lastError = new Error(
-        `MusicBrainz error ${res.status}: rate limited — slow down and retry.`,
-      );
+      lastError = new Error(`MusicBrainz error ${res.status}: rate limited — slow down and retry.`);
       await sleep(MIN_INTERVAL_MS * (attempt + 1));
       continue;
     }

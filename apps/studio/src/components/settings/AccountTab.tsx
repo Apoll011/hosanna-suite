@@ -5,16 +5,7 @@
 
 import { Button, Input, Surface } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
-import {
-  Camera,
-  CheckCircle2,
-  Info,
-  KeyRound,
-  Lock,
-  PenLine,
-  Save,
-  Trash2,
-} from "lucide-react";
+import { Camera, CheckCircle2, Info, KeyRound, Lock, PenLine, Save, Trash2 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useSync } from "../../contexts/SyncContext";
@@ -62,9 +53,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
       setIsCompressingAvatar(true);
       const compressedBase64 = await compressImage(file, 800, 0.8);
 
-      setDisplayUser((prev) =>
-        prev ? { ...prev, image: compressedBase64 } : prev,
-      );
+      setDisplayUser((prev) => (prev ? { ...prev, image: compressedBase64 } : prev));
 
       await authClient.updateUser({ image: compressedBase64 });
       await refetchAuth();
@@ -185,13 +174,9 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
           <div className="flex items-center gap-4">
             <div className="relative group">
               <div className="w-16 h-16 rounded-full bg-linear-to-tr from-sky-600 to-indigo-600 flex items-center justify-center font-semibold text-white text-xl overflow-hidden shadow-sm">
-                {displayUser?.image ||
-                (displayUser as { logo?: string })?.logo ? (
+                {displayUser?.image || (displayUser as { logo?: string })?.logo ? (
                   <img
-                    src={
-                      (displayUser?.image ||
-                        (displayUser as { logo?: string })?.logo) as string
-                    }
+                    src={(displayUser?.image || (displayUser as { logo?: string })?.logo) as string}
                     alt={displayUser?.name}
                     className="w-full h-full object-cover"
                   />
@@ -222,10 +207,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
             <div>
               <h2 className="text-title text-m3-text flex items-center gap-2">
                 {displayUser?.name || t("settings.account.user")}
-                {getRoleBadge(
-                  (displayUser as { role?: string })?.role || "member",
-                  t,
-                )}
+                {getRoleBadge((displayUser as { role?: string })?.role || "member", t)}
               </h2>
               <p className="text-caption mt-0.5">{displayUser?.email}</p>
             </div>
@@ -246,9 +228,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
 
       <Surface>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-label">
-            {t("settings.account.profile.displayName")}
-          </label>
+          <label className="text-label">{t("settings.account.profile.displayName")}</label>
           {!isEditingName && (
             <button
               onClick={() => {
@@ -271,11 +251,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
               placeholder={t("settings.account.profile.namePlaceholder")}
             />
             <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditingName(false)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setIsEditingName(false)}>
                 {t("common.cancel")}
               </Button>
               <Button
@@ -289,17 +265,13 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
             </div>
           </div>
         ) : (
-          <p className="text-base font-semibold text-m3-text">
-            {displayUser?.name || "—"}
-          </p>
+          <p className="text-base font-semibold text-m3-text">{displayUser?.name || "—"}</p>
         )}
       </Surface>
 
       <Surface>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-label">
-            {t("settings.account.profile.emailAddress")}
-          </label>
+          <label className="text-label">{t("settings.account.profile.emailAddress")}</label>
           {!isEditingEmail && (
             <button
               onClick={() => {
@@ -323,11 +295,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
               placeholder={t("settings.account.profile.emailPlaceholder")}
             />
             <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditingEmail(false)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(false)}>
                 {t("common.cancel")}
               </Button>
               <Button
@@ -341,9 +309,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
             </div>
           </div>
         ) : (
-          <p className="text-base font-semibold text-m3-text">
-            {displayUser?.email || "—"}
-          </p>
+          <p className="text-base font-semibold text-m3-text">{displayUser?.email || "—"}</p>
         )}
       </Surface>
 
@@ -428,21 +394,12 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
-            <span className="text-label block mb-1">
-              {t("settings.account.profile.userId")}
-            </span>
-            <p className="text-xs font-mono text-m3-text truncate">
-              {displayUser?.id || "—"}
-            </p>
+            <span className="text-label block mb-1">{t("settings.account.profile.userId")}</span>
+            <p className="text-xs font-mono text-m3-text truncate">{displayUser?.id || "—"}</p>
           </div>
           <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
-            <span className="text-label block mb-1">
-              {t("settings.account.profile.role")}
-            </span>
-            {getRoleBadge(
-              (displayUser as { role?: string })?.role || "member",
-              t,
-            )}
+            <span className="text-label block mb-1">{t("settings.account.profile.role")}</span>
+            {getRoleBadge((displayUser as { role?: string })?.role || "member", t)}
           </div>
           <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
             <span className="text-label block mb-1">

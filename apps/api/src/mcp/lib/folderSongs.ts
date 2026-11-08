@@ -28,17 +28,12 @@ export function extractKey(content: string): string | null {
 }
 
 /** `root` / null / undefined all mean "no folder". */
-export function normalizeFolderId(
-  folderId: string | null | undefined,
-): string | null {
+export function normalizeFolderId(folderId: string | null | undefined): string | null {
   return !folderId || folderId === "root" ? null : folderId;
 }
 
 /** Ids of `rootId` plus every folder nested below it (cycle-safe). */
-export function collectFolderIds(
-  folders: readonly FolderNode[],
-  rootId: string,
-): string[] {
+export function collectFolderIds(folders: readonly FolderNode[], rootId: string): string[] {
   const children = new Map<string, string[]>();
   for (const f of folders) {
     if (!f.parentId) continue;
@@ -61,10 +56,7 @@ export function collectFolderIds(
 }
 
 /** Breadcrumb names from the top-level folder down to `folderId`. */
-export function folderTrail(
-  folders: readonly FolderNode[],
-  folderId: string,
-): string[] {
+export function folderTrail(folders: readonly FolderNode[], folderId: string): string[] {
   const byId = new Map(folders.map((f) => [f.id, f]));
   const trail: string[] = [];
   const seen = new Set<string>();
@@ -124,10 +116,7 @@ export function sortSongs<T extends SortableSong>(
  * the folder's own subfolders. Metadata only — no lyrics/chords — so it stays
  * cheap even for big folders; use songs_get / songs_get_many for content.
  */
-export async function listSongsInFolder(
-  ctx: McpContext,
-  args: FolderSongsArgs,
-) {
+export async function listSongsInFolder(ctx: McpContext, args: FolderSongsArgs) {
   requirePermission(ctx, "song.access");
   const folderId = normalizeFolderId(args.folderId);
   const recursive = args.recursive ?? false;
@@ -228,9 +217,7 @@ export async function listSongsInFolder(
       tags: s.tags,
       path: s.path,
       folderId: s.folderId,
-      ...(recursive && s.folderId
-        ? { folderName: folderName.get(s.folderId) ?? null }
-        : {}),
+      ...(recursive && s.folderId ? { folderName: folderName.get(s.folderId) ?? null } : {}),
       updatedAt: s.updatedAt.toISOString(),
     })),
   };

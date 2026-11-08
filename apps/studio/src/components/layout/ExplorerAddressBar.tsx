@@ -89,10 +89,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
   const plusMenuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        plusMenuRef.current &&
-        !plusMenuRef.current.contains(event.target as Node)
-      ) {
+      if (plusMenuRef.current && !plusMenuRef.current.contains(event.target as Node)) {
         setIsPlusMenuOpen(false);
       }
     };
@@ -100,8 +97,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const crumbCurrent =
-    "flex items-center gap-2 font-semibold text-m3-primary shrink-0";
+  const crumbCurrent = "flex items-center gap-2 font-semibold text-m3-primary shrink-0";
   const crumbLink =
     "flex items-center gap-2 font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer shrink-0";
 
@@ -147,9 +143,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
               : t("addressBar.back")
           }
           className={`shrink-0 ${
-            isDriveRoot
-              ? "text-m3-secondary/30"
-              : "text-m3-primary border-m3-primary/30"
+            isDriveRoot ? "text-m3-secondary/30" : "text-m3-primary border-m3-primary/30"
           }`}
         >
           <CornerLeftUp className="w-4.5 h-4.5" />
@@ -162,15 +156,11 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
               onSelectFolder(null);
             }}
             className={`flex items-center gap-2 font-semibold transition-colors cursor-pointer shrink-0 ${
-              isDriveRoot
-                ? "text-m3-primary"
-                : "text-m3-secondary hover:text-m3-text"
+              isDriveRoot ? "text-m3-primary" : "text-m3-secondary hover:text-m3-text"
             }`}
           >
             <HardDrive
-              className={`w-4 h-4 ${
-                isDriveRoot ? "text-m3-primary" : "text-m3-secondary"
-              }`}
+              className={`w-4 h-4 ${isDriveRoot ? "text-m3-primary" : "text-m3-secondary"}`}
             />
             <span>{t("common.home")}</span>
           </button>
@@ -187,10 +177,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                       <span>{folder.name}</span>
                     </div>
                   ) : (
-                    <button
-                      onClick={() => onSelectFolder(folder.id)}
-                      className={crumbLink}
-                    >
+                    <button onClick={() => onSelectFolder(folder.id)} className={crumbLink}>
                       <FolderIcon className="w-4 h-4 opacity-70" />
                       <span>{folder.name}</span>
                     </button>
@@ -252,10 +239,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
           {view === "service-editor" && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <button
-                onClick={() => navigate(`${slugPrefix}/services`)}
-                className={crumbLink}
-              >
+              <button onClick={() => navigate(`${slugPrefix}/services`)} className={crumbLink}>
                 <Calendar className="w-4 h-4" />
                 <span>{t("common.services")}</span>
               </button>
@@ -274,15 +258,12 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                   >
                     <Calendar className="h-3.5 w-3.5" />
                     <span>
-                      {new Date(currentService.date).toLocaleDateString(
-                        locale,
-                        {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        },
-                      )}
+                      {new Date(currentService.date).toLocaleDateString(locale, {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
                     </span>
                   </div>
                 </>
@@ -363,10 +344,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
           {view === "collection-detail" && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <button
-                onClick={() => navigate(`${slugPrefix}/collections`)}
-                className={crumbLink}
-              >
+              <button onClick={() => navigate(`${slugPrefix}/collections`)} className={crumbLink}>
                 <LibraryBig className="w-4 h-4 opacity-70" />
                 <span>{t("common.collections")}</span>
               </button>
@@ -392,10 +370,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
           view === "services" ||
           view === "collections" ||
           view === "collection-detail") && (
-          <div
-            data-tour="toolbar-search"
-            className="relative w-full sm:w-64 min-w-0"
-          >
+          <div data-tour="toolbar-search" className="relative w-full sm:w-64 min-w-0">
             <Input
               placeholder={
                 view === "services"
@@ -415,13 +390,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
               }}
               icon={<Search className="w-4 h-4 text-m3-secondary" />}
               className={`py-2.5 text-sm rounded-md ${
-                view === "services"
-                  ? searchQuery
-                    ? "pr-9"
-                    : ""
-                  : searchQuery
-                    ? "pr-16"
-                    : "pr-9"
+                view === "services" ? (searchQuery ? "pr-9" : "") : searchQuery ? "pr-16" : "pr-9"
               }`}
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
@@ -469,10 +438,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
 
         <SyncStatusBadge className="shrink-0" showText={false} />
 
-        <InboxButton
-          client={authClient as InboxFetchClient}
-          className="shrink-0"
-        />
+        <InboxButton client={authClient as InboxFetchClient} className="shrink-0" />
 
         <AiChatToggle />
 
@@ -507,9 +473,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
                 data-tour="create-menu"
                 className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200"
               >
-                <div className="px-4 py-2 text-label">
-                  {t("addressBar.createNew")}
-                </div>
+                <div className="px-4 py-2 text-label">{t("addressBar.createNew")}</div>
                 <Can permission="song.create">
                   <button
                     onClick={() => {

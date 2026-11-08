@@ -9,11 +9,7 @@ import "driver.js/dist/driver.css";
 import "./tour.css";
 import { PRODUCT_TOUR_BLOCKS } from "./blocks";
 import { roleHasAnyPermission, roleHasPermission } from "./permissions";
-import type {
-  BuildProductTourOptions,
-  ResolvedTourStep,
-  TourBlockId,
-} from "./types";
+import type { BuildProductTourOptions, ResolvedTourStep, TourBlockId } from "./types";
 
 export interface RunProductTourOptions extends BuildProductTourOptions {
   /** Called when the user finishes every step (Done). */
@@ -60,9 +56,7 @@ const DESC_KEYS: Record<TourBlockId, TranslationKey> = {
   finish: "tour.product.finish.description",
 };
 
-export function buildProductTourSteps(
-  options: BuildProductTourOptions,
-): ResolvedTourStep[] {
+export function buildProductTourSteps(options: BuildProductTourOptions): ResolvedTourStep[] {
   const { role, flags, t } = options;
 
   return PRODUCT_TOUR_BLOCKS.filter((block) => {

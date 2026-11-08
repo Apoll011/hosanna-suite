@@ -36,8 +36,7 @@ export function ChordRoll({
     });
   }, [uniqueChords, profile]);
 
-  if (uniqueChords.length === 0 || !showDiagrams || !showChords || !profile)
-    return null;
+  if (uniqueChords.length === 0 || !showDiagrams || !showChords || !profile) return null;
 
   const cardWidthClass = profile.layoutWidthClass ?? "w-24";
 

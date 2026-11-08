@@ -51,10 +51,7 @@ function scoreColor(score: number): {
 // ─────────────────────────────────────────────────────────────
 // Layout: ring  – SVG arc progress ring
 // ─────────────────────────────────────────────────────────────
-const RingLayout: React.FC<{ score: number; compact: boolean }> = ({
-  score,
-  compact,
-}) => {
+const RingLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
   const size = compact ? 32 : 40;
   const strokeW = compact ? 3 : 3.5;
@@ -99,10 +96,7 @@ const RingLayout: React.FC<{ score: number; compact: boolean }> = ({
 // ─────────────────────────────────────────────────────────────
 // Layout: bar  – thin horizontal progress bar + number
 // ─────────────────────────────────────────────────────────────
-const BarLayout: React.FC<{ score: number; compact: boolean }> = ({
-  score,
-  compact,
-}) => {
+const BarLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
   const h = compact ? "h-1" : "h-1.5";
 
@@ -129,10 +123,7 @@ const BarLayout: React.FC<{ score: number; compact: boolean }> = ({
 // ─────────────────────────────────────────────────────────────
 // Layout: dots  – row of 5 filled/hollow pips
 // ─────────────────────────────────────────────────────────────
-const DotsLayout: React.FC<{ score: number; compact: boolean }> = ({
-  score,
-  compact,
-}) => {
+const DotsLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
   const total = 5;
   const filled = Math.round((score / 100) * total);
@@ -149,9 +140,7 @@ const DotsLayout: React.FC<{ score: number; compact: boolean }> = ({
         <span
           key={i}
           className={`${dotSz} rounded-full transition-all duration-300 ${
-            i < filled
-              ? `${col.dot} shadow-sm`
-              : "bg-slate-200 dark:bg-slate-700"
+            i < filled ? `${col.dot} shadow-sm` : "bg-slate-200 dark:bg-slate-700"
           }`}
         />
       ))}
@@ -162,18 +151,13 @@ const DotsLayout: React.FC<{ score: number; compact: boolean }> = ({
 // ─────────────────────────────────────────────────────────────
 // Layout: badge  – pill chip with colour-coded score
 // ─────────────────────────────────────────────────────────────
-const BadgeLayout: React.FC<{ score: number; compact: boolean }> = ({
-  score,
-  compact,
-}) => {
+const BadgeLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
 
   return (
     <span
       className={`inline-flex items-center justify-center rounded-full font-semibold ring-1 ${col.bg} ${col.text} ${col.ring} ${
-        compact
-          ? "text-[9px] px-1.5 py-0.5 mt-1"
-          : "text-[10px] px-2 py-0.5 mt-1.5"
+        compact ? "text-[9px] px-1.5 py-0.5 mt-1" : "text-[10px] px-2 py-0.5 mt-1.5"
       } transition-colors duration-300`}
       title={`Score: ${score}`}
       aria-label={`Score ${score}`}
@@ -205,10 +189,8 @@ export const SongScoreVisualizer: React.FC<SongScoreVisualizerProps> = ({
   }
 
   if (layout === "bar") return <BarLayout score={clamped} compact={compact} />;
-  if (layout === "dots")
-    return <DotsLayout score={clamped} compact={compact} />;
-  if (layout === "badge")
-    return <BadgeLayout score={clamped} compact={compact} />;
+  if (layout === "dots") return <DotsLayout score={clamped} compact={compact} />;
+  if (layout === "badge") return <BadgeLayout score={clamped} compact={compact} />;
 
   return null;
 };

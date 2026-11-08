@@ -64,10 +64,7 @@ type OrgMemberRef = {
   email: string;
 };
 
-function readString(
-  data: Record<string, unknown> | undefined,
-  ...keys: string[]
-): string | null {
+function readString(data: Record<string, unknown> | undefined, ...keys: string[]): string | null {
   if (!data) return null;
   for (const key of keys) {
     const value = data[key];
@@ -94,10 +91,7 @@ function eventUserAgent(log: DashAuditLog): string | null {
 }
 
 function eventIp(log: DashAuditLog): string | null {
-  return (
-    log.location?.ipAddress ||
-    readString(log.eventData, "ipAddress", "ip_address", "ip")
-  );
+  return log.location?.ipAddress || readString(log.eventData, "ipAddress", "ip_address", "ip");
 }
 
 function sortByNewest(a: DashAuditLog, b: DashAuditLog): number {
@@ -117,9 +111,7 @@ function enrichEvent(log: DashAuditLog, member?: OrgMemberRef): DashAuditLog {
   };
 }
 
-function listOrgMembers(
-  organization: ReturnType<typeof useAuth>["organization"],
-): OrgMemberRef[] {
+function listOrgMembers(organization: ReturnType<typeof useAuth>["organization"]): OrgMemberRef[] {
   const members = organization?.members ?? [];
   const out: OrgMemberRef[] = [];
   for (const m of members) {
@@ -202,8 +194,10 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
       try {
         if (scope === "organization") {
           const members = listOrgMembers(organization);
-          const { events: orgEvents, error: orgError } =
-            await fetchOrganizationLoginEvents(members, 50);
+          const { events: orgEvents, error: orgError } = await fetchOrganizationLoginEvents(
+            members,
+            50,
+          );
           if (orgError) {
             throw new Error(orgError || t("loginHistory.loadError"));
           }
@@ -227,9 +221,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
 
         const raw = result.data?.events ?? [];
         const filtered = raw.filter((e) => LOGIN_EVENT_TYPES.has(e.eventType));
-        setEvents((prev) =>
-          append && prev ? [...prev, ...filtered] : filtered,
-        );
+        setEvents((prev) => (append && prev ? [...prev, ...filtered] : filtered));
         setTotal(result.data?.total ?? filtered.length);
         setOffset(nextOffset);
       } catch (err) {
@@ -262,14 +254,10 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
 
   const resolvedTitle = t(titleKey ?? "loginHistory.title");
   const resolvedDesc = t(
-    descKey ??
-      (scope === "organization"
-        ? "loginHistory.orgDesc"
-        : "loginHistory.personalDesc"),
+    descKey ?? (scope === "organization" ? "loginHistory.orgDesc" : "loginHistory.personalDesc"),
   );
 
-  const hasMore =
-    scope === "self" && (events?.length ?? 0) < total && !isLoading;
+  const hasMore = scope === "self" && (events?.length ?? 0) < total && !isLoading;
 
   return (
     <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
@@ -280,9 +268,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
               <History className="w-4 h-4 text-m3-secondary" />
               {resolvedTitle}
             </h3>
-            <p className="text-xs text-m3-secondary mt-0.5">
-              {resolvedDesc}
-            </p>
+            <p className="text-xs text-m3-secondary mt-0.5">{resolvedDesc}</p>
           </div>
         ) : (
           <div />
@@ -330,8 +316,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
               log.eventType === "session_revoked" ||
               log.eventType === "sessions_revoked_all";
             const EventIcon = isSignOut ? LogOut : LogIn;
-            const labelKey =
-              EVENT_LABEL_KEYS[log.eventType] ?? "loginHistory.events.other";
+            const labelKey = EVENT_LABEL_KEYS[log.eventType] ?? "loginHistory.events.other";
             const clientLabel = info.isApp
               ? t("settings.account.activeSessions.nativeApp", {
                   name: info.client ?? "",
@@ -340,10 +325,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
             const deviceTitle = [clientLabel, info.os, info.device]
               .filter((part): part is string => Boolean(part))
               .join(" · ");
-            const locationParts = [
-              log.location?.city,
-              log.location?.country,
-            ].filter(Boolean);
+            const locationParts = [log.location?.city, log.location?.country].filter(Boolean);
 
             return (
               <div
@@ -367,20 +349,12 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
                     <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1 truncate">
                       {actor.name || actor.email}
                       {actor.name && actor.email ? (
-                        <span className="font-normal text-slate-500">
-                          {" "}
-                          · {actor.email}
-                        </span>
+                        <span className="font-normal text-slate-500"> · {actor.email}</span>
                       ) : null}
                     </p>
                   )}
-                  <p
-                    className="text-xs text-m3-secondary mt-0.5 truncate"
-                    title={ua ?? undefined}
-                  >
-                    {deviceTitle ||
-                      ua ||
-                      t("settings.account.activeSessions.browserSession")}
+                  <p className="text-xs text-m3-secondary mt-0.5 truncate" title={ua ?? undefined}>
+                    {deviceTitle || ua || t("settings.account.activeSessions.browserSession")}
                   </p>
                   <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
                     {t("loginHistory.meta", {
@@ -411,9 +385,7 @@ export const LoginHistorySection: React.FC<LoginHistorySectionProps> = ({
           )}
         </div>
       ) : (
-        <p className="text-xs text-slate-500 py-6 text-center">
-          {t("loginHistory.empty")}
-        </p>
+        <p className="text-xs text-slate-500 py-6 text-center">{t("loginHistory.empty")}</p>
       )}
     </div>
   );

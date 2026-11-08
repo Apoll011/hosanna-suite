@@ -37,17 +37,12 @@ describe("wantsBrowserNavigation", () => {
 
 describe("isOauthAuthorizeGet", () => {
   it("matches GET authorize", () => {
-    assert.equal(
-      isOauthAuthorizeGet(new Request(authorizeUrl, { method: "GET" })),
-      true,
-    );
+    assert.equal(isOauthAuthorizeGet(new Request(authorizeUrl, { method: "GET" })), true);
   });
 
   it("ignores POST consent", () => {
     assert.equal(
-      isOauthAuthorizeGet(
-        new Request("https://x/api/auth/oauth2/consent", { method: "POST" }),
-      ),
+      isOauthAuthorizeGet(new Request("https://x/api/auth/oauth2/consent", { method: "POST" })),
       false,
     );
   });
@@ -73,8 +68,7 @@ describe("withOauthNavigationRedirect", () => {
     const res = await wrapped(
       new Request(authorizeUrl, {
         headers: {
-          accept:
-            "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
           "sec-fetch-mode": "navigate",
           "sec-fetch-dest": "document",
         },

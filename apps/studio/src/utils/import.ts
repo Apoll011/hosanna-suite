@@ -8,10 +8,7 @@ export interface SongImportProvider {
 
   readonly supportedExtensions: readonly string[];
 
-  import(
-    files: readonly File[],
-    songData: Partial<Song>,
-  ): Promise<ProviderImportResult>;
+  import(files: readonly File[], songData: Partial<Song>): Promise<ProviderImportResult>;
 }
 
 export interface ImportResult {

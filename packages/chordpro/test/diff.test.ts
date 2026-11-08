@@ -23,9 +23,7 @@ describe("diffSequences", () => {
     const a = "the quick brown fox jumps".split(" ");
     const b = "the slow brown dog jumps high".split(" ");
     const ops = diffSequences(a, b);
-    const rebuilt = ops
-      .filter((o) => o.type !== "delete")
-      .map((o) => b[o.bIndex]);
+    const rebuilt = ops.filter((o) => o.type !== "delete").map((o) => b[o.bIndex]);
     assert.deepEqual(rebuilt, b);
     const kept = ops.filter((o) => o.type === "delete" || o.type === "equal");
     assert.deepEqual(
@@ -150,9 +148,7 @@ describe("buildItems / buildSplitItems", () => {
 
   it("aligns deletes with inserts for split view", () => {
     const r = computeDiff("a\nb\nc", "a\nB\nX\nc");
-    const rows = buildSplitItems(buildItems(r, 3)).filter(
-      (i) => i.kind === "row" && i.hunk >= 0,
-    );
+    const rows = buildSplitItems(buildItems(r, 3)).filter((i) => i.kind === "row" && i.hunk >= 0);
     assert.equal(rows.length, 2);
     assert.equal(rows[0].kind === "row" && rows[0].left?.text, "b");
     assert.equal(rows[0].kind === "row" && rows[0].right?.text, "B");
@@ -191,8 +187,9 @@ describe("fuzz", () => {
     };
     const vocab = ["[C]a", "[G]b", "{sot}", "{eot}", "", "love", "grace", "x y"];
     const make = () =>
-      Array.from({ length: Math.floor(rand() * 25) }, () =>
-        vocab[Math.floor(rand() * vocab.length)],
+      Array.from(
+        { length: Math.floor(rand() * 25) },
+        () => vocab[Math.floor(rand() * vocab.length)],
       );
     for (let n = 0; n < 200; n++) {
       const a = make().join("\n");
@@ -201,10 +198,7 @@ describe("fuzz", () => {
       assert.equal(resolveHunks(r), b);
       assert.equal(resolveHunks(r, new Set(r.hunks.map((h) => h.id))), a);
       // Stats must match the edit script.
-      assert.equal(
-        r.lines.filter((l) => l.type === "insert").length,
-        r.stats.added,
-      );
+      assert.equal(r.lines.filter((l) => l.type === "insert").length, r.stats.added);
     }
   });
 });

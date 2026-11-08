@@ -45,8 +45,7 @@ describe("idempotency", () => {
       name: "A",
     });
     await assert.rejects(
-      () =>
-        withClientRequestId(org, id, async () => ({ ok: true }), { name: "B" }),
+      () => withClientRequestId(org, id, async () => ({ ok: true }), { name: "B" }),
       (err: unknown) => err instanceof IdempotencyConflictError,
     );
   });

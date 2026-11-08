@@ -1,10 +1,6 @@
 import { prisma } from "../database/prisma.js";
 import { AppError } from "../utils/errors.js";
-import {
-  AI_LIMITS,
-  normalizeMemoryContent,
-  type AiMemoryEntry,
-} from "./aiBehavior.js";
+import { AI_LIMITS, normalizeMemoryContent, type AiMemoryEntry } from "./aiBehavior.js";
 
 export type AiMemoryScope = "organization" | "personal";
 
@@ -35,10 +31,7 @@ export class AiMemoryService {
 
   /** Org + personal entries for prompt injection (org first). */
   async listForChat(orgId: string, userId: string): Promise<AiMemoryRow[]> {
-    const [org, personal] = await Promise.all([
-      this.listOrg(orgId),
-      this.listPersonal(userId),
-    ]);
+    const [org, personal] = await Promise.all([this.listOrg(orgId), this.listPersonal(userId)]);
     return [...org, ...personal];
   }
 
@@ -56,9 +49,7 @@ export class AiMemoryService {
     if (!text) throw AppError.badRequest("Memory entry is empty.");
 
     const existing = await this.listOrg(orgId);
-    const dupe = existing.find(
-      (e) => e.content.toLowerCase() === text.toLowerCase(),
-    );
+    const dupe = existing.find((e) => e.content.toLowerCase() === text.toLowerCase());
     if (dupe) return { ...dupe, duplicate: true };
     if (existing.length >= AI_LIMITS.memoryMaxEntries) {
       throw AppError.badRequest(
@@ -86,9 +77,7 @@ export class AiMemoryService {
     if (!text) throw AppError.badRequest("Memory entry is empty.");
 
     const existing = await this.listPersonal(userId);
-    const dupe = existing.find(
-      (e) => e.content.toLowerCase() === text.toLowerCase(),
-    );
+    const dupe = existing.find((e) => e.content.toLowerCase() === text.toLowerCase());
     if (dupe) return { ...dupe, duplicate: true };
     if (existing.length >= AI_LIMITS.memoryMaxEntries) {
       throw AppError.badRequest(

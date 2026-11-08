@@ -125,20 +125,7 @@ const NOTE_ALIASES: Record<string, number> = {
 const ROOT_KEYS = Object.keys(NOTE_ALIASES).sort((a, b) => b.length - a.length);
 const ROOT_PATTERN = new RegExp(`^(${ROOT_KEYS.join("|")})`, "i");
 
-const SEMITONE_NAMES = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
+const SEMITONE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 /** Resolve a raw matched root string ("c", "SOL", "Db"...) to a semitone 0-11. */
 function resolveRootSemitone(raw: string): number | null {
@@ -351,22 +338,18 @@ const QUALITY_BY_ID: Record<string, ChordQuality> = Object.fromEntries(
 // Flatten + sort every (alias -> quality) pair by alias length, longest first,
 // so e.g. "maj7" is tried before "m" and "m7b5" is tried before "m7".
 const QUALITY_ALIAS_TABLE: Array<{ alias: string; quality: ChordQuality }> =
-  CHORD_QUALITIES.flatMap((quality) =>
-    quality.aliases.map((alias) => ({ alias, quality })),
-  ).sort((a, b) => b.alias.length - a.alias.length);
+  CHORD_QUALITIES.flatMap((quality) => quality.aliases.map((alias) => ({ alias, quality }))).sort(
+    (a, b) => b.alias.length - a.alias.length,
+  );
 
 function resolveQuality(qualitySymbol: string): ChordQuality {
   if (qualitySymbol === "") return QUALITY_BY_ID.major;
   // Case-sensitive pass first (m vs M matter).
-  const exact = QUALITY_ALIAS_TABLE.find(
-    (e) => e.alias !== "" && e.alias === qualitySymbol,
-  );
+  const exact = QUALITY_ALIAS_TABLE.find((e) => e.alias !== "" && e.alias === qualitySymbol);
   if (exact) return exact.quality;
   // Loose fallback for typos/odd casing (e.g. "MAJ7", "Sus4").
   const lower = qualitySymbol.toLowerCase();
-  const loose = QUALITY_ALIAS_TABLE.find(
-    (e) => e.alias !== "" && e.alias.toLowerCase() === lower,
-  );
+  const loose = QUALITY_ALIAS_TABLE.find((e) => e.alias !== "" && e.alias.toLowerCase() === lower);
   if (loose) return loose.quality;
   return QUALITY_BY_ID.major;
 }
@@ -415,9 +398,9 @@ interface ParsedChord {
 
 // Quality aliases that themselves contain a literal "/" (currently just 6/9),
 // so we can recognize them BEFORE splitting the symbol on "/" to find a bass note.
-const SLASH_CONTAINING_ALIASES = QUALITY_ALIAS_TABLE.filter((e) =>
-  e.alias.includes("/"),
-).sort((a, b) => b.alias.length - a.alias.length);
+const SLASH_CONTAINING_ALIASES = QUALITY_ALIAS_TABLE.filter((e) => e.alias.includes("/")).sort(
+  (a, b) => b.alias.length - a.alias.length,
+);
 
 function parseChordSymbol(chord: string): ParsedChord | null {
   const cleaned = chord.replace(/[()]/g, "").trim();
@@ -434,9 +417,7 @@ function parseChordSymbol(chord: string): ParsedChord | null {
 
   // Check for a quality whose own symbol contains "/" (e.g. "6/9") before
   // treating "/" as a slash-bass separator.
-  const slashAlias = SLASH_CONTAINING_ALIASES.find((e) =>
-    remainder.startsWith(e.alias),
-  );
+  const slashAlias = SLASH_CONTAINING_ALIASES.find((e) => remainder.startsWith(e.alias));
 
   let qualitySymbol: string;
   let bassPart: string | undefined;
@@ -478,11 +459,7 @@ function parseChordSymbol(chord: string): ParsedChord | null {
 // Piano — pure computation from intervals, no lookup table at all.
 // ============================================================================
 
-function computePianoVoicing(
-  rootSemitone: number,
-  intervals: number[],
-  bassSemitone?: number,
-) {
+function computePianoVoicing(rootSemitone: number, intervals: number[], bassSemitone?: number) {
   const rootPc = ((rootSemitone % 12) + 12) % 12;
 
   if (bassSemitone !== undefined) {
@@ -793,10 +770,7 @@ const A_FORM: Record<string, BarreTemplate> = {
   },
 };
 
-function realizeTemplate(
-  t: BarreTemplate,
-  targetSemitone: number,
-): GuitarShape {
+function realizeTemplate(t: BarreTemplate, targetSemitone: number): GuitarShape {
   const shift = (((targetSemitone - t.formRootSemitone) % 12) + 12) % 12;
   const frets = t.frets.map((f) => (f < 0 ? f : f + shift));
   if (shift === 0) return { frets, fingers: t.openFingers ?? t.barreFingers };
@@ -808,10 +782,7 @@ function maxFret(shape: GuitarShape): number {
   return Math.max(0, ...shape.frets.filter((f) => f >= 0));
 }
 
-function templateFingering(
-  qualityId: string,
-  targetSemitone: number,
-): GuitarShape | null {
+function templateFingering(qualityId: string, targetSemitone: number): GuitarShape | null {
   const e = E_FORM[qualityId];
   const a = A_FORM[qualityId];
   if (!e && !a) return null;
@@ -831,15 +802,7 @@ function powerChordShape(targetSemitone: number): GuitarShape {
   };
 }
 
-const TEMPLATE_QUALITIES = new Set([
-  "major",
-  "minor",
-  "dom7",
-  "m7",
-  "maj7",
-  "sus4",
-  "sus2",
-]);
+const TEMPLATE_QUALITIES = new Set(["major", "minor", "dom7", "m7", "maj7", "sus4", "sus2"]);
 
 function getGuitarFingering(
   parsed: ParsedChord,
@@ -847,10 +810,8 @@ function getGuitarFingering(
   const { rootSemitone, quality, raw, rootDisplay } = parsed;
 
   // 1) Curated exact shape for the full symbol (handles slash chords too).
-  if (SLASH_CHORD_SHAPES[raw])
-    return { shape: SLASH_CHORD_SHAPES[raw], approximate: false };
-  if (OPEN_CHORD_SHAPES[raw])
-    return { shape: OPEN_CHORD_SHAPES[raw], approximate: false };
+  if (SLASH_CHORD_SHAPES[raw]) return { shape: SLASH_CHORD_SHAPES[raw], approximate: false };
+  if (OPEN_CHORD_SHAPES[raw]) return { shape: OPEN_CHORD_SHAPES[raw], approximate: false };
 
   // 2) Curated exact shape for the reconstructed canonical name (e.g. "C#m7").
   const suffix = CANONICAL_SUFFIX[quality.id];
@@ -861,8 +822,7 @@ function getGuitarFingering(
   }
 
   // 3) Power chords: always exact, any root.
-  if (quality.id === "five")
-    return { shape: powerChordShape(rootSemitone), approximate: false };
+  if (quality.id === "five") return { shape: powerChordShape(rootSemitone), approximate: false };
 
   // 4) Movable barre template for this exact quality.
   if (TEMPLATE_QUALITIES.has(quality.id)) {
@@ -919,17 +879,14 @@ export function analyzeChordSymbol(chord: string): ChordSymbolAnalysis {
   const rootText = rootMatch[1];
   const remainder = cleaned.slice(rootText.length);
 
-  const slashAlias = SLASH_CONTAINING_ALIASES.find((e) =>
-    remainder.startsWith(e.alias),
-  );
+  const slashAlias = SLASH_CONTAINING_ALIASES.find((e) => remainder.startsWith(e.alias));
 
   let qualitySymbol: string;
   if (slashAlias) {
     qualitySymbol = slashAlias.alias;
   } else {
     const slashIndex = remainder.indexOf("/");
-    qualitySymbol =
-      slashIndex === -1 ? remainder : remainder.slice(0, slashIndex);
+    qualitySymbol = slashIndex === -1 ? remainder : remainder.slice(0, slashIndex);
   }
 
   if (qualitySymbol === "") {
@@ -939,8 +896,7 @@ export function analyzeChordSymbol(chord: string): ChordSymbolAnalysis {
   const recognized = QUALITY_ALIAS_TABLE.some(
     (e) =>
       e.alias !== "" &&
-      (e.alias === qualitySymbol ||
-        e.alias.toLowerCase() === qualitySymbol.toLowerCase()),
+      (e.alias === qualitySymbol || e.alias.toLowerCase() === qualitySymbol.toLowerCase()),
   );
 
   return { raw: chord, hasValidRoot: true, qualityRecognized: recognized };

@@ -7,10 +7,7 @@ import { Button, Input, Modal } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { emitOnboardingEvent } from "@/src/lib/tour";
 import { Collection } from "@/src/types";
-import {
-  getFolderColorStyle,
-  getFolderIconComponent,
-} from "@/src/utils/folderCustomization";
+import { getFolderColorStyle, getFolderIconComponent } from "@/src/utils/folderCustomization";
 import { Check, FolderPlus, LibraryBig, Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
@@ -34,9 +31,7 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
   onCreateNewCollection,
 }) => {
   const { t, tc } = useI18n();
-  const [selectedCollectionId, setSelectedCollectionId] = useState<
-    string | null
-  >(null);
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -84,9 +79,7 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
         {songTitle ? (
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {t("collectionsPage.selectCollectionPrompt")}{" "}
-            <strong className="text-slate-900 dark:text-slate-100">
-              {songTitle}
-            </strong>
+            <strong className="text-slate-900 dark:text-slate-100">{songTitle}</strong>
           </p>
         ) : (
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -181,12 +174,7 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
         </div>
 
         <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={onClose}
-            disabled={isSubmitting}
-          >
+          <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
             {t("common.cancel")}
           </Button>
           <Button

@@ -194,9 +194,7 @@ export const TwoFactorPage: React.FC = () => {
               disabled={isSendingOtp}
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-primary hover:text-m3-primary-dark hover:underline disabled:opacity-50 cursor-pointer"
             >
-              <RefreshCw
-                className={`w-3.5 h-3.5 ${isSendingOtp ? "animate-spin" : ""}`}
-              />
+              <RefreshCw className={`w-3.5 h-3.5 ${isSendingOtp ? "animate-spin" : ""}`} />
               <span>Reenviar código por e-mail</span>
             </button>
           </div>
@@ -222,11 +220,7 @@ export const TwoFactorPage: React.FC = () => {
             {t("auth.forgotPassword.backToLogin")}
           </AppLink>
 
-          <Button
-            type="submit"
-            isLoading={isLoading}
-            className="rounded-full px-6"
-          >
+          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
             {t("auth.twoFactor.verifyBtn")}
           </Button>
         </div>
@@ -235,13 +229,7 @@ export const TwoFactorPage: React.FC = () => {
   );
 };
 
-function OtpInput({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
+function OtpInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const length = 6;
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -288,20 +276,14 @@ function OtpInput({
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pasted = e.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, length);
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
     onChange(pasted);
     const nextFocus = Math.min(pasted.length, length - 1);
     inputRefs.current[nextFocus]?.focus();
   };
 
   return (
-    <div
-      className="flex gap-2 sm:gap-3 justify-center my-2"
-      onPaste={handlePaste}
-    >
+    <div className="flex gap-2 sm:gap-3 justify-center my-2" onPaste={handlePaste}>
       {Array.from({ length }).map((_, i) => (
         <input
           key={i}

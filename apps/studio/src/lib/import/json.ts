@@ -9,10 +9,7 @@ export class JsonImportProvider implements SongImportProvider {
   readonly description = "Imports songs structured in JSON format";
   readonly supportedExtensions = [".json"];
 
-  async import(
-    files: File[],
-    songData: Partial<Song>,
-  ): Promise<ProviderImportResult> {
+  async import(files: File[], songData: Partial<Song>): Promise<ProviderImportResult> {
     const songPayloads: Array<Partial<Song>> = [];
     const nameSet: Set<string> = new Set();
     let ignoredCount = 0;

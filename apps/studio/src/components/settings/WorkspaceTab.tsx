@@ -38,14 +38,9 @@ import { PrintingSettingsCard } from "./PrintingSettingsCard";
 
 export interface WorkspaceTabProps {
   active: boolean;
-  showToast: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast: (text: string, variant: "success" | "error" | "info" | "warning") => void;
   setPendingRestoreData: (data: Record<string, unknown> | null) => void;
-  setRestoreStats: (
-    stats: { songs: number; folders: number; services: number } | null,
-  ) => void;
+  setRestoreStats: (stats: { songs: number; folders: number; services: number } | null) => void;
   setIsTogglingWs?: (toggling: boolean) => void;
 }
 
@@ -86,12 +81,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
   setPendingRestoreData,
   setRestoreStats,
 }) => {
-  const {
-    organization,
-    organizations,
-    refetch: refetchAuth,
-    switchOrganization,
-  } = useAuth();
+  const { organization, organizations, refetch: refetchAuth, switchOrganization } = useAuth();
   const { t } = useI18n();
   const orgMetadata = (organization?.metadata as OrgMetadataStructure) || {};
 
@@ -105,44 +95,31 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
   // --- Read-Only / Saved State ---
   const [currentName, setCurrentName] = useState(organization?.name || "");
-  const [currentLogo, setCurrentLogo] = useState<string | null | undefined>(
-    organization?.logo,
-  );
-  const [currentDescription, setCurrentDescription] = useState(
-    orgMetadata.description || "",
-  );
-  const [currentShortName, setCurrentShortName] = useState(
-    orgMetadata.shortName || "",
-  );
+  const [currentLogo, setCurrentLogo] = useState<string | null | undefined>(organization?.logo);
+  const [currentDescription, setCurrentDescription] = useState(orgMetadata.description || "");
+  const [currentShortName, setCurrentShortName] = useState(orgMetadata.shortName || "");
   const [currentAppearance, setCurrentAppearance] = useState<OrgAppearance>({
-    accentColor:
-      orgMetadata.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
+    accentColor: orgMetadata.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
     showBranding: orgMetadata.settings?.appearance?.showBranding ?? true,
   });
 
   const { printSong } = usePrint();
-  const [currentPrintSettings, setCurrentPrintSettings] =
-    useState<OrgPrintSettings>(() =>
-      resolveOrgPrintSettings(orgMetadata.settings?.print),
-    );
+  const [currentPrintSettings, setCurrentPrintSettings] = useState<OrgPrintSettings>(() =>
+    resolveOrgPrintSettings(orgMetadata.settings?.print),
+  );
 
   // --- Draft State (Edit Mode) ---
   const [isEditing, setIsEditing] = useState(false);
   const [draftName, setDraftName] = useState(currentName);
-  const [draftLogo, setDraftLogo] = useState<string | null | undefined>(
-    currentLogo,
-  );
+  const [draftLogo, setDraftLogo] = useState<string | null | undefined>(currentLogo);
   const [draftDescription, setDraftDescription] = useState(currentDescription);
   const [draftShortName, setDraftShortName] = useState(currentShortName);
-  const [draftAppearance, setDraftAppearance] =
-    useState<OrgAppearance>(currentAppearance);
+  const [draftAppearance, setDraftAppearance] = useState<OrgAppearance>(currentAppearance);
   const [draftPrintSettings, setDraftPrintSettings] =
     useState<OrgPrintSettings>(currentPrintSettings);
 
   // --- Permissions ---
-  const { granted: canManageOrg, loading: canLoading } = useCan(
-    "organization.update",
-  );
+  const { granted: canManageOrg, loading: canLoading } = useCan("organization.update");
 
   // Sync state when organization auth context changes
   useEffect(() => {
@@ -153,8 +130,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       const desc = meta.description || "";
       const short = meta.shortName || "";
       const appearance: OrgAppearance = {
-        accentColor:
-          meta.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
+        accentColor: meta.settings?.appearance?.accentColor || DEFAULT_ACCENT_COLOR,
         showBranding: meta.settings?.appearance?.showBranding ?? true,
       };
       const parsedPrint = resolveOrgPrintSettings(meta.settings?.print);
@@ -388,9 +364,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 <Building2 className="w-5 h-5 text-m3-primary" />
                 {t("settings.workspace.title")}
               </h2>
-              <p className="text-sm text-m3-secondary mt-1">
-                {t("settings.workspace.desc")}
-              </p>
+              <p className="text-sm text-m3-secondary mt-1">{t("settings.workspace.desc")}</p>
             </div>
 
             {!canLoading && !canManageOrg && (
@@ -417,9 +391,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                   ) : (
                     <div className="flex flex-col items-center justify-center text-m3-secondary p-2 text-center">
                       <ImagePlus className="w-10 h-10 mb-1 opacity-70" />
-                      <span className="text-label">
-                        {t("settings.workspace.noLogo")}
-                      </span>
+                      <span className="text-label">{t("settings.workspace.noLogo")}</span>
                     </div>
                   )}
 
@@ -488,9 +460,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         label={t("settings.workspace.shortNameLabel")}
                         value={draftShortName}
                         onChange={(e) => setDraftShortName(e.target.value)}
-                        placeholder={t(
-                          "settings.workspace.shortNamePlaceholder",
-                        )}
+                        placeholder={t("settings.workspace.shortNamePlaceholder")}
                         disabled={isSavingOrganization}
                       />
                     </div>
@@ -502,9 +472,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         rows={3}
                         value={draftDescription}
                         onChange={(e) => setDraftDescription(e.target.value)}
-                        placeholder={t(
-                          "settings.workspace.descriptionPlaceholder",
-                        )}
+                        placeholder={t("settings.workspace.descriptionPlaceholder")}
                         disabled={isSavingOrganization}
                         className="w-full rounded-xl border border-m3-border bg-m3-card px-3.5 py-2.5 text-sm text-m3-text placeholder:text-m3-secondary focus:outline-hidden focus:ring-2 focus:ring-m3-primary/30 focus:border-m3-primary transition-colors resize-none disabled:opacity-50"
                       />
@@ -537,17 +505,13 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         <span className="font-semibold text-m3-secondary uppercase text-[10px] tracking-wider">
                           ID:
                         </span>
-                        <span className="font-mono text-m3-text">
-                          {organization?.id || "—"}
-                        </span>
+                        <span className="font-mono text-m3-text">{organization?.id || "—"}</span>
                       </div>
                       <div className="bg-m3-sidebar px-3 py-1.5 rounded-lg border border-m3-border/70 dark:border-m3-border flex items-center gap-2">
                         <span className="font-semibold text-m3-secondary uppercase text-[10px] tracking-wider">
                           Slug:
                         </span>
-                        <span className="font-mono text-m3-text">
-                          {organization?.slug || "—"}
-                        </span>
+                        <span className="font-mono text-m3-text">{organization?.slug || "—"}</span>
                       </div>
                     </div>
                   </div>
@@ -630,17 +594,14 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                             }
                             title={preset.name}
                             className={`w-6 h-6 rounded-full transition-transform flex items-center justify-center cursor-pointer ${
-                              draftAppearance.accentColor.toLowerCase() ===
-                              preset.hex.toLowerCase()
+                              draftAppearance.accentColor.toLowerCase() === preset.hex.toLowerCase()
                                 ? "ring-2 ring-offset-2 ring-m3-text dark:ring-white dark:ring-offset-m3-card"
                                 : ""
                             }`}
                             style={{ backgroundColor: preset.hex }}
                           >
                             {draftAppearance.accentColor.toLowerCase() ===
-                              preset.hex.toLowerCase() && (
-                              <Check className="w-3 h-3 text-white" />
-                            )}
+                              preset.hex.toLowerCase() && <Check className="w-3 h-3 text-white" />}
                           </button>
                         ))}
                       </div>
@@ -695,9 +656,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         </span>
                         {draftAppearance.showBranding && (
                           <span className="text-[11px] font-semibold text-m3-text border border-m3-border px-2 py-0.5 rounded">
-                            {draftShortName ||
-                              draftName ||
-                              t("settings.workspace.churchFallback")}
+                            {draftShortName || draftName || t("settings.workspace.churchFallback")}
                           </span>
                         )}
                       </div>
@@ -815,9 +774,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
               <ShieldAlert className="w-5 h-5 text-m3-primary" />
               {t("settings.workspace.backupTitle")}
             </h3>
-            <p className="text-sm text-m3-secondary mt-1">
-              {t("settings.workspace.backupDesc")}
-            </p>
+            <p className="text-sm text-m3-secondary mt-1">{t("settings.workspace.backupDesc")}</p>
           </div>
 
           <div className="p-6">
@@ -936,12 +893,8 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-bold text-m3-text truncate">
-                          {org.name}
-                        </p>
-                        <p className="text-xs text-m3-secondary font-mono truncate">
-                          @{org.slug}
-                        </p>
+                        <p className="text-sm font-bold text-m3-text truncate">{org.name}</p>
+                        <p className="text-xs text-m3-secondary font-mono truncate">@{org.slug}</p>
                       </div>
                     </div>
 

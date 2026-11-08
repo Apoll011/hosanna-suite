@@ -33,9 +33,7 @@ export const AcceptInvitationPage: React.FC = () => {
 
   const [invitation, setInvitation] = useState<InvitationData | null>(null);
   const [isFetching, setIsFetching] = useState(true);
-  const [actionLoading, setActionLoading] = useState<
-    "accept" | "reject" | null
-  >(null);
+  const [actionLoading, setActionLoading] = useState<"accept" | "reject" | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
@@ -67,17 +65,12 @@ export const AcceptInvitationPage: React.FC = () => {
         });
 
         if (error || !data) {
-          setErrorMsg(
-            error?.message ||
-              "Não foi possível carregar os detalhes do convite.",
-          );
+          setErrorMsg(error?.message || "Não foi possível carregar os detalhes do convite.");
         } else {
           setInvitation(data as unknown as InvitationData);
         }
       } catch (err: unknown) {
-        setErrorMsg(
-          (err as Error)?.message || "Ocorreu um erro ao carregar o convite.",
-        );
+        setErrorMsg((err as Error)?.message || "Ocorreu um erro ao carregar o convite.");
       } finally {
         setIsFetching(false);
       }
@@ -123,9 +116,7 @@ export const AcceptInvitationPage: React.FC = () => {
         }, 1000);
       }
     } catch (err: unknown) {
-      setErrorMsg(
-        (err as Error)?.message || "Erro inesperado ao aceitar convite.",
-      );
+      setErrorMsg((err as Error)?.message || "Erro inesperado ao aceitar convite.");
       setActionLoading(null);
     }
   };
@@ -156,9 +147,7 @@ export const AcceptInvitationPage: React.FC = () => {
         }
       }, 1200);
     } catch (err: unknown) {
-      setErrorMsg(
-        (err as Error)?.message || "Erro inesperado ao recusar convite.",
-      );
+      setErrorMsg((err as Error)?.message || "Erro inesperado ao recusar convite.");
       setActionLoading(null);
     }
   };
@@ -166,9 +155,7 @@ export const AcceptInvitationPage: React.FC = () => {
   return (
     <LoginLayout
       headerTitle={t("auth.acceptInvitation.title")}
-      headerSubtitle={
-        invitation ? `${t("auth.acceptInvitation.invitedTo")}` : undefined
-      }
+      headerSubtitle={invitation ? `${t("auth.acceptInvitation.invitedTo")}` : undefined}
       errorMsg={errorMsg}
       redirectMessage={successMsg}
     >
@@ -186,15 +173,11 @@ export const AcceptInvitationPage: React.FC = () => {
 
             <div className="p-4 bg-m3-sidebar rounded-xl border border-m3-border text-left">
               <span className="text-base sm:text-lg font-medium text-m3-text block">
-                {invitation.organizationName ||
-                  invitation.organizationId ||
-                  "Organização Hosanna"}
+                {invitation.organizationName || invitation.organizationId || "Organização Hosanna"}
               </span>
               <span className="text-xs sm:text-sm text-m3-secondary mt-1 block">
                 {t("settings.account.profile.role")}:{" "}
-                <strong className="text-m3-primary font-semibold">
-                  {invitation.role}
-                </strong>
+                <strong className="text-m3-primary font-semibold">{invitation.role}</strong>
               </span>
             </div>
 
@@ -218,9 +201,7 @@ export const AcceptInvitationPage: React.FC = () => {
                 variant="primary"
                 onClick={handleAccept}
                 isLoading={actionLoading === "accept"}
-                disabled={
-                  actionLoading !== null || invitation.status !== "pending"
-                }
+                disabled={actionLoading !== null || invitation.status !== "pending"}
                 className="h-10 sm:h-11 px-6 rounded-full bg-m3-primary hover:bg-m3-primary-dark text-white font-medium text-sm transition-colors shadow-none border-0"
               >
                 <span>{t("auth.acceptInvitation.acceptBtn")}</span>
@@ -232,9 +213,7 @@ export const AcceptInvitationPage: React.FC = () => {
             <div className="w-14 h-14 bg-m3-danger/10 text-m3-danger rounded-full flex items-center justify-center mx-auto">
               <ShieldAlert className="w-7 h-7" />
             </div>
-            <p className="text-sm text-m3-secondary">
-              {t("auth.acceptInvitation.invalidDesc")}
-            </p>
+            <p className="text-sm text-m3-secondary">{t("auth.acceptInvitation.invalidDesc")}</p>
           </div>
         )}
       </div>

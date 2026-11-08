@@ -11,8 +11,7 @@ export const TwoFactorSection: React.FC = () => {
   const { user, refetch: refetchAuth } = useAuth();
   const { showToast } = useSync();
   const { t } = useI18n();
-  const is2FAEnabled =
-    (user as { twoFactorEnabled?: boolean })?.twoFactorEnabled || false;
+  const is2FAEnabled = (user as { twoFactorEnabled?: boolean })?.twoFactorEnabled || false;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [password, setPassword] = useState("");
@@ -20,9 +19,7 @@ export const TwoFactorSection: React.FC = () => {
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
   const [verificationCode, setVerificationCode] = useState("");
 
-  const [step, setStep] = useState<"password" | "setup" | "backup" | "disable">(
-    "password",
-  );
+  const [step, setStep] = useState<"password" | "setup" | "backup" | "disable">("password");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEnable2FA = async () => {
@@ -69,10 +66,7 @@ export const TwoFactorSection: React.FC = () => {
         trustDevice: true,
       });
       if (error) {
-        showToast(
-          error.message || t("settings.twoFactor.codeInvalid"),
-          "error",
-        );
+        showToast(error.message || t("settings.twoFactor.codeInvalid"), "error");
       } else {
         showToast(t("settings.twoFactor.codeVerified"), "success");
         setStep("backup");
@@ -144,9 +138,7 @@ export const TwoFactorSection: React.FC = () => {
             <Shield className="w-4 h-4 text-m3-primary" />
             {t("settings.twoFactor.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">
-            {t("settings.twoFactor.desc")}
-          </p>
+          <p className="text-xs text-m3-secondary mt-0.5">{t("settings.twoFactor.desc")}</p>
         </div>
         <button
           onClick={() => {
@@ -159,9 +151,7 @@ export const TwoFactorSection: React.FC = () => {
               : "bg-m3-primary text-white hover:bg-m3-primary-dark shadow-xs"
           }`}
         >
-          {is2FAEnabled
-            ? t("settings.twoFactor.disableBtn")
-            : t("settings.twoFactor.enableBtn")}
+          {is2FAEnabled ? t("settings.twoFactor.disableBtn") : t("settings.twoFactor.enableBtn")}
         </button>
       </div>
 
@@ -191,12 +181,7 @@ export const TwoFactorSection: React.FC = () => {
                 <Button variant="outline" size="sm" onClick={closeModal}>
                   {t("common.cancel")}
                 </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  isLoading={isLoading}
-                  onClick={handleEnable2FA}
-                >
+                <Button variant="primary" size="sm" isLoading={isLoading} onClick={handleEnable2FA}>
                   {t("settings.twoFactor.continue")}
                 </Button>
               </div>
@@ -225,9 +210,7 @@ export const TwoFactorSection: React.FC = () => {
               <Input
                 type="text"
                 label={t("settings.twoFactor.verificationCodeLabel")}
-                placeholder={t(
-                  "settings.twoFactor.verificationCodePlaceholder",
-                )}
+                placeholder={t("settings.twoFactor.verificationCodePlaceholder")}
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 maxLength={6}
@@ -237,12 +220,7 @@ export const TwoFactorSection: React.FC = () => {
                 <Button variant="outline" size="sm" onClick={closeModal}>
                   {t("common.cancel")}
                 </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  isLoading={isLoading}
-                  onClick={handleVerify2FA}
-                >
+                <Button variant="primary" size="sm" isLoading={isLoading} onClick={handleVerify2FA}>
                   {t("settings.twoFactor.verify")}
                 </Button>
               </div>

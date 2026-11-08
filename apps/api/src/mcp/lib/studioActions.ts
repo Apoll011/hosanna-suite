@@ -22,13 +22,7 @@ export const STUDIO_NAVIGATE_KINDS = [
 
 export type StudioNavigateKind = (typeof STUDIO_NAVIGATE_KINDS)[number];
 
-export const STUDIO_PRINT_KINDS = [
-  "song",
-  "service",
-  "folder",
-  "collection",
-  "event",
-] as const;
+export const STUDIO_PRINT_KINDS = ["song", "service", "folder", "collection", "event"] as const;
 
 export type StudioPrintKind = (typeof STUDIO_PRINT_KINDS)[number];
 

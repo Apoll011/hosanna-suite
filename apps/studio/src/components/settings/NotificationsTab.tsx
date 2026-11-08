@@ -38,10 +38,7 @@ import { getRoleBadge } from "../../utils/settingsUtils";
 
 export interface NotificationsTabProps {
   active: boolean;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 type Target = "user" | "org";
@@ -84,10 +81,7 @@ const CHANNELS: {
   { value: "both", icon: <MessageSquare className="w-4 h-4" /> },
 ];
 
-export const NotificationsTab: React.FC<NotificationsTabProps> = ({
-  active,
-  showToast,
-}) => {
+export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, showToast }) => {
   const { organization } = useAuth();
   const { showToast: contextToast } = useSync();
   const { t } = useI18n();
@@ -142,8 +136,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
       if (error) throw new Error(error.message);
 
       const rows =
-        (data as unknown as { members?: Record<string, unknown>[] } | null)
-          ?.members ?? [];
+        (data as unknown as { members?: Record<string, unknown>[] } | null)?.members ?? [];
       setMembers(
         rows.map((m) => {
           const user = (m.user ?? {}) as {
@@ -184,24 +177,12 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
     ) {
       void loadMembers();
     }
-  }, [
-    active,
-    canSend,
-    target,
-    members.length,
-    isLoadingMembers,
-    membersError,
-    loadMembers,
-  ]);
+  }, [active, canSend, target, members.length, isLoadingMembers, membersError, loadMembers]);
 
   const filteredMembers = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = q
-      ? members.filter(
-          (m) =>
-            m.name.toLowerCase().includes(q) ||
-            m.email.toLowerCase().includes(q),
-        )
+      ? members.filter((m) => m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q))
       : members;
     return list.slice(0, MAX_SEARCH_RESULTS);
   }, [members, query]);
@@ -264,10 +245,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
         err instanceof Error && err.message
           ? err.message
           : t("settings.notifications.genericError");
-      notify(
-        t("settings.notifications.errorToast", { error: message }),
-        "error",
-      );
+      notify(t("settings.notifications.errorToast", { error: message }), "error");
     } finally {
       setIsSending(false);
     }
@@ -290,9 +268,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
         <div className="w-12 h-12 mx-auto rounded-lg bg-m3-sidebar text-m3-secondary flex items-center justify-center mb-4">
           <Lock className="w-5 h-5" />
         </div>
-        <h3 className="text-title text-m3-text">
-          {t("settings.notifications.noAccessTitle")}
-        </h3>
+        <h3 className="text-title text-m3-text">{t("settings.notifications.noAccessTitle")}</h3>
         <p className="text-muted mt-2 max-w-sm mx-auto">
           {t("settings.notifications.noAccessDesc")}
         </p>
@@ -421,9 +397,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                                 : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
                             }`}
                           >
-                            {t(
-                              `settings.roles.${role}` as "settings.roles.owner",
-                            )}
+                            {t(`settings.roles.${role}` as "settings.roles.owner")}
                           </button>
                         );
                       })}
@@ -448,12 +422,8 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-m3-text truncate">
-                      {recipient.name}
-                    </p>
-                    <p className="text-caption text-m3-secondary truncate">
-                      {recipient.email}
-                    </p>
+                    <p className="text-sm font-semibold text-m3-text truncate">{recipient.name}</p>
+                    <p className="text-caption text-m3-secondary truncate">{recipient.email}</p>
                   </div>
                   {getRoleBadge(recipient.role, t)}
                   <button
@@ -473,9 +443,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                       type="text"
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      placeholder={t(
-                        "settings.notifications.recipient.searchPlaceholder",
-                      )}
+                      placeholder={t("settings.notifications.recipient.searchPlaceholder")}
                       className="w-full pl-9 pr-3 min-h-10 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
                     />
                   </div>
@@ -645,9 +613,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
 
               <Input
                 label={t("settings.notifications.content.titleLabel")}
-                placeholder={t(
-                  "settings.notifications.content.titlePlaceholder",
-                )}
+                placeholder={t("settings.notifications.content.titlePlaceholder")}
                 value={title}
                 maxLength={255}
                 required
@@ -663,18 +629,14 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                   maxLength={1000}
                   rows={3}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder={t(
-                    "settings.notifications.content.descriptionPlaceholder",
-                  )}
+                  placeholder={t("settings.notifications.content.descriptionPlaceholder")}
                   className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary resize-y"
                 />
               </div>
 
               <Input
                 label={t("settings.notifications.content.linkLabel")}
-                placeholder={t(
-                  "settings.notifications.content.linkPlaceholder",
-                )}
+                placeholder={t("settings.notifications.content.linkPlaceholder")}
                 helperText={t("settings.notifications.content.linkHint")}
                 value={href}
                 maxLength={2048}
@@ -694,9 +656,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
               </h3>
             </div>
             <div className="p-5 space-y-4">
-              {(isOrgTarget ||
-                channel === "inbox" ||
-                channel === "both") && (
+              {(isOrgTarget || channel === "inbox" || channel === "both") && (
                 <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/40">
                   <div className="flex gap-3 items-start">
                     <div className="p-2 rounded-md bg-m3-card border border-m3-border text-m3-primary shrink-0">
@@ -704,8 +664,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-m3-text truncate">
-                        {title.trim() ||
-                          t("settings.notifications.content.previewEmpty")}
+                        {title.trim() || t("settings.notifications.content.previewEmpty")}
                       </p>
                       {description.trim() ? (
                         <p className="text-caption text-m3-secondary mt-0.5 leading-relaxed">
@@ -734,8 +693,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                     </span>
                   </div>
                   <p className="text-sm font-semibold leading-snug">
-                    {title.trim() ||
-                      t("settings.notifications.content.previewEmpty")}
+                    {title.trim() || t("settings.notifications.content.previewEmpty")}
                   </p>
                   <p className="text-caption opacity-70 mt-0.5 leading-snug">
                     {description.trim() || title.trim()}
@@ -748,11 +706,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                   ? selectedRoles.length > 0
                     ? t("settings.notifications.summaryOrgRoles", {
                         roles: selectedRoles
-                          .map((r) =>
-                            t(
-                              `settings.roles.${r}` as "settings.roles.owner",
-                            ),
-                          )
+                          .map((r) => t(`settings.roles.${r}` as "settings.roles.owner"))
                           .join(", "),
                       })
                     : t("settings.notifications.summaryOrg")
@@ -770,9 +724,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
                 icon={<Send className="w-4 h-4" />}
                 className="w-full"
               >
-                {isSending
-                  ? t("settings.notifications.sending")
-                  : t("settings.notifications.send")}
+                {isSending ? t("settings.notifications.sending") : t("settings.notifications.send")}
               </Button>
             </div>
           </Surface>

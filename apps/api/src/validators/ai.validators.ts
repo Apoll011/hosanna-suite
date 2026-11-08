@@ -34,11 +34,7 @@ export const updateAiSettingsSchema = z.object({
     .max(AI_LIMITS.maxOutputTokens.max)
     .nullable()
     .optional(),
-  instructions: z
-    .string()
-    .max(AI_LIMITS.instructionsMaxChars)
-    .nullable()
-    .optional(),
+  instructions: z.string().max(AI_LIMITS.instructionsMaxChars).nullable().optional(),
   memoryEnabled: z.boolean().optional(),
 });
 
@@ -98,13 +94,10 @@ export const aiChatBodySchema = z
     /** Studio UI language so the model replies in it. */
     locale: z.enum(["pt", "en", "es"]).optional(),
   })
-  .refine(
-    (body) => JSON.stringify(body.messages).length <= AI_CHAT_MAX_BODY_CHARS,
-    {
-      message: "Conversation is too large. Start a new chat.",
-      path: ["messages"],
-    },
-  );
+  .refine((body) => JSON.stringify(body.messages).length <= AI_CHAT_MAX_BODY_CHARS, {
+    message: "Conversation is too large. Start a new chat.",
+    path: ["messages"],
+  });
 
 /** Execute a Studio-staged destructive confirmation (after user clicks Confirm). */
 export const aiConfirmActionSchema = z.object({

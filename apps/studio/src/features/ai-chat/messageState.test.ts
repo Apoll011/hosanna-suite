@@ -46,9 +46,7 @@ test("sequential tool calls collapse into one group; text splits groups", () => 
   );
   const first = blocks[1];
   assert.equal(first.kind === "tools" && first.tools.length, 3);
-  assert.deepEqual(countByName(first.kind === "tools" ? first.tools : []), [
-    ["folders_update", 3],
-  ]);
+  assert.deepEqual(countByName(first.kind === "tools" ? first.tools : []), [["folders_update", 3]]);
 });
 
 test("tool errors are surfaced instead of staying 'running'", () => {
@@ -112,9 +110,7 @@ test("suggest_followups populates followups", () => {
 });
 
 test("settleRunningTools stops spinners after abort", () => {
-  const running = run([
-    { type: "tool-input-start", toolCallId: "1", toolName: "songs_get" },
-  ]);
+  const running = run([{ type: "tool-input-start", toolCallId: "1", toolName: "songs_get" }]);
   const settled = settleRunningTools(running, "stopped", 2000);
   const part = settled.parts[0];
   assert.equal(part.type === "tool" && part.tool.status, "error");
@@ -140,13 +136,7 @@ test("history round-trips tool calls and drops empty assistant turns", () => {
   ]);
   assert.equal(ui.length, 2);
   const types = ui[1].parts.map((p) => p.type);
-  assert.deepEqual(types, [
-    "text",
-    "step-start",
-    "tool-songs_get",
-    "step-start",
-    "text",
-  ]);
+  assert.deepEqual(types, ["text", "step-start", "tool-songs_get", "step-start", "text"]);
   const tool = ui[1].parts[2] as unknown as {
     state: string;
     toolCallId: string;

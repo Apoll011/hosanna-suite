@@ -58,8 +58,7 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
 
   // Most recent first — you usually want to link the upcoming culto.
   const sorted = useMemo(
-    () =>
-      [...services].sort((a, b) => (b.date || "").localeCompare(a.date || "")),
+    () => [...services].sort((a, b) => (b.date || "").localeCompare(a.date || "")),
     [services],
   );
 
@@ -86,9 +85,7 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
       setHighlight((h) => (filtered.length ? (h + 1) % filtered.length : 0));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setHighlight((h) =>
-        filtered.length ? (h - 1 + filtered.length) % filtered.length : 0,
-      );
+      setHighlight((h) => (filtered.length ? (h - 1 + filtered.length) % filtered.length : 0));
     } else if (e.key === "Escape") {
       setOpen(false);
     } else {
@@ -176,9 +173,7 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
             <Link2 className="w-4 h-4" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-m3-text truncate">
-              {linked.name}
-            </p>
+            <p className="text-sm font-semibold text-m3-text truncate">{linked.name}</p>
             <p className="text-caption">
               {formatShortDate(linked.date, t)} ·{" "}
               {t("agenda.minutes", { minutes: serviceTotalMinutes(linked) })} ·{" "}

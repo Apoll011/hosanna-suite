@@ -1,11 +1,5 @@
 import { ArrowRightLeft, Music } from "lucide-react";
-import React, {
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import type { IAceEditorProps } from "react-ace";
 import type { ChordProDiffEditorProps } from "../diff/DiffEditor";
 import { ChordProDiffEditor } from "../diff/DiffEditor";
@@ -17,8 +11,7 @@ import { attachChordProLinter, injectChordProLintStyles } from "./lint";
 import { registerChordproMode } from "./mode-chordpro";
 import { registerChordproSnippets } from "./snippets-chordpro";
 
-let aceLoaderPromise: Promise<React.ComponentType<IAceEditorProps>> | null =
-  null;
+let aceLoaderPromise: Promise<React.ComponentType<IAceEditorProps>> | null = null;
 
 /**
  * Preloads Ace Editor, its themes, and ChordPro syntax modes in the background.
@@ -125,10 +118,7 @@ const LazyAce = React.lazy<React.ComponentType<IAceEditorProps>>(async () => {
 // ---------------------------------------------------------------------------
 type SectionType = "verse" | "chorus" | "bridge";
 
-const SECTION_LABELS: Record<
-  SectionType,
-  { start: string; end: string; defaultLabel: string }
-> = {
+const SECTION_LABELS: Record<SectionType, { start: string; end: string; defaultLabel: string }> = {
   verse: {
     start: "start_of_verse",
     end: "end_of_verse",
@@ -187,20 +177,7 @@ function wrapSelectionInSection(editor: any, sectionType: SectionType) {
 // ---------------------------------------------------------------------------
 // Transpose helpers
 // ---------------------------------------------------------------------------
-const ALL_NOTES = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
+const ALL_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const NOTE_MAP: Record<string, number> = {
   C: 0,
@@ -221,34 +198,8 @@ const NOTE_MAP: Record<string, number> = {
   Bb: 10,
   B: 11,
 };
-const SHARPS_SCALE = [
-  "C",
-  "C#",
-  "D",
-  "D#",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "A#",
-  "B",
-];
-const FLATS_SCALE = [
-  "C",
-  "Db",
-  "D",
-  "Eb",
-  "E",
-  "F",
-  "Gb",
-  "G",
-  "Ab",
-  "A",
-  "Bb",
-  "B",
-];
+const SHARPS_SCALE = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+const FLATS_SCALE = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 
 function transposeChordInline(chord: string, semitones: number): string {
   if (chord.includes("/")) {
@@ -303,14 +254,8 @@ interface TransposeModalProps {
   onClose: () => void;
 }
 
-function TransposeModal({
-  visible,
-  currentText,
-  onConfirm,
-  onClose,
-}: TransposeModalProps) {
-  const currentKey =
-    getKeyFromText(currentText) ?? getOriginalKeyFromText(currentText) ?? "C";
+function TransposeModal({ visible, currentText, onConfirm, onClose }: TransposeModalProps) {
+  const currentKey = getKeyFromText(currentText) ?? getOriginalKeyFromText(currentText) ?? "C";
   const [targetNote, setTargetNote] = useState(currentKey);
 
   useEffect(() => {
@@ -537,11 +482,10 @@ const DEFAULT_EDITOR_SETTINGS: Required<EditorSettings> = {
  * and `content` with per-change keep/undo. The user's own text is untouched
  * until `onAccept` runs.
  */
-export interface EditorProposal
-  extends Omit<
-    ChordProDiffEditorProps,
-    "original" | "modified" | "theme" | "fontSize"
-  > {
+export interface EditorProposal extends Omit<
+  ChordProDiffEditorProps,
+  "original" | "modified" | "theme" | "fontSize"
+> {
   /** The proposed full source. */
   content: string;
 }
@@ -564,12 +508,7 @@ export interface EditorProps {
   proposal?: EditorProposal | null;
 }
 
-const DARK_ACE_THEMES = new Set([
-  "dracula",
-  "monokai",
-  "solarized_dark",
-  "tomorrow_night",
-]);
+const DARK_ACE_THEMES = new Set(["dracula", "monokai", "solarized_dark", "tomorrow_night"]);
 
 export function Editor(props: EditorProps) {
   const { proposal, value, settings } = props;
@@ -582,9 +521,7 @@ export function Editor(props: EditorProps) {
         original={value}
         modified={content}
         fontSize={settings?.fontSize}
-        theme={
-          theme ? (DARK_ACE_THEMES.has(theme) ? "dark" : "light") : "auto"
-        }
+        theme={theme ? (DARK_ACE_THEMES.has(theme) ? "dark" : "light") : "auto"}
       />
     );
   }
@@ -668,8 +605,7 @@ function TextEditor({
       } else {
         // No directives at all: prepend original_key and key
         const currentKey = getKeyFromText(value) ?? "C";
-        result =
-          `{original_key: ${currentKey}}\n{key: ${targetNote}}\n` + result;
+        result = `{original_key: ${currentKey}}\n{key: ${targetNote}}\n` + result;
       }
 
       onChange(result);
@@ -684,11 +620,7 @@ function TextEditor({
 
       const aceInstance = (window as any).ace;
       if (aceInstance && mode === "chordpro") {
-        linterRef.current = attachChordProLinter(
-          aceInstance,
-          editor,
-          onDiagnostics,
-        );
+        linterRef.current = attachChordProLinter(aceInstance, editor, onDiagnostics);
         // Do an initial lint pass
         linterRef.current.lint(editor.getValue());
       }
@@ -737,10 +669,7 @@ function TextEditor({
       }
 
       // Context menu on right-click when text is selected
-      if (
-        editor.container &&
-        typeof editor.container.addEventListener === "function"
-      ) {
+      if (editor.container && typeof editor.container.addEventListener === "function") {
         const handleContextMenu = (e: MouseEvent) => {
           if (!editor || typeof editor.getSelectedText !== "function") return;
           const selectedText = editor.getSelectedText();

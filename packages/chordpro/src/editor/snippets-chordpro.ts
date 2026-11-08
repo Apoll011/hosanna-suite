@@ -1,6 +1,4 @@
-export async function registerChordproSnippets(
-  aceInstance?: any,
-): Promise<void> {
+export async function registerChordproSnippets(aceInstance?: any): Promise<void> {
   let ace = aceInstance;
   if (!ace) {
     try {
@@ -11,11 +9,7 @@ export async function registerChordproSnippets(
     }
   }
 
-  if (
-    !ace ||
-    typeof ace.define !== "function" ||
-    (ace as any)._chordproSnippetsRegistered
-  ) {
+  if (!ace || typeof ace.define !== "function" || (ace as any)._chordproSnippetsRegistered) {
     return;
   }
 

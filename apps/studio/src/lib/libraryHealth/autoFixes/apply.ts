@@ -30,9 +30,9 @@ export async function applyLibraryHealthAutoFixes(
 ): Promise<ApplyAutoFixesResult> {
   const idFilter = options.songIds ? new Set(options.songIds) : null;
   const fixers = options.criterion
-    ? ([getAutoFixForCriterion(options.criterion)].filter(
-        Boolean,
-      ) as ReturnType<typeof listAutoFixes>)
+    ? ([getAutoFixForCriterion(options.criterion)].filter(Boolean) as ReturnType<
+        typeof listAutoFixes
+      >)
     : listAutoFixes();
 
   if (fixers.length === 0) {

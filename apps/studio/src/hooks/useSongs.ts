@@ -65,9 +65,7 @@ export function useSongMutations() {
           artist: data.artist || "",
           content: data.content || "",
           folderId,
-          collectionIds: Array.isArray(data.collectionIds)
-            ? data.collectionIds
-            : [],
+          collectionIds: Array.isArray(data.collectionIds) ? data.collectionIds : [],
           path,
           tags: Array.isArray(data.tags) ? data.tags : [],
           song_number: data.song_number ?? null,
@@ -80,10 +78,7 @@ export function useSongMutations() {
         if (folderId) {
           await updateFolderCounts(db, folderId);
         }
-        if (
-          Array.isArray(data.collectionIds) &&
-          data.collectionIds.length > 0
-        ) {
+        if (Array.isArray(data.collectionIds) && data.collectionIds.length > 0) {
           for (const cId of data.collectionIds) {
             await updateCollectionCounts(db, cId);
           }
@@ -118,9 +113,7 @@ export function useSongMutations() {
       try {
         const db = await getDatabase();
         const id =
-          "id" in songUpdate && "data" in songUpdate
-            ? songUpdate.id
-            : (songUpdate as Song).id;
+          "id" in songUpdate && "data" in songUpdate ? songUpdate.id : (songUpdate as Song).id;
         const data =
           "data" in songUpdate
             ? (songUpdate as { data: Partial<Song> }).data
@@ -130,20 +123,12 @@ export function useSongMutations() {
         const now = new Date().toISOString();
 
         if (doc) {
-          const nextTitle =
-            data.title !== undefined ? data.title.trim() : doc.title;
-          const nextFolderId =
-            data.folderId !== undefined
-              ? (data.folderId ?? null)
-              : doc.folderId;
+          const nextTitle = data.title !== undefined ? data.title.trim() : doc.title;
+          const nextFolderId = data.folderId !== undefined ? (data.folderId ?? null) : doc.folderId;
           const explicitPath = data.path !== undefined ? data.path : undefined;
 
           let newPath = doc.path;
-          if (
-            data.title !== undefined ||
-            data.folderId !== undefined ||
-            data.path !== undefined
-          ) {
+          if (data.title !== undefined || data.folderId !== undefined || data.path !== undefined) {
             const validated = await validateSongRules(
               db,
               {
@@ -157,9 +142,7 @@ export function useSongMutations() {
             newPath = validated.path;
           }
 
-          const prevCollectionIds = Array.isArray(doc.collectionIds)
-            ? [...doc.collectionIds]
-            : [];
+          const prevCollectionIds = Array.isArray(doc.collectionIds) ? [...doc.collectionIds] : [];
           const nextCollectionIds =
             data.collectionIds !== undefined
               ? Array.isArray(data.collectionIds)
@@ -177,10 +160,7 @@ export function useSongMutations() {
           });
 
           if (data.collectionIds !== undefined) {
-            const affectedCollectionIds = new Set([
-              ...prevCollectionIds,
-              ...nextCollectionIds,
-            ]);
+            const affectedCollectionIds = new Set([...prevCollectionIds, ...nextCollectionIds]);
             for (const cId of affectedCollectionIds) {
               await updateCollectionCounts(db, cId);
             }
@@ -220,10 +200,7 @@ export function useSongMutations() {
             ...data,
           });
 
-          if (
-            Array.isArray(data.collectionIds) &&
-            data.collectionIds.length > 0
-          ) {
+          if (Array.isArray(data.collectionIds) && data.collectionIds.length > 0) {
             for (const cId of data.collectionIds) {
               await updateCollectionCounts(db, cId);
             }
@@ -260,9 +237,7 @@ export function useSongMutations() {
         const doc = await db.songs.findOne(id).exec();
         if (doc) {
           const folderId = doc.folderId;
-          const collectionIds = Array.isArray(doc.collectionIds)
-            ? [...doc.collectionIds]
-            : [];
+          const collectionIds = Array.isArray(doc.collectionIds) ? [...doc.collectionIds] : [];
           // Move to trash; permanent removal happens at purgeAt via the trash verifier
           await doc.patch({
             isDeleted: true,
@@ -330,10 +305,7 @@ export function useSongMutations() {
           if (targetFolderId) {
             await updateFolderCounts(db, targetFolderId);
           }
-          if (
-            Array.isArray(doc.collectionIds) &&
-            doc.collectionIds.length > 0
-          ) {
+          if (Array.isArray(doc.collectionIds) && doc.collectionIds.length > 0) {
             for (const cId of doc.collectionIds) {
               await updateCollectionCounts(db, cId);
             }
@@ -481,13 +453,8 @@ export function useSongMutations() {
             title: i.title || t("forms.untitled"),
           })),
         );
-        await db.songs.bulkInsert(
-          prepared as unknown as Parameters<typeof db.songs.bulkInsert>[0],
-        );
-        showToast(
-          t("songsPage.movedToast", { count: prepared.length }),
-          "success",
-        );
+        await db.songs.bulkInsert(prepared as unknown as Parameters<typeof db.songs.bulkInsert>[0]);
+        showToast(t("songsPage.movedToast", { count: prepared.length }), "success");
         return prepared;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
@@ -526,17 +493,14 @@ export function useSongMutations() {
 
 export function useSongs(params: GetSongsParams = {}) {
   const folder = params.folder;
-  const folderKey =
-    folder === undefined ? "__all__" : folder === null ? "__root__" : folder;
+  const folderKey = folder === undefined ? "__all__" : folder === null ? "__root__" : folder;
 
   const [songs, setSongs] = useState<Song[]>(() => {
     if (folderKey === "__all__" && cachedAllSongs) {
       let items = cachedAllSongs;
       if (params.collection) {
         items = items.filter(
-          (s) =>
-            Array.isArray(s.collectionIds) &&
-            s.collectionIds.includes(params.collection!),
+          (s) => Array.isArray(s.collectionIds) && s.collectionIds.includes(params.collection!),
         );
       }
       if (params.search) {
@@ -556,9 +520,7 @@ export function useSongs(params: GetSongsParams = {}) {
       let items = cached;
       if (params.collection) {
         items = items.filter(
-          (s) =>
-            Array.isArray(s.collectionIds) &&
-            s.collectionIds.includes(params.collection!),
+          (s) => Array.isArray(s.collectionIds) && s.collectionIds.includes(params.collection!),
         );
       }
       if (params.search) {
@@ -623,9 +585,7 @@ export function useSongs(params: GetSongsParams = {}) {
           let items = rawItems;
           if (params.collection) {
             items = items.filter(
-              (s) =>
-                Array.isArray(s.collectionIds) &&
-                s.collectionIds.includes(params.collection!),
+              (s) => Array.isArray(s.collectionIds) && s.collectionIds.includes(params.collection!),
             );
           }
           if (params.search) {
@@ -681,9 +641,7 @@ export function useSong(id: string | null) {
   const [song, setSong] = useState<Song | null>(() =>
     id ? (cachedSingleSongs.get(id) ?? null) : null,
   );
-  const [isLoading, setIsLoading] = useState(() =>
-    id ? !cachedSingleSongs.has(id) : false,
-  );
+  const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleSongs.has(id) : false));
 
   useEffect(() => {
     if (!id) {
@@ -754,9 +712,7 @@ export function useSearchableSongs(folders: Folder[] = []) {
   const [searchableSongs, setSearchableSongs] = useState<SearchableSong[]>(
     () => cachedSearchableSongs ?? [],
   );
-  const [isLoading, setIsLoading] = useState(
-    () => cachedSearchableSongs === null,
-  );
+  const [isLoading, setIsLoading] = useState(() => cachedSearchableSongs === null);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -778,9 +734,7 @@ export function useSearchableSongs(folders: Folder[] = []) {
           const rawItems = docs.map((d) => d.toJSON() as Song);
 
           // Fast check if items changed based on IDs and update timestamps
-          const currentHash = rawItems
-            .map((s) => `${s.id}:${s.updatedAt}`)
-            .join("|");
+          const currentHash = rawItems.map((s) => `${s.id}:${s.updatedAt}`).join("|");
           if (cachedSearchableSongs && currentHash === lastSearchableRawHash) {
             setSearchableSongs(cachedSearchableSongs);
             setIsLoading(false);
@@ -789,18 +743,14 @@ export function useSearchableSongs(folders: Folder[] = []) {
 
           const converted = rawItems.map((song) => {
             const parsed = parseSong(song, folders);
-            const lyricsOnly = parseChordPro(parsed.content || "").removeChords(
-              true,
-            );
+            const lyricsOnly = parseChordPro(parsed.content || "").removeChords(true);
             return parsedSongToSearchableSong({
               ...parsed,
               content: lyricsOnly.sections
                 .flatMap((section) =>
                   section.lines.map(
                     (line) =>
-                      line.segments?.map((segment) => segment.text).join("") ??
-                      line.text ??
-                      "",
+                      line.segments?.map((segment) => segment.text).join("") ?? line.text ?? "",
                   ),
                 )
                 .join("\n"),

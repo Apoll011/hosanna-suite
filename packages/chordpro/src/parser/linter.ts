@@ -109,10 +109,7 @@ function analyzeBracketContent(
   return diagnostics;
 }
 
-function findBracketDiagnostics(
-  line: string,
-  lineIdx: number,
-): ChordProDiagnostic[] {
+function findBracketDiagnostics(line: string, lineIdx: number): ChordProDiagnostic[] {
   const diagnostics: ChordProDiagnostic[] = [];
   let depth = 0;
   let openIdx = -1;
@@ -137,9 +134,7 @@ function findBracketDiagnostics(
       depth--;
       if (depth === 0 && openIdx !== -1) {
         const content = line.slice(openIdx + 1, i);
-        diagnostics.push(
-          ...analyzeBracketContent(content, lineIdx, openIdx, i + 1),
-        );
+        diagnostics.push(...analyzeBracketContent(content, lineIdx, openIdx, i + 1));
         openIdx = -1;
       }
     }
@@ -203,9 +198,7 @@ export function lintChordPro(content: string): ChordProDiagnostic[] {
       }
 
       const colonIdx = directive.indexOf(":");
-      const rawName = (
-        colonIdx === -1 ? directive : directive.slice(0, colonIdx)
-      ).trim();
+      const rawName = (colonIdx === -1 ? directive : directive.slice(0, colonIdx)).trim();
       const value = colonIdx === -1 ? "" : directive.slice(colonIdx + 1).trim();
       const lowerName = rawName.toLowerCase();
 
@@ -276,11 +269,7 @@ export function lintChordPro(content: string): ChordProDiagnostic[] {
         continue;
       }
 
-      if (
-        NUMERIC_DIRECTIVES.has(lowerName) &&
-        value &&
-        !/^-?[0-9]+(\.[0-9]+)?$/.test(value)
-      ) {
+      if (NUMERIC_DIRECTIVES.has(lowerName) && value && !/^-?[0-9]+(\.[0-9]+)?$/.test(value)) {
         diagnostics.push({
           line: i,
           column: line.indexOf(":") + 1,

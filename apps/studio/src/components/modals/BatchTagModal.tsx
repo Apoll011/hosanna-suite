@@ -12,10 +12,7 @@ interface BatchTagModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedSongIds: string[];
-  onConfirm: (
-    tags: string[],
-    mode: "append" | "replace" | "remove",
-  ) => Promise<void>;
+  onConfirm: (tags: string[], mode: "append" | "replace" | "remove") => Promise<void>;
 }
 
 const PRESET_CATEGORIES = [
@@ -98,25 +95,16 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
   const count = selectedSongIds.length;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t("modals.batchTagTitle", { count })}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={t("modals.batchTagTitle", { count })}>
       <div className="flex flex-col gap-5 text-m3-text">
         <p className="text-xs text-m3-secondary">
           {t("modals.selectCategories")}{" "}
-          <strong className="text-m3-text">
-            {t("modals.selectedSongs", { count })}
-          </strong>
-          .
+          <strong className="text-m3-text">{t("modals.selectedSongs", { count })}</strong>.
         </p>
 
         {/* Mode Selector */}
         <div className="flex flex-col gap-2">
-          <label className="text-label text-m3-textr text-[10px]">
-            {t("modals.applyMode")}
-          </label>
+          <label className="text-label text-m3-textr text-[10px]">{t("modals.applyMode")}</label>
           <div className="grid grid-cols-3 gap-2 p-1 bg-m3-sidebar/60 rounded-xl">
             <button
               type="button"
@@ -216,10 +204,7 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
           <div className="flex flex-col gap-1.5 p-3 bg-m3-primary/10 border border-m3-primary/20 rounded-xl">
             <span className="text-label text-m3-primary">
               {t("modals.tagsToApply", {
-                action:
-                  mode === "remove"
-                    ? t("modals.removeLower")
-                    : t("modals.applyLower"),
+                action: mode === "remove" ? t("modals.removeLower") : t("modals.applyLower"),
                 count: tags.length,
               })}
             </span>

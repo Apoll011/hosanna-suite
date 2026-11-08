@@ -51,13 +51,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
@@ -180,8 +174,7 @@ const SongPreview: React.FC<{ element: ServiceElement; chrome?: boolean }> = ({
         <>
           <div className="h-10 bg-m3-sidebar/50 border-b border-m3-border dark:border-m3-dark-border flex items-center justify-between px-3 shrink-0">
             <span className="text-label flex items-center gap-1.5">
-              <LayoutTemplate className="w-3 h-3" />{" "}
-              {t("serviceDetailPage.previewTitle")}
+              <LayoutTemplate className="w-3 h-3" /> {t("serviceDetailPage.previewTitle")}
             </span>
             <button
               onClick={() => setShowSettings(!showSettings)}
@@ -257,12 +250,8 @@ const LibrarySongItem: React.FC<LibrarySongItemProps> = ({
       }`}
     >
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold truncate text-m3-text">
-          {song.title}
-        </p>
-        <p className="text-xs text-m3-secondary truncate">
-          {song.artist || "—"}
-        </p>
+        <p className="text-sm font-semibold truncate text-m3-text">{song.title}</p>
+        <p className="text-xs text-m3-secondary truncate">{song.artist || "—"}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         {countInService > 0 && (
@@ -277,11 +266,7 @@ const LibrarySongItem: React.FC<LibrarySongItemProps> = ({
           className="min-w-11 min-h-11 inline-flex items-center justify-center rounded-md bg-m3-primary/10 text-m3-primary hover:bg-m3-primary/20 disabled:opacity-50 transition-colors cursor-pointer"
           aria-label={t("serviceDetailPage.addSong")}
         >
-          {isPending ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Plus className="w-4 h-4" />
-          )}
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
         </button>
       </div>
     </div>
@@ -376,8 +361,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
       canDrop: ({ source }) => {
         return (
           source.data.type === "library-song" ||
-          (source.data.type === "service-element" &&
-            source.data.elementId !== element.id)
+          (source.data.type === "service-element" && source.data.elementId !== element.id)
         );
       },
       onDragEnter: (args) => {
@@ -400,9 +384,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(
-    null,
-  );
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [localNote, setLocalNote] = useState(element.notes || "");
@@ -424,15 +406,10 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
     const menuWidth = 224;
     const menuHeight = 196;
     if (rect) {
-      const left = Math.max(
-        8,
-        Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8),
-      );
+      const left = Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8));
       const below = rect.bottom + 4;
       const top =
-        below + menuHeight > window.innerHeight
-          ? Math.max(8, rect.top - menuHeight - 4)
-          : below;
+        below + menuHeight > window.innerHeight ? Math.max(8, rect.top - menuHeight - 4) : below;
       setMenuPos({ top, left });
     }
     setMenuOpen(true);
@@ -474,10 +451,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
           <Icon className="w-4 h-4" />
         </div>
 
-        <div
-          className="min-w-0 flex-1 cursor-pointer select-none"
-          onClick={handleExpandToggle}
-        >
+        <div className="min-w-0 flex-1 cursor-pointer select-none" onClick={handleExpandToggle}>
           <p className="text-sm font-semibold truncate text-m3-text">
             {element.title || t("serviceDetailPage.untitledElement")}
           </p>
@@ -500,9 +474,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
             </p>
           )}
           {element.content && !isSong && (
-            <p className="text-xs text-m3-secondary line-clamp-1 mt-0.5">
-              {element.content}
-            </p>
+            <p className="text-xs text-m3-secondary line-clamp-1 mt-0.5">{element.content}</p>
           )}
           {showNotes && (isEditingNote || element.notes) && (
             <div className="flex items-center gap-1.5 mt-1 min-w-0">
@@ -543,9 +515,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
             onClick={handleExpandToggle}
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${isPreviewed ? "bg-m3-primary/10 text-m3-primary" : "text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10"}`}
             title={
-              isPreviewed
-                ? t("serviceDetailPage.closePreview")
-                : t("serviceDetailPage.openPreview")
+              isPreviewed ? t("serviceDetailPage.closePreview") : t("serviceDetailPage.openPreview")
             }
           >
             {isPreviewed ? (
@@ -569,10 +539,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
             </button>
             {menuOpen && menuPos && (
               <>
-                <div
-                  className="fixed inset-0 z-70"
-                  onClick={() => setMenuOpen(false)}
-                />
+                <div className="fixed inset-0 z-70" onClick={() => setMenuOpen(false)} />
                 <div
                   role="menu"
                   style={{ top: menuPos.top, left: menuPos.left }}
@@ -633,9 +600,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
                         className={SERVICE_MENU_ITEM}
                       >
                         {isRestoring ? (
-                          <Loader2
-                            className={SERVICE_MENU_ICON + " animate-spin"}
-                          />
+                          <Loader2 className={SERVICE_MENU_ICON + " animate-spin"} />
                         ) : (
                           <RotateCcw className={SERVICE_MENU_ICON} />
                         )}
@@ -717,8 +682,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
           <div className="border-t border-m3-border dark:border-m3-border/30 bg-m3-sidebar/10 dark:bg-black/10 p-4 flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <label className="text-label flex items-center gap-1">
-                <FileText className="w-3 h-3" />{" "}
-                {t("serviceDetailPage.elementNotes")}
+                <FileText className="w-3 h-3" /> {t("serviceDetailPage.elementNotes")}
               </label>
               {isEditingNote ? (
                 <div className="flex items-center gap-2">
@@ -757,8 +721,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
   );
 };
 
-type ModalType =
-  "welcome" | "scripture" | "message" | "announcement" | "custom" | null;
+type ModalType = "welcome" | "scripture" | "message" | "announcement" | "custom" | null;
 
 const ReadingStage: React.FC<{
   elements: ServiceElement[];
@@ -787,12 +750,8 @@ const ReadingStage: React.FC<{
     <div className="flex-1 flex flex-col md:flex-row min-h-0 min-w-0 bg-m3-card">
       <div className="md:w-72 lg:w-80 shrink-0 border-b md:border-b-0 md:border-r border-m3-border bg-m3-sidebar/30 flex flex-col min-h-0 max-h-36 md:max-h-none md:h-full">
         <div className="hidden md:flex items-center justify-between px-4 h-11 border-b border-m3-border shrink-0">
-          <span className="text-label">
-            {t("serviceDetailPage.serviceOrder")}
-          </span>
-          <span className="text-caption">
-            {t("serviceDetailPage.readingKeys")}
-          </span>
+          <span className="text-label">{t("serviceDetailPage.serviceOrder")}</span>
+          <span className="text-caption">{t("serviceDetailPage.readingKeys")}</span>
         </div>
         <div
           className="flex md:flex-col gap-1 overflow-x-auto md:overflow-y-auto min-h-0 flex-1 p-2 custom-scrollbar"
@@ -809,9 +768,7 @@ const ReadingStage: React.FC<{
                 aria-selected={selected}
                 onClick={() => onSelect(el)}
                 className={`shrink-0 md:w-full text-left rounded-md px-3 min-h-11 cursor-pointer transition-colors flex items-center gap-2 ${
-                  selected
-                    ? "bg-m3-primary/10 text-m3-primary"
-                    : "text-m3-text hover:bg-m3-hover"
+                  selected ? "bg-m3-primary/10 text-m3-primary" : "text-m3-text hover:bg-m3-hover"
                 }`}
               >
                 <span className="text-[11px] font-semibold tabular-nums text-m3-secondary w-4 shrink-0">
@@ -835,9 +792,7 @@ const ReadingStage: React.FC<{
           </div>
           {next && (
             <p className="text-caption shrink-0 max-w-[46%] text-right truncate">
-              <span className="font-semibold text-m3-text">
-                {t("serviceDetailPage.nextLabel")}
-              </span>
+              <span className="font-semibold text-m3-text">{t("serviceDetailPage.nextLabel")}</span>
               {" · "}
               {next.title}
             </p>
@@ -854,9 +809,7 @@ const ReadingStage: React.FC<{
           ) : (
             <div className="h-full min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-10 py-8 custom-scrollbar">
               {current.passage && (
-                <p className="text-sm font-semibold text-m3-primary mb-4">
-                  {current.passage}
-                </p>
+                <p className="text-sm font-semibold text-m3-primary mb-4">{current.passage}</p>
               )}
               <div className="font-lyric text-[1.35rem] sm:text-[1.6rem] leading-snug text-m3-text whitespace-pre-wrap max-w-2xl">
                 {current.content || t("serviceDetailPage.noContent")}
@@ -888,39 +841,25 @@ export const ServiceDetailPage: React.FC = () => {
   const [generalNotes, setGeneralNotes] = useState("");
   const stagedProposal = useServiceProposal(id);
   const [librarySearch, setLibrarySearch] = useState("");
-  const [pendingSongIds, setPendingSongIds] = useState<Record<string, number>>(
-    {},
-  );
+  const [pendingSongIds, setPendingSongIds] = useState<Record<string, number>>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [showLibrary, setShowLibrary] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia("(min-width: 768px)").matches
-      : true,
+    typeof window !== "undefined" ? window.matchMedia("(min-width: 768px)").matches : true,
   );
   const [mobilePane, setMobilePane] = useState<"order" | "library">("order");
   const [readingMode, setReadingMode] = useState(false);
   const readingRoleApplied = useRef(false);
-  const [previewElement, setPreviewElement] = useState<ServiceElement | null>(
-    null,
-  );
+  const [previewElement, setPreviewElement] = useState<ServiceElement | null>(null);
   const [isDropTargetActive, setIsDropTargetActive] = useState(false);
   const dropContainerRef = useRef<HTMLDivElement>(null);
 
   const [activeModal, setActiveModal] = useState<ModalType>(null);
-  const [editingElement, setEditingElement] = useState<ServiceElement | null>(
-    null,
-  );
+  const [editingElement, setEditingElement] = useState<ServiceElement | null>(null);
 
-  const allFolders = useMemo(
-    () => foldersQuery.data?.folders || [],
-    [foldersQuery.data?.folders],
-  );
+  const allFolders = useMemo(() => foldersQuery.data?.folders || [], [foldersQuery.data?.folders]);
 
-  const allSongs = useMemo(
-    () => songsQuery.data?.songs || [],
-    [songsQuery.data?.songs],
-  );
+  const allSongs = useMemo(() => songsQuery.data?.songs || [], [songsQuery.data?.songs]);
 
   const { searchableSongs } = useSearchableSongs(allFolders);
 
@@ -993,8 +932,7 @@ export const ServiceDetailPage: React.FC = () => {
 
   // Auto-save general notes after a short debounce when the org autoSave is on
   useEffect(() => {
-    if (!orgSettings.services.autoSave || !service || isEditingGeneralNotes)
-      return;
+    if (!orgSettings.services.autoSave || !service || isEditingGeneralNotes) return;
     const timer = setTimeout(async () => {
       if (generalNotes === (service.notes || "")) return;
       try {
@@ -1011,13 +949,7 @@ export const ServiceDetailPage: React.FC = () => {
       }
     }, 1500);
     return () => clearTimeout(timer);
-  }, [
-    generalNotes,
-    orgSettings.services.autoSave,
-    service,
-    isEditingGeneralNotes,
-    updateService,
-  ]);
+  }, [generalNotes, orgSettings.services.autoSave, service, isEditingGeneralNotes, updateService]);
 
   // Close the preview if the song it references is removed from the plan
   useEffect(() => {
@@ -1029,8 +961,7 @@ export const ServiceDetailPage: React.FC = () => {
   // Derived state
   const allAvailableSongs = songsQuery.data?.songs || [];
   const songCountById = elements.reduce<Record<string, number>>((acc, el) => {
-    if (el.type === "song" && el.songId)
-      acc[el.songId] = (acc[el.songId] || 0) + 1;
+    if (el.type === "song" && el.songId) acc[el.songId] = (acc[el.songId] || 0) + 1;
     return acc;
   }, {});
 
@@ -1044,10 +975,7 @@ export const ServiceDetailPage: React.FC = () => {
 
     let matchedSongIds: Set<string> | null = null;
     if (librarySearch.trim()) {
-      const liqeMatches = filterSearchableSongsWithLiqe(
-        searchableSongs,
-        librarySearch,
-      );
+      const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, librarySearch);
       matchedSongIds = new Set(liqeMatches.map((s) => s.id));
     }
 
@@ -1109,9 +1037,7 @@ export const ServiceDetailPage: React.FC = () => {
       const target = event.target as HTMLElement | null;
       if (
         target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.isContentEditable)
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
       ) {
         return;
       }
@@ -1128,8 +1054,7 @@ export const ServiceDetailPage: React.FC = () => {
       event.preventDefault();
       const currentIndex = list.findIndex((el) => el.id === previewElement?.id);
       const index = currentIndex < 0 ? 0 : currentIndex;
-      const delta =
-        event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
+      const delta = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
       const next = list[Math.min(list.length - 1, Math.max(0, index + delta))];
       if (next) setPreviewElement(next);
     };
@@ -1190,8 +1115,7 @@ export const ServiceDetailPage: React.FC = () => {
     } catch (error) {
       showToast(
         t("serviceDetailPage.serviceSaveError", {
-          error:
-            (error as { message?: string | null })?.message || "Save error",
+          error: (error as { message?: string | null })?.message || "Save error",
         }),
         "error",
       );
@@ -1215,9 +1139,7 @@ export const ServiceDetailPage: React.FC = () => {
 
   const handleNoteChange = async (elementId: string, note: string) => {
     await syncElements(
-      elementsRef.current.map((e) =>
-        e.id === elementId ? { ...e, notes: note } : e,
-      ),
+      elementsRef.current.map((e) => (e.id === elementId ? { ...e, notes: note } : e)),
     );
   };
 
@@ -1237,8 +1159,7 @@ export const ServiceDetailPage: React.FC = () => {
       } catch (error) {
         showToast(
           t("serviceDetailPage.serviceSaveError", {
-            error:
-              (error as { message?: string | null })?.message || "Sync error",
+            error: (error as { message?: string | null })?.message || "Sync error",
           }),
           "error",
         );
@@ -1246,10 +1167,7 @@ export const ServiceDetailPage: React.FC = () => {
     }
   };
 
-  const handleAddSongToService = async (
-    songId: string,
-    insertBeforeElementId?: string,
-  ) => {
+  const handleAddSongToService = async (songId: string, insertBeforeElementId?: string) => {
     setPendingSongIds((prev) => ({
       ...prev,
       [songId]: (prev[songId] || 0) + 1,
@@ -1266,16 +1184,12 @@ export const ServiceDetailPage: React.FC = () => {
         songId,
         content: song?.artist || t("serviceDetailPage.noComposer"),
         position: previousElements.length,
-        duration:
-          Number(parsed.metadata.duration || "0") ||
-          orgSettings.services.songDuration,
+        duration: Number(parsed.metadata.duration || "0") || orgSettings.services.songDuration,
       };
 
       const nextElements = [...previousElements];
       if (insertBeforeElementId) {
-        const idx = nextElements.findIndex(
-          (e) => e.id === insertBeforeElementId,
-        );
+        const idx = nextElements.findIndex((e) => e.id === insertBeforeElementId);
         if (idx !== -1) nextElements.splice(idx, 0, newElem);
         else nextElements.push(newElem);
       } else {
@@ -1336,10 +1250,7 @@ export const ServiceDetailPage: React.FC = () => {
       setActiveModal(null);
       setEditingElement(null);
     } catch {
-      showToast(
-        t("serviceDetailPage.serviceSaveError", { error: "Save error" }),
-        "error",
-      );
+      showToast(t("serviceDetailPage.serviceSaveError", { error: "Save error" }), "error");
     }
   };
 
@@ -1350,17 +1261,9 @@ export const ServiceDetailPage: React.FC = () => {
 
   const openEditModal = (element: ServiceElement) => {
     setEditingElement(element);
-    const knownTypes: ModalType[] = [
-      "welcome",
-      "scripture",
-      "message",
-      "announcement",
-      "custom",
-    ];
+    const knownTypes: ModalType[] = ["welcome", "scripture", "message", "announcement", "custom"];
     setActiveModal(
-      knownTypes.includes(element.type as ModalType)
-        ? (element.type as ModalType)
-        : "custom",
+      knownTypes.includes(element.type as ModalType) ? (element.type as ModalType) : "custom",
     );
   };
 
@@ -1401,12 +1304,8 @@ export const ServiceDetailPage: React.FC = () => {
             const targetId = targetData.elementId as string;
             if (sourceId === targetId) return;
 
-            const oldIndex = currentElements.findIndex(
-              (e) => e.id === sourceId,
-            );
-            const targetIndex = currentElements.findIndex(
-              (e) => e.id === targetId,
-            );
+            const oldIndex = currentElements.findIndex((e) => e.id === sourceId);
+            const targetIndex = currentElements.findIndex((e) => e.id === targetId);
             if (oldIndex === -1 || targetIndex === -1) return;
 
             const edge = extractClosestEdge(targetData);
@@ -1441,13 +1340,8 @@ export const ServiceDetailPage: React.FC = () => {
             if (edge === "top") {
               insertBeforeId = targetId;
             } else {
-              const targetIndex = currentElements.findIndex(
-                (e) => e.id === targetId,
-              );
-              if (
-                targetIndex !== -1 &&
-                targetIndex + 1 < currentElements.length
-              ) {
+              const targetIndex = currentElements.findIndex((e) => e.id === targetId);
+              if (targetIndex !== -1 && targetIndex + 1 < currentElements.length) {
                 insertBeforeId = currentElements[targetIndex + 1].id;
               }
             }
@@ -1506,9 +1400,7 @@ export const ServiceDetailPage: React.FC = () => {
   if (isError || !service)
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4 p-12 text-center">
-        <h2 className="text-lg font-bold text-m3-text">
-          {t("serviceDetailPage.serviceNotFound")}
-        </h2>
+        <h2 className="text-lg font-bold text-m3-text">{t("serviceDetailPage.serviceNotFound")}</h2>
         <Button
           variant="primary"
           icon={<ArrowLeft className="w-4 h-4" />}
@@ -1538,9 +1430,7 @@ export const ServiceDetailPage: React.FC = () => {
             <h1 className="text-sm font-bold text-m3-text flex items-center gap-2">
               {service.name}
             </h1>
-            <p className="text-[10px] text-m3-secondary">
-              {t("serviceDetailPage.servicePlan")}
-            </p>
+            <p className="text-[10px] text-m3-secondary">{t("serviceDetailPage.servicePlan")}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -1556,9 +1446,7 @@ export const ServiceDetailPage: React.FC = () => {
                 setPreviewElement(null);
               }}
               className={`min-h-8 px-2.5 text-xs font-semibold rounded-sm cursor-pointer transition-colors ${
-                readingMode
-                  ? "text-m3-secondary hover:text-m3-text"
-                  : "bg-m3-primary text-white"
+                readingMode ? "text-m3-secondary hover:text-m3-text" : "bg-m3-primary text-white"
               }`}
               aria-pressed={!readingMode}
             >
@@ -1568,9 +1456,7 @@ export const ServiceDetailPage: React.FC = () => {
               type="button"
               onClick={enterReadingMode}
               className={`min-h-8 px-2.5 text-xs font-semibold rounded-sm cursor-pointer transition-colors ${
-                readingMode
-                  ? "bg-m3-primary text-white"
-                  : "text-m3-secondary hover:text-m3-text"
+                readingMode ? "bg-m3-primary text-white" : "text-m3-secondary hover:text-m3-text"
               }`}
               aria-pressed={readingMode}
               title={t("serviceDetailPage.readingModeHint")}
@@ -1606,19 +1492,14 @@ export const ServiceDetailPage: React.FC = () => {
                 )
               }
             >
-              {isSavingService
-                ? t("serviceDetailPage.savingService")
-                : t("common.save")}
+              {isSavingService ? t("serviceDetailPage.savingService") : t("common.save")}
             </Button>
           )}
           <div
             className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-m3-card border border-m3-border/60 shadow-sm"
             title={syncMeta.label}
           >
-            <span
-              className={`w-2 h-2 rounded-full shrink-0 ${syncMeta.dot}`}
-              aria-hidden="true"
-            />
+            <span className={`w-2 h-2 rounded-full shrink-0 ${syncMeta.dot}`} aria-hidden="true" />
             <span className="text-[11px] font-semibold text-m3-secondary hidden sm:inline">
               {syncMeta.label}
             </span>
@@ -1804,11 +1685,7 @@ export const ServiceDetailPage: React.FC = () => {
               <div
                 className={`flex-1 flex flex-col bg-m3-card overflow-hidden min-h-0
         transition-all duration-300 ease-out
-        ${
-          !showLibrary && !previewElement
-            ? "rounded-xl border border-m3-border shadow-sm"
-            : ""
-        }`}
+        ${!showLibrary && !previewElement ? "rounded-xl border border-m3-border shadow-sm" : ""}`}
               >
                 <div className="flex flex-wrap items-center justify-between px-5 py-3 border-b border-m3-border shrink-0 bg-m3-sidebar/30 gap-3">
                   <div className="flex items-center gap-3">
@@ -1869,9 +1746,7 @@ export const ServiceDetailPage: React.FC = () => {
                           rows={1}
                           value={generalNotes}
                           onChange={(e) => setGeneralNotes(e.target.value)}
-                          placeholder={t(
-                            "serviceDetailPage.generalNotesPlaceholder",
-                          )}
+                          placeholder={t("serviceDetailPage.generalNotesPlaceholder")}
                           className="flex-1 text-xs rounded-lg border border-m3-border p-2 bg-m3-card focus:outline-none focus:ring-1 focus:ring-m3-primary text-m3-text resize-y min-h-9"
                           autoFocus
                         />
@@ -1895,8 +1770,7 @@ export const ServiceDetailPage: React.FC = () => {
                           }}
                           className="h-9 text-xs shrink-0"
                         >
-                          <Save className="w-3.5 h-3.5 mr-1" />{" "}
-                          {t("common.save")}
+                          <Save className="w-3.5 h-3.5 mr-1" /> {t("common.save")}
                         </Button>
                       </div>
                     ) : (
@@ -1997,9 +1871,7 @@ export const ServiceDetailPage: React.FC = () => {
                         <div className="flex items-center justify-between gap-2">
                           <h2 className="text-sm font-bold text-m3-text flex items-center gap-2 min-w-0">
                             <Icon className="w-4 h-4 text-m3-primary shrink-0" />
-                            <span className="truncate">
-                              {previewContent.title}
-                            </span>
+                            <span className="truncate">{previewContent.title}</span>
                           </h2>
                           <button
                             type="button"
@@ -2021,12 +1893,11 @@ export const ServiceDetailPage: React.FC = () => {
                           >
                             {badge.label}
                           </span>
-                          {previewContent.type === "song" &&
-                            previewContent.content && (
-                              <p className="text-xs text-m3-secondary truncate">
-                                {previewContent.content}
-                              </p>
-                            )}
+                          {previewContent.type === "song" && previewContent.content && (
+                            <p className="text-xs text-m3-secondary truncate">
+                              {previewContent.content}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="flex-1 overflow-hidden min-h-0">
@@ -2048,8 +1919,7 @@ export const ServiceDetailPage: React.FC = () => {
                               </div>
                             )}
                             <div className="font-lyric text-[1.25rem] sm:text-[1.5rem] leading-snug text-m3-text whitespace-pre-wrap max-w-2xl">
-                              {previewContent.content ||
-                                t("serviceDetailPage.noContent")}
+                              {previewContent.content || t("serviceDetailPage.noContent")}
                             </div>
                           </div>
                         )}

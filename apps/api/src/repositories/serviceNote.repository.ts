@@ -26,9 +26,7 @@ export type NoteListFilter = {
  * Notes the caller is allowed to see: every shared note, plus their own
  * private notes. Other people's private notes are excluded entirely.
  */
-export function visibleNotesWhere(
-  filter: NoteListFilter,
-): Prisma.ServiceNoteWhereInput {
+export function visibleNotesWhere(filter: NoteListFilter): Prisma.ServiceNoteWhereInput {
   const where: Prisma.ServiceNoteWhereInput = {
     serviceId: filter.serviceId,
     OR: [{ private: false }, { authorId: filter.userId }],

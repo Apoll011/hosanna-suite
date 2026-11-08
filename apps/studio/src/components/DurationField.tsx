@@ -4,9 +4,7 @@ import React from "react";
 // ─── Pure helpers (exported for reuse) ───────────────────────────────────────
 
 export function secondsToDurationInput(seconds?: number): string {
-  const safe = Number.isFinite(seconds)
-    ? Math.max(0, Math.floor(seconds || 0))
-    : 0;
+  const safe = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds || 0)) : 0;
   const mm = Math.floor(safe / 60);
   const ss = safe % 60;
   return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
@@ -101,9 +99,7 @@ export const DurationField: React.FC<DurationFieldProps> = ({
           {icon}
           {resolvedLabel}
         </label>
-        <span
-          className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${badgeClass}`}
-        >
+        <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${badgeClass}`}>
           {formatHumanDuration(seconds, t)}
         </span>
       </div>

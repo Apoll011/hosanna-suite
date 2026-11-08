@@ -2,11 +2,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { formatChordPro } from "@hosanna/chordpro/formatter";
-import {
-  convertToChordProDetailed,
-  lintChordPro,
-  parseChordPro,
-} from "@hosanna/chordpro/parser";
+import { convertToChordProDetailed, lintChordPro, parseChordPro } from "@hosanna/chordpro/parser";
 import type { AuthInfo } from "@modelcontextprotocol/server";
 import {
   APICallError,
@@ -38,10 +34,7 @@ import {
   services as serviceService,
   songs as songService,
 } from "../mcp/context.js";
-import {
-  explainChordProDirective,
-  getChordProCapabilities,
-} from "../mcp/lib/capabilities.js";
+import { explainChordProDirective, getChordProCapabilities } from "../mcp/lib/capabilities.js";
 import {
   DOC_RESOURCES,
   docsAccessReport,
@@ -57,11 +50,7 @@ import {
   mirroredMetadataWarnings,
   validateChordProContent,
 } from "../mcp/lib/chordproGate.js";
-import {
-  clipContent,
-  FULL_CONTENT_MAX,
-  SEARCH_CONTENT_MAX,
-} from "../mcp/lib/contentClip.js";
+import { clipContent, FULL_CONTENT_MAX, SEARCH_CONTENT_MAX } from "../mcp/lib/contentClip.js";
 import { summarizeDiff } from "../mcp/lib/diff.js";
 import { withClientRequestId } from "../mcp/lib/idempotency.js";
 import {
@@ -79,16 +68,10 @@ import {
   updateCollection,
   updateFolder,
 } from "../mcp/lib/libraryCrud.js";
-import {
-  FOLDER_SONGS_MAX_LIMIT,
-  listSongsInFolder,
-} from "../mcp/lib/folderSongs.js";
+import { FOLDER_SONGS_MAX_LIMIT, listSongsInFolder } from "../mcp/lib/folderSongs.js";
 import { searchMusicBrainzRecordings } from "../mcp/lib/musicbrainz.js";
 import { propagateVerseChords } from "../mcp/lib/propagateChords.js";
-import {
-  serviceElementsSchema,
-  validateServicePlan,
-} from "../mcp/lib/serviceElements.js";
+import { serviceElementsSchema, validateServicePlan } from "../mcp/lib/serviceElements.js";
 import { mapToolError } from "../mcp/lib/toolErrors.js";
 import { transposeChordProSource } from "../mcp/lib/transposeSource.js";
 import {
@@ -111,11 +94,7 @@ import {
   studioNavigateDirective,
   studioPrintDirective,
 } from "../mcp/lib/studioActions.js";
-import {
-  FOLDER_COLOR_IDS,
-  FOLDER_ICON_IDS,
-  STUDIO_UI_CATALOG,
-} from "../mcp/lib/studioUi.js";
+import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS, STUDIO_UI_CATALOG } from "../mcp/lib/studioUi.js";
 import { searchWeb } from "../mcp/lib/webSearch.js";
 import { searchYouTube } from "../mcp/lib/youtubeSearch.js";
 import { clockContextPromptBlock } from "../lib/clockContext.js";
@@ -124,10 +103,7 @@ import { AppError } from "../utils/errors.js";
 const folderIconSchema = z.enum(FOLDER_ICON_IDS);
 const folderColorSchema = z.enum(FOLDER_COLOR_IDS);
 import type { AiProvider } from "./orgAiConfig.service.js";
-import {
-  AI_PROVIDER_DEFAULT_BASE_URL,
-  OrgAiConfigService,
-} from "./orgAiConfig.service.js";
+import { AI_PROVIDER_DEFAULT_BASE_URL, OrgAiConfigService } from "./orgAiConfig.service.js";
 
 export type ChatPageContext = {
   kind?:
@@ -180,8 +156,7 @@ function buildModel(
     case "openai_compatible":
     case "openai":
     default: {
-      const url =
-        baseUrl || AI_PROVIDER_DEFAULT_BASE_URL[provider] || undefined;
+      const url = baseUrl || AI_PROVIDER_DEFAULT_BASE_URL[provider] || undefined;
       const client = createOpenAI({
         apiKey,
         ...(url ? { baseURL: url } : {}),
@@ -200,11 +175,7 @@ function textResult(data: unknown) {
 /** Studio-only: stage a destructive action for the Confirm button (does not mutate). */
 function deleteConfirmation(opts: {
   action:
-    | "delete_song"
-    | "delete_service"
-    | "delete_folder"
-    | "delete_collection"
-    | "delete_agenda";
+    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
   id: string;
   title: string;
   detail?: string;
@@ -257,9 +228,7 @@ function buildHosannaTools(
 ) {
   const memory = opts?.memory;
   const nativeWebAuth = opts?.nativeWebAuth ?? null;
-  const webBackend = nativeWebAuth
-    ? `native(${nativeWebAuth.provider})→duckduckgo`
-    : "duckduckgo";
+  const webBackend = nativeWebAuth ? `native(${nativeWebAuth.provider})→duckduckgo` : "duckduckgo";
   const memoryTools = memory
     ? {
         memory_list: tool({
@@ -422,19 +391,8 @@ function buildHosannaTools(
               "delete",
               "restore",
             ],
-            org: [
-              "me",
-              "members_list",
-              "members_get",
-              "members_resolve",
-              "org_get",
-            ],
-            studioOnly: [
-              "studio_sync",
-              "studio_navigate",
-              "studio_generate_pdf",
-              "studio_search",
-            ],
+            org: ["me", "members_list", "members_get", "members_resolve", "org_get"],
+            studioOnly: ["studio_sync", "studio_navigate", "studio_generate_pdf", "studio_search"],
             library: [
               "folders CRUD+restore",
               "folders_create_many / folders_update_many / collections_update_many (batch)",
@@ -450,8 +408,7 @@ function buildHosannaTools(
               "musicbrainz",
               "youtube",
               `web(${webBackend})`,
-              ...(nativeWebAuth &&
-              providerSupportsNativeFetch(nativeWebAuth.provider)
+              ...(nativeWebAuth && providerSupportsNativeFetch(nativeWebAuth.provider)
                 ? ["web_fetch"]
                 : []),
             ],
@@ -468,8 +425,7 @@ function buildHosannaTools(
         }),
     }),
     hosanna_permissions: tool({
-      description:
-        "Current user role and org entitlement. Prefer `me` for name/email/memberId.",
+      description: "Current user role and org entitlement. Prefer `me` for name/email/memberId.",
       inputSchema: z.object({}),
       execute: async () => {
         const ctx = getMcpContext(authInfo);
@@ -513,8 +469,7 @@ function buildHosannaTools(
         role: z.string().optional(),
         limit: z.number().int().positive().max(200).optional(),
       }),
-      execute: async (args) =>
-        textResult(await listMembers(requireMcpContext(authInfo), args)),
+      execute: async (args) => textResult(await listMembers(requireMcpContext(authInfo), args)),
     }),
     members_get: tool({
       description: "Get one member by memberId, userId, or name.",
@@ -523,8 +478,7 @@ function buildHosannaTools(
         userId: z.string().optional(),
         name: z.string().optional(),
       }),
-      execute: async (args) =>
-        textResult(await getMember(requireMcpContext(authInfo), args)),
+      execute: async (args) => textResult(await getMember(requireMcpContext(authInfo), args)),
     }),
     members_resolve: tool({
       description:
@@ -547,8 +501,7 @@ function buildHosannaTools(
       description:
         "Active org profile + responsibilityCategories (leader, musicians, preacher, …). No org switch.",
       inputSchema: z.object({}),
-      execute: async () =>
-        textResult(await getOrganization(requireMcpContext(authInfo))),
+      execute: async () => textResult(await getOrganization(requireMcpContext(authInfo))),
     }),
     hosanna_skills_list: tool({
       description:
@@ -617,11 +570,7 @@ function buildHosannaTools(
           return textResult({
             uri: trimmed,
             mimeType: "application/json",
-            text: JSON.stringify(
-              { resources: listResources(), skills: SKILL_NAMES },
-              null,
-              2,
-            ),
+            text: JSON.stringify({ resources: listResources(), skills: SKILL_NAMES }, null, 2),
           });
         }
         const entry = DOC_RESOURCES.find((r) => r.uri === trimmed);
@@ -663,8 +612,7 @@ function buildHosannaTools(
         color: folderColorSchema.optional(),
         icon: folderIconSchema.optional(),
       }),
-      execute: async (args) =>
-        textResult(await createFolder(requireMcpContext(authInfo), args)),
+      execute: async (args) => textResult(await createFolder(requireMcpContext(authInfo), args)),
     }),
     folders_update: tool({
       description:
@@ -677,8 +625,7 @@ function buildHosannaTools(
         color: folderColorSchema.optional(),
         icon: folderIconSchema.optional(),
       }),
-      execute: async (args) =>
-        textResult(await updateFolder(requireMcpContext(authInfo), args)),
+      execute: async (args) => textResult(await updateFolder(requireMcpContext(authInfo), args)),
     }),
     folders_create_many: tool({
       description: `Create up to ${MAX_BATCH} folders in ONE call (prefer this over repeated folders_create). Same color/icon rules as folders_create. Per-item results; Studio refreshes automatically.`,
@@ -741,9 +688,7 @@ function buildHosannaTools(
       }),
       execute: async ({ updates }) => {
         const ctx = requireMcpContext(authInfo);
-        return textResult(
-          await runBatch(updates, (u) => updateCollection(ctx, u)),
-        );
+        return textResult(await runBatch(updates, (u) => updateCollection(ctx, u)));
       },
     }),
     suggest_followups: tool({
@@ -762,10 +707,7 @@ function buildHosannaTools(
       description:
         "Studio-only: ask the open Studio tab to pull replication now so explorer/lists show server changes immediately. Call after folders/collections/songs/services mutations. Not needed on MCP hosts.",
       inputSchema: z.object({
-        reason: z
-          .string()
-          .optional()
-          .describe("Short why, e.g. after_folder_update"),
+        reason: z.string().optional().describe("Short why, e.g. after_folder_update"),
       }),
       execute: async ({ reason }) =>
         textResult({
@@ -782,15 +724,11 @@ function buildHosannaTools(
         id: z
           .string()
           .optional()
-          .describe(
-            "Entity id when kind is song/service/folder/collection/agenda",
-          ),
+          .describe("Entity id when kind is song/service/folder/collection/agenda"),
         route: z
           .string()
           .optional()
-          .describe(
-            "Optional absolute path under the org slug when kind=route",
-          ),
+          .describe("Optional absolute path under the org slug when kind=route"),
         reason: z.string().optional(),
       }),
       execute: async (args) =>
@@ -808,10 +746,7 @@ function buildHosannaTools(
         "Studio-only: open the print/PDF modal for song(s), service(s), folder, collection, or agenda event. Resolves ids in the open Studio tab.",
       inputSchema: z.object({
         kind: z.enum(STUDIO_PRINT_KINDS),
-        ids: z
-          .array(z.string().min(1))
-          .min(1)
-          .describe("One or more entity ids to print"),
+        ids: z.array(z.string().min(1)).min(1).describe("One or more entity ids to print"),
         title: z.string().optional(),
         options: z
           .object({
@@ -893,9 +828,7 @@ function buildHosannaTools(
             includeArchived: args.includeArchivedServices ?? true,
           });
           services = services.filter(
-            (s) =>
-              s.name.toLowerCase().includes(q) ||
-              (s.notes ?? "").toLowerCase().includes(q),
+            (s) => s.name.toLowerCase().includes(q) || (s.notes ?? "").toLowerCase().includes(q),
           );
           for (const s of services.slice(0, limit)) {
             hits.push({
@@ -911,9 +844,7 @@ function buildHosannaTools(
         if (types.has("folder")) {
           requirePermission(ctx, "folder.access");
           const { folders } = await listFolders(ctx);
-          for (const f of folders
-            .filter((f) => f.name.toLowerCase().includes(q))
-            .slice(0, limit)) {
+          for (const f of folders.filter((f) => f.name.toLowerCase().includes(q)).slice(0, limit)) {
             hits.push({ type: "folder", id: f.id, title: f.name });
           }
         }
@@ -924,8 +855,7 @@ function buildHosannaTools(
           for (const c of collections
             .filter(
               (c) =>
-                c.name.toLowerCase().includes(q) ||
-                (c.description ?? "").toLowerCase().includes(q),
+                c.name.toLowerCase().includes(q) || (c.description ?? "").toLowerCase().includes(q),
             )
             .slice(0, limit)) {
             hits.push({
@@ -1004,8 +934,7 @@ function buildHosannaTools(
       },
     }),
     trash_list: tool({
-      description:
-        "List soft-deleted songs, folders, and services. Paginated per type.",
+      description: "List soft-deleted songs, folders, and services. Paginated per type.",
       inputSchema: z.object({
         page: z.number().int().positive().optional(),
         limit: z.number().int().positive().max(50).optional(),
@@ -1070,8 +999,7 @@ function buildHosannaTools(
     collections_list: tool({
       description: "List organization collections.",
       inputSchema: z.object({}),
-      execute: async () =>
-        textResult(await listCollections(requireMcpContext(authInfo))),
+      execute: async () => textResult(await listCollections(requireMcpContext(authInfo))),
     }),
     collections_get: tool({
       description:
@@ -1154,9 +1082,7 @@ function buildHosannaTools(
         songIds: z.array(z.string()).min(1),
       }),
       execute: async (args) =>
-        textResult(
-          await collectionRemoveSongs(requireMcpContext(authInfo), args),
-        ),
+        textResult(await collectionRemoveSongs(requireMcpContext(authInfo), args)),
     }),
     agenda_list: tool({
       description: "List upcoming agenda events.",
@@ -1164,8 +1090,7 @@ function buildHosannaTools(
         from: z.string().optional(),
         limit: z.number().int().min(1).max(50).optional(),
       }),
-      execute: async (args) =>
-        textResult(await listAgenda(requireMcpContext(authInfo), args)),
+      execute: async (args) => textResult(await listAgenda(requireMcpContext(authInfo), args)),
     }),
     agenda_get: tool({
       description: "Get a single agenda event.",
@@ -1180,10 +1105,7 @@ function buildHosannaTools(
         title: z.string().min(1),
         date: z.string().min(1).describe("YYYY-MM-DD org-local"),
         time: z.string().min(1).describe("HH:mm 24h org-local"),
-        type: z
-          .string()
-          .min(1)
-          .describe('Free string e.g. "Culto Dominical", "Ensaio"'),
+        type: z.string().min(1).describe('Free string e.g. "Culto Dominical", "Ensaio"'),
         durationMinutes: z.number().int().positive().optional(),
         location: z.string().optional(),
         notes: z.string().optional(),
@@ -1272,8 +1194,7 @@ function buildHosannaTools(
         query: z.string().optional(),
         limit: z.number().int().min(1).max(10).optional(),
       }),
-      execute: async (args) =>
-        textResult(await searchMusicBrainzRecordings(args)),
+      execute: async (args) => textResult(await searchMusicBrainzRecordings(args)),
     }),
     metadata_youtube_search: tool({
       description:
@@ -1317,24 +1238,21 @@ function buildHosannaTools(
             inputSchema: z.object({
               url: z.string().url().max(8192),
             }),
-            execute: async ({ url }) =>
-              textResult(await nativeWebFetch(nativeWebAuth, url)),
+            execute: async ({ url }) => textResult(await nativeWebFetch(nativeWebAuth, url)),
           }),
         }
       : {}),
     chordpro_validate: tool({
       description: "Lint and parse ChordPro text.",
       inputSchema: z.object({ content: z.string() }),
-      execute: async ({ content }) =>
-        textResult(validateChordProContent(content)),
+      execute: async ({ content }) => textResult(validateChordProContent(content)),
     }),
     chordpro_propagate_chords: tool({
       description:
         "Copy chord markers from the first chorded verse onto later verses, anchored to words/syllables (existing chords are untouched; identical choruses copied exactly). Does not invent chords. Returns a DRAFT (not staged): read `review`/`skipped`, fix lines marked `check` yourself, then submit with songs_propose_edit.",
       inputSchema: z.object({ content: z.string() }),
       execute: async ({ content }) => {
-        const { content: draftContent, ...report } =
-          propagateVerseChords(content);
+        const { content: draftContent, ...report } = propagateVerseChords(content);
         return textResult({
           draft: { content: draftContent },
           ...report,
@@ -1365,8 +1283,7 @@ function buildHosannaTools(
       },
     }),
     chordpro_format: tool({
-      description:
-        "Normalize ChordPro formatting. Returns a proposal for the Studio editor.",
+      description: "Normalize ChordPro formatting. Returns a proposal for the Studio editor.",
       inputSchema: z.object({ content: z.string() }),
       execute: async ({ content }) => {
         const result = formatChordPro(content, {
@@ -1436,9 +1353,7 @@ function buildHosannaTools(
       inputSchema: z.object({ name: z.string().optional() }),
       execute: async ({ name }) => {
         if (name) {
-          return textResult(
-            explainChordProDirective(name) ?? { error: `Unknown: ${name}` },
-          );
+          return textResult(explainChordProDirective(name) ?? { error: `Unknown: ${name}` });
         }
         return textResult(getChordProCapabilities());
       },
@@ -1508,17 +1423,10 @@ function buildHosannaTools(
       inputSchema: z.object({
         folderId: z.string().nullable().optional(),
         recursive: z.boolean().optional(),
-        sortBy: z
-          .enum(["title", "artist", "updatedAt", "song_number"])
-          .optional(),
+        sortBy: z.enum(["title", "artist", "updatedAt", "song_number"]).optional(),
         sortOrder: z.enum(["asc", "desc"]).optional(),
         page: z.number().int().positive().optional(),
-        limit: z
-          .number()
-          .int()
-          .positive()
-          .max(FOLDER_SONGS_MAX_LIMIT)
-          .optional(),
+        limit: z.number().int().positive().max(FOLDER_SONGS_MAX_LIMIT).optional(),
       }),
       execute: async (args) =>
         textResult(await listSongsInFolder(requireMcpContext(authInfo), args)),
@@ -1683,8 +1591,7 @@ function buildHosannaTools(
       },
     }),
     songs_propose_edit: tool({
-      description:
-        "Propose an edit to an existing song (not saved). Studio stages Accept/Decline.",
+      description: "Propose an edit to an existing song (not saved). Studio stages Accept/Decline.",
       inputSchema: z.object({
         songId: z.string(),
         content: z.string().optional(),
@@ -1786,9 +1693,7 @@ function buildHosannaTools(
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.update");
         const current = await songService(ctx).getById(songId);
-        const { content: draftContent, ...report } = propagateVerseChords(
-          current.content,
-        );
+        const { content: draftContent, ...report } = propagateVerseChords(current.content);
         return textResult({
           draft: {
             id: current.id,
@@ -1834,18 +1739,12 @@ function buildHosannaTools(
                 song_number: args.song_number,
                 content: args.content,
               });
-              if (
-                (!validation.ok || metadataWarnings.length > 0) &&
-                !args.allowInvalid
-              ) {
-                return mapToolError(
-                  new Error(metadataWarnings[0] ?? "Validation failed"),
-                  {
-                    current: {
-                      validation: { ...validation, metadataWarnings },
-                    },
+              if ((!validation.ok || metadataWarnings.length > 0) && !args.allowInvalid) {
+                return mapToolError(new Error(metadataWarnings[0] ?? "Validation failed"), {
+                  current: {
+                    validation: { ...validation, metadataWarnings },
                   },
-                );
+                });
               }
               if (args.mode === "create") {
                 requirePermission(ctx, "song.create");
@@ -1914,8 +1813,7 @@ function buildHosannaTools(
       },
     }),
     songs_move: tool({
-      description:
-        "Move a song to another folder (or root). Requires updatedAt.",
+      description: "Move a song to another folder (or root). Requires updatedAt.",
       inputSchema: z.object({
         songId: z.string(),
         updatedAt: z.string(),
@@ -1926,11 +1824,7 @@ function buildHosannaTools(
         requirePermission(ctx, "song.update");
         requireWriteEntitlement(ctx);
         try {
-          const moved = await songService(ctx).move(
-            songId,
-            new Date(updatedAt),
-            folderId,
-          );
+          const moved = await songService(ctx).move(songId, new Date(updatedAt), folderId);
           return textResult({
             moved: true,
             song: {
@@ -1953,9 +1847,7 @@ function buildHosannaTools(
           } catch {
             /* ignore */
           }
-          return textResult(
-            mapToolError(error, { current, field: "updatedAt" }),
-          );
+          return textResult(mapToolError(error, { current, field: "updatedAt" }));
         }
       },
     }),
@@ -2016,9 +1908,7 @@ function buildHosannaTools(
         if (args.search?.trim()) {
           const q = args.search.toLowerCase();
           list = list.filter(
-            (s) =>
-              s.name.toLowerCase().includes(q) ||
-              (s.notes ?? "").toLowerCase().includes(q),
+            (s) => s.name.toLowerCase().includes(q) || (s.notes ?? "").toLowerCase().includes(q),
           );
         }
         return textResult({
@@ -2040,15 +1930,10 @@ function buildHosannaTools(
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.access");
         const service = await serviceService(ctx).getByIdForMcp(serviceId);
-        const validation = await validateServicePlan(
-          service.elements,
-          songService(ctx),
-        );
+        const validation = await validateServicePlan(service.elements, songService(ctx));
         let expandedSongs: unknown[] | undefined;
         if (expandSongs) {
-          const rawElements = Array.isArray(service.elements)
-            ? service.elements
-            : [];
+          const rawElements = Array.isArray(service.elements) ? service.elements : [];
           const ids = [
             ...new Set(
               rawElements
@@ -2085,14 +1970,10 @@ function buildHosannaTools(
         const missingFromExpand = (expandedSongs ?? [])
           .filter(
             (s): s is { id: string; missing: true } =>
-              Boolean(s) &&
-              typeof s === "object" &&
-              (s as { missing?: boolean }).missing === true,
+              Boolean(s) && typeof s === "object" && (s as { missing?: boolean }).missing === true,
           )
           .map((s) => s.id);
-        const missingSongIds = [
-          ...new Set([...validation.missingSongIds, ...missingFromExpand]),
-        ];
+        const missingSongIds = [...new Set([...validation.missingSongIds, ...missingFromExpand])];
         return textResult({
           service,
           validation: {
@@ -2114,9 +1995,7 @@ function buildHosannaTools(
       execute: async ({ elements }) => {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.access");
-        return textResult(
-          await validateServicePlan(elements, songService(ctx)),
-        );
+        return textResult(await validateServicePlan(elements, songService(ctx)));
       },
     }),
     services_plan_suggest: tool({
@@ -2198,12 +2077,8 @@ function buildHosannaTools(
       execute: async (args) => {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.update");
-        const current = await serviceService(ctx).getByIdSerialized(
-          args.serviceId,
-        );
-        const elements =
-          args.elements ??
-          (Array.isArray(current.elements) ? current.elements : []);
+        const current = await serviceService(ctx).getByIdSerialized(args.serviceId);
+        const elements = args.elements ?? (Array.isArray(current.elements) ? current.elements : []);
         return textResult({
           proposal: {
             id: current.id,
@@ -2220,8 +2095,7 @@ function buildHosannaTools(
       },
     }),
     services_save: tool({
-      description:
-        "Persist service create/update after explicit approval. Updates need updatedAt.",
+      description: "Persist service create/update after explicit approval. Updates need updatedAt.",
       inputSchema: z.object({
         mode: z.enum(["create", "update"]),
         serviceId: z.string().optional(),
@@ -2244,10 +2118,7 @@ function buildHosannaTools(
             clientRequestId,
             async () => {
               const elements = args.elements ?? [];
-              const validation = await validateServicePlan(
-                elements,
-                songService(ctx),
-              );
+              const validation = await validateServicePlan(elements, songService(ctx));
               if (!validation.ok && !args.allowInvalid) {
                 return {
                   error: true,
@@ -2269,9 +2140,7 @@ function buildHosannaTools(
               }
               requirePermission(ctx, "service.update");
               if (!args.serviceId || !args.updatedAt) {
-                return mapToolError(
-                  new Error("serviceId and updatedAt required"),
-                );
+                return mapToolError(new Error("serviceId and updatedAt required"));
               }
               try {
                 const updated = await serviceService(ctx).update(
@@ -2289,9 +2158,7 @@ function buildHosannaTools(
               } catch (error) {
                 let current: unknown;
                 try {
-                  current = await serviceService(ctx).getByIdSerialized(
-                    args.serviceId,
-                  );
+                  current = await serviceService(ctx).getByIdSerialized(args.serviceId);
                 } catch {
                   /* ignore */
                 }
@@ -2383,9 +2250,7 @@ const STUDIO_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosa
 
 function contextBlock(page?: ChatPageContext): string {
   if (!page) return "";
-  const excerpt = page.contentExcerpt
-    ? page.contentExcerpt.slice(0, 12_000)
-    : "";
+  const excerpt = page.contentExcerpt ? page.contentExcerpt.slice(0, 12_000) : "";
   return `
 
 ## Current Studio page context
@@ -2476,12 +2341,7 @@ export class AiChatService {
     abortSignal?: AbortSignal;
   }) {
     const runtime = await this.config.getRuntimeConfig(opts.orgId);
-    const model = buildModel(
-      runtime.provider,
-      runtime.model,
-      runtime.apiKey,
-      runtime.baseUrl,
-    );
+    const model = buildModel(runtime.provider, runtime.model, runtime.apiKey, runtime.baseUrl);
     const nativeWebAuth = nativeWebAuthFromRuntime(runtime);
     const chatUserId = getMcpContext(opts.authInfo)?.user?.id;
     const memoryEntries = runtime.memoryEnabled
@@ -2528,10 +2388,7 @@ export class AiChatService {
           budget.used = steps.reduce((n, s) => n + s.toolCalls.length, 0);
           const notice = toolBudgetNotice(budget.used, budget.max);
           if (!notice) return undefined;
-          const base =
-            typeof initialInstructions === "string"
-              ? initialInstructions
-              : system;
+          const base = typeof initialInstructions === "string" ? initialInstructions : system;
           if (!notice.final) return { instructions: base + notice.text };
           budget.limitReached = true;
           return {

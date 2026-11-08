@@ -12,10 +12,7 @@ const cache = new Map<string, SongAST | null>();
  * Parse ChordPro with a bounded LRU-ish cache so huge songbooks don't
  * re-parse the same content on every options tweak / remount.
  */
-export function safeParseSong(
-  content: string,
-  cacheKey?: string,
-): SongAST | null {
+export function safeParseSong(content: string, cacheKey?: string): SongAST | null {
   const key = cacheKey ?? content;
   if (cache.has(key)) {
     const hit = cache.get(key) ?? null;

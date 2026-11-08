@@ -21,11 +21,7 @@ import {
 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { emitOnboardingEvent } from "@/src/lib/tour";
-import {
-  FolderTreeNode,
-  getFolderDescendantIds,
-  MoveFolderTreeItem,
-} from "../explorer";
+import { FolderTreeNode, getFolderDescendantIds, MoveFolderTreeItem } from "../explorer";
 import { FolderForm } from "../forms/FolderForm";
 import { ServiceForm } from "../forms/ServiceForm";
 import { SongForm } from "../forms/SongForm";
@@ -100,9 +96,7 @@ function removeLiqeClause(query: string, prefix: string): string {
   // Remove any existing clause that starts with the given prefix
   return query
     .split(/\s+AND\s+/i)
-    .filter(
-      (part) => !part.trim().toLowerCase().startsWith(prefix.toLowerCase()),
-    )
+    .filter((part) => !part.trim().toLowerCase().startsWith(prefix.toLowerCase()))
     .join(" AND ")
     .trim();
 }
@@ -135,13 +129,9 @@ const FilterSection: React.FC<{
         className="w-full flex items-center justify-between px-4 py-3 text-xs font-bold text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          <span className={active ? "text-m3-primary" : "text-m3-secondary"}>
-            {icon}
-          </span>
+          <span className={active ? "text-m3-primary" : "text-m3-secondary"}>{icon}</span>
           <span className={active ? "text-m3-primary" : ""}>{label}</span>
-          {active && (
-            <span className="w-2 h-2 rounded-full bg-m3-primary inline-block" />
-          )}
+          {active && <span className="w-2 h-2 rounded-full bg-m3-primary inline-block" />}
         </div>
         {open ? (
           <ChevronDown className="w-3.5 h-3.5 text-m3-secondary" />
@@ -149,11 +139,7 @@ const FilterSection: React.FC<{
           <ChevronRight className="w-3.5 h-3.5 text-m3-secondary" />
         )}
       </button>
-      {open && (
-        <div className="px-4 pb-4 pt-1 border-t border-m3-border/50">
-          {children}
-        </div>
-      )}
+      {open && <div className="px-4 pb-4 pt-1 border-t border-m3-border/50">{children}</div>}
     </div>
   );
 };
@@ -243,9 +229,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
       if (existing === folderName) return cleaned;
       return addLiqeClause(
         cleaned,
-        folderName.includes(" ")
-          ? `folder:"${folderName}"`
-          : `folder:${folderName}`,
+        folderName.includes(" ") ? `folder:"${folderName}"` : `folder:${folderName}`,
       );
     });
   }, []);
@@ -260,11 +244,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
   }, []);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={t("explorer.modals.filterTitle")}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={t("explorer.modals.filterTitle")}>
       <div className="space-y-3 py-2 max-h-[70vh] overflow-y-auto">
         {/* Live query preview */}
         <div className="flex items-center gap-2 p-3 bg-m3-sidebar/40 border border-m3-border rounded-2xl">
@@ -291,9 +271,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
         {currentFolder && (
           <p className="text-[11px] text-m3-secondary px-1">
             {t("explorer.modals.searchScope")}{" "}
-            <span className="font-bold text-m3-primary">
-              {currentFolder.name}
-            </span>
+            <span className="font-bold text-m3-primary">{currentFolder.name}</span>
           </p>
         )}
 
@@ -307,9 +285,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           >
             <div className="flex flex-wrap gap-1.5 mt-2 max-h-28 overflow-y-auto">
               {availableTags.map((tag) => {
-                const clause = tag.includes(" ")
-                  ? `tags:"${tag}"`
-                  : `tags:${tag}`;
+                const clause = tag.includes(" ") ? `tags:"${tag}"` : `tags:${tag}`;
                 return (
                   <Chip
                     key={tag}
@@ -377,8 +353,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
         >
           <div className="mt-2 space-y-2">
             <p className="text-[11px] text-m3-secondary leading-relaxed">
-              Clique num campo para adicionar um prefixo de pesquisa ao query.{" "}
-              <br />
+              Clique num campo para adicionar um prefixo de pesquisa ao query. <br />
               Edite o valor diretamente no campo de query acima.
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -400,9 +375,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                   onClick={() =>
                     setDraft((q) => {
                       const base = q.trim();
-                      const prefix = base
-                        ? `${base} AND ${field}:`
-                        : `${field}:`;
+                      const prefix = base ? `${base} AND ${field}:` : `${field}:`;
                       return prefix;
                     })
                   }
@@ -475,12 +448,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           <Button type="button" variant="ghost" size="sm" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={handleApply}
-          >
+          <Button type="button" variant="primary" size="sm" onClick={handleApply}>
             {t("explorer.modals.applyFilters")}
           </Button>
         </div>
@@ -496,11 +464,7 @@ interface ExplorerModalsProps {
   onOpenModal?: (modal: ActiveModal) => void;
 
   // CifraClub
-  onCifraClubSubmit: (
-    chordpro: ConversionResult,
-    artist: string,
-    title: string,
-  ) => Promise<void>;
+  onCifraClubSubmit: (chordpro: ConversionResult, artist: string, title: string) => Promise<void>;
 
   // Create Song
   currentFolder: Folder | undefined;
@@ -514,11 +478,7 @@ interface ExplorerModalsProps {
   }) => Promise<void>;
 
   // Create Service
-  onCreateServiceSubmit: (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => Promise<void>;
+  onCreateServiceSubmit: (data: { name: string; date: string; notes: string }) => Promise<void>;
 
   // Create Event
   onCreateEventSubmit?: (value: EventFormValue) => Promise<void>;
@@ -573,14 +533,9 @@ interface ExplorerModalsProps {
   onBatchMoveConfirm: (targetFolderId: string | null) => Promise<void>;
 
   selectedFolderObjects: Folder[];
-  onBatchDeleteConfirm: (
-    folderAction: "move_to_root" | "delete_songs",
-  ) => Promise<void>;
+  onBatchDeleteConfirm: (folderAction: "move_to_root" | "delete_songs") => Promise<void>;
 
-  onBatchTagConfirm: (
-    tags: string[],
-    mode: "append" | "replace" | "remove",
-  ) => Promise<void>;
+  onBatchTagConfirm: (tags: string[], mode: "append" | "replace" | "remove") => Promise<void>;
 
   // Advanced Filter Modal — now Liqe-based
   currentQuery: string;
@@ -780,9 +735,7 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         <div className="flex flex-col gap-4">
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {t("explorer.modals.selectDestFolder")}{" "}
-            <strong className="text-slate-900 dark:text-slate-100">
-              {moveFolderTarget?.name}
-            </strong>
+            <strong className="text-slate-900 dark:text-slate-100">{moveFolderTarget?.name}</strong>
             :
           </p>
 
@@ -845,8 +798,7 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
           folder: deleteTarget?.name || "",
         })}
       >
-        {(deleteTarget?.folderCount || 0) + (deleteTarget?.songCount || 0) >
-        0 ? (
+        {(deleteTarget?.folderCount || 0) + (deleteTarget?.songCount || 0) > 0 ? (
           <div className="flex flex-col gap-4">
             <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-2.5 text-xs text-amber-800 dark:text-amber-300">
               <AlertTriangle className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
@@ -904,10 +856,7 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
                 </div>
                 <p className="text-rose-900 dark:text-rose-200 text-[11px] leading-relaxed">
                   {t("explorer.modals.deleteFolderIrreversible")}{" "}
-                  <strong className="font-extrabold underline">
-                    {deleteTarget?.name}
-                  </strong>{" "}
-                  abaixo:
+                  <strong className="font-extrabold underline">{deleteTarget?.name}</strong> abaixo:
                 </p>
                 <Input
                   placeholder={t("explorer.modals.writeToConfirm", {
@@ -1072,22 +1021,18 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
       )}
 
       {/* ADD TO COLLECTION MODAL (SINGLE SONG) */}
-      {addToCollectionTarget &&
-        setAddToCollectionTarget &&
-        onAddToCollectionConfirm && (
-          <AddToCollectionModal
-            isOpen={!!addToCollectionTarget}
-            onClose={() => setAddToCollectionTarget(null)}
-            collections={allCollections}
-            songTitle={addToCollectionTarget.title}
-            onConfirm={onAddToCollectionConfirm}
-            onCreateNewCollection={
-              onOpenModal
-                ? () => onOpenModal("create-collection")
-                : onOpenCreateCollectionFromAdd
-            }
-          />
-        )}
+      {addToCollectionTarget && setAddToCollectionTarget && onAddToCollectionConfirm && (
+        <AddToCollectionModal
+          isOpen={!!addToCollectionTarget}
+          onClose={() => setAddToCollectionTarget(null)}
+          collections={allCollections}
+          songTitle={addToCollectionTarget.title}
+          onConfirm={onAddToCollectionConfirm}
+          onCreateNewCollection={
+            onOpenModal ? () => onOpenModal("create-collection") : onOpenCreateCollectionFromAdd
+          }
+        />
+      )}
 
       {/* ADD TO COLLECTION MODAL (BATCH SONGS) */}
       {onAddToCollectionConfirm && (
@@ -1098,9 +1043,7 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
           songCount={selectedSongIds.size}
           onConfirm={onAddToCollectionConfirm}
           onCreateNewCollection={
-            onOpenModal
-              ? () => onOpenModal("create-collection")
-              : onOpenCreateCollectionFromAdd
+            onOpenModal ? () => onOpenModal("create-collection") : onOpenCreateCollectionFromAdd
           }
         />
       )}

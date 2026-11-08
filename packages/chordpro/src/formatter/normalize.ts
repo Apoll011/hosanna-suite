@@ -5,11 +5,7 @@
 
 import type { FormatChange, FormatOptions, FormatWarning } from "./types";
 import { isValidChord, normalizeChordContent } from "./chords";
-import {
-  buildDirectiveLine,
-  detectMalformedDirective,
-  parseDirectiveContent,
-} from "./directives";
+import { buildDirectiveLine, detectMalformedDirective, parseDirectiveContent } from "./directives";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -125,10 +121,7 @@ function normalizeChordLyricSpacing(
 ): string {
   const original = line;
   // Remove space between a closing bracket ']' and a non-whitespace, non-'[' character
-  const result = line.replace(
-    /\]\s+([^\s\[])/g,
-    (_: string, char: string) => "]" + char,
-  );
+  const result = line.replace(/\]\s+([^\s\[])/g, (_: string, char: string) => "]" + char);
   if (result !== original) {
     changes.push({
       type: "chord_spacing",
@@ -144,11 +137,7 @@ function normalizeChordLyricSpacing(
  * Normalize excessive whitespace between words on a plain text line.
  * Collapses multiple spaces between words safely without touching bracketed chord text.
  */
-function normalizeTextSpacing(
-  line: string,
-  lineNumber: number,
-  changes: FormatChange[],
-): string {
+function normalizeTextSpacing(line: string, lineNumber: number, changes: FormatChange[]): string {
   const parts: string[] = [];
   const regex = /\[[^\]]*\]/g;
   let lastIndex = 0;

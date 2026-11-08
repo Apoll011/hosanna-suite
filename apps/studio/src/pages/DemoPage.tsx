@@ -39,8 +39,7 @@ export const DemoPage: React.FC = () => {
         // re-booted app can detect it immediately.
         enableDemoMode();
 
-        const locale =
-          (typeof navigator !== "undefined" && navigator.language) || "pt";
+        const locale = (typeof navigator !== "undefined" && navigator.language) || "pt";
 
         const db = await getDatabase();
         await seedDemoDatabase(db, locale);
@@ -59,9 +58,7 @@ export const DemoPage: React.FC = () => {
   if (status === "error") {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center gap-4 bg-m3-bg text-m3-on-bg">
-        <p className="text-lg font-medium">
-          Failed to start demo. Please try again.
-        </p>
+        <p className="text-lg font-medium">Failed to start demo. Please try again.</p>
         <button
           className="px-4 py-2 rounded-md bg-m3-primary text-m3-on-primary text-sm"
           onClick={() => window.location.reload()}

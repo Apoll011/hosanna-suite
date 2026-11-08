@@ -6,10 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { hosannaBrandPublic } from "../src/vite-plugin.js";
 
-const brandPublic = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../public",
-);
+const brandPublic = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
 
 describe("hosannaBrandPublic", () => {
   it("exposes a named Vite plugin with lifecycle hooks", () => {
@@ -34,10 +31,7 @@ describe("hosannaBrandPublic", () => {
       "og-image.jpg",
       "bimi.svg",
     ]) {
-      assert.ok(
-        fs.existsSync(path.join(brandPublic, file)),
-        `missing brand asset: ${file}`,
-      );
+      assert.ok(fs.existsSync(path.join(brandPublic, file)), `missing brand asset: ${file}`);
     }
   });
 
@@ -64,10 +58,7 @@ describe("hosannaBrandPublic", () => {
       });
       plugin.closeBundle();
 
-      assert.equal(
-        fs.readFileSync(path.join(outDir, "favicon.svg"), "utf8"),
-        "app-owned",
-      );
+      assert.equal(fs.readFileSync(path.join(outDir, "favicon.svg"), "utf8"), "app-owned");
       assert.ok(fs.existsSync(path.join(outDir, "og-image.jpg")));
       assert.ok(fs.existsSync(path.join(outDir, "apple-touch-icon.png")));
     } finally {

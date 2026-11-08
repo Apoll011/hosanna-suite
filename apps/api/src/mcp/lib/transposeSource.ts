@@ -6,11 +6,7 @@
  * unknown directives stay intact.
  */
 
-import {
-  getNoteValue,
-  transposeChord,
-  transposeNote,
-} from "@hosanna/chordpro/parser";
+import { getNoteValue, transposeChord, transposeNote } from "@hosanna/chordpro/parser";
 
 export type TransposeChordProSourceOptions =
   { semitones: number; toKey?: never } | { toKey: string; semitones?: never };
@@ -112,10 +108,7 @@ export function transposeChordProSource(
   // When targeting an explicit key, force {key:} to that exact spelling
   if (typeof options !== "number" && "toKey" in options && options.toKey) {
     if (/\{(?:key|k)\s*:/i.test(content)) {
-      content = content.replace(
-        /\{(key|k)\s*:\s*[^}]+\}/i,
-        `{key: ${options.toKey}}`,
-      );
+      content = content.replace(/\{(key|k)\s*:\s*[^}]+\}/i, `{key: ${options.toKey}}`);
     }
   }
 
@@ -124,8 +117,6 @@ export function transposeChordProSource(
     semitones: applied,
     fromKey,
     toKey:
-      typeof options !== "number" && "toKey" in options && options.toKey
-        ? options.toKey
-        : toKey,
+      typeof options !== "number" && "toKey" in options && options.toKey ? options.toKey : toKey,
   };
 }

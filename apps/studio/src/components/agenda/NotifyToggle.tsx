@@ -36,9 +36,7 @@ export const NotifyToggle: React.FC<NotifyToggleProps> = ({
     >
       <span className="flex items-start gap-2 min-w-0">
         <Icon
-          className={`w-4 h-4 shrink-0 mt-0.5 ${
-            checked ? "text-sky-500" : "text-slate-400"
-          }`}
+          className={`w-4 h-4 shrink-0 mt-0.5 ${checked ? "text-sky-500" : "text-slate-400"}`}
         />
         <span className="min-w-0">
           <span className="block text-xs font-bold text-slate-800 dark:text-slate-200">

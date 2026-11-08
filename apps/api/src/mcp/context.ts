@@ -17,10 +17,7 @@ import { SongService } from "../services/song.service.js";
 import { mapToolError } from "./lib/toolErrors.js";
 
 const apiOrigin = env.mcpResourceUrl.replace(/\/mcp\/?$/, "");
-const jwksUrl = new URL(
-  "/api/auth/jwks",
-  apiOrigin || `http://127.0.0.1:${env.port}`,
-);
+const jwksUrl = new URL("/api/auth/jwks", apiOrigin || `http://127.0.0.1:${env.port}`);
 const remoteJwks = createRemoteJWKSet(jwksUrl);
 
 export interface McpContext {
@@ -47,10 +44,7 @@ export function requireMcpContext(authInfo?: AuthInfo | null): McpContext {
   return ctx;
 }
 
-export function requirePermission(
-  ctx: McpContext,
-  permission: PermissionString,
-): void {
+export function requirePermission(ctx: McpContext, permission: PermissionString): void {
   if (!can(ctx.user, permission)) {
     throw new Error(`Missing permission: ${permission}`);
   }
@@ -79,8 +73,7 @@ export function folders(ctx: McpContext): FolderService {
 function parseLocaleFromMeta(metadata: unknown): string | null {
   try {
     const meta = typeof metadata === "string" ? JSON.parse(metadata) : metadata;
-    const locale =
-      (meta as any)?.settings?.general?.locale ?? (meta as any)?.locale;
+    const locale = (meta as any)?.settings?.general?.locale ?? (meta as any)?.locale;
     if (typeof locale === "string" && locale.length > 0) return locale;
   } catch {
     /* ignore */
@@ -196,9 +189,7 @@ async function resolveFromOAuthAccessToken(
     const userId = typeof payload.sub === "string" ? payload.sub : undefined;
     if (!userId) return null;
     const scopeClaim =
-      typeof payload.scope === "string"
-        ? payload.scope.split(/\s+/).filter(Boolean)
-        : [];
+      typeof payload.scope === "string" ? payload.scope.split(/\s+/).filter(Boolean) : [];
     let workspaceId =
       (typeof payload.organizationId === "string" && payload.organizationId) ||
       (typeof payload.reference_id === "string" && payload.reference_id) ||
@@ -219,8 +210,7 @@ async function resolveFromOAuthAccessToken(
       workspaceId,
       token,
       scopes: scopeClaim,
-      clientId:
-        typeof payload.client_id === "string" ? payload.client_id : userId,
+      clientId: typeof payload.client_id === "string" ? payload.client_id : userId,
     });
   } catch {
     return null;
@@ -247,8 +237,7 @@ export async function resolveMcpContextFromHeaders(
 
   const sessionData = await auth.api.getSession({ headers: headerBag });
   if (sessionData?.session && sessionData?.user) {
-    const workspaceId = (sessionData.session as any).activeOrganizationId as
-      string | undefined;
+    const workspaceId = (sessionData.session as any).activeOrganizationId as string | undefined;
     if (workspaceId) {
       const authHeader = headerBag.get("authorization") ?? "";
       const token = authHeader.startsWith("Bearer ")
@@ -304,25 +293,17 @@ export function jsonResult(data: unknown, isError = false) {
       },
     ],
     structuredContent:
-      typeof data === "object" && data !== null
-        ? (data as Record<string, unknown>)
-        : undefined,
+      typeof data === "object" && data !== null ? (data as Record<string, unknown>) : undefined,
     isError,
   };
 }
 
-export function errorResult(
-  error: unknown,
-  opts?: { current?: unknown; field?: string },
-) {
+export function errorResult(error: unknown, opts?: { current?: unknown; field?: string }) {
   return jsonResult(mapToolError(error, opts), true);
 }
 
 /** Run a tool body, attach `_meta.durationMs`, and record in-process metrics. */
-export async function timedToolResult(
-  toolName: string,
-  run: () => Promise<unknown>,
-) {
+export async function timedToolResult(toolName: string, run: () => Promise<unknown>) {
   const started = performance.now();
   try {
     const data = await run();
@@ -344,9 +325,6 @@ export async function timedToolResult(
     const { recordToolTiming } = await import("./lib/toolMetrics.js");
     recordToolTiming(toolName, durationMs, false);
     const payload = mapToolError(error);
-    return jsonResult(
-      { ...payload, _meta: { durationMs, tool: toolName } },
-      true,
-    );
+    return jsonResult({ ...payload, _meta: { durationMs, tool: toolName } }, true);
   }
 }

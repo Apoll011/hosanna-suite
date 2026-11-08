@@ -27,10 +27,7 @@ export const ServiceGridCard: React.FC<ServiceGridCardProps> = React.memo(
     const { t, locale } = useI18n();
     const isCompact = density === "compact";
 
-    const formatDate = (
-      dateStr: string,
-      options?: Intl.DateTimeFormatOptions,
-    ) =>
+    const formatDate = (dateStr: string, options?: Intl.DateTimeFormatOptions) =>
       new Date(dateStr).toLocaleDateString(
         locale,
         options ?? {
@@ -76,13 +73,9 @@ export const ServiceGridCard: React.FC<ServiceGridCardProps> = React.memo(
           }`}
         >
           {isArchived ? (
-            <Archive
-              className={`${isCompact ? "w-5 h-5" : "w-8 h-8"} opacity-80`}
-            />
+            <Archive className={`${isCompact ? "w-5 h-5" : "w-8 h-8"} opacity-80`} />
           ) : (
-            <Church
-              className={`${isCompact ? "w-5 h-5" : "w-8 h-8"} opacity-80`}
-            />
+            <Church className={`${isCompact ? "w-5 h-5" : "w-8 h-8"} opacity-80`} />
           )}
         </div>
 
@@ -129,10 +122,7 @@ export const ServiceTableRow: React.FC<ServiceTableRowProps> = React.memo(
     const isCompact = density === "compact";
     const cellPadding = isCompact ? "py-2.5 px-4" : "py-4 px-6";
 
-    const formatDate = (
-      dateStr: string,
-      options?: Intl.DateTimeFormatOptions,
-    ) =>
+    const formatDate = (dateStr: string, options?: Intl.DateTimeFormatOptions) =>
       new Date(dateStr).toLocaleDateString(
         locale,
         options ?? {
@@ -151,11 +141,7 @@ export const ServiceTableRow: React.FC<ServiceTableRowProps> = React.memo(
         onContextMenu={onContextMenu}
         className={`cursor-pointer transition-all group select-none ${
           isArchived ? "opacity-50" : ""
-        } ${
-          isSelected
-            ? "bg-m3-primary/10 text-m3-text"
-            : "hover:bg-m3-hover/50 text-m3-text"
-        }`}
+        } ${isSelected ? "bg-m3-primary/10 text-m3-text" : "hover:bg-m3-hover/50 text-m3-text"}`}
       >
         <td className={cellPadding}>
           <div className="flex items-center gap-4 group-hover:translate-x-1 transition-transform">
@@ -169,14 +155,10 @@ export const ServiceTableRow: React.FC<ServiceTableRowProps> = React.memo(
               />
             )}
             <span>{service.name}</span>
-            {isArchived && (
-              <Badge variant="slate">{t("explorer.archived")}</Badge>
-            )}
+            {isArchived && <Badge variant="slate">{t("explorer.archived")}</Badge>}
           </div>
         </td>
-        <td className={`${cellPadding} text-m3-secondary opacity-70`}>
-          {t("explorer.service")}
-        </td>
+        <td className={`${cellPadding} text-m3-secondary opacity-70`}>{t("explorer.service")}</td>
         <td className={`${cellPadding} text-m3-secondary`}>
           {formatDate(service.date, {
             weekday: "short",

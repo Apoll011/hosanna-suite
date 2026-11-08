@@ -45,16 +45,10 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 }) => {
   const { t } = useI18n();
 
-  const effectivePerPage =
-    itemsPerPage === 0 ? Math.max(1, totalItems) : itemsPerPage;
+  const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalItems) : itemsPerPage;
   const totalPages = Math.max(1, Math.ceil(totalItems / effectivePerPage) || 1);
 
-  const from =
-    totalItems === 0
-      ? 0
-      : itemsPerPage === 0
-        ? 1
-        : (page - 1) * effectivePerPage + 1;
+  const from = totalItems === 0 ? 0 : itemsPerPage === 0 ? 1 : (page - 1) * effectivePerPage + 1;
   const to =
     totalItems === 0
       ? 0
@@ -62,10 +56,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         ? totalItems
         : Math.min(page * effectivePerPage, totalItems);
 
-  const visiblePages = useMemo(
-    () => getVisiblePages(page, totalPages),
-    [page, totalPages],
-  );
+  const visiblePages = useMemo(() => getVisiblePages(page, totalPages), [page, totalPages]);
 
   return (
     <div
@@ -77,12 +68,9 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             emptyLabel
           ) : (
             <>
-              {t("table.showing")}{" "}
-              <strong className="font-bold text-m3-text">{from}</strong>{" "}
-              {t("table.to")}{" "}
-              <strong className="font-bold text-m3-text">{to}</strong>{" "}
-              {t("table.of")}{" "}
-              <strong className="font-bold text-m3-text">{totalItems}</strong>{" "}
+              {t("table.showing")} <strong className="font-bold text-m3-text">{from}</strong>{" "}
+              {t("table.to")} <strong className="font-bold text-m3-text">{to}</strong>{" "}
+              {t("table.of")} <strong className="font-bold text-m3-text">{totalItems}</strong>{" "}
               {itemLabel}
             </>
           )}
@@ -124,9 +112,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             const showEllipsis = prev !== undefined && p - prev > 1;
             return (
               <React.Fragment key={p}>
-                {showEllipsis && (
-                  <span className="px-1 text-m3-secondary opacity-50">…</span>
-                )}
+                {showEllipsis && <span className="px-1 text-m3-secondary opacity-50">…</span>}
                 <button
                   type="button"
                   onClick={() => onPageChange(p)}

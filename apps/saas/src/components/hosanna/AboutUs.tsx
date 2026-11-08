@@ -111,7 +111,6 @@ export function AboutUs() {
             <p>{t("about.storyP2")}</p>
             <p>{t("about.storyP3")}</p>
           </div>
-
         </div>
       </section>
 

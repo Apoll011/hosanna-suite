@@ -31,16 +31,11 @@ export interface LibraryHealthTabProps {
   active: boolean;
 }
 
-function criterionLabel(
-  t: (key: string) => string,
-  criterion: ScoreMissingCriterion,
-): string {
+function criterionLabel(t: (key: string) => string, criterion: ScoreMissingCriterion): string {
   return t(`analytics.libraryHealth.criteria.${criterion}`);
 }
 
-export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
-  active,
-}) => {
+export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) => {
   const { t } = useI18n();
   const { showToast } = useSync();
   const { navigate } = useAppNavigate();
@@ -48,16 +43,11 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
   const slugPrefix = slug ? `/${slug}` : "";
   const { songsQuery } = useAllSongs();
   const { granted: canUpdateSong } = useCan("song.update");
-  const songs = useMemo(
-    () => songsQuery.data?.songs ?? [],
-    [songsQuery.data?.songs],
-  );
+  const songs = useMemo(() => songsQuery.data?.songs ?? [], [songsQuery.data?.songs]);
   const isLoading = songsQuery.isLoading;
 
   const summary = useMemo(() => computeLibraryHealth(songs), [songs]);
-  const [expanded, setExpanded] = useState<Set<ScoreMissingCriterion>>(
-    () => new Set(),
-  );
+  const [expanded, setExpanded] = useState<Set<ScoreMissingCriterion>>(() => new Set());
   const [fixingKey, setFixingKey] = useState<string | null>(null);
 
   if (!active) return null;
@@ -159,14 +149,10 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span
-                className={`text-3xl font-semibold tabular-nums ${healthColor}`}
-              >
+              <span className={`text-3xl font-semibold tabular-nums ${healthColor}`}>
                 {summary.healthPercentage}%
               </span>
-              <span className="text-caption">
-                {t("analytics.libraryHealth.healthLabel")}
-              </span>
+              <span className="text-caption">{t("analytics.libraryHealth.healthLabel")}</span>
             </div>
           </div>
 
@@ -175,25 +161,19 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
               <span className="block text-2xl font-semibold text-m3-text tabular-nums">
                 {summary.songCount}
               </span>
-              <span className="text-caption">
-                {t("analytics.libraryHealth.statSongs")}
-              </span>
+              <span className="text-caption">{t("analytics.libraryHealth.statSongs")}</span>
             </div>
             <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
               <span className="block text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 {summary.healthyCount}
               </span>
-              <span className="text-caption">
-                {t("analytics.libraryHealth.statHealthy")}
-              </span>
+              <span className="text-caption">{t("analytics.libraryHealth.statHealthy")}</span>
             </div>
             <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60 col-span-2 sm:col-span-1">
               <span className="block text-2xl font-semibold text-amber-600 dark:text-amber-400 tabular-nums">
                 {summary.issueCount}
               </span>
-              <span className="text-caption">
-                {t("analytics.libraryHealth.statIssues")}
-              </span>
+              <span className="text-caption">{t("analytics.libraryHealth.statIssues")}</span>
             </div>
           </div>
         </div>
@@ -205,9 +185,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
             <AlertTriangle className="w-5 h-5 text-amber-500" />
             {t("analytics.libraryHealth.issuesTitle")}
           </h3>
-          <p className="mt-1 text-muted">
-            {t("analytics.libraryHealth.issuesDesc")}
-          </p>
+          <p className="mt-1 text-muted">{t("analytics.libraryHealth.issuesDesc")}</p>
         </div>
 
         <div className="divide-y divide-m3-border">
@@ -218,9 +196,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                 <p className="text-sm font-semibold text-m3-text">
                   {t("analytics.libraryHealth.allHealthyTitle")}
                 </p>
-                <p className="mt-1 text-caption">
-                  {t("analytics.libraryHealth.allHealthyDesc")}
-                </p>
+                <p className="mt-1 text-caption">{t("analytics.libraryHealth.allHealthyDesc")}</p>
               </div>
             </div>
           ) : (
@@ -279,9 +255,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                           e.stopPropagation();
                           void runAutoFix(categoryFixKey, {
                             criterion: category.criterion,
-                            songIds: category.songs
-                              .filter((s) => s.autoFixable)
-                              .map((s) => s.id),
+                            songIds: category.songs.filter((s) => s.autoFixable).map((s) => s.id),
                           });
                         }}
                       >
@@ -315,11 +289,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                                     </span>
                                   )}
                                 </div>
-                                <SongScoreVisualizer
-                                  score={song.score}
-                                  layout="badge"
-                                  compact
-                                />
+                                <SongScoreVisualizer score={song.score} layout="badge" compact />
                                 <ChevronRight className="w-4 h-4 text-m3-secondary/50 group-hover:text-m3-primary shrink-0" />
                               </button>
 
@@ -330,9 +300,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({
                                   size="sm"
                                   isLoading={fixingKey === songFixKey}
                                   disabled={Boolean(fixingKey)}
-                                  icon={
-                                    <WandSparkles className="w-3.5 h-3.5" />
-                                  }
+                                  icon={<WandSparkles className="w-3.5 h-3.5" />}
                                   title={t("analytics.libraryHealth.autoFix")}
                                   onClick={() =>
                                     void runAutoFix(songFixKey, {

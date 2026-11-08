@@ -13,11 +13,7 @@ export type ToolTimingSample = {
 const MAX = 100;
 const samples: ToolTimingSample[] = [];
 
-export function recordToolTiming(
-  tool: string,
-  durationMs: number,
-  ok = true,
-): void {
+export function recordToolTiming(tool: string, durationMs: number, ok = true): void {
   samples.push({
     tool,
     durationMs,
@@ -41,16 +37,11 @@ export function toolTimingSummary(): {
     arr.push(s.durationMs);
     byName.set(s.tool, arr);
   }
-  const byTool: Record<
-    string,
-    { count: number; p50Ms: number; p95Ms: number }
-  > = {};
+  const byTool: Record<string, { count: number; p50Ms: number; p95Ms: number }> = {};
   for (const [tool, values] of byName) {
     const sorted = [...values].sort((a, b) => a - b);
     const p = (q: number) =>
-      sorted[
-        Math.min(sorted.length - 1, Math.floor(q * (sorted.length - 1)))
-      ] ?? 0;
+      sorted[Math.min(sorted.length - 1, Math.floor(q * (sorted.length - 1)))] ?? 0;
     byTool[tool] = {
       count: sorted.length,
       p50Ms: p(0.5),

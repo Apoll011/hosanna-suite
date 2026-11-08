@@ -4,11 +4,7 @@
  * otherwise DuckDuckGo HTML → Instant Answer API → Wikipedia OpenSearch.
  */
 
-import {
-  type NativeWebAuth,
-  nativeWebSearch,
-  providerSupportsNativeSearch,
-} from "./nativeWeb.js";
+import { type NativeWebAuth, nativeWebSearch, providerSupportsNativeSearch } from "./nativeWeb.js";
 import { ProviderError } from "./providerError.js";
 
 export type WebSearchHit = {
@@ -18,8 +14,7 @@ export type WebSearchHit = {
   summary?: string;
 };
 
-export type WebSearchProvider =
-  "deepseek" | "duckduckgo" | "duckduckgo_ia" | "wikipedia";
+export type WebSearchProvider = "deepseek" | "duckduckgo" | "duckduckgo_ia" | "wikipedia";
 
 const BROWSER_UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
@@ -46,8 +41,7 @@ function isDuckDuckGoChallenge(html: string): boolean {
 
 function parseDuckDuckGoHtml(html: string, limit: number): WebSearchHit[] {
   const hits: WebSearchHit[] = [];
-  const re =
-    /<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
+  const re = /<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
   let match: RegExpExecArray | null;
   while ((match = re.exec(html)) && hits.length < limit) {
     let href = match[1];
@@ -116,10 +110,7 @@ async function fetchDuckDuckGoHtml(query: string): Promise<string> {
   return res.text();
 }
 
-async function searchDuckDuckGoHtml(
-  query: string,
-  limit: number,
-): Promise<WebSearchHit[]> {
+async function searchDuckDuckGoHtml(query: string, limit: number): Promise<WebSearchHit[]> {
   let html = await fetchDuckDuckGoHtml(query);
 
   if (isDuckDuckGoChallenge(html)) {
@@ -199,10 +190,7 @@ async function searchDuckDuckGoInstantAnswer(
   return hits.slice(0, limit);
 }
 
-async function searchWikipedia(
-  query: string,
-  limit: number,
-): Promise<WebSearchHit[]> {
+async function searchWikipedia(query: string, limit: number): Promise<WebSearchHit[]> {
   const url = new URL("https://en.wikipedia.org/w/api.php");
   url.searchParams.set("action", "opensearch");
   url.searchParams.set("search", query);
@@ -214,11 +202,7 @@ async function searchWikipedia(
     headers: { Accept: "application/json", "User-Agent": "HosannaMCP/2.20" },
   });
   if (!res.ok) {
-    throw new ProviderError(
-      "wikipedia",
-      `Wikipedia OpenSearch HTTP ${res.status}`,
-      "unavailable",
-    );
+    throw new ProviderError("wikipedia", `Wikipedia OpenSearch HTTP ${res.status}`, "unavailable");
   }
 
   const data = (await res.json()) as [string, string[], string[], string[]];
@@ -367,8 +351,7 @@ export async function searchWeb(opts: {
       );
       return { query, ...fallback };
     } catch (nativeErr) {
-      const nativeMessage =
-        nativeErr instanceof Error ? nativeErr.message : String(nativeErr);
+      const nativeMessage = nativeErr instanceof Error ? nativeErr.message : String(nativeErr);
       const fallback = await tryFallbackChain(
         query,
         limit,

@@ -3,13 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  AppleIcon,
-  DiscordIcon,
-  GitHubIcon,
-  GoogleIcon,
-  MicrosoftIcon,
-} from "@hosanna/ui";
+import { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "@hosanna/ui";
 import { authClient } from "@/src/lib/authClient";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -87,8 +81,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
 
     try {
       const activeSlug = localStorage.getItem("active_org_slug");
-      const targetPath =
-        callbackURL || (activeSlug ? `/${activeSlug}/folders` : "/onboarding");
+      const targetPath = callbackURL || (activeSlug ? `/${activeSlug}/folders` : "/onboarding");
       const fullCallbackUrl = targetPath.startsWith("http")
         ? targetPath
         : `${window.location.origin}${targetPath}`;
@@ -134,15 +127,9 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
               className="w-full min-h-10 sm:min-h-11 px-4 rounded-full border border-m3-border bg-m3-card hover:bg-m3-hover text-m3-text font-medium text-sm transition-colors flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
-                <Loader2
-                  className="w-4 h-4 animate-spin text-m3-secondary"
-                  aria-hidden="true"
-                />
+                <Loader2 className="w-4 h-4 animate-spin text-m3-secondary" aria-hidden="true" />
               ) : (
-                <Icon
-                  className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"
-                  aria-hidden="true"
-                />
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden="true" />
               )}
               <span>
                 {provider.id === "google"

@@ -483,10 +483,7 @@ export function buildPageCss(
 
 /** Inline CSS variables that size the document for the chosen paper. */
 export function documentStyleVars(
-  options: Pick<
-    PrintOptions,
-    "fontSize" | "paperSize" | "margins" | "useAccentColor"
-  >,
+  options: Pick<PrintOptions, "fontSize" | "paperSize" | "margins" | "useAccentColor">,
   _accentColor?: string,
 ): Record<string, string> {
   const paper = PAPER_SIZES[options.paperSize];

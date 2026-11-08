@@ -43,14 +43,8 @@ describe("interpolate", () => {
 
 describe("resolveString", () => {
   it("looks up string leaves and interpolates them", () => {
-    assert.equal(
-      resolveString(dict, "greeting", { name: "Hosanna" }),
-      "Hello Hosanna",
-    );
-    assert.equal(
-      resolveString(dict, "nested.empty", { org: "Alpha" }),
-      "No songs for Alpha",
-    );
+    assert.equal(resolveString(dict, "greeting", { name: "Hosanna" }), "Hello Hosanna");
+    assert.equal(resolveString(dict, "nested.empty", { org: "Alpha" }), "No songs for Alpha");
   });
 
   it("returns undefined for missing or non-string leaves", () => {

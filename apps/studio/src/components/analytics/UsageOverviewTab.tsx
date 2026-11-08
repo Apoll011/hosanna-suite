@@ -48,10 +48,7 @@ const COUNT_RESOURCES: UsageResourceId[] = [
   "folders",
 ];
 
-const RESOURCE_ICONS: Record<
-  UsageResourceId,
-  React.ComponentType<{ className?: string }>
-> = {
+const RESOURCE_ICONS: Record<UsageResourceId, React.ComponentType<{ className?: string }>> = {
   songs: Music2,
   members: Users,
   services: ClipboardList,
@@ -73,19 +70,11 @@ const RESOURCE_LABEL_KEYS: Record<UsageResourceId, TranslationKey> = {
 
 async function countTrashItems(): Promise<number> {
   const db = await getDatabase();
-  const collections = [
-    db.songs,
-    db.folders,
-    db.collections,
-    db.services,
-    db.agendaEvents,
-  ] as const;
+  const collections = [db.songs, db.folders, db.collections, db.services, db.agendaEvents] as const;
 
   let total = 0;
   for (const collection of collections) {
-    total += collection
-      .getAllRaw()
-      .filter((doc) => doc.isDeleted && !doc._deleted).length;
+    total += collection.getAllRaw().filter((doc) => doc.isDeleted && !doc._deleted).length;
   }
   return total;
 }
@@ -119,11 +108,7 @@ async function readStorageEstimate(): Promise<{
 
 function StorageBar({ percentage }: { percentage: number }) {
   const tone =
-    percentage >= 90
-      ? "bg-rose-500"
-      : percentage >= 70
-        ? "bg-amber-500"
-        : "bg-m3-primary";
+    percentage >= 90 ? "bg-rose-500" : percentage >= 70 ? "bg-amber-500" : "bg-m3-primary";
 
   return (
     <div className="h-2 w-full rounded-full bg-m3-sidebar overflow-hidden">
@@ -135,9 +120,7 @@ function StorageBar({ percentage }: { percentage: number }) {
   );
 }
 
-export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
-  active,
-}) => {
+export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({ active }) => {
   const { t, locale } = useI18n();
   const { organization } = useAuth();
   const { activeSubscription, isTrialing, currentStatus } = useSubscription();
@@ -155,23 +138,11 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
   } | null>(null);
   const [extrasReady, setExtrasReady] = useState(false);
 
-  const songs = useMemo(
-    () => songsQuery.data?.songs ?? [],
-    [songsQuery.data?.songs],
-  );
-  const services = useMemo(
-    () => servicesQuery.data ?? [],
-    [servicesQuery.data],
-  );
-  const folders = useMemo(
-    () => foldersQuery.data?.folders ?? [],
-    [foldersQuery.data?.folders],
-  );
+  const songs = useMemo(() => songsQuery.data?.songs ?? [], [songsQuery.data?.songs]);
+  const services = useMemo(() => servicesQuery.data ?? [], [servicesQuery.data]);
+  const folders = useMemo(() => foldersQuery.data?.folders ?? [], [foldersQuery.data?.folders]);
   const foldersLoading = foldersQuery.isLoading;
-  const members = useMemo(
-    () => organization?.members ?? [],
-    [organization?.members],
-  );
+  const members = useMemo(() => organization?.members ?? [], [organization?.members]);
   const pendingInvitations = (organization?.invitations ?? []).filter(
     (inv) => inv.status === "pending",
   ).length;
@@ -200,14 +171,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
     return () => {
       cancelled = true;
     };
-  }, [
-    active,
-    songs.length,
-    services.length,
-    events.length,
-    collections.length,
-    folders.length,
-  ]);
+  }, [active, songs.length, services.length, events.length, collections.length, folders.length]);
 
   const summary: UsageOverviewSummary = useMemo(
     () =>
@@ -265,9 +229,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
   const formatCount = (n: number) => new Intl.NumberFormat(locale).format(n);
 
   const storage = summary.resources.find((r) => r.id === "storage");
-  const countCards = summary.resources.filter((r) =>
-    COUNT_RESOURCES.includes(r.id),
-  );
+  const countCards = summary.resources.filter((r) => COUNT_RESOURCES.includes(r.id));
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -289,9 +251,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
               {t(planStatusKey)}
               {isTrialing && activeSubscription?.trialEnd
                 ? ` · ${t("analytics.usage.trialUntil", {
-                    date: new Date(
-                      activeSubscription.trialEnd,
-                    ).toLocaleDateString(locale, {
+                    date: new Date(activeSubscription.trialEnd).toLocaleDateString(locale, {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
@@ -306,10 +266,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
           {countCards.map((item) => {
             const Icon = RESOURCE_ICONS[item.id];
             return (
-              <div
-                key={item.id}
-                className="p-4 rounded-md border border-m3-border bg-m3-card"
-              >
+              <div key={item.id} className="p-4 rounded-md border border-m3-border bg-m3-card">
                 <div className="flex items-center gap-2 text-m3-secondary mb-3">
                   <Icon className="w-4 h-4 text-m3-primary" />
                   <span className="text-xs font-medium truncate">
@@ -352,9 +309,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({
                   </span>
                 ) : null}
               </div>
-              {storage.percentage != null ? (
-                <StorageBar percentage={storage.percentage} />
-              ) : null}
+              {storage.percentage != null ? <StorageBar percentage={storage.percentage} /> : null}
             </div>
           </Surface>
         ) : null}
@@ -497,14 +452,10 @@ function DetailRow({
         {icon}
         <span className="truncate">
           {label}
-          {hint ? (
-            <span className="block text-caption font-normal">{hint}</span>
-          ) : null}
+          {hint ? <span className="block text-caption font-normal">{hint}</span> : null}
         </span>
       </dt>
-      <dd className="text-sm font-semibold tabular-nums text-m3-text shrink-0">
-        {value}
-      </dd>
+      <dd className="text-sm font-semibold tabular-nums text-m3-text shrink-0">{value}</dd>
     </div>
   );
 }

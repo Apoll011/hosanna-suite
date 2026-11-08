@@ -3,13 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  Badge,
-  Button,
-  EmptyState,
-  PageHeader,
-  Spinner,
-} from "@/src/components/common";
+import { Badge, Button, EmptyState, PageHeader, Spinner } from "@/src/components/common";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
@@ -48,10 +42,7 @@ export const TrashPage: React.FC = () => {
   const { organization } = useAuth();
   const { navigate } = useAppNavigate();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const { matched: canManageTrash, loading: roleLoading } = useAnyRole(
-    "owner",
-    "admin",
-  );
+  const { matched: canManageTrash, loading: roleLoading } = useAnyRole("owner", "admin");
 
   const typeLabel = (type: string): string =>
     type === "folder"
@@ -74,9 +65,7 @@ export const TrashPage: React.FC = () => {
     return (
       <div className="flex-1 flex flex-col w-full mx-auto p-4 sm:p-8 max-w-7xl">
         <EmptyState
-          icon={
-            <ShieldAlert className="w-12 h-12 text-m3-primary opacity-40" />
-          }
+          icon={<ShieldAlert className="w-12 h-12 text-m3-primary opacity-40" />}
           title={t("routes.unauthorized.title")}
           description={t("routes.unauthorized.desc")}
           actionLabel={t("routes.unauthorized.goHomeBtn")}
@@ -101,25 +90,16 @@ export const TrashPage: React.FC = () => {
 
   return (
     <div className="flex-1 p-6 overflow-y-auto">
-      <PageHeader
-        title={t("common.trash")}
-        description={t("trashPage.emptyDesc")}
-      />
+      <PageHeader title={t("common.trash")} description={t("trashPage.emptyDesc")} />
       <div className="overflow-x-auto border border-m3-border/40 rounded-xl bg-m3-card shadow-sm">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-m3-sidebar/40 border-b border-m3-border">
               <th className="text-label py-4 px-6">{t("common.name")}</th>
               <th className="text-label py-4 px-6">{t("common.type")}</th>
-              <th className="text-label py-4 px-6">
-                {t("trashPage.deletedAt")}
-              </th>
-              <th className="text-label py-4 px-6">
-                {t("trashPage.permanentDeletion")}
-              </th>
-              <th className="text-label py-4 px-6 text-right">
-                {t("common.action")}
-              </th>
+              <th className="text-label py-4 px-6">{t("trashPage.deletedAt")}</th>
+              <th className="text-label py-4 px-6">{t("trashPage.permanentDeletion")}</th>
+              <th className="text-label py-4 px-6 text-right">{t("common.action")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-m3-border/30 text-sm font-semibold">

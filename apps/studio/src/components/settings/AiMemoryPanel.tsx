@@ -6,15 +6,7 @@
 import { aiApi, type AiLimits, type AiMemoryItem } from "@/src/api/ai";
 import { Button, Surface } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
-import {
-  Brain,
-  Building2,
-  Loader2,
-  Plus,
-  Sparkles,
-  Trash2,
-  User,
-} from "lucide-react";
+import { Brain, Building2, Loader2, Plus, Sparkles, Trash2, User } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
 export type AiMemoryScope = "organization" | "personal";
@@ -22,10 +14,7 @@ export type AiMemoryScope = "organization" | "personal";
 export interface AiMemoryPanelProps {
   scope: AiMemoryScope;
   limits: AiLimits;
-  showToast?: (
-    text: string,
-    variant: "success" | "error" | "info" | "warning",
-  ) => void;
+  showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
 const SCOPE_API = {
@@ -44,11 +33,7 @@ const SCOPE_API = {
 } as const;
 
 /** Notes the assistant remembers — org-wide or account-scoped. */
-export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
-  scope,
-  limits,
-  showToast,
-}) => {
+export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({ scope, limits, showToast }) => {
   const { t } = useI18n();
   const [items, setItems] = useState<AiMemoryItem[] | null>(null);
   const [draft, setDraft] = useState("");
@@ -58,10 +43,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
 
   const fail = useCallback(
     (err: unknown) => {
-      showToast?.(
-        err instanceof Error ? err.message : t("ai.settings.memoryError"),
-        "error",
-      );
+      showToast?.(err instanceof Error ? err.message : t("ai.settings.memoryError"), "error");
     },
     [showToast, t],
   );
@@ -91,9 +73,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
     setBusy(true);
     try {
       const item = await api.add(content);
-      setItems((prev) =>
-        prev?.some((p) => p.id === item.id) ? prev : [...(prev ?? []), item],
-      );
+      setItems((prev) => (prev?.some((p) => p.id === item.id) ? prev : [...(prev ?? []), item]));
       setDraft("");
     } catch (err) {
       fail(err);
@@ -138,14 +118,10 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-title text-m3-text">
-            {isOrg
-              ? t("ai.settings.memoryOrgTitle")
-              : t("ai.settings.memoryPersonalTitle")}
+            {isOrg ? t("ai.settings.memoryOrgTitle") : t("ai.settings.memoryPersonalTitle")}
           </h2>
           <p className="text-muted mt-1 text-sm">
-            {isOrg
-              ? t("ai.settings.memoryOrgDesc")
-              : t("ai.settings.memoryPersonalDesc")}
+            {isOrg ? t("ai.settings.memoryOrgDesc") : t("ai.settings.memoryPersonalDesc")}
           </p>
         </div>
         <div className="shrink-0 flex flex-col items-end gap-1.5 pt-1">
@@ -204,9 +180,7 @@ export const AiMemoryPanel: React.FC<AiMemoryPanelProps> = ({
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-md border border-dashed border-m3-border py-8 px-4 text-center">
           <Brain className="w-6 h-6 text-m3-secondary/60" />
-          <p className="text-sm text-m3-secondary max-w-sm m-0">
-            {t("ai.settings.memoryEmpty")}
-          </p>
+          <p className="text-sm text-m3-secondary max-w-sm m-0">{t("ai.settings.memoryEmpty")}</p>
         </div>
       ) : (
         <div className="space-y-2">

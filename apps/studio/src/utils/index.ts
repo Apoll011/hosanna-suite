@@ -12,10 +12,7 @@ import { CifraResult, FolderNode } from "../types";
 // Folder tree
 // ---------------------------------------------------------------------------
 
-export function buildFolderTree(
-  songs: Song[],
-  search: string = "",
-): FolderNode[] {
+export function buildFolderTree(songs: Song[], search: string = ""): FolderNode[] {
   const root: FolderNode[] = [];
   const query = search.trim().toLowerCase();
 
@@ -52,9 +49,7 @@ export function buildFolderTree(
           songId: song.id,
         });
       } else {
-        let folder = currentLevel.find(
-          (n) => n.type === "folder" && n.name === part,
-        );
+        let folder = currentLevel.find((n) => n.type === "folder" && n.name === part);
         if (!folder) {
           folder = {
             name: part,
@@ -113,16 +108,12 @@ export function printHtmlDirectly(html: string) {
   }, 1000);
 }
 
-export function parseCifraClubInput(
-  input: string,
-): { artist: string; song: string } | null {
+export function parseCifraClubInput(input: string): { artist: string; song: string } | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
 
   try {
-    const urlObj = new URL(
-      trimmed.startsWith("http") ? trimmed : `https://${trimmed}`,
-    );
+    const urlObj = new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
     const parts = urlObj.pathname.split("/").filter(Boolean);
     if (parts.length >= 2) {
       return { artist: parts[0], song: parts[1] };
@@ -141,9 +132,7 @@ export async function getCifra(url: string): Promise<CifraResult> {
     const params = new URLSearchParams({ url });
 
     const client = getApiClient();
-    const res = await client.request<CifraResult>(
-      `/cifra?${params.toString()}`,
-    );
+    const res = await client.request<CifraResult>(`/cifra?${params.toString()}`);
     return res;
   } catch (error) {
     return {
@@ -207,9 +196,7 @@ export function getAvatarGradient(seed: string): string {
 /**
  * Converts duration strings like "3:45", "03:45", "1:02:15", or "225" into seconds as a number.
  */
-export function parseDurationToSeconds(
-  durationStr: string | undefined,
-): number | undefined {
+export function parseDurationToSeconds(durationStr: string | undefined): number | undefined {
   if (!durationStr) return undefined;
   const trimmed = durationStr.trim();
   if (!trimmed) return undefined;
@@ -239,9 +226,7 @@ export function parseDurationToSeconds(
  * Converts a ParsedSong into a SerchableSong (SearchableSong) representation
  * optimized for in-memory Lucene/Liqe searching.
  */
-export function parsedSongToSearchableSong(
-  parsedSong: ParsedSong,
-): SearchableSong {
+export function parsedSongToSearchableSong(parsedSong: ParsedSong): SearchableSong {
   const meta = parsedSong.metadata || {};
 
   // Year parsing

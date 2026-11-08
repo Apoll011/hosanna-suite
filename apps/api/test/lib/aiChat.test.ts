@@ -8,10 +8,7 @@ import {
   runBatch,
 } from "../../src/services/aiChat.service.js";
 import { AppError } from "../../src/utils/errors.js";
-import {
-  AI_CHAT_MAX_MESSAGES,
-  aiChatBodySchema,
-} from "../../src/validators/ai.validators.js";
+import { AI_CHAT_MAX_MESSAGES, aiChatBodySchema } from "../../src/validators/ai.validators.js";
 
 const msg = (n: number) =>
   Array.from({ length: n }, (_, i) => ({
@@ -22,10 +19,7 @@ const msg = (n: number) =>
 
 describe("describeChatError", () => {
   it("passes AppError messages through", () => {
-    assert.equal(
-      describeChatError(AppError.forbidden("No AI access")),
-      "No AI access",
-    );
+    assert.equal(describeChatError(AppError.forbidden("No AI access")), "No AI access");
   });
 
   it("never leaks provider internals", () => {
@@ -64,19 +58,12 @@ describe("localePromptBlock", () => {
 
 describe("aiChatBodySchema", () => {
   it("accepts a locale and rejects unknown ones", () => {
-    assert.ok(
-      aiChatBodySchema.safeParse({ messages: msg(1), locale: "pt" }).success,
-    );
-    assert.ok(
-      !aiChatBodySchema.safeParse({ messages: msg(1), locale: "fr" }).success,
-    );
+    assert.ok(aiChatBodySchema.safeParse({ messages: msg(1), locale: "pt" }).success);
+    assert.ok(!aiChatBodySchema.safeParse({ messages: msg(1), locale: "fr" }).success);
   });
 
   it("caps history length and size", () => {
-    assert.ok(
-      !aiChatBodySchema.safeParse({ messages: msg(AI_CHAT_MAX_MESSAGES + 1) })
-        .success,
-    );
+    assert.ok(!aiChatBodySchema.safeParse({ messages: msg(AI_CHAT_MAX_MESSAGES + 1) }).success);
     const huge = [
       {
         id: "1",

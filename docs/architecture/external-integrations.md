@@ -4,11 +4,11 @@ Everything outside the Hosanna repos that the product depends on.
 
 ## Data and storage
 
-| Service                      | Used for                                                                               | Config                                                                              |
-| ---------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **Supabase Postgres**        | Primary DB via Prisma (`DATABASE_URL` pooler, `DIRECT_URL` migrations)                 | `.env`                                                                              |
-| **Supabase Storage**         | Avatar uploads (`avatars` bucket)                                                      | `SUPABASE_URL` + service client                                                     |
-| **Firebase Cloud Messaging** | Push to devices; session carries `fcm` + `notify`                                      | `FCM_*` service account                                                             |
+| Service                      | Used for                                                                               | Config                                                                           |
+| ---------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Supabase Postgres**        | Primary DB via Prisma (`DATABASE_URL` pooler, `DIRECT_URL` migrations)                 | `.env`                                                                           |
+| **Supabase Storage**         | Avatar uploads (`avatars` bucket)                                                      | `SUPABASE_URL` + service client                                                  |
+| **Firebase Cloud Messaging** | Push to devices; session carries `fcm` + `notify`                                      | `FCM_*` service account                                                          |
 | **Cloud Firestore**          | Realtime signals: `services/{id}/realtime/notes`, `services/{id}/annotations/{songId}` | Same Firebase project; see [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) |
 
 Local Docker Compose can run Postgres without Supabase for development.

@@ -1,10 +1,4 @@
-import {
-  Badge,
-  ConfirmDialog,
-  EmptyState,
-  Modal,
-  Spinner,
-} from "@/src/components/common";
+import { Badge, ConfirmDialog, EmptyState, Modal, Spinner } from "@/src/components/common";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan, usePermissionValue } from "@/src/lib/permissions/client";
@@ -22,13 +16,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import {
   BatchActionFloatingBar,
@@ -50,36 +38,25 @@ interface ServicesPageProps {
 type ServiceSortBy = "date" | "name";
 type SortOrder = "asc" | "desc";
 
-export const ServicesPage: React.FC<ServicesPageProps> = ({
-  searchQuery: externalSearchQuery,
-}) => {
+export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externalSearchQuery }) => {
   const { navigate } = useAppNavigate();
   const { t } = useI18n();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<
-    string,
-    unknown
-  >;
+  const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<string, unknown>;
   const viewMode = context.viewMode ?? "grid";
-  const density =
-    (context.density as "comfortable" | "compact") ?? "comfortable";
+  const density = (context.density as "comfortable" | "compact") ?? "comfortable";
   const contextSortBy = context.sortBy;
   const contextSortOrder = context.sortOrder;
   const actualSearchQuery =
-    externalSearchQuery !== undefined
-      ? externalSearchQuery
-      : (context.searchQuery as string) || "";
+    externalSearchQuery !== undefined ? externalSearchQuery : (context.searchQuery as string) || "";
 
-  const { servicesQuery, createService, updateService, deleteService } =
-    useServices();
+  const { servicesQuery, createService, updateService, deleteService } = useServices();
   const { printService, printServices } = usePrint();
 
   // Effective sort (from MainLayout context)
-  const effectiveSortBy: ServiceSortBy =
-    contextSortBy === "title" ? "name" : "date";
-  const effectiveSortOrder: SortOrder =
-    (contextSortOrder as SortOrder) ?? "desc";
+  const effectiveSortBy: ServiceSortBy = contextSortBy === "title" ? "name" : "date";
+  const effectiveSortOrder: SortOrder = (contextSortOrder as SortOrder) ?? "desc";
 
   // ─── Archive toggle (from MainLayout context or local fallback) ──────────
   const showArchived = (context.showArchived as boolean) ?? false;
@@ -111,9 +88,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   } | null>(null);
 
   // ─── Multi-select state ───────────────────
-  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedServiceIds, setSelectedServiceIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isBatchDeleteOpen, setIsBatchDeleteOpen] = useState(false);
@@ -130,10 +105,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   );
 
   // Active (non-archived) services
-  const activeServices = useMemo(
-    () => allServices.filter((s) => !s.archived),
-    [allServices],
-  );
+  const activeServices = useMemo(() => allServices.filter((s) => !s.archived), [allServices]);
 
   const archivedServices = useMemo(
     () =>
@@ -173,9 +145,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     if (actualSearchQuery.trim()) {
       const lq = actualSearchQuery.toLowerCase();
       list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(lq) ||
-          (s.notes && s.notes.toLowerCase().includes(lq)),
+        (s) => s.name.toLowerCase().includes(lq) || (s.notes && s.notes.toLowerCase().includes(lq)),
       );
     }
     return sortServices(list);
@@ -186,9 +156,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     if (actualSearchQuery.trim()) {
       const lq = actualSearchQuery.toLowerCase();
       list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(lq) ||
-          (s.notes && s.notes.toLowerCase().includes(lq)),
+        (s) => s.name.toLowerCase().includes(lq) || (s.notes && s.notes.toLowerCase().includes(lq)),
       );
     }
     return sortServices(list);
@@ -196,10 +164,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
 
   // Combined visible list for keyboard selection and operations
   const allVisibleServices = useMemo(
-    () =>
-      showArchived
-        ? [...filteredServices, ...filteredArchivedServices]
-        : filteredServices,
+    () => (showArchived ? [...filteredServices, ...filteredArchivedServices] : filteredServices),
     [showArchived, filteredServices, filteredArchivedServices],
   );
 
@@ -221,9 +186,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if (isTyping) return;
 
       if (e.key === "Escape") {
@@ -243,9 +206,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         if (selectedServiceIds.size === 0) return;
         e.preventDefault();
         if (selectedServiceIds.size === 1) {
-          const service = allVisibleServices.find((s) =>
-            selectedServiceIds.has(s.id),
-          );
+          const service = allVisibleServices.find((s) => selectedServiceIds.has(s.id));
           if (service) setDeleteTarget(service);
         } else {
           setIsBatchDeleteOpen(true);
@@ -257,17 +218,16 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   }, [allVisibleServices, selectedServiceIds]);
 
   // ─── Marquee selection hook ──────────────────────────────────────────────
-  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } =
-    useMarqueeSelection({
-      containerRef,
-      enabled: true,
-      selectedIds: selectedServiceIds,
-      onSelectionChange: setSelectedServiceIds,
-      onClearSelection: () => {
-        setSelectedServiceIds(new Set());
-        setLastClickedId(null);
-      },
-    });
+  const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } = useMarqueeSelection({
+    containerRef,
+    enabled: true,
+    selectedIds: selectedServiceIds,
+    onSelectionChange: setSelectedServiceIds,
+    onClearSelection: () => {
+      setSelectedServiceIds(new Set());
+      setLastClickedId(null);
+    },
+  });
 
   // ─── Item click handler (Ctrl/Shift/normal) ───────────────────────────────
   const handleServiceClick = useCallback(
@@ -296,10 +256,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         }
         setLastClickedId(service.id);
       } else {
-        if (
-          selectedServiceIds.size === 1 &&
-          selectedServiceIds.has(service.id)
-        ) {
+        if (selectedServiceIds.size === 1 && selectedServiceIds.has(service.id)) {
           navigate(`${slugPrefix}/services/${service.id}`);
           return;
         }
@@ -343,11 +300,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   );
 
   // ─── Service actions ──────────────────────────────────────────────────────
-  const handleCreateServiceSubmit = async (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => {
+  const handleCreateServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
     try {
       const newService = await createService({
         name: data.name,
@@ -363,11 +316,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     }
   };
 
-  const handleEditServiceSubmit = async (data: {
-    name: string;
-    date: string;
-    notes: string;
-  }) => {
+  const handleEditServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
     if (!editTarget) return;
     try {
       await updateService({
@@ -389,9 +338,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     try {
       let fullElements = service.elements;
       if (!fullElements) {
-        const fullService = (servicesQuery.data || []).find(
-          (s: Service) => s.id === service.id,
-        );
+        const fullService = (servicesQuery.data || []).find((s: Service) => s.id === service.id);
         fullElements = fullService?.elements || [];
       }
       await createService({
@@ -480,8 +427,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   // ─── Truly Empty State (Only when no active services AND archive view is off/empty) ───
   const hasNoItemsToShow =
     activeServices.length === 0 &&
-    (!showArchived ||
-      (archivedServices.length === 0 && !archivedServicesQuery.isLoading));
+    (!showArchived || (archivedServices.length === 0 && !archivedServicesQuery.isLoading));
 
   if (hasNoItemsToShow && !actualSearchQuery) {
     return (
@@ -494,9 +440,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
           title={t("servicesPage.noServicesTitle")}
           description={t("servicesPage.noServicesDesc")}
           actionLabel={emptyStateAction}
-          onAction={
-            canCreateService ? () => setIsCreateModalOpen(true) : undefined
-          }
+          onAction={canCreateService ? () => setIsCreateModalOpen(true) : undefined}
         />
         {contextMenu && contextMenu.service === null && (
           <div
@@ -566,12 +510,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 service={service}
                 isSelected={selectedServiceIds.has(service.id)}
                 density={density}
-                onClick={(e) =>
-                  handleServiceClick(e, service, filteredServices)
-                }
-                onDoubleClick={() =>
-                  navigate(`${slugPrefix}/services/${service.id}`)
-                }
+                onClick={(e) => handleServiceClick(e, service, filteredServices)}
+                onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                 onContextMenu={(e) => openContextMenu(e, service)}
               />
             ))
@@ -591,8 +531,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 </span>
                 <div className="h-px flex-1 bg-amber-500/20" />
               </div>
-              {filteredArchivedServices.length === 0 &&
-              !archivedServicesQuery.isLoading ? (
+              {filteredArchivedServices.length === 0 && !archivedServicesQuery.isLoading ? (
                 <div className="col-span-full text-center py-8 text-m3-secondary text-xs opacity-60">
                   {t("servicesPage.noArchived")}
                 </div>
@@ -604,12 +543,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                     isSelected={selectedServiceIds.has(service.id)}
                     isArchived
                     density={density}
-                    onClick={(e) =>
-                      handleServiceClick(e, service, filteredArchivedServices)
-                    }
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/services/${service.id}`)
-                    }
+                    onClick={(e) => handleServiceClick(e, service, filteredArchivedServices)}
+                    onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                     onContextMenu={(e) => openContextMenu(e, service)}
                   />
                 ))
@@ -622,25 +557,13 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
           <table className="w-full text-left border-collapse select-none">
             <thead>
               <tr className="bg-m3-sidebar/40 border-b border-m3-border">
-                <th
-                  className={`text-label ${
-                    density === "compact" ? "py-2.5 px-4" : "py-4 px-6"
-                  }`}
-                >
+                <th className={`text-label ${density === "compact" ? "py-2.5 px-4" : "py-4 px-6"}`}>
                   {t("servicesPage.serviceName")}
                 </th>
-                <th
-                  className={`text-label ${
-                    density === "compact" ? "py-2.5 px-4" : "py-4 px-6"
-                  }`}
-                >
+                <th className={`text-label ${density === "compact" ? "py-2.5 px-4" : "py-4 px-6"}`}>
                   {t("common.type")}
                 </th>
-                <th
-                  className={`text-label ${
-                    density === "compact" ? "py-2.5 px-4" : "py-4 px-6"
-                  }`}
-                >
+                <th className={`text-label ${density === "compact" ? "py-2.5 px-4" : "py-4 px-6"}`}>
                   {t("servicesPage.scheduledDate")}
                 </th>
                 <th
@@ -655,10 +578,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             >
               {filteredServices.length === 0 && !showArchived ? (
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="text-center py-12 text-m3-secondary opacity-60"
-                  >
+                  <td colSpan={4} className="text-center py-12 text-m3-secondary opacity-60">
                     {t("servicesPage.noMatch")}
                   </td>
                 </tr>
@@ -669,12 +589,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                     service={service}
                     isSelected={selectedServiceIds.has(service.id)}
                     density={density}
-                    onClick={(e) =>
-                      handleServiceClick(e, service, filteredServices)
-                    }
-                    onDoubleClick={() =>
-                      navigate(`${slugPrefix}/services/${service.id}`)
-                    }
+                    onClick={(e) => handleServiceClick(e, service, filteredServices)}
+                    onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                     onContextMenu={(e) => openContextMenu(e, service)}
                   />
                 ))
@@ -684,23 +600,17 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
               {showArchived && (
                 <>
                   <tr>
-                    <td
-                      colSpan={4}
-                      className="py-3 px-6 bg-amber-50/50 dark:bg-amber-950/20"
-                    >
+                    <td colSpan={4} className="py-3 px-6 bg-amber-50/50 dark:bg-amber-950/20">
                       <span className="text-label text-amber-600 dark:text-amber-400 flex items-center gap-2">
                         <Archive className="w-3.5 h-3.5" />
                         {t("servicesPage.archivedTitle", {
                           count: filteredArchivedServices.length,
                         })}
-                        {archivedServicesQuery.isLoading && (
-                          <Spinner size="sm" />
-                        )}
+                        {archivedServicesQuery.isLoading && <Spinner size="sm" />}
                       </span>
                     </td>
                   </tr>
-                  {filteredArchivedServices.length === 0 &&
-                  !archivedServicesQuery.isLoading ? (
+                  {filteredArchivedServices.length === 0 && !archivedServicesQuery.isLoading ? (
                     <tr>
                       <td
                         colSpan={4}
@@ -717,16 +627,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                         isSelected={selectedServiceIds.has(service.id)}
                         isArchived
                         density={density}
-                        onClick={(e) =>
-                          handleServiceClick(
-                            e,
-                            service,
-                            filteredArchivedServices,
-                          )
-                        }
-                        onDoubleClick={() =>
-                          navigate(`${slugPrefix}/services/${service.id}`)
-                        }
+                        onClick={(e) => handleServiceClick(e, service, filteredArchivedServices)}
+                        onDoubleClick={() => navigate(`${slugPrefix}/services/${service.id}`)}
                         onContextMenu={(e) => openContextMenu(e, service)}
                       />
                     ))
@@ -743,9 +645,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         selectedCount={selectedServiceIds.size}
         itemLabel={t("common.services")}
         onPrint={() => {
-          const selected = allServices.filter((s) =>
-            selectedServiceIds.has(s.id),
-          );
+          const selected = allServices.filter((s) => selectedServiceIds.has(s.id));
           if (selected.length > 0) {
             printServices(selected.map((s) => ({ service: s })));
           }
@@ -788,9 +688,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedServiceIds(
-                    new Set(allVisibleServices.map((s) => s.id)),
-                  );
+                  setSelectedServiceIds(new Set(allVisibleServices.map((s) => s.id)));
                   setContextMenu(null);
                 }}
                 className="w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
@@ -807,9 +705,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
               </div>
               <button
                 onClick={() => {
-                  const selected = allServices.filter((s) =>
-                    selectedServiceIds.has(s.id),
-                  );
+                  const selected = allServices.filter((s) => selectedServiceIds.has(s.id));
                   if (selected.length > 0) {
                     printServices(selected.map((s) => ({ service: s })));
                   }
@@ -1006,9 +902,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             : t("servicesPage.archiveService")
         }
         message={t("servicesPage.archiveServiceMessage", {
-          action: archiveTarget?.archived
-            ? t("servicesPage.activate")
-            : t("servicesPage.archive"),
+          action: archiveTarget?.archived ? t("servicesPage.activate") : t("servicesPage.archive"),
           name: archiveTarget?.name || "",
         })}
         confirmText={

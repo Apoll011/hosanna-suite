@@ -6,14 +6,7 @@
 import type { LineAST, SongAST } from "@hosanna/chordpro";
 
 export type SongBlockKind =
-  | "verse"
-  | "chorus"
-  | "bridge"
-  | "tab"
-  | "grid"
-  | "comment"
-  | "ref"
-  | "divider";
+  "verse" | "chorus" | "bridge" | "tab" | "grid" | "comment" | "ref" | "divider";
 
 export interface SongBlock {
   kind: SongBlockKind;
@@ -26,11 +19,9 @@ export interface SongBlock {
 
 const CHORUS_LABEL = /^(coro|refr[ãa]o|chorus|refrain|estribillo|pre-?coro)/i;
 const BRIDGE_LABEL = /^(ponte|bridge|puente)/i;
-const VERSE_LABEL =
-  /^((verse|verso|estrofe|estrofa|stanza|v)\.?\s*\d*\.?|\d+\.?)$/i;
+const VERSE_LABEL = /^((verse|verso|estrofe|estrofa|stanza|v)\.?\s*\d*\.?|\d+\.?)$/i;
 
-const isLabelLine = (line: LineAST) =>
-  line.type === "comment" || line.type === "comment_italic";
+const isLabelLine = (line: LineAST) => line.type === "comment" || line.type === "comment_italic";
 
 const hasContent = (line: LineAST) => {
   if (line.type === "empty") return false;

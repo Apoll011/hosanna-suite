@@ -14,9 +14,7 @@ import { I18nProvider } from "./lib/i18n";
 import { posthog } from "./lib/posthog";
 import { AppRoutes } from "./routes/AppRoutes";
 
-configureApiClient(
-  localStorage.getItem("server_url") || import.meta.env.VITE_API_URL || "/api",
-);
+configureApiClient(localStorage.getItem("server_url") || import.meta.env.VITE_API_URL || "/api");
 
 function PageviewTracker() {
   const location = useLocation();

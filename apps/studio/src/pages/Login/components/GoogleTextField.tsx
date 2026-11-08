@@ -13,10 +13,7 @@ interface GoogleTextFieldProps extends React.InputHTMLAttributes<HTMLInputElemen
   trailingIcon?: React.ReactNode;
 }
 
-export const GoogleTextField = React.forwardRef<
-  HTMLInputElement,
-  GoogleTextFieldProps
->(
+export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFieldProps>(
   (
     {
       label,
@@ -63,11 +60,7 @@ export const GoogleTextField = React.forwardRef<
           {leadingIcon && (
             <div
               className={`pl-3 pr-1 shrink-0 transition-colors ${
-                error
-                  ? "text-m3-danger"
-                  : isFocused
-                    ? "text-m3-primary"
-                    : "text-m3-secondary"
+                error ? "text-m3-danger" : isFocused ? "text-m3-primary" : "text-m3-secondary"
               }`}
             >
               {leadingIcon}
@@ -81,11 +74,7 @@ export const GoogleTextField = React.forwardRef<
             } ${
               isFloating
                 ? `-top-2.5 px-1.5 text-label bg-m3-card ${
-                    error
-                      ? "text-m3-danger"
-                      : isFocused
-                        ? "text-m3-primary"
-                        : "text-m3-secondary"
+                    error ? "text-m3-danger" : isFocused ? "text-m3-primary" : "text-m3-secondary"
                   }`
                 : "top-1/2 -translate-y-1/2 text-sm text-m3-secondary"
             }`}
@@ -112,9 +101,7 @@ export const GoogleTextField = React.forwardRef<
             {...props}
           />
 
-          {trailingIcon && (
-            <div className="pr-3 pl-1 shrink-0">{trailingIcon}</div>
-          )}
+          {trailingIcon && <div className="pr-3 pl-1 shrink-0">{trailingIcon}</div>}
         </div>
 
         {error ? (

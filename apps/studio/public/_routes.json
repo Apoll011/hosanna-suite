@@ -1,5 +1,11 @@
 {
   "version": 1,
   "include": ["/*"],
-  "exclude": ["/robots.txt", "/sitemap.xml", "/favicon.png", "/apple-touch-icon*.png", "/hosanna_favicon.svg"]
+  "exclude": [
+    "/robots.txt",
+    "/sitemap.xml",
+    "/favicon.png",
+    "/apple-touch-icon*.png",
+    "/hosanna_favicon.svg"
+  ]
 }
