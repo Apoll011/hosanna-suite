@@ -767,7 +767,7 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       {/* ========================================== */}
       {/* 2. CÓPIAS DE SEGURANÇA & DADOS             */}
       {/* ========================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
         <CanAny permissions={["backup.export", "backup.import"]}>
           <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden h-full flex flex-col">
             <div className="px-6 py-5 border-b border-m3-border/60 bg-m3-sidebar/50">

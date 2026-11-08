@@ -25,13 +25,13 @@ export const Button: React.FC<ButtonProps> = React.memo(
     ...props
   }) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-semibold rounded-[var(--radius-md)] transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary";
+      "inline-flex items-center justify-center font-semibold rounded-md transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary";
 
     const variantStyles = {
       primary:
-        "bg-m3-primary hover:bg-m3-primary-dark text-white shadow-[var(--shadow-sm)] data-[action=primary]:bg-m3-primary",
+        "bg-m3-primary hover:bg-m3-primary-dark text-white shadow-sm data-[action=primary]:bg-m3-primary",
       secondary: "bg-m3-sidebar hover:bg-m3-hover text-m3-text border border-m3-border/60",
-      danger: "bg-m3-danger hover:opacity-90 text-white shadow-[var(--shadow-sm)]",
+      danger: "bg-m3-danger hover:opacity-90 text-white shadow-sm",
       ghost: "hover:bg-m3-hover text-m3-secondary hover:text-m3-text",
       outline: "border border-m3-border text-m3-text hover:bg-m3-hover bg-transparent",
       link: "text-m3-primary hover:text-m3-primary-dark underline-offset-2 hover:underline px-0 py-0 h-auto",

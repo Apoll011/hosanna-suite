@@ -235,9 +235,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({ active }) =>
     <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div
         className={
-          storage
-            ? "grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch"
-            : "grid grid-cols-1"
+          storage ? "grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch" : "grid grid-cols-1"
         }
       >
         <Surface className="h-full">
@@ -323,7 +321,7 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({ active }) =>
         })}
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 [&>*]:min-w-0 [&>*]:h-full">
+      <div className="grid gap-6 sm:grid-cols-2 *:min-w-0 *:h-full">
         <BreakdownCard
           title={t("analytics.usage.sections.library")}
           icon={<Music2 className="w-4 h-4 text-m3-primary" />}

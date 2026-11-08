@@ -5,11 +5,11 @@
 
 import { Surface } from "@/src/components/common";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
-import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
 import type { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
+import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
-import { LANGUAGES, type PersonalLanguage } from "@hosanna/i18n";
 import { useCan } from "@/src/lib/permissions/client";
+import { LANGUAGES, type PersonalLanguage } from "@hosanna/i18n";
 import {
   BarChart2,
   Check,
@@ -112,7 +112,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast 
   const optionCard = (selected: boolean) =>
     `group relative rounded-[var(--radius-lg)] border p-4 text-left transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-m3-primary/50 ${
       selected
-        ? "border-m3-primary bg-m3-primary/5 ring-2 ring-m3-primary/20 shadow-[var(--shadow-sm)]"
+        ? "border-m3-primary bg-m3-primary/5 ring-2 ring-m3-primary/20 shadow-sm"
         : "border-m3-border hover:border-m3-primary/40 bg-m3-sidebar/40"
     }`;
 

@@ -278,7 +278,9 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
-                <span className="text-label block mb-1">{t("settings.account.profile.userId")}</span>
+                <span className="text-label block mb-1">
+                  {t("settings.account.profile.userId")}
+                </span>
                 <p className="text-xs font-mono text-m3-text truncate">{displayUser?.id || "—"}</p>
               </div>
               <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
@@ -419,7 +421,7 @@ export const AccountTab: React.FC<{ active: boolean }> = ({ active }) => {
 
       <SocialAccountsSection />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
         <ActiveSessionsSection />
         <LoginHistorySection scope="self" active={active} />
       </div>
