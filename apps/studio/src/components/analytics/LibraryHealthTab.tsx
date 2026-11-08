@@ -116,18 +116,17 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <section className="space-y-5">
-        <div>
-          <h2 className="text-title text-m3-text flex items-center gap-2">
-            <HeartPulse className="w-5 h-5 text-m3-primary" />
-            {t("analytics.libraryHealth.title")}
-          </h2>
-          <p className="mt-1 text-muted">{t("analytics.libraryHealth.desc")}</p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center gap-8">
-          <div className="relative w-36 h-36 shrink-0">
+    <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch">
+        <Surface className="h-full flex flex-col items-center justify-center text-center gap-4">
+          <div>
+            <h2 className="text-title text-m3-text flex items-center justify-center gap-2">
+              <HeartPulse className="w-5 h-5 text-m3-primary" />
+              {t("analytics.libraryHealth.title")}
+            </h2>
+            <p className="mt-1 text-muted">{t("analytics.libraryHealth.desc")}</p>
+          </div>
+          <div className="relative w-40 h-40 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
               <circle
                 cx="60"
@@ -155,29 +154,31 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
               <span className="text-caption">{t("analytics.libraryHealth.healthLabel")}</span>
             </div>
           </div>
+        </Surface>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
-            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
+        <Surface className="h-full flex flex-col justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-4 rounded-xl border border-m3-border bg-m3-sidebar/60">
               <span className="block text-2xl font-semibold text-m3-text tabular-nums">
                 {summary.songCount}
               </span>
               <span className="text-caption">{t("analytics.libraryHealth.statSongs")}</span>
             </div>
-            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
+            <div className="p-4 rounded-xl border border-m3-border bg-m3-sidebar/60">
               <span className="block text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 {summary.healthyCount}
               </span>
               <span className="text-caption">{t("analytics.libraryHealth.statHealthy")}</span>
             </div>
-            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60 col-span-2 sm:col-span-1">
+            <div className="p-4 rounded-xl border border-m3-border bg-m3-sidebar/60">
               <span className="block text-2xl font-semibold text-amber-600 dark:text-amber-400 tabular-nums">
                 {summary.issueCount}
               </span>
               <span className="text-caption">{t("analytics.libraryHealth.statIssues")}</span>
             </div>
           </div>
-        </div>
-      </section>
+        </Surface>
+      </div>
 
       <Surface padding="none" className="overflow-hidden">
         <div className="px-6 py-5 border-b border-m3-border">
