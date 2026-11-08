@@ -520,10 +520,6 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
               </span>
             </div>
 
-            {settings.configured && settings.provider === "deepseek" && provider === "deepseek" ? (
-              <AiBillingCard refreshKey={billingRefreshKey} showToast={showToast} />
-            ) : null}
-
             <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
               <Button
                 variant="primary"
@@ -696,6 +692,10 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
             </div>
           </SectionCard>
           </div>
+
+          {settings.configured && settings.provider === "deepseek" && provider === "deepseek" ? (
+            <AiBillingCard refreshKey={billingRefreshKey} showToast={showToast} />
+          ) : null}
 
           {memoryEnabled ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
