@@ -5,6 +5,9 @@
   "license": "Apache-2.0",
   "description": "Hosanna authentication app (auth.hosanna.live) — Better Auth UI + handlers",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev --port 5174",
     "build": "next build",

@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "@hosanna/ui",
     "@hosanna/config",
   ],
+  serverExternalPackages: ["handlebars", "pg", "@prisma/client", "@prisma/adapter-pg"],
 };
 
 export default nextConfig;

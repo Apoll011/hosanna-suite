@@ -8,10 +8,10 @@
  * - `t(locale, key, vars?)` interpolates {{var}} placeholders.
  */
 
-import en from "../locales/en.js";
-import es from "../locales/es.js";
-import type { I18nKeys } from "../locales/pt-PT.js";
-import ptPT from "../locales/pt-PT.js";
+import en from "../locales/en";
+import es from "../locales/es";
+import type { I18nKeys } from "../locales/pt-PT";
+import ptPT from "../locales/pt-PT";
 
 // ── Registry ───────────────────────────────────────────────────────────────
 
@@ -27,7 +27,7 @@ async function loadLocale(locale: string): Promise<Record<string, any>> {
   if (registry.has(locale)) return registry.get(locale)!;
 
   try {
-    const mod = await import(`../locales/${locale}.js`);
+    const mod = await import(`../locales/${locale}`);
     const data = mod.default ?? mod;
     registry.set(locale, data);
     return data;

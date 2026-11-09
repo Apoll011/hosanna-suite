@@ -1,4 +1,4 @@
-import type { I18nKeys } from "./pt-PT.js";
+import type { I18nKeys } from "./pt-PT";
 
 /**
  * en-US — English locale.

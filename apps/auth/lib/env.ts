@@ -22,6 +22,21 @@ function optional(name: string): string | undefined {
   return process.env[name] || undefined;
 }
 
+/** Better Auth MCP rejects http:// for non-loopback hosts (fails `next build`). */
+function normalizeMcpResourceUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    const isLoopback = host === "localhost" || host === "127.0.0.1" || host === "::1";
+    if (!isLoopback && parsed.protocol === "http:") {
+      parsed.protocol = "https:";
+    }
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 const isVercel = Boolean(process.env.VERCEL);
 
 /** Auth app origin — AUTH_URL, else PUBLIC_APP_URL, else local Next port. */
@@ -60,8 +75,12 @@ export const env = {
 
   /**
    * MCP resource identifier (stays on the API host).
-   * Defaults to local API MCP for development.
+   * Better Auth MCP requires https for non-loopback hosts.
    */
-  mcpResourceUrl:
-    optional("MCP_RESOURCE_URL") ?? "http://127.0.0.1:3000/mcp",
+  mcpResourceUrl: normalizeMcpResourceUrl(
+    optional("MCP_RESOURCE_URL") ??
+      (process.env.NODE_ENV === "production"
+        ? "https://api.hosanna.live/mcp"
+        : "http://localhost:3000/mcp"),
+  ),
 };

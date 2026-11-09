@@ -10,18 +10,22 @@
       "env": [
         "VITE_*",
         "DATABASE_*",
+        "DB_POOL_MAX",
         "DIRECT_URL",
         "BETTER_AUTH_*",
         "STRIPE_*",
         "SUPABASE_*",
         "RESEND_*",
+        "EMAIL_FROM",
         "GOOGLE_*",
         "TURNSTILE_*",
         "CORS_*",
         "PUBLIC_APP_URL",
         "AUTH_URL",
         "STUDIO_URL",
+        "MCP_RESOURCE_URL",
         "NEXT_PUBLIC_*",
+        "SKIP_ENV_VALIDATION",
         "PORT"
       ]
     },
