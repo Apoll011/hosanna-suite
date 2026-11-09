@@ -47,3 +47,5 @@ skills-lock.json
 
 */.obsidian/*
 .vscode
+.vercel
+.env*

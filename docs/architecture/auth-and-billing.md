@@ -2,7 +2,10 @@
 
 ## Better Auth
 
-Configured in `src/lib/auth.ts` with the Prisma adapter.
+Shared factory: `createAuth()` in `@hosanna/auth/server`.  
+**HTTP + UI:** `apps/auth` (`auth.hosanna.live`).  
+**Session validation:** `apps/api` imports the same factory (resource server).  
+See [auth-app-migration.md](./auth-app-migration.md).
 
 ### Sign-in methods
 
@@ -31,10 +34,10 @@ Session extras: `fcm`, `notify`, `activeOrganizationId`, `activeTeamId`.
 
 ### MCP OAuth
 
-- Login/consent UX on Studio (`STUDIO_URL/login`, `/oauth/consent`)
-- Resource audience must equal `MCP_RESOURCE_URL`
+- Login/consent UX on Auth (`AUTH_URL/login`, `/oauth/consent`)
+- Resource audience must equal `MCP_RESOURCE_URL` (still on API)
 - DCR + CIMD; scopes include `openid profile email offline_access`
-- JWT verified via `/api/auth/jwks`
+- JWT verified via `{AUTH_URL}/api/auth/jwks`
 
 ## Organizations and roles
 

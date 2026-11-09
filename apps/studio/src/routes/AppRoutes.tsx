@@ -13,7 +13,7 @@ import { isDemoMode } from "../demo/index";
 import { MainLayout } from "../layouts/MainLayout";
 import { usePreloadPermissions } from "../lib/permissions/client";
 import { posthog } from "../lib/posthog";
-import { CaptchaPage } from "../pages/CaptchaPage";
+import { ExternalAuthRedirect } from "../components/ExternalAuthRedirect";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 const PageLoader = () => {
@@ -26,22 +26,13 @@ const PageLoader = () => {
 };
 
 import {
-  AcceptInvitationPage,
   AgendaPage,
   AnalyticsPage,
-  AuthErrorPage,
   CollectionDetailPage,
   CollectionsPage,
   DemoPage,
   FoldersPage,
-  ForgotPasswordPage,
-  LoginPage,
-  OAuthConsentPage,
-  OnboardingPage,
   OrganizationPage,
-  RegisterOrganizationPage,
-  RegisterPage,
-  ResetPasswordPage,
   ServiceDetailPage,
   ServicesPage,
   SettingsPage,
@@ -49,8 +40,6 @@ import {
   SongsPage,
   TeamsPage,
   TrashPage,
-  TwoFactorPage,
-  VerifyEmailPage,
   prefetchQueue,
 } from "./routePreloader";
 
@@ -154,24 +143,26 @@ export const AppRoutes: React.FC = () => {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/auth/error" element={<AuthErrorPage />} />
-          <Route path="/oauth/consent" element={<OAuthConsentPage />} />
-          <Route path="/two-factor" element={<TwoFactorPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/new" element={<RegisterOrganizationPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/accept-invitation" element={<AcceptInvitationPage />} />
-          <Route path="/captcha" element={<CaptchaPage />} />
+          <Route path="/login" element={<ExternalAuthRedirect path="/login" />} />
+          <Route path="/auth/error" element={<ExternalAuthRedirect path="/auth/error" />} />
+          <Route path="/oauth/consent" element={<ExternalAuthRedirect path="/oauth/consent" />} />
+          <Route path="/two-factor" element={<ExternalAuthRedirect path="/two-factor" />} />
+          <Route path="/register" element={<ExternalAuthRedirect path="/register" />} />
+          <Route path="/new" element={<ExternalAuthRedirect path="/new" />} />
+          <Route path="/verify-email" element={<ExternalAuthRedirect path="/verify-email" />} />
+          <Route path="/forgot-password" element={<ExternalAuthRedirect path="/forgot-password" />} />
+          <Route path="/reset-password" element={<ExternalAuthRedirect path="/reset-password" />} />
+          <Route
+            path="/accept-invitation"
+            element={<ExternalAuthRedirect path="/accept-invitation" />}
+          />
+          <Route path="/captcha" element={<ExternalAuthRedirect path="/captcha" />} />
+          <Route path="/onboarding" element={<ExternalAuthRedirect path="/onboarding" />} />
 
           {/* Demo mode entry point — no auth required */}
           <Route path="/demo" element={<DemoPage />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/onboarding" element={<OnboardingPage />} />
-
             {/* Wrap the slug routes with our new OrganizationGuard */}
             <Route path="/:slug" element={<OrganizationGuard />}>
               <Route element={<MainLayout />}>

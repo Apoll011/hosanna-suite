@@ -3,3 +3,6 @@ export type { ActionFor, PermissionRequest, PermissionString, Resource } from ".
 
 export { admin, editor, guest, musician, owner, roles, teamLeader } from "./roles.js";
 export type { AppRole } from "./roles.js";
+
+export { pluginLocaleOverrides } from "./plugin-locale-overrides.js";
+export { RESPONSIBILITIES } from "./responsibilities.js";

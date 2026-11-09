@@ -3,12 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Hosanna RBAC: Better Auth access-control statements and organization roles",
+  "description": "Hosanna Better Auth factory, RBAC roles, and shared auth client helpers",
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
     }
   },
   "scripts": {
@@ -17,13 +25,20 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"test/**/*.test.ts\""
   },
-  "peerDependencies": {
-    "better-auth": "^1.7.18"
+  "dependencies": {
+    "@better-auth/cimd": "^1.7.18",
+    "@better-auth/i18n": "^1.7.18",
+    "@better-auth/infra": "^0.4.27",
+    "@better-auth/mcp": "^1.7.18",
+    "@better-auth/stripe": "^1.7.18",
+    "@hosanna/db": "workspace:*",
+    "better-auth": "^1.7.18",
+    "better-inbox": "^0.1.2",
+    "stripe": "^22.6.1"
   },
   "devDependencies": {
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
-    "better-auth": "^1.7.18",
     "tsx": "^4.23.15",
     "typescript": "catalog:"
   }
