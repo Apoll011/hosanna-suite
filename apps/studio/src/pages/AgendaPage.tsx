@@ -245,8 +245,8 @@ export const AgendaPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 p-4 sm:p-6 overflow-y-auto bg-m3-bg dark:bg-m3-bg">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="flex-1 p-6 overflow-y-auto bg-m3-bg dark:bg-m3-bg">
+      <div className="w-full space-y-6">
         <PageHeader
           title={t("common.agenda")}
           description={t("agenda.subtitle")}

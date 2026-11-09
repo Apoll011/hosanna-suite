@@ -13,7 +13,7 @@ pnpm run openapi:generate
 
 | Included                                                                                                                          | Excluded                                                   |
 | --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Health, billing, cron, songs, folders, services, notes, annotations, replication, trash, backup, AI, YouTube/Cifra, notifications | Better Auth (`/api/auth/*`) — use Better Auth docs/clients |
+| Health, billing, cron, songs, folders, services, notes, annotations, replication, trash, backup, AI, YouTube/Cifra, notifications | Better Auth (`AUTH_URL/api/auth/*`, hosted by `apps/auth`) — use Better Auth docs/clients |
 |                                                                                                                                   | MCP (`/mcp`)                                               |
 
 Auth: Better Auth session cookie **or** `Authorization: Bearer`. Cron routes use `CRON_SECRET` as Bearer.

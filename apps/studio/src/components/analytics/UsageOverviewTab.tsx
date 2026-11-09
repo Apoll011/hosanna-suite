@@ -232,62 +232,49 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({ active }) =>
   const countCards = summary.resources.filter((r) => COUNT_RESOURCES.includes(r.id));
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <section className="space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          <div>
-            <h2 className="text-title text-m3-text flex items-center gap-2">
-              <Cloud className="w-5 h-5 text-m3-primary" />
-              {t("analytics.usage.title")}
-            </h2>
-            <p className="mt-1 text-muted">{t("analytics.usage.desc")}</p>
+    <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div
+        className={
+          storage ? "grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch" : "grid grid-cols-1"
+        }
+      >
+        <Surface className="h-full">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div>
+              <h2 className="text-title text-m3-text flex items-center gap-2">
+                <Cloud className="w-5 h-5 text-m3-primary" />
+                {t("analytics.usage.title")}
+              </h2>
+              <p className="mt-1 text-muted">{t("analytics.usage.desc")}</p>
+            </div>
+            <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-m3-primary/10 text-m3-primary text-xs font-semibold">
+                <InfinityIcon className="w-3.5 h-3.5" />
+                {t("settings.billing.planName")}
+              </span>
+              <span className="text-caption">
+                {t(planStatusKey)}
+                {isTrialing && activeSubscription?.trialEnd
+                  ? ` · ${t("analytics.usage.trialUntil", {
+                      date: new Date(activeSubscription.trialEnd).toLocaleDateString(locale, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }),
+                    })}`
+                  : null}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-m3-primary/10 text-m3-primary text-xs font-semibold">
-              <InfinityIcon className="w-3.5 h-3.5" />
-              {t("settings.billing.planName")}
-            </span>
-            <span className="text-caption">
-              {t(planStatusKey)}
-              {isTrialing && activeSubscription?.trialEnd
-                ? ` · ${t("analytics.usage.trialUntil", {
-                    date: new Date(activeSubscription.trialEnd).toLocaleDateString(locale, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    }),
-                  })}`
-                : null}
-            </span>
-          </div>
-        </div>
-
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {countCards.map((item) => {
-            const Icon = RESOURCE_ICONS[item.id];
-            return (
-              <div key={item.id} className="p-4 rounded-md border border-m3-border bg-m3-card">
-                <div className="flex items-center gap-2 text-m3-secondary mb-3">
-                  <Icon className="w-4 h-4 text-m3-primary" />
-                  <span className="text-xs font-medium truncate">
-                    {t(RESOURCE_LABEL_KEYS[item.id])}
-                  </span>
-                </div>
-                <p className="text-2xl font-semibold tabular-nums text-m3-text tracking-tight">
-                  {formatCount(item.used)}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+        </Surface>
 
         {storage ? (
-          <Surface padding="none" className="overflow-hidden">
-            <div className="p-5 space-y-3">
+          <Surface padding="none" className="overflow-hidden h-full flex flex-col">
+            <div className="p-5 space-y-3 flex-1 flex flex-col justify-center">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-9 h-9 rounded-md bg-m3-sidebar border border-m3-border flex items-center justify-center shrink-0">
-                    <HardDrive className="w-4 h-4 text-m3-primary" />
+                  <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                    <HardDrive className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <span className="block text-sm font-semibold text-m3-text">
@@ -313,9 +300,28 @@ export const UsageOverviewTab: React.FC<UsageOverviewTabProps> = ({ active }) =>
             </div>
           </Surface>
         ) : null}
-      </section>
+      </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+        {countCards.map((item) => {
+          const Icon = RESOURCE_ICONS[item.id];
+          return (
+            <div key={item.id} className="p-4 rounded-md border border-m3-border bg-m3-card">
+              <div className="flex items-center gap-2 text-m3-secondary mb-3">
+                <Icon className="w-4 h-4 text-m3-primary" />
+                <span className="text-xs font-medium truncate">
+                  {t(RESOURCE_LABEL_KEYS[item.id])}
+                </span>
+              </div>
+              <p className="text-2xl font-semibold tabular-nums text-m3-text tracking-tight">
+                {formatCount(item.used)}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2 *:min-w-0 *:h-full">
         <BreakdownCard
           title={t("analytics.usage.sections.library")}
           icon={<Music2 className="w-4 h-4 text-m3-primary" />}
@@ -423,7 +429,7 @@ function BreakdownCard({
   children: React.ReactNode;
 }) {
   return (
-    <Surface padding="none" className="overflow-hidden">
+    <Surface padding="none" className="overflow-hidden h-full">
       <div className="px-5 py-4 border-b border-m3-border">
         <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2">
           {icon}

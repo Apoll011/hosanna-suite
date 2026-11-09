@@ -349,7 +349,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
   );
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <Tabs
           items={subTabItems}
@@ -404,7 +404,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
               {t("settings.members.noMembers")}
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredMembers.map((member: OrgMember) => (
                 <Surface
                   key={member.id}
@@ -458,7 +458,7 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
               {t("settings.members.noInvites")}
             </p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredInvites.map((invite) => {
                 const expired = isExpired(invite);
                 return (

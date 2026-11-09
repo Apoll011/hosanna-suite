@@ -432,7 +432,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
   if (hasNoItemsToShow && !actualSearchQuery) {
     return (
       <div
-        className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-500 overflow-y-auto h-full p-4 sm:p-8 max-w-7xl"
+        className="flex-1 flex flex-col w-full animate-in fade-in duration-500 overflow-y-auto h-full p-6"
         onContextMenu={handleCanvasContextMenu}
       >
         <EmptyState
@@ -485,7 +485,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
   // ─── Main Render ──────────────────────────────────────────────────────────
   return (
     <div
-      className="flex-1 flex flex-col w-full mx-auto space-y-6 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-4 sm:p-8 max-w-7xl"
+      className="flex-1 flex flex-col w-full space-y-6 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-6"
       onMouseDown={handleWorkspaceMouseDown}
       onContextMenu={handleCanvasContextMenu}
       ref={containerRef}

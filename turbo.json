@@ -6,7 +6,7 @@
     "build": {
       "dependsOn": ["^build", "^db:generate", "db:generate"],
       "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*", "!.env.example"],
-      "outputs": ["dist/**", ".output/**", "build/**"],
+      "outputs": ["dist/**", ".output/**", "build/**", ".next/**"],
       "env": [
         "VITE_*",
         "DATABASE_*",
@@ -19,6 +19,9 @@
         "TURNSTILE_*",
         "CORS_*",
         "PUBLIC_APP_URL",
+        "AUTH_URL",
+        "STUDIO_URL",
+        "NEXT_PUBLIC_*",
         "PORT"
       ]
     },

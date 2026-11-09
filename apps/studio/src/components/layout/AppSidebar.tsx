@@ -72,7 +72,7 @@ interface AppSidebarProps {
 const NAV_ACTIVE = "bg-m3-primary/10 text-m3-primary";
 const NAV_INACTIVE = "text-m3-secondary hover:bg-m3-hover hover:text-m3-text";
 const NAV_BASE =
-  "w-full flex items-center justify-between px-3 py-2 min-h-10 text-[13px] font-medium rounded-[var(--radius-md)] transition-colors cursor-pointer group";
+  "w-full flex items-center justify-between px-3 py-2 min-h-10 text-[13px] font-medium rounded-md transition-colors cursor-pointer group";
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
   isSidebarOpen,
@@ -393,7 +393,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             if (window.innerWidth < 768) setIsSidebarOpen(false);
           }}
           title={isSidebarCollapsed ? t("common.services") : undefined}
-          className={`${NAV_BASE} ${view === "services" ? NAV_ACTIVE : NAV_INACTIVE}`}
+          className={`${NAV_BASE} ${view === "services" || view === "service-editor" ? NAV_ACTIVE : NAV_INACTIVE}`}
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-5 h-5 flex items-center justify-center shrink-0">
@@ -408,7 +408,11 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             <span className={collapseText()}>{t("common.services")}</span>
           </div>
           <div className={collapseBadge()}>
-            <Badge variant={view === "services" ? "accent" : "neutral"}>{totalServices}</Badge>
+            <Badge
+              variant={view === "services" || view === "service-editor" ? "accent" : "neutral"}
+            >
+              {totalServices}
+            </Badge>
           </div>
         </button>
 

@@ -104,7 +104,7 @@ function InsightSection({
   formatPlays: (count: number) => string;
 }) {
   return (
-    <Surface padding="none" className="overflow-hidden">
+    <Surface padding="none" className="overflow-hidden h-full flex flex-col">
       <div className="px-5 py-4 border-b border-m3-border">
         <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2">
           <Icon className="w-4 h-4 text-m3-primary" />
@@ -112,7 +112,7 @@ function InsightSection({
         </h3>
         <p className="mt-1 text-caption">{desc}</p>
       </div>
-      <div className="p-2 sm:p-3 space-y-0.5">
+      <div className="p-2 sm:p-3 space-y-0.5 flex-1">
         {songs.length === 0 ? (
           <p className="text-sm text-m3-secondary px-3 py-8 text-center">{empty}</p>
         ) : (
@@ -237,37 +237,39 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({ active }
   };
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <section className="space-y-5">
-        <div>
-          <h2 className="text-title text-m3-text flex items-center gap-2">
-            <ListMusic className="w-5 h-5 text-m3-primary" />
-            {t("analytics.setlist.title")}
-          </h2>
-          <p className="mt-1 text-muted">{t("analytics.setlist.desc")}</p>
-        </div>
+    <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <Surface>
+        <div className="flex flex-col gap-5">
+          <div>
+            <h2 className="text-title text-m3-text flex items-center gap-2">
+              <ListMusic className="w-5 h-5 text-m3-primary" />
+              {t("analytics.setlist.title")}
+            </h2>
+            <p className="mt-1 text-muted">{t("analytics.setlist.desc")}</p>
+          </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Stat
-            value={formatCount(summary.songsPlayed)}
-            label={t("analytics.setlist.statPlayed")}
-          />
-          <Stat
-            value={formatCount(summary.songsNeverPlayed)}
-            label={t("analytics.setlist.statNever")}
-          />
-          <Stat
-            value={formatCount(summary.totalPlays)}
-            label={t("analytics.setlist.statTotalPlays")}
-          />
-          <Stat
-            value={formatCount(summary.pastServiceCount)}
-            label={t("analytics.setlist.statServices")}
-          />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <Stat
+              value={formatCount(summary.songsPlayed)}
+              label={t("analytics.setlist.statPlayed")}
+            />
+            <Stat
+              value={formatCount(summary.songsNeverPlayed)}
+              label={t("analytics.setlist.statNever")}
+            />
+            <Stat
+              value={formatCount(summary.totalPlays)}
+              label={t("analytics.setlist.statTotalPlays")}
+            />
+            <Stat
+              value={formatCount(summary.pastServiceCount)}
+              label={t("analytics.setlist.statServices")}
+            />
+          </div>
         </div>
-      </section>
+      </Surface>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2 [&>*]:min-w-0 [&>*]:h-full">
         <InsightSection
           title={t("analytics.setlist.sections.mostPlayed")}
           desc={t("analytics.setlist.sections.mostPlayedDesc")}

@@ -336,7 +336,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
       ref={containerRef}
       data-tour="songs-list"
       onMouseDown={handleWorkspaceMouseDown}
-      className="flex-1 flex flex-col w-full mx-auto animate-in fade-in duration-300 overflow-hidden h-full relative select-none p-4 sm:p-8 max-w-7xl"
+      className="flex-1 flex flex-col w-full animate-in fade-in duration-300 overflow-hidden h-full relative select-none p-6"
     >
       <Table
         isLoading={songsQuery.isLoading}

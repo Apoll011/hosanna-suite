@@ -197,8 +197,8 @@ export const OrganizationPage: React.FC = () => {
     }));
 
   return (
-    <div className="h-full w-full overflow-y-auto bg-m3-bg text-m3-text p-4 sm:p-6 lg:p-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="h-full w-full overflow-y-auto bg-m3-bg text-m3-text p-6">
+      <div className="w-full space-y-6">
         <PageHeader title={t("common.organization")} />
 
         {!isOnline && (
@@ -245,7 +245,7 @@ export const OrganizationPage: React.FC = () => {
             <GeneralTab active={activeTab === "general"} showToast={showToast} />
             <AiSettingsTab active={activeTab === "ai"} showToast={showToast} />
             {activeTab === "loginActivity" && canViewLoginActivity && (
-              <div className="max-w-4xl mx-auto w-full">
+              <div className="w-full">
                 <LoginHistorySection
                   scope="organization"
                   active={activeTab === "loginActivity"}
@@ -255,7 +255,7 @@ export const OrganizationPage: React.FC = () => {
               </div>
             )}
             {activeTab === "loginActivity" && !roleLoading && !canViewLoginActivity && (
-              <Surface className="max-w-4xl mx-auto w-full text-center">
+              <Surface className="w-full text-center">
                 <Lock className="w-8 h-8 text-m3-secondary mx-auto mb-3" />
                 <h3 className="text-title text-m3-text">
                   {t("organization.loginActivity.noAccessTitle")}

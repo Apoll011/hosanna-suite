@@ -73,9 +73,27 @@ export const env = {
   resendApiKey: required("RESEND_API_KEY"),
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
-  // ── Studio URL ────────────────────────────────────────────────────────────
-  /** The front-end app URL used to build email links. */
+  // ── Studio / Auth URLs ────────────────────────────────────────────────────
+  /** The Studio product URL (post-login / settings deep links). */
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
+  /**
+   * Dedicated auth app origin (auth.hosanna.live). When set, Better Auth HTTP
+   * is delegated there (308) unless AUTH_MOUNT=local.
+   */
+  authUrl: optional("AUTH_URL"),
+  /**
+   * How `/api/auth` is served on this process:
+   * - `local` — mount Better Auth handler here (legacy / dual-run fallback)
+   * - `delegate` — 308 to AUTH_URL (requires AUTH_URL)
+   * - `off` — do not mount auth or well-known routes
+   *
+   * Default: `delegate` when AUTH_URL is set, otherwise `local`.
+   */
+  authMount: (() => {
+    const raw = (process.env.AUTH_MOUNT ?? "").toLowerCase();
+    if (raw === "local" || raw === "delegate" || raw === "off") return raw;
+    return process.env.AUTH_URL ? "delegate" : "local";
+  })() as "local" | "delegate" | "off",
 
   // ── Cron ──────────────────────────────────────────────────────────────────
   cronSecret: optional("CRON_SECRET"),

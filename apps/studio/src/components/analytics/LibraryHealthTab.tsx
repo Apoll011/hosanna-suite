@@ -31,7 +31,10 @@ export interface LibraryHealthTabProps {
   active: boolean;
 }
 
-function criterionLabel(t: (key: string) => string, criterion: ScoreMissingCriterion): string {
+function criterionLabel(
+  t: (key: `analytics.libraryHealth.criteria.${ScoreMissingCriterion}`) => string,
+  criterion: ScoreMissingCriterion,
+): string {
   return t(`analytics.libraryHealth.criteria.${criterion}`);
 }
 
@@ -93,19 +96,35 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
     }
   };
 
-  const healthColor =
+  const healthTone =
     summary.healthPercentage >= 80
-      ? "text-emerald-500"
+      ? {
+          text: "text-emerald-600 dark:text-emerald-400",
+          ring: "stroke-emerald-500",
+          soft: "from-emerald-500/12 via-transparent to-transparent",
+          badge: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+          bar: "bg-emerald-500",
+        }
       : summary.healthPercentage >= 55
-        ? "text-amber-500"
-        : "text-rose-500";
+        ? {
+            text: "text-amber-600 dark:text-amber-400",
+            ring: "stroke-amber-500",
+            soft: "from-amber-500/12 via-transparent to-transparent",
+            badge: "bg-amber-500/15 text-amber-800 dark:text-amber-200",
+            bar: "bg-amber-500",
+          }
+        : {
+            text: "text-rose-600 dark:text-rose-400",
+            ring: "stroke-rose-500",
+            soft: "from-rose-500/12 via-transparent to-transparent",
+            badge: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
+            bar: "bg-rose-500",
+          };
 
-  const healthRing =
-    summary.healthPercentage >= 80
-      ? "stroke-emerald-500"
-      : summary.healthPercentage >= 55
-        ? "stroke-amber-500"
-        : "stroke-rose-500";
+  const healthyShare =
+    summary.songCount > 0 ? Math.round((summary.healthyCount / summary.songCount) * 100) : 0;
+  const issueShare =
+    summary.songCount > 0 ? Math.round((summary.issueCount / summary.songCount) * 100) : 0;
 
   if (isLoading && songs.length === 0) {
     return (
@@ -116,68 +135,132 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <section className="space-y-5">
-        <div>
-          <h2 className="text-title text-m3-text flex items-center gap-2">
-            <HeartPulse className="w-5 h-5 text-m3-primary" />
-            {t("analytics.libraryHealth.title")}
-          </h2>
-          <p className="mt-1 text-muted">{t("analytics.libraryHealth.desc")}</p>
-        </div>
+    <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch">
+        <Surface padding="none" className="relative overflow-hidden h-full">
+          <div
+            className={`absolute inset-0 bg-linear-to-br ${healthTone.soft} pointer-events-none`}
+          />
+          <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-5 h-full">
+            <div className="relative w-32 h-32 sm:w-36 sm:h-36 shrink-0">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="52"
+                  fill="none"
+                  strokeWidth="10"
+                  className="stroke-m3-border/70"
+                />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="52"
+                  fill="none"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                  className={healthTone.ring}
+                  strokeDasharray={`${(summary.healthPercentage / 100) * 326.73} 326.73`}
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className={`text-3xl font-semibold tabular-nums tracking-tight ${healthTone.text}`}>
+                  {summary.healthPercentage}%
+                </span>
+                <span className="text-caption mt-0.5">
+                  {t("analytics.libraryHealth.healthLabel")}
+                </span>
+              </div>
+            </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-8">
-          <div className="relative w-36 h-36 shrink-0">
-            <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
-              <circle
-                cx="60"
-                cy="60"
-                r="52"
-                fill="none"
-                strokeWidth="10"
-                className="stroke-m3-sidebar"
-              />
-              <circle
-                cx="60"
-                cy="60"
-                r="52"
-                fill="none"
-                strokeWidth="10"
-                strokeLinecap="round"
-                className={healthRing}
-                strokeDasharray={`${(summary.healthPercentage / 100) * 326.73} 326.73`}
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className={`text-3xl font-semibold tabular-nums ${healthColor}`}>
-                {summary.healthPercentage}%
-              </span>
-              <span className="text-caption">{t("analytics.libraryHealth.healthLabel")}</span>
+            <div className="min-w-0 flex-1 text-center sm:text-left space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                <div className="min-w-0">
+                  <h2 className="text-title text-m3-text flex items-center justify-center sm:justify-start gap-2">
+                    <HeartPulse className="w-5 h-5 text-m3-primary shrink-0" />
+                    {t("analytics.libraryHealth.title")}
+                  </h2>
+                  <p className="mt-1 text-muted">{t("analytics.libraryHealth.desc")}</p>
+                </div>
+                <span
+                  className={`inline-flex self-center sm:self-start items-center rounded-full px-2.5 py-1 text-xs font-semibold shrink-0 ${healthTone.badge}`}
+                >
+                  {summary.healthPercentage >= 80
+                    ? t("analytics.libraryHealth.statHealthy")
+                    : t("analytics.libraryHealth.statIssues")}
+                </span>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-2 text-caption">
+                  <span>{t("analytics.libraryHealth.statHealthy")}</span>
+                  <span className="tabular-nums font-medium text-m3-text">{healthyShare}%</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-m3-sidebar overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-[width] duration-500 ${healthTone.bar}`}
+                    style={{ width: `${Math.max(healthyShare, healthyShare > 0 ? 2 : 0)}%` }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
+        </Surface>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
-            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
-              <span className="block text-2xl font-semibold text-m3-text tabular-nums">
-                {summary.songCount}
-              </span>
-              <span className="text-caption">{t("analytics.libraryHealth.statSongs")}</span>
+        <Surface padding="none" className="overflow-hidden h-full">
+          <div className="flex flex-col h-full divide-y divide-m3-border">
+            <div className="flex-1 flex items-center gap-3 px-4 py-2.5">
+              <div className="w-10 h-10 rounded-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                <Music2 className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="text-caption block">
+                  {t("analytics.libraryHealth.statSongs")}
+                </span>
+                <span className="block text-2xl font-semibold tabular-nums tracking-tight text-m3-text leading-tight">
+                  {summary.songCount}
+                </span>
+              </div>
             </div>
-            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60">
-              <span className="block text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
-                {summary.healthyCount}
-              </span>
-              <span className="text-caption">{t("analytics.libraryHealth.statHealthy")}</span>
+
+            <div className="flex-1 flex items-center gap-3 px-4 py-2.5">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-caption">
+                    {t("analytics.libraryHealth.statHealthy")}
+                  </span>
+                  <span className="text-caption tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
+                    {healthyShare}%
+                  </span>
+                </div>
+                <span className="block text-2xl font-semibold tabular-nums tracking-tight text-emerald-600 dark:text-emerald-400 leading-tight">
+                  {summary.healthyCount}
+                </span>
+              </div>
             </div>
-            <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/60 col-span-2 sm:col-span-1">
-              <span className="block text-2xl font-semibold text-amber-600 dark:text-amber-400 tabular-nums">
-                {summary.issueCount}
-              </span>
-              <span className="text-caption">{t("analytics.libraryHealth.statIssues")}</span>
+
+            <div className="flex-1 flex items-center gap-3 px-4 py-2.5">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-caption">{t("analytics.libraryHealth.statIssues")}</span>
+                  <span className="text-caption tabular-nums font-medium text-amber-600 dark:text-amber-400">
+                    {issueShare}%
+                  </span>
+                </div>
+                <span className="block text-2xl font-semibold tabular-nums tracking-tight text-amber-600 dark:text-amber-400 leading-tight">
+                  {summary.issueCount}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </Surface>
+      </div>
 
       <Surface padding="none" className="overflow-hidden">
         <div className="px-6 py-5 border-b border-m3-border">

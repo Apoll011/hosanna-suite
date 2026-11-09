@@ -1,0 +1,40 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/** Auth app origin (Better Auth UI + `/api/auth`). */
+export function getAuthAppUrl(): string {
+  const raw =
+    import.meta.env.VITE_AUTH_URL ||
+    (typeof window !== "undefined" ? "" : "") ||
+    "https://auth.hosanna.live";
+  return String(raw).replace(/\/+$/, "") || "https://auth.hosanna.live";
+}
+
+/** Build an auth-app URL, preserving query and optional returnUrl. */
+export function authAppHref(
+  path: string,
+  options?: { returnUrl?: string; preserveSearch?: boolean },
+): string {
+  const base = getAuthAppUrl();
+  const url = new URL(path.startsWith("/") ? path : `/${path}`, `${base}/`);
+  if (options?.preserveSearch && typeof window !== "undefined") {
+    const current = new URLSearchParams(window.location.search);
+    current.forEach((value, key) => {
+      if (!url.searchParams.has(key)) url.searchParams.set(key, value);
+    });
+  }
+  if (options?.returnUrl) {
+    url.searchParams.set("returnUrl", options.returnUrl);
+  }
+  return url.toString();
+}
+
+/** Hard-navigate to the auth app (external origin). */
+export function redirectToAuthApp(
+  path: string,
+  options?: { returnUrl?: string; preserveSearch?: boolean },
+): void {
+  window.location.replace(authAppHref(path, options));
+}

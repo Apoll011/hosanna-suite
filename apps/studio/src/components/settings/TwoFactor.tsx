@@ -7,7 +7,7 @@ import { AlertTriangle, CheckCircle2, Shield } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import React, { useState } from "react";
 
-export const TwoFactorSection: React.FC = () => {
+export const TwoFactorSection: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const { user, refetch: refetchAuth } = useAuth();
   const { showToast } = useSync();
   const { t } = useI18n();
@@ -130,22 +130,27 @@ export const TwoFactorSection: React.FC = () => {
     setStep("password");
   };
 
-  return (
-    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
-            <Shield className="w-4 h-4 text-m3-primary" />
+  const content = (
+    <>
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h3
+            className={`${embedded ? "text-label flex items-center gap-1.5" : "text-sm font-bold text-m3-text flex items-center gap-2"}`}
+          >
+            <Shield className={`shrink-0 ${embedded ? "w-3.5 h-3.5 text-m3-primary" : "w-4 h-4 text-m3-primary"}`} />
             {t("settings.twoFactor.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">{t("settings.twoFactor.desc")}</p>
+          <p className={`text-xs text-m3-secondary ${embedded ? "mt-1" : "mt-0.5"}`}>
+            {t("settings.twoFactor.desc")}
+          </p>
         </div>
         <button
+          type="button"
           onClick={() => {
             setStep(is2FAEnabled ? "disable" : "password");
             setIsModalOpen(true);
           }}
-          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+          className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
             is2FAEnabled
               ? "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/40 dark:text-red-400 border border-red-200 dark:border-red-900/50"
               : "bg-m3-primary text-white hover:bg-m3-primary-dark shadow-xs"
@@ -297,6 +302,12 @@ export const TwoFactorSection: React.FC = () => {
           )}
         </div>
       </Modal>
-    </div>
+    </>
+  );
+
+  if (embedded) return content;
+
+  return (
+    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">{content}</div>
   );
 };

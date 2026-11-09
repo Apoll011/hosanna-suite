@@ -17,7 +17,11 @@ import { SongService } from "../services/song.service.js";
 import { mapToolError } from "./lib/toolErrors.js";
 
 const apiOrigin = env.mcpResourceUrl.replace(/\/mcp\/?$/, "");
-const jwksUrl = new URL("/api/auth/jwks", apiOrigin || `http://127.0.0.1:${env.port}`);
+const authIssuer = (env.authUrl ?? apiOrigin ?? `http://127.0.0.1:${env.port}`).replace(
+  /\/+$/,
+  "",
+);
+const jwksUrl = new URL("/api/auth/jwks", authIssuer);
 const remoteJwks = createRemoteJWKSet(jwksUrl);
 
 export interface McpContext {
