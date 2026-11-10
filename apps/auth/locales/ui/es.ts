@@ -142,6 +142,10 @@ export const es: typeof pt = {
     },
     logout: "Cerrar sesión",
     otherOptions: "Otras opciones",
+    activeWorkspace: "Espacio actual",
+    continueToStudio: "Continuar a Studio",
+    switchWorkspace: "Cambiar de espacio",
+    switchingWorkspace: "Cambiando…",
   },
   settings: {
     billing: {

@@ -142,6 +142,10 @@ export const en: typeof pt = {
     },
     logout: "Sign out",
     otherOptions: "Other options",
+    activeWorkspace: "Current workspace",
+    continueToStudio: "Continue to Studio",
+    switchWorkspace: "Switch workspace",
+    switchingWorkspace: "Switching…",
   },
   settings: {
     billing: {

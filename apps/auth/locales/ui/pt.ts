@@ -140,6 +140,10 @@ export const pt = {
     },
     logout: "Terminar sessão",
     otherOptions: "Outras opções",
+    activeWorkspace: "Espaço atual",
+    continueToStudio: "Continuar para o Studio",
+    switchWorkspace: "Mudar de espaço",
+    switchingWorkspace: "A mudar…",
   },
   settings: {
     billing: {
