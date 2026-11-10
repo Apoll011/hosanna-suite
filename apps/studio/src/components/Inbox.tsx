@@ -269,7 +269,6 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
         </div>
       </div>
 
-      {/* Filter Tabs */}
       <div className="flex border-b border-m3-border/60 text-xs px-2 pt-2 bg-m3-sidebar/30">
         <button
           onClick={() => setFilter("all")}
@@ -293,7 +292,6 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
         </button>
       </div>
 
-      {/* List */}
       <div className="flex-1 overflow-y-auto divide-y divide-m3-border/60 custom-scrollbar">
         {inbox.isLoading && inbox.notifications.length === 0 ? (
           <div className="p-8 text-center text-m3-secondary">
@@ -359,7 +357,6 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
         )}
       </div>
 
-      {/* Selected Details Modal/Drawer */}
       {selectedNotif && (
         <div className="p-4 border-t border-m3-border bg-m3-sidebar">
           <div className="flex items-center justify-between mb-2">

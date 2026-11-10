@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner } from "@/src/components/common";
+import { Spinner } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import React, { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -158,7 +158,10 @@ export const AppRoutes: React.FC = () => {
           <Route path="/register" element={<ExternalAuthRedirect path="/register" />} />
           <Route path="/new" element={<ExternalAuthRedirect path="/new" />} />
           <Route path="/verify-email" element={<ExternalAuthRedirect path="/verify-email" />} />
-          <Route path="/forgot-password" element={<ExternalAuthRedirect path="/forgot-password" />} />
+          <Route
+            path="/forgot-password"
+            element={<ExternalAuthRedirect path="/forgot-password" />}
+          />
           <Route path="/reset-password" element={<ExternalAuthRedirect path="/reset-password" />} />
           <Route
             path="/accept-invitation"
@@ -202,7 +205,6 @@ export const AppRoutes: React.FC = () => {
                 <Route path="analytics" element={<AnalyticsPage />} />
               </Route>
             </Route>
-            {/* Unknown paths → home; ProtectedRoute sends authed users to folders. */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

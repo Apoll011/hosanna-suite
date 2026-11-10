@@ -1,4 +1,3 @@
-// components/AppLink.tsx
 import React from "react";
 import { Link, type LinkProps } from "react-router-dom";
 import { useNavTransition } from "../contexts/NavigationTransitionContext";

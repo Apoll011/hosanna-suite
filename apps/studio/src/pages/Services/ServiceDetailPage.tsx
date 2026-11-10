@@ -4,7 +4,7 @@
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChorproSettings";
-import { Button, Input, Spinner } from "@/src/components/common";
+import { Button, Spinner, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useFolders } from "@/src/hooks/useFolders";
 import { usePreviewSettings } from "@/src/hooks/usePreviewSettings";
@@ -290,9 +290,9 @@ interface ServiceRowProps {
 }
 
 const SERVICE_MENU_ITEM =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
 const SERVICE_MENU_DANGER =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
 const SERVICE_MENU_ICON = "w-4 h-4 text-m3-secondary shrink-0";
 
 const ServiceRow: React.FC<ServiceRowProps> = ({
@@ -317,7 +317,6 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
   const [closestEdge, setClosestEdge] = useState<Edge | null>(null);
   const [isRestoring, setIsRestoring] = useState(false);
 
-  // Detect whether the song linked to this row still exists (not deleted/purged).
   const isSong = element.type === "song";
   const { data: linkedSong, isLoading: isSongLoading } = useSong(
     isSong ? (element.songId ?? null) : null,
@@ -628,7 +627,6 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
         </div>
       </div>
 
-      {/* Deleted-song warning banner */}
       {isSongMissing && (
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 bg-amber-50 dark:bg-amber-900/20 border-t border-amber-200 dark:border-amber-800/40">
           <div className="flex items-center gap-2 min-w-0">
@@ -930,7 +928,6 @@ export const ServiceDetailPage: React.FC = () => {
     if (stagedProposal) aiProposals.resolve(stagedProposal.key);
   };
 
-  // Auto-save general notes after a short debounce when the org autoSave is on
   useEffect(() => {
     if (!orgSettings.services.autoSave || !service || isEditingGeneralNotes) return;
     const timer = setTimeout(async () => {
@@ -944,21 +941,17 @@ export const ServiceDetailPage: React.FC = () => {
             updatedAt: service.updatedAt,
           },
         });
-      } catch {
-        // silent — user can still save manually
-      }
+      } catch {}
     }, 1500);
     return () => clearTimeout(timer);
   }, [generalNotes, orgSettings.services.autoSave, service, isEditingGeneralNotes, updateService]);
 
-  // Close the preview if the song it references is removed from the plan
   useEffect(() => {
     if (previewElement && !elements.some((e) => e.id === previewElement.id)) {
       setPreviewElement(null);
     }
   }, [elements, previewElement]);
 
-  // Derived state
   const allAvailableSongs = songsQuery.data?.songs || [];
   const songCountById = elements.reduce<Record<string, number>>((acc, el) => {
     if (el.type === "song" && el.songId) acc[el.songId] = (acc[el.songId] || 0) + 1;
@@ -1066,7 +1059,6 @@ export const ServiceDetailPage: React.FC = () => {
     setPreviewElement((prev) => (prev?.id === el.id ? null : el));
   };
 
-  // Keep the last previewed song mounted during the close animation
   const previewContentRef = useRef<ServiceElement | null>(null);
   useEffect(() => {
     if (previewElement) previewContentRef.current = previewElement;
@@ -1267,7 +1259,6 @@ export const ServiceDetailPage: React.FC = () => {
     );
   };
 
-  // Pragmatic DnD drop target for the entire elements container
   useEffect(() => {
     const el = dropContainerRef.current;
     if (!el) return;
@@ -1286,7 +1277,6 @@ export const ServiceDetailPage: React.FC = () => {
   const handleAddSongToServiceRef = useRef(handleAddSongToService);
   handleAddSongToServiceRef.current = handleAddSongToService;
 
-  // Monitor all pragmatic drag-and-drop operations
   useEffect(() => {
     return monitorForElements({
       onDrop: async ({ source, location }) => {
@@ -1295,7 +1285,6 @@ export const ServiceDetailPage: React.FC = () => {
 
         const currentElements = elementsRef.current;
 
-        // Case 1: Reordering service elements within the list
         if (source.data.type === "service-element") {
           const sourceId = source.data.elementId as string;
           const targetData = destination.data;
@@ -1326,7 +1315,6 @@ export const ServiceDetailPage: React.FC = () => {
           return;
         }
 
-        // Case 2: Dropping a song from the library
         if (source.data.type === "library-song") {
           const songId = source.data.songId as string;
           if (!songId) return;
@@ -1367,7 +1355,6 @@ export const ServiceDetailPage: React.FC = () => {
     [editingElement],
   );
 
-  // When creating new elements, pre-fill duration from org defaults
   const newMessageInitial = useMemo(
     () =>
       editInitial ?? {
@@ -1423,7 +1410,6 @@ export const ServiceDetailPage: React.FC = () => {
           onDecline={declineStagedProposal}
         />
       )}
-      {/* ── Top Header ────────────────────────────────────────────── */}
       <div className="h-14 bg-m3-sidebar border-b border-m3-border flex items-center justify-between px-4 shrink-0 gap-4">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
@@ -1552,7 +1538,6 @@ export const ServiceDetailPage: React.FC = () => {
         </div>
       )}
 
-      {/* ── Split Layout — panes stay mounted so width/opacity can animate ── */}
       <div className="flex-1 flex overflow-hidden relative">
         <div
           className={`absolute inset-0 flex min-h-0 min-w-0 transition-all duration-300 ease-in-out ${
@@ -1585,7 +1570,6 @@ export const ServiceDetailPage: React.FC = () => {
               <PanelLeftOpen className="w-4 h-4" />
             </button>
           )}
-          {/* Library Sidebar — width animates; never display:none */}
           <div
             className={`flex flex-col overflow-hidden shrink-0 min-w-0 bg-m3-sidebar/30 transition-[width,opacity] duration-300 ease-in-out ${
               showLibrary && mobilePane === "library"

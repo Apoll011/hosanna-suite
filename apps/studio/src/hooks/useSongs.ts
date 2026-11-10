@@ -184,7 +184,6 @@ export function useSongMutations() {
             { existingId: id },
           );
 
-          // If not existing locally yet, upsert
           const newDoc = await db.songs.upsert({
             id,
             title,
@@ -238,7 +237,6 @@ export function useSongMutations() {
         if (doc) {
           const folderId = doc.folderId;
           const collectionIds = Array.isArray(doc.collectionIds) ? [...doc.collectionIds] : [];
-          // Move to trash; permanent removal happens at purgeAt via the trash verifier
           await doc.patch({
             isDeleted: true,
             purgeAt: getPurgeAt(),
@@ -282,9 +280,6 @@ export function useSongMutations() {
           let targetFolderId = doc.folderId ?? null;
           let targetPath = doc.path;
 
-          // If the song had a folder assigned, verify that the folder still exists and is not deleted.
-          // If the folder was deleted/purged while the song was in trash, move the song to root
-          // so it remains reachable and visible on FoldersPage.
           if (targetFolderId) {
             const folder = await db.folders.findOne(targetFolderId).exec();
             if (!folder || folder.isDeleted || folder._deleted) {
@@ -359,7 +354,6 @@ export function useSongMutations() {
           updatedAt: now,
         });
 
-        // Recalculate folder counts on affected source and destination folders
         if (oldFolderId && oldFolderId !== targetFolderId) {
           await updateFolderCounts(db, oldFolderId);
         }
@@ -733,7 +727,6 @@ export function useSearchableSongs(folders: Folder[] = []) {
           if (!isSubscribed) return;
           const rawItems = docs.map((d) => d.toJSON() as Song);
 
-          // Fast check if items changed based on IDs and update timestamps
           const currentHash = rawItems.map((s) => `${s.id}:${s.updatedAt}`).join("|");
           if (cachedSearchableSongs && currentHash === lastSearchableRawHash) {
             setSearchableSongs(cachedSearchableSongs);

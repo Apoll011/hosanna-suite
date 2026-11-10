@@ -46,9 +46,6 @@ import HeroDashboardMockup from "./HeroDashboardMockup";
 // WebGL rays are expensive — defer until idle so they never block LCP.
 const LightRays = lazy(() => import("@/components/ui/Scanner"));
 
-/* ------------------------------------------------------------------ */
-/*  Logo                                                              */
-/* ------------------------------------------------------------------ */
 function Logo({ className }: { className?: string }) {
   return (
     <Link to="/" hash="top" className={cn("flex items-center", className)}>
@@ -61,9 +58,6 @@ function Logo({ className }: { className?: string }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Nav                                                               */
-/* ------------------------------------------------------------------ */
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
 
 export function Nav() {
@@ -189,9 +183,6 @@ export function Nav() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Decorative staff lines                                            */
-/* ------------------------------------------------------------------ */
 export function StaffLines({ className }: { className?: string }) {
   return (
     <svg
@@ -212,10 +203,6 @@ export function StaffLines({ className }: { className?: string }) {
     </svg>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  Hero                                                              */
-/* ------------------------------------------------------------------ */
 
 function DeferredHeroRays() {
   const [ready, setReady] = useState(false);
@@ -309,7 +296,6 @@ function Hero() {
           </div>
         </div>
 
-        {/* Mockups — eager LCP image (not Suspense-lazy) */}
         <div className="pointer-events-none relative z-0 mx-auto -mt-10 max-w-6xl">
           <div className="relative aspect-1400/972">
             <HeroDashboardMockup alt={t("landing.hero.dashboardAlt")} />
@@ -320,9 +306,6 @@ function Hero() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Problem section                                                   */
-/* ------------------------------------------------------------------ */
 function Problem() {
   const { t, dict } = useI18n();
 
@@ -363,9 +346,6 @@ function Problem() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Two Apps section                                                  */
-/* ------------------------------------------------------------------ */
 function TwoApps() {
   const { t, dict } = useI18n();
 
@@ -377,7 +357,6 @@ function TwoApps() {
         </SectionHeader>
 
         <div className="mt-16 grid gap-8 lg:grid-cols-2">
-          {/* Studio */}
           <div className="reveal group relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-10">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
@@ -411,7 +390,6 @@ function TwoApps() {
             </ul>
           </div>
 
-          {/* Mobile */}
           <div className="reveal group relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-10">
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
@@ -451,9 +429,6 @@ function TwoApps() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Organize                                                          */
-/* ------------------------------------------------------------------ */
 function Organize() {
   const { t, dict } = useI18n();
   const icons = [FolderTree, Search, Music];
@@ -486,9 +461,6 @@ function Organize() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  App Gallery (lazy — pulls in framer-motion)                       */
-/* ------------------------------------------------------------------ */
 function AppGallery() {
   return (
     <LazySection
@@ -499,9 +471,6 @@ function AppGallery() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  How it works                                                      */
-/* ------------------------------------------------------------------ */
 function HowItWorks() {
   const { t, dict } = useI18n();
 
@@ -538,9 +507,6 @@ function HowItWorks() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Live worship                                                      */
-/* ------------------------------------------------------------------ */
 function LiveWorship() {
   const { t } = useI18n();
 
@@ -598,9 +564,6 @@ function LiveWorship() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Any size                                                          */
-/* ------------------------------------------------------------------ */
 function AnySize() {
   const { t } = useI18n();
 
@@ -635,9 +598,6 @@ function AnySize() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Export                                                            */
-/* ------------------------------------------------------------------ */
 function ExportSection() {
   const { t, dict } = useI18n();
 
@@ -688,9 +648,6 @@ function ExportSection() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Pricing                                                           */
-/* ------------------------------------------------------------------ */
 function Pricing() {
   const { t, dict } = useI18n();
   const [annual, setAnnual] = useState(true);
@@ -827,9 +784,6 @@ function Pricing() {
   );
 }
 
-/* ----------------------------------------------------------------- */
-/*  Mobile App                                                        */
-/* ----------------------------------------------------------------- */
 function MobileApp() {
   const { t } = useI18n();
 
@@ -871,9 +825,6 @@ function MobileApp() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Vision                                                            */
-/* ------------------------------------------------------------------ */
 function Vision() {
   const { t } = useI18n();
 
@@ -897,9 +848,6 @@ function Vision() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Open source                                                       */
-/* ------------------------------------------------------------------ */
 const githubAppUrl = "https://github.com/Apoll011/Hosanna";
 const githubStudioUrl = "https://github.com/Apoll011/hosanna-studio";
 
@@ -943,9 +891,6 @@ function OpenSource() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Support                                                           */
-/* ------------------------------------------------------------------ */
 function SupportTheMission() {
   const { t } = useI18n();
   // Link out instead of embedding the GoFundMe widget — the iframe pulls ~1MB of
@@ -976,9 +921,6 @@ function SupportTheMission() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  FAQ                                                               */
-/* ------------------------------------------------------------------ */
 function Roadmap() {
   const { t, dict } = useI18n();
 
@@ -1028,9 +970,6 @@ function FAQ() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Final CTA + Footer                                                */
-/* ------------------------------------------------------------------ */
 function FinalCTA() {
   const { t } = useI18n();
 
@@ -1191,9 +1130,6 @@ export function Footer() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Root                                                              */
-/* ------------------------------------------------------------------ */
 export function HosannaLanding() {
   useReveal();
   const rootRef = useRef<HTMLDivElement>(null);

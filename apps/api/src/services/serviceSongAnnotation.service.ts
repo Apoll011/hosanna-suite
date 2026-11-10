@@ -1,5 +1,3 @@
-// src/services/serviceSongAnnotation.service.ts
-
 import { OrgScopedPrisma } from "../database/prisma.js";
 import { getAnnotationDoc, publishAnnotation, resolveAnnotationBytes } from "../lib/firestore.js";
 
@@ -38,8 +36,6 @@ export class ServiceSongAnnotationService {
     });
     if (!row) return null;
 
-    // If Firestore had a newer metadata ping, prefer its timestamps while
-    // serving bytes from Postgres.
     const updatedAt = firebaseDoc != null ? new Date(firebaseDoc.updatedAt) : row.updatedAt;
     const updatedById = firebaseDoc?.updatedById || row.updatedById;
 

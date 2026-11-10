@@ -7,10 +7,6 @@ export interface SongScoreVisualizerProps {
   compact?: boolean;
 }
 
-// ─────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────
-
 /** Returns Tailwind colour tokens that shift from red → amber → emerald. */
 function scoreColor(score: number): {
   text: string;
@@ -48,9 +44,6 @@ function scoreColor(score: number): {
   };
 }
 
-// ─────────────────────────────────────────────────────────────
-// Layout: ring  – SVG arc progress ring
-// ─────────────────────────────────────────────────────────────
 const RingLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
   const size = compact ? 32 : 40;
@@ -93,9 +86,6 @@ const RingLayout: React.FC<{ score: number; compact: boolean }> = ({ score, comp
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// Layout: bar  – thin horizontal progress bar + number
-// ─────────────────────────────────────────────────────────────
 const BarLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
   const h = compact ? "h-1" : "h-1.5";
@@ -120,9 +110,6 @@ const BarLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compa
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// Layout: dots  – row of 5 filled/hollow pips
-// ─────────────────────────────────────────────────────────────
 const DotsLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
   const total = 5;
@@ -148,9 +135,6 @@ const DotsLayout: React.FC<{ score: number; compact: boolean }> = ({ score, comp
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// Layout: badge  – pill chip with colour-coded score
-// ─────────────────────────────────────────────────────────────
 const BadgeLayout: React.FC<{ score: number; compact: boolean }> = ({ score, compact }) => {
   const col = scoreColor(score);
 
@@ -167,9 +151,6 @@ const BadgeLayout: React.FC<{ score: number; compact: boolean }> = ({ score, com
   );
 };
 
-// ─────────────────────────────────────────────────────────────
-// Public component – dispatches to the correct layout
-// ─────────────────────────────────────────────────────────────
 export const SongScoreVisualizer: React.FC<SongScoreVisualizerProps> = ({
   score,
   layout,

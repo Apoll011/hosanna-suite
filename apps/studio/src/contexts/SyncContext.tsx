@@ -54,12 +54,9 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
   const replicationManagerRef = useRef<ReplicationManager | null>(null);
 
-  // Track auto-dismiss timers so they can be cleared on manual dismissal
-  // and on unmount, preventing setState-after-unmount warnings.
   const toastTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const removeToast = useCallback((id: string) => {
-    // Cancel the auto-dismiss timer if the user dismisses manually
     const timer = toastTimersRef.current.get(id);
     if (timer !== undefined) {
       clearTimeout(timer);
@@ -71,7 +68,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           leaving.onDismiss();
         } catch {
-          // ignore consumer errors
+          /* ignore */
         }
       }
       return prev.filter((t) => t.id !== id);
@@ -113,7 +110,6 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [],
   );
 
-  // Clear all pending toast timers on unmount
   useEffect(() => {
     const timers = toastTimersRef.current;
     return () => {
@@ -127,20 +123,12 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { isAuthenticated, organization } = useAuth();
   const orgSlug = organization?.slug ?? null;
 
-  // Initialise database and replication on mount / auth / org change.
-  //
-  // Key correctness invariants:
-  //  1. We call `resetReplication()` synchronously before the async `getDatabase()`
-  //     so any *previous* manager is torn down immediately, not after an await.
-  //  2. The `isMounted` guard prevents double-setup when StrictMode double-invokes
-  //     the effect — the cleanup sets it to false before the second run starts.
-  //  3. The subscription `sub` is stored in a local variable scoped to this
-  //     effect invocation; the cleanup always unsubscribes the *correct* sub even
-  //     if a concurrent async init is still in flight.
-  //  4. Local data is stamped with the active org slug. A mismatch wipes the
-  //     stores before any sync starts; sync is refused while slugs differ.
+  // Sync setup invariants:
+  // 1. resetReplication() runs sync before await getDatabase() so the previous manager dies immediately.
+  // 2. isMounted guards StrictMode double-invoke.
+  // 3. cleanup unsubscribes the sub from this effect invocation only.
+  // 4. org-slug stamp must match before sync starts.
   useEffect(() => {
-    // Tear down any previous manager immediately (synchronously)
     resetReplication();
     replicationManagerRef.current = null;
 
@@ -152,7 +140,6 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const db = await getDatabase();
         if (!isMounted) return;
 
-        // In demo mode, skip replication entirely — the DB is local-only.
         if (isDemoMode()) {
           setSyncStatus("local_only" as SyncStatus);
           return;
@@ -161,7 +148,6 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const scope = await ensureOrgScopedData(db, orgSlug);
         if (!isMounted) return;
 
-        // No active org (or scope still mismatched) — never start sync.
         if (!isAuthenticated || !scope.matched || !orgSlug) {
           return;
         }
@@ -170,7 +156,6 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         replicationManagerRef.current = repl;
 
         sub = repl.status$.subscribe((st) => {
-          // Map replication states to SyncStatus
           setSyncStatus(st as unknown as SyncStatus);
           if (st === "synced") {
             setLastSyncedAt(new Date());
@@ -189,14 +174,11 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       isMounted = false;
       if (sub) sub.unsubscribe();
-      // Stop the manager on cleanup; resetReplication() at the top of the next
-      // effect run handles full teardown.
       replicationManagerRef.current?.stop();
     };
   }, [isAuthenticated, orgSlug]);
 
   const triggerSyncCheck = useCallback(async () => {
-    // No-op in demo mode — no server to sync with.
     if (isDemoMode()) return;
     if (replicationManagerRef.current) {
       await replicationManagerRef.current.replicateNow();

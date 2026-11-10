@@ -1,11 +1,10 @@
 import { Router } from "express";
 import { z } from "zod";
-import { auth } from "../lib/auth.js";
 import { assertUser, requirePermission } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { roles } from "@hosanna/auth";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { sendFcmToUser } from "../utils/notify.js";
+import { inboxNotify, sendFcmToUser } from "../utils/notify.js";
 
 export const notificationsRouter = Router();
 
@@ -93,8 +92,7 @@ notificationsRouter.post(
   asyncHandler(async (req, res) => {
     const { channel, fcm, ...notifyBody } = req.body as z.infer<typeof createNotificationSchema>;
 
-    // Org fan-out always stays in-app only.
-    await auth.api.notify({ body: notifyBody as any });
+    await inboxNotify(notifyBody);
 
     let push: Awaited<ReturnType<typeof sendFcmToUser>> | undefined;
     if (channel !== "inbox" && "userId" in notifyBody && notifyBody.userId) {

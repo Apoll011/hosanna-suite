@@ -94,7 +94,6 @@ export const ServiceLinkField: React.FC<ServiceLinkFieldProps> = ({
     }
   };
 
-  // Close the dropdown when clicking anywhere outside the field.
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) {

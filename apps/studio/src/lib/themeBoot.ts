@@ -17,9 +17,7 @@ function cookieDomain(): string {
 export function writeThemeCookie(mode: "light" | "dark" | "system") {
   try {
     document.cookie = `${THEME_COOKIE}=${mode}; Path=/; Max-Age=31536000; SameSite=Lax${cookieDomain()}`;
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 export function applyDocumentTheme(dark: boolean) {

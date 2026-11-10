@@ -26,8 +26,8 @@ export class FolderService {
     this.songRepo = new SongRepository(db);
   }
 
-  invalidateCache() {
-    syncCache.invalidate(this.tenantId);
+  async invalidateCache() {
+    await syncCache.invalidate(this.tenantId, "folders");
   }
 
   async listWithCounts() {
@@ -57,7 +57,7 @@ export class FolderService {
   }
 
   async create(name: string, parentId?: string | null, color?: string, icon?: string) {
-    this.invalidateCache();
+    await this.invalidateCache();
     if (parentId) {
       this.folderRepo.touch(parentId);
     }
@@ -104,7 +104,7 @@ export class FolderService {
         ),
       );
     }
-    this.invalidateCache();
+    await this.invalidateCache();
     return updated;
   }
 
@@ -127,7 +127,7 @@ export class FolderService {
     if (folder.parentId) {
       this.folderRepo.touch(folder.parentId);
     }
-    this.invalidateCache();
+    await this.invalidateCache();
     return {
       movedSongs: songs.length,
       movedFolders: childFolders.length,
@@ -135,7 +135,7 @@ export class FolderService {
   }
 
   async deleteWithContent(id: string) {
-    this.invalidateCache();
+    await this.invalidateCache();
     const result = await this.db.$transaction(async (tx) => {
       return this.deleteRecursive(id, tx);
     });
@@ -195,7 +195,7 @@ export class FolderService {
     if (!folder || !folder.deleted)
       throw AppError.notFound("FOLDER_NOT_FOUND", t(this.locale, "folder.not_found"));
     await this.folderRepo.update(id, { deleted: false, purgeAt: null });
-    this.invalidateCache();
+    await this.invalidateCache();
     return this.folderRepo.findById(id);
   }
 

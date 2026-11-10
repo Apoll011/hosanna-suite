@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Input, Spinner, Surface } from "@/src/components/common";
+import { Spinner, Surface, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useServices } from "@/src/hooks/useServices";
 import { useAllSongs } from "@/src/hooks/useSongs";
@@ -269,7 +269,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({ active }
         </div>
       </Surface>
 
-      <div className="grid gap-6 sm:grid-cols-2 [&>*]:min-w-0 [&>*]:h-full">
+      <div className="grid gap-6 sm:grid-cols-2 *:min-w-0 *:h-full">
         <InsightSection
           title={t("analytics.setlist.sections.mostPlayed")}
           desc={t("analytics.setlist.sections.mostPlayedDesc")}

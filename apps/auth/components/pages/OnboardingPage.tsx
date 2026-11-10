@@ -11,6 +11,7 @@ import {
   Building2,
   Check,
   CheckCircle2,
+  ChevronDown,
   CreditCard,
   LogOut,
   MailCheck,
@@ -18,7 +19,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 
 interface UserInvitation {
   id: string;
@@ -28,6 +29,8 @@ interface UserInvitation {
   role: string;
   status: "pending" | "accepted" | "rejected" | "canceled";
 }
+
+type OrgSummary = { id: string; name: string; slug: string; logo?: string | null };
 
 const PLAN_PRICING = {
   monthly: { amount: "€12", period: "/mo" },
@@ -49,9 +52,11 @@ export function OnboardingPage() {
   const [invitations, setInvitations] = useState<UserInvitation[]>([]);
   const [isFetchingInvitations, setIsFetchingInvitations] = useState(true);
   const [processingInvId, setProcessingInvId] = useState<string | null>(null);
-  const [existingOrgs, setExistingOrgs] = useState<Array<{ id: string; name: string; slug: string }>>(
-    [],
-  );
+  const [existingOrgs, setExistingOrgs] = useState<OrgSummary[]>([]);
+  const [activeOrgId, setActiveOrgId] = useState<string | null>(null);
+  const [isLoadingOrgs, setIsLoadingOrgs] = useState(true);
+  const [isOrgSwitcherOpen, setIsOrgSwitcherOpen] = useState(false);
+  const [switchingOrgId, setSwitchingOrgId] = useState<string | null>(null);
 
   useEffect(() => {
     const pendingInvitationId = localStorage.getItem("pending_invitation_id");
@@ -79,7 +84,7 @@ export function OnboardingPage() {
         setInvitations(pendingInvs);
       }
     } catch {
-      // ignore
+      /* ignore invitation fetch errors — onboarding still works */
     } finally {
       setIsFetchingInvitations(false);
     }
@@ -87,10 +92,59 @@ export function OnboardingPage() {
 
   useEffect(() => {
     void fetchUserInvitations();
-    void authClient.organization.list({}).then((res: { data?: Array<{ id: string; name: string; slug: string }> | null }) => {
-      setExistingOrgs(res.data ?? []);
-    });
+
+    let cancelled = false;
+    setIsLoadingOrgs(true);
+
+    void (async () => {
+      try {
+        const [listRes, activeRes] = await Promise.all([
+          authClient.organization.list({}),
+          authClient.organization.getFullOrganization({ query: {} }),
+        ]);
+        if (cancelled) return;
+
+        const list = (listRes.data ?? []) as OrgSummary[];
+        setExistingOrgs(list);
+
+        const activeFromSession = activeRes.data as OrgSummary | null | undefined;
+        const storedSlug =
+          typeof localStorage !== "undefined" ? localStorage.getItem("active_org_slug") : null;
+        const resolved =
+          (activeFromSession && list.find((o) => o.id === activeFromSession.id)) ||
+          (storedSlug ? list.find((o) => o.slug === storedSlug) : undefined) ||
+          list[0] ||
+          null;
+
+        if (resolved) {
+          setActiveOrgId(resolved.id);
+          localStorage.setItem("active_org_slug", resolved.slug);
+          if (!activeFromSession || activeFromSession.id !== resolved.id) {
+            void authClient.organization.setActive({ organizationSlug: resolved.slug });
+          }
+        } else {
+          setActiveOrgId(null);
+        }
+      } catch {
+        if (!cancelled) {
+          setExistingOrgs([]);
+          setActiveOrgId(null);
+        }
+      } finally {
+        if (!cancelled) setIsLoadingOrgs(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [fetchUserInvitations]);
+
+  const activeOrg = useMemo(
+    () => existingOrgs.find((o) => o.id === activeOrgId) ?? null,
+    [existingOrgs, activeOrgId],
+  );
+  const hasMultipleOrgs = existingOrgs.length > 1;
 
   useEffect(() => {
     const trimmed = orgSlug.trim();
@@ -113,6 +167,26 @@ export function OnboardingPage() {
   const goToStudio = (slug: string) => {
     localStorage.setItem("active_org_slug", slug);
     window.location.assign(`${getStudioUrl()}/${slug}`);
+  };
+
+  const switchOrganization = async (org: OrgSummary) => {
+    if (org.id === activeOrgId || switchingOrgId) return;
+    setSwitchingOrgId(org.id);
+    setErrorMsg("");
+    try {
+      const { error } = await authClient.organization.setActive({ organizationId: org.id });
+      if (error) {
+        setErrorMsg(error.message || "Failed to switch workspace.");
+        return;
+      }
+      localStorage.setItem("active_org_slug", org.slug);
+      setActiveOrgId(org.id);
+      setIsOrgSwitcherOpen(false);
+    } catch (err: unknown) {
+      setErrorMsg((err as Error)?.message || "Failed to switch workspace.");
+    } finally {
+      setSwitchingOrgId(null);
+    }
   };
 
   const handleAcceptInvitation = async (invitationId: string) => {
@@ -232,7 +306,11 @@ export function OnboardingPage() {
   };
 
   return (
-    <AuthLayout headerTitle={getHeaderTitle()} headerSubtitle={getHeaderSubtitle()} errorMsg={errorMsg}>
+    <AuthLayout
+      headerTitle={getHeaderTitle()}
+      headerSubtitle={getHeaderSubtitle()}
+      errorMsg={errorMsg}
+    >
       {mode === "trial" && newOrg && (
         <div className="text-center space-y-5">
           <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-4 text-left space-y-2.5">
@@ -313,32 +391,109 @@ export function OnboardingPage() {
 
       {mode === "choose" && (
         <div className="space-y-6">
-          {existingOrgs.length > 0 && (
-            <div className="space-y-2">
-              <h3 className="text-label px-1">Your workspaces</h3>
-              {existingOrgs.map((org) => (
-                <button
-                  key={org.id}
-                  type="button"
-                  onClick={() => {
-                    void authClient.organization.setActive({ organizationSlug: org.slug }).then(() => {
-                      goToStudio(org.slug);
-                    });
-                  }}
-                  className="w-full flex items-center p-4 border border-m3-border hover:border-m3-primary rounded-lg transition-all text-left bg-transparent hover:bg-m3-hover cursor-pointer"
-                >
-                  <div className="w-10 h-10 bg-m3-primary/10 text-m3-primary rounded-full flex items-center justify-center mr-3.5">
-                    <Building2 className="w-5 h-5" />
+          {isLoadingOrgs ? (
+            <div className="flex items-center justify-center p-6">
+              <Spinner size="sm" />
+            </div>
+          ) : activeOrg ? (
+            <div className="space-y-3 relative">
+              <h3 className="text-label px-1">{t("onboarding.activeWorkspace")}</h3>
+              <div className="rounded-lg border border-m3-primary/30 bg-m3-primary/5 p-4 space-y-3">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 shrink-0 overflow-hidden rounded-full bg-m3-primary/10 text-m3-primary flex items-center justify-center border border-m3-border/60">
+                    {activeOrg.logo ? (
+                      <img src={activeOrg.logo} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <Building2 className="w-5 h-5" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-m3-text text-sm truncate">{org.name}</h3>
-                    <p className="text-xs text-m3-secondary truncate">{org.slug}</p>
+                    <h3 className="font-medium text-m3-text text-sm truncate">{activeOrg.name}</h3>
+                    <p className="text-xs text-m3-secondary truncate">@{activeOrg.slug}</p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-m3-secondary" />
-                </button>
-              ))}
+                  <Check className="w-4 h-4 shrink-0 text-m3-primary" />
+                </div>
+                <Button
+                  variant="primary"
+                  className="w-full rounded-full"
+                  icon={<ArrowRight className="w-4 h-4" />}
+                  onClick={() => {
+                    void authClient.organization
+                      .setActive({ organizationSlug: activeOrg.slug })
+                      .finally(() => goToStudio(activeOrg.slug));
+                  }}
+                >
+                  {t("onboarding.continueToStudio")}
+                </Button>
+              </div>
+
+              {hasMultipleOrgs && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsOrgSwitcherOpen((v) => !v)}
+                    aria-haspopup="menu"
+                    aria-expanded={isOrgSwitcherOpen}
+                    className="w-full inline-flex items-center justify-between gap-2 rounded-lg border border-m3-border bg-transparent px-3.5 py-2.5 text-xs font-medium text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
+                  >
+                    <span>{t("onboarding.switchWorkspace")}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+                        isOrgSwitcherOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {isOrgSwitcherOpen && (
+                    <div
+                      className="mt-2 rounded-xl border border-m3-border bg-m3-card shadow-lg p-2 space-y-1"
+                      role="menu"
+                    >
+                      {existingOrgs.map((org) => {
+                        const isActive = org.id === activeOrg.id;
+                        const isSwitching = switchingOrgId === org.id;
+                        return (
+                          <button
+                            key={org.id}
+                            type="button"
+                            role="menuitem"
+                            disabled={isActive || Boolean(switchingOrgId)}
+                            onClick={() => void switchOrganization(org)}
+                            className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left transition-colors ${
+                              isActive
+                                ? "bg-m3-primary/10 text-m3-primary cursor-default"
+                                : "text-m3-text hover:bg-m3-hover cursor-pointer disabled:opacity-60"
+                            }`}
+                          >
+                            <div className="w-7 h-7 rounded-md shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-[11px] font-semibold text-m3-primary">
+                              {org.logo ? (
+                                <img src={org.logo} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                (org.name?.trim().charAt(0) || "·").toUpperCase()
+                              )}
+                            </div>
+                            <span className="flex-1 min-w-0">
+                              <span className="block text-xs font-semibold truncate">
+                                {org.name}
+                              </span>
+                              <span className="block text-caption text-m3-secondary truncate">
+                                @{org.slug}
+                              </span>
+                            </span>
+                            {isSwitching ? (
+                              <Spinner size="sm" />
+                            ) : isActive ? (
+                              <Check className="w-4 h-4 shrink-0 text-m3-primary" />
+                            ) : null}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
+          ) : null}
 
           {isFetchingInvitations ? (
             <div className="flex items-center justify-center p-4">
@@ -477,7 +632,9 @@ export function OnboardingPage() {
             <Button
               type="submit"
               size="md"
-              disabled={isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"}
+              disabled={
+                isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"
+              }
               isLoading={isLoading}
               className="rounded-full"
             >

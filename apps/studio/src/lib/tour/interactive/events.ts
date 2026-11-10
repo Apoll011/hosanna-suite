@@ -40,9 +40,7 @@ export function emitOnboardingEvent(name: OnboardingEventName, detail?: unknown)
   for (const listener of set) {
     try {
       listener(detail);
-    } catch {
-      // ignore consumer errors
-    }
+    } catch {}
   }
 }
 

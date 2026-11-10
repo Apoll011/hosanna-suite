@@ -9,12 +9,7 @@ import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 export type SocialProviderId =
-  | "google"
-  | "github"
-  | "apple"
-  | "microsoft"
-  | "discord"
-  | (string & {});
+  "google" | "github" | "apple" | "microsoft" | "discord" | (string & {});
 
 export interface SocialProviderOption {
   id: SocialProviderId;

@@ -18,20 +18,19 @@
  *  - Invalidates syncCache only when state was modified
  */
 
+import { Prisma } from "@hosanna/db";
 import { v4 as uuid } from "uuid";
-import type { OrgScopedPrisma, OrgScopedTx } from "../database/prisma.js";
+import { prisma, type OrgScopedPrisma, type OrgScopedTx } from "../database/prisma.js";
 import { syncCache } from "./syncCache.service.js";
 
 const MAX_LIMIT = 2000;
 const DEFAULT_LIMIT = 100;
 
-// ── Checkpoint type ────────────────────────────────────────────────────────
 export interface ReplicationCheckpoint {
   updatedAt: number; // Unix epoch milliseconds
   id: string;
 }
 
-// ── Pull request / response types ──────────────────────────────────────────
 export interface PullRequest {
   checkpoint: ReplicationCheckpoint | null;
   limit: number;
@@ -53,7 +52,6 @@ export interface PullResponse<T> {
   checkpoint: ReplicationCheckpoint | null;
 }
 
-// ── Push request / response types ──────────────────────────────────────────
 export interface ChangeRow<T> {
   newDocumentState: T;
   assumedMasterState?: T | null;
@@ -63,7 +61,6 @@ export interface PushRequest<T> {
   changeRows: ChangeRow<T>[];
 }
 
-// ── Collection names we replicate ──────────────────────────────────────────
 export type ReplicatedCollection =
   "songs" | "folders" | "collections" | "services" | "agendaEvents";
 
@@ -74,8 +71,6 @@ export const ALL_COLLECTIONS: readonly ReplicatedCollection[] = [
   "services",
   "agendaEvents",
 ] as const;
-
-// ── Helpers ────────────────────────────────────────────────────────────────
 
 const DELEGATE_BY_COLLECTION = {
   songs: "song",
@@ -377,7 +372,40 @@ function buildCheckpointWhere(checkpoint: ReplicationCheckpoint | null) {
   };
 }
 
-// ── Generic pull ───────────────────────────────────────────────────────────
+/** `_CollectionToSong`: A = collectionId, B = songId. One round-trip instead of Prisma include. */
+async function loadCollectionSongIds(collectionIds: string[]): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>();
+  if (collectionIds.length === 0) return map;
+
+  const rows = await prisma.$queryRaw<Array<{ A: string; B: string }>>`
+    SELECT "A", "B" FROM "_CollectionToSong"
+    WHERE "A" IN (${Prisma.join(collectionIds)})
+  `;
+
+  for (const row of rows) {
+    const list = map.get(row.A);
+    if (list) list.push(row.B);
+    else map.set(row.A, [row.B]);
+  }
+  return map;
+}
+
+async function loadSongCollectionIds(songIds: string[]): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>();
+  if (songIds.length === 0) return map;
+
+  const rows = await prisma.$queryRaw<Array<{ A: string; B: string }>>`
+    SELECT "A", "B" FROM "_CollectionToSong"
+    WHERE "B" IN (${Prisma.join(songIds)})
+  `;
+
+  for (const row of rows) {
+    const list = map.get(row.B);
+    if (list) list.push(row.A);
+    else map.set(row.B, [row.A]);
+  }
+  return map;
+}
 
 async function pullOne(
   db: OrgScopedPrisma,
@@ -385,9 +413,9 @@ async function pullOne(
   collection: ReplicatedCollection,
   checkpoint: ReplicationCheckpoint | null,
   limit: number,
+  options?: { skipCacheCheck?: boolean },
 ): Promise<PullResponse<any>> {
-  // Fast path: if syncCache knows nothing has changed since checkpoint, return immediately!
-  if (syncCache.hasNoChanges(tenantId, collection, checkpoint)) {
+  if (!options?.skipCacheCheck && (await syncCache.hasNoChanges(tenantId, collection, checkpoint))) {
     return { documents: [], checkpoint };
   }
 
@@ -396,7 +424,6 @@ async function pullOne(
   const where = buildCheckpointWhere(checkpoint);
 
   if (collection === "folders") {
-    // Lean fetch without subquery JOINs in the main query
     const docs = await delegate.findMany({
       where,
       orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
@@ -404,7 +431,7 @@ async function pullOne(
     });
 
     if (docs.length === 0) {
-      syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
       return { documents: [], checkpoint };
     }
 
@@ -415,7 +442,7 @@ async function pullOne(
     };
 
     if (docs.length < limit) {
-      syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
     const documents = docs.map((doc: any) => toWireFolder(doc));
@@ -425,19 +452,12 @@ async function pullOne(
   if (collection === "collections") {
     const docs = await delegate.findMany({
       where,
-      include: {
-        songs: {
-          select: {
-            id: true,
-          },
-        },
-      },
       orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
       take: limit,
     });
 
     if (docs.length === 0) {
-      syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
       return { documents: [], checkpoint };
     }
 
@@ -448,30 +468,57 @@ async function pullOne(
     };
 
     if (docs.length < limit) {
-      syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
-    const documents = docs.map((doc: any) => toWireCollection(doc, doc.songs?.length ?? 0));
+    const songIdsByCollection = await loadCollectionSongIds(docs.map((doc: { id: string }) => doc.id));
+    const documents = docs.map((doc: any) => {
+      const songIds = songIdsByCollection.get(doc.id) ?? [];
+      return toWireCollection({ ...doc, songs: songIds.map((id) => ({ id })) }, songIds.length);
+    });
+    return { documents, checkpoint: newCheckpoint };
+  }
+
+  if (collection === "songs") {
+    const docs = await delegate.findMany({
+      where,
+      orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
+      take: limit,
+    });
+
+    if (docs.length === 0) {
+      await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+      return { documents: [], checkpoint };
+    }
+
+    const last = docs[docs.length - 1];
+    const newCheckpoint: ReplicationCheckpoint = {
+      updatedAt: new Date(last.updatedAt).getTime(),
+      id: last.id,
+    };
+
+    if (docs.length < limit) {
+      await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+    }
+
+    const collectionIdsBySong = await loadSongCollectionIds(docs.map((doc: { id: string }) => doc.id));
+    const documents = docs.map((doc: any) =>
+      toWireSong({
+        ...doc,
+        collections: (collectionIdsBySong.get(doc.id) ?? []).map((id) => ({ id })),
+      }),
+    );
     return { documents, checkpoint: newCheckpoint };
   }
 
   const docs = await delegate.findMany({
     where,
-    ...(collection === "songs" && {
-      include: {
-        collections: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    }),
     orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
     take: limit,
   });
 
   if (docs.length === 0) {
-    syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+    await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
     return { documents: [], checkpoint };
   }
 
@@ -482,7 +529,7 @@ async function pullOne(
   };
 
   if (docs.length < limit) {
-    syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+    await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
   }
 
   const documents = docs.map((doc: any) => toWireDoc(doc, collection));
@@ -506,9 +553,16 @@ export async function pullAll(
     limit: number;
   }[] = [];
 
-  for (const collection of collections) {
+  const cacheFlags = await Promise.all(
+    collections.map((collection) =>
+      syncCache.hasNoChanges(tenantId, collection, checkpoints[collection] ?? null),
+    ),
+  );
+
+  for (let i = 0; i < collections.length; i++) {
+    const collection = collections[i];
     const cp = checkpoints[collection] ?? null;
-    if (syncCache.hasNoChanges(tenantId, collection, cp)) {
+    if (cacheFlags[i]) {
       response[collection] = { documents: [], checkpoint: cp };
     } else {
       const limit = typeof limits === "number" ? limits : (limits[collection] ?? DEFAULT_LIMIT);
@@ -519,7 +573,9 @@ export async function pullAll(
   if (collectionsToFetch.length > 0) {
     const fetchedResults = await Promise.all(
       collectionsToFetch.map(({ collection, limit }) =>
-        pullOne(db, tenantId, collection, checkpoints[collection] ?? null, limit),
+        pullOne(db, tenantId, collection, checkpoints[collection] ?? null, limit, {
+          skipCacheCheck: true,
+        }),
       ),
     );
     for (let i = 0; i < collectionsToFetch.length; i++) {
@@ -530,10 +586,7 @@ export async function pullAll(
   return response;
 }
 
-// Keep single-collection signature around for backward compatibility
 export const pull = pullOne;
-
-// ── Push: songs ────────────────────────────────────────────────────────────
 
 async function pushSongs(
   db: OrgScopedPrisma,
@@ -546,7 +599,6 @@ async function pushSongs(
     .map((r) => r.newDocumentState?.id)
     .filter((id): id is string => typeof id === "string" && id.length > 0);
 
-  // Lean lookup: only fetch id and updatedAt to detect conflicts for 300+ songs
   const existingList =
     candidateIds.length > 0
       ? await db.song.findMany({
@@ -671,12 +723,10 @@ async function pushSongs(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "songs");
+    await syncCache.invalidate(tenantId, "songs");
   }
   return conflicts;
 }
-
-// ── Push: folders ──────────────────────────────────────────────────────────
 
 async function pushFolders(
   db: OrgScopedPrisma,
@@ -783,12 +833,10 @@ async function pushFolders(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "folders");
+    await syncCache.invalidate(tenantId, "folders");
   }
   return conflicts;
 }
-
-// ── Push: collections ──────────────────────────────────────────────────────
 
 async function pushCollections(
   db: OrgScopedPrisma,
@@ -916,12 +964,10 @@ async function pushCollections(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "collections");
+    await syncCache.invalidate(tenantId, "collections");
   }
   return conflicts;
 }
-
-// ── Push: services ─────────────────────────────────────────────────────────
 
 async function pushServices(
   db: OrgScopedPrisma,
@@ -1026,12 +1072,10 @@ async function pushServices(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "services");
+    await syncCache.invalidate(tenantId, "services");
   }
   return conflicts;
 }
-
-// ── Push: agenda events ────────────────────────────────────────────────────
 
 async function pushAgendaEvents(
   db: OrgScopedPrisma,
@@ -1148,12 +1192,10 @@ async function pushAgendaEvents(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "agendaEvents");
+    await syncCache.invalidate(tenantId, "agendaEvents");
   }
   return conflicts;
 }
-
-// ── Public API ─────────────────────────────────────────────────────────────
 
 const pushHandlers: Record<
   ReplicatedCollection,

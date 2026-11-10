@@ -5,9 +5,6 @@ import { Mail, MessageSquare, Send } from "lucide-react";
 import { useEffect } from "react";
 import { StaffLines } from "./HosannaLanding";
 
-/* ------------------------------------------------------------------ */
-/*  Scroll reveal hook                                                */
-/* ------------------------------------------------------------------ */
 function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>(".reveal");
@@ -33,7 +30,6 @@ export function ContactForm() {
 
   return (
     <div className="bg-[#f8fafc] min-h-screen selection:bg-primary/10 font-sans">
-      {/* Hero Header */}
       <section className="bg-hero-gradient pt-40 pb-12 text-white overflow-hidden relative -mt-30">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
         <div className="absolute inset-0 text-white/10">
@@ -60,7 +56,6 @@ export function ContactForm() {
       <section className="p-12 md:p-16 relative z-20">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            {/* Left Side: Info */}
             <div className="space-y-10 reveal">
               <div className="space-y-4">
                 <h2 className="text-3xl md:text-4xl font-display font-bold text-primary tracking-tight">
@@ -113,7 +108,6 @@ export function ContactForm() {
                 <p className="text-muted-foreground leading-relaxed">{t("common.activeDevDesc")}</p>
               </div>
             </div>
-            {/* Right Side: Form */}
             <div className="bg-white p-8 md:p-10 lg:p-12 rounded-3xl shadow-soft border border-blue-50 reveal">
               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid sm:grid-cols-2 gap-4">

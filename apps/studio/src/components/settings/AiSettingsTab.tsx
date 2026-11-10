@@ -4,7 +4,7 @@
  */
 
 import { aiApi, type AiProvider, type AiSettingsPublic } from "@/src/api/ai";
-import { Button, Spinner, Surface } from "@/src/components/common";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import { dispatchAiSettingsChanged, LogosMascot } from "@/src/features/ai-chat";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
@@ -32,10 +32,10 @@ export interface AiSettingsTabProps {
 }
 
 const selectClass =
-  "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
+  "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
 
 const inputClass =
-  "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
+  "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
 
 const API_KEY_MASK = "••••••••••••••••••••••••";
 
@@ -333,364 +333,366 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
             </div>
           )}
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
-          <SectionCard
-            className="h-full"
-            icon={<Zap className="w-4 h-4" />}
-            title={t("ai.settings.connectionTitle")}
-            desc={t("ai.settings.connectionDesc")}
-          >
-            <div>
-              <div className="flex items-end justify-between gap-3 mb-3">
-                <div>
-                  <span className="text-label text-m3-text block">{t("ai.settings.provider")}</span>
-                  <p className="text-caption text-m3-secondary mt-0.5">
-                    {t("ai.settings.providerHint")}
-                  </p>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 *:min-w-0 *:h-full">
+            <SectionCard
+              className="h-full"
+              icon={<Zap className="w-4 h-4" />}
+              title={t("ai.settings.connectionTitle")}
+              desc={t("ai.settings.connectionDesc")}
+            >
+              <div>
+                <div className="flex items-end justify-between gap-3 mb-3">
+                  <div>
+                    <span className="text-label text-m3-text block">
+                      {t("ai.settings.provider")}
+                    </span>
+                    <p className="text-caption text-m3-secondary mt-0.5">
+                      {t("ai.settings.providerHint")}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div
-                className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2.5"
-                role="radiogroup"
-                aria-label={t("ai.settings.provider")}
-              >
-                {providers.map((p) => {
-                  const meta = PROVIDER_META[p];
-                  const selected = provider === p;
-                  return (
-                    <button
-                      key={p}
-                      type="button"
-                      role="radio"
-                      aria-checked={selected}
-                      onClick={() => handleProviderChange(p)}
-                      className={`group relative text-left rounded-lg border p-3.5 transition-all cursor-pointer ${
-                        selected
-                          ? `border-m3-primary bg-m3-primary/5 ring-2 ${meta.ring}`
-                          : "border-m3-border hover:border-m3-primary/40 hover:bg-m3-sidebar/40"
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <AiProviderLogoBadge provider={p} />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-2">
-                            <span
-                              className={`block text-sm font-semibold truncate ${
-                                selected ? "text-m3-primary" : "text-m3-text"
-                              }`}
-                            >
-                              {meta.label}
-                            </span>
-                            {selected ? (
-                              <Check className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                            ) : null}
-                          </span>
-                          <span className="block text-caption text-m3-secondary mt-0.5">
-                            {meta.hint}
-                          </span>
-                          {meta.usesDefaultEndpoint ? (
-                            <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-sidebar text-m3-secondary border border-m3-border">
-                              {t("ai.settings.defaultEndpoint")}
-                            </span>
-                          ) : (
-                            <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
-                              {t("ai.settings.customEndpoint")}
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-              <p className="text-caption text-m3-secondary mt-2.5 flex items-start gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                <span>
-                  {settings.nativeWebCapabilities?.[provider]?.search
-                    ? t("ai.settings.nativeWebOn")
-                    : t("ai.settings.nativeWebOff")}
-                </span>
-              </p>
-            </div>
-
-            {isCustomProvider ? (
-              <label className="block space-y-1.5">
-                <span className="text-label text-m3-text">{t("ai.settings.baseUrl")}</span>
-                <input
-                  className={inputClass}
-                  value={baseUrl}
-                  onChange={(e) => setBaseUrl(e.currentTarget.value)}
-                  placeholder={t("ai.settings.baseUrlRequiredPlaceholder")}
-                  required
-                />
-                <span className="text-caption text-m3-secondary">
-                  {t("ai.settings.baseUrlHint")}
-                </span>
-              </label>
-            ) : null}
-
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-label text-m3-text">{t("ai.settings.model")}</span>
-                <button
-                  type="button"
-                  className="text-xs text-m3-primary hover:underline cursor-pointer"
-                  onClick={() => setCustomModel((v) => !v)}
+                <div
+                  className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2.5"
+                  role="radiogroup"
+                  aria-label={t("ai.settings.provider")}
                 >
-                  {customModel ? t("ai.settings.usePresets") : t("ai.settings.customModel")}
-                </button>
+                  {providers.map((p) => {
+                    const meta = PROVIDER_META[p];
+                    const selected = provider === p;
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => handleProviderChange(p)}
+                        className={`group relative text-left rounded-lg border p-3.5 transition-all cursor-pointer ${
+                          selected
+                            ? `border-m3-primary bg-m3-primary/5 ring-2 ${meta.ring}`
+                            : "border-m3-border hover:border-m3-primary/40 hover:bg-m3-sidebar/40"
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <AiProviderLogoBadge provider={p} />
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center gap-2">
+                              <span
+                                className={`block text-sm font-semibold truncate ${
+                                  selected ? "text-m3-primary" : "text-m3-text"
+                                }`}
+                              >
+                                {meta.label}
+                              </span>
+                              {selected ? (
+                                <Check className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                              ) : null}
+                            </span>
+                            <span className="block text-caption text-m3-secondary mt-0.5">
+                              {meta.hint}
+                            </span>
+                            {meta.usesDefaultEndpoint ? (
+                              <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-sidebar text-m3-secondary border border-m3-border">
+                                {t("ai.settings.defaultEndpoint")}
+                              </span>
+                            ) : (
+                              <span className="inline-flex mt-2 text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                                {t("ai.settings.customEndpoint")}
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-caption text-m3-secondary mt-2.5 flex items-start gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                  <span>
+                    {settings.nativeWebCapabilities?.[provider]?.search
+                      ? t("ai.settings.nativeWebOn")
+                      : t("ai.settings.nativeWebOff")}
+                  </span>
+                </p>
               </div>
-              {customModel ? (
-                <input
-                  className={inputClass}
-                  value={model}
-                  onChange={(e) => setModel(e.currentTarget.value)}
-                  placeholder={t("ai.settings.modelPlaceholder")}
-                />
-              ) : (
-                <select
-                  className={selectClass}
-                  value={model}
-                  onChange={(e) => setModel(e.currentTarget.value)}
-                >
-                  {presets.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                  {!presets.includes(model) && model ? (
-                    <option value={model}>{model}</option>
-                  ) : null}
-                </select>
-              )}
-            </div>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-label text-m3-text flex items-center gap-2">
-                  <KeyRound className="w-3.5 h-3.5" />
-                  {t("ai.settings.apiKey")}
-                </span>
-                {settings.configured ? (
+              {isCustomProvider ? (
+                <label className="block space-y-1.5">
+                  <span className="text-label text-m3-text">{t("ai.settings.baseUrl")}</span>
+                  <input
+                    className={inputClass}
+                    value={baseUrl}
+                    onChange={(e) => setBaseUrl(e.currentTarget.value)}
+                    placeholder={t("ai.settings.baseUrlRequiredPlaceholder")}
+                    required
+                  />
+                  <span className="text-caption text-m3-secondary">
+                    {t("ai.settings.baseUrlHint")}
+                  </span>
+                </label>
+              ) : null}
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-label text-m3-text">{t("ai.settings.model")}</span>
                   <button
                     type="button"
-                    className="text-xs text-m3-danger hover:underline cursor-pointer disabled:opacity-50"
-                    disabled={clearing || saving}
-                    onClick={() => void handleClearKey()}
+                    className="text-xs text-m3-primary hover:underline cursor-pointer"
+                    onClick={() => setCustomModel((v) => !v)}
                   >
-                    {t("ai.settings.clearKey")}
+                    {customModel ? t("ai.settings.usePresets") : t("ai.settings.customModel")}
                   </button>
-                ) : null}
+                </div>
+                {customModel ? (
+                  <input
+                    className={inputClass}
+                    value={model}
+                    onChange={(e) => setModel(e.currentTarget.value)}
+                    placeholder={t("ai.settings.modelPlaceholder")}
+                  />
+                ) : (
+                  <select
+                    className={selectClass}
+                    value={model}
+                    onChange={(e) => setModel(e.currentTarget.value)}
+                  >
+                    {presets.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                    {!presets.includes(model) && model ? (
+                      <option value={model}>{model}</option>
+                    ) : null}
+                  </select>
+                )}
               </div>
-              <div className="relative">
-                <input
-                  className={`${inputClass} ${showMaskedKey ? "tracking-[0.18em] text-m3-secondary" : "font-mono"}`}
-                  type={showMaskedKey ? "text" : "password"}
-                  autoComplete="off"
-                  spellCheck={false}
-                  readOnly={showMaskedKey}
-                  value={showMaskedKey ? API_KEY_MASK : apiKey}
-                  onFocus={() => {
-                    if (showMaskedKey) {
-                      setApiKeyEditing(true);
-                      setApiKey("");
-                    }
-                  }}
-                  onChange={(e) => {
-                    setApiKeyEditing(true);
-                    setApiKey(e.currentTarget.value);
-                  }}
-                  placeholder={
-                    settings.configured
-                      ? t("ai.settings.apiKeyConfiguredPlaceholder")
-                      : t("ai.settings.apiKeyPlaceholder")
-                  }
-                />
-                {showMaskedKey ? (
-                  <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-caption text-m3-secondary">
-                    {t("ai.settings.keyStatusConfigured")}
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-label text-m3-text flex items-center gap-2">
+                    <KeyRound className="w-3.5 h-3.5" />
+                    {t("ai.settings.apiKey")}
                   </span>
-                ) : null}
-              </div>
-              <span className="text-caption text-m3-secondary">
-                {settings.configured
-                  ? t("ai.settings.apiKeyReplaceHint")
-                  : t("ai.settings.keyStatusMissing")}{" "}
-                {t("ai.settings.keyNeverReturned")}
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
-              <Button
-                variant="primary"
-                size="sm"
-                isLoading={saving}
-                icon={<Save className="w-4 h-4" />}
-                onClick={() => void handleSave()}
-                disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
-              >
-                {t("common.save")}
-              </Button>
-            </div>
-          </SectionCard>
-
-          <SectionCard
-            className="h-full"
-            icon={<Settings2 className="w-4 h-4" />}
-            title={t("ai.settings.behaviorTitle")}
-            desc={t("ai.settings.behaviorDesc")}
-          >
-            <label className="block space-y-1.5">
-              <span className="text-label text-m3-text">{t("ai.settings.instructions")}</span>
-              <textarea
-                className={`${inputClass} min-h-28 resize-y`}
-                value={instructions}
-                maxLength={settings.limits.instructionsMaxChars}
-                onChange={(e) => setInstructions(e.currentTarget.value)}
-                placeholder={t("ai.settings.instructionsPlaceholder")}
-              />
-              <span className="text-caption text-m3-secondary flex justify-between gap-2">
-                <span>{t("ai.settings.instructionsHint")}</span>
-                <span className="tabular-nums shrink-0">
-                  {instructions.length}/{settings.limits.instructionsMaxChars}
-                </span>
-              </span>
-            </label>
-
-            <label className="flex items-center justify-between gap-3 rounded-md border border-m3-border px-3.5 py-3 cursor-pointer hover:bg-m3-sidebar/40 transition-colors">
-              <div>
-                <span className="text-sm font-medium text-m3-text block">
-                  {t("ai.settings.memoryEnabled")}
-                </span>
+                  {settings.configured ? (
+                    <button
+                      type="button"
+                      className="text-xs text-m3-danger hover:underline cursor-pointer disabled:opacity-50"
+                      disabled={clearing || saving}
+                      onClick={() => void handleClearKey()}
+                    >
+                      {t("ai.settings.clearKey")}
+                    </button>
+                  ) : null}
+                </div>
+                <div className="relative">
+                  <input
+                    className={`${inputClass} ${showMaskedKey ? "tracking-[0.18em] text-m3-secondary" : "font-mono"}`}
+                    type={showMaskedKey ? "text" : "password"}
+                    autoComplete="off"
+                    spellCheck={false}
+                    readOnly={showMaskedKey}
+                    value={showMaskedKey ? API_KEY_MASK : apiKey}
+                    onFocus={() => {
+                      if (showMaskedKey) {
+                        setApiKeyEditing(true);
+                        setApiKey("");
+                      }
+                    }}
+                    onChange={(e) => {
+                      setApiKeyEditing(true);
+                      setApiKey(e.currentTarget.value);
+                    }}
+                    placeholder={
+                      settings.configured
+                        ? t("ai.settings.apiKeyConfiguredPlaceholder")
+                        : t("ai.settings.apiKeyPlaceholder")
+                    }
+                  />
+                  {showMaskedKey ? (
+                    <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-caption text-m3-secondary">
+                      {t("ai.settings.keyStatusConfigured")}
+                    </span>
+                  ) : null}
+                </div>
                 <span className="text-caption text-m3-secondary">
-                  {t("ai.settings.memoryEnabledDesc")}
+                  {settings.configured
+                    ? t("ai.settings.apiKeyReplaceHint")
+                    : t("ai.settings.keyStatusMissing")}{" "}
+                  {t("ai.settings.keyNeverReturned")}
                 </span>
               </div>
-              <input
-                type="checkbox"
-                className="w-4 h-4 accent-m3-primary"
-                checked={memoryEnabled}
-                onChange={(e) => setMemoryEnabled(e.currentTarget.checked)}
-              />
-            </label>
 
-            <div className="rounded-md border border-m3-border overflow-hidden">
-              <button
-                type="button"
-                className="w-full flex items-center justify-between gap-2 px-3.5 py-3 text-left hover:bg-m3-sidebar/60 transition-colors cursor-pointer"
-                aria-expanded={showAdvanced}
-                onClick={() => setShowAdvanced((v) => !v)}
-              >
-                <span>
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  isLoading={saving}
+                  icon={<Save className="w-4 h-4" />}
+                  onClick={() => void handleSave()}
+                  disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
+                >
+                  {t("common.save")}
+                </Button>
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              className="h-full"
+              icon={<Settings2 className="w-4 h-4" />}
+              title={t("ai.settings.behaviorTitle")}
+              desc={t("ai.settings.behaviorDesc")}
+            >
+              <label className="block space-y-1.5">
+                <span className="text-label text-m3-text">{t("ai.settings.instructions")}</span>
+                <textarea
+                  className={`${inputClass} min-h-28 resize-y`}
+                  value={instructions}
+                  maxLength={settings.limits.instructionsMaxChars}
+                  onChange={(e) => setInstructions(e.currentTarget.value)}
+                  placeholder={t("ai.settings.instructionsPlaceholder")}
+                />
+                <span className="text-caption text-m3-secondary flex justify-between gap-2">
+                  <span>{t("ai.settings.instructionsHint")}</span>
+                  <span className="tabular-nums shrink-0">
+                    {instructions.length}/{settings.limits.instructionsMaxChars}
+                  </span>
+                </span>
+              </label>
+
+              <label className="flex items-center justify-between gap-3 rounded-md border border-m3-border px-3.5 py-3 cursor-pointer hover:bg-m3-sidebar/40 transition-colors">
+                <div>
                   <span className="text-sm font-medium text-m3-text block">
-                    {t("ai.settings.advanced")}
+                    {t("ai.settings.memoryEnabled")}
                   </span>
                   <span className="text-caption text-m3-secondary">
-                    {t("ai.settings.advancedDesc")}
+                    {t("ai.settings.memoryEnabledDesc")}
                   </span>
-                </span>
-                <ChevronDown
-                  className={`w-4 h-4 text-m3-secondary shrink-0 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
-                />
-              </button>
-              {showAdvanced ? (
-                <div className="space-y-5 px-3.5 pb-4 pt-3 border-t border-m3-border bg-m3-sidebar/30">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-label text-m3-text">
-                        {t("ai.settings.maxToolCalls")}
-                      </span>
-                      <span className="text-sm font-semibold tabular-nums text-m3-primary">
-                        {maxToolCalls}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      className="w-full accent-m3-primary"
-                      min={settings.limits.maxToolCalls.min}
-                      max={settings.limits.maxToolCalls.max}
-                      step={1}
-                      value={maxToolCalls}
-                      onChange={(e) => setMaxToolCalls(Number(e.currentTarget.value))}
-                    />
-                    <span className="text-caption text-m3-secondary block">
-                      {t("ai.settings.maxToolCallsHint", {
-                        min: settings.limits.maxToolCalls.min,
-                        max: settings.limits.maxToolCalls.max,
-                      })}
-                    </span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-label text-m3-text">
-                        {t("ai.settings.temperature")}
-                      </span>
-                      <span className="flex items-center gap-2">
-                        <span className="text-sm font-semibold tabular-nums text-m3-primary">
-                          {temperature == null
-                            ? t("ai.settings.temperatureDefault")
-                            : temperature.toFixed(1)}
-                        </span>
-                        {temperature != null ? (
-                          <button
-                            type="button"
-                            className="text-xs text-m3-primary hover:underline cursor-pointer"
-                            onClick={() => setTemperature(null)}
-                          >
-                            {t("ai.settings.temperatureDefault")}
-                          </button>
-                        ) : null}
-                      </span>
-                    </div>
-                    <input
-                      type="range"
-                      className="w-full accent-m3-primary"
-                      min={settings.limits.temperature.min}
-                      max={settings.limits.temperature.max}
-                      step={0.1}
-                      value={temperature ?? 0.7}
-                      onChange={(e) => setTemperature(Number(e.currentTarget.value))}
-                    />
-                    <span className="text-caption text-m3-secondary block">
-                      {t("ai.settings.temperatureHint")}
-                    </span>
-                  </div>
-
-                  <label className="block space-y-1.5">
-                    <span className="text-label text-m3-text">
-                      {t("ai.settings.maxOutputTokens")}
-                    </span>
-                    <input
-                      className={inputClass}
-                      type="number"
-                      inputMode="numeric"
-                      min={settings.limits.maxOutputTokens.min}
-                      max={settings.limits.maxOutputTokens.max}
-                      value={maxOutputTokens}
-                      onChange={(e) => setMaxOutputTokens(e.currentTarget.value)}
-                      placeholder={t("ai.settings.temperatureDefault")}
-                    />
-                    <span className="text-caption text-m3-secondary">
-                      {t("ai.settings.maxOutputTokensHint")}
-                    </span>
-                  </label>
                 </div>
-              ) : null}
-            </div>
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 accent-m3-primary"
+                  checked={memoryEnabled}
+                  onChange={(e) => setMemoryEnabled(e.currentTarget.checked)}
+                />
+              </label>
 
-            <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
-              <Button
-                variant="primary"
-                size="sm"
-                isLoading={saving}
-                icon={<Save className="w-4 h-4" />}
-                onClick={() => void handleSave()}
-                disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
-              >
-                {t("common.save")}
-              </Button>
-            </div>
-          </SectionCard>
+              <div className="rounded-md border border-m3-border overflow-hidden">
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between gap-2 px-3.5 py-3 text-left hover:bg-m3-sidebar/60 transition-colors cursor-pointer"
+                  aria-expanded={showAdvanced}
+                  onClick={() => setShowAdvanced((v) => !v)}
+                >
+                  <span>
+                    <span className="text-sm font-medium text-m3-text block">
+                      {t("ai.settings.advanced")}
+                    </span>
+                    <span className="text-caption text-m3-secondary">
+                      {t("ai.settings.advancedDesc")}
+                    </span>
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-m3-secondary shrink-0 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {showAdvanced ? (
+                  <div className="space-y-5 px-3.5 pb-4 pt-3 border-t border-m3-border bg-m3-sidebar/30">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-label text-m3-text">
+                          {t("ai.settings.maxToolCalls")}
+                        </span>
+                        <span className="text-sm font-semibold tabular-nums text-m3-primary">
+                          {maxToolCalls}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        className="w-full accent-m3-primary"
+                        min={settings.limits.maxToolCalls.min}
+                        max={settings.limits.maxToolCalls.max}
+                        step={1}
+                        value={maxToolCalls}
+                        onChange={(e) => setMaxToolCalls(Number(e.currentTarget.value))}
+                      />
+                      <span className="text-caption text-m3-secondary block">
+                        {t("ai.settings.maxToolCallsHint", {
+                          min: settings.limits.maxToolCalls.min,
+                          max: settings.limits.maxToolCalls.max,
+                        })}
+                      </span>
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-label text-m3-text">
+                          {t("ai.settings.temperature")}
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className="text-sm font-semibold tabular-nums text-m3-primary">
+                            {temperature == null
+                              ? t("ai.settings.temperatureDefault")
+                              : temperature.toFixed(1)}
+                          </span>
+                          {temperature != null ? (
+                            <button
+                              type="button"
+                              className="text-xs text-m3-primary hover:underline cursor-pointer"
+                              onClick={() => setTemperature(null)}
+                            >
+                              {t("ai.settings.temperatureDefault")}
+                            </button>
+                          ) : null}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        className="w-full accent-m3-primary"
+                        min={settings.limits.temperature.min}
+                        max={settings.limits.temperature.max}
+                        step={0.1}
+                        value={temperature ?? 0.7}
+                        onChange={(e) => setTemperature(Number(e.currentTarget.value))}
+                      />
+                      <span className="text-caption text-m3-secondary block">
+                        {t("ai.settings.temperatureHint")}
+                      </span>
+                    </div>
+
+                    <label className="block space-y-1.5">
+                      <span className="text-label text-m3-text">
+                        {t("ai.settings.maxOutputTokens")}
+                      </span>
+                      <input
+                        className={inputClass}
+                        type="number"
+                        inputMode="numeric"
+                        min={settings.limits.maxOutputTokens.min}
+                        max={settings.limits.maxOutputTokens.max}
+                        value={maxOutputTokens}
+                        onChange={(e) => setMaxOutputTokens(e.currentTarget.value)}
+                        placeholder={t("ai.settings.temperatureDefault")}
+                      />
+                      <span className="text-caption text-m3-secondary">
+                        {t("ai.settings.maxOutputTokensHint")}
+                      </span>
+                    </label>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-1 border-t border-m3-border">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  isLoading={saving}
+                  icon={<Save className="w-4 h-4" />}
+                  onClick={() => void handleSave()}
+                  disabled={clearing || !model.trim() || (isCustomProvider && !baseUrl.trim())}
+                >
+                  {t("common.save")}
+                </Button>
+              </div>
+            </SectionCard>
           </div>
 
           {settings.configured && settings.provider === "deepseek" && provider === "deepseek" ? (
@@ -698,7 +700,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
           ) : null}
 
           {memoryEnabled ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
               <AiMemoryPanel scope="organization" limits={settings.limits} showToast={showToast} />
               <AiMemoryPanel scope="personal" limits={settings.limits} showToast={showToast} />
             </div>

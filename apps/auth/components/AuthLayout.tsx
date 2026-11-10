@@ -43,9 +43,7 @@ export function AuthLayout({
       <header className="relative z-20 flex shrink-0 items-center justify-between px-4 pt-4 pb-2 sm:px-8">
         <div className="flex items-center gap-2 select-none rounded-full border border-m3-border/60 bg-m3-card/75 px-3 py-1.5 shadow-xs backdrop-blur-md">
           <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
-          <span className="text-xs font-semibold tracking-tight sm:text-sm">
-            {t("brand.name")}
-          </span>
+          <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -97,13 +95,28 @@ export function AuthLayout({
           {t("brand.name")} &copy; {new Date().getFullYear()}
         </span>
         <div className="flex items-center gap-4 sm:gap-6">
-          <a href="https://hosanna.live" className="hover:text-m3-text transition-colors" target="_blank" rel="noreferrer">
+          <a
+            href="https://hosanna.live"
+            className="hover:text-m3-text transition-colors"
+            target="_blank"
+            rel="noreferrer"
+          >
             {t("footer.help")}
           </a>
-          <a href="https://hosanna.live/privacy" className="hover:text-m3-text transition-colors" target="_blank" rel="noreferrer">
+          <a
+            href="https://hosanna.live/privacy"
+            className="hover:text-m3-text transition-colors"
+            target="_blank"
+            rel="noreferrer"
+          >
             {t("footer.privacy")}
           </a>
-          <a href="https://hosanna.live/terms" className="hover:text-m3-text transition-colors" target="_blank" rel="noreferrer">
+          <a
+            href="https://hosanna.live/terms"
+            className="hover:text-m3-text transition-colors"
+            target="_blank"
+            rel="noreferrer"
+          >
             {t("footer.terms")}
           </a>
         </div>

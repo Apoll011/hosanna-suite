@@ -1,4 +1,3 @@
-// src/routes/serviceSongAnnotation.routes.ts
 import { Router } from "express";
 import { assertUser } from "../middleware/auth.js";
 import { ServiceSongAnnotationService } from "../services/serviceSongAnnotation.service.js";

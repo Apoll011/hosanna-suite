@@ -61,16 +61,13 @@ function getSnapshot() {
   return state;
 }
 
-// Sync across tabs/windows on the same origin
 if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
     if (e.key === STORAGE_KEY && e.newValue) {
       try {
         state = { ...DEFAULT_SETTINGS, ...JSON.parse(e.newValue) };
         listeners.forEach((l) => l());
-      } catch {
-        // ignore invalid JSON from another tab
-      }
+      } catch {}
     }
   });
 }

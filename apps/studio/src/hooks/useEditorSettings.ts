@@ -65,9 +65,7 @@ if (typeof window !== "undefined") {
       try {
         state = { ...DEFAULT_EDITOR_SETTINGS, ...JSON.parse(e.newValue) };
         listeners.forEach((l) => l());
-      } catch {
-        // ignore invalid JSON
-      }
+      } catch {}
     }
   });
 }

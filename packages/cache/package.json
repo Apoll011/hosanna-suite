@@ -1,0 +1,33 @@
+{
+  "name": "@hosanna/cache",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Namespaced Keyv cache — memory by default, Redis via REDIS_URL",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"test/**/*.test.ts\""
+  },
+  "dependencies": {
+    "keyv": "^5.5.5"
+  },
+  "optionalDependencies": {
+    "@keyv/redis": "^5.1.6"
+  },
+  "devDependencies": {
+    "@hosanna/config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:"
+  }
+}

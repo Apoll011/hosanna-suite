@@ -264,7 +264,6 @@ export const INTERACTIVE_MODULES: InteractiveModuleDef[] = [
         retargetElement: "[data-tour='create-collection-modal']",
         retargetSide: "bottom",
       },
-      // --- Drive file-explorer tour (kept even if Collections page is skipped) ---
       {
         id: "collections.backToDrive",
         titleKey: "tour.interactive.collections.backToDrive.title",

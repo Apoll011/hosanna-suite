@@ -11,7 +11,7 @@ import { AgendaEvent } from "@/src/types";
 import { formatLongDate, formatShortDate } from "@/src/utils/agendaDate";
 import { Bell, ExternalLink, Link2, Pencil, Send } from "lucide-react";
 import React from "react";
-import { Button } from "../common";
+import { Button } from "@hosanna/ui";
 import { serviceTotalMinutes } from "./ServiceLinkField";
 
 interface DetailsSidebarProps {
@@ -145,7 +145,6 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
           </h3>
 
           <div className="space-y-3">
-            {/* Assignments — only people not yet notified */}
             <div>
               <p className="text-xs font-semibold text-m3-text">
                 {t("agenda.notify.assignSection")}
@@ -171,7 +170,6 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
               </p>
             </div>
 
-            {/* Date / location changes — explicit, aggregated when both */}
             <div className="pt-3 border-t border-m3-border/40">
               <p className="text-xs font-semibold text-m3-text">
                 {t("agenda.notify.updateSection")}

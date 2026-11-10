@@ -60,12 +60,10 @@ export const ULTIMATE_GUITAR_PROVIDER: OnlineChordProvider = {
   websiteUrl: "https://www.ultimate-guitar.com",
   parseUrlFallback: (url: URL) => {
     const segments = url.pathname.split("/").filter(Boolean);
-    // Ultimate Guitar tab paths typically look like /tab/{artist}/{song-name}-{tabId}
     const relevant = segments[0] === "tab" ? segments.slice(1) : segments;
     const artistSlug = relevant[0] || "";
     let songSlug = relevant[1] || "";
 
-    // Remove common suffixes like "-chords-12345" or "-12345"
     songSlug = songSlug
       .replace(/-(chords|tab|tabs|ukulele|bass)?-?\d+$/i, "")
       .replace(/-chords$/i, "");
@@ -148,9 +146,7 @@ export function parseUrlFallback(rawUrl: string): {
       const parsed = provider.parseUrlFallback(url);
       return { ...parsed, provider };
     }
-  } catch {
-    // Ignore URL parsing errors
-  }
+  } catch {}
 
   return { artist: "", title: "", provider: null };
 }

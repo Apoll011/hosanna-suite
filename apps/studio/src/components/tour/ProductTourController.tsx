@@ -127,7 +127,6 @@ export const ProductTourController: React.FC = () => {
     };
   }, [launchTour, launchInteractiveOnboarding]);
 
-  // Auto-start after first landing on /folders (non-guests, pending flag)
   useEffect(() => {
     if (demo || isGuest || roleLoading || !role) return;
     if (!isFoldersView) return;
@@ -139,7 +138,6 @@ export const ProductTourController: React.FC = () => {
     return () => window.clearTimeout(timer);
   }, [demo, isGuest, roleLoading, role, isFoldersView, settings, launchTour]);
 
-  // Legacy users (null flag): sticky “you missed the tour” toast once
   useEffect(() => {
     if (demo || isGuest || roleLoading || !role) return;
     if (!isFoldersView) return;

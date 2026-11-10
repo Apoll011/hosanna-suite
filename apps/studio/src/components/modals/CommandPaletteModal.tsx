@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-// Substring Highlighter
 function HighlightText({ text, query }: { text: string; query: string }) {
   if (!query.trim()) return <span>{text}</span>;
   const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -57,7 +56,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
   const inputRef = useRef<HTMLInputElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
 
-  // Focus input automatically on open
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 20);
@@ -65,18 +63,15 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
     }
   }, [isOpen, activeParentId]);
 
-  // Filter actions based on search and parent context
   const filteredActions = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
 
-    // Context filter (Nested submenus)
     let currentPool = allActions.filter((a) => {
       if (activeParentId) return a.parent === activeParentId;
       return !a.parent; // Top level
     });
 
     if (!q) {
-      // Empty search state: Group pinned Recents (if any) at top
       if (!activeParentId && recentActionIds.length > 0) {
         const recents: CommandAction[] = [];
         recentActionIds.forEach((id) => {
@@ -109,7 +104,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
     });
   }, [allActions, searchQuery, activeParentId, recentActionIds, t]);
 
-  // Group actions by Section
   const groupedActions = useMemo(() => {
     const groups: { section: string; actions: CommandAction[] }[] = [];
     filteredActions.forEach((action) => {
@@ -124,17 +118,14 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
     return groups;
   }, [filteredActions, t]);
 
-  // Flat list of visible actions to map keyboard navigation indices
   const flatVisibleActions = useMemo(() => {
     return groupedActions.flatMap((g) => g.actions);
   }, [groupedActions]);
 
-  // Ensure index stays in bounds
   useEffect(() => {
     setSelectedIndex(0);
   }, [searchQuery, activeParentId]);
 
-  // Keep selected element visible inside the scroll container
   useEffect(() => {
     if (!listContainerRef.current) return;
     const selectedEl = listContainerRef.current.querySelector(
@@ -145,7 +136,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
     }
   }, [selectedIndex]);
 
-  // Handle action execution
   const executeAction = (action: CommandAction) => {
     recordRecentAction(action.id.replace("recent-", ""));
     if (action.perform) {
@@ -154,7 +144,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
     }
   };
 
-  // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       e.preventDefault();
@@ -193,7 +182,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
-        {/* Top Input Bar */}
         <div className="relative flex items-center px-4 py-3.5 border-b border-m3-border">
           <Search className="w-5 h-5 text-m3-primary mr-3 shrink-0" />
 
@@ -227,7 +215,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
           )}
         </div>
 
-        {/* Results List */}
         <div ref={listContainerRef} className="max-h-95 overflow-y-auto py-2">
           {flatVisibleActions.length === 0 ? (
             <div className="py-12 flex flex-col items-center justify-center text-center px-4">
@@ -314,7 +301,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
           )}
         </div>
 
-        {/* Footer */}
         <div className="px-4 py-2 bg-m3-toolbar border-t border-m3-border flex items-center justify-between text-[11px] text-m3-secondary">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">

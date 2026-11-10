@@ -212,13 +212,11 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const fetchSession = useCallback(async () => {
-    // Only show full blocking loader if we don't have a cached session yet
     const hasCachedUser = Boolean(localStorage.getItem(CACHED_USER_KEY));
     if (!hasCachedUser) {
       setIsLoading(true);
     }
 
-    // If offline, restore from cache without clearing or network call
     if (typeof navigator !== "undefined" && !navigator.onLine) {
       try {
         const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
@@ -250,7 +248,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const sessionUser = sessionData?.user;
 
       if (!sessionUser || sessionError) {
-        // If fetch failed due to network error/offline, keep cached session if available
         if (typeof navigator !== "undefined" && !navigator.onLine) {
           setIsLoading(false);
           return;
@@ -261,8 +258,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       let activeOrg: Organization | null = null;
       let userRole: string | undefined = undefined;
 
-      // Fetch the membership list (drives the workspace switcher) in parallel
-      // with the currently active organization.
       const [initialOrgRes, orgsRes] = await Promise.all([
         authClient.organization.getFullOrganization({ query: {} }),
         authClient.organization.list({ query: {} }),
@@ -310,10 +305,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         clearPermissionCache();
       }
 
-      // Whether the org has ever set up billing (any subscription record).
-      // This gates the onboarding trial step: a brand-new org with no
-      // subscription cannot enter the studio until the trial is accepted.
-      // Full subscription details/status live in the `useSubscription()` hook.
       let acceptedTrial: boolean | null = null;
       if (activeOrg) {
         try {
@@ -342,7 +333,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setUser(userToCache);
       syncSettingsFromMetadata(fullUser.metadata);
 
-      // Identify the user in PostHog on every session refresh
       posthog.identify(fullUser.id, {
         name: fullUser.name,
         email: fullUser.email,
@@ -351,7 +341,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         organization_name: activeOrg?.name,
       });
 
-      // Cache for offline usage
       try {
         localStorage.setItem(CACHED_USER_KEY, JSON.stringify(userToCache));
         if (activeOrg) {
@@ -374,7 +363,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     } catch (error) {
       console.error("Failed to fetch session:", error);
-      // If error occurred (e.g. network failure while fetching), keep cached session if available
       const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
       if (cachedUserStr) {
         try {
@@ -402,7 +390,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     fetchSession();
   }, [fetchSession]);
 
-  // Re-check session on returning online
   useEffect(() => {
     const handleOnline = () => {
       fetchSession();
@@ -411,7 +398,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return () => window.removeEventListener("online", handleOnline);
   }, [fetchSession]);
 
-  // Sync across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "active_org_slug" || e.key === CACHED_USER_KEY) fetchSession();
@@ -425,7 +411,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     await authClient.signOut({ fetchOptions: {} });
     posthog.reset();
     handleClearSession();
-    // Clear all localStorage data
     localStorage.clear();
 
     // Reset the IDB singleton *before* deleting the databases.
@@ -434,7 +419,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // would throw "The database connection is closing" on every write/purge.
     resetDatabase();
 
-    // Clear all IndexedDB databases
     if (typeof indexedDB !== "undefined" && indexedDB.databases) {
       try {
         const databases = await indexedDB.databases();
@@ -486,8 +470,6 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.warn("[AuthContext] Failed to clear local data on org switch:", err);
       }
 
-      // The app boots per organization (local-first database, sync, queries),
-      // so a hard navigation is the reliable way to land on the new workspace.
       window.location.assign(`/${org.slug}/folders`);
     },
     [organization?.id],

@@ -101,9 +101,7 @@ export async function ensureOrgScopedData(
       // Leave meta empty — there is no active org to stamp.
       try {
         await idbDelete(getIdb(db), META_STORE, META_ORG_SLUG_KEY);
-      } catch {
-        // non-fatal
-      }
+      } catch {}
       return { matched: false, cleared: true };
     }
     return { matched: false, cleared: false };

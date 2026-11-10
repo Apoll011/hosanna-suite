@@ -71,7 +71,6 @@ export const MainLayout: React.FC = () => {
 
   const { settings, updateSetting } = usePersonalSettings();
 
-  // Sidebar & Responsive State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isSidebarCollapsed = settings.sidebarCollapsed;
   const setIsSidebarCollapsed = useCallback(
@@ -97,7 +96,6 @@ export const MainLayout: React.FC = () => {
     printEvent,
   } = usePrint();
 
-  // Service Worker & Sync
   const { showToast, triggerSyncCheck } = useSync();
 
   const handleSwitchOrganization = useCallback(
@@ -158,7 +156,6 @@ export const MainLayout: React.FC = () => {
     return () => clearInterval(interval);
   }, [triggerSyncCheck]);
 
-  // Queries & Mutations — one includeArchived query; derive active vs archived.
   const { servicesQuery, createService, deleteService } = useServices(true);
   const allServices = useMemo(() => servicesQuery.data || [], [servicesQuery.data]);
 
@@ -178,7 +175,6 @@ export const MainLayout: React.FC = () => {
   useEffect(() => {
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     const onLibraryChanged = () => {
-      // Coalesce bursts (e.g. several folders_update in one chat turn).
       if (debounceTimer) clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
         debounceTimer = null;
@@ -196,7 +192,6 @@ export const MainLayout: React.FC = () => {
     };
   }, [foldersQuery, songsQuery, triggerSyncCheck]);
 
-  // Folder & Navigation State
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
 
   const handleSelectFolder = useCallback(
@@ -210,7 +205,6 @@ export const MainLayout: React.FC = () => {
     [view, navigate, slugPrefix],
   );
 
-  // View Mode & Density
   const viewMode = settings.viewMode;
   const handleViewModeChange = useCallback(
     (mode: "grid" | "list") => {
@@ -230,7 +224,6 @@ export const MainLayout: React.FC = () => {
     [updateSetting],
   );
 
-  // Search & Filter State
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedKey, setSelectedKey] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string>("");
@@ -238,7 +231,6 @@ export const MainLayout: React.FC = () => {
   const [sortBy, setSortBy] = useState<"title" | "artist" | "updatedAt" | "number">("number");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  // Unified Modal State
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const openModal = useCallback((modal: ActiveModal) => setActiveModal(modal), []);
   const closeModal = useCallback(() => setActiveModal(null), []);
@@ -264,7 +256,6 @@ export const MainLayout: React.FC = () => {
     [view, navigate, slugPrefix],
   );
 
-  // Search Context Persistence
   const prevPathnameRef = useRef(location.pathname);
   useEffect(() => {
     const prevPath = prevPathnameRef.current;
@@ -303,7 +294,6 @@ export const MainLayout: React.FC = () => {
     prevPathnameRef.current = currPath;
   }, [location.pathname]);
 
-  // Data Memos
   const allFolders = useMemo(() => foldersQuery.data?.folders || [], [foldersQuery.data?.folders]);
   const allSongs = useMemo(() => songsQuery.data?.songs || [], [songsQuery.data?.songs]);
   const { searchableSongs } = useSearchableSongs(allFolders);
@@ -387,7 +377,6 @@ export const MainLayout: React.FC = () => {
   const activeFiltersCount =
     (searchQuery.trim() ? 1 : 0) + (selectedKey ? 1 : 0) + (selectedTag ? 1 : 0);
 
-  // Filtered Folders & Files
   const filteredSubfolders = useMemo(() => {
     let list: Folder[];
 
@@ -444,7 +433,6 @@ export const MainLayout: React.FC = () => {
         return s.folderId === currentFolderId;
       });
     } else {
-      // 1. If searching with a query, filter with Liqe across SearchableSong dataset
       let matchedSongIds: Set<string> | null = null;
       if (searchQuery.trim()) {
         const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, searchQuery);
@@ -499,7 +487,6 @@ export const MainLayout: React.FC = () => {
     sortOrder,
   ]);
 
-  // Selection State
   const [selectedFolderIds, setSelectedFolderIds] = useState<Set<string>>(new Set());
   const [selectedSongIds, setSelectedSongIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
@@ -607,7 +594,6 @@ export const MainLayout: React.FC = () => {
     [viewItems, lastClickedId, toggleFolderSelect, toggleSongSelect],
   );
 
-  // Marquee Rubberband Selection
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectionBox, setSelectionBox] = useState<{
     x: number;
@@ -742,7 +728,6 @@ export const MainLayout: React.FC = () => {
     return disabled;
   }, [selectedFolderIds, allFolders]);
 
-  // Targets & Context Menu State
   const [renameTarget, setRenameTarget] = useState<Folder | null>(null);
   const [customizeTarget, setCustomizeTarget] = useState<Folder | null>(null);
   const [moveFolderTarget, setMoveFolderTarget] = useState<Folder | null>(null);
@@ -767,7 +752,6 @@ export const MainLayout: React.FC = () => {
   const { collections, createCollection, addSongsToCollection, getCollectionSongs } =
     useCollections();
 
-  // Studio AI: navigate / open print-PDF modal from tool directives
   useEffect(() => {
     const onNavigate = (ev: Event) => {
       const detail = (ev as CustomEvent<AiNavigateDetail>).detail;
@@ -962,9 +946,7 @@ export const MainLayout: React.FC = () => {
         await addEvent(value);
         closeModal();
         emitOnboardingEvent("event-created");
-      } catch {
-        // Handled by useAgenda
-      }
+      } catch {}
     },
     [addEvent, closeModal],
   );
@@ -983,7 +965,6 @@ export const MainLayout: React.FC = () => {
     [addToCollectionTarget, selectedSongIds, addSongsToCollection, closeModal],
   );
 
-  // Auto-expand folder tree
   useEffect(() => {
     if (currentFolderId && allFolders.length > 0) {
       setExpandedFolderIds((prev) => {
@@ -1008,7 +989,6 @@ export const MainLayout: React.FC = () => {
     });
   }, []);
 
-  // Context Menu Trigger Handlers
   const handleContextMenu = useCallback(
     (e: React.MouseEvent, type: "folder" | "song", item: Folder | Song) => {
       e.preventDefault();
@@ -1038,7 +1018,6 @@ export const MainLayout: React.FC = () => {
       const y = Math.min(e.clientY, window.innerHeight - 280);
 
       setContextMenu({ x, y, type, item });
-      // Emit after React commits the menu DOM so the tour can attach to it.
       requestAnimationFrame(() => {
         emitOnboardingEvent("context-menu-opened");
       });
@@ -1061,7 +1040,6 @@ export const MainLayout: React.FC = () => {
     setContextMenu({ x, y, type: "canvas", item: null });
   }, []);
 
-  // Keyboard Shortcuts
   useEffect(() => {
     const handleCloseMenu = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
@@ -1148,15 +1126,12 @@ export const MainLayout: React.FC = () => {
     openModal,
   ]);
 
-  // Folder Actions
   const handleCreateFolderSubmit = async (name: string) => {
     try {
       await createFolder({ name, parentId: currentFolderId });
       closeModal();
       emitOnboardingEvent("folder-created");
-    } catch {
-      // Toast notification is already handled by useFolders
-    }
+    } catch {}
   };
 
   const handleRenameFolderSubmit = async (name: string) => {
@@ -1168,9 +1143,7 @@ export const MainLayout: React.FC = () => {
         updatedAt: renameTarget.updatedAt!,
       });
       setRenameTarget(null);
-    } catch {
-      // Toast notification is already handled by useFolders
-    }
+    } catch {}
   };
 
   const handleCustomizeFolderSubmit = async (color: string, icon: string) => {
@@ -1183,9 +1156,7 @@ export const MainLayout: React.FC = () => {
         updatedAt: customizeTarget.updatedAt!,
       });
       setCustomizeTarget(null);
-    } catch {
-      // Toast notification is already handled by useFolders
-    }
+    } catch {}
   };
 
   const handleMoveFolderSubmit = async () => {
@@ -1198,9 +1169,7 @@ export const MainLayout: React.FC = () => {
       });
       setMoveFolderTarget(null);
       emitOnboardingEvent("folder-moved");
-    } catch {
-      // Toast notification is already handled by useFolders
-    }
+    } catch {}
   };
 
   const handleDeleteFolderSubmit = async () => {
@@ -1218,7 +1187,6 @@ export const MainLayout: React.FC = () => {
     setDeleteAcao("move_to_root");
   };
 
-  // Song Actions
   const handleCreateSongSubmit = async (data: {
     title: string;
     artist: string;
@@ -1235,14 +1203,10 @@ export const MainLayout: React.FC = () => {
       });
       closeModal();
       emitOnboardingEvent("song-created");
-      // Stay on the current page while the tour teaches "open a song".
-      // All other navigations (Library, Drive, Agenda, …) stay unrestricted.
       if (getActiveOnboardingWaitFor() !== "song-created") {
         navigate(`${slugPrefix}/songs/${song.id}`);
       }
-    } catch {
-      // Error toast is already displayed by useSongMutations
-    }
+    } catch {}
   };
 
   const handleCifraClubSubmit = async (
@@ -1264,9 +1228,7 @@ export const MainLayout: React.FC = () => {
       if (getActiveOnboardingWaitFor() !== "song-created") {
         navigate(`${slugPrefix}/songs/${song.id}`);
       }
-    } catch {
-      // Error toast is already displayed by useSongMutations
-    }
+    } catch {}
   };
 
   const handleCreateServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
@@ -1280,9 +1242,7 @@ export const MainLayout: React.FC = () => {
       closeModal();
       emitOnboardingEvent("service-created");
       navigate(`${slugPrefix}/services/${newService.id}`);
-    } catch {
-      // Error toast is already displayed by useServices
-    }
+    } catch {}
   };
 
   const handleDeleteSongSubmit = async () => {
@@ -1291,7 +1251,6 @@ export const MainLayout: React.FC = () => {
     setDeleteSongTarget(null);
   };
 
-  // Batch Operations,
   const handleBatchMoveConfirm = useCallback(
     async (targetFolderId: string | null) => {
       const folderList = Array.from(selectedFolderIds);
@@ -1364,7 +1323,6 @@ export const MainLayout: React.FC = () => {
     clearSelection();
   };
 
-  // File Upload
   const showToastImportResult = (result: ProviderImportResult) => {
     if (result.created > 0) {
       const targetFolderName = currentFolder ? currentFolder.name : t("layout.rootDirectory");
@@ -1423,7 +1381,6 @@ export const MainLayout: React.FC = () => {
     if (e.target) e.target.value = "";
   };
 
-  // Drag and Drop
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -1620,9 +1577,7 @@ export const MainLayout: React.FC = () => {
           logout={logout}
         />
 
-        {/* Main Container (Toolbar + Content) — shrinks when AI dock opens */}
         <div className="flex-1 min-w-0 flex flex-col p-2 sm:p-4 md:p-0 h-full overflow-hidden">
-          {/* Hidden File Input for Multiple ChordPro Uploads */}
           <input
             type="file"
             ref={fileInputRef}
@@ -1632,7 +1587,6 @@ export const MainLayout: React.FC = () => {
             className="hidden"
           />
 
-          {/* Window Container */}
           <div
             className="bg-m3-card border md:border-none border-m3-border rounded-xl md:rounded-none shadow-lg md:shadow-none overflow-hidden flex flex-col flex-1 h-full transition-colors duration-300"
             role="main"
@@ -1681,7 +1635,6 @@ export const MainLayout: React.FC = () => {
               collectionActions={collectionToolbarActions}
             />
 
-            {/* Main Content Area */}
             <div className="flex-1 flex flex-col relative bg-m3-bg overflow-hidden">
               <Outlet
                 context={{
@@ -1743,7 +1696,6 @@ export const MainLayout: React.FC = () => {
               />
             </div>
 
-            {/* Status Bar */}
             {view === "explorer" && (
               <div className="h-10 bg-m3-sidebar/40 border-t border-m3-border px-6 flex items-center justify-between text-caption select-none">
                 <div className="flex items-center gap-4">
@@ -1932,9 +1884,7 @@ export const MainLayout: React.FC = () => {
               updatedAt: moveSongTarget.updatedAt,
             });
             setMoveSongTarget(null);
-          } catch {
-            // Toast error is handled by useSongMutations
-          }
+          } catch {}
         }}
         deleteSongTarget={deleteSongTarget}
         setDeleteSongTarget={setDeleteSongTarget}
@@ -1956,7 +1906,6 @@ export const MainLayout: React.FC = () => {
         onAddToCollectionConfirm={handleAddToCollectionConfirm}
       />
 
-      {/* Marquee rubberband drag selection box */}
       {selectionBox && (
         <div
           style={{

@@ -277,8 +277,6 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     messagesRef.current = messages;
   }, [messages]);
 
-  /* ----------------------------- settings ----------------------------- */
-
   const refreshSettings = useCallback(async () => {
     if (!canUse || !organization) {
       setSettings(null);
@@ -300,8 +298,6 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     window.addEventListener(AI_SETTINGS_CHANGED_EVENT, onChanged);
     return () => window.removeEventListener(AI_SETTINGS_CHANGED_EVENT, onChanged);
   }, [refreshSettings]);
-
-  /* --------------------------- page context --------------------------- */
 
   const [pageContext, setPageContext] = useState<PageContextSnapshot>(() =>
     buildPageContext(location.pathname, slugPrefix, params, false),
@@ -335,8 +331,6 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const chips = useMemo(() => chipsForContext(pageContext), [pageContext]);
   const visible = Boolean(canUse && settings?.configured && settings?.enabled);
 
-  /* ------------------------------ history ------------------------------ */
-
   const refreshThreads = useCallback(async () => {
     if (!scope) {
       setThreads([]);
@@ -345,8 +339,6 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setThreads(await threadStore.list(scope));
   }, [scope]);
 
-  // Load the history list once per scope. The chat itself always starts
-  // fresh (see "open → new chat" below); older chats live in History.
   useEffect(() => {
     if (!scope || restoredScopeRef.current === scope) return;
     restoredScopeRef.current = scope;
@@ -376,8 +368,6 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => window.clearTimeout(handle);
   }, [messages, streaming, scope, threadId, threadCreatedAt, refreshThreads]);
 
-  /* ------------------------------- mood -------------------------------- */
-
   const hadStreamRef = useRef(false);
   useEffect(() => {
     if (streaming) {
@@ -404,8 +394,6 @@ export const AiChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const timer = window.setTimeout(() => setMood("idle"), failed ? 4000 : 2800);
     return () => window.clearTimeout(timer);
   }, [streaming, messages]);
-
-  /* ------------------------------ actions ------------------------------ */
 
   const stop = useCallback(() => {
     abortRef.current?.abort();

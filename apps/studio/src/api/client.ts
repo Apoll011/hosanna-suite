@@ -80,7 +80,6 @@ export class ApiClient {
   constructor(url: string) {
     this.baseURL = normalizeBaseURL(url);
     this._openapi = this.createOpenapiClient();
-    // Clear any legacy JWT tokens from older Studio builds.
     if (typeof localStorage !== "undefined") {
       localStorage.removeItem("hosanna_access_token");
       localStorage.removeItem("hosanna_refresh_token");

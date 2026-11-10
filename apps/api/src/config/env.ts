@@ -30,7 +30,6 @@ function normalizeAuthUrl(url: string | undefined): string | undefined {
 const isVercel = Boolean(process.env.VERCEL);
 
 export const env = {
-  // ── Server ──────────────────────────────────────────────────────────────
   nodeEnv: process.env.NODE_ENV ?? "development",
   port: parseInt(process.env.PORT ?? "3000", 10),
   /** Legacy local flag; cookie SameSite is always `none`+`secure` for cross-origin Studio↔API. */
@@ -53,7 +52,6 @@ export const env = {
     process.env.RATE_LIMIT_DISABLED === "true" ||
     (process.env.NODE_ENV ?? "development") === "development",
 
-  // ── Database ─────────────────────────────────────────────────────────────
   databaseUrl: required("DATABASE_URL"),
   /**
    * Max connections in the pg pool.
@@ -62,50 +60,25 @@ export const env = {
    */
   dbPoolMax: parseInt(process.env.DB_POOL_MAX ?? (isVercel ? "5" : "20"), 10),
 
-  // ── Better Auth ──────────────────────────────────────────────────────────
-  betterAuthSecret: required("BETTER_AUTH_SECRET"),
   publicAppUrl: required("PUBLIC_APP_URL"),
-  /** Sentinel plugin API key — required in production. */
-  betterAuthApiKey: optional("BETTER_AUTH_API_KEY"),
 
-  // ── OAuth providers ───────────────────────────────────────────────────────
-  googleClientId: required("GOOGLE_CLIENT_ID"),
-  googleClientSecret: required("GOOGLE_CLIENT_SECRET"),
+  supabaseUrl: optional("SUPABASE_URL"),
+  supabaseSecretKey: optional("SUPABASE_SECRET_KEY"),
 
-  // ── Stripe ────────────────────────────────────────────────────────────────
-  stripeSecretKey: required("STRIPE_SECRET_KEY"),
-  stripeWebhookSecret: required("STRIPE_WEBHOOK_SECRET"),
-
-  // ── Captcha ───────────────────────────────────────────────────────────────
-  turnstileSecretKey: required("TURNSTILE_SECRET_KEY"),
-
-  // ── Supabase ──────────────────────────────────────────────────────────────
-  supabaseUrl: required("SUPABASE_URL"),
-  supabaseSecretKey: required("SUPABASE_SECRET_KEY"),
-
-  // ── Email (Resend) ────────────────────────────────────────────────────────
-  resendApiKey: required("RESEND_API_KEY"),
+  resendApiKey: optional("RESEND_API_KEY"),
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
-  // ── Studio / Auth URLs ────────────────────────────────────────────────────
-  /** The Studio product URL (post-login / settings deep links). */
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
-  /**
-   * Dedicated auth app origin (auth.hosanna.live). Issuer / JWKS / deep links,
-   * and 308 target when Vercel flag `auth-mount` is `delegate`.
-   */
+  /** Auth app origin — get-session + JWKS. Falls back to PUBLIC_APP_URL. */
   authUrl: normalizeAuthUrl(optional("AUTH_URL")),
 
-  // ── Cron ──────────────────────────────────────────────────────────────────
   cronSecret: optional("CRON_SECRET"),
 
-  // ── Firebase Cloud Messaging / Firestore ─────────────────────────────────
   fcmProjectId: optional("FCM_PROJECT_ID"),
   fcmClientEmail: optional("FCM_CLIENT_EMAIL"),
   /** Service-account private key with literal \n escapes (as in the JSON file). */
   fcmPrivateKey: optional("FCM_PRIVATE_KEY"),
 
-  // ── AI (Studio BYOK) ─────────────────────────────────────────────────────
   /**
    * AES-256-GCM key for encrypting per-org LLM API keys at rest.
    * Prefer 64 hex characters (32 bytes). Required to save/use org AI keys.
@@ -120,7 +93,6 @@ export const env = {
     optional("MCP_RESOURCE_URL") ??
     `http://127.0.0.1:${parseInt(process.env.PORT ?? "3000", 10)}/mcp`,
 
-  // ── Metadata search (Studio AI / MCP) ─────────────────────────────────────
   /** YouTube Data API v3 key — improves `{youtube:}` lookups. */
   youtubeApiKey: optional("YOUTUBE_API_KEY"),
 };

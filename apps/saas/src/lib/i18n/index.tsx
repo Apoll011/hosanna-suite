@@ -52,7 +52,6 @@ const STORAGE_KEY = "hosanna_lang";
 export function detectUserLanguage(): Language {
   if (typeof window === "undefined") return DEFAULT_LANGUAGE;
 
-  // 1. Check if the user previously explicitly chose a language
   try {
     const saved = localeToLanguage(localStorage.getItem(STORAGE_KEY));
     if (saved) return saved;
@@ -60,16 +59,13 @@ export function detectUserLanguage(): Language {
     // localStorage might be unavailable or disabled
   }
 
-  // 2. Check browser languages in order of user priority
   try {
     const userLangs = navigator.languages?.length ? navigator.languages : [navigator.language];
     for (const rawLang of userLangs) {
       const code = localeToLanguage(rawLang);
       if (code) return code;
     }
-  } catch {
-    // Fallback if navigator API is restricted
-  }
+  } catch {}
 
   return DEFAULT_LANGUAGE;
 }
@@ -78,7 +74,6 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => detectUserLanguage());
 
   useEffect(() => {
-    // Re-verify in client after hydration
     const detected = detectUserLanguage();
     if (detected !== language) {
       setLanguageState(detected);
@@ -92,9 +87,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       if (typeof document !== "undefined") {
         document.documentElement.lang = lang;
       }
-    } catch {
-      // Ignore storage errors
-    }
+    } catch {}
   };
 
   useEffect(() => {

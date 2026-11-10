@@ -1,4 +1,4 @@
-import { EmptyState, Spinner } from "@/src/components/common";
+import { Spinner, EmptyState } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FolderOpen, Upload } from "lucide-react";
@@ -43,7 +43,6 @@ interface FolderExplorerContext {
   currentFolderId: string | null;
   selectionBox: { x: number; y: number; width: number; height: number } | null;
 
-  /* Internal item drag & drop */
   isInternalDragActive: boolean;
   dropTargetFolderId: string | null;
   dragDisabledFolderIds: Set<string>;
@@ -91,10 +90,6 @@ const DEFAULT_CONTEXT: FolderExplorerContext = {
   handleFolderDragLeave: () => {},
   handleFolderDrop: () => {},
 };
-
-/* ------------------------------------------------------------------ */
-/* Page                                                                 */
-/* ------------------------------------------------------------------ */
 
 export const FoldersPage: React.FC = () => {
   const { navigate } = useAppNavigate();
@@ -177,7 +172,6 @@ export const FoldersPage: React.FC = () => {
         isDraggingOver ? "ring-4 ring-inset ring-m3-primary bg-m3-primary/5" : ""
       }`}
     >
-      {/* Drag Over Overlay (só para upload externo, nunca durante drag interno) */}
       {isDraggingOver && !isInternalDragActive && (
         <Can permission="song.import">
           <div className="absolute inset-0 bg-m3-primary/10 backdrop-blur-xs z-30 flex flex-col items-center justify-center p-6 text-center pointer-events-none">
@@ -240,7 +234,6 @@ export const FoldersPage: React.FC = () => {
           </EmptyState>
         </div>
       ) : viewMode === "grid" ? (
-        /* GRID VIEW */
         <div
           className={
             isCompact

@@ -3,11 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input } from "@/src/components/common";
+import { Button, Input } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import React, { useState } from "react";
-
-// --- SERVICE FORM ---
 
 interface ServiceFormData {
   name: string;
@@ -15,7 +13,6 @@ interface ServiceFormData {
   notes: string;
 }
 
-// Extracted pure validation function
 const validateServiceForm = (
   values: ServiceFormData,
   t: (key: string) => string,
@@ -65,7 +62,6 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear the specific field error when the user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }

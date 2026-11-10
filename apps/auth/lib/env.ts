@@ -40,8 +40,7 @@ function normalizeMcpResourceUrl(url: string): string {
 const isVercel = Boolean(process.env.VERCEL);
 
 /** Auth app origin — AUTH_URL, else PUBLIC_APP_URL, else local Next port. */
-const authUrl =
-  process.env.AUTH_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:5174";
+const authUrl = process.env.AUTH_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:5174";
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? "development",
@@ -49,6 +48,9 @@ export const env = {
 
   databaseUrl: required("DATABASE_URL"),
   dbPoolMax: parseInt(process.env.DB_POOL_MAX ?? (isVercel ? "5" : "20"), 10),
+
+  /** Same Redis as the API — Better Auth secondary storage + shared caches. */
+  redisUrl: optional("REDIS_URL"),
 
   betterAuthSecret: required("BETTER_AUTH_SECRET"),
   /** Better Auth baseURL / issuer — must be this auth app origin. */

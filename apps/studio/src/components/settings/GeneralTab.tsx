@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@/src/components/common";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import {
@@ -46,7 +46,7 @@ const SERMON_PRESETS = [
 ];
 
 const selectClass =
-  "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
+  "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
 
 export const GeneralTab: React.FC<GeneralTabProps> = ({ active, showToast }) => {
   const { organization } = useAuth();
@@ -168,7 +168,9 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ active, showToast }) => 
                 </optgroup>
                 <optgroup label={t("settings.general.timezones.otherRegionsGroup")}>
                   <option value="Europe/London">{t("settings.general.timezones.london")}</option>
-                  <option value="America/New_York">{t("settings.general.timezones.newYork")}</option>
+                  <option value="America/New_York">
+                    {t("settings.general.timezones.newYork")}
+                  </option>
                   <option value="UTC">{t("settings.general.timezones.utc")}</option>
                 </optgroup>
               </select>

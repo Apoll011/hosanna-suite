@@ -8,9 +8,6 @@ import { StaffLines } from "./HosannaLanding";
 import tiagoPhoto from "@/assets/tiago_headshot.webp";
 import eberPhoto from "@/assets/eber_headshot.webp";
 
-/* ------------------------------------------------------------------ */
-/*  Scroll reveal hook (mirrors ContactForm's local copy)             */
-/* ------------------------------------------------------------------ */
 function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>(".reveal");
@@ -32,9 +29,6 @@ function useReveal() {
 
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
 
-/* ------------------------------------------------------------------ */
-/*  Founder card                                                      */
-/* ------------------------------------------------------------------ */
 function FounderCard({
   photo,
   name,
@@ -61,16 +55,12 @@ function FounderCard({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  About page                                                        */
-/* ------------------------------------------------------------------ */
 export function AboutUs() {
   useReveal();
   const { t } = useI18n();
 
   return (
     <div className="bg-[#f8fafc] min-h-screen selection:bg-primary/10 font-sans">
-      {/* Hero Header */}
       <section className="bg-hero-gradient pt-40 pb-12 text-white overflow-hidden relative -mt-30">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
         <div className="absolute inset-0 text-white/10">
@@ -94,7 +84,6 @@ export function AboutUs() {
         </div>
       </section>
 
-      {/* Origin story */}
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-6">
           <div className="reveal text-center">
@@ -114,7 +103,6 @@ export function AboutUs() {
         </div>
       </section>
 
-      {/* Founders */}
       <section className="bg-secondary py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="reveal text-center max-w-2xl mx-auto">
@@ -154,7 +142,6 @@ export function AboutUs() {
         </div>
       </section>
 
-      {/* Pull quote */}
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <p className="reveal font-display text-2xl leading-snug text-primary md:text-3xl">
@@ -163,7 +150,6 @@ export function AboutUs() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="relative overflow-hidden bg-hero-gradient py-16 text-white md:py-20">
         <div className="absolute inset-0 text-gold/30">
           <StaffLines className="top-10" />

@@ -4,7 +4,7 @@
  */
 
 import { backupApi } from "@/src/api";
-import { Button, Modal, PageHeader, Surface, Tabs } from "@/src/components/common";
+import { Button, PageHeader, Surface, Modal, Tabs } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useAnyRole, useCan } from "@/src/lib/permissions/client";
 import {
@@ -84,7 +84,6 @@ export const OrganizationPage: React.FC = () => {
     }
   }, [searchParams, setSearchParams, showToast, t]);
 
-  // If a non-admin lands on loginActivity, fall back to workspace.
   useEffect(() => {
     if (roleLoading) return;
     if (activeTab === "loginActivity" && !canViewLoginActivity) {

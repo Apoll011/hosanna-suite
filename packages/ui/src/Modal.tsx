@@ -6,7 +6,7 @@
 import { X } from "lucide-react";
 import React, { useEffect, useId, useRef, useState } from "react";
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
@@ -55,8 +55,7 @@ export const Modal: React.FC<ModalProps> = ({
     if (isOpen) {
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
-      // Only steal focus when the modal opens — not on every parent re-render
-      // (inline onClose identities would otherwise blur controlled inputs).
+      // Focus panel only on open, not every parent re-render.
       if (!wasOpenRef.current) {
         requestAnimationFrame(() => panelRef.current?.focus());
       }

@@ -12,9 +12,7 @@ import {
   type AiToolCallState,
 } from "./types";
 
-/* -------------------------------------------------------------------------- */
 /* Pure stream reducer (immutable)                                             */
-/* -------------------------------------------------------------------------- */
 
 function upsertTool(
   parts: AiMessagePart[],
@@ -215,9 +213,7 @@ export function settleRunningTools(
   };
 }
 
-/* -------------------------------------------------------------------------- */
 /* Render blocks: text / reasoning / collapsed tool runs                       */
-/* -------------------------------------------------------------------------- */
 
 export type RenderBlock =
   | { kind: "text"; key: string; text: string }

@@ -131,9 +131,7 @@ function extractJsonLd(html: string): JsonLdSong | undefined {
           return item;
         }
       }
-    } catch {
-      // Ignore invalid JSON-LD.
-    }
+    } catch {}
   }
 
   return undefined;
@@ -288,7 +286,6 @@ function extractCifraFromMarkdown(markdown: string): string | undefined {
     .filter((b): b is string => Boolean(b && /\[[A-G]/.test(b)));
   if (fenced[0]) return fenced[0];
 
-  // Longest indented / pre-like block that looks like chords+lyrics
   const blocks = markdown
     .split(/\n{2,}/)
     .map((b) => b.trim())
@@ -313,7 +310,6 @@ async function fetchSongViaNative(
     source_url: url.toString(),
   };
 
-  // Title often like "Song - Artist | Cifra Club"
   const titleLine = page.title || "";
   const dash = titleLine.match(/^(.+?)\s*[-–|]\s*(.+?)(?:\s*[-|].*)?$/);
   if (dash) {

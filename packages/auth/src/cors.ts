@@ -57,8 +57,7 @@ function corsHeadersFor(request: Request): Headers | null {
     const requested = request.headers.get("access-control-request-headers");
     headers.set(
       "Access-Control-Allow-Headers",
-      requested?.trim() ||
-        "content-type, authorization, x-captcha-response, x-requested-with",
+      requested?.trim() || "content-type, authorization, x-captcha-response, x-requested-with",
     );
     headers.set("Access-Control-Max-Age", "86400");
   }

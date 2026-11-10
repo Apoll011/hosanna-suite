@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@/src/components/common";
+import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Collection } from "@/src/types";
 import { compressImage } from "@/src/utils/settingsUtils";
@@ -171,7 +171,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
       }
     >
       <form onSubmit={handleSave} className="flex flex-col gap-5 pr-0.5">
-        {/* Live Preview Card */}
         <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-linear-to-br from-m3-sidebar to-m3-hover/70 dark:from-m3-sidebar dark:to-m3-card border border-m3-border/80 dark:border-m3-border/60 shadow-inner">
           {imageBase64 ? (
             <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-m3-border dark:border-m3-border shadow-sm">
@@ -201,7 +200,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           </div>
         )}
 
-        {/* Collection Name */}
         <div>
           <label className="block text-xs font-semibold text-m3-secondary dark:text-m3-secondary mb-1.5">
             {locale === "pt" ? "Nome da Coleção *" : "Collection Name *"}
@@ -222,7 +220,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           />
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-xs font-semibold text-m3-secondary dark:text-m3-secondary mb-1.5">
             {locale === "pt" ? "Descrição (opcional)" : "Description (optional)"}
@@ -240,7 +237,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           />
         </div>
 
-        {/* Cover Image Upload */}
         <div>
           <label className="block text-xs font-semibold text-m3-secondary dark:text-m3-secondary mb-1.5 items-center gap-1.5">
             <ImageIcon className="w-3.5 h-3.5 text-m3-primary" />
@@ -310,7 +306,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           />
         </div>
 
-        {/* Color Swatches */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-m3-secondary dark:text-m3-secondary flex items-center gap-1.5">
@@ -352,7 +347,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
             })}
           </div>
         </div>
-        {/* Icon Selection with Search Header */}
         <div className="flex flex-col gap-2 min-h-0 flex-1">
           <div className="flex items-center justify-between gap-2">
             <label className="text-xs font-semibold text-m3-secondary dark:text-m3-secondary flex items-center gap-1.5 shrink-0">
@@ -360,7 +354,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
               <span>{t("modals.iconCount", { count: filteredIcons.length })}</span>
             </label>
 
-            {/* Quick Search */}
             <div className="relative w-36 sm:w-48">
               <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-m3-secondary pointer-events-none" />
               <input
@@ -382,7 +375,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
             </div>
           </div>
 
-          {/* Icons Grid with dedicated scroll containment */}
           <div className="relative flex-1 min-h-35 max-h-55 sm:max-h-60 overflow-y-auto rounded-xl border border-m3-border/80 dark:border-m3-border bg-m3-sidebar/40 dark:bg-m3-card/40 p-2 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700">
             {filteredIcons.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center py-8 text-center text-m3-secondary">
@@ -419,7 +411,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-m3-border mt-auto">
           <Button type="button" variant="ghost" onClick={onClose} disabled={isSaving}>
             {t("common.cancel")}

@@ -24,21 +24,23 @@ export function VerifyEmailPage() {
 
   useEffect(() => {
     if (!token) return;
-    void authClient.verifyEmail({ query: { token } }).then(({ error }: { error?: { message?: string } | null }) => {
-      if (!error) {
-        setState("success");
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 2500);
-        return;
-      }
-      const msg = error.message?.toLowerCase() || "";
-      if (msg.includes("expir")) {
-        setState("expired");
-      } else {
-        setState("error");
-      }
-    });
+    void authClient
+      .verifyEmail({ query: { token } })
+      .then(({ error }: { error?: { message?: string } | null }) => {
+        if (!error) {
+          setState("success");
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 2500);
+          return;
+        }
+        const msg = error.message?.toLowerCase() || "";
+        if (msg.includes("expir")) {
+          setState("expired");
+        } else {
+          setState("error");
+        }
+      });
   }, [token]);
 
   const handleResend = async (e: FormEvent) => {
@@ -79,7 +81,10 @@ export function VerifyEmailPage() {
                 <CheckCircle2 className="w-4 h-4" /> {t("auth.forgotPassword.emailSentTitle")}
               </p>
             ) : (
-              <form onSubmit={(e) => void handleResend(e)} className="flex flex-col sm:flex-row gap-2.5">
+              <form
+                onSubmit={(e) => void handleResend(e)}
+                className="flex flex-col sm:flex-row gap-2.5"
+              >
                 <div className="flex-1">
                   <GoogleTextField
                     type="email"
@@ -88,7 +93,12 @@ export function VerifyEmailPage() {
                     onChange={(e) => setResendEmail(e.target.value)}
                   />
                 </div>
-                <Button type="submit" size="md" isLoading={resendLoading} className="rounded-full shrink-0 px-5">
+                <Button
+                  type="submit"
+                  size="md"
+                  isLoading={resendLoading}
+                  className="rounded-full shrink-0 px-5"
+                >
                   <RefreshCw className="w-4 h-4" />
                 </Button>
               </form>
@@ -150,7 +160,10 @@ export function VerifyEmailPage() {
           <div className="w-16 h-16 bg-amber-100 dark:bg-amber-950/50 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 mb-2">
             <Clock className="w-8 h-8" />
           </div>
-          <form onSubmit={(e) => void handleResend(e)} className="w-full flex flex-col sm:flex-row gap-2.5 mt-2">
+          <form
+            onSubmit={(e) => void handleResend(e)}
+            className="w-full flex flex-col sm:flex-row gap-2.5 mt-2"
+          >
             <div className="flex-1">
               <GoogleTextField
                 type="email"
@@ -159,7 +172,12 @@ export function VerifyEmailPage() {
                 onChange={(e) => setResendEmail(e.target.value)}
               />
             </div>
-            <Button type="submit" size="md" isLoading={resendLoading} className="rounded-full shrink-0 px-5">
+            <Button
+              type="submit"
+              size="md"
+              isLoading={resendLoading}
+              className="rounded-full shrink-0 px-5"
+            >
               <RefreshCw className="w-4 h-4" />
             </Button>
           </form>

@@ -4,7 +4,7 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { forOrganization } from "../database/prisma.js";
 import type { OrgScopedPrisma } from "../database/prisma.js";
 import { env } from "../config/env.js";
-import { auth } from "../lib/auth.js";
+import { getSession } from "../lib/session.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
 import { can } from "../middleware/auth.js";
 import { hasActiveSubscription } from "../middleware/subscription.js";
@@ -17,10 +17,7 @@ import { SongService } from "../services/song.service.js";
 import { mapToolError } from "./lib/toolErrors.js";
 
 const apiOrigin = env.mcpResourceUrl.replace(/\/mcp\/?$/, "");
-const authIssuer = (env.authUrl ?? apiOrigin ?? `http://127.0.0.1:${env.port}`).replace(
-  /\/+$/,
-  "",
-);
+const authIssuer = (env.authUrl ?? apiOrigin ?? `http://127.0.0.1:${env.port}`).replace(/\/+$/, "");
 const jwksUrl = new URL("/api/auth/jwks", authIssuer);
 const remoteJwks = createRemoteJWKSet(jwksUrl);
 
@@ -239,7 +236,7 @@ export async function resolveMcpContextFromHeaders(
     }
   }
 
-  const sessionData = await auth.api.getSession({ headers: headerBag });
+  const sessionData = await getSession({ headers: headerBag });
   if (sessionData?.session && sessionData?.user) {
     const workspaceId = (sessionData.session as any).activeOrganizationId as string | undefined;
     if (workspaceId) {

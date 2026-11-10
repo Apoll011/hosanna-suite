@@ -13,7 +13,7 @@ import { useAiProposals } from "./proposalStore";
  * (faster while Logos is working) and the whole icon tips on hover.
  */
 const SparkIcon: React.FC<{ busy: boolean }> = ({ busy }) => {
-  const star = "origin-center [transform-box:fill-box]";
+  const star = "origin-center transform-fill";
   return (
     <svg
       viewBox="0 0 24 24"

@@ -8,9 +8,7 @@ import type { HosanaDatabase } from "./database";
 import type { HosanaDoc } from "./engine/collection";
 import type { FolderDocType, ServiceDocType, SongDocType } from "./schemas";
 
-// ─── Internal convenience type aliases ────────────────────────────────────────
 // HosanaDatabase stores collections as HosanaCollection<DocType & Record<string,unknown>>.
-// These aliases reflect what findOne/find actually return so callers get full typing.
 type SongDoc = HosanaDoc<SongDocType & Record<string, unknown>>;
 type FolderDoc = HosanaDoc<FolderDocType & Record<string, unknown>>;
 

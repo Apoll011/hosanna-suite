@@ -53,7 +53,6 @@ export function Component() {
           </div>
         </section>
 
-        {/* Markdown Content Section */}
         <section className="bg-background py-16 md:py-24">
           <div className="mx-auto max-w-3xl px-5 md:px-8">
             <div className="prose prose-slate dark:prose-invert prose-headings:font-display prose-headings:font-semibold prose-a:text-gold hover:prose-a:text-(--gold)/80 prose-a:transition-colors prose-primary max-w-none">

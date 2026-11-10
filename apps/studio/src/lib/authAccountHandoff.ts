@@ -37,8 +37,7 @@ export function prefetchAuthAccount(): void {
  */
 export function navigateToAuthAccount(options?: { returnUrl?: string }): void {
   const returnUrl =
-    options?.returnUrl ??
-    (typeof window !== "undefined" ? window.location.href : undefined);
+    options?.returnUrl ?? (typeof window !== "undefined" ? window.location.href : undefined);
   const url = authAppHref("/account", { returnUrl });
 
   writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");

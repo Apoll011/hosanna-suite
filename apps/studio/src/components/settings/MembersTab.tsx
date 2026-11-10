@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal, Spinner, Surface, Tabs } from "@/src/components/common";
+import { Button, Spinner, Surface, Input, Modal, Tabs } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan, useCanAny } from "@/src/lib/permissions/client";
 import { Can } from "@/src/lib/permissions/components";
@@ -65,7 +65,6 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
 
-  // Invite Form
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<AppRole>("member");
 
@@ -77,7 +76,6 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
     setInviteToCancel(null);
   }, []);
 
-  // Pending invite actions
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [inviteToCancel, setInviteToCancel] = useState<OrgInvitation | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);

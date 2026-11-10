@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/api",
-  "version": "2.24.1",
+  "version": "2.24.4",
   "license": "Apache-2.0",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "prisma:migrate:dev": "pnpm --filter @hosanna/db db:migrate:dev",
     "prisma:push": "pnpm --filter @hosanna/db db:push",
     "typecheck": "tsc --noEmit",
-    "openapi:generate": "node openapi/generate.mjs && pnpm --filter @hosanna/types generate",
+    "openapi:generate": "node ../../scripts/generate-openapi.mjs && pnpm --filter @hosanna/types generate",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -25,23 +25,16 @@
     "@ai-sdk/google": "^4.0.108",
     "@ai-sdk/openai": "^4.0.105",
     "@ai-sdk/openai-compatible": "^3.0.84",
-    "@better-auth/cimd": "^1.7.18",
-    "@better-auth/i18n": "^1.7.18",
-    "@better-auth/infra": "^0.4.27",
-    "@better-auth/mcp": "^1.7.18",
-    "@better-auth/stripe": "^1.7.18",
     "@hosanna/auth": "workspace:*",
+    "@hosanna/cache": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/db": "workspace:*",
     "@modelcontextprotocol/node": "^2.1.2",
     "@modelcontextprotocol/server": "^2.4.0",
     "@prisma/adapter-pg": "^7.9.1",
     "@supabase/supabase-js": "^2.49.0",
-    "@vercel/flags-core": "^1.11.0",
     "@vercel/functions": "^3.9.9",
     "ai": "^7.0.157",
-    "better-auth": "^1.7.18",
-    "better-inbox": "^0.1.2",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
@@ -53,7 +46,6 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.23.0",
     "resend": "^6.22.0",
-    "stripe": "^22.6.1",
     "uuid": "^11.1.1",
     "zod": "^4.6.7"
   },
@@ -68,7 +60,6 @@
     "@types/pg": "^8.23.1",
     "@types/uuid": "^9.0.8",
     "tsx": "^4.19.0",
-    "typescript": "catalog:",
-    "yaml": "^2.9.1"
+    "typescript": "catalog:"
   }
 }

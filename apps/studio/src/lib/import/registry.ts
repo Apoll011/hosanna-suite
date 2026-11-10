@@ -34,7 +34,6 @@ export class SongImportRegistry {
 
     const results: ProviderImportResult[] = [];
 
-    // Group files by provider (O(n))
     for (const file of files) {
       const dot = file.name.lastIndexOf(".");
       const extension = dot >= 0 ? file.name.substring(dot).toLowerCase() : "";
@@ -62,7 +61,6 @@ export class SongImportRegistry {
       }
     }
 
-    // One import call per provider
     for (const [provider, providerFiles] of grouped) {
       const result = await provider.import(providerFiles, songData);
 

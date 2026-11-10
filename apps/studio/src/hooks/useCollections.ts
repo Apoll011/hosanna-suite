@@ -112,7 +112,6 @@ export function useCollections() {
 
         const doc = await db.collections.insert(newCollection);
 
-        // If songIds are provided, update each song's collectionIds
         if (songsList.length > 0) {
           for (const sId of songsList) {
             const songDoc = await db.songs.findOne(sId).exec();
@@ -255,7 +254,6 @@ export function useCollections() {
             updatedAt: now,
           });
 
-          // Also remove collection reference from songs
           const songsInCollection = await db.songs
             .find({
               selector: {

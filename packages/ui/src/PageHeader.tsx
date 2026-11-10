@@ -12,10 +12,7 @@ export interface PageHeaderProps {
   className?: string;
 }
 
-/**
- * Shared page shell for non-explorer screens (settings, account center).
- * Title uses display type; keep one primary action in `actions`.
- */
+/** Page title row for settings/account-style screens. */
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   description,
@@ -30,7 +27,11 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         <h1 className="text-display text-m3-text">{title}</h1>
         {description && <p className="text-muted mt-1 max-w-2xl text-pretty">{description}</p>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2 shrink-0 self-end sm:self-auto">{actions}</div>}
+      {actions && (
+        <div className="flex flex-wrap items-center gap-2 shrink-0 self-end sm:self-auto">
+          {actions}
+        </div>
+      )}
     </header>
   );
 };

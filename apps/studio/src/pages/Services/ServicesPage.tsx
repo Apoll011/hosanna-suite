@@ -1,4 +1,4 @@
-import { Badge, ConfirmDialog, EmptyState, Modal, Spinner } from "@/src/components/common";
+import { ConfirmDialog, Spinner, Badge, EmptyState, Modal } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan, usePermissionValue } from "@/src/lib/permissions/client";
@@ -54,14 +54,11 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
   const { servicesQuery, createService, updateService, deleteService } = useServices();
   const { printService, printServices } = usePrint();
 
-  // Effective sort (from MainLayout context)
   const effectiveSortBy: ServiceSortBy = contextSortBy === "title" ? "name" : "date";
   const effectiveSortOrder: SortOrder = (contextSortOrder as SortOrder) ?? "desc";
 
-  // ─── Archive toggle (from MainLayout context or local fallback) ──────────
   const showArchived = (context.showArchived as boolean) ?? false;
 
-  // Fetch archived services (fallback if context doesn't provide)
   const { servicesQuery: localArchivedServicesQuery } = useServices(true);
 
   const archivedServicesQuery =
@@ -75,7 +72,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     undefined,
   );
 
-  // ─── Modal / dialog state ─────────────────────────────────────────────────
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Service | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Service | null>(null);
@@ -87,14 +83,12 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     isMulti?: boolean;
   } | null>(null);
 
-  // ─── Multi-select state ───────────────────
   const [selectedServiceIds, setSelectedServiceIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isBatchDeleteOpen, setIsBatchDeleteOpen] = useState(false);
   const [isBatchArchiveOpen, setIsBatchArchiveOpen] = useState(false);
 
-  // ─── Data ─────────────────────────────────────────────────────────────────
   const allServices: Service[] = useMemo(
     () =>
       (servicesQuery.data || []).map((s: Service) => ({
@@ -104,7 +98,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     [servicesQuery.data],
   );
 
-  // Active (non-archived) services
   const activeServices = useMemo(() => allServices.filter((s) => !s.archived), [allServices]);
 
   const archivedServices = useMemo(
@@ -119,7 +112,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     [showArchived, context.archivedServices, archivedServicesQuery.data],
   );
 
-  // ─── Filter + sort ────────────────────────────────────────────────────────
   const sortServices = useCallback(
     (list: Service[]): Service[] => {
       return [...list].sort((a, b) => {
@@ -162,13 +154,11 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     return sortServices(list);
   }, [archivedServices, actualSearchQuery, sortServices]);
 
-  // Combined visible list for keyboard selection and operations
   const allVisibleServices = useMemo(
     () => (showArchived ? [...filteredServices, ...filteredArchivedServices] : filteredServices),
     [showArchived, filteredServices, filteredArchivedServices],
   );
 
-  // ─── Context menu auto-close listeners ────────────────────────────────────
   useEffect(() => {
     const handleClose = () => setContextMenu(null);
     window.addEventListener("click", handleClose);
@@ -181,7 +171,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     };
   }, []);
 
-  // ─── Keyboard shortcuts (selection mode) ──────────────────────────────────
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -217,7 +206,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [allVisibleServices, selectedServiceIds]);
 
-  // ─── Marquee selection hook ──────────────────────────────────────────────
   const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } = useMarqueeSelection({
     containerRef,
     enabled: true,
@@ -229,7 +217,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     },
   });
 
-  // ─── Item click handler (Ctrl/Shift/normal) ───────────────────────────────
   const handleServiceClick = useCallback(
     (e: React.MouseEvent, service: Service, allDisplayed: Service[]) => {
       e.stopPropagation();
@@ -267,7 +254,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     [navigate, slugPrefix, lastClickedId, selectedServiceIds],
   );
 
-  // ─── Context menu opener ──────────────────────────────────────────────────
   const openContextMenu = useCallback(
     (e: React.MouseEvent, service?: Service) => {
       e.preventDefault();
@@ -299,7 +285,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     [openContextMenu],
   );
 
-  // ─── Service actions ──────────────────────────────────────────────────────
   const handleCreateServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
     try {
       const newService = await createService({
@@ -311,9 +296,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
       posthog.capture("service_created", { has_notes: !!data.notes });
       setIsCreateModalOpen(false);
       navigate(`${slugPrefix}/services/${newService.id}`);
-    } catch {
-      // Toast notification is already handled by useServices
-    }
+    } catch {}
   };
 
   const handleEditServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
@@ -329,9 +312,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         },
       });
       setEditTarget(null);
-    } catch {
-      // Toast notification is already handled by useServices
-    }
+    } catch {}
   };
 
   const handleDuplicateService = async (service: Service) => {
@@ -380,9 +361,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         },
       });
       posthog.capture("service_archived", { archived: nextArchived });
-    } catch {
-      // Toast notification is already handled by useServices
-    }
+    } catch {}
     setArchiveTarget(null);
     setContextMenu(null);
   };
@@ -415,7 +394,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     setIsBatchArchiveOpen(false);
   };
 
-  // ─── Loading State ────────────────────────────────────────────────────────
   if (servicesQuery.isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center p-12">
@@ -424,7 +402,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     );
   }
 
-  // ─── Truly Empty State (Only when no active services AND archive view is off/empty) ───
   const hasNoItemsToShow =
     activeServices.length === 0 &&
     (!showArchived || (archivedServices.length === 0 && !archivedServicesQuery.isLoading));
@@ -482,7 +459,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     );
   }
 
-  // ─── Main Render ──────────────────────────────────────────────────────────
   return (
     <div
       className="flex-1 flex flex-col w-full space-y-6 animate-in fade-in duration-300 overflow-y-auto h-full relative select-none p-6"
@@ -490,7 +466,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
       onContextMenu={handleCanvasContextMenu}
       ref={containerRef}
     >
-      {/* ── Services Content (Grid / List Views) ── */}
       {viewMode === "grid" ? (
         <div
           className={
@@ -517,7 +492,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
             ))
           )}
 
-          {/* Archived section */}
           {showArchived && (
             <>
               <div className="col-span-full flex items-center gap-3 mt-4 mb-2">
@@ -596,7 +570,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
                 ))
               )}
 
-              {/* Archived rows */}
               {showArchived && (
                 <>
                   <tr>
@@ -640,7 +613,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         </div>
       )}
 
-      {/* ── Multi-select action bar ── */}
       <BatchActionFloatingBar
         selectedCount={selectedServiceIds.size}
         itemLabel={t("common.services")}
@@ -658,7 +630,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         }}
       />
 
-      {/* ── FLOATING CONTEXT MENU ── */}
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
@@ -847,7 +818,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         </div>
       )}
 
-      {/* ── CREATE SERVICE MODAL ── */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
@@ -859,7 +829,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         />
       </Modal>
 
-      {/* ── EDIT SERVICE MODAL ── */}
       <Modal
         isOpen={!!editTarget}
         onClose={() => setEditTarget(null)}
@@ -878,7 +847,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         )}
       </Modal>
 
-      {/* ── DELETE SERVICE DIALOG ── */}
       <ConfirmDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
@@ -890,7 +858,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         confirmText={t("servicesPage.deleteService")}
       />
 
-      {/* ── ARCHIVE SERVICE DIALOG ── */}
       <ConfirmDialog
         variant="primary"
         isOpen={!!archiveTarget}
@@ -912,7 +879,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         }
       />
 
-      {/* ── BATCH DELETE DIALOG ── */}
       <ConfirmDialog
         isOpen={isBatchDeleteOpen}
         onClose={() => setIsBatchDeleteOpen(false)}
@@ -926,7 +892,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         confirmText={t("servicesPage.deleteAll")}
       />
 
-      {/* ── BATCH ARCHIVE DIALOG ── */}
       <ConfirmDialog
         variant="primary"
         isOpen={isBatchArchiveOpen}
@@ -941,7 +906,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         confirmText={t("servicesPage.archiveAll")}
       />
 
-      {/* ── Marquee rubberband selection box ── */}
       <MarqueeSelectionBox box={selectionBox} />
     </div>
   );

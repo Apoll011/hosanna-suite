@@ -28,7 +28,6 @@ interface Props {
  */
 export const CacheHydrationProvider: React.FC<Props> = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  // Track previous auth state to detect logout transitions
   const prevAuthRef = useRef<boolean | undefined>(undefined);
 
   useEffect(() => {
@@ -49,9 +48,7 @@ export const CacheHydrationProvider: React.FC<Props> = ({ children }) => {
           const db = await getDatabase();
           // Null org slug clears collections, replication state, and meta.
           await ensureOrgScopedData(db, null);
-        } catch {
-          // Ignore — DB may not be initialized (e.g. logout before DB opens)
-        }
+        } catch {}
       })();
     }
   }, [isAuthenticated]);

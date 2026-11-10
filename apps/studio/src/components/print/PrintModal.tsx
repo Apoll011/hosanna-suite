@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useSync } from "@/src/contexts/SyncContext";
 import { useI18n } from "@/src/lib/i18n";
@@ -236,7 +236,7 @@ const PrintModalContent: React.FC<{
   }, [handlePrint, onClose]);
 
   const iconButton =
-    "inline-flex items-center justify-center min-h-9 min-w-9 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center min-h-9 min-w-9 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
   const pillButton =
     "inline-flex items-center justify-center h-8 min-w-8 px-1.5 rounded-full text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 
@@ -253,7 +253,6 @@ const PrintModalContent: React.FC<{
         aria-labelledby={titleId}
         className="bg-m3-card sm:border border-m3-border sm:rounded-xl shadow-lg flex flex-col w-full max-w-360 h-full sm:h-[94vh] overflow-hidden"
       >
-        {/* ── Top bar ── */}
         <div className="px-3 sm:px-5 py-2.5 border-b border-m3-border flex items-center gap-2 sm:gap-3 shrink-0">
           <div className="hidden sm:flex p-2 rounded-md bg-m3-primary/10 text-m3-primary shrink-0">
             <Printer className="w-5 h-5" />
@@ -304,7 +303,6 @@ const PrintModalContent: React.FC<{
         </div>
 
         <div className="flex-1 min-h-0 flex">
-          {/* ── Preview ── */}
           <div
             className={`${mobileView === "preview" ? "flex" : "hidden"} lg:flex flex-1 min-w-0 flex-col relative bg-slate-200/70 dark:bg-slate-950`}
           >
@@ -388,7 +386,6 @@ const PrintModalContent: React.FC<{
             </div>
           </div>
 
-          {/* ── Options sidebar ── */}
           <div
             className={`${mobileView === "options" ? "flex" : "hidden"} lg:flex w-full lg:w-90 shrink-0 flex-col border-l border-m3-border bg-m3-card min-h-0`}
           >

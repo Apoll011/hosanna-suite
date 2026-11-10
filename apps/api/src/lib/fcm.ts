@@ -26,8 +26,6 @@ const FCM_SEND_ENDPOINT = (projectId: string) =>
 /** Hard cap on a single outbound HTTP call so a hung request can't stall the cron. */
 const REQUEST_TIMEOUT_MS = 15_000;
 
-// ── Cached access token ─────────────────────────────────────────────────────
-
 let cachedAccessToken: string | null = null;
 let cachedTokenExpiresAt = 0;
 /** In-flight token exchange, so concurrent sends share one mint. */
@@ -96,8 +94,6 @@ async function getAccessToken(): Promise<string> {
   return tokenRefresh;
 }
 
-// ── Send ────────────────────────────────────────────────────────────────────
-
 export interface FcmMessage {
   title: string;
   body: string;
@@ -138,7 +134,6 @@ export async function sendFcmToToken(token: string, message: FcmMessage): Promis
           notification: { title: message.title, body: message.body },
           ...(message.data ? { data: message.data } : {}),
           // Deliver even when the app is backgrounded/closed; Android shows
-          // the notification automatically via the system tray.
           android: { priority: "HIGH" },
           apns: {
             payload: { aps: { sound: "default" } },

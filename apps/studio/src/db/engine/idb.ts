@@ -45,8 +45,6 @@ export function openIDB(
         _resetDatabase?.();
       };
 
-      // If another tab opens a newer DB version it will be blocked by us.
-      // Close gracefully so the upgrade can proceed without wiping stores.
       db.onversionchange = () => {
         console.warn("[hosana-idb] versionchange received — closing connection to allow upgrade");
         db.close();

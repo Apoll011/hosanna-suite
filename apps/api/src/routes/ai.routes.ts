@@ -234,7 +234,6 @@ aiRouter.post(
       abortSignal: abort.signal,
     });
 
-    // UI message stream compatible with @ai-sdk/react useChat
     const response = result.toUIMessageStreamResponse({
       originalMessages: messages,
       sendReasoning: true,
@@ -266,7 +265,6 @@ aiRouter.post(
       },
     });
 
-    // Pipe Web Response → Express
     res.status(response.status);
     response.headers.forEach((value, key) => {
       if (key.toLowerCase() === "transfer-encoding") return;

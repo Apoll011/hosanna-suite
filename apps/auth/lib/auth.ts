@@ -21,17 +21,11 @@ import {
   sendWelcomeEmail,
 } from "./email.service";
 import { DEFAULT_LOCALE, t } from "@/locales/server";
-import {
-  isBase64Image,
-  isExternalImageUrl,
-  uploadBase64Avatar,
-  uploadUrlAvatar,
-} from "./supabase";
+import { isBase64Image, isExternalImageUrl, uploadBase64Avatar, uploadUrlAvatar } from "./supabase";
 
 export const stripeClient = new Stripe(env.stripeSecretKey, {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error — SDK types only reflect latest API version; 2026-07-29.dahlia is valid.
-  apiVersion: "2026-07-29.dahlia",
+  // SDK types lag API versions; cast keeps a pinned Stripe API version.
+  apiVersion: "2026-07-29.dahlia" as any,
 });
 
 /**
@@ -52,6 +46,7 @@ export const auth = createAuth({
     mcpResourceUrl: env.mcpResourceUrl,
     appUrl: env.authUrl,
     studioUrl: env.studioUrl,
+    redisUrl: env.redisUrl,
   },
   emails: {
     sendPasswordResetEmail,

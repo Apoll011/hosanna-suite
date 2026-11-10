@@ -266,7 +266,7 @@ export async function createCollection(
       _count: { select: { songs: true } },
     },
   });
-  syncCache.invalidate(ctx.orgId, "collections");
+  await syncCache.invalidate(ctx.orgId, "collections");
   return { created: true, collection: serializeCollection(created) };
 }
 
@@ -303,7 +303,7 @@ export async function updateCollection(
       _count: { select: { songs: true } },
     },
   });
-  syncCache.invalidate(ctx.orgId, "collections");
+  await syncCache.invalidate(ctx.orgId, "collections");
   return { updated: true, collection: serializeCollection(updated) };
 }
 
@@ -318,7 +318,7 @@ export async function deleteCollection(ctx: McpContext, collectionId: string) {
     where: { id: collectionId },
     data: { deleted: true, purgeAt: purgeAt() },
   });
-  syncCache.invalidate(ctx.orgId, "collections");
+  await syncCache.invalidate(ctx.orgId, "collections");
   return { deleted: true, collectionId };
 }
 
@@ -344,7 +344,7 @@ export async function collectionAddSongs(
       _count: { select: { songs: true } },
     },
   });
-  syncCache.invalidate(ctx.orgId, "collections");
+  await syncCache.invalidate(ctx.orgId, "collections");
   return { updated: true, collection: serializeCollection(updated) };
 }
 
@@ -369,7 +369,7 @@ export async function collectionRemoveSongs(
       _count: { select: { songs: true } },
     },
   });
-  syncCache.invalidate(ctx.orgId, "collections");
+  await syncCache.invalidate(ctx.orgId, "collections");
   return { updated: true, collection: serializeCollection(updated) };
 }
 
@@ -430,7 +430,7 @@ export async function createAgendaEvent(
       responsibilities,
     } as never,
   });
-  syncCache.invalidate(ctx.orgId, "agendaEvents");
+  await syncCache.invalidate(ctx.orgId, "agendaEvents");
   return {
     status: "saved" as const,
     created: true,
@@ -490,7 +490,7 @@ export async function updateAgendaEvent(
         : {}),
     } as never,
   });
-  syncCache.invalidate(ctx.orgId, "agendaEvents");
+  await syncCache.invalidate(ctx.orgId, "agendaEvents");
   const responsibilities =
     args.responsibilities !== undefined
       ? normalizeResponsibilities(args.responsibilities)
@@ -527,6 +527,6 @@ export async function deleteAgendaEvent(ctx: McpContext, eventId: string) {
     where: { id: eventId },
     data: { deleted: true, purgeAt: purgeAt() },
   });
-  syncCache.invalidate(ctx.orgId, "agendaEvents");
+  await syncCache.invalidate(ctx.orgId, "agendaEvents");
   return { deleted: true, eventId };
 }

@@ -22,7 +22,6 @@ import type {
   SongDocType,
 } from "./schemas";
 
-// ─── DB version ──────────────────────────────────────────────────────────────
 // Bump this number whenever store structure changes (new indexes etc.).
 // v2: collections store.
 // v3: `meta` store — durable org-slug stamp for local data isolation.
@@ -31,14 +30,12 @@ import type {
 // Demo/onboarding uses `hosana_idb_demo` via getMainDbName().
 const DB_VERSION = 3;
 
-// ─── Store names ─────────────────────────────────────────────────────────────
 const STORE_SONGS = "songs";
 const STORE_FOLDERS = "folders";
 const STORE_COLLECTIONS = "collections";
 const STORE_SERVICES = "services";
 const STORE_AGENDA = "agendaEvents";
 
-// ─── Typed wrappers that satisfy the AnyDoc constraint ───────────────────────
 // HosanaCollection<T> requires T extends AnyDoc = {id:string} & Record<string,unknown>.
 // Our doc types have explicit fields but no index signature.
 // We cast them to "T & Record<string,unknown>" so TypeScript accepts them as
@@ -49,8 +46,6 @@ type AsFolderDoc = FolderDocType & Record<string, unknown>;
 type AsCollectionDoc = CollectionDocType & Record<string, unknown>;
 type AsServiceDoc = ServiceDocType & Record<string, unknown>;
 type AsAgendaDoc = AgendaEventDocType & Record<string, unknown>;
-
-// ─── Public database type ────────────────────────────────────────────────────
 
 export interface HosanaDatabaseCollections {
   songs: HosanaCollection<AsSongDoc>;
@@ -64,8 +59,6 @@ export type HosanaDatabase = HosanaDatabaseCollections & {
   /** @internal underlying IndexedDB handle (meta store, health checks). */
   readonly _idb: IDBDatabase;
 };
-
-// ─── Automatic Count Calculation Functions ───────────────────────────────────
 
 /**
  * Calculates the number of non-deleted songs belonging to a given folder.
@@ -205,8 +198,6 @@ export async function updateCollectionCounts(
   });
 }
 
-// ─── Singleton ───────────────────────────────────────────────────────────────
-
 let dbPromise: Promise<HosanaDatabase> | null = null;
 
 export async function getDatabase(): Promise<HosanaDatabase> {
@@ -274,7 +265,6 @@ async function _open(): Promise<HosanaDatabase> {
     }
   });
 
-  // Hydrate all collections in parallel — single read pass per store
   const [rawSongs, rawFolders, rawCollections, rawServices, rawAgenda] = await Promise.all([
     idbGetAll<AsSongDoc>(idb, STORE_SONGS),
     idbGetAll<AsFolderDoc>(idb, STORE_FOLDERS),
@@ -283,7 +273,6 @@ async function _open(): Promise<HosanaDatabase> {
     idbGetAll<AsAgendaDoc>(idb, STORE_AGENDA),
   ]);
 
-  // Compute initial counts from the loaded IDB data before collection instantiation
   const initialFolders = recalculateFolderCounts(rawFolders, rawSongs);
   const initialCollections = recalculateCollectionCounts(rawCollections, rawSongs);
 

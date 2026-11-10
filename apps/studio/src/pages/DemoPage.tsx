@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner } from "@/src/components/common";
+import { Spinner } from "@hosanna/ui";
 import { captureOnboardingQueryParams } from "@/src/lib/tour";
 import React, { useEffect, useRef, useState } from "react";
 import { getDatabase } from "../db";

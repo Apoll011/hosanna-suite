@@ -1,4 +1,4 @@
-import { Badge } from "@/src/components/common";
+import { Badge } from "@hosanna/ui";
 import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 interface OverflowTagListProps {
@@ -34,7 +34,6 @@ export const OverflowTagList: React.FC<OverflowTagListProps> = ({ tags }) => {
       let count = 0;
       const badgeWidthEstimate = 32; // reserve width for +N badge
 
-      // When checking fit, we measure how many tag elements can fit
       for (let i = 0; i < safeTags.length; i++) {
         const child = children[i];
         if (!child) break;

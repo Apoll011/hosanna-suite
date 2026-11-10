@@ -52,7 +52,6 @@ function buildMonthGrid(visibleMonth: Date): (Date | null)[] {
   const year = visibleMonth.getFullYear();
   const month = visibleMonth.getMonth();
   const firstOfMonth = new Date(year, month, 1);
-  // Monday-first offset (getDay(): 0=Sun..6=Sat)
   const offset = (firstOfMonth.getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 

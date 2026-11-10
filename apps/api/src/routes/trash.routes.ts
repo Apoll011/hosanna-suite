@@ -9,7 +9,6 @@ import { idParamSchema } from "../validators/common.validators.js";
 
 export const trashRouter = Router();
 
-// GET /api/trash — list all trashed items for the org
 trashRouter.get(
   "/",
   requirePermission("song.access"),
@@ -23,7 +22,6 @@ trashRouter.get(
   }),
 );
 
-// POST /api/trash/songs/:id/restore
 trashRouter.post(
   "/songs/:id/restore",
   requirePermission("song.update"),
@@ -34,7 +32,6 @@ trashRouter.post(
   }),
 );
 
-// POST /api/trash/folders/:id/restore
 trashRouter.post(
   "/folders/:id/restore",
   requirePermission("folder.update"),
@@ -45,7 +42,6 @@ trashRouter.post(
   }),
 );
 
-// POST /api/trash/services/:id/restore
 trashRouter.post(
   "/services/:id/restore",
   requirePermission("service.update"),

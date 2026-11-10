@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
 import { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
@@ -234,7 +234,6 @@ export const SongGridCard: React.FC<SongGridCardProps> = React.memo(
             : ""}
         </span>
 
-        {/* Bar / dots rendered below the artist name, full width */}
         {hasScore && (songScoreLayout === "bar" || songScoreLayout === "dots") && (
           <div className="w-full px-1">
             <SongScoreVisualizer score={scoreValue!} layout={songScoreLayout} compact={isCompact} />

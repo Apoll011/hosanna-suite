@@ -21,10 +21,7 @@ export interface AuthEmails {
     to: string,
     vars: { name: string; url: string; expireMinutes: number },
   ) => Promise<unknown>;
-  sendPasswordResetSuccessEmail: (
-    to: string,
-    vars: { first_name: string },
-  ) => Promise<unknown>;
+  sendPasswordResetSuccessEmail: (to: string, vars: { first_name: string }) => Promise<unknown>;
   sendVerificationEmail: (
     to: string,
     vars: { name: string; url: string; expireMinutes: number },
@@ -38,10 +35,7 @@ export interface AuthEmails {
       locale?: string;
     },
   ) => Promise<unknown>;
-  sendAccountDeletedEmail: (
-    to: string,
-    vars: { first_name: string },
-  ) => Promise<unknown>;
+  sendAccountDeletedEmail: (to: string, vars: { first_name: string }) => Promise<unknown>;
   sendOtpEmail: (
     to: string,
     vars: { name: string; otp: string; expireMinutes: number },
@@ -157,6 +151,11 @@ export interface CreateAuthConfig {
   studioUrl?: string;
   /** Extra trusted origins merged with the built-in Hosanna / MCP list. */
   trustedOriginsExtra?: string[];
+  /**
+   * Shared Redis URL for Better Auth secondary storage (sessions / rate limits).
+   * Same instance as the API `@hosanna/cache` REDIS_URL — different key namespaces.
+   */
+  redisUrl?: string;
 }
 
 export interface CreateAuthOptions {
@@ -169,4 +168,15 @@ export interface CreateAuthOptions {
   /** Server i18n helper for notification title/description strings. */
   t: (locale: string, key: string, vars?: Record<string, string>) => string;
   defaultLocale?: string;
+  /**
+   * Optional Better Auth secondary storage. When omitted, created from
+   * `config.redisUrl` / `REDIS_URL` via `@hosanna/cache`.
+   */
+  secondaryStorage?: {
+    get: (key: string) => Promise<string | null>;
+    set: (key: string, value: string, ttl?: number) => Promise<void>;
+    delete: (key: string) => Promise<void>;
+    getAndDelete: (key: string) => Promise<string | null>;
+    increment: (key: string, ttl?: number) => Promise<number>;
+  } | null;
 }

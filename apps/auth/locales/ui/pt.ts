@@ -140,6 +140,10 @@ export const pt = {
     },
     logout: "Terminar sessão",
     otherOptions: "Outras opções",
+    activeWorkspace: "Espaço atual",
+    continueToStudio: "Continuar para o Studio",
+    switchWorkspace: "Mudar de espaço",
+    switchingWorkspace: "A mudar…",
   },
   settings: {
     billing: {
@@ -176,7 +180,8 @@ export const pt = {
       verify: "Verificar",
       codeVerified: "Código verificado.",
       backupSuccessTitle: "Guarde os códigos de recuperação",
-      backupWarning: "Guarde estes códigos num local seguro. Cada um pode ser usado uma vez se perder o dispositivo.",
+      backupWarning:
+        "Guarde estes códigos num local seguro. Cada um pode ser usado uma vez se perder o dispositivo.",
       backupSavedBtn: "Já os guardei",
       setupSuccess: "Autenticação de dois fatores ativada.",
       disableStepDesc: "Introduza a palavra-passe para desativar o 2FA.",

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input } from "@/src/components/common";
+import { Button, Input } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import React, { useState } from "react";
 
@@ -15,7 +15,6 @@ interface FolderFormProps {
   title?: string;
 }
 
-// Extracted validation logic to a pure function for better testability
 const validateFolderName = (name: string, t: (key: string) => string): string | undefined => {
   const trimmedName = name.trim();
 
@@ -56,7 +55,6 @@ export const FolderForm: React.FC<FolderFormProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
 
-    // Clear the error state as soon as the user starts interacting again
     if (error) {
       setError(undefined);
     }

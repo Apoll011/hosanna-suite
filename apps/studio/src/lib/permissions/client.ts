@@ -16,10 +16,6 @@ import {
   type Resource,
 } from "@hosanna/auth";
 
-// ---------------------------------------------------------------------------
-// 1. Core Caching & Promise Deduplication Layer
-// ---------------------------------------------------------------------------
-
 interface PermResult {
   granted: boolean;
   loading: boolean;
@@ -32,19 +28,13 @@ const DEFAULT_RESULT: PermResult = {
   error: null,
 };
 
-// Stores resolved booleans
 const permCache = new Map<string, boolean>();
-// Stores in-flight Promises so concurrent components share the exact same network request
 const pendingPerms = new Map<string, Promise<boolean>>();
 
 export function clearPermissionCache(): void {
   permCache.clear();
   pendingPerms.clear();
 }
-
-// ---------------------------------------------------------------------------
-// 2. Batching Helpers
-// ---------------------------------------------------------------------------
 
 /**
  * Groups ["project.create", "sale.create", "project.delete"]
@@ -73,9 +63,7 @@ function getCacheKey(permissions: PermissionString[]): string {
     .join("|");
 }
 
-// ---------------------------------------------------------------------------
 // 3. Super Efficient Fetchers
-// ---------------------------------------------------------------------------
 
 /**
  * Core fetcher. Batches permissions, deduplicates requests, and pre-populates cache.
@@ -85,13 +73,10 @@ function fetchPermissionsBatch(permissions: PermissionString[]): Promise<boolean
 
   const cacheKey = getCacheKey(permissions);
 
-  // 1. If we already have the answer, return it instantly
   if (permCache.has(cacheKey)) return Promise.resolve(permCache.get(cacheKey)!);
 
-  // 2. If this EXACT check is already in-flight from another component, piggyback on it
   if (pendingPerms.has(cacheKey)) return pendingPerms.get(cacheKey)!;
 
-  // 3. Fire a single API call for all permissions
   const promise = authClient.organization
     .hasPermission({
       permissions: groupPermissions(permissions) as Record<string, string[]>,
@@ -100,7 +85,6 @@ function fetchPermissionsBatch(permissions: PermissionString[]): Promise<boolean
       if (error) throw new Error(error.message ?? "Permission check failed");
       const granted = data?.success ?? false;
 
-      // Cache the result for this specific combination
       permCache.set(cacheKey, granted);
 
       // OPTIMIZATION: If the batch was GRANTED, we know every individual permission
@@ -118,10 +102,6 @@ function fetchPermissionsBatch(permissions: PermissionString[]): Promise<boolean
   pendingPerms.set(cacheKey, promise);
   return promise;
 }
-
-// ---------------------------------------------------------------------------
-// 4. React Hooks
-// ---------------------------------------------------------------------------
 
 /** Checks a single permission. */
 export function useCan(permission: PermissionString): PermResult {
@@ -152,10 +132,6 @@ export function usePermissionValue<T, D = null>(
     error,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Role Helpers
-// ---------------------------------------------------------------------------
 
 export function checkPermissionsLocally(
   permissions: PermissionString[],
@@ -296,7 +272,6 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
     mounted.current = true;
 
     const checkAny = async () => {
-      // 1. Fast short-circuit: Are any already cached as true?
       for (const p of permissions) {
         if (permCache.get(getCacheKey([p])) === true) {
           if (mounted.current) {
@@ -333,7 +308,6 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
       setResult({ granted: false, loading: true, error: null });
 
       try {
-        // 2. Fire individual checks concurrently. Promise Deduplication ensures
         // we don't spam the network if other components are checking these same perms.
         const results = await Promise.all(permissions.map((p) => fetchPermissionsBatch([p])));
         const granted = results.some(Boolean);
@@ -354,10 +328,6 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
 
   return result;
 }
-
-// ---------------------------------------------------------------------------
-// Role Hooks
-// ---------------------------------------------------------------------------
 
 export function useActiveRole(): {
   role: AppRole | null;
@@ -409,7 +379,6 @@ export function preloadPermissionsForRole(role: AppRole | null): void {
     const resource = perm.slice(0, dotIndex) as keyof typeof roleConfig.statements;
     const action = perm.slice(dotIndex + 1);
 
-    // Check if the action is granted for the resource in this role's statements
     const allowedActions = roleConfig.statements[resource];
     const isGranted = Array.isArray(allowedActions) && allowedActions.includes(action);
 

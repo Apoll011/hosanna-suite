@@ -50,7 +50,6 @@ export const ThemeProvider: React.FC<{
 
   const toggleDarkMode = () => {
     if (theme === "system") {
-      // If following the system, toggle to the opposite of the current OS theme.
       setTheme(systemDark ? "light" : "dark");
       return;
     }

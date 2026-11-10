@@ -34,7 +34,6 @@ interface DirectiveEntry {
 }
 
 const DIRECTIVES: DirectiveEntry[] = [
-  // Metadados
   {
     directive: "title",
     alias: "t",
@@ -103,7 +102,6 @@ const DIRECTIVES: DirectiveEntry[] = [
     example: "{song_number: 147}",
     hosanna: true,
   },
-  // Comentários
   {
     directive: "comment",
     alias: "c",
@@ -129,7 +127,6 @@ const DIRECTIVES: DirectiveEntry[] = [
     category: "comment",
     descriptionKey: "repeat",
   },
-  // Estrutura
   {
     directive: "start_of_version",
     alias: "sov_ver",
@@ -206,7 +203,6 @@ const DIRECTIVES: DirectiveEntry[] = [
     category: "structure",
     descriptionKey: "new_song",
   },
-  // Notação
   {
     directive: "start_of_tab",
     alias: "sot",
@@ -441,7 +437,6 @@ export function ChordProGuide() {
 
   return (
     <div className="bg-white min-h-screen selection:bg-primary/10 font-sans">
-      {/* ============================= HERO ============================= */}
       <section className="bg-hero-gradient pt-40 pb-16 text-white relative overflow-hidden -mt-30">
         <div className="absolute inset-0 text-white/10">
           <StaffLines className="top-24 opacity-40" />
@@ -492,7 +487,6 @@ export function ChordProGuide() {
         </div>
       </section>
 
-      {/* TOC mobile */}
       <div className="lg:hidden sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-border">
         <div className="flex gap-2 overflow-x-auto px-6 py-4 no-scrollbar">
           {TOC.map((item) => (
@@ -507,11 +501,9 @@ export function ChordProGuide() {
         </div>
       </div>
 
-      {/* ============================= CONTEÚDO ============================= */}
       <section className="py-16">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-16 items-start">
-            {/* TOC desktop */}
             <nav
               className="sticky top-[calc(var(--site-header,4rem)+2rem)] hidden space-y-1 lg:block"
               aria-label={t("chordproGuide.tocTitle")}
@@ -548,7 +540,6 @@ export function ChordProGuide() {
             </nav>
 
             <div className="grid gap-20 min-w-0">
-              {/* ---------------- Fundamentos ---------------- */}
               <div id="fundamentos" className="scroll-mt-28">
                 <SectionHeader
                   icon={BookOpen}
@@ -573,7 +564,6 @@ export function ChordProGuide() {
                 </ul>
               </div>
 
-              {/* ---------------- Sintaxe de Acordes ---------------- */}
               <div id="sintaxe" className="scroll-mt-28">
                 <SectionHeader
                   icon={Code2}
@@ -629,7 +619,6 @@ export function ChordProGuide() {
                 </div>
               </div>
 
-              {/* ---------------- Diretivas Essenciais ---------------- */}
               <div id="diretivas" className="scroll-mt-28">
                 <SectionHeader
                   icon={Music2}
@@ -644,7 +633,6 @@ export function ChordProGuide() {
                 </div>
               </div>
 
-              {/* ---------------- Estrutura & {chorus} ---------------- */}
               <div id="estrutura" className="scroll-mt-28">
                 <SectionHeader
                   icon={Layers}
@@ -681,7 +669,6 @@ export function ChordProGuide() {
                   ))}
                 </div>
 
-                {/* {chorus} repetição mágica */}
                 <div className="mt-10 grid md:grid-cols-[1fr_1.1fr] gap-0 rounded-2xl border border-border overflow-hidden shadow-sm reveal">
                   <div className="p-8 bg-secondary">
                     <div className="inline-flex p-3 rounded-xl bg-white text-primary shadow-sm mb-4">
@@ -717,7 +704,6 @@ export function ChordProGuide() {
                 </div>
               </div>
 
-              {/* ---------------- Notas & Grelhas ---------------- */}
               <div id="notas" className="scroll-mt-28">
                 <SectionHeader
                   icon={Grid3x3}
@@ -767,7 +753,6 @@ export function ChordProGuide() {
                 </div>
               </div>
 
-              {/* ---------------- Tablatura ---------------- */}
               <div id="tablatura" className="scroll-mt-28">
                 <SectionHeader
                   icon={Music2}
@@ -798,7 +783,6 @@ export function ChordProGuide() {
                 </div>
               </div>
 
-              {/* ---------------- Atalhos & Snippets ---------------- */}
               <div id="atalhos" className="scroll-mt-28">
                 <SectionHeader
                   icon={Keyboard}
@@ -910,7 +894,6 @@ export function ChordProGuide() {
                 </div>
               </div>
 
-              {/* ---------------- Referência Rápida ---------------- */}
               <div id="referencia" className="scroll-mt-28">
                 <SectionHeader
                   icon={BookMarked}
@@ -969,7 +952,6 @@ export function ChordProGuide() {
         </div>
       </section>
 
-      {/* ============================= CTA ============================= */}
       <section className="bg-secondary py-16 font-sans">
         <div className="container mx-auto px-6 text-center max-w-3xl reveal">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary mb-8 tracking-tight">

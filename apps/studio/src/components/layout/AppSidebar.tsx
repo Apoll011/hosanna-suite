@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Badge, Button } from "@/src/components/common";
+import { Button, Badge } from "@hosanna/ui";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -160,14 +160,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         } w-72 border-r border-m3-border p-4 flex-col gap-1 select-none shrink-0 transition-[width] duration-300 ease-in-out z-30`}
         role="navigation"
       >
-        {/* Integrated Sidebar Header */}
         <div
           className="relative flex items-center mb-4 mt-2 select-none"
           role="banner"
           ref={orgMenuRef}
         >
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            {/* Logo container: expands on click when collapsed, hover swaps icon */}
             <button
               onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}
               disabled={!isSidebarCollapsed}
@@ -193,7 +191,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               />
             </button>
 
-            {/* Title & Subtitle + Collapse button with smooth transition */}
             <div
               className={`flex flex-col items-start min-w-0 flex-1 transition-[opacity,max-width,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
                 isSidebarCollapsed
@@ -243,7 +240,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </div>
           </div>
 
-          {/* Workspace Switcher Popover */}
           {hasMultipleOrgs && isOrgMenuOpen && (
             <div
               className="absolute top-full left-0 right-0 mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150"
@@ -288,7 +284,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           )}
         </div>
 
-        {/* Main Menu Label */}
         <div
           className={`px-3 py-2 text-label transition-[opacity,max-height,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
             isSidebarCollapsed
@@ -299,7 +294,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           {t("sidebar.mainMenu")}
         </div>
 
-        {/* Drive Item */}
         <button
           data-tour="nav-drive"
           onClick={() => {
@@ -326,7 +320,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           </div>
         </button>
 
-        {/* Library Item */}
         <button
           data-tour="nav-library"
           onClick={() => {
@@ -387,7 +380,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           </button>
         </Can>
 
-        {/* Services Item */}
         <button
           data-tour="nav-services"
           onClick={() => {
@@ -466,7 +458,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           </button>
         </Can>
 
-        {/* Folder Tree */}
         {showFolderTree && (
           <div
             className={`flex-1 flex flex-col min-h-0 transition-[opacity,max-height] duration-300 ease-in-out overflow-hidden ${
@@ -500,7 +491,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
         {(!showFolderTree || isSidebarCollapsed) && <div className="flex-1" />}
 
-        {/* Trash Item — admin / owner only */}
         <AnyRoleGate roles={["owner", "admin"]}>
           <button
             onClick={() => {
@@ -526,7 +516,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           </button>
         </AnyRoleGate>
 
-        {/* User profile footer with smooth transitions */}
         {user && (
           <div className="mt-2 pt-2 border-t border-m3-border relative shrink-0" ref={userMenuRef}>
             <button
@@ -612,29 +601,33 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   <Settings className="w-4 h-4 text-m3-secondary" />
                   {t("sidebar.openSettings")}
                 </button>
-                <button
-                  onMouseEnter={() => prefetchAuthAccount()}
-                  onFocus={() => prefetchAuthAccount()}
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    navigateToAuthAccount({ returnUrl: window.location.href });
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
-                >
-                  <UserRound className="w-4 h-4 text-m3-secondary" />
-                  {t("sidebar.openAccount")}
-                </button>
                 <div className="my-1 border-t border-m3-border" />
-                <button
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    logout();
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-semibold text-m3-danger hover:bg-m3-danger/10 rounded-md transition-colors cursor-pointer text-left"
-                >
-                  <LogOut className="w-4 h-4 text-m3-danger" />
-                  {t("sidebar.logout")}
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onMouseEnter={() => prefetchAuthAccount()}
+                    onFocus={() => prefetchAuthAccount()}
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      navigateToAuthAccount({ returnUrl: window.location.href });
+                    }}
+                    className="min-w-0 flex-1 flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
+                  >
+                    <UserRound className="w-4 h-4 text-m3-secondary shrink-0" />
+                    <span className="truncate">{t("sidebar.openAccount")}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      logout();
+                    }}
+                    title={t("sidebar.logout")}
+                    aria-label={t("sidebar.logout")}
+                    className="shrink-0 inline-flex items-center justify-center min-h-10 min-w-10 rounded-md text-m3-danger hover:bg-m3-danger/10 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             )}
           </div>

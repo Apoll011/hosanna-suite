@@ -114,7 +114,6 @@ export function useSubscription(): SubscriptionApi {
     } catch (err) {
       if (seq !== requestSeq.current) return;
       setError((err as Error)?.message || "Failed to load subscriptions.");
-      // Keep the previously loaded rows on refresh failures.
     } finally {
       if (seq === requestSeq.current) setIsLoading(false);
     }
@@ -201,7 +200,6 @@ export function useSubscription(): SubscriptionApi {
             error: apiError.message || "Couldn't open the billing portal.",
           };
         }
-        // On success the better-auth client redirects to the portal.
         setPendingAction(null);
         return {};
       } catch (err) {

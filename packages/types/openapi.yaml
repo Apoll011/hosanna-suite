@@ -140,11 +140,19 @@ paths:
   /songs/import/jobs:
     post:
       summary: Start a Logos AI song-import job (photo/gallery/PDF)
-      description: >
-        Accepts a sheet-music image (and optional extra page screenshots for PDFs).
-        Returns 202 with a job id immediately; poll GET /songs/import/jobs/{id}
-        for real step progress. Cancel with DELETE. Does not persist a song —
-        the client reviews the draft then creates locally.
+      responses:
+        "202":
+          description: Job accepted (queued/running); poll GET for progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SongImportJob"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
       tags:
         - Songs
       security: *a2
@@ -155,11 +163,16 @@ paths:
           application/json:
             schema:
               type: object
-              required: [sourceType, imageBase64]
+              required:
+                - sourceType
+                - imageBase64
               properties:
                 sourceType:
                   type: string
-                  enum: [photo, gallery, pdf]
+                  enum:
+                    - photo
+                    - gallery
+                    - pdf
                 imageBase64:
                   type: string
                   description: Photo/gallery bytes, or PDF page-1 screenshot (base64)
@@ -182,16 +195,17 @@ paths:
                   description: Required when sourceType is pdf
                 fileName:
                   type: string
+      description: Accepts a sheet-music image (and optional extra page screenshots for PDFs). Returns 202 with a job id immediately; poll GET /songs/import/jobs/{id} for real step progress. Cancel with DELETE. Does not persist a song — the client reviews the draft then creates locally.
+  /songs/import/jobs/{id}:
+    get:
+      summary: Poll a Logos AI song-import job
       responses:
-        "202":
-          description: Job accepted (queued/running); poll GET for progress
+        "200":
+          description: OK
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SongImportJob"
-  /songs/import/jobs/{id}:
-    get:
-      summary: Poll a Logos AI song-import job
       tags:
         - Songs
       security: *a2
@@ -203,15 +217,15 @@ paths:
           schema:
             type: string
             format: uuid
+    delete:
+      summary: Cancel a running Logos AI song-import job
       responses:
         "200":
-          description: OK
+          description: Job cancelled (or already terminal)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SongImportJob"
-    delete:
-      summary: Cancel a running Logos AI song-import job
       tags:
         - Songs
       security: *a2
@@ -223,13 +237,6 @@ paths:
           schema:
             type: string
             format: uuid
-      responses:
-        "200":
-          description: Job cancelled (or already terminal)
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SongImportJob"
   /songs:
     get:
       summary: List songs
@@ -1439,7 +1446,7 @@ paths:
       operationId: getAiBilling
   /ai/memory:
     get:
-      summary: List AI memory
+      summary: List organization AI memory
       responses:
         "200":
           description: OK
@@ -1462,12 +1469,14 @@ paths:
                         createdAt:
                           type: string
                           format: date-time
+                        scope:
+                          type: string
       tags:
         - AI
       security: *a2
       operationId: listAiMemory
     post:
-      summary: Add AI memory
+      summary: Add organization AI memory
       responses:
         "200":
           description: OK
@@ -1492,7 +1501,7 @@ paths:
                 content:
                   type: string
     delete:
-      summary: Clear all AI memory
+      summary: Clear organization AI memory
       responses:
         "200":
           description: OK
@@ -1509,7 +1518,7 @@ paths:
       operationId: clearAiMemory
   /ai/memory/{id}:
     delete:
-      summary: Delete AI memory item
+      summary: Delete organization AI memory item
       responses:
         "204":
           description: Deleted
@@ -1517,6 +1526,94 @@ paths:
         - AI
       security: *a2
       operationId: deleteAiMemory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+  /ai/memory/personal:
+    get:
+      summary: List personal AI memory
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        content:
+                          type: string
+                        source:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        scope:
+                          type: string
+      tags:
+        - AI
+      security: *a2
+      operationId: listPersonalAiMemory
+    post:
+      summary: Add personal AI memory
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+      tags:
+        - AI
+      security: *a2
+      operationId: createPersonalAiMemory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+    delete:
+      summary: Clear personal AI memory
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cleared:
+                    type: integer
+      tags:
+        - AI
+      security: *a2
+      operationId: clearPersonalAiMemory
+  /ai/memory/personal/{id}:
+    delete:
+      summary: Delete personal AI memory item
+      responses:
+        "204":
+          description: Deleted
+      tags:
+        - AI
+      security: *a2
+      operationId: deletePersonalAiMemory
       parameters:
         - name: id
           in: path
@@ -1704,11 +1801,11 @@ components:
       type: apiKey
       in: cookie
       name: hosanna.session_token
-      description: Better Auth session cookie (actual cookie name may vary by Better Auth version/prefix).
+      description: Better Auth session cookie forwarded to the auth app for validation (cookie name may vary by Better Auth version/prefix).
     bearerAuth:
       type: http
       scheme: bearer
-      description: "Better Auth session token (Authorization: Bearer)."
+      description: "Better Auth session token (Authorization: Bearer), validated via the auth app."
     cronSecret:
       type: http
       scheme: bearer
@@ -1785,100 +1882,6 @@ components:
             format: uuid
         isDeleted:
           type: boolean
-    SongImportJob:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        status:
-          type: string
-          enum: [queued, running, completed, failed, cancelled]
-        steps:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              label:
-                type: string
-              done:
-                type: boolean
-              active:
-                type: boolean
-        result:
-          type: object
-          nullable: true
-          properties:
-            title:
-              type: string
-            artist:
-              type: string
-            content:
-              type: string
-            key:
-              type: string
-            tempo:
-              type: string
-            timeSignature:
-              type: string
-            confidence:
-              type: number
-            warnings:
-              type: array
-              items:
-                type: string
-            youtube:
-              type: string
-            ccli:
-              type: string
-            composer:
-              type: string
-            copyright:
-              type: string
-            subtitle:
-              type: string
-            duration:
-              type: string
-            diagnostics:
-              type: array
-              items:
-                type: object
-                properties:
-                  severity:
-                    type: string
-                  message:
-                    type: string
-                  line:
-                    type: integer
-            possibleDuplicates:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
-                  artist:
-                    type: string
-                  score:
-                    type: number
-        errorMessage:
-          type: string
-          nullable: true
-        cancelCode:
-          type: string
-          nullable: true
-          enum: [not_a_song, unreadable, blank, wrong_content, multiple_unclear]
-        cancelReason:
-          type: string
-          nullable: true
-        cancelledBy:
-          type: string
-          nullable: true
-          enum: [ai, user]
     Folder:
       type: object
       properties:
@@ -2205,3 +2208,109 @@ components:
           nullable: true
         revision:
           type: integer
+    SongImportJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - queued
+            - running
+            - completed
+            - failed
+            - cancelled
+        steps:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+              done:
+                type: boolean
+              active:
+                type: boolean
+        result:
+          type: object
+          nullable: true
+          properties:
+            title:
+              type: string
+            artist:
+              type: string
+            content:
+              type: string
+            key:
+              type: string
+            tempo:
+              type: string
+            timeSignature:
+              type: string
+            confidence:
+              type: number
+            warnings:
+              type: array
+              items:
+                type: string
+            youtube:
+              type: string
+            ccli:
+              type: string
+            composer:
+              type: string
+            copyright:
+              type: string
+            subtitle:
+              type: string
+            duration:
+              type: string
+            diagnostics:
+              type: array
+              items:
+                type: object
+                properties:
+                  severity:
+                    type: string
+                  message:
+                    type: string
+                  line:
+                    type: integer
+            possibleDuplicates:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  artist:
+                    type: string
+                  score:
+                    type: number
+        errorMessage:
+          type: string
+          nullable: true
+        cancelCode:
+          type: string
+          nullable: true
+          enum:
+            - not_a_song
+            - unreadable
+            - blank
+            - wrong_content
+            - multiple_unclear
+        cancelReason:
+          type: string
+          nullable: true
+        cancelledBy:
+          type: string
+          nullable: true
+          enum:
+            - ai
+            - user

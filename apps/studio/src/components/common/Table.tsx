@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { Spinner } from "./Spinner";
+import { Spinner } from "@hosanna/ui";
 import { TablePagination, type TablePaginationProps } from "./TablePagination";
 
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {

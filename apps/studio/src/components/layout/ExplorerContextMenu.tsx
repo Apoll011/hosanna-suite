@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Badge } from "@/src/components/common";
+import { Badge } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import {
@@ -64,9 +64,9 @@ export interface ExplorerContextMenuProps {
 }
 
 const MENU_ITEM =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
 const MENU_ITEM_DANGER =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
 const MENU_ICON = "w-4 h-4 text-m3-secondary";
 const MENU_HEADER =
   "px-3 py-1.5 text-label border-b border-m3-border mb-0.5 truncate flex items-center justify-between";

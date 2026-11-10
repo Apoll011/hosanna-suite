@@ -39,22 +39,16 @@ export async function clearDemoData(): Promise<void> {
   try {
     const { disableInteractiveOnboardingSession } = await import("../lib/tour/interactive/session");
     disableInteractiveOnboardingSession();
-  } catch {
-    // ignore
-  }
+  } catch {}
 
   try {
     const { resetDatabase } = await import("../db/database");
     resetDatabase();
-  } catch {
-    // ignore if not yet loaded
-  }
+  } catch {}
   try {
     const { resetReplication } = await import("../db/replication");
     resetReplication();
-  } catch {
-    // ignore if not yet loaded
-  }
+  } catch {}
 
   await Promise.all(DEMO_DATABASE_NAMES.map((name) => deleteIndexedDbByName(name)));
 

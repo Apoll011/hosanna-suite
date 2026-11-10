@@ -31,7 +31,6 @@ folderRouter.get(
   }),
 );
 
-// POST /api/folders — admin only
 folderRouter.post(
   "/",
   requirePermission("folder.create"),
@@ -48,7 +47,6 @@ folderRouter.post(
   }),
 );
 
-// PUT /api/folders/:id — admin only, optimistic concurrency
 folderRouter.put(
   "/:id",
   requirePermission("folder.update"),

@@ -1,14 +1,10 @@
-// ══════════════════════════════════════════════════════════════════════
-// ── Announcement Modal ────────────────────────────────────────────────
-// ══════════════════════════════════════════════════════════════════════
-
-import { Button, Modal } from "@/src/components/common";
 import {
   DurationField,
   durationInputToSeconds,
   secondsToDurationInput,
 } from "@/src/components/DurationField";
 import { useI18n } from "@/src/lib/i18n";
+import { Button, Modal } from "@hosanna/ui";
 import { Megaphone } from "lucide-react";
 import React, { useEffect, useState } from "react";
 

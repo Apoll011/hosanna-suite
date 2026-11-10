@@ -14,8 +14,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { authClient } from "../lib/authClient";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 export interface OrgServicesSettings {
   /** Default sermon duration in seconds */
   sermonDuration: number;
@@ -68,8 +66,6 @@ interface OrgMetadataStructure {
   [key: string]: unknown;
 }
 
-// ─── Defaults ────────────────────────────────────────────────────────────────
-
 export const DEFAULT_RESPONSIBILITY_CATEGORIES: ResponsibilityCategory[] = [
   { id: "leader", label: "Líder do Culto", icon: "mic", color: "amber" },
   { id: "musicians", label: "Músicos", icon: "music", color: "violet" },
@@ -99,8 +95,6 @@ export const DEFAULT_ORG_SETTINGS: OrgSettings = {
   print: toOrgPrintSettings(DEFAULT_PRINT_OPTIONS),
 };
 
-// ─── Helper to parse metadata → OrgSettings ──────────────────────────────────
-
 function parseOrgSettings(metadata: OrgMetadataStructure): OrgSettings {
   const s = metadata.settings || {};
   const g = s.general || {};
@@ -129,8 +123,6 @@ function parseOrgSettings(metadata: OrgMetadataStructure): OrgSettings {
     print: resolveOrgPrintSettings(s.print),
   };
 }
-
-// ─── Hook ────────────────────────────────────────────────────────────────────
 
 export interface UseOrgSettingsReturn {
   settings: OrgSettings;
@@ -163,7 +155,6 @@ export function useOrgSettings(): UseOrgSettingsReturn {
   const [savedSettings, setSavedSettings] = useState<OrgSettings>(DEFAULT_ORG_SETTINGS);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Sync from organization whenever it changes
   useEffect(() => {
     if (organization) {
       const parsed = parseOrgSettings((organization.metadata as OrgMetadataStructure) ?? {});

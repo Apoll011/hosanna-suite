@@ -245,7 +245,6 @@ export const LogosMascot: React.FC<Props> = ({
     };
     const onActivity = () => {
       if (asleepRef.current) {
-        // Waking up: a big stretch and a yawn.
         asleepRef.current = false;
         setAsleep(false);
         if (!reduced) playAct("stretch");
@@ -297,7 +296,6 @@ export const LogosMascot: React.FC<Props> = ({
     freeRef.current = { fidget, pokeable: pokeable && reaction !== "dizzy" };
   });
 
-  // Unprompted behaviours: every so often, while he has nothing else to do.
   useEffect(() => {
     if (!antics || prefersReducedMotion()) return;
     const calm = antics === "calm";
@@ -346,7 +344,6 @@ export const LogosMascot: React.FC<Props> = ({
     }
   }, [interactive, react]);
 
-  // Wiggling the pointer back and forth over him tickles.
   const tickle = useRef({ x: 0, dir: 0, turns: [] as number[] });
   const onPointerMove = (e: React.PointerEvent) => {
     if (!freeRef.current.pokeable || e.pointerType === "touch") return;
@@ -391,11 +388,8 @@ export const LogosMascot: React.FC<Props> = ({
   /** One ear cup, drawn for the left side; the right is mirrored. */
   const cup = (mirror: boolean) => (
     <g transform={mirror ? "translate(160 0) scale(-1 1)" : undefined}>
-      {/* soft contact shadow on the feathers */}
       <ellipse cx="30" cy="80" rx="15" ry="26" fill={ref("occ")} />
-      {/* dark cushion peeking out on the head side */}
       <ellipse cx="28.5" cy="78" rx="7" ry="17.5" fill={ref("pad")} />
-      {/* golden shell */}
       <ellipse cx="21.5" cy="78" rx="11.5" ry="19.5" fill={ref("gold")} />
       <ellipse
         cx="20.5"
@@ -408,7 +402,6 @@ export const LogosMascot: React.FC<Props> = ({
         strokeWidth="1.6"
       />
       <ellipse cx="20" cy="78" rx="4" ry="8" fill="#FFD27A" opacity="0.5" />
-      {/* tiny equalizer — dances while he listens, works or sings */}
       <g className="logos-eq">
         {[17.4, 20, 22.6].map((x, i) => (
           <rect
@@ -570,7 +563,6 @@ export const LogosMascot: React.FC<Props> = ({
           <ellipse className="logos-shadow" cx="80" cy="148" rx="34" ry="5.5" fill="#0A2540" />
         )}
 
-        {/* musical extras — separate layers, driven by mood */}
         <g className="logos-orbit">
           <circle cx="80" cy="6" r="2.8" fill={GOLD} />
           <circle cx="150" cy="86" r="2.2" fill={CYAN} />
@@ -639,7 +631,6 @@ export const LogosMascot: React.FC<Props> = ({
         <g className="logos-morph">
           <g className="logos-float">
             <g className="logos-body">
-              {/* tail feathers, peeking out behind the body */}
               <g className="logos-tail">
                 <ellipse
                   cx="114"
@@ -667,7 +658,6 @@ export const LogosMascot: React.FC<Props> = ({
                 />
               </g>
 
-              {/* legs and feet */}
               <g>
                 {[66, 94].map((x) => (
                   <g key={x}>
@@ -685,14 +675,12 @@ export const LogosMascot: React.FC<Props> = ({
                 ))}
               </g>
 
-              {/* body + head as one plump silhouette */}
               <path
                 d="M80 24 C112 24 134 46 134 78 C134 108 114 128 80 128 C46 128 26 108 26 78 C26 46 48 24 80 24 Z"
                 fill={ref("body")}
               />
               <g clipPath={`url(#${u("clip")})`}>
                 <ellipse cx="80" cy="106" rx="38" ry="26" fill={ref("belly")} />
-                {/* soft chest feathers */}
                 <g
                   fill="none"
                   stroke="#fff"
@@ -705,7 +693,6 @@ export const LogosMascot: React.FC<Props> = ({
                 </g>
                 <rect x="20" y="24" width="120" height="110" fill={ref("ao")} />
               </g>
-              {/* glossy highlights */}
               <ellipse
                 cx="55"
                 cy="40"
@@ -717,14 +704,12 @@ export const LogosMascot: React.FC<Props> = ({
               />
               <circle cx="40" cy="50" r="2.6" fill="#fff" opacity="0.55" />
 
-              {/* little crest */}
               <g className="logos-crest">
                 <path d="M80 22 C74 12 70 8 66 9 C70 14 72 19 74 23 Z" fill={SKY} />
                 <path d="M80 22 C80 11 82 5 87 4 C85 10 85 17 84 23 Z" fill="#2B9DE0" />
                 <path d="M82 23 C88 14 93 12 97 14 C93 17 90 20 87 24 Z" fill={SKY} />
               </g>
 
-              {/* headphones: band */}
               <path
                 d="M25 72 C19 4 141 4 135 72"
                 fill="none"
@@ -753,14 +738,11 @@ export const LogosMascot: React.FC<Props> = ({
               {cup(false)}
               {cup(true)}
 
-              {/* face */}
               <g className="logos-face">
-                {/* rosy cheeks */}
                 <g fill="#FF8CA8">
                   <ellipse className="logos-blush" cx="46" cy="92" rx="7.4" ry="4.4" />
                   <ellipse className="logos-blush" cx="114" cy="92" rx="7.4" ry="4.4" />
                 </g>
-                {/* eyebrows — only visible when the mood needs them */}
                 <g
                   className="logos-brows"
                   fill="none"
@@ -809,7 +791,6 @@ export const LogosMascot: React.FC<Props> = ({
                   <path d="M53 73 Q62 82 71 73" />
                   <path d="M89 73 Q98 82 107 73" />
                 </g>
-                {/* wink: the right eye closes into a happy arc */}
                 <path
                   className="logos-eye-wink"
                   d="M88.5 78 Q98 63 107.5 78"
@@ -818,7 +799,6 @@ export const LogosMascot: React.FC<Props> = ({
                   strokeWidth="4.6"
                   strokeLinecap="round"
                 />
-                {/* heart eyes */}
                 <g className="logos-eyes-love">
                   {[62, 98].map((cx) => (
                     <g key={cx} className="logos-heart-eye">
@@ -838,7 +818,6 @@ export const LogosMascot: React.FC<Props> = ({
                     </g>
                   ))}
                 </g>
-                {/* dizzy spiral eyes */}
                 <g
                   className="logos-eyes-dizzy"
                   fill="none"
@@ -854,7 +833,6 @@ export const LogosMascot: React.FC<Props> = ({
                     />
                   ))}
                 </g>
-                {/* cool: shades slide down over the eyes */}
                 <g className="logos-shades">
                   <rect x="48" y="63" width="28" height="20" rx="8.5" fill={ref("lens")} />
                   <rect x="84" y="63" width="28" height="20" rx="8.5" fill={ref("lens")} />
@@ -874,7 +852,6 @@ export const LogosMascot: React.FC<Props> = ({
                   />
                 </g>
 
-                {/* beak */}
                 <g className="logos-beak">
                   <ellipse
                     className="logos-mouth"
@@ -909,7 +886,6 @@ export const LogosMascot: React.FC<Props> = ({
                     transform="rotate(-14 76 83.4)"
                   />
                 </g>
-                {/* sneeze puff */}
                 <g className="logos-puff" fill="#fff">
                   <circle cx="97" cy="97" r="2.8" />
                   <circle cx="104" cy="92" r="2" />
@@ -917,14 +893,12 @@ export const LogosMascot: React.FC<Props> = ({
                 </g>
               </g>
 
-              {/* wings (front layer so they can reach the beak) */}
               <g className="logos-wing logos-wing-l">{wing(false)}</g>
               <g className="logos-wing logos-wing-r">{wing(true)}</g>
             </g>
           </g>
         </g>
 
-        {/* dizzy stars circling the head (front layer) */}
         <g className="logos-dizzy-stars">
           {[0, 1, 2].map((i) => (
             <g key={i} className="logos-star-x" style={{ animationDelay: `${-i * 0.8}s` }}>

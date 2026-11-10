@@ -8,7 +8,6 @@ export const listSongsQuerySchema = paginationQuerySchema.extend({
   tag: z.string().optional(),
   sortBy: z.enum(["title", "artist", "createdAt", "updatedAt"]).default("title"),
   sortOrder: z.enum(["asc", "desc"]).default("asc"),
-  // JSON-encoded { title?: boolean, artist?: boolean, content?: boolean, tags?: boolean }
   searchFields: z.string().optional(),
 });
 

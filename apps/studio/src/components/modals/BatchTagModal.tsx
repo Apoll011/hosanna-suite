@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Badge, Button, Input, Modal } from "@/src/components/common";
+import { Button, Badge, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Check, Plus, Tag as TagIcon, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -102,7 +102,6 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
           <strong className="text-m3-text">{t("modals.selectedSongs", { count })}</strong>.
         </p>
 
-        {/* Mode Selector */}
         <div className="flex flex-col gap-2">
           <label className="text-label text-m3-textr text-[10px]">{t("modals.applyMode")}</label>
           <div className="grid grid-cols-3 gap-2 p-1 bg-m3-sidebar/60 rounded-xl">
@@ -147,7 +146,6 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
           </span>
         </div>
 
-        {/* Preset Categories */}
         <div className="flex flex-col gap-2">
           <label className="text-label flex items-center gap-1.5">
             {t("modals.suggestedCategories")}
@@ -174,7 +172,6 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
           </div>
         </div>
 
-        {/* Custom Tag Input */}
         <div className="flex flex-col gap-2">
           <label className="text-label">{t("modals.newCustomTag")}</label>
           <div className="flex gap-2">
@@ -199,7 +196,6 @@ export const BatchTagModal: React.FC<BatchTagModalProps> = ({
           </div>
         </div>
 
-        {/* Selected Tags Preview */}
         {tags.length > 0 && (
           <div className="flex flex-col gap-1.5 p-3 bg-m3-primary/10 border border-m3-primary/20 rounded-xl">
             <span className="text-label text-m3-primary">

@@ -63,7 +63,7 @@ async function purgeTrashHandler(_req: Request, res: Response) {
   const totalPurged =
     songs.count + folders.count + collections.count + services.count + agendaEvents.count;
   if (totalPurged > 0) {
-    syncCache.invalidateAll();
+    await syncCache.invalidateAll();
   }
 
   res.json({

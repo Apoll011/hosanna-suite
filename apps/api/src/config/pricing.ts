@@ -1,7 +1,6 @@
 /**
  * Canonical display prices for the org "cloud" plan.
- * Stripe price IDs live in lib/auth.ts; amounts here are for UI only
- * (Better Auth Stripe does not expose unit amounts to the client).
+ * Stripe price IDs are configured on the auth app; amounts here are for UI only.
  *
  * Override via env without a redeploy of frontends that fetch /api/billing/pricing.
  */

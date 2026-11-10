@@ -26,7 +26,6 @@ export function buildClockContext(now = new Date(), timeZone = "Europe/Lisbon") 
   const minute = get("minute");
   const date = `${yyyy}-${mm}-${dd}`;
 
-  // Next Sunday (if today is Sunday, next week's Sunday)
   const asUtc = new Date(`${date}T12:00:00Z`);
   const day = asUtc.getUTCDay(); // 0=Sun
   const daysUntilSunday = day === 0 ? 7 : 7 - day;

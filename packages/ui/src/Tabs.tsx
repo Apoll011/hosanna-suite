@@ -17,7 +17,6 @@ interface TabsProps {
   value: string;
   onChange: (id: string) => void;
   className?: string;
-  /** underline = soft indicator; pill = filled selected (prefer underline) */
   variant?: "underline" | "pill";
   "aria-label"?: string;
 }

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@/src/components/common";
+import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import {
   detectProvider,
@@ -46,18 +46,14 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
 }) => {
   const { t } = useI18n();
 
-  // Active tab: 'online' (link to CifraClub/UltimateGuitar/etc) or 'raw' (pasted text)
   const [activeTab, setActiveTab] = useState<ImportTab>("online");
 
-  // Online import state
   const [urlInput, setUrlInput] = useState("");
 
-  // Raw text import state
   const [songTitle, setSongTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [rawText, setRawText] = useState("");
 
-  // General modal state
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewOnly, setPreviewOnly] = useState(false);
@@ -253,7 +249,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
         </div>
       ) : (
         <div className="space-y-4 py-1">
-          {/* Tabs header */}
           <div className="flex items-center p-1 bg-m3-sidebar/60 border border-m3-border rounded-xl">
             <button
               type="button"
@@ -287,14 +282,12 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
             </button>
           </div>
 
-          {/* Error Alert */}
           {error && (
             <div className="p-3 text-xs font-semibold text-m3-danger bg-red-50 dark:bg-red-950/40 rounded-xl border border-red-200 dark:border-red-800/80">
               {error}
             </div>
           )}
 
-          {/* TAB 1: ONLINE PROVIDERS */}
           {activeTab === "online" && (
             <form onSubmit={handleOnlineImport} className="space-y-4">
               <div className="space-y-2">
@@ -302,7 +295,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
                   {t("modals.pasteLink")}
                 </p>
 
-                {/* Supported providers list badge */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-1">
                   <span className="text-[11px] text-m3-secondary font-medium">
                     {t("modals.supportedProviders")}:
@@ -343,7 +335,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
                 />
               </div>
 
-              {/* Preview-only toggle */}
               <div className="flex items-start justify-between gap-3 p-2.5 rounded-xl border border-m3-border bg-m3-sidebar/50 dark:bg-m3-card/40">
                 <div className="space-y-0.5">
                   <p className="text-xs font-bold text-m3-text">
@@ -370,7 +361,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
                 </button>
               </div>
 
-              {/* Footer Actions */}
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-m3-border">
                 <Button
                   type="button"
@@ -398,14 +388,12 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
             </form>
           )}
 
-          {/* TAB 2: RAW TEXT IMPORT */}
           {activeTab === "raw" && (
             <form onSubmit={handleRawImport} className="space-y-4">
               <p className="text-xs text-m3-secondary bg-m3-sidebar/60 p-2.5 rounded-xl border border-m3-border">
                 {t("modals.rawTextDesc")}
               </p>
 
-              {/* Song Title and Artist Inputs */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   label={t("modals.songTitle")}
@@ -429,7 +417,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
                 />
               </div>
 
-              {/* Raw Cifra Textarea */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-bold text-m3-text">
                   {t("modals.rawTextLabel")}
@@ -447,7 +434,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
                 />
               </div>
 
-              {/* Preview-only toggle */}
               <div className="flex items-start justify-between gap-3 p-2.5 rounded-xl border border-m3-border bg-m3-sidebar/50 dark:bg-m3-card/40">
                 <div className="space-y-0.5">
                   <p className="text-xs font-bold text-m3-text">
@@ -474,7 +460,6 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
                 </button>
               </div>
 
-              {/* Footer Actions */}
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-m3-border">
                 <Button
                   type="button"
@@ -507,5 +492,4 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
   );
 };
 
-// Backward-compatible alias for existing imports
 export const CifraClubImportModal = ThirdPartyProvidersModal;

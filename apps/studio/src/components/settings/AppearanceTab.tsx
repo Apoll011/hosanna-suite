@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Surface } from "@/src/components/common";
+import { Surface } from "@hosanna/ui";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
 import type { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";

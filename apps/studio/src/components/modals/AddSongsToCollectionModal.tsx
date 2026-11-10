@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@/src/components/common";
+import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Collection, Song } from "@/src/types";
 import { Check, Search } from "lucide-react";
@@ -85,7 +85,6 @@ export const AddSongsToCollectionModal: React.FC<AddSongsToCollectionModalProps>
       }
     >
       <div className="flex flex-col gap-4 max-h-[75vh]">
-        {/* Search */}
         <div className="relative">
           <Input
             placeholder={
@@ -99,7 +98,6 @@ export const AddSongsToCollectionModal: React.FC<AddSongsToCollectionModalProps>
           />
         </div>
 
-        {/* Selection Bar */}
         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
           <span>
             {locale === "pt"
@@ -123,7 +121,6 @@ export const AddSongsToCollectionModal: React.FC<AddSongsToCollectionModalProps>
           )}
         </div>
 
-        {/* Songs List */}
         <div className="flex-1 min-h-48 max-h-72 overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800/60 pr-1">
           {availableSongs.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-xs">
@@ -178,7 +175,6 @@ export const AddSongsToCollectionModal: React.FC<AddSongsToCollectionModalProps>
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
           <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
             {t("common.cancel")}

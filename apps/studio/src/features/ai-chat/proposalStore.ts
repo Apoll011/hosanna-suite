@@ -126,9 +126,7 @@ function recordOutcomes(list: AiProposal[], outcome: ProposalOutcome) {
   outcomes = next;
   try {
     sessionStorage.setItem(OUTCOMES_KEY, JSON.stringify(next));
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 function upsert(p: AiProposal) {

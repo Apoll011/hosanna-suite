@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input } from "@/src/components/common";
+import { Button, Input } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
 import { useState } from "react";
@@ -15,7 +15,6 @@ interface SongFormData {
   tags: string;
 }
 
-// Extracted pure validation function
 const validateSongForm = (
   values: SongFormData,
   t: (key: string) => string,
@@ -72,7 +71,6 @@ export const SongForm: React.FC<SongFormProps> = ({
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear the specific field error when the user starts modifying it
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }

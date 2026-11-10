@@ -78,9 +78,7 @@ export function destroyInteractiveOnboarding(): void {
     allowDestroy = true;
     try {
       activeDriver.destroy();
-    } catch {
-      // ignore
-    }
+    } catch {}
     activeDriver = null;
   }
   allowDestroy = false;
@@ -123,7 +121,6 @@ function purgeOrphanedTourDom(): void {
       node.remove();
     }
   });
-  // Keep only the newest visible interactive popover.
   const live = Array.from(
     document.querySelectorAll<HTMLElement>(".hosana-interactive-tour"),
   ).filter((el) => getComputedStyle(el).display !== "none");
@@ -142,9 +139,7 @@ function stripDriverTabTrap(): void {
     if (events?.onKeydown) {
       window.removeEventListener("keydown", events.onKeydown);
     }
-  } catch {
-    // ignore
-  }
+  } catch {}
 }
 
 function waitForSelector(
@@ -382,7 +377,6 @@ export async function runInteractiveOnboarding(options: InteractiveRunOptions): 
     let keyCleanup: (() => void) | null = null;
     let retargetCleanup: (() => void) | null = null;
 
-    // Prefer a more specific target when the context menu is open (Add to collection).
     const initialElement =
       step.id === "collections.addSongs" &&
       document.querySelector("[data-tour='ctx-add-to-collection']")
@@ -562,7 +556,6 @@ export async function runInteractiveOnboarding(options: InteractiveRunOptions): 
     paintStep(paintOpts);
 
     // Re-attach after layout/navigation settles (fixes centered popover when
-    // the + button mounts a tick after the step starts).
     if (step.element) {
       window.requestAnimationFrame(() => {
         window.setTimeout(() => {
@@ -601,9 +594,7 @@ export async function runInteractiveOnboarding(options: InteractiveRunOptions): 
           if (myToken !== paintToken) return;
           advanceStepOnAction();
         })
-        .catch(() => {
-          // aborted
-        });
+        .catch(() => {});
     }
 
     await advancePromise;

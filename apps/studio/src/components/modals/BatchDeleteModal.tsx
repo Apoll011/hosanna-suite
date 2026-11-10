@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@/src/components/common";
+import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
 import { AlertTriangle, Trash2 } from "lucide-react";
@@ -40,7 +40,6 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
   const totalItems = selectedFolders.length + selectedSongsCount;
 
   const requiresTypedConfirmation = hasFolders && folderAction === "delete_songs";
-  // Expected text: name of first folder if 1 folder, or 'APAGAR' if multiple
   const expectedConfirmText =
     selectedFolders.length === 1 ? selectedFolders[0].name.trim() : t("modals.confirmKeyword");
 

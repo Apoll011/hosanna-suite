@@ -22,7 +22,7 @@ type BadgeVariant =
   /** @deprecated Use neutral */
   | "slate";
 
-interface BadgeProps {
+export interface BadgeProps {
   children: React.ReactNode;
   variant?: BadgeVariant;
   size?: "sm" | "md";

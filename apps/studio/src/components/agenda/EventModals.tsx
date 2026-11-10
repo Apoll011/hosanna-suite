@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@/src/components/common";
+import { Button, Input, Modal } from "@hosanna/ui";
 import { useServices } from "@/src/hooks/useServices";
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
 import { Assignee, ResponsibilityCategory } from "@/src/types";
@@ -29,10 +29,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AssigneeTagInput } from "./AssigneeTagInput";
 import { ServiceLinkField } from "./ServiceLinkField";
 
-/* ------------------------------------------------------------------ */
-/* Shared bits                                                        */
-/* ------------------------------------------------------------------ */
-
 /** Section header with an icon "badge", a title and an optional hint. */
 const SectionHeader: React.FC<{
   icon: React.ReactNode;
@@ -55,7 +51,7 @@ const FieldLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const fieldInputClass =
-  "w-full h-11 pl-10 pr-3 bg-m3-sidebar border border-m3-border rounded-[var(--radius-md)] text-sm font-semibold focus:outline-none focus:border-m3-primary transition-colors";
+  "w-full h-11 pl-10 pr-3 bg-m3-sidebar border border-m3-border rounded-md text-sm font-semibold focus:outline-none focus:border-m3-primary transition-colors";
 
 /** Small icon-only round button, used for steppers and dismiss actions. */
 const IconButton: React.FC<
@@ -82,10 +78,6 @@ const formatDuration = (minutes: number, t: TranslateFn) => {
   if (h) return t("agenda.durationHours", { hours: h });
   return t("agenda.minutes", { minutes: m });
 };
-
-/* ------------------------------------------------------------------ */
-/* Create / edit an event                                             */
-/* ------------------------------------------------------------------ */
 
 export interface EventFormValue {
   title: string;
@@ -215,7 +207,6 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
         }}
         className="space-y-7 pt-1"
       >
-        {/* ── Serviço ligado ─────────────────────────────────────────── */}
         <section className="space-y-2.5">
           <SectionHeader
             icon={<Layers className="w-3.5 h-3.5" />}
@@ -230,7 +221,6 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           />
         </section>
 
-        {/* ── Informações ────────────────────────────────────────────── */}
         <section className="space-y-2.5">
           <SectionHeader
             icon={<FileText className="w-3.5 h-3.5" />}
@@ -289,7 +279,6 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           </div>
         </section>
 
-        {/* ── Agendamento ────────────────────────────────────────────── */}
         <section className="space-y-2.5">
           <SectionHeader
             icon={<Calendar className="w-3.5 h-3.5" />}
@@ -355,7 +344,6 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           </div>
         </section>
 
-        {/* ── Detalhes ───────────────────────────────────────────────── */}
         <section className="space-y-2.5">
           <SectionHeader icon={<MapPin className="w-3.5 h-3.5" />} title={t("common.details")} />
           <Input
@@ -388,7 +376,6 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           </div>
         </section>
 
-        {/* ── Footer ─────────────────────────────────────────────────── */}
         <div className="flex items-center justify-between gap-2 pt-4 border-t border-m3-border/40">
           {onDelete ? (
             confirmingDelete ? (
@@ -436,10 +423,6 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
     </Modal>
   );
 };
-
-/* ------------------------------------------------------------------ */
-/* Add a responsibility (pick category + assignees) to an event       */
-/* ------------------------------------------------------------------ */
 
 interface AddResponsibilityModalProps {
   isOpen: boolean;
@@ -562,10 +545,6 @@ export const AddResponsibilityModal: React.FC<AddResponsibilityModalProps> = ({
     </Modal>
   );
 };
-
-/* ------------------------------------------------------------------ */
-/* Edit the assignees of an existing responsibility                   */
-/* ------------------------------------------------------------------ */
 
 interface EditAssigneesModalProps {
   isOpen: boolean;

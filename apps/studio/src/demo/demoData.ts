@@ -18,10 +18,6 @@ import type {
 } from "../db/schemas";
 import { AgendaEvent, Folder, Service, Song } from "../types";
 
-// ---------------------------------------------------------------------------
-// Date helpers
-// ---------------------------------------------------------------------------
-
 function toLocalDate(d: Date): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -52,10 +48,6 @@ function lastSunday(from: Date = new Date()): Date {
   const ns = nextSunday(from);
   return addDays(ns, -7);
 }
-
-// ---------------------------------------------------------------------------
-// Localization
-// ---------------------------------------------------------------------------
 
 const LOCALE_DATA = {
   pt: {
@@ -351,10 +343,6 @@ function resolveLocale(locale: string): SupportedLocale {
   return "pt";
 }
 
-// ---------------------------------------------------------------------------
-// ChordPro song content generator (plain songs)
-// ---------------------------------------------------------------------------
-
 const SAMPLE_CHORD_PROGRESSIONS = [
   "G  C  Em  D",
   "C  G  Am  F",
@@ -385,13 +373,9 @@ function makeSongContent(title: string, artist: string, idx: number): string {
   ].join("\n");
 }
 
-// ---------------------------------------------------------------------------
-// ChordPro "showcase" songs — hand-authored per locale so the demo library
 // actually demonstrates the parser's richer features: multiple sections,
 // repeats, comments/comment boxes, an instrumental chord grid, a tab
 // section, and an alternate arrangement via {start_of_version}/{end_of_version}.
-// These replace the generated content for song index 0 in each locale.
-// ---------------------------------------------------------------------------
 
 const SHOWCASE_SONG_CONTENT: Record<SupportedLocale, string> = {
   pt: `{title: Digno És}
@@ -727,22 +711,15 @@ E|3----------------------|
 `,
 };
 
-// ---------------------------------------------------------------------------
-// Agenda responsibilities — map demo member *names* to their actual
 // OrganizationMember ids (from mock-auth's DEMO_ORGANIZATION.members) so
 // that anything keying off `memberId` (avatars, profile links, filters)
 // resolves correctly instead of pointing at nonexistent "demo-member-N" ids.
-// ---------------------------------------------------------------------------
 
 const DEMO_MEMBER_ID_BY_NAME: Record<string, string> = {
   "Demo User": "demo-member-id",
   "Maria Santos": "demo-member-2",
   "João Silva": "demo-member-3",
 };
-
-// ---------------------------------------------------------------------------
-// Main generator
-// ---------------------------------------------------------------------------
 
 export interface DemoData {
   folders: Folder[];
@@ -758,9 +735,6 @@ export function generateDemoData(locale: string): DemoData {
   const now = new Date();
   const nowIso = toIso(now);
 
-  // -------------------------------------------------------------------------
-  // Folders
-  // -------------------------------------------------------------------------
   const folderIds = L.folders.map(() => crypto.randomUUID());
   const folders: FolderDocType[] = L.folders.map((name, i) => ({
     id: folderIds[i],
@@ -777,14 +751,10 @@ export function generateDemoData(locale: string): DemoData {
     purgeAt: null,
   }));
 
-  // -------------------------------------------------------------------------
-  // Songs — spread across folders. Index 0 and 1 use hand-authored
   // "showcase" ChordPro content so the demo library actually exercises
   // verses/chorus/bridge, repeats, comments, an instrumental grid, tab
   // sections, capo/original-key/ccli/youtube/duration metadata, and an
   // alternate arrangement via {start_of_version}. Every other song keeps
-  // the lightweight generated content.
-  // -------------------------------------------------------------------------
   const songIds = L.songs.map(() => crypto.randomUUID());
   const folderAssignment = [null, null, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 3];
   const collectionSongIndexes = [
@@ -858,9 +828,6 @@ export function generateDemoData(locale: string): DemoData {
     song.collectionIds = Array.from(collectionIdsBySong.get(song.id) ?? []);
   }
 
-  // -------------------------------------------------------------------------
-  // Services — relative to today's Sundays
-  // -------------------------------------------------------------------------
   const thisSunday = nextSunday(now);
   const prevSunday = lastSunday(now);
   const nextNextSunday = addDays(thisSunday, 7);
@@ -969,9 +936,6 @@ export function generateDemoData(locale: string): DemoData {
     },
   ];
 
-  // -------------------------------------------------------------------------
-  // Agenda Events
-  // -------------------------------------------------------------------------
   const makeResponsibilities = (eventIdx: number) => {
     const sets: Array<{ categoryId: string; names: string[] }[]> = [
       [
@@ -1011,7 +975,6 @@ export function generateDemoData(locale: string): DemoData {
   };
 
   const agendaEvents: AgendaEventDocType[] = [
-    // Past events
     {
       id: crypto.randomUUID(),
       date: toLocalDate(addDays(now, -10)),
@@ -1048,7 +1011,6 @@ export function generateDemoData(locale: string): DemoData {
       purgeAt: null,
       _deleted: false,
     },
-    // Future events
     {
       id: crypto.randomUUID(),
       date: toLocalDate(thisSunday),

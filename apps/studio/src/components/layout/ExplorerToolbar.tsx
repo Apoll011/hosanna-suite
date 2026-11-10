@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Can } from "@/src/lib/permissions/components";
 import { Service } from "@/src/types";
@@ -47,9 +47,9 @@ interface ExplorerToolbarProps {
 }
 
 const MENU_ITEM =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
 const MENU_ITEM_DANGER =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
 const MENU_ICON = "w-4 h-4 text-m3-secondary shrink-0";
 
 export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
@@ -98,9 +98,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
 
   return (
     <div className="px-4 py-2.5 bg-m3-sidebar/20 border-b border-m3-border/40 flex items-center justify-between gap-3 flex-wrap">
-      {/* Left Side: Filter button, Archive button (services), Sort dropdown */}
       <div className="flex items-center gap-2.5 flex-wrap">
-        {/* Sort Control Button */}
         <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-md px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
           <ArrowUpDown className="w-4 h-4 text-m3-secondary shrink-0" />
           <select
@@ -150,7 +148,6 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           </select>
         </div>
 
-        {/* Filter Pop-Up Panel Trigger Button */}
         {(view === "explorer" || view === "songs" || view === "collection-detail") && (
           <button
             onClick={onOpenFilterPanel}
@@ -171,7 +168,6 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           </button>
         )}
 
-        {/* Archive Toggle Button (Services View) */}
         {view === "services" && (
           <button
             type="button"
@@ -194,7 +190,6 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
         )}
       </div>
 
-      {/* Right Side: Collection actions / View Mode / Density */}
       <div className="flex items-center gap-2.5">
         {view === "collection-detail" && collectionActions && (
           <div ref={collectionMenuRef} className="relative shrink-0">
@@ -273,7 +268,6 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           </div>
         )}
 
-        {/* View Mode Toggle (hidden on song tables) */}
         {view !== "songs" && view !== "collection-detail" && (
           <div
             role="group"
@@ -315,7 +309,6 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
             </Button>
           </div>
         )}
-        {/* Density Selector (Confortável / Compacto) */}
         <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-md px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
           <LayoutGrid className="w-4 h-4 text-m3-primary shrink-0" />
           <select

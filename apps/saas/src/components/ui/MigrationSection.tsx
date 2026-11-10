@@ -58,7 +58,6 @@ export function MigrationSection() {
           </p>
         </div>
         <div className="relative z-10 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center mt-6">
-          {/* Left: copy + picker */}
           <div className="min-w-0">
             <div className="reveal mb-8">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground/70 mb-3">
@@ -114,7 +113,6 @@ export function MigrationSection() {
             </div>
           </div>
 
-          {/* Right: animated mockup */}
           <div className="min-w-0 hidden lg:block reveal">
             <div className="relative mx-auto w-full max-w-sm select-none" aria-hidden="true">
               <div

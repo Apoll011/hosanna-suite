@@ -132,7 +132,6 @@ export function buildSongBlocks(
       case "bridge": {
         const lines = tidyLines(stripChordLines(section.lines));
         const isRef = lines.length === 0;
-        // A bare {chorus} repeat should reuse the name the song gave its chorus.
         const label =
           takeLabel() ||
           (isRef && section.type === "chorus" ? lastChorusLabel : undefined) ||

@@ -145,9 +145,7 @@ export function NewOrganizationPage() {
         <>
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2 text-xs font-medium text-m3-secondary">
-              <span>
-                Step {step} of 3
-              </span>
+              <span>Step {step} of 3</span>
               <span>
                 {step === 1
                   ? t("settings.workspace.title")
