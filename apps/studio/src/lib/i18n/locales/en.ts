@@ -316,6 +316,7 @@ export const en: typeof pt = {
           support: "Priority support",
         },
       },
+      trialUntil: "Until {date}",
       trialDaysLeft: "{days} days left in your free trial",
       trialEndsOn: "Your free trial ends on {date}.",
       cancelingTitle: "Subscription ending",

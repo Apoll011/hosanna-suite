@@ -86,12 +86,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
     });
   };
 
-  const daysLeft = (end?: string | Date | null) => {
-    if (!end) return 0;
-    const diff = new Date(end).getTime() - Date.now();
-    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-  };
-
   const handleStart = async () => {
     if (!canManageBilling || !organization) return;
     posthog.capture("billing_checkout_started", { annual });
@@ -185,20 +179,11 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
               </div>
 
               {activeSub.status === "trialing" && activeSub.trialEnd && (
-                <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-3">
-                  <div className="text-sm text-amber-800 dark:text-amber-300">
-                    <strong className="font-bold">
-                      {t("settings.billing.trialDaysLeft", {
-                        days: daysLeft(activeSub.trialEnd),
-                      })}
-                    </strong>
-                    <p className="mt-0.5 opacity-90">
-                      {t("settings.billing.trialEndsOn", {
-                        date: formatDate(activeSub.trialEnd),
-                      })}
-                    </p>
-                  </div>
-                </div>
+                <p className="text-sm text-m3-secondary">
+                  {t("settings.billing.trialUntil", {
+                    date: formatDate(activeSub.trialEnd),
+                  })}
+                </p>
               )}
 
               {activeSub.cancelAtPeriodEnd && (

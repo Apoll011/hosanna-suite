@@ -317,6 +317,7 @@ export const es: typeof pt = {
           support: "Soporte prioritario",
         },
       },
+      trialUntil: "Hasta {date}",
       trialDaysLeft: "Quedan {days} días de su periodo de prueba",
       trialEndsOn: "El periodo de prueba termina el {date}.",
       cancelingTitle: "Suscripción a finalizar",

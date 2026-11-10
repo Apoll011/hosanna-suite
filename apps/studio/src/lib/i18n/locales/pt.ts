@@ -315,6 +315,7 @@ export const pt = {
           support: "Suporte prioritário",
         },
       },
+      trialUntil: "Até {date}",
       trialDaysLeft: "Faltam {days} dias do seu período gratuito",
       trialEndsOn: "O período gratuito termina a {date}.",
       cancelingTitle: "Subscrição a terminar",
