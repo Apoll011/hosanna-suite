@@ -1,8 +1,6 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
@@ -12,6 +10,7 @@ import { useI18n } from "@/lib/i18n";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 export function RegisterPage() {
   const { t } = useI18n();

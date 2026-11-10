@@ -3,6 +3,7 @@
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
+import { Surface } from "@hosanna/ui";
 import {
   Globe,
   Loader2,
@@ -65,16 +66,14 @@ export function ActiveSessionsSection({
   };
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs h-full">
+    <Surface className="h-full">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
-            <MonitorSmartphone className="w-4 h-4 text-m3-secondary" />
+          <h3 className="text-title text-m3-text flex items-center gap-2">
+            <MonitorSmartphone className="w-4 h-4 text-m3-primary" />
             {t("settings.account.activeSessions.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">
-            {t("settings.account.activeSessions.desc")}
-          </p>
+          <p className="text-muted mt-0.5">{t("settings.account.activeSessions.desc")}</p>
         </div>
         <button
           type="button"
@@ -136,10 +135,10 @@ export function ActiveSessionsSection({
           })}
         </div>
       ) : (
-        <p className="text-xs text-slate-500 py-4 text-center">
+        <p className="text-xs text-m3-secondary py-4 text-center">
           {t("settings.account.activeSessions.currentSessionOnly")}
         </p>
       )}
-    </div>
+    </Surface>
   );
 }

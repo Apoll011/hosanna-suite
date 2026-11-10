@@ -1,9 +1,8 @@
 "use client";
 
-import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
-import { GoogleIcon } from "@hosanna/ui";
+import { ConfirmDialog, GoogleIcon, Surface } from "@hosanna/ui";
 import { CheckCircle2, ExternalLink, Link2, Loader2, RefreshCw, Unlink } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -90,16 +89,14 @@ export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type
   };
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
+    <Surface>
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-m3-secondary" />
+          <h3 className="text-title text-m3-text flex items-center gap-2">
+            <Link2 className="w-4 h-4 text-m3-primary" />
             {t("settings.account.socialAccounts.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">
-            {t("settings.account.socialAccounts.desc")}
-          </p>
+          <p className="text-muted mt-0.5">{t("settings.account.socialAccounts.desc")}</p>
         </div>
         <button
           type="button"
@@ -179,6 +176,6 @@ export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type
         cancelText={t("common.cancel")}
         isLoading={unlinkingProvider !== null}
       />
-    </div>
+    </Surface>
   );
 }

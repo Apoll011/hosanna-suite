@@ -1,8 +1,6 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
@@ -10,6 +8,7 @@ import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 type State = "form" | "success" | "expired" | "error";
 

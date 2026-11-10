@@ -1,8 +1,6 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { redirectAfterSuccessfulAuth } from "@/lib/redirect";
@@ -10,6 +8,7 @@ import { KeyRound, MailCheck, RefreshCw, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRef, useState, type FormEvent, type KeyboardEvent, type ChangeEvent, type ClipboardEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 type TwoFactorMethod = "totp" | "otp" | "backup";
 

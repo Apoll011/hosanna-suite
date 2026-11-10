@@ -1,14 +1,13 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { CheckCircle2, Clock, Loader2, MailCheck, RefreshCw, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 type State = "verifying" | "success" | "expired" | "error" | "pending";
 

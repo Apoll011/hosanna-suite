@@ -1,10 +1,9 @@
 "use client";
 
-import { Button } from "@/components/Button";
-import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import {
   Globe,
   History,
@@ -99,14 +98,14 @@ export function LoginHistorySection() {
   const hasMore = (events?.length ?? 0) < total && !isLoading;
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs h-full">
+    <Surface className="h-full">
       <div className="flex items-center justify-between mb-4 gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
-            <History className="w-4 h-4 text-m3-secondary" />
+          <h3 className="text-title text-m3-text flex items-center gap-2">
+            <History className="w-4 h-4 text-m3-primary" />
             {t("loginHistory.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">{t("loginHistory.personalDesc")}</p>
+          <p className="text-muted mt-0.5">{t("loginHistory.personalDesc")}</p>
         </div>
         <button
           type="button"
@@ -217,8 +216,8 @@ export function LoginHistorySection() {
           )}
         </div>
       ) : (
-        <p className="text-xs text-slate-500 py-6 text-center">{t("loginHistory.empty")}</p>
+        <p className="text-xs text-m3-secondary py-6 text-center">{t("loginHistory.empty")}</p>
       )}
-    </div>
+    </Surface>
   );
 }

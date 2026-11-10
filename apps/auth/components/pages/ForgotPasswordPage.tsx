@@ -1,8 +1,6 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions } from "@/lib/captcha";
@@ -11,6 +9,7 @@ import { CheckCircle2, Mail, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 export function ForgotPasswordPage() {
   const { t } = useI18n();

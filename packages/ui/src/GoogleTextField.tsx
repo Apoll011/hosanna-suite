@@ -1,8 +1,11 @@
-"use client";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { useId, useState } from "react";
 
-interface GoogleTextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface GoogleTextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
   helperText?: string;

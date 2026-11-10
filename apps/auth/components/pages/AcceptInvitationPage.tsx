@@ -1,14 +1,13 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { getStudioUrl } from "@/lib/redirect";
 import { Building2, ShieldAlert } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button, Spinner } from "@hosanna/ui";
 
 interface InvitationData {
   id: string;

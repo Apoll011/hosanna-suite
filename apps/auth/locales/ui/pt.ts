@@ -172,6 +172,7 @@ export const pt = {
       verifyError: "Could not verify: {error}",
     },
     account: {
+      user: "Utilizador",
       profile: {
         displayName: "Nome",
         edit: "Editar",
@@ -189,13 +190,24 @@ export const pt = {
         nameSaveError: "Não foi possível atualizar o nome.",
         emailInvalid: "Introduza um e-mail válido.",
         emailChangeSent: "Verifique a caixa de entrada para confirmar o novo e-mail.",
-        emailChangeError: "Could not change email: {error}",
+        emailChangeError: "Não foi possível alterar o e-mail: {error}",
         currentPasswordRequired: "A palavra-passe atual é obrigatória.",
         passwordMinLength: "A palavra-passe deve ter pelo menos 6 caracteres.",
         passwordMismatch: "As palavras-passe não coincidem.",
         passwordChanged: "Palavra-passe atualizada.",
-        passwordChangeError: "Could not change password: {error}",
-        role: "Role",
+        passwordChangeError: "Não foi possível alterar a palavra-passe: {error}",
+        role: "Função",
+        invalidImage: "Selecione um ficheiro de imagem válido.",
+        avatarUpdated: "Fotografia atualizada.",
+        avatarUpdateError: "Erro ao atualizar a fotografia: {error}",
+        avatarRemoved: "Fotografia removida.",
+        avatarRemoveError: "Não foi possível remover a fotografia.",
+        changeAvatarTitle: "Alterar fotografia de perfil",
+        removeAvatar: "Remover fotografia",
+        accountInfo: "Informação da conta",
+        userId: "ID de utilizador",
+        accountStatus: "Estado",
+        active: "Ativa",
       },
       socialAccounts: {
         title: "Contas ligadas",
@@ -268,6 +280,7 @@ export const pt = {
   },
   account: {
     title: "Conta",
+    subtitle: "Gerir o seu perfil, segurança e sessões Hosanna.",
     signOut: "Terminar sessão",
   },
 };

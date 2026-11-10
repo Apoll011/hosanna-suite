@@ -50,7 +50,7 @@ export function AuthLayout({
               className="w-5 h-5 object-contain rounded-md"
             />
             <span className="font-semibold text-xs sm:text-sm tracking-tight text-m3-text">
-              {t("brand.name")}
+              {t("brand.name")} Auth
             </span>
           </div>
         </div>

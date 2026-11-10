@@ -174,6 +174,7 @@ export const es: typeof pt = {
       verifyError: "No se pudo verificar: {error}",
     },
     account: {
+      user: "Usuario",
       profile: {
         displayName: "Nombre",
         edit: "Editar",
@@ -198,6 +199,17 @@ export const es: typeof pt = {
         passwordChanged: "Contraseña actualizada.",
         passwordChangeError: "No se pudo cambiar la contraseña: {error}",
         role: "Rol",
+        invalidImage: "Selecciona un archivo de imagen válido.",
+        avatarUpdated: "Foto actualizada.",
+        avatarUpdateError: "Error al actualizar la foto: {error}",
+        avatarRemoved: "Foto eliminada.",
+        avatarRemoveError: "No se pudo eliminar la foto.",
+        changeAvatarTitle: "Cambiar foto de perfil",
+        removeAvatar: "Quitar foto",
+        accountInfo: "Información de la cuenta",
+        userId: "ID de usuario",
+        accountStatus: "Estado",
+        active: "Activa",
       },
       socialAccounts: {
         title: "Cuentas conectadas",
@@ -270,6 +282,7 @@ export const es: typeof pt = {
   },
   account: {
     title: "Cuenta",
+    subtitle: "Gestiona tu perfil, seguridad y sesiones de Hosanna.",
     signOut: "Cerrar sesión",
   },
 };
