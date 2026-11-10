@@ -31,37 +31,47 @@ export function AccountShell({
   const brandPillClass =
     "group relative flex select-none items-center gap-2 rounded-full border border-m3-border/60 bg-m3-sidebar/80 px-2.5 py-1.5 transition-colors hover:bg-m3-hover";
 
-  const brandContent = (
+  const swapMotion =
+    "absolute inset-0 flex items-center transition-[opacity,translate] duration-200 ease-out";
+
+  const brandContent = canGoBack ? (
+    <>
+      <span className="relative h-5 w-5 shrink-0 overflow-hidden">
+        <span
+          className={`${swapMotion} justify-center -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100`}
+          aria-hidden
+        >
+          <ArrowLeft className="h-4 w-4 text-m3-text" />
+        </span>
+        <span
+          className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}
+        >
+          <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
+        </span>
+      </span>
+      <span className="relative inline-grid overflow-hidden text-xs font-semibold tracking-tight sm:text-sm">
+        <span className="invisible col-start-1 row-start-1 whitespace-nowrap" aria-hidden>
+          {t("brand.name")}
+        </span>
+        <span className="invisible col-start-1 row-start-1 whitespace-nowrap" aria-hidden>
+          {t("common.back")}
+        </span>
+        <span
+          className={`${swapMotion} -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100`}
+        >
+          {t("common.back")}
+        </span>
+        <span className={`${swapMotion} z-10 group-hover:opacity-0`}>
+          {t("brand.name")}
+        </span>
+      </span>
+    </>
+  ) : (
     <>
       <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
-        {canGoBack ? (
-          <ArrowLeft
-            className="absolute h-4 w-4 text-m3-text opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-            aria-hidden
-          />
-        ) : null}
-        <img
-          src="/favicon.png"
-          alt=""
-          className={`h-5 w-5 rounded-md object-contain transition-opacity duration-150 ${
-            canGoBack ? "group-hover:opacity-0" : ""
-          }`}
-        />
+        <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
       </span>
-      <span className="grid text-xs font-semibold tracking-tight sm:text-sm">
-        {canGoBack ? (
-          <>
-            <span className="col-start-1 row-start-1 transition-opacity duration-150 group-hover:opacity-0">
-              {t("brand.name")}
-            </span>
-            <span className="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-              {t("common.back")}
-            </span>
-          </>
-        ) : (
-          t("brand.name")
-        )}
-      </span>
+      <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
     </>
   );
 
