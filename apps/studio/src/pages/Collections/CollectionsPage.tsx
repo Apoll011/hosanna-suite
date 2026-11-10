@@ -263,9 +263,9 @@ export const CollectionsPage: React.FC = () => {
       className="flex-1 flex flex-col h-full overflow-y-auto bg-m3-bg select-none"
     >
       {filteredCollections.length === 0 ? (
-        <div className="h-full flex flex-col items-center justify-center p-8">
+        <div className="flex-1 flex flex-col w-full animate-in fade-in duration-500 h-full p-6">
           <EmptyState
-            icon={<LibraryBig className="w-8 h-8" />}
+            icon={<LibraryBig className="w-12 h-12 text-m3-primary opacity-40" />}
             title={
               searchQuery ? t("foldersPage.noResults") : t("collectionsPage.noCollectionsAvailable")
             }

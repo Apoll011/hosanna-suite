@@ -12,6 +12,8 @@ interface EmptyStateProps {
   description: string;
   actionLabel?: string;
   onAction?: () => void;
+  children?: React.ReactNode;
+  className?: string;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
@@ -20,9 +22,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   description,
   actionLabel,
   onAction,
+  children,
+  className = "",
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-10 sm:p-12 text-center rounded-lg border border-dashed border-m3-border bg-m3-sidebar/40 my-4 h-full min-h-48">
+    <div
+      className={`flex flex-col items-center justify-center p-10 sm:p-12 text-center rounded-lg border border-dashed border-m3-border bg-m3-sidebar/40 my-4 h-full min-h-48 w-full ${className}`}
+    >
       {icon && (
         <div className="p-3 bg-m3-hover rounded-md text-m3-secondary mb-4" aria-hidden="true">
           {icon}
@@ -35,6 +41,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           {actionLabel}
         </Button>
       )}
+      {children}
     </div>
   );
 };
