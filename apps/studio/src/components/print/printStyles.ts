@@ -534,10 +534,21 @@ export const PRINT_SCREEN_CSS = /* css */ `
   content-visibility: auto;
   contain-intrinsic-size: auto var(--hp-paper-h);
 }
-.hp-thumb { pointer-events: none; }
-.hp-thumb .hp-sheet, .hp-thumb .hp-song-pack {
-  min-height: 0 !important; width: auto !important; margin: 0 !important;
-  padding: 0 !important; box-shadow: none !important; background: transparent !important;
+.hp-thumb .hp-doc { pointer-events: none; }
+/* Thumbnails must not inherit full-page paper min-heights from pack/sheet rules. */
+.hp-thumb .hp-sheet,
+.hp-thumb .hp-song-pack,
+.hp-thumb .hp-breaks > .hp-sheet,
+.hp-thumb .hp-breaks > .hp-song-pack {
+  min-height: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  break-before: auto !important;
+  break-after: auto !important;
 }
 .hp-thumb .hp-footer { display: none; }
 `;
