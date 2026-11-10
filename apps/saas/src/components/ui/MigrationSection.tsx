@@ -2,7 +2,12 @@ import { useReveal } from "@/hooks/useReveal";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Check, ListMusic, Music2 } from "lucide-react";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
+
+type HmStyle = CSSProperties & {
+  "--hm-delay"?: string;
+  "--hm-rot"?: string;
+};
 
 export function MigrationSection() {
   useReveal();
@@ -117,7 +122,7 @@ export function MigrationSection() {
             <div className="relative mx-auto w-full max-w-sm select-none" aria-hidden="true">
               <div
                 className="hm-rise relative z-10 mx-auto w-72 max-w-full"
-                style={{ ["--hm-delay" as any]: "0ms" }}
+                style={{ "--hm-delay": "0ms" } as HmStyle}
               >
                 <div className="hm-float flex items-center gap-3 rounded-2xl border border-blue-100 bg-white px-4 py-3 shadow-lg shadow-blue-900/5 -rotate-2">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100">
@@ -158,7 +163,7 @@ export function MigrationSection() {
                 <circle className="hm-arrival" cx="208" cy="66" r="4" fill="#2563eb" />
               </svg>
 
-              <div className="hm-rise relative" style={{ ["--hm-delay" as any]: "150ms" }}>
+              <div className="hm-rise relative" style={{ "--hm-delay": "150ms" } as HmStyle}>
                 <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-2xl shadow-blue-900/10">
                   <div
                     aria-hidden="true"
@@ -176,7 +181,7 @@ export function MigrationSection() {
                   <div className="relative flex flex-col gap-1.5 p-3">
                     <div
                       className="hm-row flex items-center gap-2.5 rounded-lg bg-secondary/40 px-3 py-2"
-                      style={{ ["--hm-delay" as any]: "1050ms" }}
+                      style={{ "--hm-delay": "1050ms" } as HmStyle}
                     >
                       <Music2 className="h-4 w-4 shrink-0 text-primary" />
                       <span className="text-sm font-semibold text-primary">Praise You Anywere</span>
@@ -187,7 +192,7 @@ export function MigrationSection() {
                     </div>
                     <div
                       className="hm-row flex items-center gap-2.5 rounded-lg bg-secondary/40 px-3 py-2"
-                      style={{ ["--hm-delay" as any]: "1200ms" }}
+                      style={{ "--hm-delay": "1200ms" } as HmStyle}
                     >
                       <Music2 className="h-4 w-4 shrink-0 text-primary" />
                       <span className="block h-2 w-24 rounded bg-blue-100" />
@@ -195,7 +200,7 @@ export function MigrationSection() {
                     </div>
                     <div
                       className="hm-row flex items-center gap-2.5 rounded-lg bg-secondary/40 px-3 py-2"
-                      style={{ ["--hm-delay" as any]: "1350ms" }}
+                      style={{ "--hm-delay": "1350ms" } as HmStyle}
                     >
                       <Music2 className="h-4 w-4 shrink-0 text-primary" />
                       <span className="block h-2 w-16 rounded bg-blue-100" />
@@ -203,7 +208,7 @@ export function MigrationSection() {
                     </div>
                     <div
                       className="hm-row self-start mt-0.5 flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1"
-                      style={{ ["--hm-delay" as any]: "1550ms" }}
+                      style={{ "--hm-delay": "1550ms" } as HmStyle}
                     >
                       <ListMusic className="h-3.5 w-3.5 text-primary" />
                       <span className="text-xs font-semibold text-primary">
@@ -215,14 +220,14 @@ export function MigrationSection() {
 
                 <div
                   className="hm-pop absolute -right-2 -top-3 z-10 flex items-center gap-1.5 rounded-xl border border-blue-100 bg-white px-3 py-2 text-xs font-medium text-primary shadow-xl shadow-blue-900/10 sm:-right-5"
-                  style={{ ["--hm-delay" as any]: "1800ms", ["--hm-rot" as any]: "2deg" }}
+                  style={{ "--hm-delay": "1800ms", "--hm-rot": "2deg" } as HmStyle}
                 >
                   {t("migration.chordsAndKeys")}
                   <Check className="h-3.5 w-3.5 text-emerald-500" />
                 </div>
                 <div
                   className="hm-pop absolute -bottom-3 -left-2 z-10 flex items-center gap-1.5 rounded-xl border border-blue-100 bg-white px-3 py-2 text-xs font-medium text-primary shadow-xl shadow-blue-900/10 sm:-left-5"
-                  style={{ ["--hm-delay" as any]: "1950ms", ["--hm-rot" as any]: "-2deg" }}
+                  style={{ "--hm-delay": "1950ms", "--hm-rot": "-2deg" } as HmStyle}
                 >
                   {t("migration.setlists")}
                   <Check className="h-3.5 w-3.5 text-emerald-500" />

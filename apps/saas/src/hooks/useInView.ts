@@ -29,7 +29,7 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [options]);
 
   return { ref, inView };
 }

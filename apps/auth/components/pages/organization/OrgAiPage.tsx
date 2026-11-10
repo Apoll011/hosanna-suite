@@ -291,7 +291,6 @@ function AiMemoryPanel({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload on scope/org change only
   }, [scope, organizationId, fail]);
 
   const add = async () => {
