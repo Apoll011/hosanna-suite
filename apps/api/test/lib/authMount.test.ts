@@ -1,33 +1,25 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-/**
- * Documents AUTH_MOUNT resolution used by apps/api/src/config/env.ts.
- * Mirrors the inline IIFE so CI catches accidental default changes.
- */
-function resolveAuthMount(
-  authUrl: string | undefined,
-  authMountEnv: string | undefined,
-): "local" | "delegate" | "off" {
-  const raw = (authMountEnv ?? "").toLowerCase();
-  if (raw === "local" || raw === "delegate" || raw === "off") return raw;
-  return authUrl ? "delegate" : "local";
-}
+import { coerceAuthMount, defaultAuthMount } from "../../src/lib/flags.js";
 
-describe("AUTH_MOUNT defaults", () => {
+describe("auth-mount flag helpers", () => {
   it("defaults to local when AUTH_URL is unset", () => {
-    assert.equal(resolveAuthMount(undefined, undefined), "local");
+    assert.equal(defaultAuthMount(undefined), "local");
   });
 
   it("defaults to delegate when AUTH_URL is set", () => {
-    assert.equal(resolveAuthMount("https://auth.hosanna.live", undefined), "delegate");
+    assert.equal(defaultAuthMount("https://auth.hosanna.live"), "delegate");
   });
 
-  it("honors explicit AUTH_MOUNT=off", () => {
-    assert.equal(resolveAuthMount("https://auth.hosanna.live", "off"), "off");
+  it("coerces known variants", () => {
+    assert.equal(coerceAuthMount("local", "delegate"), "local");
+    assert.equal(coerceAuthMount("delegate", "local"), "delegate");
+    assert.equal(coerceAuthMount("off", "local"), "off");
   });
 
-  it("honors explicit AUTH_MOUNT=local with AUTH_URL set", () => {
-    assert.equal(resolveAuthMount("https://auth.hosanna.live", "local"), "local");
+  it("falls back on unknown values", () => {
+    assert.equal(coerceAuthMount("nope", "delegate"), "delegate");
+    assert.equal(coerceAuthMount(undefined, "off"), "off");
   });
 });

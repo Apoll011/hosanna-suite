@@ -12,3 +12,4 @@ export {
   wantsBrowserNavigation,
   isOauthAuthorizeGet,
 } from "../oauth-navigation-redirect.js";
+export { withAuthCors, isTrustedCorsOrigin } from "../cors.js";

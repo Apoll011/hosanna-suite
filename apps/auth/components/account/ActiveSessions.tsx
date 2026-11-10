@@ -1,8 +1,14 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
+import {
+  readCachedSessions,
+  writeCachedSessions,
+  type CachedSessionRow,
+} from "@/lib/session-cache";
+import { Surface } from "@hosanna/ui";
 import {
   Globe,
   Loader2,
@@ -21,37 +27,55 @@ const DEVICE_ICONS: Record<DeviceType, typeof Globe> = {
   unknown: Globe,
 };
 
-type SessionRow = {
-  id: string;
-  createdAt: Date | string;
-  token: string;
-  ipAddress?: string | null;
-  userAgent?: string | null;
-};
+type SessionRow = CachedSessionRow;
+
+function normalizeSessions(data: unknown): SessionRow[] {
+  if (!Array.isArray(data)) return [];
+  return data.map((raw) => {
+    const s = raw as SessionRow & { createdAt: Date | string };
+    return {
+      id: s.id,
+      token: s.token,
+      ipAddress: s.ipAddress,
+      userAgent: s.userAgent,
+      createdAt:
+        typeof s.createdAt === "string" ? s.createdAt : new Date(s.createdAt).toISOString(),
+    };
+  });
+}
 
 export function ActiveSessionsSection({
   onToast,
 }: {
   onToast: (msg: string, type: "success" | "error") => void;
 }) {
-  const { t } = useLocale();
-  const [sessions, setSessions] = useState<SessionRow[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { t } = useI18n();
+  const [sessions, setSessions] = useState<SessionRow[] | null>(() => readCachedSessions());
+  const [isLoading, setIsLoading] = useState(() => readCachedSessions() === null);
+  const [isRefreshing, setIsRefreshing] = useState(() => readCachedSessions() !== null);
 
-  const fetchSessions = useCallback(async () => {
-    setIsLoading(true);
+  const fetchSessions = useCallback(async (opts?: { background?: boolean }) => {
+    const background = Boolean(opts?.background && readCachedSessions() !== null);
+    if (background) setIsRefreshing(true);
+    else setIsLoading(true);
     try {
       const { data } = await authClient.listSessions({ query: {} });
-      setSessions((data as SessionRow[]) || []);
+      const next = normalizeSessions(data);
+      writeCachedSessions(next);
+      setSessions(next);
     } catch {
-      setSessions([]);
+      if (!background) {
+        setSessions([]);
+        writeCachedSessions([]);
+      }
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   }, []);
 
   useEffect(() => {
-    void fetchSessions();
+    void fetchSessions({ background: true });
   }, [fetchSessions]);
 
   const handleRevoke = async (token: string) => {
@@ -65,27 +89,25 @@ export function ActiveSessionsSection({
   };
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs h-full">
+    <Surface className="h-full">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
-            <MonitorSmartphone className="w-4 h-4 text-m3-secondary" />
+          <h3 className="text-title text-m3-text flex items-center gap-2">
+            <MonitorSmartphone className="w-4 h-4 text-m3-primary" />
             {t("settings.account.activeSessions.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">
-            {t("settings.account.activeSessions.desc")}
-          </p>
+          <p className="text-muted mt-0.5">{t("settings.account.activeSessions.desc")}</p>
         </div>
         <button
           type="button"
           onClick={() => void fetchSessions()}
           className="p-1.5 text-m3-secondary hover:text-m3-text rounded-lg hover:bg-m3-hover transition-colors"
         >
-          <RefreshCw className="w-4 h-4" />
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
         </button>
       </div>
 
-      {isLoading ? (
+      {isLoading && sessions === null ? (
         <div className="py-6 text-center text-xs text-m3-secondary flex items-center justify-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin text-m3-primary" />
           {t("settings.account.activeSessions.loading")}
@@ -136,10 +158,10 @@ export function ActiveSessionsSection({
           })}
         </div>
       ) : (
-        <p className="text-xs text-slate-500 py-4 text-center">
+        <p className="text-xs text-m3-secondary py-4 text-center">
           {t("settings.account.activeSessions.currentSessionOnly")}
         </p>
       )}
-    </div>
+    </Surface>
   );
 }

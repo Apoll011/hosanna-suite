@@ -1,21 +1,20 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { redirectAfterSuccessfulAuth } from "@/lib/redirect";
 import { KeyRound, MailCheck, RefreshCw, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRef, useState, type FormEvent, type KeyboardEvent, type ChangeEvent, type ClipboardEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 type TwoFactorMethod = "totp" | "otp" | "backup";
 
 export function TwoFactorPage() {
   const searchParams = useSearchParams();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [method, setMethod] = useState<TwoFactorMethod>("totp");
   const [code, setCode] = useState("");
@@ -193,7 +192,7 @@ export function TwoFactorPage() {
             {t("auth.forgotPassword.backToLogin")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="md" isLoading={isLoading} className="rounded-full">
             {t("auth.twoFactor.verifyBtn")}
           </Button>
         </div>
@@ -264,7 +263,7 @@ function OtpInput({ value, onChange }: { value: string; onChange: (v: string) =>
           onChange={(e) => handleChange(i, e)}
           onKeyDown={(e) => handleKey(i, e)}
           onFocus={(e) => e.target.select()}
-          className="w-10 sm:w-12 h-12 sm:h-14 text-center text-lg sm:text-xl font-medium rounded-md border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
+          className="w-11 sm:w-12 h-14 text-center text-lg sm:text-xl font-medium rounded-xl border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
         />
       ))}
     </div>

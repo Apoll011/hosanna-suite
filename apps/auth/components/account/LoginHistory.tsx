@@ -1,10 +1,14 @@
 "use client";
 
-import { Button } from "@/components/Button";
-import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
+import {
+  readCachedLoginHistory,
+  writeCachedLoginHistory,
+  type CachedAuditEvent,
+} from "@/lib/session-cache";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import {
   Globe,
   History,
@@ -33,52 +37,53 @@ const DEVICE_ICONS: Record<DeviceType, typeof Globe> = {
   unknown: Globe,
 };
 
-type AuditEvent = {
-  eventKey: string;
-  eventType: string;
-  createdAt: string;
-  eventData?: Record<string, unknown>;
-  location?: { ipAddress?: string; city?: string; country?: string };
-};
+type AuditEvent = CachedAuditEvent;
 
 export function LoginHistorySection() {
-  const { t, locale } = useLocale();
-  const [events, setEvents] = useState<AuditEvent[] | null>(null);
-  const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const { t, locale } = useI18n();
+  const seed = readCachedLoginHistory();
+  const [events, setEvents] = useState<AuditEvent[] | null>(() => seed?.events ?? null);
+  const [total, setTotal] = useState(() => seed?.total ?? 0);
+  const [isLoading, setIsLoading] = useState(() => seed === null);
+  const [isRefreshing, setIsRefreshing] = useState(() => seed !== null);
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const limit = 25;
 
-  const fetchLogs = useCallback(
-    async (nextOffset = 0, append = false) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const session = await authClient.getSession({ query: {} });
-        const result = await authClient.dash.getAuditLogs({
-          session: session.data,
-          eventType: "user_signed_in",
-          limit,
-          offset: nextOffset,
-        });
-        if (result.error) {
-          throw new Error(result.error.message || t("loginHistory.loadError"));
-        }
-        const raw = (result.data?.events ?? []) as AuditEvent[];
-        const filtered = raw.filter((e) => LOGIN_EVENT_TYPES.has(e.eventType));
-        setEvents((prev) => (append && prev ? [...prev, ...filtered] : filtered));
-        setTotal(result.data?.total ?? filtered.length);
-        setOffset(nextOffset);
-      } catch (err) {
-        setError((err as Error)?.message || t("loginHistory.loadError"));
-        if (!append) setEvents([]);
-      } finally {
-        setIsLoading(false);
+  const fetchLogs = useCallback(async (nextOffset = 0, append = false) => {
+    const cached = readCachedLoginHistory();
+    const background = !append && nextOffset === 0 && cached !== null;
+    if (background) setIsRefreshing(true);
+    else setIsLoading(true);
+    setError(null);
+    try {
+      const session = await authClient.getSession({ query: {} });
+      const result = await authClient.dash.getAuditLogs({
+        session: session.data,
+        eventType: "user_signed_in",
+        limit,
+        offset: nextOffset,
+      });
+      if (result.error) {
+        throw new Error(result.error.message || t("loginHistory.loadError"));
       }
-    },
-    [t],
-  );
+      const raw = (result.data?.events ?? []) as AuditEvent[];
+      const filtered = raw.filter((e) => LOGIN_EVENT_TYPES.has(e.eventType));
+      setEvents((prev) => (append && prev ? [...prev, ...filtered] : filtered));
+      const nextTotal = result.data?.total ?? filtered.length;
+      setTotal(nextTotal);
+      setOffset(nextOffset);
+      if (!append && nextOffset === 0) {
+        writeCachedLoginHistory({ events: filtered, total: nextTotal });
+      }
+    } catch (err) {
+      setError((err as Error)?.message || t("loginHistory.loadError"));
+      if (!append && cached === null) setEvents([]);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [t]);
 
   useEffect(() => {
     void fetchLogs(0, false);
@@ -87,7 +92,7 @@ export function LoginHistorySection() {
   const formatWhen = (iso: string) => {
     const date = new Date(iso);
     if (Number.isNaN(date.getTime())) return iso;
-    return date.toLocaleString(locale === "pt" ? "pt-PT" : "en-US", {
+    return date.toLocaleString(locale, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -99,22 +104,22 @@ export function LoginHistorySection() {
   const hasMore = (events?.length ?? 0) < total && !isLoading;
 
   return (
-    <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs h-full">
+    <Surface className="h-full">
       <div className="flex items-center justify-between mb-4 gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-bold text-m3-text flex items-center gap-2">
-            <History className="w-4 h-4 text-m3-secondary" />
+          <h3 className="text-title text-m3-text flex items-center gap-2">
+            <History className="w-4 h-4 text-m3-primary" />
             {t("loginHistory.title")}
           </h3>
-          <p className="text-xs text-m3-secondary mt-0.5">{t("loginHistory.personalDesc")}</p>
+          <p className="text-muted mt-0.5">{t("loginHistory.personalDesc")}</p>
         </div>
         <button
           type="button"
           onClick={() => void fetchLogs(0, false)}
-          disabled={isLoading}
+          disabled={isLoading || isRefreshing}
           className="p-1.5 text-m3-secondary hover:text-m3-text rounded-lg hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-4 h-4 ${isLoading || isRefreshing ? "animate-spin" : ""}`} />
         </button>
       </div>
 
@@ -122,7 +127,7 @@ export function LoginHistorySection() {
         <div className="py-8 flex items-center justify-center">
           <Spinner size="md" label={t("loginHistory.loading")} />
         </div>
-      ) : error ? (
+      ) : error && events === null ? (
         <div className="py-6 text-center space-y-3">
           <p className="text-xs text-rose-600 dark:text-rose-400 flex items-center justify-center gap-2">
             <ShieldAlert className="w-4 h-4" />
@@ -217,8 +222,8 @@ export function LoginHistorySection() {
           )}
         </div>
       ) : (
-        <p className="text-xs text-slate-500 py-6 text-center">{t("loginHistory.empty")}</p>
+        <p className="text-xs text-m3-secondary py-6 text-center">{t("loginHistory.empty")}</p>
       )}
-    </div>
+    </Surface>
   );
 }

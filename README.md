@@ -84,7 +84,7 @@ Images are defined in the root `Dockerfile` (`api` and `studio` targets) and orc
 
 Favicon, apple-touch icons, and OG image live in `packages/brand/public` (sourced from the former saas assets).  
 Each app keeps only its own `robots.txt`, `sitemap.xml`, and `_routes.json` under `apps/*/public`.  
-Vite picks up the shared files via `@hosanna/brand/vite-plugin`.
+Vite apps pick them up via `@hosanna/brand/vite-plugin`; the auth Next app syncs them with `@hosanna/brand/sync-public` from `next.config.ts`.
 
 ## Docs
 

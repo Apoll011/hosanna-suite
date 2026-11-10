@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { resolveSocialCallbackURL } from "@/lib/redirect";
 import { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "@hosanna/ui";
 import { Loader2 } from "lucide-react";
@@ -46,7 +46,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
   callbackURL,
   showDivider = true,
 }) => {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
 
@@ -79,7 +79,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-m3-border" />
           </div>
-          <div className="relative px-3 bg-m3-card text-caption">
+          <div className="relative bg-m3-card px-3 text-caption text-m3-secondary">
             {t("auth.login.orContinueWith")}
           </div>
         </div>
@@ -96,7 +96,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
               type="button"
               disabled={disabled || loadingProvider !== null}
               onClick={() => void handleSocialSignIn(provider.id)}
-              className="w-full min-h-10 sm:min-h-11 px-4 rounded-full border border-m3-border bg-m3-card hover:bg-m3-hover text-m3-text font-medium text-sm transition-colors flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-10 px-4 rounded-full border border-m3-border bg-m3-card hover:bg-m3-hover text-m3-text font-medium text-sm transition-colors flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-m3-secondary" aria-hidden="true" />

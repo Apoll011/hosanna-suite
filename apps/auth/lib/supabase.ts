@@ -1,8 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
-import { env } from "./env.js";
+import { env } from "./env";
 
-const supabaseUrl = env.supabaseUrl;
-const supabaseServiceKey = env.supabaseSecretKey;
+/** Real project URL at runtime; HTTPS placeholder during `next build` without secrets. */
+const supabaseUrl = env.supabaseUrl.startsWith("http")
+  ? env.supabaseUrl
+  : "https://placeholder.supabase.co";
+const supabaseServiceKey = env.supabaseSecretKey.startsWith("missing-")
+  ? "placeholder-service-role-key"
+  : env.supabaseSecretKey;
 
 export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false },

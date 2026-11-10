@@ -357,9 +357,9 @@ export const CollectionDetailPage: React.FC = () => {
   // ── Not found ───────────────────────────────────────────────────────────────
   if (!collection) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8">
+      <div className="flex-1 flex flex-col w-full animate-in fade-in duration-500 h-full p-6">
         <EmptyState
-          icon={<FolderKanban className="w-8 h-8" />}
+          icon={<FolderKanban className="w-12 h-12 text-m3-primary opacity-40" />}
           title={t("collectionsPage.notFoundTitle")}
           description={t("collectionsPage.notFoundDesc")}
           actionLabel={t("collectionsPage.backToCollections")}
@@ -382,7 +382,7 @@ export const CollectionDetailPage: React.FC = () => {
           empty={
             paginatedSongs.length === 0 ? (
               <EmptyState
-                icon={<Music2 className="w-8 h-8" />}
+                icon={<Music2 className="w-12 h-12 text-m3-primary opacity-40" />}
                 title={
                   songsInCollection.length === 0
                     ? t("collectionsPage.emptyTitle")

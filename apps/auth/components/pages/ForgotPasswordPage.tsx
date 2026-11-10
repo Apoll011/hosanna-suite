@@ -1,19 +1,18 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions } from "@/lib/captcha";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { CheckCircle2, Mail, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 export function ForgotPasswordPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [mode, setMode] = useState<"link" | "code">("link");
@@ -120,7 +119,7 @@ export function ForgotPasswordPage() {
         </button>
       </div>
 
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           type="email"
           label={t("auth.forgotPassword.emailLabel")}
@@ -140,7 +139,7 @@ export function ForgotPasswordPage() {
             {t("auth.forgotPassword.backToLogin")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="md" isLoading={isLoading} className="rounded-full">
             {t("auth.forgotPassword.sendLinkBtn")}
           </Button>
         </div>

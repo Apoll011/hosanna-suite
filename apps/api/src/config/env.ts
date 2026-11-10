@@ -12,6 +12,20 @@ function optional(name: string): string | undefined {
   return process.env[name] || undefined;
 }
 
+/** Force https for non-loopback AUTH_URL so Better Auth issuer matches the auth app. */
+function normalizeAuthUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    const loopback = host === "localhost" || host === "127.0.0.1" || host === "::1";
+    if (!loopback && parsed.protocol === "http:") parsed.protocol = "https:";
+    return parsed.toString().replace(/\/+$/, "");
+  } catch {
+    return url.replace(/\/+$/, "");
+  }
+}
+
 /** True when running inside a Vercel Function. */
 const isVercel = Boolean(process.env.VERCEL);
 
@@ -77,23 +91,10 @@ export const env = {
   /** The Studio product URL (post-login / settings deep links). */
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
   /**
-   * Dedicated auth app origin (auth.hosanna.live). When set, Better Auth HTTP
-   * is delegated there (308) unless AUTH_MOUNT=local.
+   * Dedicated auth app origin (auth.hosanna.live). Issuer / JWKS / deep links,
+   * and 308 target when Vercel flag `auth-mount` is `delegate`.
    */
-  authUrl: optional("AUTH_URL"),
-  /**
-   * How `/api/auth` is served on this process:
-   * - `local` — mount Better Auth handler here (legacy / dual-run fallback)
-   * - `delegate` — 308 to AUTH_URL (requires AUTH_URL)
-   * - `off` — do not mount auth or well-known routes
-   *
-   * Default: `delegate` when AUTH_URL is set, otherwise `local`.
-   */
-  authMount: (() => {
-    const raw = (process.env.AUTH_MOUNT ?? "").toLowerCase();
-    if (raw === "local" || raw === "delegate" || raw === "off") return raw;
-    return process.env.AUTH_URL ? "delegate" : "local";
-  })() as "local" | "delegate" | "off",
+  authUrl: normalizeAuthUrl(optional("AUTH_URL")),
 
   // ── Cron ──────────────────────────────────────────────────────────────────
   cronSecret: optional("CRON_SECRET"),

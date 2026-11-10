@@ -6,7 +6,7 @@
 import { Spinner } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import React, { useEffect } from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { isDemoMode } from "../demo/index";
 import { redirectToAuthApp } from "../lib/authUrl";
@@ -51,22 +51,14 @@ export const ProtectedRoute: React.FC = () => {
 
   if (demo) return <Outlet />;
 
-  if (
-    isLoading ||
-    !isAuthenticated ||
-    !organization ||
-    hasAcceptedTrial === null ||
-    hasAcceptedTrial === false
-  ) {
+  // `hasAcceptedTrial === null` means "unknown" (fail open) — only block when
+  // explicitly false (trial step still required on the auth app).
+  if (isLoading || !isAuthenticated || !organization || hasAcceptedTrial === false) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-m3-bg">
         <Spinner size="lg" label={t("common.loading")} />
       </div>
     );
-  }
-
-  if (location.pathname === "/onboarding" || location.pathname === "/") {
-    return <Navigate to={`/${organization.slug}/folders`} replace />;
   }
 
   return <Outlet />;

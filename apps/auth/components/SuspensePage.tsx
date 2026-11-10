@@ -1,7 +1,7 @@
 "use client";
 
-import { Spinner } from "@/components/Spinner";
 import { Suspense, type ReactNode } from "react";
+import { Spinner } from "@hosanna/ui";
 
 export function SuspensePage({ children }: { children: ReactNode }) {
   return (

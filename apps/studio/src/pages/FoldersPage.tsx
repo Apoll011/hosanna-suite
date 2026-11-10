@@ -199,9 +199,9 @@ export const FoldersPage: React.FC = () => {
           <Spinner label={t("foldersPage.loading")} />
         </div>
       ) : totalItemsCount === 0 ? (
-        <div className="h-full flex flex-col items-center justify-center">
+        <div className="flex-1 flex flex-col w-full h-full animate-in fade-in duration-500">
           <EmptyState
-            icon={<FolderOpen className="w-8 h-8" />}
+            icon={<FolderOpen className="w-12 h-12 text-m3-primary opacity-40" />}
             title={searchQuery ? t("foldersPage.noResults") : t("foldersPage.emptyTitle")}
             description={
               searchQuery
@@ -219,24 +219,25 @@ export const FoldersPage: React.FC = () => {
             onAction={
               !searchQuery && canCreateSong ? () => setIsCreateSongModalOpen(true) : undefined
             }
-          />
-          {!searchQuery && (
-            <div className="flex flex-col items-center gap-3 -mt-2 mb-8">
-              <CanAll permissions={["song.create", "song.import"]}>
-                <span className="text-label">{t("common.or")}</span>
-              </CanAll>
-              <Can permission="song.import">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef?.current?.click()}
-                  className="text-sm font-medium text-m3-primary hover:underline flex items-center gap-1.5 cursor-pointer bg-m3-primary/10 px-4 py-2 rounded-md border border-m3-primary/25 hover:bg-m3-primary/15 transition-colors"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  <span>{t("foldersPage.dragOrClick")}</span>
-                </button>
-              </Can>
-            </div>
-          )}
+          >
+            {!searchQuery && (
+              <div className="flex flex-col items-center gap-3 mt-4">
+                <CanAll permissions={["song.create", "song.import"]}>
+                  <span className="text-label">{t("common.or")}</span>
+                </CanAll>
+                <Can permission="song.import">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef?.current?.click()}
+                    className="text-sm font-medium text-m3-primary hover:underline flex items-center gap-1.5 cursor-pointer bg-m3-primary/10 px-4 py-2 rounded-md border border-m3-primary/25 hover:bg-m3-primary/15 transition-colors"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{t("foldersPage.dragOrClick")}</span>
+                  </button>
+                </Can>
+              </div>
+            )}
+          </EmptyState>
         </div>
       ) : viewMode === "grid" ? (
         /* GRID VIEW */

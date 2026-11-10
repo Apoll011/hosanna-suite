@@ -71,6 +71,7 @@ export const pt = {
     expand: "Expandir menu",
     logout: "Sair",
     openSettings: "Definições",
+    openAccount: "Conta",
     openOrganization: "Organização",
     openAnalytics: "Análises",
     switchWorkspace: "Mudar de organização",

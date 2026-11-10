@@ -1,14 +1,15 @@
 "use client";
 
-import { Button } from "@/components/Button";
+import { AuthLayout } from "@/components/AuthLayout";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
-import { Loader2, Shield } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { Button, Spinner } from "@hosanna/ui";
+import { Shield } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 export function OAuthConsentPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [busy, setBusy] = useState(false);
@@ -39,14 +40,6 @@ export function OAuthConsentPage() {
       router.replace(`/login?redirect=${next}`);
     }
   }, [userLoading, hasUser, oauthQuery, router]);
-
-  if (userLoading || !hasUser) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-m3-bg">
-        <Loader2 className="w-6 h-6 animate-spin text-m3-primary" />
-      </div>
-    );
-  }
 
   const submit = async (accept: boolean) => {
     setBusy(true);
@@ -79,43 +72,49 @@ export function OAuthConsentPage() {
     }
   };
 
+  if (userLoading || !hasUser) {
+    return (
+      <AuthLayout headerTitle={t("oauth.consent.title")}>
+        <Spinner size="md" label={t("common.loading")} />
+      </AuthLayout>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-m3-bg p-4">
-      <div className="w-full max-w-md p-6 space-y-5 rounded-2xl border border-m3-border bg-m3-card shadow-lg">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center">
-            <Shield className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="text-title text-m3-text">{t("oauth.consent.title")}</h1>
-            <p className="text-sm text-m3-secondary mt-1">
-              {t("oauth.consent.desc", { client: clientId })}
-            </p>
+    <AuthLayout
+      headerTitle={t("oauth.consent.title")}
+      headerSubtitle={t("oauth.consent.desc", { client: clientId })}
+      errorMsg={error || undefined}
+    >
+      <div className="space-y-5">
+        <div className="flex justify-center">
+          <div className="w-12 h-12 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center">
+            <Shield className="w-6 h-6" />
           </div>
         </div>
 
         {scope && (
-          <div className="rounded-md border border-m3-border bg-m3-sidebar/40 px-3 py-2 text-xs text-m3-text">
-            <span className="font-medium block mb-1">{t("oauth.consent.scopes")}</span>
-            <code className="break-all">{scope}</code>
+          <div className="rounded-md border border-m3-border bg-m3-sidebar/40 px-3 py-2.5 text-xs text-m3-text text-left">
+            <span className="font-medium block mb-1 text-label">{t("oauth.consent.scopes")}</span>
+            <code className="break-all font-mono text-[11px]">{scope}</code>
           </div>
         )}
 
-        {error && (
-          <p className="text-xs text-red-500" role="alert">
-            {error}
-          </p>
-        )}
-
-        <div className="flex items-center justify-end gap-2 pt-2">
+        <div className="flex items-center justify-between gap-3 pt-2">
           <Button variant="outline" size="sm" disabled={busy} onClick={() => void submit(false)}>
             {t("oauth.consent.deny")}
           </Button>
-          <Button variant="primary" size="sm" isLoading={busy} onClick={() => void submit(true)}>
+          <Button
+            variant="primary"
+            size="sm"
+            className="rounded-full px-6"
+            isLoading={busy}
+            onClick={() => void submit(true)}
+          >
             {t("oauth.consent.allow")}
           </Button>
         </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

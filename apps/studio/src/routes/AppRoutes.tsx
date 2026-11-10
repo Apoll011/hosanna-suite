@@ -106,6 +106,13 @@ const ErrorFallback = ({ resetErrorBoundary }: { resetErrorBoundary: () => void 
   );
 };
 
+/** Logged-in home: always land on the active org's folders. */
+const HomeRedirect = () => {
+  const { organization } = useAuth();
+  if (!organization?.slug) return <PageLoader />;
+  return <Navigate to={`/${organization.slug}/folders`} replace />;
+};
+
 const OrganizationGuard = () => {
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
@@ -117,7 +124,8 @@ const OrganizationGuard = () => {
   if (isLoading) return <PageLoader />;
 
   if (!organization) {
-    return <Navigate to="/onboarding" replace />;
+    // Let ProtectedRoute send unauthenticated / no-org users to the auth app.
+    return <Navigate to="/" replace />;
   }
 
   if (slug && slug !== organization.slug) {
@@ -163,7 +171,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/demo" element={<DemoPage />} />
 
           <Route element={<ProtectedRoute />}>
-            {/* Wrap the slug routes with our new OrganizationGuard */}
+            <Route path="/" element={<HomeRedirect />} />
             <Route path="/:slug" element={<OrganizationGuard />}>
               <Route element={<MainLayout />}>
                 <Route index element={<Navigate to="folders" replace />} />
@@ -194,9 +202,9 @@ export const AppRoutes: React.FC = () => {
                 <Route path="analytics" element={<AnalyticsPage />} />
               </Route>
             </Route>
+            {/* Unknown paths → home; ProtectedRoute sends authed users to folders. */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
-
-          <Route path="*" element={<Navigate to="/onboarding" replace />} />
         </Routes>
       </Suspense>
     </ErrorBoundary>

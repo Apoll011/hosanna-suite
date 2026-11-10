@@ -1,19 +1,15 @@
 "use client";
 
-import { useLocale, type AuthLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
+import { LANGUAGES, type Language, type LanguageMeta } from "@hosanna/i18n";
 import { Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const OPTIONS: Array<{ code: AuthLocale; label: string; flag: string }> = [
-  { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "pt", label: "Português", flag: "🇵🇹" },
-];
-
 export function LanguageSelector({ className = "" }: { className?: string }) {
-  const { locale, setLocale } = useLocale();
+  const { language, setPersonalLanguage } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const current = OPTIONS.find((l) => l.code === locale) ?? OPTIONS[0];
+  const current: LanguageMeta = LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -41,14 +37,14 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
-          {OPTIONS.map((lang) => {
-            const isSelected = lang.code === locale;
+          {LANGUAGES.map((lang) => {
+            const isSelected = lang.code === language;
             return (
               <button
                 key={lang.code}
                 type="button"
                 onClick={() => {
-                  setLocale(lang.code);
+                  setPersonalLanguage(lang.code as Language);
                   setIsOpen(false);
                 }}
                 className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 min-h-10 text-xs font-medium transition-colors cursor-pointer ${
@@ -58,7 +54,7 @@ export function LanguageSelector({ className = "" }: { className?: string }) {
                 }`}
               >
                 <span>{lang.flag}</span>
-                <span>{lang.label}</span>
+                <span>{lang.nativeLabel}</span>
               </button>
             );
           })}

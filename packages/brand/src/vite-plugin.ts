@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const brandDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../public");
+import { brandPublicDir, syncBrandPublic } from "./sync-public.ts";
 
 function contentType(file: string): string {
   switch (path.extname(file).toLowerCase()) {
@@ -29,21 +28,10 @@ function contentType(file: string): string {
 function safeBrandFile(urlPath: string): string | null {
   const rel = decodeURIComponent(urlPath.split("?")[0] ?? "").replace(/^\/+/, "");
   if (!rel || rel.includes("..")) return null;
-  const file = path.join(brandDir, rel);
-  if (!file.startsWith(brandDir + path.sep) && file !== brandDir) return null;
+  const file = path.join(brandPublicDir, rel);
+  if (!file.startsWith(brandPublicDir + path.sep) && file !== brandPublicDir) return null;
   if (!fs.existsSync(file) || !fs.statSync(file).isFile()) return null;
   return file;
-}
-
-function copyBrandInto(outDir: string): void {
-  for (const name of fs.readdirSync(brandDir)) {
-    const src = path.join(brandDir, name);
-    if (!fs.statSync(src).isFile()) continue;
-    const dest = path.join(outDir, name);
-    // App-specific public files (robots, sitemap, _routes) win when present.
-    if (fs.existsSync(dest)) continue;
-    fs.copyFileSync(src, dest);
-  }
 }
 
 /**
@@ -92,7 +80,7 @@ export function hosannaBrandPublic() {
     },
     closeBundle() {
       if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-      copyBrandInto(outDir);
+      syncBrandPublic(outDir);
     },
   };
 }

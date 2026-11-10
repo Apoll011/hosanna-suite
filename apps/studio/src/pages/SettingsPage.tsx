@@ -4,19 +4,19 @@
  */
 
 import { PageHeader, Tabs } from "@/src/components/common";
+import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
-import { AppWindow, CloudOff, Info, User, Zap } from "lucide-react";
+import { AppWindow, CloudOff, Info, Zap } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { AboutTab } from "../components/settings/AboutTab";
-import { AccountTab } from "../components/settings/AccountTab";
 import { AppearanceTab } from "../components/settings/AppearanceTab";
 import { FeaturesTab } from "../components/settings/FeaturesTab";
 import { useOnline } from "../hooks/useOnline";
 
-type TabType = "account" | "app" | "features" | "about";
+type TabType = "app" | "features" | "about";
 
-const VALID_TABS: TabType[] = ["account", "app", "features", "about"];
+const VALID_TABS: TabType[] = ["app", "features", "about"];
 
 /** Org tabs that now live on `/organization` — redirect for old bookmarks. */
 const MOVED_TO_ORGANIZATION = new Set([
@@ -39,6 +39,13 @@ export const SettingsPage: React.FC = () => {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
+    // Account moved to auth.hosanna.live — soft handoff shell then navigate.
+    if (tab === "account") {
+      navigateToAuthAccount({
+        returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
+      });
+      return;
+    }
     if (!tab || !MOVED_TO_ORGANIZATION.has(tab) || !slug) return;
     const next = new URLSearchParams(searchParams);
     next.set("tab", tab);
@@ -46,7 +53,7 @@ export const SettingsPage: React.FC = () => {
   }, [searchParams, slug, navigate]);
 
   const [activeTab, setActiveTab] = useState<TabType>(
-    VALID_TABS.includes(initialTab as TabType) ? (initialTab as TabType) : "account",
+    VALID_TABS.includes(initialTab as TabType) ? (initialTab as TabType) : "app",
   );
 
   useEffect(() => {
@@ -57,13 +64,6 @@ export const SettingsPage: React.FC = () => {
   }, [searchParams, activeTab]);
 
   const tabs = [
-    {
-      id: "account" as const,
-      label: t("settings.tabs.account"),
-      icon: <User className="w-4 h-4" />,
-      requiresNetwork: true,
-      show: true,
-    },
     {
       id: "app" as const,
       label: t("settings.tabs.app"),
@@ -125,15 +125,6 @@ export const SettingsPage: React.FC = () => {
         />
 
         <div className="pt-2 pb-12">
-          <div
-            className={
-              !isOnline && activeTab === "account"
-                ? "opacity-40 pointer-events-none select-none filter grayscale transition-opacity"
-                : ""
-            }
-          >
-            <AccountTab active={activeTab === "account"} />
-          </div>
           <AppearanceTab active={activeTab === "app"} />
           <FeaturesTab active={activeTab === "features"} />
           <AboutTab active={activeTab === "about"} />

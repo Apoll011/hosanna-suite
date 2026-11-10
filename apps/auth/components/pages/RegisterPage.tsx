@@ -1,20 +1,19 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions, captchaRequired } from "@/lib/captcha";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 export function RegisterPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -102,7 +101,7 @@ export function RegisterPage() {
       headerSubtitle={t("auth.register.subtitle")}
       errorMsg={errorMsg}
     >
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           label={t("auth.register.nameLabel")}
           value={name}
@@ -172,7 +171,7 @@ export function RegisterPage() {
             {t("auth.register.loginLink")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="md" isLoading={isLoading} className="rounded-full">
             {t("auth.register.registerBtn")}
           </Button>
         </div>

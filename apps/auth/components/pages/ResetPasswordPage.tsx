@@ -1,15 +1,14 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { Button, GoogleTextField } from "@hosanna/ui";
 
 type State = "form" | "success" | "expired" | "error";
 
@@ -17,7 +16,7 @@ export function ResetPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const router = useRouter();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -140,7 +139,7 @@ export function ResetPasswordPage() {
       headerSubtitle={t("auth.resetPassword.subtitle")}
       errorMsg={errorMsg}
     >
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           type={showPassword ? "text" : "password"}
           label={t("auth.resetPassword.newPasswordLabel")}
@@ -183,7 +182,7 @@ export function ResetPasswordPage() {
             {t("auth.forgotPassword.backToLogin")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="md" isLoading={isLoading} className="rounded-full">
             {t("auth.resetPassword.resetBtn")}
           </Button>
         </div>

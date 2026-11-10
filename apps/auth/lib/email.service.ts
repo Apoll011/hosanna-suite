@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
-import { env } from "./env.js";
-import { DEFAULT_LOCALE, t } from "./i18n.js";
-import { getResendClient } from "./resend.js";
+import { env } from "./env";
+import { DEFAULT_LOCALE, t } from "@/locales/server";
+import { getResendClient } from "./resend";
 
 export interface SendEmailOptions {
   to: string | string[];

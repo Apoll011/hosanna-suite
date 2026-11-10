@@ -1,4 +1,5 @@
 import { configureApiClient } from "@/src/api";
+import { prefetchAuthAccount } from "@/src/lib/authUrl";
 import { preloadEditor } from "@hosanna/chordpro/editor";
 import { useEffect } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
@@ -28,6 +29,7 @@ export default function App() {
   useEffect(() => {
     const id = setTimeout(() => {
       void preloadEditor();
+      prefetchAuthAccount();
     }, 3000);
     return () => clearTimeout(id);
   }, []);

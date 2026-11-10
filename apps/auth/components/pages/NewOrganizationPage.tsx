@@ -1,22 +1,20 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { Button } from "@/components/Button";
-import { GoogleTextField } from "@/components/GoogleTextField";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
-import { Spinner } from "@/components/Spinner";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions, captchaRequired } from "@/lib/captcha";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { Button, Spinner, GoogleTextField } from "@hosanna/ui";
 
 export function NewOrganizationPage() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [step, setStep] = useState(1);
   const [orgName, setOrgName] = useState("");
@@ -166,9 +164,9 @@ export function NewOrganizationPage() {
             </div>
           </div>
 
-          <form onKeyDown={handleKeyDown} className="space-y-4">
+          <form onKeyDown={handleKeyDown} className="space-y-5">
             {step === 1 && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="space-y-5 animate-in fade-in duration-200">
                 <GoogleTextField
                   label={t("onboarding.orgNameLabel")}
                   value={orgName}
@@ -201,7 +199,7 @@ export function NewOrganizationPage() {
             )}
 
             {step === 2 && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="space-y-5 animate-in fade-in duration-200">
                 <GoogleTextField
                   label={t("auth.register.nameLabel")}
                   value={adminName}
@@ -220,7 +218,7 @@ export function NewOrganizationPage() {
             )}
 
             {step === 3 && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="space-y-5 animate-in fade-in duration-200">
                 <GoogleTextField
                   type={showPassword ? "text" : "password"}
                   label={t("auth.register.passwordLabel")}
@@ -298,19 +296,21 @@ export function NewOrganizationPage() {
               {step < 3 ? (
                 <Button
                   type="button"
+                  size="md"
                   onClick={handleNext}
                   disabled={step === 1 ? !isStep1Valid : !isStep2Valid}
-                  className="rounded-full px-6"
+                  className="rounded-full"
                 >
                   {t("settings.twoFactor.continue")}
                 </Button>
               ) : (
                 <Button
                   type="button"
+                  size="md"
                   onClick={() => void handleCreateSubmit()}
                   isLoading={isLoading}
                   disabled={!isStep3Valid || isLoading}
-                  className="rounded-full px-6"
+                  className="rounded-full"
                 >
                   {t("onboarding.createOrgBtn")}
                 </Button>

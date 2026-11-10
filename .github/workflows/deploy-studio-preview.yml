@@ -52,6 +52,7 @@ jobs:
         env:
           # From GitHub Environment Preview (vars + secrets).
           VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_AUTH_URL: ${{ vars.VITE_AUTH_URL }}
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
           VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
           VITE_PUBLIC_POSTHOG_HOST: ${{ vars.VITE_PUBLIC_POSTHOG_HOST }}

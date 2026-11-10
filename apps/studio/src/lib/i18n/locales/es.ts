@@ -73,6 +73,7 @@ export const es: typeof pt = {
     expand: "Expandir menú",
     logout: "Cerrar sesión",
     openSettings: "Configuración",
+    openAccount: "Cuenta",
     openOrganization: "Organización",
     openAnalytics: "Analíticas",
     switchWorkspace: "Cambiar de organización",

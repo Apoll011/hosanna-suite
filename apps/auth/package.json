@@ -1,10 +1,13 @@
 {
   "name": "@hosanna/auth-app",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "license": "Apache-2.0",
   "description": "Hosanna authentication app (auth.hosanna.live) — Better Auth UI + handlers",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev --port 5174",
     "build": "next build",
