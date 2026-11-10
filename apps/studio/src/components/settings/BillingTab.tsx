@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner } from "@hosanna/ui";
-import { Badge } from "@/src/components/common";
+import { Button, Spinner, Badge } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { fetchPlanPricing, PLAN_PRICING, type PlanPricing } from "@/src/lib/subscriptions";

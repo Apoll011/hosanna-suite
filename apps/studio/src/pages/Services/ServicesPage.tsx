@@ -1,5 +1,4 @@
-import { ConfirmDialog, Spinner } from "@hosanna/ui";
-import { Badge, EmptyState, Modal } from "@/src/components/common";
+import { ConfirmDialog, Spinner, Badge, EmptyState, Modal } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan, usePermissionValue } from "@/src/lib/permissions/client";

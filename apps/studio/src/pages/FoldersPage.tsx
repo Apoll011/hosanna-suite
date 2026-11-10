@@ -1,5 +1,4 @@
-import { Spinner } from "@hosanna/ui";
-import { EmptyState } from "@/src/components/common";
+import { Spinner, EmptyState } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FolderOpen, Upload } from "lucide-react";

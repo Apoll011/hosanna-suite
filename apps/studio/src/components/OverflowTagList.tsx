@@ -1,4 +1,4 @@
-import { Badge } from "@/src/components/common";
+import { Badge } from "@hosanna/ui";
 import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 interface OverflowTagListProps {

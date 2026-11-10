@@ -4,8 +4,7 @@
  */
 
 import { backupApi } from "@/src/api";
-import { Button, PageHeader, Surface } from "@hosanna/ui";
-import { Modal, Tabs } from "@/src/components/common";
+import { Button, PageHeader, Surface, Modal, Tabs } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useAnyRole, useCan } from "@/src/lib/permissions/client";
 import {

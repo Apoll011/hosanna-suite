@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button } from "@hosanna/ui";
-import { Input } from "@/src/components/common";
+import { Button, Input } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import React, { useState } from "react";
 

@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button } from "@hosanna/ui";
-import { Modal } from "@/src/components/common";
+import { Button, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
 import { Check, Loader2, Palette, RotateCcw, Search, Sparkles, X } from "lucide-react";

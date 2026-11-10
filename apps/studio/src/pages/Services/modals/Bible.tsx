@@ -1,5 +1,4 @@
-import { Button } from "@hosanna/ui";
-import { Modal } from "@/src/components/common";
+import { Button, Modal } from "@hosanna/ui";
 import {
   DurationField,
   durationInputToSeconds,

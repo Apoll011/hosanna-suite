@@ -1,11 +1,4 @@
-export { Badge } from "./Badge";
-export { EmptyState } from "./EmptyState";
-export { Input } from "./Input";
-export { Modal } from "./Modal";
-export { Pagination } from "./Pagination";
 export { Table } from "./Table";
 export type { TableProps } from "./Table";
 export { TablePagination } from "./TablePagination";
 export type { TablePaginationProps } from "./TablePagination";
-export { Tabs } from "./Tabs";
-export type { TabItem } from "./Tabs";

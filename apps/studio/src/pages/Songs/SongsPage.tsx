@@ -4,7 +4,8 @@
  */
 
 import { OverflowTagList } from "@/src/components/OverflowTagList";
-import { Badge, EmptyState, Table } from "@/src/components/common";
+import { Badge, EmptyState } from "@hosanna/ui";
+import { Table } from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";

@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ConfirmDialog, Spinner } from "@hosanna/ui";
-import { EmptyState, Table } from "@/src/components/common";
+import { ConfirmDialog, Spinner, EmptyState } from "@hosanna/ui";
+import { Table } from "@/src/components/common";
 import type { CollectionToolbarActions } from "@/src/components/layout";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";

@@ -8,8 +8,7 @@ import { ResponsibilityCategory, ResponsibilityColor, ResponsibilityIconKey } fr
 import { Plus, Trash2, Users } from "lucide-react";
 import React, { useState } from "react";
 import { COLOR_MAP, ICON_MAP } from "../../utils/iconMap";
-import { Button } from "@hosanna/ui";
-import { Input } from "@/src/components/common";
+import { Button, Input } from "@hosanna/ui";
 const ICON_OPTIONS: ResponsibilityIconKey[] = [
   "mic",
   "music",

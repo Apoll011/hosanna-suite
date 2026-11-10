@@ -6,8 +6,7 @@
 import { LibraryHealthTab } from "@/src/components/analytics/LibraryHealthTab";
 import { SetlistInsightsTab } from "@/src/components/analytics/SetlistInsightsTab";
 import { UsageOverviewTab } from "@/src/components/analytics/UsageOverviewTab";
-import { PageHeader } from "@hosanna/ui";
-import { Tabs } from "@/src/components/common";
+import { PageHeader, Tabs } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { Gauge, HeartPulse, ListMusic } from "lucide-react";

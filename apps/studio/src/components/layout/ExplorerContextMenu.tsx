@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Badge } from "@/src/components/common";
+import { Badge } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import {

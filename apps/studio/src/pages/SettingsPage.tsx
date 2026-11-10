@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PageHeader } from "@hosanna/ui";
-import { Tabs } from "@/src/components/common";
+import { PageHeader, Tabs } from "@hosanna/ui";
 import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { AppWindow, CloudOff, Info, Zap } from "lucide-react";

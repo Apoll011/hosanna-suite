@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner, Surface } from "@hosanna/ui";
-import { Input } from "@/src/components/common";
+import { Spinner, Surface, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useServices } from "@/src/hooks/useServices";
 import { useAllSongs } from "@/src/hooks/useSongs";
