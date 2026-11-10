@@ -5,10 +5,6 @@ import { rateLimit } from "express-rate-limit";
 import helmetImport from "helmet";
 import { env } from "./config/env.js";
 import { DEFAULT_LOCALE, t } from "./lib/i18n.js";
-import {
-  authMountAuthorizationServerRoot,
-  authMountDispatch,
-} from "./middleware/authMount.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { mcpRouter } from "./mcp/http.js";
 import { apiRouter } from "./routes/index.js";
@@ -129,16 +125,6 @@ if (!isVercel) {
   );
 }
 
-// Better Auth HTTP — mode from Vercel Flags `auth-mount` (local | delegate | off).
-// Evaluated per request via @vercel/flags-core (not AUTH_MOUNT env).
-app.all("/api/auth", authMountDispatch);
-app.all("/api/auth/*", authMountDispatch);
-app.all("/.well-known/oauth-protected-resource", authMountDispatch);
-app.all("/.well-known/oauth-protected-resource/*", authMountDispatch);
-app.all("/.well-known/oauth-authorization-server", authMountAuthorizationServerRoot);
-app.all("/.well-known/oauth-authorization-server/*", authMountDispatch);
-app.all("/.well-known/openid-configuration", authMountDispatch);
-app.all("/.well-known/openid-configuration/*", authMountDispatch);
 
 // ── Body parsing ─────────────────────────────────────────────────────────────
 // 5 MB headroom for large replication push batches (songs with full lyrics)

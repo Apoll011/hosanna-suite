@@ -21,7 +21,7 @@ export function registerStudioTools(server: McpServer, authInfo?: AuthInfo): voi
     async ({ reason }) => {
       try {
         const ctx = requireMcpContext(authInfo);
-        syncCache.invalidate(ctx.orgId);
+        await syncCache.invalidate(ctx.orgId);
         return jsonResult({
           studioSync: true,
           reason: reason ?? "refresh",

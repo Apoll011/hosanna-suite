@@ -1,8 +1,4 @@
-/**
- * Resume state for services_publish across partial failures / retries.
- * Bound to orgId + clientRequestId. Completed reports are cached separately
- * so partial failures are NOT treated as final idempotent successes.
- */
+import { createCache } from "@hosanna/cache";
 
 type PublishPhase = "service_saved" | "agenda_saved" | "verified";
 
@@ -17,62 +13,48 @@ export type PublishProgress = {
 
 export type PublishProgressInput = Omit<PublishProgress, "at">;
 
-const progressStore = new Map<string, PublishProgress>();
-const completedStore = new Map<string, { at: number; result: unknown }>();
 const TTL_MS = 30 * 60 * 1000;
+const progress = createCache({ namespace: "mcp:publish", ttlMs: TTL_MS });
+const completed = createCache({ namespace: "mcp:publish-done", ttlMs: TTL_MS });
 
 function progressKey(orgId: string, clientRequestId: string) {
-  return `${orgId}:publish:${clientRequestId.trim()}`;
+  return `${orgId}:${clientRequestId.trim()}`;
 }
 
-function completedKey(orgId: string, clientRequestId: string) {
-  return `${orgId}:publish-done:${clientRequestId.trim()}`;
-}
-
-export function getPublishProgress(
+export async function getPublishProgress(
   orgId: string,
   clientRequestId: string,
-): PublishProgress | undefined {
-  const k = progressKey(orgId, clientRequestId);
-  const hit = progressStore.get(k);
-  if (!hit) return undefined;
-  if (Date.now() - hit.at > TTL_MS) {
-    progressStore.delete(k);
-    return undefined;
-  }
-  return hit;
+): Promise<PublishProgress | undefined> {
+  return progress.get<PublishProgress>(progressKey(orgId, clientRequestId));
 }
 
-export function setPublishProgress(
+export async function setPublishProgress(
   orgId: string,
   clientRequestId: string,
-  progress: PublishProgressInput,
-): void {
-  progressStore.set(progressKey(orgId, clientRequestId), {
-    ...progress,
+  value: PublishProgressInput,
+): Promise<void> {
+  await progress.set(progressKey(orgId, clientRequestId), {
+    ...value,
     at: Date.now(),
   });
 }
 
-export function clearPublishProgress(orgId: string, clientRequestId: string): void {
-  progressStore.delete(progressKey(orgId, clientRequestId));
+export async function clearPublishProgress(orgId: string, clientRequestId: string): Promise<void> {
+  await progress.delete(progressKey(orgId, clientRequestId));
 }
 
-export function getCompletedPublish(orgId: string, clientRequestId: string): unknown | undefined {
-  const k = completedKey(orgId, clientRequestId);
-  const hit = completedStore.get(k);
-  if (!hit) return undefined;
-  if (Date.now() - hit.at > TTL_MS) {
-    completedStore.delete(k);
-    return undefined;
-  }
-  return hit.result;
+export async function getCompletedPublish(
+  orgId: string,
+  clientRequestId: string,
+): Promise<unknown | undefined> {
+  return completed.get(progressKey(orgId, clientRequestId));
 }
 
-export function setCompletedPublish(orgId: string, clientRequestId: string, result: unknown): void {
-  completedStore.set(completedKey(orgId, clientRequestId), {
-    at: Date.now(),
-    result,
-  });
-  clearPublishProgress(orgId, clientRequestId);
+export async function setCompletedPublish(
+  orgId: string,
+  clientRequestId: string,
+  result: unknown,
+): Promise<void> {
+  await completed.set(progressKey(orgId, clientRequestId), result);
+  await clearPublishProgress(orgId, clientRequestId);
 }

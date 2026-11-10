@@ -1,8 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
+import { createCache } from "@hosanna/cache";
+import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
 import { forOrganization, prisma } from "../database/prisma.js";
 import { auth } from "../lib/auth.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
-import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
@@ -152,23 +153,12 @@ export function requireOwnTeamResource(
 
 type SessionResult = Awaited<ReturnType<typeof auth.api.getSession>>;
 
-// ── In-memory caches with bounded size & TTL ─────────────────────────────────
+const sessionCache = createCache({ namespace: "auth:session", ttlMs: 20_000 });
+const orgLocaleCache = createCache({ namespace: "auth:locale", ttlMs: 300_000 });
+const userRoleCache = createCache({ namespace: "auth:role", ttlMs: 60_000 });
 
-const SESSION_CACHE_TTL_MS = 20_000; // 20 s
-const ORG_LOCALE_CACHE_TTL_MS = 300_000; // 5 min
-const USER_ROLE_CACHE_TTL_MS = 60_000; // 1 min
-const MAX_CACHE_ENTRIES = 2_048;
-
-const sessionCache = new Map<string, { sessionData: SessionResult; expiresAt: number }>();
-
-const orgLocaleCache = new Map<string, { locale: string; expiresAt: number }>();
-
-const userRoleCache = new Map<string, { role: string; expiresAt: number }>();
-
-export function invalidateAuthCaches() {
-  sessionCache.clear();
-  orgLocaleCache.clear();
-  userRoleCache.clear();
+export async function invalidateAuthCaches() {
+  await Promise.all([sessionCache.clear(), orgLocaleCache.clear(), userRoleCache.clear()]);
 }
 
 /**
@@ -219,23 +209,17 @@ async function resolveSession(req: Request): Promise<SessionResult | null> {
   const isBearer = Boolean(authHeader?.startsWith("Bearer "));
   const cookieHeader = req.headers.cookie;
 
-  // Compute a lightweight cache key
   const cacheKey = isBearer
     ? `b:${authHeader!.slice(7).trim()}`
     : cookieHeader
       ? `c:${cookieHeader}`
       : null;
 
-  const now = Date.now();
-
   if (cacheKey) {
-    const cached = sessionCache.get(cacheKey);
-    if (cached && cached.expiresAt > now) {
-      return cached.sessionData;
-    }
+    const cached = await sessionCache.get<SessionResult>(cacheKey);
+    if (cached?.session && cached?.user) return cached;
   }
 
-  // Optimize resolution order: Bearer clients shouldn't run cookie resolution first
   let sessionData: SessionResult | null = null;
   if (isBearer) {
     sessionData = await getSessionFromBearerToken(req);
@@ -247,14 +231,7 @@ async function resolveSession(req: Request): Promise<SessionResult | null> {
   }
 
   if (cacheKey && sessionData?.session && sessionData?.user) {
-    if (sessionCache.size >= MAX_CACHE_ENTRIES) {
-      const oldest = sessionCache.keys().next().value;
-      if (oldest) sessionCache.delete(oldest);
-    }
-    sessionCache.set(cacheKey, {
-      sessionData,
-      expiresAt: now + SESSION_CACHE_TTL_MS,
-    });
+    await sessionCache.set(cacheKey, sessionData);
   }
 
   return sessionData;
@@ -273,11 +250,8 @@ function parseLocaleFromMeta(metadata: unknown): string | null {
 }
 
 async function getCachedOrgLocale(workspaceId: string): Promise<string> {
-  const now = Date.now();
-  const cached = orgLocaleCache.get(workspaceId);
-  if (cached && cached.expiresAt > now) {
-    return cached.locale;
-  }
+  const cached = await orgLocaleCache.get<string>(workspaceId);
+  if (cached) return cached;
 
   const org = await prisma.organization.findUnique({
     where: { id: workspaceId },
@@ -285,26 +259,14 @@ async function getCachedOrgLocale(workspaceId: string): Promise<string> {
   });
 
   const locale = parseLocaleFromMeta(org?.metadata) ?? DEFAULT_LOCALE;
-
-  if (orgLocaleCache.size >= MAX_CACHE_ENTRIES) {
-    const oldest = orgLocaleCache.keys().next().value;
-    if (oldest) orgLocaleCache.delete(oldest);
-  }
-  orgLocaleCache.set(workspaceId, {
-    locale,
-    expiresAt: now + ORG_LOCALE_CACHE_TTL_MS,
-  });
-
+  await orgLocaleCache.set(workspaceId, locale);
   return locale;
 }
 
 async function getCachedUserRole(workspaceId: string, userId: string): Promise<string> {
   const key = `${workspaceId}:${userId}`;
-  const now = Date.now();
-  const cached = userRoleCache.get(key);
-  if (cached && cached.expiresAt > now) {
-    return cached.role;
-  }
+  const cached = await userRoleCache.get<string>(key);
+  if (cached) return cached;
 
   const member = await prisma.member.findFirst({
     where: { organizationId: workspaceId, userId },
@@ -312,13 +274,7 @@ async function getCachedUserRole(workspaceId: string, userId: string): Promise<s
   });
 
   const role = member?.role ?? "guest";
-
-  if (userRoleCache.size >= MAX_CACHE_ENTRIES) {
-    const oldest = userRoleCache.keys().next().value;
-    if (oldest) userRoleCache.delete(oldest);
-  }
-  userRoleCache.set(key, { role, expiresAt: now + USER_ROLE_CACHE_TTL_MS });
-
+  await userRoleCache.set(key, role);
   return role;
 }
 

@@ -77,8 +77,8 @@ export class ServiceService {
     this.songRepo = new SongRepository(db);
   }
 
-  invalidateCache() {
-    syncCache.invalidate(this.tenantId);
+  async invalidateCache() {
+    await syncCache.invalidate(this.tenantId);
   }
 
   async list(body: {
@@ -131,7 +131,7 @@ export class ServiceService {
       notes: input.notes ?? "",
       elements: input.elements ?? [],
     });
-    this.invalidateCache();
+    await this.invalidateCache();
     return serialize(created!);
   }
 
@@ -157,7 +157,7 @@ export class ServiceService {
       elements: patch.elements !== undefined ? patch.elements : undefined,
     });
 
-    this.invalidateCache();
+    await this.invalidateCache();
 
     return serialize((await this.getById(id))!);
   }
@@ -166,7 +166,7 @@ export class ServiceService {
     await this.getById(id);
     const purgeAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
     await this.serviceRepo.update(id, { deleted: true, purgeAt });
-    this.invalidateCache();
+    await this.invalidateCache();
   }
 
   async restore(id: string) {
@@ -174,7 +174,7 @@ export class ServiceService {
     if (!service || !service.deleted)
       throw AppError.notFound("SERVICE_NOT_FOUND", t(this.locale, "service.not_found"));
     await this.serviceRepo.update(id, { deleted: false, purgeAt: null });
-    this.invalidateCache();
+    await this.invalidateCache();
     return serialize((await this.serviceRepo.findById(id))!);
   }
 
@@ -187,7 +187,7 @@ export class ServiceService {
     const current = await this.getById(id);
     assertUnchanged(current, updatedAt, this.locale);
     const updated = await this.serviceRepo.update(id, { elements });
-    this.invalidateCache();
+    await this.invalidateCache();
 
     return serialize(updated!);
   }

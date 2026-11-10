@@ -90,10 +90,7 @@ export const env = {
   // ── Studio / Auth URLs ────────────────────────────────────────────────────
   /** The Studio product URL (post-login / settings deep links). */
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
-  /**
-   * Dedicated auth app origin (auth.hosanna.live). Issuer / JWKS / deep links,
-   * and 308 target when Vercel flag `auth-mount` is `delegate`.
-   */
+  /** Auth app origin (issuer, JWKS, deep links). */
   authUrl: normalizeAuthUrl(optional("AUTH_URL")),
 
   // ── Cron ──────────────────────────────────────────────────────────────────

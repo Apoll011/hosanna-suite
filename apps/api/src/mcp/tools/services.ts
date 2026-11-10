@@ -490,7 +490,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
         requireWriteEntitlement(ctx);
         requirePermission(ctx, "service.create");
         const { clientRequestId } = args;
-        const cached = getCompletedPublish(ctx.orgId, clientRequestId);
+        const cached = await getCompletedPublish(ctx.orgId, clientRequestId);
         if (cached) {
           return jsonResult(cached);
         }
@@ -501,7 +501,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
             steps: [] as string[],
           };
           const steps = report.steps as string[];
-          let progress: PublishProgressInput | undefined = getPublishProgress(
+          let progress: PublishProgressInput | undefined = await getPublishProgress(
             ctx.orgId,
             clientRequestId,
           );
@@ -540,7 +540,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
               serviceId: service.id,
               serviceUpdatedAt: new Date(service.updatedAt).toISOString(),
             };
-            setPublishProgress(ctx.orgId, clientRequestId, progress);
+            await setPublishProgress(ctx.orgId, clientRequestId, progress);
             steps.push("service_saved");
             report.service = service;
           } else {
@@ -619,7 +619,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
                   eventId: agendaResult.event.id,
                   eventUpdatedAt: agendaResult.event.updatedAt,
                 };
-                setPublishProgress(ctx.orgId, clientRequestId, progress);
+                await setPublishProgress(ctx.orgId, clientRequestId, progress);
                 steps.push("agenda_saved");
                 report.agenda = agendaResult;
               } catch (agendaErr) {
@@ -646,7 +646,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
             verifiedService.elements,
             songService(ctx),
           );
-          syncCache.invalidate(ctx.orgId);
+          await syncCache.invalidate(ctx.orgId);
           steps.push("verified");
 
           const finalResult = {
@@ -662,7 +662,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
             studioNote:
               "studio_sync is Studio-only — open Studio to refresh UI, or wait for replication poll.",
           };
-          setCompletedPublish(ctx.orgId, clientRequestId, finalResult);
+          await setCompletedPublish(ctx.orgId, clientRequestId, finalResult);
           return jsonResult(finalResult);
         }
       } catch (error) {

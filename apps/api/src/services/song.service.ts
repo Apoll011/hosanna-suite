@@ -38,8 +38,8 @@ export class SongService {
     this.folderRepo = new FolderRepository(db);
   }
 
-  invalidateCache() {
-    syncCache.invalidate(this.tenantId);
+  async invalidateCache() {
+    await syncCache.invalidate(this.tenantId);
   }
 
   private async computePath(
@@ -189,7 +189,7 @@ export class SongService {
 
   async create(input: CreateInput) {
     const path = await this.computePath(input.title, input.folderId, input.path);
-    this.invalidateCache();
+    await this.invalidateCache();
     if (input.folderId) {
       this.folderRepo.touch(input.folderId);
     }
@@ -220,7 +220,7 @@ export class SongService {
         tags: item.tags ?? [],
       })),
     );
-    this.invalidateCache();
+    await this.invalidateCache();
 
     const created = await this.songRepo.createMany(prepared);
     await this.db.folder.updateMany({
@@ -247,7 +247,7 @@ export class SongService {
       await this.songRepo.update(song.id, { tags: newTags });
       updatedCount++;
     }
-    this.invalidateCache();
+    await this.invalidateCache();
 
     return { success: true, count: updatedCount };
   }
@@ -267,7 +267,7 @@ export class SongService {
       data.folder = patch.folderId ? { connect: { id: patch.folderId } } : { disconnect: true };
       this.folderRepo.touch(patch.folderId!);
     }
-    this.invalidateCache();
+    await this.invalidateCache();
 
     return this.songRepo.update(id, data);
   }
@@ -279,7 +279,7 @@ export class SongService {
     if (song.folderId) {
       this.folderRepo.touch(song.folderId);
     }
-    this.invalidateCache();
+    await this.invalidateCache();
   }
 
   async restore(id: string) {
@@ -287,7 +287,7 @@ export class SongService {
     if (!song || !song.deleted)
       throw AppError.notFound("SONG_NOT_FOUND", t(this.locale, "song.not_found"));
     await this.songRepo.update(id, { deleted: false, purgeAt: null });
-    this.invalidateCache();
+    await this.invalidateCache();
     return this.songRepo.findById(id);
   }
 
@@ -298,7 +298,7 @@ export class SongService {
   async move(id: string, updatedAt: Date, folderId: string | null, newPath?: string) {
     const current = await this.getById(id);
     assertUnchanged(current, updatedAt, this.locale);
-    this.invalidateCache();
+    await this.invalidateCache();
     if (current.folderId) {
       this.folderRepo.touch(current.folderId);
     }

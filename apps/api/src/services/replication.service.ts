@@ -387,7 +387,7 @@ async function pullOne(
   limit: number,
 ): Promise<PullResponse<any>> {
   // Fast path: if syncCache knows nothing has changed since checkpoint, return immediately!
-  if (syncCache.hasNoChanges(tenantId, collection, checkpoint)) {
+  if (await syncCache.hasNoChanges(tenantId, collection, checkpoint)) {
     return { documents: [], checkpoint };
   }
 
@@ -404,7 +404,7 @@ async function pullOne(
     });
 
     if (docs.length === 0) {
-      syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
       return { documents: [], checkpoint };
     }
 
@@ -415,7 +415,7 @@ async function pullOne(
     };
 
     if (docs.length < limit) {
-      syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
     const documents = docs.map((doc: any) => toWireFolder(doc));
@@ -437,7 +437,7 @@ async function pullOne(
     });
 
     if (docs.length === 0) {
-      syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
       return { documents: [], checkpoint };
     }
 
@@ -448,7 +448,7 @@ async function pullOne(
     };
 
     if (docs.length < limit) {
-      syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+      await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
     const documents = docs.map((doc: any) => toWireCollection(doc, doc.songs?.length ?? 0));
@@ -471,7 +471,7 @@ async function pullOne(
   });
 
   if (docs.length === 0) {
-    syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
+    await syncCache.setLatestCheckpoint(tenantId, collection, checkpoint);
     return { documents: [], checkpoint };
   }
 
@@ -482,7 +482,7 @@ async function pullOne(
   };
 
   if (docs.length < limit) {
-    syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
+    await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
   }
 
   const documents = docs.map((doc: any) => toWireDoc(doc, collection));
@@ -508,7 +508,7 @@ export async function pullAll(
 
   for (const collection of collections) {
     const cp = checkpoints[collection] ?? null;
-    if (syncCache.hasNoChanges(tenantId, collection, cp)) {
+    if (await syncCache.hasNoChanges(tenantId, collection, cp)) {
       response[collection] = { documents: [], checkpoint: cp };
     } else {
       const limit = typeof limits === "number" ? limits : (limits[collection] ?? DEFAULT_LIMIT);
@@ -671,7 +671,7 @@ async function pushSongs(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "songs");
+    await syncCache.invalidate(tenantId, "songs");
   }
   return conflicts;
 }
@@ -783,7 +783,7 @@ async function pushFolders(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "folders");
+    await syncCache.invalidate(tenantId, "folders");
   }
   return conflicts;
 }
@@ -916,7 +916,7 @@ async function pushCollections(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "collections");
+    await syncCache.invalidate(tenantId, "collections");
   }
   return conflicts;
 }
@@ -1026,7 +1026,7 @@ async function pushServices(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "services");
+    await syncCache.invalidate(tenantId, "services");
   }
   return conflicts;
 }
@@ -1148,7 +1148,7 @@ async function pushAgendaEvents(
   }
 
   if (mutations.length > lateConflictIds.length) {
-    syncCache.invalidate(tenantId, "agendaEvents");
+    await syncCache.invalidate(tenantId, "agendaEvents");
   }
   return conflicts;
 }
