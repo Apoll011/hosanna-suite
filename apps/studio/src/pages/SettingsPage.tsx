@@ -4,7 +4,7 @@
  */
 
 import { PageHeader, Tabs } from "@/src/components/common";
-import { authAppHref } from "@/src/lib/authUrl";
+import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { AppWindow, CloudOff, Info, Zap } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -39,13 +39,11 @@ export const SettingsPage: React.FC = () => {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    // Account moved to auth.hosanna.live
+    // Account moved to auth.hosanna.live — soft handoff shell then navigate.
     if (tab === "account") {
-      window.location.assign(
-        authAppHref("/account", {
-          returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
-        }),
-      );
+      navigateToAuthAccount({
+        returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
+      });
       return;
     }
     if (!tab || !MOVED_TO_ORGANIZATION.has(tab) || !slug) return;

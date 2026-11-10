@@ -40,3 +40,5 @@ export function redirectToAuthApp(
 ): void {
   window.location.replace(authAppHref(path, options));
 }
+
+export { navigateToAuthAccount, prefetchAuthAccount } from "./authAccountHandoff";
