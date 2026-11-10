@@ -47,7 +47,9 @@ jobs:
       - name: Build SaaS (+ workspace deps)
         run: pnpm turbo run build --filter=@hosanna/saas
         env:
-          VITE_DASHBOARD_URL: ${{ vars.VITE_DASHBOARD_URL }}
+          # Signup/login CTAs → auth app (auth.hosanna.live)
+          VITE_AUTH_URL: ${{ vars.VITE_AUTH_URL }}
+          VITE_DASHBOARD_URL: ${{ vars.VITE_AUTH_URL }}
           VITE_API_URL: ${{ vars.VITE_API_URL }}
 
       - name: Deploy Worker (saas)
