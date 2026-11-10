@@ -103,12 +103,6 @@ export const env = {
 
   turnstileSecretKey: required("TURNSTILE_SECRET_KEY"),
 
-  supabaseUrl: optional("SUPABASE_URL"),
-  supabaseSecretKey: optional("SUPABASE_SECRET_KEY"),
-
-  resendApiKey: optional("RESEND_API_KEY"),
-  emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
-
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
   /**
    * Auth app origin — Better Auth issuer / deep links.
