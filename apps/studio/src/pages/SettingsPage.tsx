@@ -8,12 +8,11 @@ import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { isDemoMode } from "@/src/demo";
-import { AppWindow, Clock, CloudOff, Info, Printer, Shield, Users, Zap } from "lucide-react";
+import { AppWindow, Church, CloudOff, Info, Printer, Users, Zap } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AboutTab } from "../components/settings/AboutTab";
 import { AppearanceTab } from "../components/settings/AppearanceTab";
-import { DurationsTab } from "../components/settings/DurationsTab";
 import { FeaturesTab } from "../components/settings/FeaturesTab";
 import { PrintingTab } from "../components/settings/PrintingTab";
 import { ResponsibilitiesTab } from "../components/settings/ResponsibilitiesTab";
@@ -21,26 +20,23 @@ import { ServiceBehaviorTab } from "../components/settings/ServiceBehaviorTab";
 import { useSync } from "../contexts/SyncContext";
 import { useOnline } from "../hooks/useOnline";
 
-type TabType =
-  | "app"
-  | "services"
-  | "printing"
-  | "durations"
-  | "responsibilities"
-  | "features"
-  | "about";
+type TabType = "app" | "services" | "printing" | "responsibilities" | "features" | "about";
 
 const VALID_TABS: TabType[] = [
   "app",
   "services",
   "printing",
-  "durations",
   "responsibilities",
   "features",
   "about",
 ];
 
-const NETWORK_TABS: TabType[] = ["services", "printing", "durations", "responsibilities"];
+const NETWORK_TABS: TabType[] = ["services", "printing", "responsibilities"];
+
+/** Old bookmarks that now live under another Settings tab. */
+const SETTINGS_TAB_ALIASES: Record<string, TabType> = {
+  durations: "services",
+};
 
 /** Legacy Settings bookmarks that now live on auth. */
 const MOVED_TO_AUTH: Record<string, string> = {
@@ -72,6 +68,15 @@ export const SettingsPage: React.FC = () => {
     const tab = searchParams.get("tab");
     if (!tab) return;
 
+    const alias = SETTINGS_TAB_ALIASES[tab];
+    if (alias) {
+      const next = new URLSearchParams(searchParams);
+      next.set("tab", alias);
+      setSearchParams(next, { replace: true });
+      setActiveTab(alias);
+      return;
+    }
+
     const authPath = MOVED_TO_AUTH[tab];
     if (!authPath) return;
 
@@ -99,7 +104,7 @@ export const SettingsPage: React.FC = () => {
 
   // Org-managed tabs require organization.update; drop users without it.
   useEffect(() => {
-    const orgTabs: TabType[] = ["services", "printing", "durations", "responsibilities"];
+    const orgTabs: TabType[] = ["services", "printing", "responsibilities"];
     if (orgTabs.includes(activeTab) && !canUpdate) {
       setActiveTab("app");
       const next = new URLSearchParams(searchParams);
@@ -119,7 +124,7 @@ export const SettingsPage: React.FC = () => {
     {
       id: "services" as const,
       label: t("settings.tabs.services"),
-      icon: <Shield className="w-4 h-4" />,
+      icon: <Church className="w-4 h-4" />,
       requiresNetwork: true,
       show: canUpdate,
     },
@@ -127,13 +132,6 @@ export const SettingsPage: React.FC = () => {
       id: "printing" as const,
       label: t("settings.tabs.printing"),
       icon: <Printer className="w-4 h-4" />,
-      requiresNetwork: true,
-      show: canUpdate,
-    },
-    {
-      id: "durations" as const,
-      label: t("settings.tabs.durations"),
-      icon: <Clock className="w-4 h-4" />,
       requiresNetwork: true,
       show: canUpdate,
     },
@@ -207,7 +205,6 @@ export const SettingsPage: React.FC = () => {
           <AppearanceTab active={activeTab === "app"} />
           <ServiceBehaviorTab active={activeTab === "services"} showToast={showToast} />
           <PrintingTab active={activeTab === "printing"} showToast={showToast} />
-          <DurationsTab active={activeTab === "durations"} showToast={showToast} />
           <ResponsibilitiesTab active={activeTab === "responsibilities"} showToast={showToast} />
           <FeaturesTab active={activeTab === "features"} />
           <AboutTab active={activeTab === "about"} />

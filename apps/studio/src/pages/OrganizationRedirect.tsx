@@ -22,7 +22,7 @@ const AUTH_ORG_TAB_PATHS: Record<string, string> = {
 /** Old Organization studio content that now lives under Settings. */
 const SETTINGS_TAB_REDIRECTS: Record<string, string> = {
   printing: "printing",
-  durations: "durations",
+  durations: "services",
   responsibilities: "responsibilities",
   services: "services",
 };
