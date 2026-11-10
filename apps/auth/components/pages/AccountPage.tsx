@@ -5,8 +5,10 @@ import { ActiveSessionsSection } from "@/components/account/ActiveSessions";
 import { LoginHistorySection } from "@/components/account/LoginHistory";
 import { SocialAccountsSection } from "@/components/account/SocialAccounts";
 import { TwoFactorSection } from "@/components/account/TwoFactor";
+import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth-client";
 import { compressImage } from "@/lib/compress-image";
+import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session-cache";
 import { useI18n } from "@/lib/i18n";
 import { Button, GoogleTextField, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import {
@@ -14,6 +16,7 @@ import {
   CheckCircle2,
   Info,
   KeyRound,
+  Loader2,
   Lock,
   LogOut,
   PenLine,
@@ -21,16 +24,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-
-type AuthUser = {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  role?: string | null;
-  twoFactorEnabled?: boolean;
-};
+import { useCallback, useRef, useState } from "react";
 
 function initials(name?: string | null) {
   if (!name) return "U";
@@ -46,12 +40,10 @@ export function AccountPage() {
   const { t } = useI18n();
   const router = useRouter();
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const { user, setUser, isLoading, isRefreshing, refresh, clear } = useAuthUser();
 
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [isCompressingAvatar, setIsCompressingAvatar] = useState(false);
-
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -63,21 +55,24 @@ export function AccountPage() {
 
   const showToast = useCallback((msg: string, type: "success" | "error") => {
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 3500);
+    window.setTimeout(() => setToast(null), 3500);
   }, []);
 
-  const refresh = useCallback(async () => {
-    const session = await authClient.getSession();
-    if (!session.data?.user) {
-      router.replace("/login?redirect=/account");
-      return;
-    }
-    setUser(session.data.user as AuthUser);
-  }, [router]);
-
-  useEffect(() => {
-    void refresh().finally(() => setLoading(false));
+  const syncUser = useCallback(async () => {
+    await refresh();
   }, [refresh]);
+
+  const patchUser = useCallback(
+    (patch: Partial<NonNullable<typeof user>>) => {
+      setUser((prev) => {
+        if (!prev) return prev;
+        const next = { ...prev, ...patch };
+        writeCachedUser(toCachedUser(next));
+        return next;
+      });
+    },
+    [setUser],
+  );
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,9 +84,9 @@ export function AccountPage() {
     try {
       setIsCompressingAvatar(true);
       const compressed = await compressImage(file, 800, 0.8);
-      setUser((prev) => (prev ? { ...prev, image: compressed } : prev));
+      patchUser({ image: compressed });
       await authClient.updateUser({ image: compressed });
-      await refresh();
+      await syncUser();
       showToast(t("settings.account.profile.avatarUpdated"), "success");
     } catch (err: unknown) {
       showToast(
@@ -108,9 +103,9 @@ export function AccountPage() {
 
   const handleRemoveAvatar = async () => {
     try {
-      setUser((prev) => (prev ? { ...prev, image: null } : prev));
+      patchUser({ image: null });
       await authClient.updateUser({ image: "" });
-      await refresh();
+      await syncUser();
       showToast(t("settings.account.profile.avatarRemoved"), "success");
     } catch {
       showToast(t("settings.account.profile.avatarRemoveError"), "error");
@@ -124,8 +119,9 @@ export function AccountPage() {
     }
     try {
       await authClient.updateUser({ name: draftName });
-      await refresh();
+      patchUser({ name: draftName.trim() });
       setIsEditingName(false);
+      await syncUser();
       showToast(t("settings.account.profile.nameSaved"), "success");
     } catch {
       showToast(t("settings.account.profile.nameSaveError"), "error");
@@ -139,8 +135,8 @@ export function AccountPage() {
     }
     try {
       await authClient.changeEmail({ newEmail: draftEmail });
-      await refresh();
       setIsEditingEmail(false);
+      await syncUser();
       showToast(t("settings.account.profile.emailChangeSent"), "success");
     } catch (err: unknown) {
       showToast(
@@ -187,17 +183,23 @@ export function AccountPage() {
   };
 
   const logout = async () => {
+    clear();
+    clearCachedUser();
     await authClient.signOut();
     router.replace("/login");
   };
 
-  if (loading) {
+  if (isLoading && !user) {
     return (
       <AccountShell>
-        <Spinner size="md" label={t("common.loading")} />
+        <div className="flex justify-center py-16">
+          <Spinner size="md" label={t("common.loading")} />
+        </div>
       </AccountShell>
     );
   }
+
+  if (!user) return null;
 
   return (
     <AccountShell toast={toast}>
@@ -205,14 +207,22 @@ export function AccountPage() {
         title={t("account.title")}
         description={t("account.subtitle")}
         actions={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => void logout()}
-            icon={<LogOut className="w-4 h-4" />}
-          >
-            {t("account.signOut")}
-          </Button>
+          <div className="flex items-center gap-2">
+            {isRefreshing ? (
+              <span className="inline-flex items-center gap-1.5 text-caption text-m3-secondary">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                {t("common.loading")}
+              </span>
+            ) : null}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => void logout()}
+              icon={<LogOut className="w-4 h-4" />}
+            >
+              {t("account.signOut")}
+            </Button>
+          </div>
         }
       />
 
@@ -220,12 +230,12 @@ export function AccountPage() {
         <Surface>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="relative group">
+              <div className="relative">
                 <div className="w-16 h-16 rounded-full bg-linear-to-tr from-sky-600 to-cyan-500 flex items-center justify-center font-semibold text-white text-xl overflow-hidden shadow-sm">
-                  {user?.image ? (
+                  {user.image ? (
                     <img src={user.image} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <span>{initials(user?.name)}</span>
+                    <span>{initials(user.name)}</span>
                   )}
                 </div>
                 <input
@@ -247,12 +257,12 @@ export function AccountPage() {
               </div>
               <div className="min-w-0">
                 <h2 className="text-title text-m3-text truncate">
-                  {user?.name || t("settings.account.user")}
+                  {user.name || t("settings.account.user")}
                 </h2>
-                <p className="text-caption mt-0.5 truncate">{user?.email}</p>
+                <p className="text-caption mt-0.5 truncate">{user.email}</p>
               </div>
             </div>
-            {user?.image && (
+            {user.image ? (
               <button
                 type="button"
                 onClick={() => void handleRemoveAvatar()}
@@ -261,7 +271,7 @@ export function AccountPage() {
                 <Trash2 className="w-3.5 h-3.5" />
                 {t("settings.account.profile.removeAvatar")}
               </button>
-            )}
+            ) : null}
           </div>
         </Surface>
 
@@ -269,12 +279,12 @@ export function AccountPage() {
           <div className="flex flex-col gap-6 min-w-0">
             <Surface>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-label">{t("settings.account.profile.displayName")}</label>
-                {!isEditingName && (
+                <span className="text-label">{t("settings.account.profile.displayName")}</span>
+                {!isEditingName ? (
                   <button
                     type="button"
                     onClick={() => {
-                      setDraftName(user?.name || "");
+                      setDraftName(user.name || "");
                       setIsEditingName(true);
                     }}
                     className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
@@ -282,7 +292,7 @@ export function AccountPage() {
                     <PenLine className="w-3.5 h-3.5" />
                     {t("settings.account.profile.edit")}
                   </button>
-                )}
+                ) : null}
               </div>
               {isEditingName ? (
                 <div className="space-y-3 pt-1">
@@ -306,7 +316,7 @@ export function AccountPage() {
                   </div>
                 </div>
               ) : (
-                <p className="text-base font-semibold text-m3-text">{user?.name || "—"}</p>
+                <p className="text-base font-semibold text-m3-text">{user.name || "—"}</p>
               )}
             </Surface>
 
@@ -316,13 +326,13 @@ export function AccountPage() {
                 {t("settings.account.profile.accountInfo")}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
+                <div className="p-3 bg-m3-sidebar/60 rounded-xl border border-m3-border">
                   <span className="text-label block mb-1">
                     {t("settings.account.profile.userId")}
                   </span>
-                  <p className="text-xs font-mono text-m3-text truncate">{user?.id || "—"}</p>
+                  <p className="text-xs font-mono text-m3-text truncate">{user.id}</p>
                 </div>
-                <div className="p-3 bg-m3-sidebar/60 rounded-md border border-m3-border">
+                <div className="p-3 bg-m3-sidebar/60 rounded-xl border border-m3-border">
                   <span className="text-label block mb-1">
                     {t("settings.account.profile.accountStatus")}
                   </span>
@@ -339,12 +349,12 @@ export function AccountPage() {
             <div className="space-y-6 flex-1">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-label">{t("settings.account.profile.emailAddress")}</label>
-                  {!isEditingEmail && (
+                  <span className="text-label">{t("settings.account.profile.emailAddress")}</span>
+                  {!isEditingEmail ? (
                     <button
                       type="button"
                       onClick={() => {
-                        setDraftEmail(user?.email || "");
+                        setDraftEmail(user.email || "");
                         setIsEditingEmail(true);
                       }}
                       className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
@@ -352,7 +362,7 @@ export function AccountPage() {
                       <PenLine className="w-3.5 h-3.5" />
                       {t("settings.account.profile.changeEmail")}
                     </button>
-                  )}
+                  ) : null}
                 </div>
                 {isEditingEmail ? (
                   <div className="space-y-3 pt-1">
@@ -378,7 +388,7 @@ export function AccountPage() {
                   </div>
                 ) : (
                   <p className="text-base font-semibold text-m3-text flex items-center gap-2">
-                    {user?.email || "—"}
+                    {user.email || "—"}
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                   </p>
                 )}
@@ -386,11 +396,11 @@ export function AccountPage() {
 
               <div className="border-t border-m3-border pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-label flex items-center gap-1.5">
+                  <span className="text-label flex items-center gap-1.5">
                     <Lock className="w-3.5 h-3.5 text-m3-primary" />
                     {t("settings.account.profile.password")}
-                  </label>
-                  {!isEditingPassword && (
+                  </span>
+                  {!isEditingPassword ? (
                     <button
                       type="button"
                       onClick={() => setIsEditingPassword(true)}
@@ -399,29 +409,32 @@ export function AccountPage() {
                       <KeyRound className="w-3.5 h-3.5" />
                       {t("settings.account.profile.changePassword")}
                     </button>
-                  )}
+                  ) : null}
                 </div>
                 {isEditingPassword ? (
-                  <div className="space-y-3 pt-2">
+                  <div className="space-y-4 pt-2">
                     <GoogleTextField
                       type="password"
                       label={t("settings.account.profile.currentPassword")}
                       value={draftOldPassword}
                       onChange={(e) => setDraftOldPassword(e.target.value)}
+                      autoComplete="current-password"
                     />
                     <GoogleTextField
                       type="password"
                       label={t("settings.account.profile.newPassword")}
                       value={draftNewPassword}
                       onChange={(e) => setDraftNewPassword(e.target.value)}
+                      autoComplete="new-password"
                     />
                     <GoogleTextField
                       type="password"
                       label={t("settings.account.profile.confirmNewPassword")}
                       value={draftConfirmPassword}
                       onChange={(e) => setDraftConfirmPassword(e.target.value)}
+                      autoComplete="new-password"
                     />
-                    <div className="flex justify-end gap-2 pt-2">
+                    <div className="flex justify-end gap-2 pt-1">
                       <Button
                         variant="outline"
                         size="sm"
@@ -451,8 +464,10 @@ export function AccountPage() {
 
               <div className="border-t border-m3-border pt-6">
                 <TwoFactorSection
-                  enabled={Boolean(user?.twoFactorEnabled)}
-                  onRefresh={refresh}
+                  enabled={Boolean(user.twoFactorEnabled)}
+                  onRefresh={async () => {
+                    await syncUser();
+                  }}
                   onToast={showToast}
                 />
               </div>

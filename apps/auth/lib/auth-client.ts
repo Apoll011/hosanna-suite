@@ -8,5 +8,3 @@ const baseURL =
 
 /** Browser auth client — 2FA page defaults to `{baseURL}/two-factor`. */
 export const authClient = createHosannaAuthClient({ baseURL });
-
-export type { Session, User } from "better-auth";

@@ -79,7 +79,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-m3-border" />
           </div>
-          <div className="relative px-3 bg-m3-card text-caption">
+          <div className="relative bg-m3-card px-3 text-caption text-m3-secondary">
             {t("auth.login.orContinueWith")}
           </div>
         </div>
