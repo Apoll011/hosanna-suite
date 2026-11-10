@@ -45,7 +45,7 @@ export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFiel
         </label>
 
         <div
-          className={`relative flex items-center min-h-14 rounded-xl border transition-all duration-200 bg-m3-card ${
+          className={`relative flex items-center min-h-16 rounded-xl border transition-all duration-200 bg-m3-card ${
             error
               ? "border-m3-danger ring-1 ring-m3-danger"
               : isFocused
@@ -76,7 +76,7 @@ export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFiel
               setIsFocused(false);
               onBlur?.(e);
             }}
-            className={`w-full min-h-14 bg-transparent px-4 py-3.5 text-sm text-m3-text placeholder:text-m3-secondary/70 rounded-xl focus:outline-none ${
+            className={`w-full min-h-16 bg-transparent px-4 py-4 text-sm text-m3-text placeholder:text-m3-secondary/70 rounded-xl focus:outline-none ${
               leadingIcon ? "pl-1.5" : ""
             } ${trailingIcon ? "pr-1.5" : ""} ${className}`}
             {...props}

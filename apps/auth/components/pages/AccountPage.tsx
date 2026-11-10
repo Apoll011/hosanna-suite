@@ -475,7 +475,7 @@ export function AccountPage() {
           <LoginHistorySection />
         </div>
 
-        <div className="pt-2 text-center">
+        <div className="flex justify-end pt-2">
           <button
             type="button"
             onClick={() => void logout()}
