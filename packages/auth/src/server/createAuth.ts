@@ -184,7 +184,6 @@ export function createAuth(options: CreateAuthOptions): any {
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
-      autoSignInAfterVerification: true,
       resetPasswordTokenExpiresIn: 60 * 60,
       revokeSessionsOnPasswordReset: true,
       minPasswordLength: 8,
@@ -291,6 +290,7 @@ export function createAuth(options: CreateAuthOptions): any {
     },
     emailVerification: {
       sendOnSignUp: true,
+      autoSignInAfterVerification: true,
       sendVerificationEmail: async ({ user, url, token }, request) => {
         try {
           const resetUrl = `${appUrl}/verify-email/?token=${token}`;
@@ -740,7 +740,7 @@ export function createAuth(options: CreateAuthOptions): any {
     user: {
       changeEmail: {
         enabled: true,
-        sendChangeEmailVerification: async (
+        sendChangeEmailConfirmation: async (
           {
             user,
             newEmail,
@@ -756,7 +756,7 @@ export function createAuth(options: CreateAuthOptions): any {
               confirm_email_link: url,
             });
           } catch (err) {
-            console.error("[auth] Failed to send change email verification:", err);
+            console.error("[auth] Failed to send change email confirmation:", err);
           }
         },
       },

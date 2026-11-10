@@ -27,6 +27,25 @@ type KeyvLike = {
   clear(): Promise<void>;
 };
 
+/** Better Auth secondary storage contract (TTL in seconds). */
+export type SecondaryStorage = {
+  get: (key: string) => Promise<string | null>;
+  set: (key: string, value: string, ttl?: number) => Promise<void>;
+  delete: (key: string) => Promise<void>;
+  getAndDelete: (key: string) => Promise<string | null>;
+  /** Atomic INCR; returns new count. `ttl` (seconds) applied when the key is created. */
+  increment: (key: string, ttl?: number) => Promise<number>;
+};
+
+type RedisClient = {
+  get: (key: string) => Promise<string | null>;
+  set: (key: string, value: string, opts?: { EX?: number }) => Promise<unknown>;
+  del: (key: string) => Promise<number>;
+  incr: (key: string) => Promise<number>;
+  expire: (key: string, seconds: number) => Promise<number>;
+  getDel?: (key: string) => Promise<string | null>;
+};
+
 function resolveRedisUrl(opts: CreateCacheOptions): string | null {
   return opts.redisUrl ?? process.env.REDIS_URL ?? null;
 }
@@ -38,14 +57,14 @@ function resolveBackend(opts: CreateCacheOptions): CacheBackend {
 
 /** One Redis client for the process — namespaces stay isolated via Keyv `namespace`. */
 let sharedRedisUrl: string | null = null;
-let sharedRedisClient: Promise<unknown> | null = null;
+let sharedRedisClient: Promise<RedisClient> | null = null;
 let redisModule: Promise<typeof import("@keyv/redis")> | null = null;
 
 function loadRedisModule() {
   return (redisModule ??= import("@keyv/redis"));
 }
 
-async function sharedRedis(url: string): Promise<unknown> {
+async function sharedRedis(url: string): Promise<RedisClient> {
   if (sharedRedisClient && sharedRedisUrl === url) return sharedRedisClient;
   sharedRedisUrl = url;
   sharedRedisClient = (async () => {
@@ -55,7 +74,7 @@ async function sharedRedis(url: string): Promise<unknown> {
       console.error("[@hosanna/cache] redis error:", err);
     });
     await client.connect();
-    return client;
+    return client as unknown as RedisClient;
   })();
   return sharedRedisClient;
 }
@@ -85,38 +104,49 @@ async function openStore(opts: CreateCacheOptions): Promise<KeyvLike> {
 
 /**
  * Better Auth `secondaryStorage` adapter (string values, TTL in seconds).
- * Uses the same Redis client / namespaces as `createCache` when REDIS_URL is set.
+ * Uses the shared Redis client when REDIS_URL is set.
  */
-export type SecondaryStorage = {
-  get: (key: string) => Promise<string | null>;
-  set: (key: string, value: string, ttl?: number) => Promise<void>;
-  delete: (key: string) => Promise<void>;
-};
-
 export function createSecondaryStorage(opts?: {
-  /** Keyv namespace prefix. Default `ba`. */
+  /** Key prefix. Default `ba`. */
   namespace?: string;
   redisUrl?: string | null;
 }): SecondaryStorage | null {
   const redisUrl = opts?.redisUrl ?? process.env.REDIS_URL ?? null;
   if (!redisUrl) return null;
 
-  const cache = createCache({
-    namespace: opts?.namespace ?? "ba",
-    redisUrl,
-    backend: "redis",
-  });
+  const prefix = `${opts?.namespace ?? "ba"}:`;
+  const clientP = sharedRedis(redisUrl);
+  const fullKey = (key: string) => `${prefix}${key}`;
 
   return {
-    get: async (key) => {
-      const value = await cache.get<string>(key);
-      return value ?? null;
-    },
+    get: async (key) => (await clientP).get(fullKey(key)),
     set: async (key, value, ttlSeconds) => {
-      await cache.set(key, value, typeof ttlSeconds === "number" ? ttlSeconds * 1000 : undefined);
+      const client = await clientP;
+      if (typeof ttlSeconds === "number" && ttlSeconds > 0) {
+        await client.set(fullKey(key), value, { EX: ttlSeconds });
+      } else {
+        await client.set(fullKey(key), value);
+      }
     },
     delete: async (key) => {
-      await cache.delete(key);
+      await (await clientP).del(fullKey(key));
+    },
+    getAndDelete: async (key) => {
+      const client = await clientP;
+      const k = fullKey(key);
+      if (typeof client.getDel === "function") return client.getDel(k);
+      const value = await client.get(k);
+      if (value != null) await client.del(k);
+      return value;
+    },
+    increment: async (key, ttlSeconds) => {
+      const client = await clientP;
+      const k = fullKey(key);
+      const next = await client.incr(k);
+      if (typeof ttlSeconds === "number" && ttlSeconds > 0 && next === 1) {
+        await client.expire(k, ttlSeconds);
+      }
+      return next;
     },
   };
 }

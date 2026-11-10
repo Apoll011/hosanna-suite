@@ -34,7 +34,9 @@ function readInitialDark(): boolean {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === "dark") return true;
     if (stored === "light") return false;
-  } catch {}
+  } catch {
+    /* private mode / storage blocked */
+  }
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
@@ -51,7 +53,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       const next = !prev;
       try {
         localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
-      } catch {}
+      } catch {
+        /* private mode / storage blocked */
+      }
       writeThemeCookie(next ? "dark" : "light");
       applyDarkClass(next);
       return next;

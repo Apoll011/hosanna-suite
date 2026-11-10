@@ -84,6 +84,7 @@ export function OnboardingPage() {
         setInvitations(pendingInvs);
       }
     } catch {
+      /* ignore invitation fetch errors — onboarding still works */
     } finally {
       setIsFetchingInvitations(false);
     }

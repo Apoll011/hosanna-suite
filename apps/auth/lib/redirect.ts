@@ -68,7 +68,9 @@ export async function redirectAfterSuccessfulAuth(
       localStorage.setItem("active_org_slug", slug);
       try {
         await authClient.organization.setActive({ organizationSlug: slug });
-      } catch {}
+      } catch {
+        /* studio still opens with the slug even if setActive fails */
+      }
       window.location.assign(`${getStudioUrl()}/${slug}`);
       return;
     }
