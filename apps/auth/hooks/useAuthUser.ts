@@ -8,47 +8,46 @@ import {
   writeCachedUser,
   type CachedAuthUser,
 } from "@/lib/session-cache";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 type UseAuthUserOptions = {
+  /** User from a server session — skips the cold-load spinner. */
+  initialUser?: CachedAuthUser | null;
   loginRedirect?: string;
   requireAuth?: boolean;
 };
 
 type UseAuthUserResult = {
   user: CachedAuthUser | null;
-  /** No cached user yet and network has not resolved. */
+  /** No user yet (no server seed, no cache) and network has not resolved. */
   isLoading: boolean;
-  /** Cached UI is showing while a fresh getSession runs. */
+  /** Background getSession in flight; UI should stay visible. */
   isRefreshing: boolean;
   refresh: () => Promise<CachedAuthUser | null>;
   setUser: Dispatch<SetStateAction<CachedAuthUser | null>>;
   clear: () => void;
 };
 
+function seedUser(initialUser?: CachedAuthUser | null): CachedAuthUser | null {
+  if (initialUser) return initialUser;
+  return readCachedUser();
+}
+
 /**
- * Show cached account UI before paint when localStorage has a user, then refresh.
+ * Prefer a server-provided user, then localStorage, then network.
+ * Never blank the page for a background session refresh.
  */
 export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult {
-  const { loginRedirect = "/login?redirect=/account", requireAuth = true } = options;
+  const { initialUser = null, loginRedirect = "/login?redirect=/account", requireAuth = true } =
+    options;
   const loginRedirectRef = useRef(loginRedirect);
   const requireAuthRef = useRef(requireAuth);
   loginRedirectRef.current = loginRedirect;
   requireAuthRef.current = requireAuth;
 
-  // Match SSR + first client paint (no window on server); hydrate from cache in layout effect.
-  const [user, setUser] = useState<CachedAuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const didHydrateCache = useRef(false);
+  const [user, setUser] = useState<CachedAuthUser | null>(() => seedUser(initialUser));
+  const [isLoading, setIsLoading] = useState(() => seedUser(initialUser) === null);
+  const [isRefreshing, setIsRefreshing] = useState(() => seedUser(initialUser) !== null);
 
   const clear = useCallback(() => {
     clearCachedUser();
@@ -81,20 +80,10 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
     }
   }, []);
 
-  useLayoutEffect(() => {
-    if (didHydrateCache.current) return;
-    didHydrateCache.current = true;
-    const cached = readCachedUser();
-    if (cached) {
-      setUser(cached);
-      setIsLoading(false);
-      setIsRefreshing(true);
-    }
-  }, []);
-
   useEffect(() => {
+    if (initialUser) writeCachedUser(initialUser);
     void refresh();
-  }, [refresh]);
+  }, [initialUser, refresh]);
 
   return { user, isLoading, isRefreshing, refresh, setUser, clear };
 }

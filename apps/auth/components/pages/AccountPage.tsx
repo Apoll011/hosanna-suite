@@ -12,12 +12,12 @@ import { useI18n } from "@/lib/i18n";
 import { readRedirectParam } from "@/lib/redirect";
 import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session-cache";
 import { Button, GoogleTextField, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import type { CachedAuthUser } from "@/lib/session-cache";
 import {
   Camera,
   CheckCircle2,
   Info,
   KeyRound,
-  Loader2,
   Lock,
   LogOut,
   PenLine,
@@ -37,7 +37,7 @@ function initials(name?: string | null) {
     .slice(0, 2);
 }
 
-export function AccountPage() {
+export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUser | null }) {
   const { t } = useI18n();
   const router = useRouter();
   // Read from window so we don't wrap the page in Suspense (that forced a spinner).
@@ -46,7 +46,7 @@ export function AccountPage() {
     return readRedirectParam(new URLSearchParams(window.location.search));
   }, []);
   const avatarInputRef = useRef<HTMLInputElement>(null);
-  const { user, setUser, isLoading, isRefreshing, refresh, clear } = useAuthUser();
+  const { user, setUser, isLoading, refresh, clear } = useAuthUser({ initialUser });
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [isCompressingAvatar, setIsCompressingAvatar] = useState(false);
@@ -213,22 +213,14 @@ export function AccountPage() {
         title={t("account.title")}
         description={t("account.subtitle")}
         actions={
-          <div className="flex items-center gap-3">
-            {isRefreshing ? (
-              <span className="inline-flex items-center gap-1.5 text-caption text-m3-secondary">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                {t("common.loading")}
-              </span>
-            ) : null}
-            <button
-              type="button"
-              onClick={() => void logout()}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>{t("account.signOut")}</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>{t("account.signOut")}</span>
+          </button>
         }
       />
 
