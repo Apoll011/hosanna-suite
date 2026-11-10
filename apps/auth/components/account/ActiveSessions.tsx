@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
 import {
   Globe,
@@ -34,7 +34,7 @@ export function ActiveSessionsSection({
 }: {
   onToast: (msg: string, type: "success" | "error") => void;
 }) {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [sessions, setSessions] = useState<SessionRow[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

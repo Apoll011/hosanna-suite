@@ -4,7 +4,7 @@ import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/Button";
 import { GoogleTextField } from "@/components/GoogleTextField";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { redirectAfterSuccessfulAuth } from "@/lib/redirect";
 import { KeyRound, MailCheck, RefreshCw, Smartphone } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ type TwoFactorMethod = "totp" | "otp" | "backup";
 
 export function TwoFactorPage() {
   const searchParams = useSearchParams();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [method, setMethod] = useState<TwoFactorMethod>("totp");
   const [code, setCode] = useState("");

@@ -1,7 +1,7 @@
 "use client";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { AlertCircle, CheckCircle2, Moon, Sun } from "lucide-react";
 import Link from "next/link";
@@ -27,7 +27,7 @@ export function AuthLayout({
   optionalMsg,
 }: AuthLayoutProps) {
   const { darkMode, toggleDarkMode } = useTheme();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-between relative overflow-x-hidden font-sans text-m3-text antialiased selection:bg-m3-primary/20">

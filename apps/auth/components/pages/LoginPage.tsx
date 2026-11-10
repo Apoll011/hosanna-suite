@@ -7,7 +7,7 @@ import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions, captchaRequired } from "@/lib/captcha";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { redirectAfterSuccessfulAuth } from "@/lib/redirect";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
 
 export function LoginPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const redirectMessage = searchParams.get("message") || "";
 

@@ -4,7 +4,7 @@ import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/Button";
 import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { getStudioUrl } from "@/lib/redirect";
 import { Building2, ShieldAlert } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -25,7 +25,7 @@ export function AcceptInvitationPage() {
   const searchParams = useSearchParams();
   const invitationId = searchParams.get("id");
   const router = useRouter();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [invitation, setInvitation] = useState<InvitationData | null>(null);
   const [isFetching, setIsFetching] = useState(true);

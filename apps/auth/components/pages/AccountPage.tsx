@@ -9,7 +9,7 @@ import { Button } from "@/components/Button";
 import { GoogleTextField } from "@/components/GoogleTextField";
 import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { CheckCircle2, KeyRound, Lock, LogOut, PenLine, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -23,7 +23,7 @@ type AuthUser = {
 };
 
 export function AccountPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);

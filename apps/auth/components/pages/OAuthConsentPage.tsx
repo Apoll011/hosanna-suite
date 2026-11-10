@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/Button";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { Loader2, Shield } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 export function OAuthConsentPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [busy, setBusy] = useState(false);

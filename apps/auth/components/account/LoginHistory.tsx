@@ -3,7 +3,7 @@
 import { Button } from "@/components/Button";
 import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
 import {
   Globe,
@@ -42,7 +42,7 @@ type AuditEvent = {
 };
 
 export function LoginHistorySection() {
-  const { t, locale } = useLocale();
+  const { t, locale } = useI18n();
   const [events, setEvents] = useState<AuditEvent[] | null>(null);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +87,7 @@ export function LoginHistorySection() {
   const formatWhen = (iso: string) => {
     const date = new Date(iso);
     if (Number.isNaN(date.getTime())) return iso;
-    return date.toLocaleString(locale === "pt" ? "pt-PT" : "en-US", {
+    return date.toLocaleString(locale, {
       year: "numeric",
       month: "short",
       day: "numeric",

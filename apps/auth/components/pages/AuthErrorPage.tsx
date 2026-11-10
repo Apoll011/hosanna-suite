@@ -2,7 +2,7 @@
 
 import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/Button";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
@@ -15,7 +15,7 @@ function humanizeError(code: string | null, fallback: string): string {
 }
 
 export function AuthErrorPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const searchParams = useSearchParams();
 
   const errorMsg = useMemo(() => {

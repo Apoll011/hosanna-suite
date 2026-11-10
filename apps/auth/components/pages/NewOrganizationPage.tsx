@@ -8,7 +8,7 @@ import { Spinner } from "@/components/Spinner";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions, captchaRequired } from "@/lib/captcha";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 
 export function NewOrganizationPage() {
   const router = useRouter();
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [step, setStep] = useState(1);
   const [orgName, setOrgName] = useState("");

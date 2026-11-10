@@ -3,7 +3,7 @@
 import { Button } from "@/components/Button";
 import { GoogleTextField } from "@/components/GoogleTextField";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { AlertTriangle, CheckCircle2, Shield } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
@@ -17,7 +17,7 @@ export function TwoFactorSection({
   onRefresh: () => Promise<void>;
   onToast: (msg: string, type: "success" | "error") => void;
 }) {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [totpURI, setTotpURI] = useState("");

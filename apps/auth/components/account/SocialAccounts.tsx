@@ -2,7 +2,7 @@
 
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { GoogleIcon } from "@hosanna/ui";
 import { CheckCircle2, ExternalLink, Link2, Loader2, RefreshCw, Unlink } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -14,7 +14,7 @@ interface UserAccount {
 }
 
 export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type: "success" | "error") => void }) {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const [accounts, setAccounts] = useState<UserAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [linkingProvider, setLinkingProvider] = useState<string | null>(null);

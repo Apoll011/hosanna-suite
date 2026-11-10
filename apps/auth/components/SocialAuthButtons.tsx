@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { resolveSocialCallbackURL } from "@/lib/redirect";
 import { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "@hosanna/ui";
 import { Loader2 } from "lucide-react";
@@ -46,7 +46,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
   callbackURL,
   showDivider = true,
 }) => {
-  const { t } = useLocale();
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
 

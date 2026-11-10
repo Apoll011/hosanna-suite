@@ -1,12 +1,7 @@
-import { uiEn, type UiDict } from "./en";
-import { uiPt } from "./pt";
+import type { Language } from "@hosanna/i18n";
+import { en } from "./en";
+import { es } from "./es";
+import { pt } from "./pt";
 
-export type AuthLocale = "en" | "pt";
-export type { UiDict };
-
-export const UI_DICTS: Record<AuthLocale, UiDict> = {
-  en: uiEn,
-  pt: uiPt,
-};
-
-export { uiEn, uiPt };
+export const MESSAGES: Record<Language, typeof pt> = { pt, en, es };
+export { en, es, pt };

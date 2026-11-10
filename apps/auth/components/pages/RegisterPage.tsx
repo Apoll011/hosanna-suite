@@ -8,13 +8,13 @@ import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth-client";
 import { captchaFetchOptions, captchaRequired } from "@/lib/captcha";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 
 export function RegisterPage() {
-  const { t } = useLocale();
+  const { t } = useI18n();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

@@ -5,7 +5,7 @@ import { Button } from "@/components/Button";
 import { GoogleTextField } from "@/components/GoogleTextField";
 import { Spinner } from "@/components/Spinner";
 import { authClient } from "@/lib/auth-client";
-import { useLocale } from "@/lib/locale";
+import { useI18n } from "@/lib/i18n";
 import { getStudioUrl } from "@/lib/redirect";
 import {
   ArrowLeft,
@@ -38,7 +38,7 @@ const PLAN_PRICING = {
 
 export function OnboardingPage() {
   const router = useRouter();
-  const { t, locale } = useLocale();
+  const { t, locale } = useI18n();
   const [mode, setMode] = useState<"choose" | "create" | "trial">("choose");
   const [orgName, setOrgName] = useState("");
   const [orgSlug, setOrgSlug] = useState("");
@@ -201,7 +201,7 @@ export function OnboardingPage() {
         referenceId: newOrg.id,
         customerType: "organization",
         annual,
-        locale: locale === "pt" ? "pt-PT" : "en-US",
+        locale,
         successUrl: `${studio}/${newOrg.slug}/organization?tab=billing&billing=success`,
         cancelUrl: `${studio}/${newOrg.slug}`,
       });
