@@ -35,7 +35,7 @@ import { ViewName } from "../../layouts/view";
 import { authClient } from "../../lib/authClient";
 import { Can, CanAny } from "../../lib/permissions/components";
 import { emitOnboardingEvent } from "../../lib/tour";
-import { AiChatToggle } from "@/src/features/ai-chat";
+import { AiChatToggle } from "@hosanna/logos-ai";
 import { InboxButton, InboxFetchClient } from "../Inbox";
 import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
 import { SyncStatusBadge } from "../SyncStatusBadge";

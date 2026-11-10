@@ -29,7 +29,7 @@ import { CommandAction } from "../command-palette.types";
 import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { ViewName } from "../layouts/view";
-import { useAiCommandPaletteActions } from "../features/ai-chat/useAiCommandPaletteActions";
+import { useAiCommandPaletteActions } from "../logos/useAiCommandPaletteActions";
 import { useRxDbSearch } from "../hooks/useRxDbSearch";
 import { ActiveModal } from "./layout";
 import { CommandPaletteModal } from "./modals/CommandPaletteModal";

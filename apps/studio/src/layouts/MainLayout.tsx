@@ -38,11 +38,11 @@ import {
   AI_NAVIGATE_EVENT,
   AI_PRINT_EVENT,
   AiChatDock,
-  AiChatProvider,
   aiContextBridge,
   type AiNavigateDetail,
   type AiPrintDetail,
-} from "../features/ai-chat";
+} from "@hosanna/logos-ai";
+import { StudioLogosProvider } from "../logos/StudioLogosProvider";
 import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
 import { useCollections } from "../hooks/useCollections";
@@ -1924,7 +1924,7 @@ export const MainLayout: React.FC = () => {
   );
 
   return (
-    <AiChatProvider>
+    <StudioLogosProvider>
       <HosannaCommandPalette
         slugPrefix={organization?.slug || ""}
         isDataLoading={songsQuery.isLoading || foldersQuery.isLoading || servicesQuery.isLoading}
@@ -1995,6 +1995,6 @@ export const MainLayout: React.FC = () => {
       >
         {layoutContent}
       </HosannaCommandPalette>
-    </AiChatProvider>
+    </StudioLogosProvider>
   );
 };

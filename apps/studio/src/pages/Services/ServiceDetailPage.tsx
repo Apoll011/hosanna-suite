@@ -61,7 +61,7 @@ import {
   aiProposals,
   useServiceProposal,
   aiContextBridge,
-} from "../../features/ai-chat";
+} from "@hosanna/logos-ai";
 import { useOrgSettings } from "../../hooks/useOrgSettings";
 import { useService, useServices } from "../../hooks/useServices";
 import { useSearchableSongs, useSong, useSongs } from "../../hooks/useSongs";
@@ -915,8 +915,9 @@ export const ServiceDetailPage: React.FC = () => {
     if (!stagedProposal?.elements) return;
     const next = stagedProposal.elements.map((el, index) => ({
       ...el,
+      title: el.title ?? "",
       position: el.position ?? index,
-    }));
+    })) as ServiceElement[];
     setElements(next);
     elementsRef.current = next;
     if (stagedProposal.notes != null) setGeneralNotes(stagedProposal.notes);

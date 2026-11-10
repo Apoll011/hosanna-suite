@@ -41,7 +41,7 @@ import {
   aiProposals,
   useDiffLabels,
   useSongProposal,
-} from "../../features/ai-chat";
+} from "@hosanna/logos-ai";
 import { useSong, useSongs } from "../../hooks/useSongs";
 import { posthog } from "../../lib/posthog";
 
