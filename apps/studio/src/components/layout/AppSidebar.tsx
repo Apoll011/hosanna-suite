@@ -612,29 +612,33 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   <Settings className="w-4 h-4 text-m3-secondary" />
                   {t("sidebar.openSettings")}
                 </button>
-                <button
-                  onMouseEnter={() => prefetchAuthAccount()}
-                  onFocus={() => prefetchAuthAccount()}
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    navigateToAuthAccount({ returnUrl: window.location.href });
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
-                >
-                  <UserRound className="w-4 h-4 text-m3-secondary" />
-                  {t("sidebar.openAccount")}
-                </button>
                 <div className="my-1 border-t border-m3-border" />
-                <button
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
-                    logout();
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-semibold text-m3-danger hover:bg-m3-danger/10 rounded-md transition-colors cursor-pointer text-left"
-                >
-                  <LogOut className="w-4 h-4 text-m3-danger" />
-                  {t("sidebar.logout")}
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    onMouseEnter={() => prefetchAuthAccount()}
+                    onFocus={() => prefetchAuthAccount()}
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      navigateToAuthAccount({ returnUrl: window.location.href });
+                    }}
+                    className="min-w-0 flex-1 flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
+                  >
+                    <UserRound className="w-4 h-4 text-m3-secondary shrink-0" />
+                    <span className="truncate">{t("sidebar.openAccount")}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      logout();
+                    }}
+                    title={t("sidebar.logout")}
+                    aria-label={t("sidebar.logout")}
+                    className="shrink-0 inline-flex items-center justify-center min-h-10 min-w-10 rounded-md text-m3-danger hover:bg-m3-danger/10 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             )}
           </div>
