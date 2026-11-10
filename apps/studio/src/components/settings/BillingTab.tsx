@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Badge } from "@hosanna/ui";
+import { Button, Spinner, Badge, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import { fetchPlanPricing, PLAN_PRICING, type PlanPricing } from "@/src/lib/subscriptions";
 import { AlertTriangle, Check, CreditCard, Lock, RotateCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -98,7 +98,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
     const { error } = await startCheckout({
       annual,
       locale: language,
-      cancelUrl: `${window.location.origin}/${organization.slug}/organization?tab=billing`,
+      cancelUrl: `${window.location.origin}/${organization.slug}/folders`,
     });
     if (error) {
       showToast?.(error, "error");

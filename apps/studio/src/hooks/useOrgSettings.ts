@@ -19,6 +19,10 @@ export interface OrgServicesSettings {
   sermonDuration: number;
   /** Default song duration in seconds */
   songDuration: number;
+  /**
+   * Usual Sunday-service start time (`HH:MM`).
+   */
+  usualStartTime: string;
   showNotes: boolean;
   showServiceDuration: boolean;
   autoSave: boolean;
@@ -53,6 +57,7 @@ interface OrgMetadataStructure {
     general?: Partial<OrgGeneralSettings>;
     services?: {
       defaultDurations?: { sermon?: number; song?: number };
+      usualStartTime?: string;
       showNotes?: boolean;
       showServiceDuration?: boolean;
       autoSave?: boolean;
@@ -85,6 +90,7 @@ export const DEFAULT_ORG_SETTINGS: OrgSettings = {
   services: {
     sermonDuration: 2400, // 40 min
     songDuration: 300, // 5 min
+    usualStartTime: "10:00",
     showNotes: true,
     showServiceDuration: true,
     autoSave: true,
@@ -94,6 +100,17 @@ export const DEFAULT_ORG_SETTINGS: OrgSettings = {
   },
   print: toOrgPrintSettings(DEFAULT_PRINT_OPTIONS),
 };
+
+/** Normalize stored clock strings to `HH:MM` (24h). */
+export function normalizeUsualStartTime(value: unknown, fallback = "10:00"): string {
+  if (typeof value !== "string") return fallback;
+  const match = /^(\d{1,2}):(\d{2})(?::\d{2})?/.exec(value.trim());
+  if (!match) return fallback;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours > 23 || minutes > 59) return fallback;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
 
 function parseOrgSettings(metadata: OrgMetadataStructure): OrgSettings {
   const s = metadata.settings || {};
@@ -111,6 +128,10 @@ function parseOrgSettings(metadata: OrgMetadataStructure): OrgSettings {
     services: {
       sermonDuration: dur.sermon ?? DEFAULT_ORG_SETTINGS.services.sermonDuration,
       songDuration: dur.song ?? DEFAULT_ORG_SETTINGS.services.songDuration,
+      usualStartTime: normalizeUsualStartTime(
+        svc.usualStartTime,
+        DEFAULT_ORG_SETTINGS.services.usualStartTime,
+      ),
       showNotes: svc.showNotes ?? DEFAULT_ORG_SETTINGS.services.showNotes,
       showServiceDuration:
         svc.showServiceDuration ?? DEFAULT_ORG_SETTINGS.services.showServiceDuration,
@@ -225,6 +246,7 @@ export function useOrgSettings(): UseOrgSettingsReturn {
                   sermon: settings.services.sermonDuration,
                   song: settings.services.songDuration,
                 },
+                usualStartTime: normalizeUsualStartTime(settings.services.usualStartTime),
                 showNotes: settings.services.showNotes,
                 showServiceDuration: settings.services.showServiceDuration,
                 autoSave: settings.services.autoSave,

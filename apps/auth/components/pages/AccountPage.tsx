@@ -1,6 +1,6 @@
 "use client";
 
-import { AccountShell } from "@/components/AccountShell";
+import { AccountCenter } from "@/components/account/AccountCenter";
 import { ActiveSessionsSection } from "@/components/account/ActiveSessions";
 import { LoginHistorySection } from "@/components/account/LoginHistory";
 import { SocialAccountsSection } from "@/components/account/SocialAccounts";
@@ -9,7 +9,7 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth-client";
 import { compressImage } from "@/lib/compress-image";
 import { useI18n } from "@/lib/i18n";
-import { readRedirectParam } from "@/lib/redirect";
+import { clearCachedOrg } from "@/lib/org-cache";
 import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session-cache";
 import { Button, GoogleTextField, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import type { CachedAuthUser } from "@/lib/session-cache";
@@ -25,7 +25,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 function initials(name?: string | null) {
   if (!name) return "U";
@@ -40,11 +40,6 @@ function initials(name?: string | null) {
 export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUser | null }) {
   const { t } = useI18n();
   const router = useRouter();
-  // Read from window so we don't wrap the page in Suspense (that forced a spinner).
-  const returnUrl = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    return readRedirectParam(new URLSearchParams(window.location.search));
-  }, []);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { user, setUser, isLoading, refresh, clear } = useAuthUser({ initialUser });
 
@@ -191,24 +186,25 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
   const logout = async () => {
     clear();
     clearCachedUser();
+    clearCachedOrg();
     await authClient.signOut();
     router.replace("/login");
   };
 
   if (isLoading && !user) {
     return (
-      <AccountShell returnUrl={returnUrl}>
+      <AccountCenter>
         <div className="flex justify-center py-16">
           <Spinner size="md" label={t("common.loading")} />
         </div>
-      </AccountShell>
+      </AccountCenter>
     );
   }
 
   if (!user) return null;
 
   return (
-    <AccountShell toast={toast} returnUrl={returnUrl}>
+    <AccountCenter toast={toast}>
       <PageHeader
         title={t("account.title")}
         description={t("account.subtitle")}
@@ -480,6 +476,6 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
           <LoginHistorySection />
         </div>
       </div>
-    </AccountShell>
+    </AccountCenter>
   );
 }

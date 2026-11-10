@@ -15,12 +15,11 @@ import {
 import { MiniCalendar, toIso } from "@/src/components/agenda/MiniCalendar";
 import { RemoveAssignmentModal } from "@/src/components/agenda/RemoveAssignmentModal";
 import { ResponsibilitiesPanel } from "@/src/components/agenda/ResponsibilitiesPanel";
-import { Button, PageHeader, Spinner } from "@hosanna/ui";
+import { Button, PageHeader, Spinner, useCan, Can } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
-import { Can } from "@/src/lib/permissions/components";
+
 import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
 import { formatLongDate } from "@/src/utils/agendaDate";
 import { assigneeKey, collectEventMembers, groupAssignees } from "@/src/utils/agendaNotify";

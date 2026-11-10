@@ -94,4 +94,9 @@ describe("role authorization", () => {
     assert.equal(musician.authorize(toPermissionRequest("service.create")).success, false);
     assert.equal(musician.authorize(toPermissionRequest("folder.create")).success, false);
   });
+
+  it("denies guest ai.use and grants owner notification.sent", () => {
+    assert.equal(guest.authorize(toPermissionRequest("ai.use")).success, false);
+    assert.equal(owner.authorize(toPermissionRequest("notification.sent")).success, true);
+  });
 });

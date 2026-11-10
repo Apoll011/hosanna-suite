@@ -4,14 +4,13 @@
  */
 
 import { OverflowTagList } from "@/src/components/OverflowTagList";
-import { Badge, EmptyState } from "@hosanna/ui";
+import { Badge, EmptyState, usePermissionValue, Can } from "@hosanna/ui";
 import { Table } from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
 import { useI18n } from "@/src/lib/i18n";
-import { usePermissionValue } from "@/src/lib/permissions/client";
-import { Can } from "@/src/lib/permissions/components";
+
 import { Song } from "@/src/types";
 import { FileText, FolderInput, Music, Tag, Trash2, X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";

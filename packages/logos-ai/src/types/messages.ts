@@ -1,0 +1,80 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import type { AiUiMessage } from "./api";
+import type { AiChatMessage, AiMessagePart } from "./chat";
+
+export function messageText(msg: AiChatMessage): string {
+  return msg.parts
+    .filter((p): p is Extract<AiMessagePart, { type: "text" }> => p.type === "text")
+    .map((p) => p.text)
+    .join("");
+}
+
+const HISTORY_OUTPUT_MAX = 6_000;
+
+function clipForHistory(value: unknown): unknown {
+  if (value == null) return value;
+  if (typeof value === "string") {
+    return value.length > HISTORY_OUTPUT_MAX
+      ? `${value.slice(0, HISTORY_OUTPUT_MAX)}\n…[clipped]`
+      : value;
+  }
+  try {
+    const json = JSON.stringify(value);
+    if (json.length <= HISTORY_OUTPUT_MAX) return value;
+    return `${json.slice(0, HISTORY_OUTPUT_MAX)}…[clipped]`;
+  } catch {
+    return String(value);
+  }
+}
+
+/**
+ * Convert to AI SDK UIMessages. Tool calls round-trip (clipped) so the model
+ * keeps ids / `updatedAt` / results from earlier turns.
+ */
+export function toUiMessages(messages: AiChatMessage[]): AiUiMessage[] {
+  const out = messages.map((m) => {
+    if (m.role === "user") {
+      return {
+        id: m.id,
+        role: "user" as const,
+        parts: [{ type: "text", text: messageText(m) }],
+      };
+    }
+    const parts: AiUiMessage["parts"] = [];
+    for (const p of m.parts) {
+      if (p.type === "text") {
+        if (p.text) parts.push({ type: "text", text: p.text });
+      } else if (p.type === "step") {
+        parts.push({ type: "step-start" });
+      } else if (p.type === "tool" && p.tool.status !== "running") {
+        const base = {
+          type: `tool-${p.tool.toolName}`,
+          toolCallId: p.tool.toolCallId,
+          input: p.tool.input ?? {},
+        };
+        parts.push(
+          p.tool.status === "error"
+            ? {
+                ...base,
+                state: "output-error",
+                errorText: p.tool.errorText ?? "Tool failed",
+              }
+            : {
+                ...base,
+                state: "output-available",
+                output: clipForHistory(p.tool.output),
+              },
+        );
+      }
+    }
+    return { id: m.id, role: "assistant" as const, parts };
+  });
+  // Drop assistant turns that produced nothing (aborted / errored early).
+  return out.filter((m) => m.role === "user" || m.parts.some((p) => p.type !== "step-start"));
+}
+
+export { newId } from "../core/id";

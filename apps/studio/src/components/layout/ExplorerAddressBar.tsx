@@ -2,12 +2,11 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Button, Input } from "@hosanna/ui";
+import { Button, Input, Can, CanAny } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import {
   BarChart3,
-  Building2,
   Calendar,
   Calendar1,
   CalendarPlus,
@@ -33,9 +32,9 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
 import { authClient } from "../../lib/authClient";
-import { Can, CanAny } from "../../lib/permissions/components";
+
 import { emitOnboardingEvent } from "../../lib/tour";
-import { AiChatToggle } from "@/src/features/ai-chat";
+import { AiChatToggle } from "@hosanna/logos-ai";
 import { InboxButton, InboxFetchClient } from "../Inbox";
 import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
 import { SyncStatusBadge } from "../SyncStatusBadge";
@@ -273,16 +272,6 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
               <div className={crumbCurrent}>
                 <Settings className="w-4 h-4" />
                 <span>{t("common.settings")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "organization" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Building2 className="w-4 h-4" />
-                <span>{t("common.organization")}</span>
               </div>
             </>
           )}

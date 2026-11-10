@@ -1,4 +1,4 @@
-import { Spinner, EmptyState } from "@hosanna/ui";
+import { Spinner, EmptyState, Can, CanAll, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FolderOpen, Upload } from "lucide-react";
@@ -8,8 +8,6 @@ import { FolderGridCard, FolderTableRow, SongGridCard, SongTableRow } from "../c
 import { useAuth } from "../contexts/AuthContext";
 import { useAppNavigate } from "../hooks/useAppNavigate";
 import { usePersonalSettings } from "../hooks/usePersonalSettings";
-import { Can, CanAll } from "../lib/permissions/components";
-import { useCan } from "../lib/permissions/client";
 
 interface FolderExplorerContext {
   filteredSubfolders: Folder[];

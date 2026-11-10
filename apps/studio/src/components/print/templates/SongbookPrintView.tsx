@@ -100,7 +100,15 @@ export const SongbookPrintView: React.FC<SongbookPrintViewProps> = ({
         </section>
       </PrintSheet>
 
-      {options.includeSongs && (pack ? <div className="hp-song-pack">{songViews}</div> : songViews)}
+      {options.includeSongs &&
+        (pack ? (
+          <div className="hp-song-pack">
+            {songViews}
+            <TemplateFooter options={options} brand={brand} />
+          </div>
+        ) : (
+          songViews
+        ))}
     </>
   );
 };

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@hosanna/ui";
+import { Button, Spinner, Surface, useCan } from "@hosanna/ui";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
 import { useSync } from "@/src/contexts/SyncContext";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
@@ -14,7 +14,7 @@ import {
   computeLibraryHealth,
   type ScoreMissingCriterion,
 } from "@/src/lib/libraryHealth";
-import { useCan } from "@/src/lib/permissions/client";
+
 import {
   AlertTriangle,
   CheckCircle2,

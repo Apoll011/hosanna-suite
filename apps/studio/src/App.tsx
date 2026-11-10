@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { CacheHydrationProvider } from "./contexts/CacheHydrationProvider";
 import { NavigationTransitionProvider } from "./contexts/NavigationTransitionContext";
 import { PrintProvider } from "./contexts/PrintContext";
+import { StudioPermissionsProvider } from "./contexts/StudioPermissionsProvider";
 import { SyncProvider } from "./contexts/SyncContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { I18nProvider } from "./lib/i18n";
@@ -51,24 +52,26 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <I18nProvider>
-        <ThemeProvider>
-          <SyncProvider>
-            <CacheHydrationProvider>
-              <PrintProvider>
-                <BrowserRouter>
-                  <NavigationTransitionProvider>
-                    <PageviewTracker />
-                    <NavigationProgressBar />
-                    <InteractiveOnboardingController />
-                    <AppRoutes />
-                  </NavigationTransitionProvider>
-                </BrowserRouter>
-              </PrintProvider>
-            </CacheHydrationProvider>
-          </SyncProvider>
-        </ThemeProvider>
-      </I18nProvider>
+      <StudioPermissionsProvider>
+        <I18nProvider>
+          <ThemeProvider>
+            <SyncProvider>
+              <CacheHydrationProvider>
+                <PrintProvider>
+                  <BrowserRouter>
+                    <NavigationTransitionProvider>
+                      <PageviewTracker />
+                      <NavigationProgressBar />
+                      <InteractiveOnboardingController />
+                      <AppRoutes />
+                    </NavigationTransitionProvider>
+                  </BrowserRouter>
+                </PrintProvider>
+              </CacheHydrationProvider>
+            </SyncProvider>
+          </ThemeProvider>
+        </I18nProvider>
+      </StudioPermissionsProvider>
     </AuthProvider>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/studio",
-  "version": "2.24.0",
+  "version": "2.24.1",
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
@@ -16,7 +16,7 @@
     "deploy:preview": "wrangler deploy --env preview",
     "cf:typegen": "wrangler types",
     "deploy:production": "wrangler deploy --env production",
-    "test": "tsx --test \"src/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\""
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^3.0.0",
@@ -27,6 +27,8 @@
     "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/i18n": "workspace:*",
+    "@hosanna/logos-ai": "workspace:*",
+    "@hosanna/replication": "workspace:*",
     "@hosanna/ui": "workspace:*",
     "@preact/preset-vite": "^2.10.6",
     "@tailwindcss/vite": "^4.1.14",

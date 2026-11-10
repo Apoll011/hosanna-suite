@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/api",
-  "version": "2.24.4",
+  "version": "2.24.5",
   "license": "Apache-2.0",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",
@@ -34,6 +34,8 @@
     "@prisma/adapter-pg": "^7.9.1",
     "@supabase/supabase-js": "^2.49.0",
     "@vercel/functions": "^3.9.9",
+    "@vercel/oidc": "^4.0.7",
+    "@vercel/related-projects": "^1.1.1",
     "ai": "^7.0.157",
     "compression": "^1.8.1",
     "cors": "^2.8.5",

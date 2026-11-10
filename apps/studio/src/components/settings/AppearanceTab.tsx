@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Surface } from "@hosanna/ui";
+import { Surface, useCan } from "@hosanna/ui";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
 import type { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import { LANGUAGES, type PersonalLanguage } from "@hosanna/i18n";
 import {
   BarChart2,

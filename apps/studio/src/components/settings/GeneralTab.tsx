@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@hosanna/ui";
+import { Button, Spinner, Surface, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import {
   Calendar,
   Clock,
@@ -263,6 +263,21 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ active, showToast }) => 
                 presets={SERMON_PRESETS}
                 disabled={!canManageOrg || isSaving}
                 placeholder="40:00"
+              />
+            </div>
+
+            <div className="rounded-md border border-m3-border p-4 space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-m3-text">
+                <Clock className="w-4 h-4 text-m3-primary" />
+                {t("settings.general.usualStartTime")}
+              </label>
+              <p className="text-caption">{t("settings.general.usualStartTimeDesc")}</p>
+              <input
+                type="time"
+                value={settings.services.usualStartTime}
+                disabled={!canManageOrg || isSaving}
+                onChange={(e) => update("services", "usualStartTime", e.target.value || "10:00")}
+                className={`${selectClass} max-w-40`}
               />
             </div>
 

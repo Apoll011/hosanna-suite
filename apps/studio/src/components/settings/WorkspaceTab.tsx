@@ -4,10 +4,9 @@
  */
 
 import { backupApi } from "@/src/api";
-import { Button, Input } from "@hosanna/ui";
+import { Button, Input, useCan, Can, CanAny } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
-import { Can, CanAny } from "@/src/lib/permissions/components";
+
 import {
   Building2,
   Camera,

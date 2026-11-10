@@ -5,7 +5,7 @@
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { authClient } from "@/src/lib/authClient";
-import { useCan } from "@/src/lib/permissions/client";
+import { useCan } from "@hosanna/ui";
 import { useCallback, useMemo } from "react";
 import { resolveOrgPrintSettings, toOrgPrintSettings } from "./options";
 import { OrgPrintSettings, PrintOptions } from "./types";

@@ -4,6 +4,7 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
+import { Song } from "@/src/types";
 import React, { useMemo } from "react";
 import { documentStyleVars } from "../printStyles";
 import { PrintBrand, PrintItem, PrintOptions } from "../types";
@@ -37,9 +38,17 @@ export function printDocumentClassName(options: PrintOptions): string {
 
 export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, options, brand }) => {
   const { t, tc } = useI18n();
-  const showCover = items.length > 2 && !!title;
   const pack = !options.pageBreakBetweenItems;
 
+  const songsOnly = items.length > 0 && items.every((item) => item.type === "song");
+  const songList = useMemo(() => {
+    if (!songsOnly) return [] as Song[];
+    return items
+      .filter((item): item is Extract<PrintItem, { type: "song" }> => item.type === "song")
+      .map((item) => item.data);
+  }, [items, songsOnly]);
+
+  const showCover = !songsOnly && items.length > 2 && !!title;
   const topLevelSongCount = useMemo(
     () => items.filter((item) => item.type === "song").length,
     [items],
@@ -62,6 +71,25 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, opti
         return { label: item.data.title, type: t("print.batch.types.event") };
     }
   };
+
+  // Multi-song batches use the same compact index as folders/collections.
+  if (songsOnly && songList.length >= 2) {
+    return (
+      <div
+        className={printDocumentClassName(options)}
+        style={documentStyleVars(options, brand.accentColor) as React.CSSProperties}
+      >
+        <SongbookPrintView
+          name={title || t("print.documentDefaultTitle")}
+          badge={t("print.batch.types.song")}
+          emptyText={t("print.songbook.emptySelection")}
+          songs={songList}
+          options={{ ...options, includeSongs: true }}
+          brand={brand}
+        />
+      </div>
+    );
+  }
 
   const body: React.ReactNode[] = [];
   let songOrdinal = 0;
@@ -93,6 +121,7 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, opti
               />
             );
           })}
+          <TemplateFooter options={options} brand={brand} />
         </div>,
       );
       continue;
@@ -187,19 +216,20 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, opti
             <h2 className="hp-h2">
               <span>{t("print.batch.content")}</span>
             </h2>
-            <ol className="hp-toc">
+            <div className={items.length > 48 ? "hp-index hp-index--dense" : "hp-index"}>
               {items.map((item, idx) => {
                 const { label, type } = itemLabel(item);
                 return (
-                  <li key={idx}>
-                    <span className="hp-toc-num">{idx + 1}</span>
-                    <span className="hp-toc-title">{label}</span>
-                    <span className="hp-toc-dots" />
-                    <span className="hp-toc-type">{type}</span>
-                  </li>
+                  <div key={idx} className="hp-index-row">
+                    <span className="hp-index-num">{idx + 1}</span>
+                    <span className="hp-index-title">
+                      {label}
+                      <span className="hp-index-type"> · {type}</span>
+                    </span>
+                  </div>
                 );
               })}
-            </ol>
+            </div>
           </section>
         </PrintSheet>
       )}

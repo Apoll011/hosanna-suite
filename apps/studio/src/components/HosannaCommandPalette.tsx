@@ -1,5 +1,5 @@
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+import { useCan } from "@hosanna/ui";
 import { Folder, Service, Song } from "@/src/types";
 import {
   Calendar,
@@ -19,7 +19,6 @@ import {
   Plus,
   Printer,
   BarChart3,
-  Building2,
   Settings,
   Trash2,
   Upload,
@@ -29,7 +28,7 @@ import { CommandAction } from "../command-palette.types";
 import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { ViewName } from "../layouts/view";
-import { useAiCommandPaletteActions } from "../features/ai-chat/useAiCommandPaletteActions";
+import { useAiCommandPaletteActions } from "../logos/useAiCommandPaletteActions";
 import { useRxDbSearch } from "../hooks/useRxDbSearch";
 import { ActiveModal } from "./layout";
 import { CommandPaletteModal } from "./modals/CommandPaletteModal";
@@ -148,10 +147,10 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         name: t("commandPalette.navOrganization"),
         shortcut: ["g", "o"],
         keywords:
-          "organizacao organization workspace membros members billing fatura login history activity",
+          "impressao printing duracoes durations responsabilidades responsibilities organization organizacao",
         section: t("commandPalette.sections.navigation"),
-        icon: <Building2 className="w-4 h-4 text-violet-500" />,
-        perform: () => navigate(`${slugPrefix}/organization`),
+        icon: <Printer className="w-4 h-4 text-sky-500" />,
+        perform: () => navigate(`${slugPrefix}/settings?tab=printing`),
       },
       ...(canViewLibraryHealth
         ? [

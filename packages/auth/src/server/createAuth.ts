@@ -462,6 +462,7 @@ export function createAuth(options: CreateAuthOptions): any {
                         sermon: 2300,
                         song: 210,
                       },
+                      usualStartTime: "10:00",
                       showNotes: true,
                       showServiceDuration: true,
                       autoSave: true,

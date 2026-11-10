@@ -4,15 +4,14 @@
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChorproSettings";
-import { Button, Spinner } from "@hosanna/ui";
+import { Button, Spinner, useCan, Can } from "@hosanna/ui";
 import { EditorSettingsPanel } from "@/src/components/EditorSettingsPanel";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useEditorSettings } from "@/src/hooks/useEditorSettings";
 import { usePreviewSettings } from "@/src/hooks/usePreviewSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { emitOnboardingEvent } from "@/src/lib/tour";
-import { useCan } from "@/src/lib/permissions/client";
-import { Can } from "@/src/lib/permissions/components";
+
 import { Song } from "@/src/types";
 import { ChordProRenderer, parseChordPro } from "@hosanna/chordpro";
 import { Editor } from "@hosanna/chordpro/editor";
@@ -41,7 +40,7 @@ import {
   aiProposals,
   useDiffLabels,
   useSongProposal,
-} from "../../features/ai-chat";
+} from "@hosanna/logos-ai";
 import { useSong, useSongs } from "../../hooks/useSongs";
 import { posthog } from "../../lib/posthog";
 

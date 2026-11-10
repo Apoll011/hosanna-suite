@@ -1,18 +1,21 @@
 /**
- * Hosana Database — replaces RxDB.
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
  *
- * Uses native IndexedDB directly via the lightweight engine in ./engine/.
+ * Hosana Database — Studio domain wiring over `@hosanna/replication`.
+ *
  * On first call the DB is opened and all docs are loaded into memory;
  * subsequent calls return the same already-resolved promise (singleton).
- *
- * Public API is intentionally identical to the old RxDB surface so no
- * React code needs to change.
  */
 
 import { parseChordPro } from "@hosanna/chordpro";
+import { _registerResetDatabase, HosanaCollection, idbGetAll, openIDB } from "@hosanna/replication";
+import {
+  recalculateAllDerivedCounts,
+  recalculateCollectionCounts,
+  recalculateFolderCounts,
+} from "./counts";
 import { getMainDbName } from "./dbNames";
-import { HosanaCollection } from "./engine/collection";
-import { _registerResetDatabase, idbGetAll, openIDB } from "./engine/idb";
 import { META_STORE } from "./orgScope";
 import type {
   AgendaEventDocType,
@@ -59,144 +62,6 @@ export type HosanaDatabase = HosanaDatabaseCollections & {
   /** @internal underlying IndexedDB handle (meta store, health checks). */
   readonly _idb: IDBDatabase;
 };
-
-/**
- * Calculates the number of non-deleted songs belonging to a given folder.
- */
-export function calculateFolderSongCount(
-  folderId: string,
-  songs:
-    Array<Pick<SongDocType, "folderId" | "isDeleted" | "_deleted">> | HosanaCollection<AsSongDoc>,
-): number {
-  const list = Array.isArray(songs) ? songs : songs.getAllRaw();
-  return list.filter((s) => s.folderId === folderId && !s.isDeleted && !s._deleted).length;
-}
-
-/**
- * Calculates the number of non-deleted subfolders belonging to a given parent folder.
- */
-export function calculateFolderCount(
-  folderId: string,
-  folders:
-    | Array<Pick<FolderDocType, "parentId" | "isDeleted" | "_deleted">>
-    | HosanaCollection<AsFolderDoc>,
-): number {
-  const list = Array.isArray(folders) ? folders : folders.getAllRaw();
-  return list.filter((f) => f.parentId === folderId && !f.isDeleted && !f._deleted).length;
-}
-
-/**
- * Recalculates songCount and folderCount for an array of folders using the given songs.
- */
-export function recalculateFolderCounts(
-  folders: AsFolderDoc[],
-  songs: Array<Pick<SongDocType, "folderId" | "isDeleted">>,
-): AsFolderDoc[] {
-  return folders.map((folder) => ({
-    ...folder,
-    songCount: calculateFolderSongCount(folder.id, songs),
-    folderCount: calculateFolderCount(folder.id, folders),
-  }));
-}
-
-/**
- * Recalculates and updates songCount and folderCount for a specific folder in the database.
- */
-export async function updateFolderCounts(db: HosanaDatabase, folderId: string): Promise<void> {
-  const folder = await db.folders.findOne(folderId).exec();
-  if (!folder) return;
-  await folder.patch({
-    songCount: calculateFolderSongCount(folderId, db.songs),
-    folderCount: calculateFolderCount(folderId, db.folders),
-  });
-}
-
-/**
- * Calculates the number of non-deleted songs belonging to a given collection.
- */
-export function calculateCollectionSongCount(
-  collectionId: string,
-  songs:
-    | Array<Pick<SongDocType, "id" | "collectionIds" | "isDeleted" | "_deleted">>
-    | HosanaCollection<AsSongDoc>,
-): number {
-  const list = Array.isArray(songs) ? songs : songs.getAllRaw();
-  return list.filter(
-    (s) =>
-      Array.isArray(s.collectionIds) &&
-      s.collectionIds.includes(collectionId) &&
-      !s.isDeleted &&
-      !s._deleted,
-  ).length;
-}
-
-/**
- * Recalculates songCount and synchronizes songIds for an array of collections using the given songs.
- */
-export function recalculateCollectionCounts(
-  collections: AsCollectionDoc[],
-  songs: Array<Pick<SongDocType, "id" | "collectionIds" | "isDeleted" | "_deleted">>,
-): AsCollectionDoc[] {
-  const activeSongs = songs.filter((s) => !s.isDeleted && !s._deleted);
-  const activeSongIdSet = new Set(activeSongs.map((s) => s.id));
-
-  return collections.map((collection) => {
-    const songIdsSet = new Set<string>();
-    for (const s of activeSongs) {
-      if (Array.isArray(s.collectionIds) && s.collectionIds.includes(collection.id)) {
-        songIdsSet.add(s.id);
-      }
-    }
-    if (Array.isArray(collection.songIds)) {
-      for (const sid of collection.songIds) {
-        if (activeSongIdSet.has(sid)) {
-          songIdsSet.add(sid);
-        }
-      }
-    }
-    const syncedSongIds = Array.from(songIdsSet);
-    return {
-      ...collection,
-      songIds: syncedSongIds,
-      songCount: syncedSongIds.length,
-    };
-  });
-}
-
-/**
- * Recalculates and updates songCount and songIds for a specific collection in the database.
- */
-export async function updateCollectionCounts(
-  db: HosanaDatabase,
-  collectionId: string,
-): Promise<void> {
-  const collection = await db.collections.findOne(collectionId).exec();
-  if (!collection) return;
-
-  const allSongs = db.songs.getAllRaw();
-  const activeSongs = allSongs.filter((s) => !s.isDeleted && !s._deleted);
-  const activeSongIdSet = new Set(activeSongs.map((s) => s.id));
-
-  const songIdsSet = new Set<string>();
-  for (const s of activeSongs) {
-    if (Array.isArray(s.collectionIds) && s.collectionIds.includes(collectionId)) {
-      songIdsSet.add(s.id);
-    }
-  }
-  if (Array.isArray(collection.songIds)) {
-    for (const sid of collection.songIds) {
-      if (activeSongIdSet.has(sid)) {
-        songIdsSet.add(sid);
-      }
-    }
-  }
-
-  const syncedSongIds = Array.from(songIdsSet);
-  await collection.patch({
-    songIds: syncedSongIds,
-    songCount: syncedSongIds.length,
-  });
-}
 
 let dbPromise: Promise<HosanaDatabase> | null = null;
 
@@ -293,6 +158,9 @@ async function _open(): Promise<HosanaDatabase> {
     services: new HosanaCollection<AsServiceDoc>(idb, STORE_SERVICES, rawServices),
     agendaEvents: new HosanaCollection<AsAgendaDoc>(idb, STORE_AGENDA, rawAgenda),
   };
+
+  // Persist derived counts (memory already corrected above; this writes IDB).
+  await recalculateAllDerivedCounts(db);
 
   return db;
 }

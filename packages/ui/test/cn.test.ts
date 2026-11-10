@@ -18,4 +18,10 @@ describe("cn", () => {
   it("supports conditional objects and arrays", () => {
     assert.equal(cn(["base", { active: true, disabled: false }], "extra"), "base active extra");
   });
+
+  it("handles empty inputs and nested falsy values", () => {
+    assert.equal(cn(), "");
+    assert.equal(cn(false, null, undefined, 0, ""), "");
+    assert.equal(cn("a", ["b", false, null], { c: true, d: false }), "a b c");
+  });
 });

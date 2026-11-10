@@ -415,7 +415,10 @@ async function pullOne(
   limit: number,
   options?: { skipCacheCheck?: boolean },
 ): Promise<PullResponse<any>> {
-  if (!options?.skipCacheCheck && (await syncCache.hasNoChanges(tenantId, collection, checkpoint))) {
+  if (
+    !options?.skipCacheCheck &&
+    (await syncCache.hasNoChanges(tenantId, collection, checkpoint))
+  ) {
     return { documents: [], checkpoint };
   }
 
@@ -471,7 +474,9 @@ async function pullOne(
       await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
-    const songIdsByCollection = await loadCollectionSongIds(docs.map((doc: { id: string }) => doc.id));
+    const songIdsByCollection = await loadCollectionSongIds(
+      docs.map((doc: { id: string }) => doc.id),
+    );
     const documents = docs.map((doc: any) => {
       const songIds = songIdsByCollection.get(doc.id) ?? [];
       return toWireCollection({ ...doc, songs: songIds.map((id) => ({ id })) }, songIds.length);
@@ -501,7 +506,9 @@ async function pullOne(
       await syncCache.setLatestCheckpoint(tenantId, collection, newCheckpoint);
     }
 
-    const collectionIdsBySong = await loadSongCollectionIds(docs.map((doc: { id: string }) => doc.id));
+    const collectionIdsBySong = await loadSongCollectionIds(
+      docs.map((doc: { id: string }) => doc.id),
+    );
     const documents = docs.map((doc: any) =>
       toWireSong({
         ...doc,

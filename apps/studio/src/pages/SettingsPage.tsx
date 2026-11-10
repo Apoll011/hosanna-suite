@@ -3,58 +3,97 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PageHeader, Tabs } from "@hosanna/ui";
+import { PageHeader, Tabs, useCan } from "@hosanna/ui";
 import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
-import { AppWindow, CloudOff, Info, Zap } from "lucide-react";
+
+import { isDemoMode } from "@/src/demo";
+import { AppWindow, Church, CloudOff, Info, Printer, Users, Zap } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { AboutTab } from "../components/settings/AboutTab";
 import { AppearanceTab } from "../components/settings/AppearanceTab";
 import { FeaturesTab } from "../components/settings/FeaturesTab";
+import { PrintingTab } from "../components/settings/PrintingTab";
+import { ResponsibilitiesTab } from "../components/settings/ResponsibilitiesTab";
+import { ServiceBehaviorTab } from "../components/settings/ServiceBehaviorTab";
+import { useSync } from "../contexts/SyncContext";
 import { useOnline } from "../hooks/useOnline";
 
-type TabType = "app" | "features" | "about";
+type TabType = "app" | "services" | "printing" | "responsibilities" | "features" | "about";
 
-const VALID_TABS: TabType[] = ["app", "features", "about"];
+const VALID_TABS: TabType[] = [
+  "app",
+  "services",
+  "printing",
+  "responsibilities",
+  "features",
+  "about",
+];
 
-/** Org tabs that now live on `/organization` — redirect for old bookmarks. */
-const MOVED_TO_ORGANIZATION = new Set([
-  "workspace",
-  "members",
-  "notifications",
-  "billing",
-  "general",
-  "loginActivity",
-]);
+const NETWORK_TABS: TabType[] = ["services", "printing", "responsibilities"];
+
+/** Old bookmarks that now live under another Settings tab. */
+const SETTINGS_TAB_ALIASES: Record<string, TabType> = {
+  durations: "services",
+};
+
+/** Legacy Settings bookmarks that now live on auth. */
+const MOVED_TO_AUTH: Record<string, string> = {
+  account: "/account",
+  workspace: "/account/organization/profile",
+  members: "/account/organization/members",
+  billing: "/account/organization/billing",
+  general: "/account/organization/regional",
+  loginActivity: "/account/organization/activity",
+  notifications: "/account/organization/notifications",
+  ai: "/account/organization/ai",
+};
 
 export const SettingsPage: React.FC = () => {
   const { t } = useI18n();
   const isOnline = useOnline();
-  const navigate = useNavigate();
-  const { slug } = useParams<{ slug: string }>();
+  const { showToast } = useSync();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { granted: canUpdate } = useCan("organization.update");
+
   const initialTab = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    if (VALID_TABS.includes(initialTab as TabType)) return initialTab as TabType;
+    return "app";
+  });
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    // Account lives on auth.hosanna.live — hard-navigate immediately.
-    if (tab === "account") {
-      navigateToAuthAccount({
-        returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
-      });
+    if (!tab) return;
+
+    const alias = SETTINGS_TAB_ALIASES[tab];
+    if (alias) {
+      const next = new URLSearchParams(searchParams);
+      next.set("tab", alias);
+      setSearchParams(next, { replace: true });
+      setActiveTab(alias);
       return;
     }
-    if (!tab || !MOVED_TO_ORGANIZATION.has(tab) || !slug) return;
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", tab);
-    navigate(`/${slug}/organization?${next.toString()}`, { replace: true });
-  }, [searchParams, slug, navigate]);
 
-  const [activeTab, setActiveTab] = useState<TabType>(
-    VALID_TABS.includes(initialTab as TabType) ? (initialTab as TabType) : "app",
-  );
+    const authPath = MOVED_TO_AUTH[tab];
+    if (!authPath) return;
+
+    // Demo has no auth account surface — drop legacy tabs onto Application.
+    if (isDemoMode()) {
+      setActiveTab("app");
+      const next = new URLSearchParams(searchParams);
+      next.set("tab", "app");
+      setSearchParams(next, { replace: true });
+      return;
+    }
+
+    navigateToAuthAccount({
+      path: authPath,
+      returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
+    });
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -63,6 +102,17 @@ export const SettingsPage: React.FC = () => {
     }
   }, [searchParams, activeTab]);
 
+  // Org-managed tabs require organization.update; drop users without it.
+  useEffect(() => {
+    const orgTabs: TabType[] = ["services", "printing", "responsibilities"];
+    if (orgTabs.includes(activeTab) && !canUpdate) {
+      setActiveTab("app");
+      const next = new URLSearchParams(searchParams);
+      next.set("tab", "app");
+      setSearchParams(next, { replace: true });
+    }
+  }, [activeTab, canUpdate, searchParams, setSearchParams]);
+
   const tabs = [
     {
       id: "app" as const,
@@ -70,6 +120,27 @@ export const SettingsPage: React.FC = () => {
       icon: <AppWindow className="w-4 h-4" />,
       requiresNetwork: false,
       show: true,
+    },
+    {
+      id: "services" as const,
+      label: t("settings.tabs.services"),
+      icon: <Church className="w-4 h-4" />,
+      requiresNetwork: true,
+      show: canUpdate,
+    },
+    {
+      id: "printing" as const,
+      label: t("settings.tabs.printing"),
+      icon: <Printer className="w-4 h-4" />,
+      requiresNetwork: true,
+      show: canUpdate,
+    },
+    {
+      id: "responsibilities" as const,
+      label: t("settings.tabs.responsibilities"),
+      icon: <Users className="w-4 h-4" />,
+      requiresNetwork: true,
+      show: canUpdate,
     },
     {
       id: "features" as const,
@@ -99,7 +170,7 @@ export const SettingsPage: React.FC = () => {
   return (
     <div className="h-full w-full overflow-y-auto bg-m3-bg text-m3-text p-6">
       <div className="w-full space-y-6">
-        <PageHeader title={t("common.settings")} />
+        <PageHeader title={t("common.settings")} description={t("settings.pageDesc")} />
 
         {!isOnline && (
           <div className="flex items-center gap-3 p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-700 dark:text-amber-300 text-xs">
@@ -124,8 +195,17 @@ export const SettingsPage: React.FC = () => {
           aria-label={t("common.settings")}
         />
 
-        <div className="pt-2 pb-12">
+        <div
+          className={`pt-2 pb-12 ${
+            !isOnline && NETWORK_TABS.includes(activeTab)
+              ? "opacity-40 pointer-events-none select-none filter grayscale"
+              : ""
+          }`}
+        >
           <AppearanceTab active={activeTab === "app"} />
+          <ServiceBehaviorTab active={activeTab === "services"} showToast={showToast} />
+          <PrintingTab active={activeTab === "printing"} showToast={showToast} />
+          <ResponsibilitiesTab active={activeTab === "responsibilities"} showToast={showToast} />
           <FeaturesTab active={activeTab === "features"} />
           <AboutTab active={activeTab === "about"} />
         </div>

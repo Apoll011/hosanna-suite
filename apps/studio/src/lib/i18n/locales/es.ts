@@ -74,9 +74,10 @@ export const es: typeof pt = {
     logout: "Cerrar sesión",
     openSettings: "Configuración",
     openAccount: "Cuenta",
-    openOrganization: "Organización",
+    openOrganization: "Valores de impresión",
     openAnalytics: "Analíticas",
     switchWorkspace: "Cambiar de organización",
+    manageOrganization: "Gestionar organización",
   },
 
   addressBar: {
@@ -138,7 +139,7 @@ export const es: typeof pt = {
     navSongs: "Ir a Biblioteca de Canciones",
     navServices: "Ir a Cultos / Planes",
     navSettings: "Ir a Configuración del Sistema",
-    navOrganization: "Ir a Organización",
+    navOrganization: "Ir a ajustes de impresión",
     navAnalytics: "Ir a Analíticas",
     navAgenda: "Ir a Agenda",
     createSong: "Crear Nueva Canción",
@@ -180,6 +181,7 @@ export const es: typeof pt = {
   },
 
   settings: {
+    pageDesc: "Apariencia, impresión, duraciones, responsabilidades y funciones de Studio.",
     tabs: {
       account: "Cuenta y Seguridad",
       workspace: "Organización",
@@ -190,6 +192,23 @@ export const es: typeof pt = {
       features: "Funcionalidades y soporte",
       about: "Acerca de",
       notifications: "Notificaciones",
+      ai: "Logos IA",
+      services: "Cultos",
+      printing: "Impresión",
+      durations: "Duraciones",
+      responsibilities: "Responsabilidades",
+    },
+    services: {
+      pageDesc: "Hora habitual de inicio y comportamiento al editar cultos.",
+    },
+    printing: {
+      pageDesc: "Disposición y opciones predeterminadas para imprimir canciones y cultos.",
+    },
+    durations: {
+      pageDesc: "Duración predeterminada de canciones y sermones al armar un culto.",
+    },
+    responsibilities: {
+      pageDesc: "Roles de la agenda que puedes asignar al planificar cultos.",
     },
     notifications: {
       title: "Notificaciones",
@@ -446,6 +465,9 @@ export const es: typeof pt = {
         "Introduzca los tiempos promedio en minutos y segundos para estimar la duración de los cultos.",
       songLabel: "Canción / Música",
       sermonLabel: "Predicación / Sermón",
+      usualStartTime: "Hora habitual de inicio del culto",
+      usualStartTimeDesc:
+        "Hora propuesta para eventos de tipo Culto Dominical y usada al imprimir cuando no hay evento de agenda vinculado.",
       suggestions: "Sugerencias:",
       behaviorTitle: "Comportamiento del Orden del Culto",
       showDuration: "Mostrar Duración Total Estimada",
@@ -2220,6 +2242,7 @@ export const es: typeof pt = {
       artistCol: "Artista / Autor",
       emptyFolder: "Esta carpeta no contiene cánticos.",
       emptyCollection: "Esta colección no contiene cánticos.",
+      emptySelection: "No hay cánticos seleccionados.",
     },
     service: {
       badge: "Orden de Culto",
@@ -2430,6 +2453,8 @@ export const es: typeof pt = {
   organization: {
     offlineTitle: "Sin conexión",
     offlineDesc: "La configuración de la organización necesita conexión a internet.",
+    studioDesc:
+      "Valores de impresión, duraciones de momentos y responsabilidades de la agenda de este espacio.",
     tabs: {
       workspace: "Espacio de trabajo",
       members: "Miembros",

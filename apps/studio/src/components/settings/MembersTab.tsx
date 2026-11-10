@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface, Input, Modal, Tabs } from "@hosanna/ui";
+import { Button, Spinner, Surface, Input, Modal, Tabs, useCan, useCanAny, Can } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan, useCanAny } from "@/src/lib/permissions/client";
-import { Can } from "@/src/lib/permissions/components";
+
 import type { AppRole } from "@hosanna/auth";
 import { getAvatarGradient, getInitials } from "@/src/utils";
 import {

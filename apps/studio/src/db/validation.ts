@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { HosanaDoc } from "@hosanna/replication";
 import { Song } from "../types";
 import type { HosanaDatabase } from "./database";
-import type { HosanaDoc } from "./engine/collection";
 import type { FolderDocType, ServiceDocType, SongDocType } from "./schemas";
 
 // HosanaDatabase stores collections as HosanaCollection<DocType & Record<string,unknown>>.

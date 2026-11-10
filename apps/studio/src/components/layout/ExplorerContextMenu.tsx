@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Badge } from "@hosanna/ui";
+import { Badge, Can, CanAll } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import {
@@ -24,7 +24,7 @@ import {
   X,
 } from "lucide-react";
 import React from "react";
-import { Can, CanAll } from "../../lib/permissions/components";
+
 import { ActiveModal } from "./ExplorerModals";
 
 export interface ContextMenuState {

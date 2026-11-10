@@ -4,6 +4,7 @@
  */
 
 import { Button, Input, Modal } from "@hosanna/ui";
+import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useServices } from "@/src/hooks/useServices";
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
 import { Assignee, ResponsibilityCategory } from "@/src/types";
@@ -107,16 +108,21 @@ interface EventFormModalProps {
 const emptyEventForm = (
   initial: Partial<EventFormValue> | undefined,
   defaultType: string,
-): EventFormValue => ({
-  title: initial?.title ?? "",
-  type: initial?.type ?? defaultType,
-  date: initial?.date ?? new Date().toISOString().slice(0, 10),
-  time: initial?.time ?? "10:00",
-  durationMinutes: initial?.durationMinutes ?? 90,
-  location: initial?.location ?? "",
-  notes: initial?.notes ?? "",
-  linkedServiceId: initial?.linkedServiceId ?? null,
-});
+  usualStartTime: string,
+): EventFormValue => {
+  const type = initial?.type ?? defaultType;
+  const proposeUsual = type === defaultType;
+  return {
+    title: initial?.title ?? "",
+    type,
+    date: initial?.date ?? new Date().toISOString().slice(0, 10),
+    time: initial?.time ?? (proposeUsual ? usualStartTime : "10:00"),
+    durationMinutes: initial?.durationMinutes ?? 90,
+    location: initial?.location ?? "",
+    notes: initial?.notes ?? "",
+    linkedServiceId: initial?.linkedServiceId ?? null,
+  };
+};
 
 export const EventFormModal: React.FC<EventFormModalProps> = ({
   isOpen,
@@ -129,8 +135,10 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 }) => {
   const { t } = useI18n();
   const { servicesQuery } = useServices();
+  const { settings } = useOrgSettings();
   const services = servicesQuery.data ?? [];
   const servicesLoading = servicesQuery.isLoading;
+  const usualStartTime = settings.services.usualStartTime || "10:00";
 
   const eventTypeOptions = [
     t("agenda.eventTypes.sundayService"),
@@ -140,19 +148,34 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
     t("agenda.eventTypes.teamMeeting"),
     t("agenda.eventTypes.specialEvent"),
   ];
-  const defaultType = eventTypeOptions[0] ?? "";
+  const sundayServiceType = eventTypeOptions[0] ?? "";
+  const defaultType = sundayServiceType;
 
-  const [form, setForm] = useState<EventFormValue>(() => emptyEventForm(initial, defaultType));
+  const [form, setForm] = useState<EventFormValue>(() =>
+    emptyEventForm(initial, defaultType, usualStartTime),
+  );
   const [titleTouched, setTitleTouched] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setForm(emptyEventForm(initial, defaultType));
-      setTitleTouched(false);
-      setConfirmingDelete(false);
-    }
+    if (!isOpen) return;
+    setForm(emptyEventForm(initial, defaultType, usualStartTime));
+    setTitleTouched(false);
+    setConfirmingDelete(false);
+    // Seed once when opening / when the edited event changes — not when org
+    // settings hydrate mid-edit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- usualStartTime read on open
   }, [isOpen, initial, defaultType]);
+
+  const applyEventType = (type: string) => {
+    setForm((f) => ({
+      ...f,
+      type,
+      // Propose the org's usual start when picking Sunday Service (create flow
+      // or when the user hasn't already typed a different time for this draft).
+      time: type === sundayServiceType ? usualStartTime : f.time,
+    }));
+  };
 
   const titleIsEmpty = form.title.trim().length === 0;
   const showTitleError = titleTouched && titleIsEmpty;
@@ -252,7 +275,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
               <input
                 list="agenda-event-types"
                 value={form.type}
-                onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
+                onChange={(e) => applyEventType(e.target.value)}
                 placeholder={t("agenda.typePlaceholder")}
                 className={fieldInputClass}
               />
@@ -269,7 +292,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setForm((f) => ({ ...f, type: opt }))}
+                    onClick={() => applyEventType(opt)}
                     className="px-2.5 h-7 rounded-md text-[11px] font-semibold border border-m3-border text-m3-secondary hover:border-m3-primary/50 hover:text-m3-primary transition-colors cursor-pointer"
                   >
                     {opt}

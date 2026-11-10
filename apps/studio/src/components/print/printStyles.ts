@@ -68,10 +68,10 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   --hp-lh: 1.45; --hp-chord-lh: 1.1; --hp-line-gap: 0.14em; --hp-stanza-gap: 0.7em;
   --hp-section-gap: 1.15em; --hp-block-gap: 1.3em; --hp-cell-y: 0.5em;
 }
- * One-song-per-page sheets are at least one page tall so the footer can
+/* One-song-per-page sheets are at least one page tall so the footer can
  * sit on the page bottom (margin-top: auto). The body must NOT flex-grow —
  * growing it made 2-column songs fill the page and orphaned the footer
- * mid-page. Packed songbooks skip the min-height so songs share pages. */
+ * mid-page. Packed song packs pin a single pack-level footer the same way. */
 .hp-sheet { display: flow-root; box-sizing: border-box; }
 .hp-sheet-body { display: block; flex: 0 0 auto; }
 .hp-breaks > .hp-sheet:not(.hp-sheet--packed) {
@@ -80,7 +80,12 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 }
 .hp-breaks > .hp-sheet:not(.hp-sheet--packed) > .hp-footer { margin-top: auto; }
 .hp-breaks > .hp-sheet:not(:last-child):not(.hp-sheet--packed) { break-after: page; }
-.hp-breaks > .hp-song-pack { break-before: page; }
+.hp-breaks > .hp-song-pack {
+  display: flex; flex-direction: column;
+  break-before: page;
+  min-height: calc(var(--hp-paper-h) - 2 * var(--hp-margin));
+}
+.hp-breaks > .hp-song-pack > .hp-footer { margin-top: auto; flex-shrink: 0; }
 .hp-breaks > .hp-song-pack > .hp-sheet + .hp-sheet {
   margin-top: 1.1em; padding-top: 0.85em; border-top: 1px solid var(--hp-rule);
 }
@@ -190,7 +195,14 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-table .hp-right { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .hp-table .hp-center { text-align: center; }
 .hp-table .hp-mono { font-family: var(--hp-mono); font-size: 0.92em; }
-.hp-cell-title { font-weight: 600; color: var(--hp-ink); }
+.hp-cell-title {
+  font-weight: 600; color: var(--hp-ink);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35em 0.65em;
+}
+.hp-passage {
+  font-weight: 600; font-size: 0.92em; color: var(--hp-accent);
+  white-space: nowrap;
+}
 .hp-cell-sub { font-size: 0.9em; color: var(--hp-muted); margin-top: 0.05em; }
 .hp-cell-quote { font-size: 0.9em; font-style: italic; color: var(--hp-muted); margin-top: 0.1em;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -240,6 +252,13 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   font-weight: 700; color: var(--hp-muted);
 }
 .hp-index-title { flex: 1; min-width: 0; color: var(--hp-ink); font-weight: 500; }
+.hp-index-type { font-weight: 500; color: var(--hp-muted); }
+
+.hp-song-credit {
+  display: flex; flex-wrap: wrap; gap: 0 0.9em;
+  margin-top: 0.55em; font-size: 0.68em; color: var(--hp-muted);
+  break-inside: avoid;
+}
 
 .hp-footer {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25em 1em;
@@ -248,6 +267,23 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   break-inside: avoid; break-before: avoid;
 }
 .hp-footer-left { display: flex; flex-wrap: wrap; gap: 0 0.9em; }
+
+/* Packed song layout (shared): tighter masthead so more lyrics fit per page. */
+.hp-sheet--packed .hp-header {
+  gap: 0.4em; margin-bottom: 0.45em; padding-bottom: 0.3em;
+}
+.hp-sheet--packed .hp-logo { height: 1.5em; max-width: 4.2em; }
+.hp-sheet--packed .hp-church { font-size: 0.62em; margin-bottom: 0.05em; letter-spacing: 0.06em; }
+.hp-sheet--packed .hp-title { font-size: 1.2em; line-height: 1.15; }
+.hp-sheet--packed .hp-subtitle { font-size: 0.78em; margin-top: 0.05em; }
+.hp-sheet--packed .hp-badge { font-size: 0.62em; padding: 0.1em 0.45em; }
+.hp-sheet--packed .hp-meta {
+  font-size: 0.7em; gap: 0.2em 0.7em;
+  margin: 0 0 0.45em;
+}
+.hp-sheet--packed .hp-meta-item { padding: 0.05em 0.4em; }
+.hp-sheet--packed .hp-section + .hp-section { margin-top: calc(var(--hp-section-gap) * 0.75); }
+.hp-sheet--packed .hp-song-credit { margin-top: 0.35em; }
 
 /* ═══ THEMES ═══════════════════════════════════════════════════════ */
 
@@ -272,6 +308,15 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-classic .hp-index-row { border-bottom-style: dotted; }
 .hp-theme-classic .hp-index-num { font-style: normal; font-weight: 600; color: var(--hp-text); }
 .hp-theme-classic .hp-index-title { font-weight: 400; }
+.hp-theme-classic .hp-sheet--packed .hp-header {
+  flex-direction: row; align-items: baseline; text-align: left; gap: 0.5em;
+  border-bottom: 1px solid var(--hp-ink);
+}
+.hp-theme-classic .hp-sheet--packed .hp-logo { filter: none; height: 1.4em; }
+.hp-theme-classic .hp-sheet--packed .hp-title { font-size: 1.25em; }
+.hp-theme-classic .hp-sheet--packed .hp-meta { justify-content: flex-start; }
+.hp-theme-classic .hp-sheet--packed .hp-section--chorus .hp-section-body { padding-left: 0.8em; }
+.hp-theme-classic .hp-passage { color: var(--hp-text); font-style: italic; font-weight: 500; }
 
 .hp-theme-contemporary { --hp-chord: #000; --hp-ink: #000; --hp-text: #0a0a0a; --hp-chord-font: var(--hp-mono); }
 .hp-theme-contemporary .hp-header { align-items: center; border-bottom: 3px solid #000; }
@@ -297,6 +342,18 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-contemporary .hp-table td { border-bottom-color: #d4d4d4; }
 .hp-theme-contemporary .hp-tag { background: none; border: 1px solid #000; color: #000; text-transform: uppercase; font-family: var(--hp-mono); font-size: 0.75em; }
 .hp-theme-contemporary .hp-footer { border-top: 2px solid #000; font-family: var(--hp-mono); text-transform: uppercase; }
+.hp-theme-contemporary .hp-sheet--packed .hp-header { border-bottom-width: 2px; }
+.hp-theme-contemporary .hp-sheet--packed .hp-title {
+  font-size: 1.15em; text-transform: none; letter-spacing: -0.01em;
+}
+.hp-theme-contemporary .hp-sheet--packed .hp-subtitle {
+  text-transform: none; letter-spacing: 0; font-weight: 600; font-size: 0.72em;
+}
+.hp-theme-contemporary .hp-sheet--packed .hp-meta { border-width: 1px; font-size: 0.72em; }
+.hp-theme-contemporary .hp-sheet--packed .hp-section--chorus .hp-section-body {
+  border-left-width: 3px; padding-left: 0.45em;
+}
+.hp-theme-contemporary .hp-passage { color: #000; font-family: var(--hp-mono); }
 
 .hp-theme-compact .hp-header { align-items: baseline; gap: 0.5em; padding-bottom: 0.3em; }
 .hp-theme-compact .hp-logo { height: 1.4em; align-self: center; }
@@ -312,6 +369,9 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-compact .hp-cols-2 { column-gap: 1.4em; column-rule: 1px solid var(--hp-rule); }
 .hp-theme-compact .hp-table { font-size: 0.84em; }
 .hp-theme-compact .hp-footer { font-size: 0.62em; padding-top: 0.25em; }
+/* Compact is already dense; packed only trims the header further. */
+.hp-theme-compact .hp-sheet--packed .hp-title { font-size: 1.1em; }
+.hp-theme-compact .hp-sheet--packed .hp-meta { margin-top: -0.15em; margin-bottom: 0.3em; }
 
 .hp-theme-elegant { --hp-display-font: var(--hp-serif); }
 .hp-theme-elegant .hp-header { flex-direction: column; gap: 0.1em; border-bottom: 0; padding-bottom: 0; position: relative; }
@@ -331,6 +391,11 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-elegant .hp-table th { font-variant: small-caps; text-transform: lowercase; letter-spacing: 0.06em; font-size: 0.9em; }
 .hp-theme-elegant .hp-tag { background: none; padding: 0; color: var(--hp-accent); font-style: italic; font-weight: 500; }
 .hp-theme-elegant .hp-footer { border-top-color: color-mix(in srgb, var(--hp-accent) 35%, #fff); }
+.hp-theme-elegant .hp-sheet--packed .hp-header { flex-direction: row; align-items: baseline; gap: 0.5em; }
+.hp-theme-elegant .hp-sheet--packed .hp-header::after { width: 1.6em; height: 1.5px; margin-top: 0; margin-left: 0.4em; }
+.hp-theme-elegant .hp-sheet--packed .hp-logo { position: static; height: 1.4em; }
+.hp-theme-elegant .hp-sheet--packed .hp-title { font-size: 1.25em; }
+.hp-theme-elegant .hp-sheet--packed .hp-badge { order: 0; }
 
 .hp-theme-bulletin .hp-header {
   align-items: center; border: 0; border-radius: 8px; padding: 0.7em 0.95em;
@@ -353,6 +418,14 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-bulletin .hp-table tbody tr:nth-child(even) td { background: var(--hp-tint); }
 .hp-theme-bulletin .hp-note, .hp-theme-bulletin .hp-facts { background: var(--hp-tint); border-color: transparent; }
 .hp-theme-bulletin .hp-footer { border-top: 2px solid var(--hp-accent); }
+.hp-theme-bulletin .hp-sheet--packed .hp-header {
+  border-radius: 5px; padding: 0.35em 0.6em; margin-bottom: 0.4em;
+}
+.hp-theme-bulletin .hp-sheet--packed .hp-title { font-size: 1.15em; }
+.hp-theme-bulletin .hp-sheet--packed .hp-logo { height: 1.5em; padding: 0.1em; }
+.hp-theme-bulletin .hp-sheet--packed .hp-section--chorus .hp-section-body {
+  padding: 0.15em 0.4em; border-radius: 4px;
+}
 
 .hp-theme-leadsheet { --hp-chord-font: var(--hp-mono); --hp-chord: var(--hp-ink); }
 .hp-theme-leadsheet .hp-header { align-items: flex-end; border-bottom: 2px solid var(--hp-ink); }
@@ -379,6 +452,15 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-leadsheet .hp-table th { font-family: var(--hp-mono); text-transform: uppercase; color: var(--hp-ink); border-bottom: 1.5px solid var(--hp-ink); }
 .hp-theme-leadsheet .hp-tag { background: none; border: 1px solid var(--hp-rule); font-family: var(--hp-mono); font-size: 0.78em; }
 .hp-theme-leadsheet .hp-footer { font-family: var(--hp-mono); border-top-color: var(--hp-ink); }
+.hp-theme-leadsheet .hp-sheet--packed .hp-header { border-bottom-width: 1.5px; align-items: baseline; }
+.hp-theme-leadsheet .hp-sheet--packed .hp-title { font-size: 1.2em; }
+.hp-theme-leadsheet .hp-sheet--packed .hp-section {
+  grid-template-columns: 3.6em minmax(0, 1fr); column-gap: 0.45em;
+}
+.hp-theme-leadsheet .hp-sheet--packed .hp-section-label { font-size: 0.6em; }
+.hp-theme-leadsheet .hp-sheet--packed .hp-section-body { padding-left: 0.45em; }
+.hp-theme-leadsheet .hp-sheet--packed .hp-section--ref .hp-section-label { padding-left: 4.5em; }
+.hp-theme-leadsheet .hp-passage { font-family: var(--hp-mono); color: var(--hp-ink); }
 
 .hp-theme-hymnal { --hp-body-font: var(--hp-serif); --hp-display-font: var(--hp-serif); --hp-chord-font: var(--hp-sans); }
 .hp-theme-hymnal .hp-header { flex-direction: column; align-items: center; text-align: center; gap: 0.1em; border-bottom: 0; padding-bottom: 0; }
@@ -406,6 +488,19 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-hymnal .hp-table th { font-style: italic; font-weight: 600; }
 .hp-theme-hymnal .hp-tag { background: none; padding: 0; font-style: italic; }
 .hp-theme-hymnal .hp-footer { justify-content: center; text-align: center; font-style: italic; border-top: 0; }
+.hp-theme-hymnal .hp-sheet--packed .hp-header {
+  flex-direction: row; align-items: baseline; text-align: left; gap: 0.5em;
+}
+.hp-theme-hymnal .hp-sheet--packed .hp-header::after { display: none; }
+.hp-theme-hymnal .hp-sheet--packed .hp-badge { order: 0; font-size: 0.95em; }
+.hp-theme-hymnal .hp-sheet--packed .hp-title { font-size: 1.2em; }
+.hp-theme-hymnal .hp-sheet--packed .hp-meta { justify-content: flex-start; }
+.hp-theme-hymnal .hp-sheet--packed .hp-song { margin-inline: 0; padding-left: 1.35em; }
+.hp-theme-hymnal .hp-passage { font-style: italic; color: var(--hp-muted); font-weight: 500; }
+
+/* Modern (default theme) packed tweaks */
+.hp-theme-modern .hp-sheet--packed .hp-title { font-size: 1.22em; }
+.hp-theme-modern .hp-sheet--packed .hp-header { border-bottom-color: color-mix(in srgb, var(--hp-rule) 80%, transparent); }
 `;
 
 /** Screen-only chrome: paper sheets, shadows and page guides for the preview. */
@@ -427,17 +522,35 @@ export const PRINT_SCREEN_CSS = /* css */ `
   margin-top: 24px;
 }
 .hp-screen .hp-song-pack {
+  display: flex; flex-direction: column;
   background: #fff; width: var(--hp-paper-w); min-height: var(--hp-paper-h);
   padding: var(--hp-margin); margin: 0 auto;
   box-shadow: 0 1px 2px rgba(15,23,42,.08), 0 8px 24px rgba(15,23,42,.10);
   border-radius: 2px;
 }
+.hp-screen .hp-song-pack > .hp-footer { margin-top: auto; }
 .hp-screen .hp-doc.hp-breaks > .hp-sheet:not(:last-child) { break-after: auto; }
 .hp-screen .hp-breaks > .hp-sheet:not(.hp-sheet--packed) {
   content-visibility: auto;
   contain-intrinsic-size: auto var(--hp-paper-h);
 }
 .hp-thumb .hp-doc { pointer-events: none; }
+/* Thumbnails must not inherit full-page paper min-heights from pack/sheet rules. */
+.hp-thumb .hp-sheet,
+.hp-thumb .hp-song-pack,
+.hp-thumb .hp-breaks > .hp-sheet,
+.hp-thumb .hp-breaks > .hp-song-pack {
+  min-height: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  break-before: auto !important;
+  break-after: auto !important;
+}
+.hp-thumb .hp-footer { display: none; }
 `;
 
 const STYLE_ID = "hosana-print-styles";
@@ -455,15 +568,34 @@ export function ensurePrintStyles(): void {
   if (style.textContent !== css) style.textContent = css;
 }
 
+const escapeCssContent = (value: string) =>
+  value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, " ");
+
+const PAGE_FOOTER_FONT = 'font: 500 8pt "Figtree", system-ui, sans-serif; color: #94a3b8;';
+
+/**
+ * @page rules for the print iframe. The document footer and page numbers live
+ * in margin boxes so every printed page gets one footer at the bottom — even
+ * when the content only fills half the sheet, and never once-per-song.
+ * "Hosanna" is always present (center); church/custom note left; pages right.
+ */
 export function buildPageCss(
   options: Pick<PrintOptions, "paperSize" | "margins" | "showPageNumbers">,
+  footerNote = "",
 ): string {
   const paper = PAPER_SIZES[options.paperSize];
   const margin = PAGE_MARGINS_MM[options.margins];
-  const pageNumbers = options.showPageNumbers
-    ? `@bottom-right { content: counter(page) " / " counter(pages); font: 500 8pt "Figtree", system-ui, sans-serif; color: #94a3b8; }`
+  const note = footerNote.trim();
+  const left = note
+    ? `@bottom-left { content: "${escapeCssContent(note)}"; ${PAGE_FOOTER_FONT} }`
     : "";
-  return `@page { size: ${paper.w}mm ${paper.h}mm; margin: ${margin}mm; ${pageNumbers} }`;
+  const center = `@bottom-center { content: "Hosanna"; ${PAGE_FOOTER_FONT} }`;
+  const right = options.showPageNumbers
+    ? `@bottom-right { content: counter(page) " / " counter(pages); ${PAGE_FOOTER_FONT} }`
+    : "";
+  // Hide in-flow preview footers so they don't duplicate the @page footer.
+  return `@page { size: ${paper.w}mm ${paper.h}mm; margin: ${margin}mm; ${left} ${center} ${right} }
+.hp-footer { display: none !important; }`;
 }
 
 /** Inline CSS variables that size the document for the chosen paper. */

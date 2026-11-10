@@ -1,10 +1,11 @@
 import type { AuthInfo } from "@modelcontextprotocol/server";
 import type { Request } from "express";
-import { createRemoteJWKSet, jwtVerify } from "jose";
+import { createRemoteJWKSet, customFetch, jwtVerify } from "jose";
 import { forOrganization } from "../database/prisma.js";
 import type { OrgScopedPrisma } from "../database/prisma.js";
 import { env } from "../config/env.js";
 import { getSession } from "../lib/session.js";
+import { attachTrustedOidcHeader } from "../lib/vercelOidc.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
 import { can } from "../middleware/auth.js";
 import { hasActiveSubscription } from "../middleware/subscription.js";
@@ -19,7 +20,12 @@ import { mapToolError } from "./lib/toolErrors.js";
 const apiOrigin = env.mcpResourceUrl.replace(/\/mcp\/?$/, "");
 const authIssuer = (env.authUrl ?? apiOrigin ?? `http://127.0.0.1:${env.port}`).replace(/\/+$/, "");
 const jwksUrl = new URL("/api/auth/jwks", authIssuer);
-const remoteJwks = createRemoteJWKSet(jwksUrl);
+const remoteJwks = createRemoteJWKSet(jwksUrl, {
+  [customFetch]: async (url, options) => {
+    const headers = await attachTrustedOidcHeader(new Headers(options.headers));
+    return fetch(url, { ...options, headers });
+  },
+});
 
 export interface McpContext {
   user: AuthorizedUser;

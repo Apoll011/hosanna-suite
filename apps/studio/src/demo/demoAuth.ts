@@ -55,6 +55,7 @@ export const DEMO_ORGANIZATION: Organization = {
       },
       services: {
         defaultDurations: { sermon: 45, song: 5 },
+        usualStartTime: "10:00",
         showNotes: true,
         showServiceDuration: true,
         autoSave: true,

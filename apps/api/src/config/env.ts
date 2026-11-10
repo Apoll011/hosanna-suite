@@ -1,4 +1,8 @@
+import { withRelatedProject } from "@vercel/related-projects";
 import "dotenv/config";
+
+/** Vercel project name for `apps/auth` (see apps/auth/.vercel/project.json). */
+const AUTH_RELATED_PROJECT_NAME = "hosanna-auth";
 
 function required(name: string): string {
   const value = process.env[name];
@@ -24,6 +28,23 @@ function normalizeAuthUrl(url: string | undefined): string | undefined {
   } catch {
     return url.replace(/\/+$/, "");
   }
+}
+
+/**
+ * Auth app origin for get-session / JWKS.
+ * Uses `@vercel/related-projects` so preview API hits the matching auth deploy;
+ * falls back to AUTH_URL (then PUBLIC_APP_URL). Protected preview hosts need the
+ * Trusted Sources OIDC header (see `lib/session.ts` / MCP JWKS fetch).
+ */
+function resolveAuthUrl(): string | undefined {
+  const fallback = optional("AUTH_URL") ?? optional("PUBLIC_APP_URL");
+  if (!fallback) return undefined;
+  return normalizeAuthUrl(
+    withRelatedProject({
+      projectName: AUTH_RELATED_PROJECT_NAME,
+      defaultHost: fallback,
+    }),
+  );
 }
 
 /** True when running inside a Vercel Function. */
@@ -69,8 +90,11 @@ export const env = {
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
-  /** Auth app origin — get-session + JWKS. Falls back to PUBLIC_APP_URL. */
-  authUrl: normalizeAuthUrl(optional("AUTH_URL")),
+  /**
+   * Auth app origin (get-session + JWKS).
+   * `withRelatedProject` → matching hosanna-auth deploy; else AUTH_URL.
+   */
+  authUrl: resolveAuthUrl(),
 
   cronSecret: optional("CRON_SECRET"),
 

@@ -18,7 +18,7 @@ import { notificationsApi, type NotificationType, type SendNotificationsResult }
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useSync } from "@/src/contexts/SyncContext";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+import { useCan } from "@hosanna/ui";
 import type { AgendaEvent, ResponsibilityCategory } from "@/src/types";
 import { formatLongDate } from "@/src/utils/agendaDate";
 import {

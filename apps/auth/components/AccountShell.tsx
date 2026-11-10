@@ -2,10 +2,14 @@
 
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AccountToastBanner } from "@/components/account/AccountToast";
+import { NavigationProgress } from "@/components/account/NavigationProgress";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useI18n } from "@/lib/i18n";
+import { LoadingBar } from "@hosanna/ui";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 
 /** Full-page chrome for the account center (not the login card). */
 export function AccountShell({
@@ -21,27 +25,47 @@ export function AccountShell({
   headerActions?: ReactNode;
 }) {
   const { t } = useI18n();
+  const { isRefreshing } = useActiveOrganization();
   const canGoBack = Boolean(returnUrl);
 
   const brandPillClass =
     "group relative flex select-none items-center gap-2 rounded-full border border-m3-border/60 bg-m3-sidebar/80 px-2.5 py-1.5 transition-colors hover:bg-m3-hover";
 
-  const brandContent = (
+  const swapMotion =
+    "absolute inset-0 flex items-center transition-[opacity,translate] duration-200 ease-out";
+
+  const brandContent = canGoBack ? (
+    <>
+      <span className="relative h-5 w-5 shrink-0 overflow-hidden">
+        <span
+          className={`${swapMotion} justify-center -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100`}
+          aria-hidden
+        >
+          <ArrowLeft className="h-4 w-4 text-m3-text" />
+        </span>
+        <span className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}>
+          <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
+        </span>
+      </span>
+      <span className="relative inline-grid overflow-hidden text-xs font-semibold tracking-tight sm:text-sm">
+        <span className="invisible col-start-1 row-start-1 whitespace-nowrap" aria-hidden>
+          {t("brand.name")}
+        </span>
+        <span className="invisible col-start-1 row-start-1 whitespace-nowrap" aria-hidden>
+          {t("common.back")}
+        </span>
+        <span
+          className={`${swapMotion} -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100`}
+        >
+          {t("common.back")}
+        </span>
+        <span className={`${swapMotion} z-10 group-hover:opacity-0`}>{t("brand.name")}</span>
+      </span>
+    </>
+  ) : (
     <>
       <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
-        {canGoBack ? (
-          <ArrowLeft
-            className="absolute h-4 w-4 text-m3-text opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-            aria-hidden
-          />
-        ) : null}
-        <img
-          src="/favicon.png"
-          alt=""
-          className={`h-5 w-5 rounded-md object-contain transition-opacity duration-150 ${
-            canGoBack ? "group-hover:opacity-0" : ""
-          }`}
-        />
+        <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
       </span>
       <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
     </>
@@ -49,8 +73,13 @@ export function AccountShell({
 
   return (
     <div className="min-h-dvh w-full flex flex-col bg-m3-bg text-m3-text font-sans antialiased">
+      <Suspense fallback={null}>
+        <NavigationProgress />
+      </Suspense>
+      <LoadingBar active={isRefreshing} />
+
       <header className="sticky top-0 z-30 border-b border-m3-border/70 bg-m3-card/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="mx-auto flex h-14 w-full items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           {canGoBack && returnUrl ? (
             <a
               href={returnUrl}
@@ -61,7 +90,7 @@ export function AccountShell({
               {brandContent}
             </a>
           ) : (
-            <Link href="/account" className={brandPillClass}>
+            <Link href="/account" className={brandPillClass} prefetch>
               {brandContent}
             </Link>
           )}
@@ -74,24 +103,12 @@ export function AccountShell({
         </div>
       </header>
 
-      {toast ? (
-        <div className="mx-auto w-full max-w-5xl px-4 pt-4 sm:px-6" role="status">
-          <div
-            className={`rounded-xl border px-3.5 py-2.5 text-sm font-medium animate-in fade-in duration-200 ${
-              toast.type === "error"
-                ? "border-m3-danger/30 bg-m3-danger/10 text-m3-danger"
-                : "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300"
-            }`}
-          >
-            {toast.msg}
-          </div>
-        </div>
-      ) : null}
+      <AccountToastBanner toast={toast} />
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+      <main className="mx-auto w-full flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{children}</main>
 
       <footer className="mt-auto w-full border-t border-m3-border/60">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4 text-caption sm:px-6">
+        <div className="mx-auto flex w-full flex-wrap items-center justify-between gap-3 px-4 py-4 text-caption sm:px-6 lg:px-8">
           <span>
             {t("brand.name")} &copy; {new Date().getFullYear()}
           </span>

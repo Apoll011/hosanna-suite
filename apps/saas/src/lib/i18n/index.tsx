@@ -65,7 +65,9 @@ export function detectUserLanguage(): Language {
       const code = localeToLanguage(rawLang);
       if (code) return code;
     }
-  } catch {}
+  } catch {
+    // navigator.languages can throw in restricted environments
+  }
 
   return DEFAULT_LANGUAGE;
 }
@@ -78,6 +80,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     if (detected !== language) {
       setLanguageState(detected);
     }
+    // Sync from storage/browser once on mount; ignore later language changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setLanguage = (lang: Language) => {
@@ -87,7 +91,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       if (typeof document !== "undefined") {
         document.documentElement.lang = lang;
       }
-    } catch {}
+    } catch {
+      // localStorage / document may be unavailable
+    }
   };
 
   useEffect(() => {

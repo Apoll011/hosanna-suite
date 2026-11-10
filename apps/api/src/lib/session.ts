@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { attachTrustedOidcHeader } from "./vercelOidc.js";
 
 export type AuthSessionUser = {
   id: string;
@@ -36,13 +37,13 @@ function toHeaders(input?: Headers | Record<string, string> | Iterable<[string, 
   return new Headers(input as Record<string, string>);
 }
 
-const GET_SESSION_TIMEOUT_MS = 2_500;
+const GET_SESSION_TIMEOUT_MS = 12_000;
 
 /** Validate a session via the auth app (cookie / bearer), not a local Better Auth instance. */
 export async function getSession(input?: {
   headers?: Headers | Record<string, string>;
 }): Promise<SessionResult> {
-  const headers = toHeaders(input?.headers);
+  const headers = await attachTrustedOidcHeader(toHeaders(input?.headers));
   let res: Response;
   try {
     res = await fetch(`${authBaseUrl()}/api/auth/get-session`, {
@@ -55,6 +56,8 @@ export async function getSession(input?: {
     return null;
   }
 
+  // Deployment protection SSO redirect = missing/invalid Trusted Sources OIDC.
+  if (res.status >= 300 && res.status < 400) return null;
   if (!res.ok) return null;
 
   const data = (await res.json()) as SessionResult | { session?: null; user?: null } | null;

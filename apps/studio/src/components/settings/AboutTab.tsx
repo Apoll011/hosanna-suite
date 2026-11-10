@@ -5,7 +5,7 @@
 
 import { useI18n } from "@/src/lib/i18n";
 import { songImportRegistry } from "@/src/lib/import";
-import { useActiveRole } from "@/src/lib/permissions/client";
+import { useActiveRole } from "@hosanna/ui";
 import { startInteractiveOnboarding, startProductTour } from "@/src/lib/tour";
 import {
   ChevronDown,
