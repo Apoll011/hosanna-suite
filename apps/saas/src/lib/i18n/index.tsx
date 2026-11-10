@@ -65,8 +65,7 @@ export function detectUserLanguage(): Language {
       const code = localeToLanguage(rawLang);
       if (code) return code;
     }
-  } catch {
-  }
+  } catch {}
 
   return DEFAULT_LANGUAGE;
 }
@@ -88,8 +87,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
       if (typeof document !== "undefined") {
         document.documentElement.lang = lang;
       }
-    } catch {
-    }
+    } catch {}
   };
 
   useEffect(() => {
