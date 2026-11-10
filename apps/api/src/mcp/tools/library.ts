@@ -345,6 +345,12 @@ export function registerLibraryTools(server: McpServer, authInfo?: AuthInfo): vo
     name: z.string().min(1),
     memberId: z.string().optional().describe("Better Auth member id from members_list / me"),
     avatarUrl: z.string().optional(),
+    unlinked: z
+      .boolean()
+      .optional()
+      .describe(
+        "Explicit external / name-only assignee. Allowed; emits warning assignee_unlinked (not an error).",
+      ),
   });
   const agendaResponsibilitySchema = z.object({
     id: z.string().optional(),
@@ -360,7 +366,7 @@ export function registerLibraryTools(server: McpServer, authInfo?: AuthInfo): vo
     {
       title: "Create agenda event",
       description:
-        "Create an agenda event (org-local date/time). Pass responsibilities with real memberIds from members_list/me (categoryIds from org_get).",
+        "Create an agenda event (org-local date/time). Assignees require only name; memberId is optional for existing org members. Name-only people are valid and may return warnings:['assignee_unlinked'] (not a blocking error).",
       inputSchema: z.object({
         title: z.string().min(1),
         date: z
@@ -448,6 +454,91 @@ export function registerLibraryTools(server: McpServer, authInfo?: AuthInfo): vo
     async ({ eventId }) => {
       try {
         return jsonResult(await deleteAgendaEvent(requireMcpContext(authInfo), eventId));
+      } catch (error) {
+        return errorResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "trash_get",
+    {
+      title: "Get trashed item (read-only)",
+      description:
+        "Read a soft-deleted song or service by id without restoring. Prefer songs_get/services_get with includeTrashed=true when you already know the kind.",
+      inputSchema: z.object({
+        id: z.string().uuid(),
+        kind: z.enum(["song", "service", "auto"]).optional().default("auto"),
+      }),
+    },
+    async ({ id, kind }) => {
+      try {
+        const ctx = requireMcpContext(authInfo);
+        const { loadSong, loadService } = await import("../lib/resourceAccess.js");
+        const trySong = kind === "song" || kind === "auto";
+        const tryService = kind === "service" || kind === "auto";
+        if (trySong) {
+          try {
+            requirePermission(ctx, "song.access");
+            const song = await loadSong(ctx, id, { includeTrashed: true });
+            if (song.deleted) {
+              return jsonResult({
+                kind: "song",
+                trashed: true,
+                purgeAt: song.purgeAt?.toISOString() ?? null,
+                song: {
+                  id: song.id,
+                  title: song.title,
+                  artist: song.artist,
+                  content: song.content,
+                  path: song.path,
+                  tags: song.tags,
+                  folderId: song.folderId,
+                  song_number: song.song_number,
+                  updatedAt: song.updatedAt.toISOString(),
+                  createdAt: song.createdAt.toISOString(),
+                },
+                hint: "Read-only trash view. Call songs_restore to undelete.",
+              });
+            }
+            if (kind === "song") {
+              return jsonResult({
+                kind: "song",
+                trashed: false,
+                song: {
+                  id: song.id,
+                  title: song.title,
+                  artist: song.artist,
+                  updatedAt: song.updatedAt.toISOString(),
+                },
+                hint: "Item is not in trash — use songs_get.",
+              });
+            }
+          } catch (err) {
+            if (kind === "song") throw err;
+          }
+        }
+        if (tryService) {
+          requirePermission(ctx, "service.access");
+          const service = await loadService(ctx, id, { includeTrashed: true });
+          return jsonResult({
+            kind: "service",
+            trashed: Boolean(service.deleted),
+            purgeAt: service.purgeAt?.toISOString() ?? null,
+            service: {
+              id: service.id,
+              name: service.name,
+              date: service.date,
+              notes: service.notes,
+              elements: service.elements,
+              updatedAt: service.updatedAt.toISOString(),
+            },
+            hint: service.deleted
+              ? "Read-only trash view. Call services_restore to undelete."
+              : "Item is not in trash — use services_get.",
+          });
+        }
+        throw new Error("Item not found in trash");
       } catch (error) {
         return errorResult(error);
       }

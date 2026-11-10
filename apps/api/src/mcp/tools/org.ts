@@ -6,6 +6,7 @@ import {
   getMe,
   getMember,
   getOrganization,
+  inviteMember,
   listMembers,
   resolveMembers,
 } from "../lib/orgDirectory.js";
@@ -33,7 +34,7 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
     {
       title: "List organization members",
       description:
-        "List members of the active organization (memberId, userId, name, email, role). Use to resolve people for agenda responsibilities (leader, musicians, preacher, …).",
+        "List members of the active organization (memberId, userId, name, email, role). Use to optionally link agenda assignees; name-only assignees do not require a member row.",
       inputSchema: z.object({
         search: z.string().optional().describe("Filter by name or email (case-insensitive)"),
         role: z.string().optional().describe("Filter by org role (owner, admin, musician, …)"),
@@ -54,7 +55,7 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
     {
       title: "Get organization member",
       description:
-        "Look up one member by memberId, userId, or name (partial). Prefer memberId for agenda assignee.memberId.",
+        "Look up one member by memberId, userId, or name (partial). Optional helper for linking assignee.memberId when the person already has an account.",
       inputSchema: z.object({
         memberId: z.string().optional(),
         userId: z.string().optional(),
@@ -75,7 +76,7 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
     {
       title: "Resolve member names",
       description:
-        "Preflight before agenda_create: map people names to memberIds. Returns resolved[] and unresolved[] (not_found / ambiguous with candidates). Prefer this over guessing.",
+        "Optional helper: map people names to memberIds when they exist. Unresolved → nameOnlyOk=true; still assign by name on the agenda. Never refuse agenda work. After everything is saved you may mention who has no account — do not mix this with members_invite.",
       inputSchema: z.object({
         names: z
           .array(
@@ -94,6 +95,31 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
     async ({ names }) => {
       try {
         return jsonResult(await resolveMembers(requireMcpContext(authInfo), names));
+      } catch (error) {
+        return errorResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "members_invite",
+    {
+      title: "Invite organization member",
+      description:
+        "Standalone org tool: create a pending email invitation (owner/admin/teamLeader). Independent of agenda — never required for event assignments. Call only when the user explicitly wants to invite someone into the organization.",
+      inputSchema: z.object({
+        email: z.string().email(),
+        name: z.string().optional().describe("Display name hint for the invitee"),
+        role: z
+          .string()
+          .optional()
+          .default("musician")
+          .describe("Org role: musician, editor, admin, guest, …"),
+      }),
+    },
+    async (args) => {
+      try {
+        return jsonResult(await inviteMember(requireMcpContext(authInfo), args));
       } catch (error) {
         return errorResult(error);
       }

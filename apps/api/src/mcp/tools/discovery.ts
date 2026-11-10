@@ -128,7 +128,7 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
             "Use draft/propose tools first; persist only with songs_save / services_save after user approval.",
             "Never fabricate lyrics. Instrument diagrams are client-render-only.",
             "Folder/collection icon and color must use studioUi ids (or hosanna://domain/library).",
-            "Assign agenda people via responsibilities + members_list/me (not service element notes).",
+            "Agenda assignees need only name; memberId is optional for existing org members. Do not refuse name-only people.",
             "All tool names use snake_case (underscores), never dots.",
           ],
         });

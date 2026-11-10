@@ -1,13 +1,16 @@
+import { RESPONSIBILITIES } from "@hosanna/auth";
 import { randomUUID } from "node:crypto";
 import { prisma } from "../../database/prisma.js";
-import { RESPONSIBILITIES } from "@hosanna/auth";
-import type { McpContext } from "../context.js";
+import { requireWriteEntitlement, type McpContext } from "../context.js";
 
 export type OrgAssignee = {
   id: string;
   name: string;
+  /** Optional — link to an existing org member when known. */
   memberId?: string;
   avatarUrl?: string;
+  /** True when there is no memberId (external / guest name). */
+  unlinked?: boolean;
 };
 
 export type OrgResponsibility = {
@@ -182,9 +185,11 @@ function serializeMemberRow(m: {
 }
 
 /**
- * Preflight: resolve people names to memberIds before agenda_create.
+ * Preflight: optionally map people names to memberIds.
  * Exact name match preferred; a single partial match counts as resolved;
  * zero or multiple matches → unresolved (+ candidates).
+ * Unresolved names are still valid agenda assignees (name only) — never block.
+ * Inviting people into the org is a separate tool (`members_invite`) — not part of agenda.
  */
 export async function resolveMembers(
   ctx: McpContext,
@@ -215,6 +220,7 @@ export async function resolveMembers(
     category?: string;
     reason: "not_found" | "ambiguous";
     candidates: ReturnType<typeof serializeMemberRow>[];
+    nameOnlyOk: true;
   }> = [];
 
   for (const entry of names) {
@@ -242,6 +248,7 @@ export async function resolveMembers(
         category: entry.category,
         reason: "not_found",
         candidates: [],
+        nameOnlyOk: true,
       });
     } else {
       unresolved.push({
@@ -249,22 +256,108 @@ export async function resolveMembers(
         category: entry.category,
         reason: "ambiguous",
         candidates: pool.slice(0, 8).map(serializeMemberRow),
+        nameOnlyOk: true,
       });
     }
   }
 
+  const allResolved = unresolved.length === 0;
   return {
     resolved,
     unresolved,
-    allResolved: unresolved.length === 0,
-    tip: allResolvedTip(unresolved.length === 0),
+    allResolved,
+    nameOnlyOk: true as const,
+    tip: allResolvedTip(allResolved, unresolved.length),
   };
 }
 
-function allResolvedTip(ok: boolean): string {
+function allResolvedTip(ok: boolean, unresolvedCount: number): string {
   return ok
-    ? "All names resolved — safe to pass memberId on agenda assignees."
-    : "Resolve unresolved names (pick a candidate memberId or confirm name-only assignees). Prefer members_resolve before agenda_create.";
+    ? "All names matched org members — you may pass memberId. Name-only assignees remain valid too."
+    : `${unresolvedCount} name(s) are not org members. Assign them by name on the agenda anyway; after saving, you may mention they have no account. Do not block the agenda or call members_invite unless the user asks to invite someone.`;
+}
+
+/** Invite by email (creates a pending Better Auth invitation row). Does not invent people. */
+export async function inviteMember(
+  ctx: McpContext,
+  args: { email: string; name?: string; role?: string },
+) {
+  requireInvitePermission(ctx);
+  requireWriteEntitlement(ctx);
+  const email = args.email.trim().toLowerCase();
+  if (!email || !email.includes("@")) {
+    throw new Error("Valid email is required for members_invite");
+  }
+  const role = (args.role?.trim() || "musician").toLowerCase();
+  const allowed = new Set(["admin", "teamLeader", "editor", "musician", "member", "guest"]);
+  if (!allowed.has(role)) {
+    throw new Error(`Invalid role "${role}". Use musician, editor, admin, guest, …`);
+  }
+
+  const existingMember = await prisma.member.findFirst({
+    where: { organizationId: ctx.orgId, user: { email } },
+    select: { id: true },
+  });
+  if (existingMember) {
+    return {
+      invited: false as const,
+      alreadyMember: true as const,
+      memberId: existingMember.id,
+      email,
+      hint: "User is already an org member — use their memberId on agenda assignees.",
+    };
+  }
+
+  const pending = await prisma.invitation.findFirst({
+    where: { organizationId: ctx.orgId, email, status: "pending" },
+    select: { id: true, expiresAt: true, role: true },
+  });
+  if (pending) {
+    return {
+      invited: false as const,
+      alreadyPending: true as const,
+      invitation: {
+        id: pending.id,
+        email,
+        role: pending.role,
+        expiresAt: pending.expiresAt.toISOString(),
+        name: args.name?.trim() || null,
+      },
+      hint: "Invitation already pending — resend from Studio Members settings if needed.",
+    };
+  }
+
+  const id = randomUUID();
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  await prisma.invitation.create({
+    data: {
+      id,
+      organizationId: ctx.orgId,
+      email,
+      role,
+      status: "pending",
+      expiresAt,
+      inviterId: ctx.user.id,
+    },
+  });
+
+  return {
+    invited: true as const,
+    invitation: {
+      id,
+      email,
+      role,
+      expiresAt: expiresAt.toISOString(),
+      name: args.name?.trim() || null,
+    },
+    hint: "Invitation created.",
+  };
+}
+
+function requireInvitePermission(ctx: McpContext): void {
+  const role = ctx.user.role;
+  if (role === "owner" || role === "admin" || role === "teamLeader") return;
+  throw new Error("Missing permission: invitation.create (owner/admin/teamLeader only)");
 }
 
 export async function getMember(
@@ -414,7 +507,16 @@ export function normalizeResponsibilities(input: unknown): OrgResponsibility[] {
       const memberId =
         typeof asg.memberId === "string" && asg.memberId.trim() ? asg.memberId.trim() : undefined;
       const avatarUrl = typeof asg.avatarUrl === "string" ? asg.avatarUrl : undefined;
-      assignees.push({ id, name, memberId, avatarUrl });
+      const unlinked =
+        asg.unlinked === true || (!memberId && asg.unlinked !== false) ? true : undefined;
+      // Persist unlinked when there is no memberId (external / name-only assignee).
+      assignees.push({
+        id,
+        name,
+        memberId,
+        avatarUrl,
+        ...(memberId ? {} : { unlinked: unlinked ?? true }),
+      });
     }
     out.push({
       id: typeof r.id === "string" && r.id.trim() ? r.id.trim() : randomUUID(),

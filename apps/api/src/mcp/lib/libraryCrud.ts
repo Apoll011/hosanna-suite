@@ -378,12 +378,27 @@ export async function collectionRemoveSongs(
 export async function listAgenda(ctx: McpContext, args?: { from?: string; limit?: number }) {
   requirePermission(ctx, "agenda.access");
   const since = args?.from?.trim() || new Date().toISOString().slice(0, 10);
-  const events = await ctx.db.agendaEvent.findMany({
-    where: { deleted: false, date: { gte: since } },
-    orderBy: [{ date: "asc" }, { time: "asc" }],
-    take: args?.limit ?? 20,
-  });
-  return { events: events.map(serializeAgenda) };
+  const limit = args?.limit ?? 20;
+  const where = { deleted: false, date: { gte: since } } as const;
+  const [totalCount, events] = await Promise.all([
+    ctx.db.agendaEvent.count({ where }),
+    ctx.db.agendaEvent.findMany({
+      where,
+      orderBy: [{ date: "asc" }, { time: "asc" }],
+      take: limit,
+    }),
+  ]);
+  const mapped = events.map(serializeAgenda);
+  return {
+    events: mapped,
+    totalCount,
+    from: since,
+    limit,
+    hint:
+      totalCount === 0
+        ? `No agenda events on or after ${since}. Try an earlier from date, or confirm the org has events (linkedServiceId is included on each event when present).`
+        : undefined,
+  };
 }
 
 export async function getAgendaEvent(ctx: McpContext, eventId: string) {
@@ -504,14 +519,20 @@ export async function updateAgendaEvent(
 
 function responsibilityWarnings(responsibilities: OrgResponsibility[]): string[] {
   const warnings: string[] = [];
+  let unlinked = false;
   for (const r of responsibilities) {
     for (const a of r.assignees) {
-      if (!a.memberId) {
+      if (!a.memberId || a.unlinked) {
+        unlinked = true;
         warnings.push(
           `Assignee "${a.name}" on category "${r.categoryId}" has no memberId — not linked to an org member`,
         );
       }
     }
+  }
+  // Stable machine code first (agents must not treat name-only as a hard error).
+  if (unlinked && !warnings.includes("assignee_unlinked")) {
+    warnings.unshift("assignee_unlinked");
   }
   return warnings;
 }
