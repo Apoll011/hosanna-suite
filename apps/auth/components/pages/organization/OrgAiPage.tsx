@@ -11,6 +11,12 @@ import {
   type AiProvider,
   type AiSettingsPublic,
 } from "@/lib/ai-api";
+import {
+  readCachedAiBilling,
+  readCachedAiSettings,
+  writeCachedAiBilling,
+  writeCachedAiSettings,
+} from "@/lib/ai-settings-cache";
 import { useI18n } from "@/lib/i18n";
 import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
@@ -36,7 +42,14 @@ import {
   Wallet,
   Zap,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 const inputClass =
   "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
@@ -208,19 +221,34 @@ function AiBillingCard({
   showToast: (msg: string, type: "success" | "error") => void;
 }) {
   const { t, locale } = useI18n();
-  const [data, setData] = useState<AiBillingResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<AiBillingResponse | null>(() =>
+    readCachedAiBilling(organizationId),
+  );
+  const [loading, setLoading] = useState(() => !readCachedAiBilling(organizationId));
   const [error, setError] = useState<string | null>(null);
 
+  useLayoutEffect(() => {
+    const cached = readCachedAiBilling(organizationId);
+    if (cached) {
+      setData(cached);
+      setLoading(false);
+    } else {
+      setData(null);
+    }
+  }, [organizationId]);
+
   const load = useCallback(async () => {
-    setLoading(true);
+    const hadCache = Boolean(readCachedAiBilling(organizationId));
+    if (!hadCache) setLoading(true);
     setError(null);
     try {
-      setData(await aiApi.getBilling({ organizationId }));
+      const next = await aiApi.getBilling({ organizationId });
+      writeCachedAiBilling(organizationId, next);
+      setData(next);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t("ai.settings.billing.loadError");
       setError(message);
-      setData(null);
+      if (!readCachedAiBilling(organizationId)) setData(null);
       showToast(message, "error");
     } finally {
       setLoading(false);
@@ -548,13 +576,46 @@ function AiMemoryPanel({
   );
 }
 
+function applyAiSettingsForm(
+  data: AiSettingsPublic,
+  setters: {
+    setSettings: (v: AiSettingsPublic) => void;
+    setProvider: (v: AiProvider) => void;
+    setModel: (v: string) => void;
+    setEnabled: (v: boolean) => void;
+    setBaseUrl: (v: string) => void;
+    setMaxToolCalls: (v: number) => void;
+    setTemperature: (v: number | null) => void;
+    setMaxOutputTokens: (v: string) => void;
+    setInstructions: (v: string) => void;
+    setMemoryEnabled: (v: boolean) => void;
+    setApiKey: (v: string) => void;
+    setApiKeyEditing: (v: boolean) => void;
+    setCustomModel: (v: boolean) => void;
+  },
+) {
+  setters.setSettings(data);
+  setters.setProvider(data.provider);
+  setters.setModel(data.model);
+  setters.setEnabled(data.enabled);
+  setters.setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
+  setters.setMaxToolCalls(data.maxToolCalls);
+  setters.setTemperature(data.temperature);
+  setters.setMaxOutputTokens(data.maxOutputTokens != null ? String(data.maxOutputTokens) : "");
+  setters.setInstructions(data.instructions ?? "");
+  setters.setMemoryEnabled(data.memoryEnabled);
+  setters.setApiKey("");
+  setters.setApiKeyEditing(false);
+  const presets = data.modelPresets[data.provider] ?? [];
+  setters.setCustomModel(!presets.includes(data.model));
+}
+
 export function OrgAiPage() {
   const { t } = useI18n();
   const { organization, isLoading: orgLoading } = useActiveOrganization();
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [settings, setSettings] = useState<AiSettingsPublic | null>(null);
-  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [clearing, setClearing] = useState(false);
 
@@ -581,41 +642,53 @@ export function OrgAiPage() {
     window.setTimeout(() => setToast(null), 3500);
   }, []);
 
+  const formSetters = useMemo(
+    () => ({
+      setSettings,
+      setProvider,
+      setModel,
+      setEnabled,
+      setBaseUrl,
+      setMaxToolCalls,
+      setTemperature,
+      setMaxOutputTokens,
+      setInstructions,
+      setMemoryEnabled,
+      setApiKey,
+      setApiKeyEditing,
+      setCustomModel,
+    }),
+    [],
+  );
+
+  // Paint cached settings before the network round-trip (and before first paint when possible).
+  useLayoutEffect(() => {
+    if (!organization?.id) return;
+    const cached = readCachedAiSettings(organization.id);
+    if (cached) applyAiSettingsForm(cached, formSetters);
+  }, [organization?.id, formSetters]);
+
   useEffect(() => {
     if (!canManage || !organization) return;
     let cancelled = false;
-    setLoading(true);
-    setSetupDismissed(false);
     void aiApi
       .getSettings({ organizationId: organization.id })
       .then((data) => {
         if (cancelled) return;
-        setSettings(data);
-        setProvider(data.provider);
-        setModel(data.model);
-        setEnabled(data.enabled);
-        setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
-        setMaxToolCalls(data.maxToolCalls);
-        setTemperature(data.temperature);
-        setMaxOutputTokens(data.maxOutputTokens != null ? String(data.maxOutputTokens) : "");
-        setInstructions(data.instructions ?? "");
-        setMemoryEnabled(data.memoryEnabled);
-        setApiKey("");
-        setApiKeyEditing(false);
-        const presets = data.modelPresets[data.provider] ?? [];
-        setCustomModel(!presets.includes(data.model));
+        writeCachedAiSettings(organization.id, data);
+        applyAiSettingsForm(data, formSetters);
       })
       .catch((err: unknown) => {
-        const message = err instanceof Error ? err.message : t("ai.settings.loadError");
-        showToast(message, "error");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (cancelled) return;
+        if (!readCachedAiSettings(organization.id)) {
+          const message = err instanceof Error ? err.message : t("ai.settings.loadError");
+          showToast(message, "error");
+        }
       });
     return () => {
       cancelled = true;
     };
-  }, [canManage, organization, showToast, t]);
+  }, [canManage, organization, showToast, t, formSetters]);
 
   const presets = useMemo(() => settings?.modelPresets[provider] ?? [], [settings, provider]);
 
@@ -685,10 +758,8 @@ export function OrgAiPage() {
         },
         { organizationId: organization.id },
       );
-      setSettings(data);
-      setApiKey("");
-      setApiKeyEditing(false);
-      setBaseUrl(data.provider === "openai_compatible" ? (data.baseUrl ?? "") : "");
+      writeCachedAiSettings(organization.id, data);
+      applyAiSettingsForm(data, formSetters);
       setBillingRefreshKey((k) => k + 1);
       showToast(t("ai.settings.saved"), "success");
     } catch (err: unknown) {
@@ -703,10 +774,8 @@ export function OrgAiPage() {
     setClearing(true);
     try {
       const data = await aiApi.clearKey({ organizationId: organization.id });
-      setSettings(data);
-      setEnabled(false);
-      setApiKey("");
-      setApiKeyEditing(false);
+      writeCachedAiSettings(organization.id, data);
+      applyAiSettingsForm(data, formSetters);
       setSetupDismissed(false);
       showToast(t("ai.settings.keyCleared"), "success");
     } catch (err: unknown) {
@@ -725,7 +794,7 @@ export function OrgAiPage() {
   return (
     <AccountCenter toast={toast}>
       <div className="space-y-6 pb-8">
-        {loading || !settings ? (
+        {!settings ? (
           <>
             <PageHeader
               title={t("accountOrg.ai.title")}
