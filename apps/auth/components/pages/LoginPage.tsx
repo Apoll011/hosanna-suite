@@ -76,7 +76,7 @@ export function LoginPage() {
       errorMsg={errorMsg}
       redirectMessage={redirectMessage}
     >
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           type="email"
           label={t("auth.login.emailLabel")}
@@ -86,7 +86,7 @@ export function LoginPage() {
           autoFocus
         />
 
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           <GoogleTextField
             type={showPassword ? "text" : "password"}
             label={t("auth.login.passwordLabel")}
@@ -97,7 +97,7 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="p-1 rounded-full text-m3-secondary hover:text-m3-text transition-colors"
+                className="p-1.5 rounded-full text-m3-secondary hover:text-m3-text transition-colors"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -145,7 +145,7 @@ export function LoginPage() {
             {t("auth.login.registerLink")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="lg" isLoading={isLoading} className="rounded-full">
             {t("auth.login.loginBtn")}
           </Button>
         </div>

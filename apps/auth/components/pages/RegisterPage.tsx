@@ -101,7 +101,7 @@ export function RegisterPage() {
       headerSubtitle={t("auth.register.subtitle")}
       errorMsg={errorMsg}
     >
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           label={t("auth.register.nameLabel")}
           value={name}
@@ -171,7 +171,7 @@ export function RegisterPage() {
             {t("auth.register.loginLink")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="lg" isLoading={isLoading} className="rounded-full">
             {t("auth.register.registerBtn")}
           </Button>
         </div>

@@ -434,7 +434,7 @@ export function OnboardingPage() {
       )}
 
       {mode === "create" && (
-        <form onSubmit={(e) => void handleCreate(e)} className="space-y-4">
+        <form onSubmit={(e) => void handleCreate(e)} className="space-y-5">
           <GoogleTextField
             label={t("onboarding.orgNameLabel")}
             value={orgName}
@@ -476,9 +476,10 @@ export function OnboardingPage() {
             </button>
             <Button
               type="submit"
+              size="lg"
               disabled={isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"}
               isLoading={isLoading}
-              className="rounded-full px-6"
+              className="rounded-full"
             >
               {t("onboarding.createOrgBtn")}
             </Button>

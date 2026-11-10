@@ -96,7 +96,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
               type="button"
               disabled={disabled || loadingProvider !== null}
               onClick={() => void handleSocialSignIn(provider.id)}
-              className="w-full min-h-10 sm:min-h-11 px-4 rounded-full border border-m3-border bg-m3-card hover:bg-m3-hover text-m3-text font-medium text-sm transition-colors flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-14 px-4 rounded-full border border-m3-border bg-m3-card hover:bg-m3-hover text-m3-text font-medium text-[15px] transition-colors flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-m3-secondary" aria-hidden="true" />

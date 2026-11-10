@@ -139,7 +139,7 @@ export function ResetPasswordPage() {
       headerSubtitle={t("auth.resetPassword.subtitle")}
       errorMsg={errorMsg}
     >
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           type={showPassword ? "text" : "password"}
           label={t("auth.resetPassword.newPasswordLabel")}
@@ -182,7 +182,7 @@ export function ResetPasswordPage() {
             {t("auth.forgotPassword.backToLogin")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="lg" isLoading={isLoading} className="rounded-full">
             {t("auth.resetPassword.resetBtn")}
           </Button>
         </div>

@@ -119,7 +119,7 @@ export function ForgotPasswordPage() {
         </button>
       </div>
 
-      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+      <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5">
         <GoogleTextField
           type="email"
           label={t("auth.forgotPassword.emailLabel")}
@@ -139,7 +139,7 @@ export function ForgotPasswordPage() {
             {t("auth.forgotPassword.backToLogin")}
           </Link>
 
-          <Button type="submit" isLoading={isLoading} className="rounded-full px-6">
+          <Button type="submit" size="lg" isLoading={isLoading} className="rounded-full">
             {t("auth.forgotPassword.sendLinkBtn")}
           </Button>
         </div>

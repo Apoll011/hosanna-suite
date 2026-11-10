@@ -40,7 +40,7 @@ export const Button: React.FC<ButtonProps> = React.memo(
     const sizeStyles = {
       sm: "min-h-8 px-2.5 py-1.5 text-xs gap-1.5",
       md: "min-h-10 px-3.5 py-2 text-sm gap-2",
-      lg: "min-h-11 px-5 py-2.5 text-base gap-2.5",
+      lg: "min-h-14 px-6 py-3 text-[15px] gap-2.5",
       icon: "min-h-10 min-w-10 p-2",
     };
 

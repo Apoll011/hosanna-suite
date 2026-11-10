@@ -164,9 +164,9 @@ export function NewOrganizationPage() {
             </div>
           </div>
 
-          <form onKeyDown={handleKeyDown} className="space-y-4">
+          <form onKeyDown={handleKeyDown} className="space-y-5">
             {step === 1 && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="space-y-5 animate-in fade-in duration-200">
                 <GoogleTextField
                   label={t("onboarding.orgNameLabel")}
                   value={orgName}
@@ -199,7 +199,7 @@ export function NewOrganizationPage() {
             )}
 
             {step === 2 && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="space-y-5 animate-in fade-in duration-200">
                 <GoogleTextField
                   label={t("auth.register.nameLabel")}
                   value={adminName}
@@ -218,7 +218,7 @@ export function NewOrganizationPage() {
             )}
 
             {step === 3 && (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="space-y-5 animate-in fade-in duration-200">
                 <GoogleTextField
                   type={showPassword ? "text" : "password"}
                   label={t("auth.register.passwordLabel")}
@@ -296,19 +296,21 @@ export function NewOrganizationPage() {
               {step < 3 ? (
                 <Button
                   type="button"
+                  size="lg"
                   onClick={handleNext}
                   disabled={step === 1 ? !isStep1Valid : !isStep2Valid}
-                  className="rounded-full px-6"
+                  className="rounded-full"
                 >
                   {t("settings.twoFactor.continue")}
                 </Button>
               ) : (
                 <Button
                   type="button"
+                  size="lg"
                   onClick={() => void handleCreateSubmit()}
                   isLoading={isLoading}
                   disabled={!isStep3Valid || isLoading}
-                  className="rounded-full px-6"
+                  className="rounded-full"
                 >
                   {t("onboarding.createOrgBtn")}
                 </Button>

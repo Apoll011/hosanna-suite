@@ -73,10 +73,10 @@ export function AuthLayout({
       </header>
 
       <main className="flex-1 w-full flex items-center justify-center p-2 sm:p-3 md:p-4 z-10">
-        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-xl sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-4 sm:p-6 md:p-8 transition-all">
-          <div className="flex flex-col items-center text-center mb-7 sm:mb-8 select-none">
+        <div className="w-full max-w-md sm:max-w-124 md:max-w-135 bg-m3-card/95 backdrop-blur-xl sm:border sm:border-m3-border/80 rounded-xl sm:rounded-[28px] shadow-lg shadow-black/5 dark:shadow-black/40 px-6 py-7 sm:p-8 md:p-9 transition-all">
+          <div className="flex flex-col items-center text-center mb-8 select-none">
             <h1 className="text-title text-m3-text">{headerTitle || t("brand.name")}</h1>
-            {headerSubtitle && <p className="mt-1.5 text-muted max-w-sm">{headerSubtitle}</p>}
+            {headerSubtitle && <p className="mt-2 text-muted max-w-sm">{headerSubtitle}</p>}
           </div>
 
           {redirectMessage && (
