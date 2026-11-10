@@ -13,7 +13,7 @@ import {
 } from "@/src/hooks/usePersonalSettings";
 import { deriveView } from "@/src/layouts/view";
 import { useI18n } from "@/src/lib/i18n";
-import { useActiveRole } from "@/src/lib/permissions/client";
+import { useActiveRole } from "@hosanna/ui";
 import {
   destroyProductTour,
   isProductTourRunning,

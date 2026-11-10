@@ -3,14 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@hosanna/ui";
+import { Button, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
   DurationField,
   durationInputToSeconds,
   secondsToDurationInput,
 } from "@/src/components/DurationField";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import { Clock, Loader2, Lock, Mic2, Music, RotateCcw, Save, Shield } from "lucide-react";
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";

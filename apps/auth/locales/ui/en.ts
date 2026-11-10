@@ -509,10 +509,13 @@ export const en: typeof pt = {
         "Cancel the invitation for {email}? They will no longer be able to accept it.",
       cancelling: "Cancelling…",
       confirmCancel: "Cancel invitation",
+      noInviteAccess: "You don't have permission to manage invitations.",
     },
     memberProfile: {
       backToList: "Back to members",
       memberSince: "Member since {date}",
+      joinedLabel: "Joined",
+      detailsTitle: "Member details",
       leaveOrg: "Leave organization",
       removeMember: "Remove member",
       rbacTitle: "Role & permissions",
@@ -521,6 +524,8 @@ export const en: typeof pt = {
         "You are about to make {name} an owner. Confirm carefully.",
       saveRole: "Save role",
       currentRole: "Current role:",
+      userId: "User ID",
+      memberId: "Member ID",
       removeConfirmTitle: "Remove member",
       removeConfirmText:
         "Remove {name} from the organization? They will lose access immediately.",

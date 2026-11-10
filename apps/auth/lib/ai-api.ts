@@ -84,58 +84,85 @@ export type AiBillingResponse =
       reason: "unsupported_provider" | "not_configured" | "disabled_crypto";
     };
 
-export const aiApi = {
-  getSettings: (): Promise<AiSettingsPublic> =>
-    apiFetch<AiSettingsPublic>("/ai/settings"),
+type OrgScoped = { organizationId: string };
 
-  updateSettings: (input: UpdateAiSettingsInput): Promise<AiSettingsPublic> =>
+export const aiApi = {
+  getSettings: ({ organizationId }: OrgScoped): Promise<AiSettingsPublic> =>
+    apiFetch<AiSettingsPublic>("/ai/settings", { organizationId }),
+
+  updateSettings: (
+    input: UpdateAiSettingsInput,
+    { organizationId }: OrgScoped,
+  ): Promise<AiSettingsPublic> =>
     apiFetch<AiSettingsPublic>("/ai/settings", {
       method: "PUT",
       body: JSON.stringify(input),
+      organizationId,
     }),
 
-  clearKey: (): Promise<AiSettingsPublic> =>
-    apiFetch<AiSettingsPublic>("/ai/settings/key", { method: "DELETE" }),
+  clearKey: ({ organizationId }: OrgScoped): Promise<AiSettingsPublic> =>
+    apiFetch<AiSettingsPublic>("/ai/settings/key", {
+      method: "DELETE",
+      organizationId,
+    }),
 
-  getBilling: (): Promise<AiBillingResponse> =>
-    apiFetch<AiBillingResponse>("/ai/billing"),
+  getBilling: ({ organizationId }: OrgScoped): Promise<AiBillingResponse> =>
+    apiFetch<AiBillingResponse>("/ai/billing", { organizationId }),
 
-  listMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
-    const data = await apiFetch<{ items?: AiMemoryItem[] }>("/ai/memory");
+  listMemory: async ({ organizationId }: OrgScoped): Promise<{ items: AiMemoryItem[] }> => {
+    const data = await apiFetch<{ items?: AiMemoryItem[] }>("/ai/memory", { organizationId });
     return { items: data?.items ?? [] };
   },
 
-  addMemory: (content: string): Promise<AiMemoryItem> =>
+  addMemory: (content: string, { organizationId }: OrgScoped): Promise<AiMemoryItem> =>
     apiFetch<AiMemoryItem>("/ai/memory", {
       method: "POST",
       body: JSON.stringify({ content }),
+      organizationId,
     }),
 
-  removeMemory: (id: string): Promise<void> =>
-    apiFetch<void>(`/ai/memory/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  removeMemory: (id: string, { organizationId }: OrgScoped): Promise<void> =>
+    apiFetch<void>(`/ai/memory/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      organizationId,
+    }),
 
-  clearMemory: async (): Promise<{ cleared: number }> => {
-    const data = await apiFetch<{ cleared?: number }>("/ai/memory", { method: "DELETE" });
+  clearMemory: async ({ organizationId }: OrgScoped): Promise<{ cleared: number }> => {
+    const data = await apiFetch<{ cleared?: number }>("/ai/memory", {
+      method: "DELETE",
+      organizationId,
+    });
     return { cleared: data?.cleared ?? 0 };
   },
 
-  listPersonalMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
-    const data = await apiFetch<{ items?: AiMemoryItem[] }>("/ai/memory/personal");
+  listPersonalMemory: async ({
+    organizationId,
+  }: OrgScoped): Promise<{ items: AiMemoryItem[] }> => {
+    const data = await apiFetch<{ items?: AiMemoryItem[] }>("/ai/memory/personal", {
+      organizationId,
+    });
     return { items: data?.items ?? [] };
   },
 
-  addPersonalMemory: (content: string): Promise<AiMemoryItem> =>
+  addPersonalMemory: (content: string, { organizationId }: OrgScoped): Promise<AiMemoryItem> =>
     apiFetch<AiMemoryItem>("/ai/memory/personal", {
       method: "POST",
       body: JSON.stringify({ content }),
+      organizationId,
     }),
 
-  removePersonalMemory: (id: string): Promise<void> =>
-    apiFetch<void>(`/ai/memory/personal/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  removePersonalMemory: (id: string, { organizationId }: OrgScoped): Promise<void> =>
+    apiFetch<void>(`/ai/memory/personal/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      organizationId,
+    }),
 
-  clearPersonalMemory: async (): Promise<{ cleared: number }> => {
+  clearPersonalMemory: async ({
+    organizationId,
+  }: OrgScoped): Promise<{ cleared: number }> => {
     const data = await apiFetch<{ cleared?: number }>("/ai/memory/personal", {
       method: "DELETE",
+      organizationId,
     });
     return { cleared: data?.cleared ?? 0 };
   },

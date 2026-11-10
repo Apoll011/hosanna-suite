@@ -4,7 +4,7 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 8080",
     "build": "vite build && node scripts/prerender.mjs",
     "build:dev": "vite build --mode development && node scripts/prerender.mjs",
     "preview": "vite preview",

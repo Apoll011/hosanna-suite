@@ -5,7 +5,7 @@ import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
-import { Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, PageHeader, Spinner, Surface, useAnyRole } from "@hosanna/ui";
 import {
   Globe,
   History,
@@ -101,7 +101,8 @@ async function fetchOrganizationLoginEvents(
 
 export function OrgActivityPage() {
   const { t, locale } = useI18n();
-  const { organization, capabilities, isLoading: orgLoading } = useActiveOrganization();
+  const { organization, isLoading: orgLoading } = useActiveOrganization();
+  const { matched: canViewLoginActivity } = useAnyRole("owner", "admin");
   const [events, setEvents] = useState<AuditEvent[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -133,9 +134,9 @@ export function OrgActivityPage() {
 
   useEffect(() => {
     if (orgLoading || !organization?.id) return;
-    if (!capabilities.canViewLoginActivity) return;
+    if (!canViewLoginActivity) return;
     void fetchLogs();
-  }, [orgLoading, organization?.id, capabilities.canViewLoginActivity, fetchLogs]);
+  }, [orgLoading, organization?.id, canViewLoginActivity, fetchLogs]);
 
   const formatWhen = (iso: string) => {
     const date = new Date(iso);
@@ -169,7 +170,7 @@ export function OrgActivityPage() {
     );
   }
 
-  if (!capabilities.canViewLoginActivity) {
+  if (!canViewLoginActivity) {
     return (
       <AccountCenter>
         <div className="space-y-6">

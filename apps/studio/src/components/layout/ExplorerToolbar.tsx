@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button } from "@hosanna/ui";
+import { Button, Can } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { Can } from "@/src/lib/permissions/components";
+
 import { Service } from "@/src/types";
 import {
   Archive,

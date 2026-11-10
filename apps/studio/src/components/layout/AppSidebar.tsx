@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Badge } from "@hosanna/ui";
+import { Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -30,8 +30,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import type { Organization as AuthOrganization } from "../../contexts/AuthContext";
 import { ViewName } from "../../layouts/view";
-import { useCan } from "../../lib/permissions/client";
-import { AnyRoleGate, Can } from "../../lib/permissions/components";
+
 import { getAvatarGradient, getInitials } from "../../utils";
 import { getRoleLabel } from "../../utils/settingsUtils";
 import { FolderTreeItemNode, FolderTreeNode } from "../explorer";

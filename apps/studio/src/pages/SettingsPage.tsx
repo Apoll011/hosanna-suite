@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PageHeader, Tabs } from "@hosanna/ui";
+import { PageHeader, Tabs, useCan } from "@hosanna/ui";
 import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import { isDemoMode } from "@/src/demo";
 import { AppWindow, Church, CloudOff, Info, Printer, Users, Zap } from "lucide-react";
 import React, { useEffect, useState } from "react";

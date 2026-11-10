@@ -507,10 +507,13 @@ export const pt = {
         "Cancelar o convite para {email}? A pessoa deixará de o poder aceitar.",
       cancelling: "A cancelar…",
       confirmCancel: "Cancelar convite",
+      noInviteAccess: "Não tem permissão para gerir convites.",
     },
     memberProfile: {
       backToList: "Voltar à lista",
       memberSince: "Membro desde {date}",
+      joinedLabel: "Entrou em",
+      detailsTitle: "Detalhes do membro",
       leaveOrg: "Sair da organização",
       removeMember: "Remover membro",
       rbacTitle: "Função e permissões",
@@ -519,6 +522,8 @@ export const pt = {
         "Está prestes a tornar {name} proprietário. Confirme com cuidado.",
       saveRole: "Guardar função",
       currentRole: "Função atual:",
+      userId: "ID do utilizador",
+      memberId: "ID do membro",
       removeConfirmTitle: "Remover membro",
       removeConfirmText:
         "Remover {name} da organização? Perderá o acesso de imediato.",

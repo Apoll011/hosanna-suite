@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Button, Input } from "@hosanna/ui";
+import { Button, Input, Can, CanAny } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import {
@@ -32,7 +32,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
 import { authClient } from "../../lib/authClient";
-import { Can, CanAny } from "../../lib/permissions/components";
+
 import { emitOnboardingEvent } from "../../lib/tour";
 import { AiChatToggle } from "@hosanna/logos-ai";
 import { InboxButton, InboxFetchClient } from "../Inbox";

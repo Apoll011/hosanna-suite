@@ -8,9 +8,9 @@ import {
   type CreateNotificationInput,
   type NotificationChannel,
 } from "@/src/api";
-import { Button, Surface, Input } from "@hosanna/ui";
+import { Button, Surface, Input, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import type { AppRole } from "@hosanna/auth";
 import { getAvatarGradient, getInitials } from "@/src/utils";
 import {

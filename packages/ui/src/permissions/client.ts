@@ -1,12 +1,12 @@
 /**
- * React hooks for RBAC permission and role checks.
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
  *
- * @module permissions/client
+ * React hooks for RBAC permission and role checks.
  */
 
-import { useAuth } from "@/src/contexts/AuthContext";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { authClient } from "../authClient";
+"use client";
+
 import {
   roles,
   statement,
@@ -15,6 +15,8 @@ import {
   type PermissionString,
   type Resource,
 } from "@hosanna/auth";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { usePermissionsContext } from "./provider";
 
 interface PermResult {
   granted: boolean;
@@ -40,7 +42,7 @@ export function clearPermissionCache(): void {
  * Groups ["project.create", "sale.create", "project.delete"]
  * into { project: ["create", "delete"], sale: ["create"] }
  */
-function groupPermissions(permissions: PermissionString[]): PermissionRequest {
+export function groupPermissions(permissions: PermissionString[]): PermissionRequest {
   const grouped = {} as Record<Resource, string[]>;
   for (const perm of permissions) {
     const dotIndex = perm.indexOf(".");
@@ -63,12 +65,13 @@ function getCacheKey(permissions: PermissionString[]): string {
     .join("|");
 }
 
-// 3. Super Efficient Fetchers
-
 /**
  * Core fetcher. Batches permissions, deduplicates requests, and pre-populates cache.
  */
-function fetchPermissionsBatch(permissions: PermissionString[]): Promise<boolean> {
+function fetchPermissionsBatch(
+  permissions: PermissionString[],
+  checkPermissions: (permissions: PermissionString[]) => Promise<boolean>,
+): Promise<boolean> {
   if (permissions.length === 0) return Promise.resolve(true);
 
   const cacheKey = getCacheKey(permissions);
@@ -77,18 +80,11 @@ function fetchPermissionsBatch(permissions: PermissionString[]): Promise<boolean
 
   if (pendingPerms.has(cacheKey)) return pendingPerms.get(cacheKey)!;
 
-  const promise = authClient.organization
-    .hasPermission({
-      permissions: groupPermissions(permissions) as Record<string, string[]>,
-    })
-    .then(({ data, error }) => {
-      if (error) throw new Error(error.message ?? "Permission check failed");
-      const granted = data?.success ?? false;
-
+  const promise = checkPermissions(permissions)
+    .then((granted) => {
       permCache.set(cacheKey, granted);
 
-      // OPTIMIZATION: If the batch was GRANTED, we know every individual permission
-      // inside it is ALSO granted. We can pre-populate the cache for future checks!
+      // If the batch was GRANTED, every individual permission inside it is also granted.
       if (granted) {
         permissions.forEach((p) => permCache.set(getCacheKey([p]), true));
       }
@@ -174,6 +170,7 @@ export function checkPermissionAnyLocally(
  */
 export function useCanAll(permissions: PermissionString[]): PermResult {
   const { role } = useActiveRole();
+  const { checkPermissions } = usePermissionsContext();
   const cacheKey = useMemo(() => getCacheKey(permissions), [permissions]);
 
   const [result, setResult] = useState<PermResult>(() => {
@@ -221,7 +218,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
 
     setResult({ granted: false, loading: true, error: null });
 
-    fetchPermissionsBatch(permissions)
+    fetchPermissionsBatch(permissions, checkPermissions)
       .then((granted) => {
         if (mounted.current) setResult({ granted, loading: false, error: null });
       })
@@ -233,7 +230,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
       mounted.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- cacheKey deterministically tracks permissions
-  }, [cacheKey, role]);
+  }, [cacheKey, role, checkPermissions]);
 
   return result;
 }
@@ -245,6 +242,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
  */
 export function useCanAny(permissions: PermissionString[]): PermResult {
   const { role } = useActiveRole();
+  const { checkPermissions } = usePermissionsContext();
   const cacheKey = useMemo(() => getCacheKey(permissions), [permissions]);
 
   const [result, setResult] = useState<PermResult>(() => {
@@ -308,8 +306,9 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
       setResult({ granted: false, loading: true, error: null });
 
       try {
-        // we don't spam the network if other components are checking these same perms.
-        const results = await Promise.all(permissions.map((p) => fetchPermissionsBatch([p])));
+        const results = await Promise.all(
+          permissions.map((p) => fetchPermissionsBatch([p], checkPermissions)),
+        );
         const granted = results.some(Boolean);
 
         if (mounted.current) setResult({ granted, loading: false, error: null });
@@ -324,7 +323,7 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
       mounted.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- cacheKey deterministically tracks permissions
-  }, [cacheKey, role]);
+  }, [cacheKey, role, checkPermissions]);
 
   return result;
 }
@@ -334,11 +333,11 @@ export function useActiveRole(): {
   loading: boolean;
   error: Error | null;
 } {
-  const { user, isLoading } = useAuth();
+  const { role, roleLoading } = usePermissionsContext();
 
   return {
-    role: (user?.role as AppRole) ?? null,
-    loading: isLoading,
+    role,
+    loading: roleLoading,
     error: null,
   };
 }
@@ -348,14 +347,15 @@ export function useRole(role: AppRole) {
   return { matched: activeRole === role, loading, error };
 }
 
-export function useAnyRole(...roles: AppRole[]) {
+export function useAnyRole(...rolesToMatch: AppRole[]) {
   const { role: activeRole, loading, error } = useActiveRole();
   return {
-    matched: activeRole ? roles.includes(activeRole) : false,
+    matched: activeRole ? rolesToMatch.includes(activeRole) : false,
     loading,
     error,
   };
 }
+
 /**
  * Automatically computes all possible permission strings
  * (e.g. "song.create", "billing.manage") from your `statement` object.

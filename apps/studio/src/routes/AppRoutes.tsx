@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner } from "@hosanna/ui";
+import { Spinner, usePreloadPermissions } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import React, { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -11,7 +11,7 @@ import { Navigate, Outlet, Route, Routes, useLocation, useParams } from "react-r
 import { useAuth } from "../contexts/AuthContext";
 import { isDemoMode } from "../demo/index";
 import { MainLayout } from "../layouts/MainLayout";
-import { usePreloadPermissions } from "../lib/permissions/client";
+
 import { posthog } from "../lib/posthog";
 import { ExternalAuthRedirect } from "../components/ExternalAuthRedirect";
 import { ProtectedRoute } from "./ProtectedRoute";

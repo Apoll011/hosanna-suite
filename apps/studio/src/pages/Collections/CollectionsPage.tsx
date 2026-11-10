@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ConfirmDialog, Spinner, Badge, EmptyState } from "@hosanna/ui";
+import { ConfirmDialog, Spinner, Badge, EmptyState, useCan, Can } from "@hosanna/ui";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
 import { CreateCollectionModal } from "@/src/components/modals/CreateCollectionModal";
@@ -12,8 +12,7 @@ import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useCollections } from "@/src/hooks/useCollections";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
-import { Can } from "@/src/lib/permissions/components";
+
 import { Collection } from "@/src/types";
 import { getFolderColorStyle, getFolderIconComponent } from "@/src/utils/folderCustomization";
 import {

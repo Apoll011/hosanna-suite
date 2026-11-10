@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, PageHeader, Spinner, Badge, EmptyState } from "@hosanna/ui";
+import { Button, PageHeader, Spinner, Badge, EmptyState, useAnyRole } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useI18n } from "@/src/lib/i18n";
-import { useAnyRole } from "@/src/lib/permissions/client";
+
 import {
   Calendar,
   CalendarClock,

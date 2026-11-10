@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@hosanna/ui";
+import { Button, Spinner, Surface, useCan } from "@hosanna/ui";
 import { PRINT_BRAND_ACCENT } from "@/src/components/print/brand";
 import { toOrgPrintSettings } from "@/src/components/print/options";
 import { PrintOptionsPanel } from "@/src/components/print/PrintOptionsPanel";
@@ -19,7 +19,7 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { usePrint } from "@/src/contexts/PrintContext";
 import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import {
   Eye,
   LayoutTemplate,

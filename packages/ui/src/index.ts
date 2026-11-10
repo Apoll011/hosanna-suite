@@ -12,3 +12,33 @@ export { Spinner, type SpinnerProps } from "./Spinner";
 export { LoadingBar, type LoadingBarProps } from "./LoadingBar";
 export { Surface, type SurfaceProps } from "./Surface";
 export { Tabs, type TabItem } from "./Tabs";
+
+export {
+  AnyRoleGate,
+  Can,
+  CanAll,
+  CanAny,
+  Cannot,
+  PermissionsProvider,
+  RoleGate,
+  RoleSwitch,
+  checkPermissionAnyLocally,
+  checkPermissionsLocally,
+  clearPermissionCache,
+  groupPermissions,
+  preloadPermissionsForRole,
+  useActiveRole,
+  useAnyRole,
+  useCan,
+  useCanAll,
+  useCanAny,
+  useCannot,
+  usePermissionValue,
+  usePermissionsContext,
+  usePreloadPermissions,
+  useRole,
+  withPermission,
+  withRole,
+  type PermissionsContextValue,
+  type PermissionsProviderProps,
+} from "./permissions";

@@ -1,3 +1,11 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+"use client";
+
+import type { AppRole, PermissionString } from "@hosanna/auth";
 import React, { type ReactNode } from "react";
 import {
   useActiveRole,
@@ -8,7 +16,6 @@ import {
   useCannot,
   useRole,
 } from "./client";
-import type { AppRole, PermissionString } from "@hosanna/auth";
 
 interface GateBaseProps<T> {
   fallback?: ReactNode;

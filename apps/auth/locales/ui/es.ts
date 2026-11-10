@@ -509,10 +509,13 @@ export const es: typeof pt = {
         "¿Cancelar la invitación de {email}? Ya no podrá aceptarla.",
       cancelling: "Cancelando…",
       confirmCancel: "Cancelar invitación",
+      noInviteAccess: "No tienes permiso para gestionar invitaciones.",
     },
     memberProfile: {
       backToList: "Volver a la lista",
       memberSince: "Miembro desde {date}",
+      joinedLabel: "Alta",
+      detailsTitle: "Detalles del miembro",
       leaveOrg: "Salir de la organización",
       removeMember: "Eliminar miembro",
       rbacTitle: "Rol y permisos",
@@ -521,6 +524,8 @@ export const es: typeof pt = {
         "Estás a punto de hacer propietario a {name}. Confirma con cuidado.",
       saveRole: "Guardar rol",
       currentRole: "Rol actual:",
+      userId: "ID de usuario",
+      memberId: "ID de miembro",
       removeConfirmTitle: "Eliminar miembro",
       removeConfirmText:
         "¿Eliminar a {name} de la organización? Perderá el acceso de inmediato.",

@@ -10,7 +10,7 @@ import {
   type NotificationChannel,
 } from "@/lib/notifications-api";
 import type { AppRole } from "@hosanna/auth";
-import { Button, Input, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
   Bell,
   Building2,
@@ -75,7 +75,7 @@ function initials(name: string) {
 
 export function OrgNotificationsPage() {
   const { t } = useI18n();
-  const { organization, capabilities, isLoading } = useActiveOrganization();
+  const { organization, isLoading } = useActiveOrganization();
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [target, setTarget] = useState<Target>("org");
@@ -92,7 +92,7 @@ export function OrgNotificationsPage() {
   const [channel, setChannel] = useState<NotificationChannel>("inbox");
   const [isSending, setIsSending] = useState(false);
 
-  const canSend = capabilities.canSendNotifications;
+  const { granted: canSend } = useCan("notification.sent");
   const isOrgTarget = target === "org";
   const showTypeField = isOrgTarget || channel !== "push";
 
@@ -219,7 +219,9 @@ export function OrgNotificationsPage() {
         }
       }
 
-      const result = await notificationsApi.create(payload);
+      const result = await notificationsApi.create(payload, {
+        organizationId: organization.id,
+      });
       showToast(
         result.push
           ? t("settings.notifications.sentPushToast", { count: result.push.sent })

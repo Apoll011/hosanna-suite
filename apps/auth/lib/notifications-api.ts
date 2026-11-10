@@ -37,9 +37,13 @@ export type CreateNotificationResult = {
 };
 
 export const notificationsApi = {
-  create: (input: CreateNotificationInput): Promise<CreateNotificationResult> =>
+  create: (
+    input: CreateNotificationInput,
+    opts?: { organizationId?: string },
+  ): Promise<CreateNotificationResult> =>
     apiFetch<CreateNotificationResult>("/notifications", {
       method: "POST",
       body: JSON.stringify(input),
+      organizationId: opts?.organizationId ?? input.organizationId ?? null,
     }),
 };

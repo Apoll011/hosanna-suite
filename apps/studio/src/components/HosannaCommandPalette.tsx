@@ -1,5 +1,5 @@
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+import { useCan } from "@hosanna/ui";
 import { Folder, Service, Song } from "@/src/types";
 import {
   Calendar,

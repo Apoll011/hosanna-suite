@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Spinner, Surface } from "@hosanna/ui";
+import { Button, Input, Spinner, Surface, useCan } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import { ResponsibilityColor, ResponsibilityIconKey } from "@/src/types";
 import { COLOR_MAP, ICON_MAP } from "@/src/utils/iconMap";
 import { Loader2, Lock, Plus, RotateCcw, Save, Trash2, Users } from "lucide-react";

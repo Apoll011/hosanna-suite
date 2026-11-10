@@ -3,7 +3,12 @@
  *
  * Base URL is `NEXT_PUBLIC_API_URL` (must include the `/api` suffix, same as
  * Studio's `VITE_API_URL`). Cookie session via `credentials: "include"`.
+ *
+ * API middleware requires `session.activeOrganizationId` — callers should pass
+ * `organizationId` so we sync Better Auth's active org before the request.
  */
+
+import { authClient } from "@/lib/auth-client";
 
 export function apiBaseUrl(): string {
   const fromEnv =
@@ -39,17 +44,46 @@ export async function readApiError(res: Response): Promise<string> {
   return `Request failed (${res.status})`;
 }
 
+type SessionPayload = {
+  session?: { activeOrganizationId?: string | null } | null;
+  user?: unknown;
+} | null;
+
+/** Keep Better Auth's active org in sync so API cookie sessions resolve a workspace. */
+export async function ensureActiveOrganizationSession(
+  organizationId?: string | null,
+): Promise<void> {
+  if (!organizationId || typeof window === "undefined") return;
+
+  const { data } = (await authClient.getSession({ query: {} })) as {
+    data?: SessionPayload;
+  };
+  const activeId = data?.session?.activeOrganizationId ?? null;
+  if (activeId === organizationId) return;
+
+  await authClient.organization.setActive({ organizationId });
+}
+
+export type ApiFetchOptions = RequestInit & {
+  /** When set, syncs the auth session's active organization before calling the API. */
+  organizationId?: string | null;
+};
+
 export async function apiFetch<T>(
   path: string,
-  init?: RequestInit,
+  init?: ApiFetchOptions,
 ): Promise<T> {
-  const headers = new Headers(init?.headers);
+  const { organizationId, ...requestInit } = init ?? {};
+  await ensureActiveOrganizationSession(organizationId);
+
+  const headers = new Headers(requestInit.headers);
   if (!headers.has("Accept")) headers.set("Accept", "application/json");
-  if (init?.body && !headers.has("Content-Type")) {
+  if (requestInit.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
+
   const res = await fetch(`${apiBaseUrl()}${path.startsWith("/") ? path : `/${path}`}`, {
-    ...init,
+    ...requestInit,
     credentials: "include",
     headers,
   });

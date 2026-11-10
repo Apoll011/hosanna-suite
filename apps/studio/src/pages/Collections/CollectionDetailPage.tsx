@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ConfirmDialog, Spinner, EmptyState } from "@hosanna/ui";
+import { ConfirmDialog, Spinner, EmptyState, useCan, Can } from "@hosanna/ui";
 import { Table } from "@/src/components/common";
 import type { CollectionToolbarActions } from "@/src/components/layout";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
@@ -16,8 +16,7 @@ import { useCollection, useCollections } from "@/src/hooks/useCollections";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
 import { useAllSongs } from "@/src/hooks/useSongs";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
-import { Can } from "@/src/lib/permissions/components";
+
 import { Song } from "@/src/types";
 import {
   CheckSquare,

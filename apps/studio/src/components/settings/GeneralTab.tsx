@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@hosanna/ui";
+import { Button, Spinner, Surface, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@/src/lib/permissions/client";
+
 import {
   Calendar,
   Clock,

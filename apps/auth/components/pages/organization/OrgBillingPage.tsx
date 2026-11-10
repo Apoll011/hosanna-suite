@@ -4,8 +4,16 @@ import { AccountCenter } from "@/components/account/AccountCenter";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
-import { Badge, Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
-import { AlertTriangle, Check, CreditCard, RotateCcw } from "lucide-react";
+import { Badge, Button, Can, Cannot, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
+import {
+  AlertTriangle,
+  CalendarRange,
+  Check,
+  CreditCard,
+  Receipt,
+  RotateCcw,
+  Sparkles,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Subscription = {
@@ -69,7 +77,9 @@ function writeCachedSubs(orgId: string, rows: Subscription[]): void {
 
 export function OrgBillingPage() {
   const { t, language, locale } = useI18n();
-  const { organization, capabilities, isLoading: orgLoading } = useActiveOrganization();
+  const { organization, isLoading: orgLoading } = useActiveOrganization();
+  const canManage = useCan("billing.manage");
+  const canAccess = useCan("billing.access");
 
   const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -197,7 +207,7 @@ export function OrgBillingPage() {
   };
 
   const handleCheckout = async () => {
-    if (!capabilities.canManageBilling || !organization) return;
+    if (!canManage.granted || !organization) return;
     setPendingAction("checkout");
     try {
       const origin = window.location.origin;
@@ -221,7 +231,7 @@ export function OrgBillingPage() {
   };
 
   const handlePortal = async () => {
-    if (!capabilities.canManageBilling || !organization) return;
+    if (!canManage.granted || !organization) return;
     setPendingAction("portal");
     try {
       const { error } = await authClient.subscription.billingPortal({
@@ -240,7 +250,7 @@ export function OrgBillingPage() {
   };
 
   const handleRestore = async () => {
-    if (!capabilities.canManageBilling || !organization) return;
+    if (!canManage.granted || !organization) return;
     setPendingAction("restore");
     try {
       const { error } = await authClient.subscription.restore({
@@ -280,17 +290,25 @@ export function OrgBillingPage() {
     );
   }
 
-  if (!capabilities.canAccessBilling) {
+  if (!canAccess.loading && !canAccess.granted) {
     return (
       <AccountCenter toast={toast}>
         <div className="space-y-6">
           <PageHeader title={t("settings.billing.title")} description={t("settings.billing.desc")} />
-          <Surface className="text-center py-8">
-            <h3 className="text-base font-semibold text-m3-text">
-              {t("settings.billing.noAccessTitle")}
-            </h3>
-            <p className="text-sm text-m3-secondary mt-1">{t("settings.billing.noAccessDesc")}</p>
-          </Surface>
+          <div className="overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card">
+            <div className="h-28 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
+            <div className="-mt-8 px-6 pb-8 text-center sm:px-10">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-m3-border bg-m3-card shadow-sm">
+                <CreditCard className="h-7 w-7 text-m3-secondary" />
+              </div>
+              <h3 className="text-lg font-semibold text-m3-text">
+                {t("settings.billing.noAccessTitle")}
+              </h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-m3-secondary">
+                {t("settings.billing.noAccessDesc")}
+              </p>
+            </div>
+          </div>
         </div>
       </AccountCenter>
     );
@@ -298,26 +316,29 @@ export function OrgBillingPage() {
 
   const loadingInitial = isLoading && subscriptions === null;
   const refreshing = isLoading && subscriptions !== null;
+  const isAnnual = activeSub?.billingInterval === "year";
+  const price = isAnnual ? planPricing.annual : planPricing.monthly;
 
   return (
     <AccountCenter toast={toast}>
-      <div className="space-y-5">
-        <PageHeader title={t("settings.billing.title")} description={t("settings.billing.desc")} />
+      <div className="space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <PageHeader title={t("settings.billing.title")} description={t("settings.billing.desc")} />
+          <Cannot permission="billing.manage">
+            <span className="inline-flex w-fit items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+              {t("settings.billing.readOnly")}
+            </span>
+          </Cannot>
+        </div>
 
-        {!capabilities.canManageBilling ? (
-          <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
-            {t("settings.billing.readOnly")}
-          </p>
-        ) : null}
-
-        {loadingInitial ? (
+        {loadingInitial || canAccess.loading ? (
           <div className="flex justify-center py-12">
             <Spinner label={t("settings.billing.loading")} />
           </div>
         ) : fetchError && subscriptions === null ? (
           <Surface>
-            <div className="flex flex-col items-center text-center gap-3 py-6">
-              <AlertTriangle className="w-6 h-6 text-m3-danger" />
+            <div className="flex flex-col items-center gap-3 py-6 text-center">
+              <AlertTriangle className="h-6 w-6 text-m3-danger" />
               <p className="text-sm text-m3-danger">{fetchError}</p>
               <Button variant="outline" size="sm" onClick={() => void refresh()}>
                 {t("common.retry")}
@@ -331,101 +352,166 @@ export function OrgBillingPage() {
             ) : null}
 
             {activeSub.status === "trialing" && activeSub.trialEnd ? (
-              <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
-                <strong className="font-semibold">
-                  {t("settings.billing.trialDaysLeft", {
-                    days: daysLeft(activeSub.trialEnd),
-                  })}
-                </strong>
-                <p className="mt-0.5 opacity-90">
-                  {t("settings.billing.trialEndsOn", {
-                    date: formatDate(activeSub.trialEnd),
-                  })}
-                </p>
+              <div className="flex items-start gap-3 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-3.5 dark:border-amber-800 dark:from-amber-950/40 dark:to-orange-950/20">
+                <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <div className="text-sm text-amber-900 dark:text-amber-200">
+                  <p className="font-semibold">
+                    {t("settings.billing.trialDaysLeft", {
+                      days: daysLeft(activeSub.trialEnd),
+                    })}
+                  </p>
+                  <p className="mt-0.5 opacity-90">
+                    {t("settings.billing.trialEndsOn", {
+                      date: formatDate(activeSub.trialEnd),
+                    })}
+                  </p>
+                </div>
               </div>
             ) : null}
 
             {activeSub.cancelAtPeriodEnd ? (
-              <div className="rounded-xl border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-sm text-rose-700 dark:text-rose-400">
-                  <strong className="font-semibold">{t("settings.billing.cancelingTitle")}</strong>
+              <div className="flex flex-col justify-between gap-3 rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-red-50 px-4 py-3.5 sm:flex-row sm:items-center dark:border-rose-800 dark:from-rose-950/40 dark:to-red-950/20">
+                <div className="text-sm text-rose-800 dark:text-rose-300">
+                  <p className="font-semibold">{t("settings.billing.cancelingTitle")}</p>
                   <p className="mt-0.5 opacity-90">
                     {t("settings.billing.cancelingDesc", {
                       date: formatDate(activeSub.periodEnd),
                     })}
                   </p>
                 </div>
-                {capabilities.canManageBilling ? (
+                <Can permission="billing.manage">
                   <Button
                     variant="outline"
                     size="sm"
                     isLoading={pendingAction === "restore"}
                     onClick={() => void handleRestore()}
-                    icon={<RotateCcw className="w-3.5 h-3.5" />}
+                    icon={<RotateCcw className="h-3.5 w-3.5" />}
                   >
                     {t("settings.billing.restore")}
                   </Button>
-                ) : null}
+                </Can>
               </div>
             ) : null}
 
-            <Surface className="space-y-5">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <Badge variant={activeSub.status === "trialing" ? "warning" : "success"} size="md">
-                  {activeSub.status === "trialing"
-                    ? t("settings.billing.status.trialing")
-                    : t("settings.billing.status.active")}
-                </Badge>
-                <div className="min-w-0">
-                  <p className="text-xs text-m3-secondary">{t("settings.billing.currentPlanTitle")}</p>
-                  <h3 className="text-base font-semibold text-m3-text">
-                    {t("settings.billing.planName")}
-                    {activeSub.billingInterval ? (
-                      <span className="text-sm font-normal text-m3-secondary">
-                        {" "}
-                        ·{" "}
-                        {activeSub.billingInterval === "year"
-                          ? t("settings.billing.annual")
-                          : t("settings.billing.monthly")}
+            <div className="overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-sm">
+              <div className="relative overflow-hidden bg-gradient-to-br from-sky-800 via-slate-800 to-slate-950 px-5 py-6 sm:px-8 sm:py-8">
+                <div
+                  className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-sky-400/20 blur-3xl"
+                  aria-hidden
+                />
+                <div
+                  className="pointer-events-none absolute -bottom-24 left-1/3 h-48 w-48 rounded-full bg-indigo-400/15 blur-3xl"
+                  aria-hidden
+                />
+                <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                  <div className="min-w-0 space-y-4 text-white">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge
+                        variant={activeSub.status === "trialing" ? "warning" : "success"}
+                        size="md"
+                      >
+                        {activeSub.status === "trialing"
+                          ? t("settings.billing.status.trialing")
+                          : t("settings.billing.status.active")}
+                      </Badge>
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">
+                        {t("settings.billing.currentPlanTitle")}
                       </span>
-                    ) : null}
-                  </h3>
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                        {t("settings.billing.planName")}
+                      </h3>
+                      <p className="mt-1.5 max-w-lg text-sm text-white/75">
+                        {t("settings.billing.planDesc")}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <span className="text-4xl font-semibold tabular-nums tracking-tight sm:text-5xl">
+                        {price.amount}
+                      </span>
+                      <span className="text-sm text-white/70">
+                        {price.period}
+                        {activeSub.billingInterval ? (
+                          <>
+                            {" "}
+                            ·{" "}
+                            {isAnnual
+                              ? t("settings.billing.annual")
+                              : t("settings.billing.monthly")}
+                          </>
+                        ) : null}
+                      </span>
+                    </div>
+                  </div>
+
+                  <Can permission="billing.manage">
+                    <div className="shrink-0 space-y-2 rounded-xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm lg:min-w-[220px]">
+                      <Button
+                        variant="primary"
+                        className="w-full"
+                        isLoading={pendingAction === "portal"}
+                        icon={<CreditCard className="h-4 w-4" />}
+                        onClick={() => void handlePortal()}
+                      >
+                        {t("settings.billing.manage")}
+                      </Button>
+                      <p className="text-xs leading-relaxed text-white/70">
+                        {t("settings.billing.manageDesc")}
+                      </p>
+                    </div>
+                  </Can>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <div className="rounded-lg bg-m3-sidebar/50 px-3.5 py-3">
-                  <span className="block text-label text-m3-secondary">
-                    {t("settings.billing.currentPeriod")}
+              <div className="grid grid-cols-1 gap-px bg-m3-border/60 sm:grid-cols-2">
+                <div className="flex items-start gap-3 bg-m3-card px-5 py-5 sm:px-6">
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-m3-primary/10 text-m3-primary">
+                    <CalendarRange className="h-4 w-4" />
                   </span>
-                  <span className="font-semibold text-m3-text">
-                    {formatDate(activeSub.periodStart)} → {formatDate(activeSub.periodEnd)}
-                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-m3-secondary">
+                      {t("settings.billing.currentPeriod")}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-m3-text">
+                      {formatDate(activeSub.periodStart)} → {formatDate(activeSub.periodEnd)}
+                    </p>
+                  </div>
                 </div>
-                <div className="rounded-lg bg-m3-sidebar/50 px-3.5 py-3">
-                  <span className="block text-label text-m3-secondary">
-                    {t("settings.billing.nextCharge")}
+                <div className="flex items-start gap-3 bg-m3-card px-5 py-5 sm:px-6">
+                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-m3-primary/10 text-m3-primary">
+                    <Receipt className="h-4 w-4" />
                   </span>
-                  <span className="font-semibold text-m3-text">
-                    {activeSub.cancelAtPeriodEnd ? "—" : formatDate(activeSub.periodEnd)}
-                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-m3-secondary">
+                      {t("settings.billing.nextCharge")}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-m3-text">
+                      {activeSub.cancelAtPeriodEnd ? "—" : formatDate(activeSub.periodEnd)}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {capabilities.canManageBilling ? (
-                <div>
-                  <Button
-                    variant="primary"
-                    isLoading={pendingAction === "portal"}
-                    icon={<CreditCard className="w-4 h-4" />}
-                    onClick={() => void handlePortal()}
-                  >
-                    {t("settings.billing.manage")}
-                  </Button>
-                  <p className="text-xs text-m3-secondary mt-2">{t("settings.billing.manageDesc")}</p>
-                </div>
-              ) : null}
-            </Surface>
+              <div className="border-t border-m3-border/60 px-5 py-5 sm:px-6">
+                <p className="mb-3 text-sm font-semibold text-m3-text">
+                  {t("settings.billing.includedTitle")}
+                </p>
+                <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {PLAN_FEATURE_KEYS.map((key) => (
+                    <li
+                      key={key}
+                      className="flex items-center gap-2.5 text-sm text-m3-text"
+                    >
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                        <Check className="h-3 w-3" />
+                      </span>
+                      {t(key)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -433,92 +519,114 @@ export function OrgBillingPage() {
               <p className="text-xs text-m3-secondary">{t("settings.billing.loading")}</p>
             ) : null}
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
-              <Surface className="space-y-5">
-                <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div className="min-w-0">
-                    <h3 className="text-base font-semibold text-m3-text">
-                      {t("settings.billing.planName")}
-                    </h3>
-                    <p className="text-sm text-m3-secondary mt-1">
-                      {t("settings.billing.planDesc")}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 border border-m3-border rounded-full p-1 bg-m3-sidebar/40 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setAnnual(false)}
-                      disabled={pendingAction === "checkout"}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer disabled:opacity-50 ${
-                        !annual ? "bg-m3-primary text-white" : "text-m3-secondary"
-                      }`}
+            <div className="overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-sm">
+              <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr]">
+                <div className="relative overflow-hidden bg-gradient-to-br from-sky-800 via-slate-800 to-slate-950 px-5 py-7 text-white sm:px-8 sm:py-9">
+                  <div
+                    className="pointer-events-none absolute -right-10 top-0 h-40 w-40 rounded-full bg-sky-400/25 blur-3xl"
+                    aria-hidden
+                  />
+                  <div className="relative space-y-6">
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-200/90">
+                        {t("settings.billing.planName")}
+                      </p>
+                      <h3 className="max-w-md text-2xl font-semibold tracking-tight sm:text-3xl">
+                        {t("settings.billing.planDesc")}
+                      </h3>
+                    </div>
+
+                    <div className="inline-flex rounded-full border border-white/20 bg-white/10 p-1 backdrop-blur-sm">
+                      <button
+                        type="button"
+                        onClick={() => setAnnual(false)}
+                        disabled={pendingAction === "checkout"}
+                        className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 ${
+                          !annual
+                            ? "bg-white text-slate-900"
+                            : "text-white/75 hover:text-white"
+                        }`}
+                      >
+                        {t("settings.billing.monthly")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAnnual(true)}
+                        disabled={pendingAction === "checkout"}
+                        className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 ${
+                          annual
+                            ? "bg-white text-slate-900"
+                            : "text-white/75 hover:text-white"
+                        }`}
+                      >
+                        {t("settings.billing.annual")}
+                      </button>
+                    </div>
+
+                    <div>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-5xl font-semibold tabular-nums tracking-tight sm:text-6xl">
+                          {annual ? planPricing.annual.amount : planPricing.monthly.amount}
+                        </span>
+                        <span className="text-base text-white/70">
+                          {annual ? planPricing.annual.period : planPricing.monthly.period}
+                        </span>
+                      </div>
+                      {annual ? (
+                        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-2.5 py-1 text-xs font-semibold text-emerald-200">
+                          <Check className="h-3.5 w-3.5" />
+                          {t("settings.billing.annualSavings")}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <Can
+                      permission="billing.manage"
+                      fallback={
+                        <p className="text-sm text-white/70">{t("settings.billing.askOwner")}</p>
+                      }
                     >
-                      {t("settings.billing.monthly")}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setAnnual(true)}
-                      disabled={pendingAction === "checkout"}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer disabled:opacity-50 ${
-                        annual ? "bg-m3-primary text-white" : "text-m3-secondary"
-                      }`}
-                    >
-                      {t("settings.billing.annual")}
-                    </button>
+                      <div className="space-y-2 border-t border-white/15 pt-5">
+                        <Button
+                          variant="primary"
+                          className="w-full sm:w-auto"
+                          isLoading={pendingAction === "checkout"}
+                          onClick={() => void handleCheckout()}
+                        >
+                          {usedTrial
+                            ? t("settings.billing.subscribe")
+                            : t("settings.billing.startTrial")}
+                        </Button>
+                        <p className="max-w-md text-xs leading-relaxed text-white/70">
+                          {usedTrial
+                            ? t("settings.billing.subscribeNote")
+                            : t("settings.billing.trialNote")}
+                        </p>
+                        <p className="text-xs text-white/55">{t("settings.billing.promoHint")}</p>
+                      </div>
+                    </Can>
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-semibold text-m3-text">
-                      {annual ? planPricing.annual.amount : planPricing.monthly.amount}
-                    </span>
-                    <span className="text-sm text-m3-secondary">
-                      {annual ? planPricing.annual.period : planPricing.monthly.period}
-                    </span>
-                  </div>
-                  {annual ? (
-                    <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-1.5">
-                      <Check className="w-3.5 h-3.5" />
-                      {t("settings.billing.annualSavings")}
-                    </p>
-                  ) : null}
+                <div className="flex flex-col justify-center gap-4 bg-m3-sidebar/40 px-5 py-7 sm:px-7 sm:py-9">
+                  <h3 className="text-sm font-semibold text-m3-text">
+                    {t("settings.billing.includedTitle")}
+                  </h3>
+                  <ul className="flex flex-col gap-2.5">
+                    {PLAN_FEATURE_KEYS.map((key) => (
+                      <li
+                        key={key}
+                        className="flex items-start gap-3 rounded-xl border border-m3-border/50 bg-m3-card/80 px-3.5 py-3 text-sm text-m3-text"
+                      >
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-m3-primary/15 text-m3-primary">
+                          <Check className="h-3 w-3" />
+                        </span>
+                        {t(key)}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                {capabilities.canManageBilling ? (
-                  <div>
-                    <Button
-                      variant="primary"
-                      isLoading={pendingAction === "checkout"}
-                      onClick={() => void handleCheckout()}
-                    >
-                      {usedTrial ? t("settings.billing.subscribe") : t("settings.billing.startTrial")}
-                    </Button>
-                    <p className="text-xs text-m3-secondary mt-2">
-                      {usedTrial
-                        ? t("settings.billing.subscribeNote")
-                        : t("settings.billing.trialNote")}
-                    </p>
-                    <p className="text-xs text-m3-secondary mt-1">{t("settings.billing.promoHint")}</p>
-                  </div>
-                ) : (
-                  <p className="text-xs text-m3-secondary">{t("settings.billing.askOwner")}</p>
-                )}
-              </Surface>
-
-              <Surface className="space-y-4">
-                <h3 className="text-sm font-semibold text-m3-text">
-                  {t("settings.billing.includedTitle")}
-                </h3>
-                <ul className="space-y-2.5">
-                  {PLAN_FEATURE_KEYS.map((key) => (
-                    <li key={key} className="flex items-center gap-2.5 text-sm text-m3-text">
-                      <Check className="w-4 h-4 text-m3-primary shrink-0" />
-                      {t(key)}
-                    </li>
-                  ))}
-                </ul>
-              </Surface>
+              </div>
             </div>
           </div>
         )}

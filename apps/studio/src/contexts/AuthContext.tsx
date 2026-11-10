@@ -10,7 +10,7 @@ import { getDemoOrganization, getDemoUser } from "../demo/demoAuth";
 import { clearDemoData, isDemoMode } from "../demo/index";
 import { getPersistedSettingsJson, syncSettingsFromMetadata } from "../hooks/usePersonalSettings";
 import { authClient } from "../lib/authClient";
-import { clearPermissionCache } from "../lib/permissions/client";
+import { clearPermissionCache } from "@hosanna/ui";
 import { posthog } from "../lib/posthog";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
 import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";

@@ -6,14 +6,28 @@ import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { orgInitials, roleLabel, selectClass } from "@/lib/org-ui";
 import type { AppRole } from "@hosanna/auth";
-import { Badge, Button, Input, Modal, PageHeader, Spinner, Surface, Tabs } from "@hosanna/ui";
+import {
+  Badge,
+  Button,
+  Can,
+  CanAny,
+  Input,
+  Modal,
+  PageHeader,
+  Spinner,
+  Surface,
+  Tabs,
+} from "@hosanna/ui";
 import {
   AlertTriangle,
   ArrowLeft,
+  CalendarDays,
   Mail,
+  PenLine,
   RefreshCw,
   Search,
   Send,
+  Shield,
   Trash2,
   UserPlus,
   XCircle,
@@ -328,6 +342,8 @@ export function OrgMembersPage() {
     const promotingOwner =
       editingRole && draftRole === "owner" && selected.role !== "owner";
     const showDanger = isSelf || capabilities.canManageMembers;
+    const canEditRole = capabilities.canManageMembers && !isSelf;
+    const userId = selected.userId || selected.user?.id || null;
 
     return (
       <AccountCenter toast={toast}>
@@ -341,75 +357,138 @@ export function OrgMembersPage() {
             {t("settings.memberProfile.backToList")}
           </button>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-            <div className="w-20 h-20 rounded-full bg-m3-primary/15 text-m3-primary text-xl font-semibold flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-m3-border/60">
-              {selected.user?.image ? (
-                <img
-                  src={selected.user.image}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                orgInitials(name)
-              )}
+          <div className="rounded-2xl border border-m3-border/70 bg-m3-card shadow-sm">
+            <div className="relative h-28 overflow-hidden rounded-t-2xl bg-gradient-to-r from-sky-800 via-indigo-800 to-slate-900 sm:h-32">
+              <div
+                className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-sky-400/20 blur-3xl"
+                aria-hidden
+              />
             </div>
-            <div className="min-w-0 flex-1 space-y-1.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-xl font-semibold text-m3-text truncate">{name}</h2>
-                <Badge variant="accent" size="md">
-                  {roleLabel(selected.role, t)}
-                </Badge>
+            <div className="relative z-10 px-5 pb-6 sm:px-7">
+              <div className="-mt-12 mb-4 flex flex-wrap items-end justify-between gap-3">
+                <div className="relative z-10 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-4 border-m3-card bg-m3-primary/15 text-xl font-semibold text-m3-primary shadow-md sm:h-24 sm:w-24 sm:text-2xl">
+                  {selected.user?.image ? (
+                    <img
+                      src={selected.user.image}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    orgInitials(name)
+                  )}
+                </div>
+                <div className="mb-1 flex flex-wrap items-center gap-2">
+                  {isSelf ? (
+                    <Badge variant="neutral" size="sm">
+                      {t("settings.members.you")}
+                    </Badge>
+                  ) : null}
+                  <Badge variant="accent" size="md">
+                    {roleLabel(selected.role, t)}
+                  </Badge>
+                </div>
               </div>
-              {selected.user?.email ? (
-                <p className="text-sm text-m3-secondary truncate">{selected.user.email}</p>
-              ) : null}
-              {joined ? (
-                <p className="text-xs text-m3-secondary">
-                  {t("settings.memberProfile.memberSince", { date: joined })}
-                </p>
-              ) : null}
+
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div className="min-w-0 space-y-2">
+                  <h2 className="truncate text-2xl font-semibold tracking-tight text-m3-text sm:text-3xl">
+                    {name}
+                  </h2>
+                  {selected.user?.email ? (
+                    <p className="flex items-center gap-1.5 truncate text-sm text-m3-secondary">
+                      <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                      {selected.user.email}
+                    </p>
+                  ) : null}
+                  {joined ? (
+                    <p className="flex items-center gap-1.5 text-xs text-m3-secondary">
+                      <CalendarDays className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                      {t("settings.memberProfile.memberSince", { date: joined })}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {isSelf ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setConfirmLeave(true)}
+                    >
+                      {t("settings.memberProfile.leaveOrg")}
+                    </Button>
+                  ) : (
+                    <Can permission="member.delete">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setConfirmRemove(true)}
+                        icon={<Trash2 className="h-3.5 w-3.5 text-m3-danger" />}
+                      >
+                        {t("settings.memberProfile.removeMember")}
+                      </Button>
+                    </Can>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
-          <div
-            className={`grid grid-cols-1 gap-4 ${
-              showDanger ? "lg:grid-cols-2" : ""
-            }`}
-          >
-            {capabilities.canManageMembers && !isSelf ? (
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <Can
+              permission="member.update"
+              fallback={
+                <Surface className="space-y-3">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold text-m3-text">
+                    <Shield className="h-4 w-4 text-m3-primary" aria-hidden />
+                    {t("settings.memberProfile.rbacTitle")}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-m3-secondary">
+                      {t("settings.memberProfile.currentRole")}
+                    </span>
+                    <Badge variant="accent" size="md">
+                      {roleLabel(selected.role, t)}
+                    </Badge>
+                  </div>
+                </Surface>
+              }
+            >
               <Surface className="space-y-4">
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="text-sm font-semibold text-m3-text">
+                  <div className="min-w-0 space-y-2">
+                    <h3 className="flex items-center gap-2 text-sm font-semibold text-m3-text">
+                      <Shield className="h-4 w-4 text-m3-primary" aria-hidden />
                       {t("settings.memberProfile.rbacTitle")}
                     </h3>
-                    {!editingRole ? (
-                      <p className="text-xs text-m3-secondary mt-1">
-                        {t("settings.memberProfile.currentRole")}{" "}
-                        <strong className="text-m3-text font-semibold">
-                          {roleLabel(selected.role, t)}
-                        </strong>
-                      </p>
-                    ) : null}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs text-m3-secondary">
+                        {t("settings.memberProfile.currentRole")}
+                      </span>
+                      <Badge variant="accent" size="md">
+                        {roleLabel(selected.role, t)}
+                      </Badge>
+                    </div>
                   </div>
-                  {!editingRole ? (
+                  {canEditRole && !editingRole ? (
                     <button
                       type="button"
                       onClick={() => {
                         setDraftRole(selected.role);
                         setEditingRole(true);
                       }}
-                      className="text-xs font-semibold text-m3-primary hover:underline cursor-pointer shrink-0"
+                      className="inline-flex shrink-0 cursor-pointer items-center gap-1 text-xs font-semibold text-m3-primary hover:underline"
                     >
+                      <PenLine className="h-3.5 w-3.5" />
                       {t("settings.memberProfile.changeRole")}
                     </button>
                   ) : null}
                 </div>
 
-                {editingRole ? (
-                  <div className="space-y-3">
+                {canEditRole && editingRole ? (
+                  <div className="space-y-3 border-t border-m3-border/60 pt-4">
                     <div>
-                      <label className="text-label block mb-1.5">
+                      <label className="text-label mb-1.5 block">
                         {t("settings.members.roleLabel")}
                       </label>
                       <select
@@ -431,11 +510,9 @@ export function OrgMembersPage() {
                     </div>
 
                     {promotingOwner ? (
-                      <div className="flex items-start gap-2.5 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-3 py-2.5 text-xs text-amber-800 dark:text-amber-300">
-                        <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
-                        <p>
-                          {t("settings.memberProfile.promoteOwnerWarning", { name })}
-                        </p>
+                      <div className="flex items-start gap-2.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-300">
+                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                        <p>{t("settings.memberProfile.promoteOwnerWarning", { name })}</p>
                       </div>
                     ) : null}
 
@@ -464,52 +541,78 @@ export function OrgMembersPage() {
                   </div>
                 ) : null}
               </Surface>
-            ) : (
-              <Surface className="space-y-1">
-                <h3 className="text-sm font-semibold text-m3-text">
-                  {t("settings.memberProfile.rbacTitle")}
-                </h3>
-                <p className="text-xs text-m3-secondary">
-                  {t("settings.memberProfile.currentRole")}{" "}
-                  <strong className="text-m3-text font-semibold">
-                    {roleLabel(selected.role, t)}
-                  </strong>
-                </p>
-              </Surface>
-            )}
+            </Can>
 
-            {showDanger ? (
-              <Surface className="space-y-4 border-rose-200/60 dark:border-rose-900/40">
-                <div>
-                  <h3 className="text-sm font-semibold text-m3-danger">
-                    {t("org.danger.title")}
-                  </h3>
-                  <p className="text-xs text-m3-secondary mt-1">
-                    {isSelf
-                      ? t("org.danger.leaveDesc")
-                      : t("settings.memberProfile.removeConfirmText", { name })}
-                  </p>
-                </div>
-                {isSelf ? (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setConfirmLeave(true)}
-                  >
+            <Surface className="space-y-4">
+              <h3 className="text-sm font-semibold text-m3-text">
+                {t("settings.memberProfile.detailsTitle")}
+              </h3>
+              <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {userId ? (
+                  <div className="rounded-xl border border-m3-border/60 bg-m3-sidebar/35 px-3.5 py-3">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-m3-secondary">
+                      {t("settings.memberProfile.userId")}
+                    </dt>
+                    <dd className="mt-1 break-all font-mono text-xs text-m3-text">{userId}</dd>
+                  </div>
+                ) : null}
+                {selected.id ? (
+                  <div className="rounded-xl border border-m3-border/60 bg-m3-sidebar/35 px-3.5 py-3">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-m3-secondary">
+                      {t("settings.memberProfile.memberId")}
+                    </dt>
+                    <dd className="mt-1 break-all font-mono text-xs text-m3-text">{selected.id}</dd>
+                  </div>
+                ) : null}
+                {joined ? (
+                  <div className="rounded-xl border border-m3-border/60 bg-m3-sidebar/35 px-3.5 py-3 sm:col-span-2">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-m3-secondary">
+                      {t("settings.memberProfile.joinedLabel")}
+                    </dt>
+                    <dd className="mt-1 text-sm font-medium text-m3-text">{joined}</dd>
+                  </div>
+                ) : null}
+              </dl>
+
+              {showDanger && !isSelf ? (
+                <Can permission="member.delete">
+                  <div className="space-y-3 rounded-xl border border-m3-danger/20 bg-m3-danger/[0.03] px-3.5 py-3.5">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-m3-danger" aria-hidden />
+                      <h4 className="text-sm font-semibold text-m3-danger">
+                        {t("org.danger.title")}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-m3-secondary">
+                      {t("settings.memberProfile.removeConfirmText", { name })}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setConfirmRemove(true)}
+                      icon={<Trash2 className="h-3.5 w-3.5 text-m3-danger" />}
+                    >
+                      {t("settings.memberProfile.removeMember")}
+                    </Button>
+                  </div>
+                </Can>
+              ) : null}
+
+              {isSelf ? (
+                <div className="space-y-3 rounded-xl border border-m3-danger/20 bg-m3-danger/[0.03] px-3.5 py-3.5">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-m3-danger" aria-hidden />
+                    <h4 className="text-sm font-semibold text-m3-danger">
+                      {t("org.danger.title")}
+                    </h4>
+                  </div>
+                  <p className="text-xs text-m3-secondary">{t("org.danger.leaveDesc")}</p>
+                  <Button variant="outline" size="sm" onClick={() => setConfirmLeave(true)}>
                     {t("settings.memberProfile.leaveOrg")}
                   </Button>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setConfirmRemove(true)}
-                    icon={<Trash2 className="w-3.5 h-3.5 text-m3-danger" />}
-                  >
-                    {t("settings.memberProfile.removeMember")}
-                  </Button>
-                )}
-              </Surface>
-            ) : null}
+                </div>
+              ) : null}
+            </Surface>
           </div>
 
           <Modal
@@ -591,7 +694,7 @@ export function OrgMembersPage() {
             >
               <RefreshCw className="w-4 h-4" />
             </button>
-            {capabilities.canManageInvites ? (
+            <CanAny permissions={["invitation.create"]}>
               <Button
                 variant="primary"
                 size="sm"
@@ -600,7 +703,7 @@ export function OrgMembersPage() {
               >
                 {t("settings.members.inviteMember")}
               </Button>
-            ) : null}
+            </CanAny>
           </div>
         </div>
 
@@ -668,72 +771,85 @@ export function OrgMembersPage() {
           )
         ) : null}
 
-        {subTab === "invites" && capabilities.canManageInvites ? (
-          loadingInvites && invitations.length === 0 ? (
-            <div className="py-12 flex justify-center">
-              <Spinner size="md" label={t("settings.members.loadingInvites")} />
-            </div>
-          ) : filteredInvites.length === 0 ? (
-            <p className="py-12 text-center text-sm text-m3-secondary">
-              {t("settings.members.noInvites")}
-            </p>
-          ) : (
-            <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
-              {filteredInvites.map((invite) => {
-                const expired = invite.expiresAt
-                  ? new Date(invite.expiresAt).getTime() < Date.now()
-                  : false;
-                return (
-                  <div
-                    key={invite.id}
-                    className="flex items-center gap-3 px-3 sm:px-4 py-2.5"
-                  >
-                    <div className="w-9 h-9 rounded-full bg-m3-sidebar text-m3-secondary flex items-center justify-center shrink-0">
-                      <Mail className="w-4 h-4" />
+        {subTab === "invites" ? (
+          <CanAny
+            permissions={["invitation.create", "invitation.cancel"]}
+            fallback={
+              <Surface className="py-10 text-center">
+                <p className="text-sm text-m3-secondary">{t("settings.members.noInviteAccess")}</p>
+              </Surface>
+            }
+          >
+            {loadingInvites && invitations.length === 0 ? (
+              <div className="py-12 flex justify-center">
+                <Spinner size="md" label={t("settings.members.loadingInvites")} />
+              </div>
+            ) : filteredInvites.length === 0 ? (
+              <p className="py-12 text-center text-sm text-m3-secondary">
+                {t("settings.members.noInvites")}
+              </p>
+            ) : (
+              <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
+                {filteredInvites.map((invite) => {
+                  const expired = invite.expiresAt
+                    ? new Date(invite.expiresAt).getTime() < Date.now()
+                    : false;
+                  return (
+                    <div
+                      key={invite.id}
+                      className="flex items-center gap-3 px-3 sm:px-4 py-2.5"
+                    >
+                      <div className="w-9 h-9 rounded-full bg-m3-sidebar text-m3-secondary flex items-center justify-center shrink-0">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-m3-text truncate">{invite.email}</p>
+                        <p className="text-xs text-m3-secondary">
+                          {expired
+                            ? t("settings.members.expired")
+                            : invite.expiresAt
+                              ? t("settings.members.expires", {
+                                  date: formatRelativeDays(invite.expiresAt),
+                                })
+                              : null}
+                        </p>
+                      </div>
+                      <Badge variant="neutral" size="sm" className="shrink-0 hidden sm:inline-flex">
+                        {roleLabel(invite.role, t)}
+                      </Badge>
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <Can permission="invitation.create">
+                          <button
+                            type="button"
+                            onClick={() => void handleResend(invite)}
+                            disabled={resendingId === invite.id}
+                            className="p-2 text-m3-secondary hover:text-m3-primary rounded-md hover:bg-m3-sidebar cursor-pointer disabled:opacity-50"
+                            title={t("settings.members.resendInviteTitle")}
+                          >
+                            {resendingId === invite.id ? (
+                              <Spinner size="sm" />
+                            ) : (
+                              <Send className="w-4 h-4" />
+                            )}
+                          </button>
+                        </Can>
+                        <Can permission="invitation.cancel">
+                          <button
+                            type="button"
+                            onClick={() => setCancelInvite(invite)}
+                            className="p-2 text-m3-secondary hover:text-rose-500 rounded-md hover:bg-m3-sidebar cursor-pointer"
+                            title={t("settings.members.cancelInviteTitle")}
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                        </Can>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-m3-text truncate">{invite.email}</p>
-                      <p className="text-xs text-m3-secondary">
-                        {expired
-                          ? t("settings.members.expired")
-                          : invite.expiresAt
-                            ? t("settings.members.expires", {
-                                date: formatRelativeDays(invite.expiresAt),
-                              })
-                            : null}
-                      </p>
-                    </div>
-                    <Badge variant="neutral" size="sm" className="shrink-0 hidden sm:inline-flex">
-                      {roleLabel(invite.role, t)}
-                    </Badge>
-                    <div className="flex items-center gap-0.5 shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => void handleResend(invite)}
-                        disabled={resendingId === invite.id}
-                        className="p-2 text-m3-secondary hover:text-m3-primary rounded-md hover:bg-m3-sidebar cursor-pointer disabled:opacity-50"
-                        title={t("settings.members.resendInviteTitle")}
-                      >
-                        {resendingId === invite.id ? (
-                          <Spinner size="sm" />
-                        ) : (
-                          <Send className="w-4 h-4" />
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setCancelInvite(invite)}
-                        className="p-2 text-m3-secondary hover:text-rose-500 rounded-md hover:bg-m3-sidebar cursor-pointer"
-                        title={t("settings.members.cancelInviteTitle")}
-                      >
-                        <XCircle className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )
+                  );
+                })}
+              </div>
+            )}
+          </CanAny>
         ) : null}
 
         <Modal

@@ -17,7 +17,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useSong, useSongMutations } from "../hooks/useSongs";
 import { deriveView } from "../layouts/view";
 import { useI18n } from "../lib/i18n";
-import { useCan } from "../lib/permissions/client";
+import { useCan } from "@hosanna/ui";
 
 function useStudioSong(id: string | null | undefined) {
   return useSong(id ?? null);

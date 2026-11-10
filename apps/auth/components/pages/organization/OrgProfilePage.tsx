@@ -12,13 +12,14 @@ import {
   readOrgAppearance,
   type OrgAppearance,
 } from "@/lib/org-ui";
-import { Button, Input, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, Cannot, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { Camera, Check, ImagePlus, PenLine, Save, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function OrgProfilePage() {
   const { t } = useI18n();
-  const { organization, metadata, capabilities, isLoading, refresh } = useActiveOrganization();
+  const { organization, metadata, isLoading, refresh } = useActiveOrganization();
+  const { granted: canEdit } = useCan("organization.update");
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
@@ -158,8 +159,6 @@ export function OrgProfilePage() {
   const displayLogo = isEditing ? draftLogo : logo;
   const displayAccent = isEditing ? draftAppearance.accentColor : appearance.accentColor;
   const displayBranding = isEditing ? draftAppearance.showBranding : appearance.showBranding;
-  const canEdit = capabilities.canManageOrg;
-
   return (
     <AccountCenter toast={toast}>
       <div className="space-y-6">
@@ -168,11 +167,11 @@ export function OrgProfilePage() {
           description={t("settings.workspace.desc")}
         />
 
-        {!canEdit ? (
+        <Cannot permission="organization.update">
           <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
             {t("settings.general.readOnly")}
           </p>
-        ) : null}
+        </Cannot>
 
         <form onSubmit={(e) => void handleSave(e)}>
           <Surface className="space-y-8">

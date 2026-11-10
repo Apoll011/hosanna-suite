@@ -10,13 +10,14 @@ import {
   selectClass,
   type OrgGeneralSettings,
 } from "@/lib/org-ui";
-import { Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, Cannot, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { Save } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 export function OrgRegionalPage() {
   const { t } = useI18n();
-  const { organization, metadata, capabilities, isLoading, refresh } = useActiveOrganization();
+  const { organization, metadata, isLoading, refresh } = useActiveOrganization();
+  const { granted: canEdit } = useCan("organization.update");
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [general, setGeneral] = useState<OrgGeneralSettings>(DEFAULT_GENERAL);
@@ -41,7 +42,7 @@ export function OrgRegionalPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!capabilities.canManageOrg || !organization) return;
+    if (!canEdit || !organization) return;
     setIsSaving(true);
     try {
       const currentSettings = (metadata.settings as Record<string, unknown> | undefined) || {};
@@ -96,7 +97,6 @@ export function OrgRegionalPage() {
     );
   }
 
-  const canEdit = capabilities.canManageOrg;
   const isDirty = JSON.stringify(general) !== JSON.stringify(saved);
 
   return (
@@ -109,11 +109,11 @@ export function OrgRegionalPage() {
 
         <form onSubmit={(e) => void handleSave(e)}>
           <Surface className="space-y-6">
-            {!canEdit ? (
+            <Cannot permission="organization.update">
               <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
                 {t("settings.general.readOnly")}
               </p>
-            ) : null}
+            </Cannot>
 
             <div className="flex flex-col gap-1.5">
               <label className="text-label">{t("settings.general.orgLanguage")}</label>

@@ -12,7 +12,7 @@ import {
   type AiSettingsPublic,
 } from "@/lib/ai-api";
 import { useI18n } from "@/lib/i18n";
-import { Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
   Brain,
   Building2,
@@ -112,9 +112,11 @@ function formatFetchedAt(iso: string, locale: string): string {
 }
 
 function AiBillingCard({
+  organizationId,
   refreshKey,
   showToast,
 }: {
+  organizationId: string;
   refreshKey: number;
   showToast: (msg: string, type: "success" | "error") => void;
 }) {
@@ -127,7 +129,7 @@ function AiBillingCard({
     setLoading(true);
     setError(null);
     try {
-      setData(await aiApi.getBilling());
+      setData(await aiApi.getBilling({ organizationId }));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t("ai.settings.billing.loadError");
       setError(message);
@@ -136,7 +138,7 @@ function AiBillingCard({
     } finally {
       setLoading(false);
     }
-  }, [showToast, t]);
+  }, [organizationId, showToast, t]);
 
   useEffect(() => {
     void load();
@@ -240,10 +242,12 @@ function AiBillingCard({
 }
 
 function AiMemoryPanel({
+  organizationId,
   scope,
   limits,
   showToast,
 }: {
+  organizationId: string;
   scope: "organization" | "personal";
   limits: AiLimits;
   showToast: (msg: string, type: "success" | "error") => void;
@@ -253,19 +257,20 @@ function AiMemoryPanel({
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const isOrg = scope === "organization";
+  const org = useMemo(() => ({ organizationId }), [organizationId]);
 
   const api = isOrg
     ? {
-        list: aiApi.listMemory,
-        add: aiApi.addMemory,
-        remove: aiApi.removeMemory,
-        clear: aiApi.clearMemory,
+        list: () => aiApi.listMemory(org),
+        add: (content: string) => aiApi.addMemory(content, org),
+        remove: (id: string) => aiApi.removeMemory(id, org),
+        clear: () => aiApi.clearMemory(org),
       }
     : {
-        list: aiApi.listPersonalMemory,
-        add: aiApi.addPersonalMemory,
-        remove: aiApi.removePersonalMemory,
-        clear: aiApi.clearPersonalMemory,
+        list: () => aiApi.listPersonalMemory(org),
+        add: (content: string) => aiApi.addPersonalMemory(content, org),
+        remove: (id: string) => aiApi.removePersonalMemory(id, org),
+        clear: () => aiApi.clearPersonalMemory(org),
       };
 
   const fail = useCallback(
@@ -292,8 +297,8 @@ function AiMemoryPanel({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload on scope change only
-  }, [scope, fail]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload on scope/org change only
+  }, [scope, organizationId, fail]);
 
   const add = async () => {
     const content = draft.trim();
@@ -459,7 +464,7 @@ function AiMemoryPanel({
 
 export function OrgAiPage() {
   const { t } = useI18n();
-  const { organization, capabilities, isLoading: orgLoading } = useActiveOrganization();
+  const { organization, isLoading: orgLoading } = useActiveOrganization();
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [settings, setSettings] = useState<AiSettingsPublic | null>(null);
@@ -482,7 +487,7 @@ export function OrgAiPage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [billingRefreshKey, setBillingRefreshKey] = useState(0);
 
-  const canManage = capabilities.canManageAi;
+  const { granted: canManage } = useCan("ai.manage");
 
   const showToast = useCallback((msg: string, type: "success" | "error") => {
     setToast({ msg, type });
@@ -494,7 +499,7 @@ export function OrgAiPage() {
     let cancelled = false;
     setLoading(true);
     void aiApi
-      .getSettings()
+      .getSettings({ organizationId: organization.id })
       .then((data) => {
         if (cancelled) return;
         setSettings(data);
@@ -580,18 +585,21 @@ export function OrgAiPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const data = await aiApi.updateSettings({
-        provider,
-        model: model.trim(),
-        enabled,
-        ...(apiKey.trim() ? { apiKey: apiKey.trim() } : {}),
-        ...(isCustomProvider ? { baseUrl: baseUrl.trim() || null } : { baseUrl: null }),
-        maxToolCalls,
-        temperature,
-        maxOutputTokens: maxOutputTokens.trim() ? Number(maxOutputTokens.trim()) : null,
-        instructions: instructions.trim() || null,
-        memoryEnabled,
-      });
+      const data = await aiApi.updateSettings(
+        {
+          provider,
+          model: model.trim(),
+          enabled,
+          ...(apiKey.trim() ? { apiKey: apiKey.trim() } : {}),
+          ...(isCustomProvider ? { baseUrl: baseUrl.trim() || null } : { baseUrl: null }),
+          maxToolCalls,
+          temperature,
+          maxOutputTokens: maxOutputTokens.trim() ? Number(maxOutputTokens.trim()) : null,
+          instructions: instructions.trim() || null,
+          memoryEnabled,
+        },
+        { organizationId: organization.id },
+      );
       setSettings(data);
       setApiKey("");
       setApiKeyEditing(false);
@@ -609,7 +617,7 @@ export function OrgAiPage() {
   const handleClearKey = async () => {
     setClearing(true);
     try {
-      const data = await aiApi.clearKey();
+      const data = await aiApi.clearKey({ organizationId: organization.id });
       setSettings(data);
       setEnabled(false);
       setApiKey("");
@@ -1011,17 +1019,27 @@ export function OrgAiPage() {
             </div>
 
             {settings.configured && settings.provider === "deepseek" && provider === "deepseek" ? (
-              <AiBillingCard refreshKey={billingRefreshKey} showToast={showToast} />
+              <AiBillingCard
+                organizationId={organization.id}
+                refreshKey={billingRefreshKey}
+                showToast={showToast}
+              />
             ) : null}
 
             {memoryEnabled ? (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <AiMemoryPanel
+                  organizationId={organization.id}
                   scope="organization"
                   limits={settings.limits}
                   showToast={showToast}
                 />
-                <AiMemoryPanel scope="personal" limits={settings.limits} showToast={showToast} />
+                <AiMemoryPanel
+                  organizationId={organization.id}
+                  scope="personal"
+                  limits={settings.limits}
+                  showToast={showToast}
+                />
               </div>
             ) : null}
           </>

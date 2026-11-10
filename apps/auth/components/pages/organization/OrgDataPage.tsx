@@ -5,13 +5,15 @@ import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth-client";
 import { backupApi, type BackupDocument } from "@/lib/backup-api";
 import { useI18n } from "@/lib/i18n";
-import { Button, Modal, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, Can, Modal, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { AlertTriangle, Download, Upload } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
 export function OrgDataPage() {
   const { t } = useI18n();
   const { organization, capabilities, isLoading, refresh, user } = useActiveOrganization();
+  const canExportPerm = useCan("backup.export");
+  const canImportPerm = useCan("backup.import");
 
   const restoreInputRef = useRef<HTMLInputElement>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
@@ -35,9 +37,10 @@ export function OrgDataPage() {
   }, []);
 
   const handleBackup = async () => {
+    if (!organization?.id) return;
     setIsDownloading(true);
     try {
-      await backupApi.downloadBackup();
+      await backupApi.downloadBackup({ organizationId: organization.id });
       showToast(t("settings.workspace.exportSuccess"), "success");
     } catch (err) {
       showToast(
@@ -71,10 +74,12 @@ export function OrgDataPage() {
   };
 
   const handleConfirmRestore = async () => {
-    if (!pendingRestore) return;
+    if (!pendingRestore || !organization?.id) return;
     setIsRestoring(true);
     try {
-      await backupApi.restoreBackup(pendingRestore);
+      await backupApi.restoreBackup(pendingRestore, {
+        organizationId: organization.id,
+      });
       showToast(t("settings.restore.success"), "success");
       window.setTimeout(() => window.location.reload(), 1200);
     } catch (err) {
@@ -147,10 +152,10 @@ export function OrgDataPage() {
     );
   }
 
-  const canExport = capabilities.canExportBackup;
-  const canImport = capabilities.canImportBackup;
   const isOwner = capabilities.isOwner;
   const selfMember = organization.members?.find((m) => m.userId === user?.id);
+  const canExport = canExportPerm.granted;
+  const canImport = canImportPerm.granted;
 
   return (
     <AccountCenter toast={toast}>
@@ -160,64 +165,68 @@ export function OrgDataPage() {
         description={t("settings.workspace.backupDesc")}
       />
 
-      {(canExport || canImport) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {canExport ? (
-            <Surface className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold text-m3-text">
-                  {t("settings.workspace.exportData")}
-                </h3>
-                <p className="text-xs text-m3-secondary mt-1">
-                  {t("settings.workspace.exportDesc")}
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full justify-center"
-                onClick={() => void handleBackup()}
-                disabled={isDownloading}
-                isLoading={isDownloading}
-                icon={<Download className="w-4 h-4" />}
-              >
-                {isDownloading
-                  ? t("settings.workspace.exportProcessing")
-                  : t("settings.workspace.exportDownloadBtn")}
-              </Button>
-            </Surface>
-          ) : null}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Can permission="backup.export">
+          <Surface className="space-y-4">
+            <div>
+              <h3 className="text-sm font-semibold text-m3-text">
+                {t("settings.workspace.exportData")}
+              </h3>
+              <p className="text-xs text-m3-secondary mt-1">
+                {t("settings.workspace.exportDesc")}
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-center"
+              onClick={() => void handleBackup()}
+              disabled={isDownloading}
+              isLoading={isDownloading}
+              icon={<Download className="w-4 h-4" />}
+            >
+              {isDownloading
+                ? t("settings.workspace.exportProcessing")
+                : t("settings.workspace.exportDownloadBtn")}
+            </Button>
+          </Surface>
+        </Can>
 
-          {canImport ? (
-            <Surface className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold text-m3-text">
-                  {t("settings.workspace.restoreData")}
-                </h3>
-                <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                  {t("settings.workspace.restoreWarning")}
-                </p>
-              </div>
-              <input
-                ref={restoreInputRef}
-                type="file"
-                accept=".hosanna,application/json"
-                onChange={handleRestoreFile}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full justify-center"
-                onClick={() => restoreInputRef.current?.click()}
-                icon={<Upload className="w-4 h-4" />}
-              >
-                {t("settings.workspace.restoreUploadBtn")}
-              </Button>
-            </Surface>
-          ) : null}
-        </div>
-      )}
+        <Can permission="backup.import">
+          <Surface className="space-y-4">
+            <div>
+              <h3 className="text-sm font-semibold text-m3-text">
+                {t("settings.workspace.restoreData")}
+              </h3>
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                {t("settings.workspace.restoreWarning")}
+              </p>
+            </div>
+            <input
+              ref={restoreInputRef}
+              type="file"
+              accept=".hosanna,application/json"
+              onChange={handleRestoreFile}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-center"
+              onClick={() => restoreInputRef.current?.click()}
+              icon={<Upload className="w-4 h-4" />}
+            >
+              {t("settings.workspace.restoreUploadBtn")}
+            </Button>
+          </Surface>
+        </Can>
+      </div>
+
+      {!canExport && !canImport && !canExportPerm.loading && !canImportPerm.loading ? (
+        <Surface className="py-8 text-center">
+          <p className="text-sm text-m3-secondary">{t("org.data.noBackupAccess")}</p>
+        </Surface>
+      ) : null}
 
       {!canExport && !canImport ? (
         <Surface>

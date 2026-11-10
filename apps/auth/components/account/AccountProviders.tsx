@@ -1,6 +1,7 @@
 "use client";
 
 import { AccountLayoutChrome } from "@/components/account/AccountLayoutChrome";
+import { AccountPermissionsProvider } from "@/components/account/AccountPermissionsProvider";
 import { ActiveOrganizationProvider } from "@/hooks/useActiveOrganization";
 import type { ReactNode } from "react";
 
@@ -8,7 +9,9 @@ import type { ReactNode } from "react";
 export function AccountProviders({ children }: { children: ReactNode }) {
   return (
     <ActiveOrganizationProvider>
-      <AccountLayoutChrome>{children}</AccountLayoutChrome>
+      <AccountPermissionsProvider>
+        <AccountLayoutChrome>{children}</AccountLayoutChrome>
+      </AccountPermissionsProvider>
     </ActiveOrganizationProvider>
   );
 }
