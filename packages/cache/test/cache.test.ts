@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createCache } from "../src/index.ts";
+import { createCache } from "../src/index.js";
 
 describe("createCache (memory)", () => {
   it("round-trips values with TTL", async () => {

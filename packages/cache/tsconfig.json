@@ -1,14 +1,9 @@
 {
-  "extends": "@hosanna/config/tsconfig/base.json",
+  "extends": "@hosanna/config/tsconfig/node.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["ES2022"],
-    "types": ["node"],
-    "isolatedModules": true,
-    "strict": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true
   },
-  "include": ["src", "test"]
+  "include": ["src"]
 }
