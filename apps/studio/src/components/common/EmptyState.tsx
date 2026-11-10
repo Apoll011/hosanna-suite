@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { Button } from "./Button";
+import { Button } from "@hosanna/ui";
 
 interface EmptyStateProps {
   icon?: React.ReactNode;

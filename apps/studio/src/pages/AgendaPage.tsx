@@ -15,7 +15,7 @@ import {
 import { MiniCalendar, toIso } from "@/src/components/agenda/MiniCalendar";
 import { RemoveAssignmentModal } from "@/src/components/agenda/RemoveAssignmentModal";
 import { ResponsibilitiesPanel } from "@/src/components/agenda/ResponsibilitiesPanel";
-import { Button, PageHeader, Spinner } from "@/src/components/common";
+import { Button, PageHeader, Spinner } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
 import { useI18n } from "@/src/lib/i18n";

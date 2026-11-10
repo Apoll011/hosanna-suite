@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Modal } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
+import { Modal } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
 import { ChevronDown, ChevronRight, Folder as FolderIcon, HardDrive } from "lucide-react";

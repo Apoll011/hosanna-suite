@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner, Surface } from "@/src/components/common";
+import { Spinner, Surface } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { getDatabase } from "@/src/db";
 import { useAgenda } from "@/src/hooks/useAgenda";

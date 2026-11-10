@@ -2,8 +2,7 @@ import { TranslationKey, useI18n } from "@/src/lib/i18n";
 import { RotateCcw, X } from "lucide-react";
 import React from "react";
 import { EDITOR_THEMES, useEditorSettings } from "../hooks/useEditorSettings";
-import { Button } from "./common/Button";
-
+import { Button } from "@hosanna/ui";
 export interface EditorSettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;

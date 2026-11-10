@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner } from "@/src/components/common";
+import { Button, Spinner } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { authClient } from "@/src/lib/authClient";
 import { useI18n, type TranslationKey } from "@/src/lib/i18n";

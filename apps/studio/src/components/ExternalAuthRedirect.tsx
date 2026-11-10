@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner } from "@/src/components/common";
+import { Spinner } from "@hosanna/ui";
 import React, { useEffect } from "react";
 import { redirectToAuthApp } from "../lib/authUrl";
 

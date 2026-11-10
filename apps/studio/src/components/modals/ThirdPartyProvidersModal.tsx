@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
+import { Input, Modal } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import {
   detectProvider,

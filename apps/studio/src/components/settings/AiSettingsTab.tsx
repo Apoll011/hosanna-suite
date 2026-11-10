@@ -4,7 +4,7 @@
  */
 
 import { aiApi, type AiProvider, type AiSettingsPublic } from "@/src/api/ai";
-import { Button, Spinner, Surface } from "@/src/components/common";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import { dispatchAiSettingsChanged, LogosMascot } from "@/src/features/ai-chat";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";

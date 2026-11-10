@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner, Surface } from "@/src/components/common";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
 import { useSync } from "@/src/contexts/SyncContext";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";

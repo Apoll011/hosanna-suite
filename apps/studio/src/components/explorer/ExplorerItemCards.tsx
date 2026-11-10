@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
 import { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";

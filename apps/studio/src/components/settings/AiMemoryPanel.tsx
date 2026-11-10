@@ -4,7 +4,7 @@
  */
 
 import { aiApi, type AiLimits, type AiMemoryItem } from "@/src/api/ai";
-import { Button, Surface } from "@/src/components/common";
+import { Button, Surface } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Brain, Building2, Loader2, Plus, Sparkles, Trash2, User } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";

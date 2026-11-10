@@ -5,7 +5,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
-import { Button } from "./Button";
+import { Button } from "@hosanna/ui";
 
 interface PaginationProps {
   page: number;

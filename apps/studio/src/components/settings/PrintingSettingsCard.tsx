@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
 import { PRINT_BRAND_ACCENT } from "@/src/components/print/brand";
 import { toOrgPrintSettings } from "@/src/components/print/options";
 import { PrintOptionsPanel } from "@/src/components/print/PrintOptionsPanel";

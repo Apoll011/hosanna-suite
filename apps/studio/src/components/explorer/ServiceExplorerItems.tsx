@@ -1,4 +1,5 @@
-import { Badge, Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
+import { Badge } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { Service } from "@/src/types";
 import { Archive, Calendar, Church, MoreVertical } from "lucide-react";

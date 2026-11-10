@@ -11,7 +11,7 @@ import { AgendaEvent } from "@/src/types";
 import { formatLongDate, formatShortDate } from "@/src/utils/agendaDate";
 import { Bell, ExternalLink, Link2, Pencil, Send } from "lucide-react";
 import React from "react";
-import { Button } from "../common";
+import { Button } from "@hosanna/ui";
 import { serviceTotalMinutes } from "./ServiceLinkField";
 
 interface DetailsSidebarProps {

@@ -8,7 +8,8 @@ import {
   type CreateNotificationInput,
   type NotificationChannel,
 } from "@/src/api";
-import { Button, Input, Surface } from "@/src/components/common";
+import { Button, Surface } from "@hosanna/ui";
+import { Input } from "@/src/components/common";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import type { AppRole } from "@hosanna/auth";

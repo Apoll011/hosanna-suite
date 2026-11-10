@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner } from "@/src/components/common";
+import { Button, Spinner } from "@hosanna/ui";
 import { useSong } from "@/src/hooks/useSongs";
 import { useI18n } from "@/src/lib/i18n";
 import { ChordProDiffEditor } from "@hosanna/chordpro/diff";

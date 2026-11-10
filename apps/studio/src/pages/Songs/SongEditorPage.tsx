@@ -4,7 +4,7 @@
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChorproSettings";
-import { Button, Spinner } from "@/src/components/common";
+import { Button, Spinner } from "@hosanna/ui";
 import { EditorSettingsPanel } from "@/src/components/EditorSettingsPanel";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useEditorSettings } from "@/src/hooks/useEditorSettings";

@@ -4,7 +4,7 @@
  */
 
 import { aiApi, type AiBillingResponse } from "@/src/api/ai";
-import { Button, Surface } from "@/src/components/common";
+import { Button, Surface } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Gift, Loader2, RefreshCw, Wallet } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";

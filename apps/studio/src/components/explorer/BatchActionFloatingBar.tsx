@@ -1,4 +1,4 @@
-import { Button } from "@/src/components/common";
+import { Button } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Archive, FolderInput, Printer, Tag, Trash2, X } from "lucide-react";
 import React from "react";
