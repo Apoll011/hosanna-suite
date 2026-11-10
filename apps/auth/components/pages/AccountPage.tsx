@@ -8,8 +8,9 @@ import { TwoFactorSection } from "@/components/account/TwoFactor";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth-client";
 import { compressImage } from "@/lib/compress-image";
-import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session-cache";
 import { useI18n } from "@/lib/i18n";
+import { readRedirectParam } from "@/lib/redirect";
+import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session-cache";
 import { Button, GoogleTextField, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import {
   Camera,
@@ -23,8 +24,8 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 function initials(name?: string | null) {
   if (!name) return "U";
@@ -39,6 +40,8 @@ function initials(name?: string | null) {
 export function AccountPage() {
   const { t } = useI18n();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnUrl = useMemo(() => readRedirectParam(searchParams), [searchParams]);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { user, setUser, isLoading, isRefreshing, refresh, clear } = useAuthUser();
 
@@ -191,7 +194,7 @@ export function AccountPage() {
 
   if (isLoading && !user) {
     return (
-      <AccountShell>
+      <AccountShell returnUrl={returnUrl}>
         <div className="flex justify-center py-16">
           <Spinner size="md" label={t("common.loading")} />
         </div>
@@ -202,27 +205,17 @@ export function AccountPage() {
   if (!user) return null;
 
   return (
-    <AccountShell toast={toast}>
+    <AccountShell toast={toast} returnUrl={returnUrl}>
       <PageHeader
         title={t("account.title")}
         description={t("account.subtitle")}
         actions={
-          <div className="flex items-center gap-2">
-            {isRefreshing ? (
-              <span className="inline-flex items-center gap-1.5 text-caption text-m3-secondary">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                {t("common.loading")}
-              </span>
-            ) : null}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => void logout()}
-              icon={<LogOut className="w-4 h-4" />}
-            >
-              {t("account.signOut")}
-            </Button>
-          </div>
+          isRefreshing ? (
+            <span className="inline-flex items-center gap-1.5 text-caption text-m3-secondary">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              {t("common.loading")}
+            </span>
+          ) : undefined
         }
       />
 
@@ -480,6 +473,17 @@ export function AccountPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
           <ActiveSessionsSection onToast={showToast} />
           <LoginHistorySection />
+        </div>
+
+        <div className="pt-2 text-center">
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>{t("account.signOut")}</span>
+          </button>
         </div>
       </div>
     </AccountShell>
