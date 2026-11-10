@@ -32,7 +32,6 @@ import {
   CollectionsPage,
   DemoPage,
   FoldersPage,
-  OrganizationPage,
   ServiceDetailPage,
   ServicesPage,
   SettingsPage,
@@ -42,6 +41,7 @@ import {
   TrashPage,
   prefetchQueue,
 } from "./routePreloader";
+import { OrganizationRedirect } from "../pages/OrganizationRedirect";
 
 function canPrefetch(): boolean {
   if (typeof navigator === "undefined") return false;
@@ -201,7 +201,7 @@ export const AppRoutes: React.FC = () => {
                 <Route path="agenda" element={<AgendaPage />} />
                 <Route path="trash" element={<TrashPage />} />
                 <Route path="settings" element={<SettingsPage />} />
-                <Route path="organization" element={<OrganizationPage />} />
+                <Route path="organization" element={<OrganizationRedirect />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
               </Route>
             </Route>

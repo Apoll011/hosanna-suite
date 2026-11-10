@@ -50,7 +50,7 @@ export function AccountShell({
   return (
     <div className="min-h-dvh w-full flex flex-col bg-m3-bg text-m3-text font-sans antialiased">
       <header className="sticky top-0 z-30 border-b border-m3-border/70 bg-m3-card/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           {canGoBack && returnUrl ? (
             <a
               href={returnUrl}
@@ -75,7 +75,7 @@ export function AccountShell({
       </header>
 
       {toast ? (
-        <div className="mx-auto w-full max-w-5xl px-4 pt-4 sm:px-6" role="status">
+        <div className="mx-auto w-full max-w-6xl px-4 pt-4 sm:px-6" role="status">
           <div
             className={`rounded-xl border px-3.5 py-2.5 text-sm font-medium animate-in fade-in duration-200 ${
               toast.type === "error"
@@ -88,10 +88,10 @@ export function AccountShell({
         </div>
       ) : null}
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
 
       <footer className="mt-auto w-full border-t border-m3-border/60">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4 text-caption sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 text-caption sm:px-6">
           <span>
             {t("brand.name")} &copy; {new Date().getFullYear()}
           </span>

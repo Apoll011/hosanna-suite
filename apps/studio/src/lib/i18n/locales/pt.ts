@@ -72,9 +72,10 @@ export const pt = {
     logout: "Sair",
     openSettings: "Definições",
     openAccount: "Conta",
-    openOrganization: "Organização",
+    openOrganization: "Predefinições de impressão",
     openAnalytics: "Análises",
     switchWorkspace: "Mudar de organização",
+    manageOrganization: "Gerir organização",
   },
 
   addressBar: {
@@ -136,7 +137,7 @@ export const pt = {
     navSongs: "Ir para Biblioteca de Cânticos",
     navServices: "Ir para Cultos / Planos",
     navSettings: "Ir para Definições do Sistema",
-    navOrganization: "Ir para Organização",
+    navOrganization: "Ir para definições de impressão",
     navAnalytics: "Ir para Análises",
     navAgenda: "Ir para Agenda",
     createSong: "Criar Novo Cântico",
@@ -178,6 +179,7 @@ export const pt = {
   },
 
   settings: {
+    pageDesc: "Aparência, impressão, durações, responsabilidades e funcionalidades do Studio.",
     tabs: {
       account: "Conta & Segurança",
       workspace: "Organização",
@@ -188,6 +190,23 @@ export const pt = {
       features: "Funcionalidades & Suporte",
       about: "Sobre",
       notifications: "Notificações",
+      ai: "Logos IA",
+      services: "Cultos",
+      printing: "Impressão",
+      durations: "Durações",
+      responsibilities: "Responsabilidades",
+    },
+    services: {
+      pageDesc: "Hora habitual de início e comportamento ao editar cultos.",
+    },
+    printing: {
+      pageDesc: "Disposição e opções predefinidas para impressão de músicas e cultos.",
+    },
+    durations: {
+      pageDesc: "Duração predefinida de músicas e sermões ao montar um culto.",
+    },
+    responsibilities: {
+      pageDesc: "Funções da agenda que pode atribuir ao planear cultos.",
     },
     notifications: {
       title: "Notificações",
@@ -2424,6 +2443,8 @@ export const pt = {
   organization: {
     offlineTitle: "Está offline",
     offlineDesc: "As definições da organização precisam de ligação à internet.",
+    studioDesc:
+      "Predefinições de impressão, durações dos momentos e responsabilidades da agenda deste espaço.",
     tabs: {
       workspace: "Espaço de trabalho",
       members: "Membros",

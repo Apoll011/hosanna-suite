@@ -209,7 +209,7 @@ export const MainLayout: React.FC = () => {
   const handleViewModeChange = useCallback(
     (mode: "grid" | "list") => {
       updateSetting("viewMode", mode);
-      if (view === "settings" || view === "organization" || view === "analytics") {
+      if (view === "settings" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
     },
@@ -238,7 +238,7 @@ export const MainLayout: React.FC = () => {
   const handleSearchChange = useCallback(
     (val: string) => {
       setSearchQuery(val);
-      if (view === "settings" || view === "organization" || view === "analytics") {
+      if (view === "settings" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
     },
@@ -249,7 +249,7 @@ export const MainLayout: React.FC = () => {
     (sb: "title" | "artist" | "updatedAt" | "number", so: "asc" | "desc") => {
       setSortBy(sb);
       setSortOrder(so);
-      if (view === "settings" || view === "organization" || view === "analytics") {
+      if (view === "settings" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
     },
@@ -267,7 +267,6 @@ export const MainLayout: React.FC = () => {
         if (path === "/services" || path.startsWith("/services/")) return "services";
         if (path === "/folders" || path.startsWith("/folders/")) return "explorer";
         if (path.startsWith("/settings")) return "settings";
-        if (path.startsWith("/organization")) return "organization";
         if (path.startsWith("/analytics")) return "analytics";
         return "other";
       };

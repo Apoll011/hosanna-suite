@@ -7,7 +7,6 @@ import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import {
   BarChart3,
-  Building2,
   Calendar,
   Calendar1,
   CalendarPlus,
@@ -273,16 +272,6 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
               <div className={crumbCurrent}>
                 <Settings className="w-4 h-4" />
                 <span>{t("common.settings")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "organization" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Building2 className="w-4 h-4" />
-                <span>{t("common.organization")}</span>
               </div>
             </>
           )}

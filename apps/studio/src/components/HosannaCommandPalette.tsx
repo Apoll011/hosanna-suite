@@ -19,7 +19,6 @@ import {
   Plus,
   Printer,
   BarChart3,
-  Building2,
   Settings,
   Trash2,
   Upload,
@@ -148,10 +147,10 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         name: t("commandPalette.navOrganization"),
         shortcut: ["g", "o"],
         keywords:
-          "organizacao organization workspace membros members billing fatura login history activity",
+          "impressao printing duracoes durations responsabilidades responsibilities organization organizacao",
         section: t("commandPalette.sections.navigation"),
-        icon: <Building2 className="w-4 h-4 text-violet-500" />,
-        perform: () => navigate(`${slugPrefix}/organization`),
+        icon: <Printer className="w-4 h-4 text-sky-500" />,
+        perform: () => navigate(`${slugPrefix}/settings?tab=printing`),
       },
       ...(canViewLibraryHealth
         ? [

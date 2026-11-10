@@ -98,7 +98,7 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
     const { error } = await startCheckout({
       annual,
       locale: language,
-      cancelUrl: `${window.location.origin}/${organization.slug}/organization?tab=billing`,
+      cancelUrl: `${window.location.origin}/${organization.slug}/folders`,
     });
     if (error) {
       showToast?.(error, "error");

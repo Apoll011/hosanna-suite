@@ -267,6 +267,10 @@ export function OnboardingPage() {
     setErrorMsg("");
     setCheckoutLoading(true);
     const studio = getStudioUrl();
+    const authOrigin =
+      (typeof window !== "undefined" && window.location.origin) ||
+      process.env.NEXT_PUBLIC_AUTH_URL ||
+      "";
     try {
       const { error } = await authClient.subscription.upgrade({
         plan: "cloud",
@@ -274,7 +278,7 @@ export function OnboardingPage() {
         customerType: "organization",
         annual,
         locale,
-        successUrl: `${studio}/${newOrg.slug}/organization?tab=billing&billing=success`,
+        successUrl: `${authOrigin}/account/organization/billing?billing=success`,
         cancelUrl: `${studio}/${newOrg.slug}`,
       });
       if (error) {

@@ -74,9 +74,10 @@ export const en: typeof pt = {
     logout: "Sign out",
     openSettings: "Settings",
     openAccount: "Account",
-    openOrganization: "Organization",
+    openOrganization: "Printing defaults",
     openAnalytics: "Analytics",
     switchWorkspace: "Switch workspace",
+    manageOrganization: "Manage organization",
   },
 
   addressBar: {
@@ -138,7 +139,7 @@ export const en: typeof pt = {
     navSongs: "Go to Song Library",
     navServices: "Go to Services / Plans",
     navSettings: "Go to System Settings",
-    navOrganization: "Go to Organization",
+    navOrganization: "Go to Printing settings",
     navAnalytics: "Go to Analytics",
     navAgenda: "Go to Agenda",
     createSong: "Create New Song",
@@ -180,6 +181,7 @@ export const en: typeof pt = {
   },
 
   settings: {
+    pageDesc: "Appearance, printing, durations, responsibilities, and studio features.",
     tabs: {
       account: "Account & Security",
       workspace: "Organization",
@@ -190,6 +192,23 @@ export const en: typeof pt = {
       features: "Features & Support",
       about: "About",
       notifications: "Notifications",
+      ai: "Logos AI",
+      services: "Services",
+      printing: "Printing",
+      durations: "Durations",
+      responsibilities: "Responsibilities",
+    },
+    services: {
+      pageDesc: "Usual start time and how services behave while editing.",
+    },
+    printing: {
+      pageDesc: "Default layout and options for printed songs and services.",
+    },
+    durations: {
+      pageDesc: "Default song and sermon lengths when building a service.",
+    },
+    responsibilities: {
+      pageDesc: "Agenda roles you can assign when planning services.",
     },
     notifications: {
       title: "Notifications",
@@ -2410,6 +2429,7 @@ export const en: typeof pt = {
   organization: {
     offlineTitle: "You're offline",
     offlineDesc: "Organization settings need an internet connection.",
+    studioDesc: "Printing defaults, moment durations, and agenda responsibilities for this workspace.",
     tabs: {
       workspace: "Workspace",
       members: "Members",

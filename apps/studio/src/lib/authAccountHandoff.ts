@@ -31,14 +31,22 @@ export function prefetchAuthAccount(): void {
   ensureLink("preconnect", origin);
 }
 
+export type NavigateToAuthAccountOptions = {
+  returnUrl?: string;
+  /** Auth-app path. Defaults to `/account`. */
+  path?: string;
+};
+
 /**
- * Navigate to auth /account immediately.
+ * Navigate to an auth account path immediately.
  * No overlay, view-transition, or competing prefetch on the click path.
  */
-export function navigateToAuthAccount(options?: { returnUrl?: string }): void {
+export function navigateToAuthAccount(options?: NavigateToAuthAccountOptions): void {
   const returnUrl =
     options?.returnUrl ?? (typeof window !== "undefined" ? window.location.href : undefined);
-  const url = authAppHref("/account", { returnUrl });
+  const path = options?.path?.trim() || "/account";
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const url = authAppHref(normalized, { returnUrl });
 
   writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
   // Best-effort connection warm if idle prefetch never ran — still non-blocking.

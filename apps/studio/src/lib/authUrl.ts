@@ -10,7 +10,6 @@
 export function getAuthAppUrl(): string {
   const fromEnv = import.meta.env.VITE_AUTH_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/+$/, "");
-  if (import.meta.env.DEV) return "http://localhost:5174";
   return "https://auth.hosanna.live";
 }
 

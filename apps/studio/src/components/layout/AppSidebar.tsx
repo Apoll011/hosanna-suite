@@ -167,10 +167,31 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         >
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <button
-              onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}
+              onClick={() => {
+                if (!isSidebarCollapsed) return;
+                if (hasMultipleOrgs) {
+                  setIsOrgMenuOpen((v) => !v);
+                  return;
+                }
+                setIsSidebarCollapsed(false);
+              }}
               disabled={!isSidebarCollapsed}
-              title={isSidebarCollapsed ? t("sidebar.expand") : undefined}
-              aria-label={isSidebarCollapsed ? t("sidebar.expand") : undefined}
+              title={
+                isSidebarCollapsed
+                  ? hasMultipleOrgs
+                    ? t("sidebar.switchWorkspace")
+                    : t("sidebar.expand")
+                  : undefined
+              }
+              aria-label={
+                isSidebarCollapsed
+                  ? hasMultipleOrgs
+                    ? t("sidebar.switchWorkspace")
+                    : t("sidebar.expand")
+                  : undefined
+              }
+              aria-haspopup={isSidebarCollapsed && hasMultipleOrgs ? "menu" : undefined}
+              aria-expanded={isSidebarCollapsed && hasMultipleOrgs ? isOrgMenuOpen : undefined}
               className={`w-11 h-11 rounded-md flex items-center justify-center border border-m3-border/50 bg-m3-card text-m3-secondary shadow-sm shrink-0 relative group transition-colors duration-200 ${
                 isSidebarCollapsed
                   ? "cursor-pointer hover:bg-m3-hover hover:border-m3-border hover:text-m3-text"
@@ -214,72 +235,93 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
               </div>
-              {organization &&
-                (hasMultipleOrgs ? (
-                  <button
-                    onClick={() => setIsOrgMenuOpen((v) => !v)}
-                    title={t("sidebar.switchWorkspace")}
-                    aria-haspopup="menu"
-                    aria-expanded={isOrgMenuOpen}
-                    className="inline-flex max-w-full min-w-0 items-center gap-1 rounded-md text-caption text-m3-secondary transition-colors hover:text-m3-text cursor-pointer"
-                  >
-                    <span className="truncate min-w-0">
-                      {organization?.metadata?.shortName || organization.slug}
-                    </span>
-                    <ChevronDown
-                      className={`w-3 h-3 shrink-0 transition-transform duration-200 ${
-                        isOrgMenuOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                ) : (
-                  <span className="mt-1 block max-w-32.5 truncate text-caption text-m3-secondary">
+              {organization && (
+                <button
+                  onClick={() => setIsOrgMenuOpen((v) => !v)}
+                  title={
+                    hasMultipleOrgs ? t("sidebar.switchWorkspace") : t("sidebar.manageOrganization")
+                  }
+                  aria-haspopup="menu"
+                  aria-expanded={isOrgMenuOpen}
+                  className="inline-flex max-w-full min-w-0 items-center gap-1 rounded-md text-caption text-m3-secondary transition-colors hover:text-m3-text cursor-pointer"
+                >
+                  <span className="truncate min-w-0">
                     {organization?.metadata?.shortName || organization.slug}
                   </span>
-                ))}
+                  <ChevronDown
+                    className={`w-3 h-3 shrink-0 transition-transform duration-200 ${
+                      isOrgMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+              )}
             </div>
           </div>
 
-          {hasMultipleOrgs && isOrgMenuOpen && (
+          {organization && isOrgMenuOpen && (
             <div
-              className="absolute top-full left-0 right-0 mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150"
+              className={`absolute top-full mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150 ${
+                isSidebarCollapsed ? "left-0 w-64" : "left-0 right-0"
+              }`}
               role="menu"
             >
-              <p className="px-2.5 pt-1.5 pb-1 text-label">{t("sidebar.switchWorkspace")}</p>
-              {organizations?.map((o) => {
-                const isActive = o.id === organization?.id;
-                return (
-                  <button
-                    key={o.id}
-                    role="menuitem"
-                    disabled={isActive}
-                    onClick={() => {
-                      setIsOrgMenuOpen(false);
-                      if (onSwitchOrganization) {
-                        void onSwitchOrganization(o);
-                      }
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left transition-colors ${
-                      isActive
-                        ? "bg-m3-primary/10 text-m3-primary cursor-default"
-                        : "text-m3-text hover:bg-m3-hover cursor-pointer"
-                    }`}
-                  >
-                    <div className="w-7 h-7 rounded-md shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-[11px] font-semibold text-m3-primary">
-                      {o.logo ? (
-                        <img src={o.logo} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        (o.name?.trim().charAt(0) || "·").toUpperCase()
-                      )}
-                    </div>
-                    <span className="flex-1 min-w-0">
-                      <span className="block text-xs font-semibold truncate">{o.name}</span>
-                      <span className="block text-caption truncate">@{o.slug}</span>
-                    </span>
-                    {isActive && <Check className="w-4 h-4 shrink-0 text-m3-primary" />}
-                  </button>
-                );
-              })}
+              {hasMultipleOrgs && (
+                <p className="px-2.5 pt-1.5 pb-1 text-label">{t("sidebar.switchWorkspace")}</p>
+              )}
+              {hasMultipleOrgs &&
+                organizations?.map((o) => {
+                  const isActive = o.id === organization?.id;
+                  return (
+                    <button
+                      key={o.id}
+                      role="menuitem"
+                      disabled={isActive}
+                      onClick={() => {
+                        setIsOrgMenuOpen(false);
+                        if (onSwitchOrganization) {
+                          void onSwitchOrganization(o);
+                        }
+                      }}
+                      className={`w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left transition-colors ${
+                        isActive
+                          ? "bg-m3-primary/10 text-m3-primary cursor-default"
+                          : "text-m3-text hover:bg-m3-hover cursor-pointer"
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-md shrink-0 overflow-hidden flex items-center justify-center bg-m3-primary/10 border border-m3-border/60 text-[11px] font-semibold text-m3-primary">
+                        {o.logo ? (
+                          <img src={o.logo} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          (o.name?.trim().charAt(0) || "·").toUpperCase()
+                        )}
+                      </div>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-xs font-semibold truncate">{o.name}</span>
+                        <span className="block text-caption truncate">@{o.slug}</span>
+                      </span>
+                      {isActive && <Check className="w-4 h-4 shrink-0 text-m3-primary" />}
+                    </button>
+                  );
+                })}
+              {hasMultipleOrgs && <div className="my-1 border-t border-m3-border" />}
+              <button
+                role="menuitem"
+                onMouseEnter={() => prefetchAuthAccount()}
+                onFocus={() => prefetchAuthAccount()}
+                onClick={() => {
+                  setIsOrgMenuOpen(false);
+                  navigateToAuthAccount({
+                    path: "/account/organization",
+                    returnUrl: window.location.href,
+                  });
+                }}
+                className="w-full flex items-center gap-2.5 px-2.5 py-2 min-h-10 rounded-md text-left text-m3-text hover:bg-m3-hover cursor-pointer transition-colors"
+              >
+                <Building2 className="w-4 h-4 text-m3-secondary shrink-0" />
+                <span className="text-xs font-medium truncate">
+                  {t("sidebar.manageOrganization")}
+                </span>
+              </button>
             </div>
           )}
         </div>
@@ -582,7 +624,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 <button
                   onClick={() => {
                     setIsUserMenuOpen(false);
-                    navigate(`${slugPrefix}/organization`);
+                    navigate(`${slugPrefix}/settings?tab=printing`);
                     if (window.innerWidth < 768) setIsSidebarOpen(false);
                   }}
                   className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"

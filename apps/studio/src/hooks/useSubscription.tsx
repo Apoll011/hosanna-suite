@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { authAppHref } from "../lib/authUrl";
 import { authClient } from "../lib/authClient";
 import {
   currentSubscriptionStatus,
@@ -160,7 +161,15 @@ export function useSubscription(): SubscriptionApi {
           locale,
           successUrl:
             successUrl ??
-            `${window.location.origin}/${slug}/organization?tab=billing&billing=success`,
+            (() => {
+              const url = new URL(authAppHref("/account/organization/billing"));
+              url.searchParams.set("billing", "success");
+              url.searchParams.set(
+                "returnUrl",
+                `${window.location.origin}/${slug}/folders`,
+              );
+              return url.toString();
+            })(),
           cancelUrl: cancelUrl ?? `${window.location.origin}/${slug}/folders`,
         });
         if (apiError) {
@@ -185,14 +194,13 @@ export function useSubscription(): SubscriptionApi {
   const openBillingPortal = useCallback(
     async (options: OpenBillingPortalOptions = {}) => {
       if (!orgId) return { error: "No active organization." };
-      const slug = organization?.slug ?? "";
       setPendingAction("portal");
       try {
         const { error: apiError } = await authClient.subscription.billingPortal({
           referenceId: orgId,
           customerType: "organization",
           returnUrl:
-            options.returnUrl ?? `${window.location.origin}/${slug}/organization?tab=billing`,
+            options.returnUrl ?? authAppHref("/account/organization/billing"),
         });
         if (apiError) {
           setPendingAction(null);
@@ -209,7 +217,7 @@ export function useSubscription(): SubscriptionApi {
         };
       }
     },
-    [orgId, organization?.slug],
+    [orgId],
   );
 
   const restore = useCallback(async () => {
