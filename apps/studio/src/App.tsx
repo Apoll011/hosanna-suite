@@ -29,9 +29,24 @@ export default function App() {
   useEffect(() => {
     const id = setTimeout(() => {
       void preloadEditor();
-      prefetchAuthAccount();
     }, 3000);
     return () => clearTimeout(id);
+  }, []);
+
+  // Single idle warm for auth origin (TLS only — see authAccountHandoff).
+  useEffect(() => {
+    const ric = (
+      window as Window & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        cancelIdleCallback?: (id: number) => void;
+      }
+    ).requestIdleCallback;
+    if (typeof ric === "function") {
+      const id = ric(() => prefetchAuthAccount(), { timeout: 5000 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(() => prefetchAuthAccount(), 2000);
+    return () => window.clearTimeout(id);
   }, []);
 
   return (
