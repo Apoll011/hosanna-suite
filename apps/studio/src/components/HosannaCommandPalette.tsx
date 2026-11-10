@@ -27,6 +27,7 @@ import {
 import React, { useMemo } from "react";
 import { CommandAction } from "../command-palette.types";
 import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { ViewName } from "../layouts/view";
 import { useAiCommandPaletteActions } from "../features/ai-chat/useAiCommandPaletteActions";
 import { useRxDbSearch } from "../hooks/useRxDbSearch";
@@ -99,6 +100,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
   } = props;
 
   const { t } = useI18n();
+  const { toggleDarkMode } = useTheme();
   const { granted: canCreateAgenda } = useCan("agenda.create");
   const { granted: canViewLibraryHealth } = useCan("library.health");
 
@@ -248,10 +250,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         keywords: "tema dark light modo escuro claro theme",
         section: t("commandPalette.sections.account"),
         icon: <Moon className="w-4 h-4 text-amber-500" />,
-        perform: () => {
-          const isDark = document.documentElement.classList.toggle("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-        },
+        perform: () => toggleDarkMode(),
       },
       {
         id: "toggle-sidebar",
@@ -370,6 +369,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
     setDeleteSongTarget,
     deleteService,
     fileInputRef,
+    toggleDarkMode,
     t,
   ]);
 

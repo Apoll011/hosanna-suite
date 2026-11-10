@@ -129,20 +129,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Warm auth /account after the shell is up so Account opens with less flash.
-  useEffect(() => {
-    const ric = (window as Window & {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-      cancelIdleCallback?: (id: number) => void;
-    }).requestIdleCallback;
-    if (typeof ric === "function") {
-      const id = ric(() => prefetchAuthAccount(), { timeout: 4000 });
-      return () => window.cancelIdleCallback?.(id);
-    }
-    const id = window.setTimeout(() => prefetchAuthAccount(), 2500);
-    return () => window.clearTimeout(id);
-  }, []);
-
   const collapseText = (extra = "") =>
     `truncate transition-[opacity,max-width,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
       isSidebarCollapsed

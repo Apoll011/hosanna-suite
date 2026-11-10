@@ -39,7 +39,7 @@ export const SettingsPage: React.FC = () => {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    // Account moved to auth.hosanna.live — soft handoff shell then navigate.
+    // Account lives on auth.hosanna.live — hard-navigate immediately.
     if (tab === "account") {
       navigateToAuthAccount({
         returnUrl: typeof window !== "undefined" ? window.location.href : undefined,

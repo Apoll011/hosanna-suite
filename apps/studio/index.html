@@ -21,9 +21,47 @@
     <link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon-167x167.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
     <link rel="mask-icon" href="/hosanna_favicon.svg" color="#0284c7" />
-    <meta name="theme-color" content="#0284c7" />
+    <meta name="theme-color" content="#0b0d12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f6f8" media="(prefers-color-scheme: light)" />
+    <!-- Blocking: apply .dark before first paint (storage → cookie → default). -->
+    <script>
+      (function () {
+        try {
+          var bg = { light: "#f4f6f8", dark: "#0b0d12" };
+          var theme = "light";
+          var raw = localStorage.getItem("personal-settings");
+          if (raw) {
+            try {
+              var p = JSON.parse(raw);
+              if (p && (p.theme === "light" || p.theme === "dark" || p.theme === "system")) theme = p.theme;
+            } catch (e) {}
+          } else {
+            var legacy = localStorage.getItem("chordpro_theme");
+            if (legacy === "light" || legacy === "dark" || legacy === "system") theme = legacy;
+            else {
+              var m = document.cookie.match(/(?:^|; )hosanna_color_scheme=([^;]*)/);
+              if (m) {
+                var cv = decodeURIComponent(m[1]);
+                if (cv === "light" || cv === "dark" || cv === "system") theme = cv;
+              }
+            }
+          }
+          var dark =
+            theme === "dark" ||
+            (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var r = document.documentElement;
+          r.classList.toggle("dark", dark);
+          r.style.colorScheme = dark ? "dark" : "light";
+          r.style.backgroundColor = dark ? bg.dark : bg.light;
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>

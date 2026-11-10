@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useLayoutEffect, useState } from "react";
 import { usePersonalSettings, type PersonalTheme } from "../hooks/usePersonalSettings";
+import { applyDocumentTheme, writeThemeCookie } from "../lib/themeBoot";
 
 export type Theme = PersonalTheme;
 
@@ -22,8 +23,7 @@ export const ThemeProvider: React.FC<{
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
   );
 
-  // Listen for OS theme changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
 
     const listener = (e: MediaQueryListEvent) => {
@@ -35,13 +35,18 @@ export const ThemeProvider: React.FC<{
     return () => media.removeEventListener("change", listener);
   }, []);
 
-  const setTheme = (next: Theme) => updateSetting("theme", next);
+  const setTheme = (next: Theme) => {
+    updateSetting("theme", next);
+    writeThemeCookie(next);
+  };
 
   const darkMode = theme === "system" ? systemDark : theme === "dark";
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-  }, [darkMode]);
+  // useLayoutEffect: sync class before browser paint (no light→dark flash).
+  useLayoutEffect(() => {
+    applyDocumentTheme(darkMode);
+    writeThemeCookie(theme);
+  }, [darkMode, theme]);
 
   const toggleDarkMode = () => {
     if (theme === "system") {
