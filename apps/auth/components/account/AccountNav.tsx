@@ -131,7 +131,7 @@ function PermissionGate({ item, children }: { item: OrgNavItem; children: ReactN
   return <>{children}</>;
 }
 
-/** Google-accounts style left sidebar (sticky on desktop while content scrolls). */
+/** Google-accounts style left sidebar (fixed on desktop while content scrolls). */
 export function AccountNav({ className = "" }: { className?: string }) {
   const { t } = useI18n();
   const pathname = usePathname() || "/account";
@@ -148,7 +148,7 @@ export function AccountNav({ className = "" }: { className?: string }) {
 
   return (
     <nav
-      className={`w-full shrink-0 md:sticky md:top-14 md:max-h-[calc(100dvh-3.5rem)] md:w-56 md:self-start md:overflow-y-auto lg:w-60 ${className}`}
+      className={`w-full shrink-0 md:fixed md:top-14 md:left-6 md:z-20 md:max-h-[calc(100dvh-3.5rem)] md:w-56 md:overflow-y-auto md:overscroll-contain lg:left-8 lg:w-60 ${className}`}
       aria-label={t("account.nav.ariaLabel")}
     >
       <div className="md:hidden space-y-2">
