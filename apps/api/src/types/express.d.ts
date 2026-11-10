@@ -1,8 +1,11 @@
-import { OrgScopedPrisma } from "../database/prisma.js";
+import type { AppRole } from "@hosanna/auth";
+import type { OrgScopedPrisma } from "../database/prisma.js";
 
+/** Request-scoped identity after `authenticate` — `role` is the org member role. */
 export interface AuthorizedUser {
   id: string;
   workspaceId: string;
+  /** Organization membership role (`owner` / `admin` / …), never admin-plugin `user.role`. */
   role: AppRole;
   teamId?: string;
 }

@@ -142,7 +142,7 @@ export function requireOwnTeamResource(
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!requireUser(req, res, options)) return;
-    if (req.user.role === "OWNER" || req.user.role === "ADMIN") return next();
+    if (req.user.role === "owner" || req.user.role === "admin") return next();
 
     const resourceTeamId = getResourceTeamId(req);
     if (!resourceTeamId || resourceTeamId !== req.user.teamId) {
@@ -156,7 +156,7 @@ export function requireOwnTeamResource(
 type AuthContext = {
   userId: string;
   workspaceId: string;
-  role: string;
+  role: AppRole;
   teamId?: string;
   locale: string;
 };
@@ -259,7 +259,7 @@ async function getCachedUserRole(workspaceId: string, userId: string): Promise<s
     select: { role: true },
   });
 
-  const role = member?.role ?? "guest";
+  const role = (member?.role ?? "guest").toLowerCase();
   await userRoleCache.set(key, role);
   return role;
 }
@@ -289,8 +289,7 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
 
   const teamId = session.activeTeamId || undefined;
 
-  // Membership table is source of truth per org. Do not use admin-plugin
-  // `user.role` (often `"user"`) or a stale cookie-cache member role.
+  // Org RBAC = `member.role` only. Never Better Auth admin-plugin `user.role`.
   const [resolvedRole, locale] = await Promise.all([
     getCachedUserRole(workspaceId, user.id),
     getCachedOrgLocale(workspaceId),
@@ -299,7 +298,7 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
   const ctx: AuthContext = {
     userId: user.id,
     workspaceId,
-    role: resolvedRole,
+    role: (resolvedRole in roles ? resolvedRole : "guest") as AppRole,
     teamId,
     locale,
   };

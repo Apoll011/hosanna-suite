@@ -5,6 +5,10 @@ export type AuthSessionUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  /**
+   * Better Auth admin-plugin platform role (e.g. `"user"`).
+   * NOT an organization RBAC role — never use for permissions.
+   */
   role?: string | null;
   [key: string]: unknown;
 };
@@ -14,13 +18,13 @@ export type AuthSession = {
   userId: string;
   activeOrganizationId?: string | null;
   activeTeamId?: string | null;
-  role?: string | null;
   [key: string]: unknown;
 };
 
 export type SessionResult = {
   session: AuthSession;
   user: AuthSessionUser;
+  /** Active-org membership from the organization plugin (org RBAC role lives here). */
   member?: { role?: string | null } | null;
 } | null;
 

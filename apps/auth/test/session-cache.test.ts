@@ -65,7 +65,6 @@ describe("session-cache", () => {
       name: "Ada",
       email: "ada@example.com",
       image: null,
-      role: "member",
       twoFactorEnabled: true,
     });
     writeCachedUser(user);
@@ -74,7 +73,6 @@ describe("session-cache", () => {
       name: "Ada",
       email: "ada@example.com",
       image: null,
-      role: "member",
       twoFactorEnabled: true,
     });
 
