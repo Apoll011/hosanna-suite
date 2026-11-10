@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { brandPublicDir, syncBrandPublic } from "./sync-public.js";
+import { brandPublicDir, syncBrandPublic } from "./sync-public.ts";
 
 function contentType(file: string): string {
   switch (path.extname(file).toLowerCase()) {
