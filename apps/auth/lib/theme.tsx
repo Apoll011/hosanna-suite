@@ -4,13 +4,13 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 
-const STORAGE_KEY = "hosanna_auth_theme";
+import { THEME_STORAGE_KEY, writeThemeCookie } from "@/lib/theme-boot";
 
 type ThemeContextValue = {
   darkMode: boolean;
@@ -20,24 +20,44 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 function applyDarkClass(dark: boolean) {
-  document.documentElement.classList.toggle("dark", dark);
+  const root = document.documentElement;
+  root.classList.toggle("dark", dark);
+  root.style.colorScheme = dark ? "dark" : "light";
+  // Clear the boot-script inline bg so CSS tokens own the surface.
+  root.style.backgroundColor = "";
+}
+
+function readInitialDark(): boolean {
+  if (typeof document === "undefined") return false;
+  // Prefer the class the head bootstrap already set (avoids a second paint).
+  if (document.documentElement.classList.contains("dark")) return true;
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "dark") return true;
+    if (stored === "light") return false;
+  } catch {
+    // ignore
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(readInitialDark);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const next = stored === "dark" || (!stored && prefersDark);
-    setDarkMode(next);
-    applyDarkClass(next);
-  }, []);
+  useLayoutEffect(() => {
+    applyDarkClass(darkMode);
+    writeThemeCookie(darkMode ? "dark" : "light");
+  }, [darkMode]);
 
   const toggleDarkMode = useCallback(() => {
     setDarkMode((prev) => {
       const next = !prev;
-      localStorage.setItem(STORAGE_KEY, next ? "dark" : "light");
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
+      } catch {
+        // ignore
+      }
+      writeThemeCookie(next ? "dark" : "light");
       applyDarkClass(next);
       return next;
     });

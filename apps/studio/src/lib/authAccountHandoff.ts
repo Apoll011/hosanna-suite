@@ -4,6 +4,7 @@
  */
 
 import { authAppHref, getAuthAppUrl } from "./authUrl";
+import { writeThemeCookie } from "./themeBoot";
 
 const OVERLAY_ID = "hosanna-account-handoff";
 let prefetched = false;
@@ -88,39 +89,47 @@ function mountHandoffOverlay(): void {
   root.setAttribute("role", "status");
   root.setAttribute("aria-live", "polite");
   root.setAttribute("aria-busy", "true");
+  const dark = document.documentElement.classList.contains("dark");
+  // Hard fallbacks match tokens so the shell stays dark even if CSS vars lag.
+  const bg = dark ? "#0b0d12" : "#f4f6f8";
+  const text = dark ? "#eceef2" : "#1a1d24";
+  const card = dark ? "#181b23" : "#ffffff";
+  const sidebar = dark ? "#12151c" : "#eef1f4";
+  const border = dark ? "#2d3244" : "#d0d7e0";
+
   root.style.cssText =
     "position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;" +
-    "background:var(--m3-bg,#f4f6f8);color:var(--m3-text,#1a1d24);" +
+    `background:var(--m3-bg,${bg});color:var(--m3-text,${text});` +
     "font-family:Figtree,system-ui,-apple-system,sans-serif;";
 
   root.innerHTML = `
-    <header style="position:sticky;top:0;z-index:1;border-bottom:1px solid color-mix(in srgb, var(--m3-border,#d0d7e0) 70%, transparent);background:color-mix(in srgb, var(--m3-card,#fff) 85%, transparent);backdrop-filter:blur(12px);">
+    <header style="position:sticky;top:0;z-index:1;border-bottom:1px solid color-mix(in srgb, var(--m3-border,${border}) 70%, transparent);background:color-mix(in srgb, var(--m3-card,${card}) 85%, transparent);backdrop-filter:blur(12px);">
       <div style="margin:0 auto;height:3.5rem;max-width:64rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem;padding:0 1rem;">
-        <div style="display:flex;align-items:center;gap:0.5rem;border:1px solid color-mix(in srgb, var(--m3-border,#d0d7e0) 60%, transparent);background:color-mix(in srgb, var(--m3-sidebar,#eef1f4) 80%, transparent);border-radius:9999px;padding:0.375rem 0.625rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;border:1px solid color-mix(in srgb, var(--m3-border,${border}) 60%, transparent);background:color-mix(in srgb, var(--m3-sidebar,${sidebar}) 80%, transparent);border-radius:9999px;padding:0.375rem 0.625rem;">
           <img src="/favicon.png" alt="" width="20" height="20" style="border-radius:0.375rem;object-fit:contain;" />
           <span style="font-size:0.8125rem;font-weight:600;letter-spacing:-0.01em;">Hosanna</span>
         </div>
-        <div style="width:5.5rem;height:2.25rem;border-radius:9999px;background:var(--m3-sidebar,#eef1f4);opacity:0.7;"></div>
+        <div style="width:5.5rem;height:2.25rem;border-radius:9999px;background:var(--m3-sidebar,${sidebar});opacity:0.7;"></div>
       </div>
     </header>
     <main style="margin:0 auto;width:100%;max-width:64rem;flex:1;padding:1.5rem 1rem 2rem;">
       <div style="margin-bottom:1.5rem;">
-        <div style="height:1.75rem;width:8rem;border-radius:0.5rem;background:var(--m3-sidebar,#eef1f4);margin-bottom:0.5rem;"></div>
-        <div style="height:0.875rem;width:min(24rem,90%);border-radius:0.375rem;background:var(--m3-sidebar,#eef1f4);opacity:0.75;"></div>
+        <div style="height:1.75rem;width:8rem;border-radius:0.5rem;background:var(--m3-sidebar,${sidebar});margin-bottom:0.5rem;"></div>
+        <div style="height:0.875rem;width:min(24rem,90%);border-radius:0.375rem;background:var(--m3-sidebar,${sidebar});opacity:0.75;"></div>
         <p style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">${title} — ${subtitle}</p>
       </div>
-      <div style="border:1px solid var(--m3-border,#d0d7e0);border-radius:1rem;background:var(--m3-card,#fff);padding:1.25rem;">
+      <div style="border:1px solid var(--m3-border,${border});border-radius:1rem;background:var(--m3-card,${card});padding:1.25rem;">
         <div style="display:flex;align-items:center;gap:1rem;">
           <div style="width:4rem;height:4rem;border-radius:9999px;background:linear-gradient(to top right,#0284c7,#06b6d4);opacity:0.85;"></div>
           <div style="flex:1;">
-            <div style="height:1rem;width:10rem;border-radius:0.375rem;background:var(--m3-sidebar,#eef1f4);margin-bottom:0.5rem;"></div>
-            <div style="height:0.75rem;width:14rem;border-radius:0.375rem;background:var(--m3-sidebar,#eef1f4);opacity:0.7;"></div>
+            <div style="height:1rem;width:10rem;border-radius:0.375rem;background:var(--m3-sidebar,${sidebar});margin-bottom:0.5rem;"></div>
+            <div style="height:0.75rem;width:14rem;border-radius:0.375rem;background:var(--m3-sidebar,${sidebar});opacity:0.7;"></div>
           </div>
         </div>
       </div>
       <div style="margin-top:1.5rem;display:grid;gap:1.5rem;">
-        <div style="height:8rem;border-radius:1rem;border:1px solid var(--m3-border,#d0d7e0);background:var(--m3-card,#fff);"></div>
-        <div style="height:10rem;border-radius:1rem;border:1px solid var(--m3-border,#d0d7e0);background:var(--m3-card,#fff);"></div>
+        <div style="height:8rem;border-radius:1rem;border:1px solid var(--m3-border,${border});background:var(--m3-card,${card});"></div>
+        <div style="height:10rem;border-radius:1rem;border:1px solid var(--m3-border,${border});background:var(--m3-card,${card});"></div>
       </div>
     </main>
   `;
@@ -139,6 +148,8 @@ export function navigateToAuthAccount(options?: { returnUrl?: string }): void {
   const url = authAppHref("/account", { returnUrl });
 
   prefetchAuthAccount();
+  // Ensure Auth's pre-paint boot can read the current scheme across origins.
+  writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
   mountHandoffOverlay();
 
   const go = () => {
