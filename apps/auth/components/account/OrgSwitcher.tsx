@@ -91,9 +91,7 @@ export function OrgSwitcher({ className = "" }: { className?: string }) {
         aria-expanded={open}
         aria-label={t("accountOrg.switcher.label")}
         className={`w-full flex items-center gap-2.5 rounded-lg border border-m3-border/70 bg-m3-sidebar/50 px-2.5 py-2 text-left transition-colors ${
-          canSwitch
-            ? "hover:bg-m3-hover cursor-pointer"
-            : "cursor-default opacity-95"
+          canSwitch ? "hover:bg-m3-hover cursor-pointer" : "cursor-default opacity-95"
         }`}
       >
         <OrgAvatar org={organization} />

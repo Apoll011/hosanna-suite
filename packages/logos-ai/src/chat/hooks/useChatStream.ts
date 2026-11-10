@@ -12,12 +12,13 @@ import {
   type MutableRefObject,
   type SetStateAction,
 } from "react";
+import { buildPageContext, maybeDispatchHostActions, maybeSyncLibrary } from "../../core/bridge";
 import {
-  buildPageContext,
-  maybeDispatchHostActions,
-  maybeSyncLibrary,
-} from "../../core/bridge";
-import { applyStreamEvent, readUiMessageStream, settleRunningTools, type StreamEvent } from "../../core/stream";
+  applyStreamEvent,
+  readUiMessageStream,
+  settleRunningTools,
+  type StreamEvent,
+} from "../../core/stream";
 import { useLogosHost } from "../../host";
 import { maybeStageProposal } from "../../proposals/stage";
 import { newId, toUiMessages, type AiChatMessage } from "../../types";
@@ -58,128 +59,131 @@ export function useChatStream(opts: {
   }, []);
 
   /** Core: stream an assistant reply for `history` (ends with a user turn). */
-  const run = useCallback(async (history: AiChatMessage[]) => {
-    if (streamingRef.current) return;
-    streamingRef.current = true;
+  const run = useCallback(
+    async (history: AiChatMessage[]) => {
+      if (streamingRef.current) return;
+      streamingRef.current = true;
 
-    const assistantId = newId();
-    const startedAt = Date.now();
-    const assistantMsg: AiChatMessage = {
-      id: assistantId,
-      role: "assistant",
-      parts: [],
-      createdAt: startedAt,
-    };
-    setError(null);
-    setOpen(true);
-    setMessages([...history, assistantMsg]);
-    setStreaming(true);
+      const assistantId = newId();
+      const startedAt = Date.now();
+      const assistantMsg: AiChatMessage = {
+        id: assistantId,
+        role: "assistant",
+        parts: [],
+        createdAt: startedAt,
+      };
+      setError(null);
+      setOpen(true);
+      setMessages([...history, assistantMsg]);
+      setStreaming(true);
 
-    const controller = new AbortController();
-    abortRef.current = controller;
-    const toolNames = new Map<string, string>();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const toolNames = new Map<string, string>();
 
-    const patch = (fn: (m: AiChatMessage) => AiChatMessage) => {
-      setMessages((prev) => prev.map((m) => (m.id === assistantId ? fn(m) : m)));
-    };
+      const patch = (fn: (m: AiChatMessage) => AiChatMessage) => {
+        setMessages((prev) => prev.map((m) => (m.id === assistantId ? fn(m) : m)));
+      };
 
-    // Batch text/reasoning deltas to one render per frame.
-    type PendingDelta = { type: "text-delta" | "reasoning-delta"; delta: string };
-    let pending: PendingDelta | null = null;
-    let scheduled = 0;
-    const flush = () => {
-      if (scheduled) {
-        if (typeof cancelAnimationFrame === "function") cancelAnimationFrame(scheduled);
-        window.clearTimeout(scheduled);
-        scheduled = 0;
-      }
-      const current: PendingDelta | null = pending;
-      if (!current) return;
-      pending = null;
-      patch((m) => applyStreamEvent(m, current as StreamEvent));
-    };
-    const schedule = () => {
-      if (scheduled) return;
-      if (document.visibilityState === "hidden") {
-        scheduled = window.setTimeout(flush, 50);
-      } else {
-        scheduled = requestAnimationFrame(flush);
-      }
-    };
-
-    try {
-      const r = routeRef.current;
-      const response = await apiRef.current.streamChat({
-        messages: toUiMessages(history),
-        context: includeContextRef.current
-          ? buildPageContext(r.pathname, r.slugPrefix, r.params, deriveViewRef.current)
-          : { kind: "general", route: r.pathname },
-        locale: localeRef.current,
-        signal: controller.signal,
-      });
-
-      for await (const event of readUiMessageStream(response)) {
-        if (controller.signal.aborted) break;
-
-        if (
-          (event.type === "text-delta" || event.type === "reasoning-delta") &&
-          typeof event.delta === "string"
-        ) {
-          const kind = event.type as PendingDelta["type"];
-          const deltaText = String(event.delta ?? "");
-          if (pending && pending.type !== kind) flush();
-          const priorDelta: string = pending ? pending.delta : "";
-          pending = { type: kind, delta: priorDelta + deltaText };
-          schedule();
-          continue;
+      // Batch text/reasoning deltas to one render per frame.
+      type PendingDelta = { type: "text-delta" | "reasoning-delta"; delta: string };
+      let pending: PendingDelta | null = null;
+      let scheduled = 0;
+      const flush = () => {
+        if (scheduled) {
+          if (typeof cancelAnimationFrame === "function") cancelAnimationFrame(scheduled);
+          window.clearTimeout(scheduled);
+          scheduled = 0;
         }
+        const current: PendingDelta | null = pending;
+        if (!current) return;
+        pending = null;
+        patch((m) => applyStreamEvent(m, current as StreamEvent));
+      };
+      const schedule = () => {
+        if (scheduled) return;
+        if (document.visibilityState === "hidden") {
+          scheduled = window.setTimeout(flush, 50);
+        } else {
+          scheduled = requestAnimationFrame(flush);
+        }
+      };
 
-        flush();
-        patch((m) => applyStreamEvent(m, event));
+      try {
+        const r = routeRef.current;
+        const response = await apiRef.current.streamChat({
+          messages: toUiMessages(history),
+          context: includeContextRef.current
+            ? buildPageContext(r.pathname, r.slugPrefix, r.params, deriveViewRef.current)
+            : { kind: "general", route: r.pathname },
+          locale: localeRef.current,
+          signal: controller.signal,
+        });
 
-        if (event.type === "tool-input-start" || event.type === "tool-input-available") {
-          if (typeof event.toolName === "string") {
-            toolNames.set(String(event.toolCallId), event.toolName);
+        for await (const event of readUiMessageStream(response)) {
+          if (controller.signal.aborted) break;
+
+          if (
+            (event.type === "text-delta" || event.type === "reasoning-delta") &&
+            typeof event.delta === "string"
+          ) {
+            const kind = event.type as PendingDelta["type"];
+            const deltaText = String(event.delta ?? "");
+            if (pending && pending.type !== kind) flush();
+            const priorDelta: string = pending ? pending.delta : "";
+            pending = { type: kind, delta: priorDelta + deltaText };
+            schedule();
+            continue;
           }
-        } else if (event.type === "tool-output-available") {
-          const name = toolNames.get(String(event.toolCallId)) ?? "tool";
-          const rr = routeRef.current;
-          maybeStageProposal(
-            name,
-            event.output,
-            buildPageContext(rr.pathname, rr.slugPrefix, rr.params, deriveViewRef.current),
-          );
-          maybeSyncLibrary(name, event.output);
-          maybeDispatchHostActions(name, event.output);
-        } else if (event.type === "error") {
-          setError(typeof event.errorText === "string" ? event.errorText : "AI stream error");
+
+          flush();
+          patch((m) => applyStreamEvent(m, event));
+
+          if (event.type === "tool-input-start" || event.type === "tool-input-available") {
+            if (typeof event.toolName === "string") {
+              toolNames.set(String(event.toolCallId), event.toolName);
+            }
+          } else if (event.type === "tool-output-available") {
+            const name = toolNames.get(String(event.toolCallId)) ?? "tool";
+            const rr = routeRef.current;
+            maybeStageProposal(
+              name,
+              event.output,
+              buildPageContext(rr.pathname, rr.slugPrefix, rr.params, deriveViewRef.current),
+            );
+            maybeSyncLibrary(name, event.output);
+            maybeDispatchHostActions(name, event.output);
+          } else if (event.type === "error") {
+            setError(typeof event.errorText === "string" ? event.errorText : "AI stream error");
+          }
         }
+      } catch (err: unknown) {
+        if (!controller.signal.aborted) {
+          const message = err instanceof Error ? err.message : "Failed to reach AI chat";
+          setError(message);
+          patch((m) => ({ ...m, error: message }));
+        }
+      } finally {
+        flush();
+        const aborted = controller.signal.aborted;
+        patch((m) => {
+          const settled = settleRunningTools(m, aborted ? "stopped" : "interrupted");
+          return {
+            ...settled,
+            aborted: settled.aborted || aborted || undefined,
+            meta: {
+              ...settled.meta,
+              durationMs: settled.meta?.durationMs ?? Date.now() - startedAt,
+            },
+          };
+        });
+        if (abortRef.current === controller) abortRef.current = null;
+        streamingRef.current = false;
+        setStreaming(false);
       }
-    } catch (err: unknown) {
-      if (!controller.signal.aborted) {
-        const message = err instanceof Error ? err.message : "Failed to reach AI chat";
-        setError(message);
-        patch((m) => ({ ...m, error: message }));
-      }
-    } finally {
-      flush();
-      const aborted = controller.signal.aborted;
-      patch((m) => {
-        const settled = settleRunningTools(m, aborted ? "stopped" : "interrupted");
-        return {
-          ...settled,
-          aborted: settled.aborted || aborted || undefined,
-          meta: {
-            ...settled.meta,
-            durationMs: settled.meta?.durationMs ?? Date.now() - startedAt,
-          },
-        };
-      });
-      if (abortRef.current === controller) abortRef.current = null;
-      streamingRef.current = false;
-      setStreaming(false);
-    }
-  }, [routeRef, deriveViewRef, setOpen]);
+    },
+    [routeRef, deriveViewRef, setOpen],
+  );
 
   const send = useCallback(
     async (text: string) => {

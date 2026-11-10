@@ -234,14 +234,7 @@ export async function runSyncCycle(
           console.warn(`[replication] collection "${cfg.name}" missing on db — skipping`);
           return Promise.resolve();
         }
-        return replicateCollection(
-          collection,
-          cfg.name,
-          http,
-          storage,
-          forceFullPull,
-          shouldAbort,
-        );
+        return replicateCollection(collection, cfg.name, http, storage, forceFullPull, shouldAbort);
       }),
     );
   }

@@ -408,11 +408,7 @@ export function OrgNotificationsPage() {
                 <div className="flex items-center gap-3 p-3 rounded-lg border border-m3-primary/25 bg-m3-primary/5">
                   <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center shrink-0 overflow-hidden">
                     {recipient.image ? (
-                      <img
-                        src={recipient.image}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={recipient.image} alt="" className="w-full h-full object-cover" />
                     ) : (
                       initials(recipient.name)
                     )}
@@ -448,7 +444,10 @@ export function OrgNotificationsPage() {
                   <div className="max-h-56 overflow-y-auto rounded-md border border-m3-border divide-y divide-m3-border/60">
                     {isLoadingMembers ? (
                       <div className="py-8 flex justify-center">
-                        <Spinner size="sm" label={t("settings.notifications.recipient.searching")} />
+                        <Spinner
+                          size="sm"
+                          label={t("settings.notifications.recipient.searching")}
+                        />
                       </div>
                     ) : membersError ? (
                       <div className="py-8 text-center space-y-3">
@@ -495,7 +494,9 @@ export function OrgNotificationsPage() {
                             <p className="text-xs text-m3-secondary truncate">{member.email}</p>
                           </div>
                           <span className="text-[10px] font-semibold uppercase tracking-wide text-m3-secondary px-1.5 py-0.5 rounded bg-m3-sidebar border border-m3-border">
-                            {t(`settings.roles.${member.role as AppRole}` as "settings.roles.owner")}
+                            {t(
+                              `settings.roles.${member.role as AppRole}` as "settings.roles.owner",
+                            )}
                           </span>
                         </button>
                       ))

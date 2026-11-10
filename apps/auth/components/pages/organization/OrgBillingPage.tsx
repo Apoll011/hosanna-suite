@@ -294,7 +294,10 @@ export function OrgBillingPage() {
     return (
       <AccountCenter toast={toast}>
         <div className="space-y-6">
-          <PageHeader title={t("settings.billing.title")} description={t("settings.billing.desc")} />
+          <PageHeader
+            title={t("settings.billing.title")}
+            description={t("settings.billing.desc")}
+          />
           <div className="overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card">
             <div className="h-28 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
             <div className="-mt-8 px-6 pb-8 text-center sm:px-10">
@@ -323,7 +326,10 @@ export function OrgBillingPage() {
     <AccountCenter toast={toast}>
       <div className="space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <PageHeader title={t("settings.billing.title")} description={t("settings.billing.desc")} />
+          <PageHeader
+            title={t("settings.billing.title")}
+            description={t("settings.billing.desc")}
+          />
           <Cannot permission="billing.manage">
             <span className="inline-flex w-fit items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
               {t("settings.billing.readOnly")}
@@ -499,10 +505,7 @@ export function OrgBillingPage() {
                 </p>
                 <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {PLAN_FEATURE_KEYS.map((key) => (
-                    <li
-                      key={key}
-                      className="flex items-center gap-2.5 text-sm text-m3-text"
-                    >
+                    <li key={key} className="flex items-center gap-2.5 text-sm text-m3-text">
                       <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
                         <Check className="h-3 w-3" />
                       </span>
@@ -542,9 +545,7 @@ export function OrgBillingPage() {
                         onClick={() => setAnnual(false)}
                         disabled={pendingAction === "checkout"}
                         className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 ${
-                          !annual
-                            ? "bg-white text-slate-900"
-                            : "text-white/75 hover:text-white"
+                          !annual ? "bg-white text-slate-900" : "text-white/75 hover:text-white"
                         }`}
                       >
                         {t("settings.billing.monthly")}
@@ -554,9 +555,7 @@ export function OrgBillingPage() {
                         onClick={() => setAnnual(true)}
                         disabled={pendingAction === "checkout"}
                         className={`cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 ${
-                          annual
-                            ? "bg-white text-slate-900"
-                            : "text-white/75 hover:text-white"
+                          annual ? "bg-white text-slate-900" : "text-white/75 hover:text-white"
                         }`}
                       >
                         {t("settings.billing.annual")}

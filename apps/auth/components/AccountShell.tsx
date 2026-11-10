@@ -43,9 +43,7 @@ export function AccountShell({
         >
           <ArrowLeft className="h-4 w-4 text-m3-text" />
         </span>
-        <span
-          className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}
-        >
+        <span className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}>
           <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
         </span>
       </span>
@@ -61,9 +59,7 @@ export function AccountShell({
         >
           {t("common.back")}
         </span>
-        <span className={`${swapMotion} z-10 group-hover:opacity-0`}>
-          {t("brand.name")}
-        </span>
+        <span className={`${swapMotion} z-10 group-hover:opacity-0`}>{t("brand.name")}</span>
       </span>
     </>
   ) : (

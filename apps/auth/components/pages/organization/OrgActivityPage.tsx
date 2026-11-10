@@ -194,126 +194,128 @@ export function OrgActivityPage() {
   return (
     <AccountCenter>
       <div className="space-y-6">
-      <PageHeader
-        title={t("organization.loginActivity.title")}
-        description={t("organization.loginActivity.desc")}
-      />
+        <PageHeader
+          title={t("organization.loginActivity.title")}
+          description={t("organization.loginActivity.desc")}
+        />
 
-      <Surface>
-        <div className="flex items-center justify-between mb-4 gap-3">
-          <div className="min-w-0">
-            <h3 className="text-title text-m3-text flex items-center gap-2">
-              <History className="w-4 h-4 text-m3-primary" />
-              {t("organization.loginActivity.listTitle")}
-            </h3>
-            <p className="text-muted mt-0.5">{t("loginHistory.orgDesc")}</p>
+        <Surface>
+          <div className="flex items-center justify-between mb-4 gap-3">
+            <div className="min-w-0">
+              <h3 className="text-title text-m3-text flex items-center gap-2">
+                <History className="w-4 h-4 text-m3-primary" />
+                {t("organization.loginActivity.listTitle")}
+              </h3>
+              <p className="text-muted mt-0.5">{t("loginHistory.orgDesc")}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void fetchLogs()}
+              disabled={isLoading}
+              className="p-1.5 text-m3-secondary hover:text-m3-text rounded-lg hover:bg-m3-hover cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => void fetchLogs()}
-            disabled={isLoading}
-            className="p-1.5 text-m3-secondary hover:text-m3-text rounded-lg hover:bg-m3-hover cursor-pointer disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-          </button>
-        </div>
 
-        {isLoading && events === null ? (
-          <div className="py-8 flex justify-center">
-            <Spinner size="md" label={t("loginHistory.loading")} />
-          </div>
-        ) : error ? (
-          <div className="py-6 text-center space-y-3">
-            <p className="text-xs text-rose-600 dark:text-rose-400 flex items-center justify-center gap-2">
-              <ShieldAlert className="w-4 h-4" />
-              {error}
-            </p>
-            <Button type="button" variant="outline" size="sm" onClick={() => void fetchLogs()}>
-              {t("common.retry")}
-            </Button>
-          </div>
-        ) : events && events.length > 0 ? (
-          <div className="space-y-3">
-            {events.map((log, idx) => {
-              const ua =
-                readString(log.eventData, "userAgent", "user_agent", "ua") || null;
-              const info = parseUserAgent(ua);
-              const DeviceIcon = DEVICE_ICONS[info.deviceType];
-              const actorName = readString(log.eventData, "name", "userName");
-              const actorEmail = readString(log.eventData, "email", "identifier");
-              const ip =
-                log.location?.ipAddress ||
-                readString(log.eventData, "ipAddress", "ip_address", "ip");
-              const isSignOut =
-                log.eventType === "user_signed_out" ||
-                log.eventType === "session_revoked" ||
-                log.eventType === "sessions_revoked_all";
-              const EventIcon = isSignOut ? LogOut : LogIn;
-              const labelKey =
-                log.eventType === "user_signed_in"
-                  ? "loginHistory.events.signedIn"
-                  : log.eventType === "user_signed_out"
-                    ? "loginHistory.events.signedOut"
-                    : log.eventType === "session_created"
-                      ? "loginHistory.events.sessionCreated"
-                      : log.eventType === "session_revoked"
-                        ? "loginHistory.events.sessionRevoked"
-                        : log.eventType === "sessions_revoked_all"
-                          ? "loginHistory.events.sessionsRevokedAll"
-                          : "loginHistory.events.other";
-              const deviceTitle =
-                [info.client, info.os, info.device].filter(Boolean).join(" · ") ||
-                ua ||
-                t("settings.account.activeSessions.browserSession");
-              const locationParts = [log.location?.city, log.location?.country].filter(Boolean);
+          {isLoading && events === null ? (
+            <div className="py-8 flex justify-center">
+              <Spinner size="md" label={t("loginHistory.loading")} />
+            </div>
+          ) : error ? (
+            <div className="py-6 text-center space-y-3">
+              <p className="text-xs text-rose-600 dark:text-rose-400 flex items-center justify-center gap-2">
+                <ShieldAlert className="w-4 h-4" />
+                {error}
+              </p>
+              <Button type="button" variant="outline" size="sm" onClick={() => void fetchLogs()}>
+                {t("common.retry")}
+              </Button>
+            </div>
+          ) : events && events.length > 0 ? (
+            <div className="space-y-3">
+              {events.map((log, idx) => {
+                const ua = readString(log.eventData, "userAgent", "user_agent", "ua") || null;
+                const info = parseUserAgent(ua);
+                const DeviceIcon = DEVICE_ICONS[info.deviceType];
+                const actorName = readString(log.eventData, "name", "userName");
+                const actorEmail = readString(log.eventData, "email", "identifier");
+                const ip =
+                  log.location?.ipAddress ||
+                  readString(log.eventData, "ipAddress", "ip_address", "ip");
+                const isSignOut =
+                  log.eventType === "user_signed_out" ||
+                  log.eventType === "session_revoked" ||
+                  log.eventType === "sessions_revoked_all";
+                const EventIcon = isSignOut ? LogOut : LogIn;
+                const labelKey =
+                  log.eventType === "user_signed_in"
+                    ? "loginHistory.events.signedIn"
+                    : log.eventType === "user_signed_out"
+                      ? "loginHistory.events.signedOut"
+                      : log.eventType === "session_created"
+                        ? "loginHistory.events.sessionCreated"
+                        : log.eventType === "session_revoked"
+                          ? "loginHistory.events.sessionRevoked"
+                          : log.eventType === "sessions_revoked_all"
+                            ? "loginHistory.events.sessionsRevokedAll"
+                            : "loginHistory.events.other";
+                const deviceTitle =
+                  [info.client, info.os, info.device].filter(Boolean).join(" · ") ||
+                  ua ||
+                  t("settings.account.activeSessions.browserSession");
+                const locationParts = [log.location?.city, log.location?.country].filter(Boolean);
 
-              return (
-                <div
-                  key={`${log.eventKey}-${log.createdAt}-${idx}`}
-                  className="p-3 bg-m3-sidebar rounded-xl border border-m3-border flex items-start gap-3"
-                >
-                  <div className="p-2 bg-m3-card rounded-lg border border-m3-border shrink-0">
-                    <DeviceIcon className="w-4 h-4 text-m3-primary" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-m3-text">
-                        <EventIcon className="w-3 h-3 text-m3-secondary" />
-                        {t(labelKey)}
-                      </span>
-                      <span className="text-[10px] text-m3-secondary tabular-nums">
-                        {formatWhen(log.createdAt)}
-                      </span>
+                return (
+                  <div
+                    key={`${log.eventKey}-${log.createdAt}-${idx}`}
+                    className="p-3 bg-m3-sidebar rounded-xl border border-m3-border flex items-start gap-3"
+                  >
+                    <div className="p-2 bg-m3-card rounded-lg border border-m3-border shrink-0">
+                      <DeviceIcon className="w-4 h-4 text-m3-primary" />
                     </div>
-                    {(actorName || actorEmail) && (
-                      <p className="text-xs font-semibold text-m3-text mt-1 truncate">
-                        {actorName || actorEmail}
-                        {actorName && actorEmail ? (
-                          <span className="font-normal text-m3-secondary"> · {actorEmail}</span>
-                        ) : null}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-m3-text">
+                          <EventIcon className="w-3 h-3 text-m3-secondary" />
+                          {t(labelKey)}
+                        </span>
+                        <span className="text-[10px] text-m3-secondary tabular-nums">
+                          {formatWhen(log.createdAt)}
+                        </span>
+                      </div>
+                      {(actorName || actorEmail) && (
+                        <p className="text-xs font-semibold text-m3-text mt-1 truncate">
+                          {actorName || actorEmail}
+                          {actorName && actorEmail ? (
+                            <span className="font-normal text-m3-secondary"> · {actorEmail}</span>
+                          ) : null}
+                        </p>
+                      )}
+                      <p
+                        className="text-xs text-m3-secondary mt-0.5 truncate"
+                        title={ua ?? undefined}
+                      >
+                        {deviceTitle}
                       </p>
-                    )}
-                    <p className="text-xs text-m3-secondary mt-0.5 truncate" title={ua ?? undefined}>
-                      {deviceTitle}
-                    </p>
-                    <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
-                      {t("loginHistory.meta", {
-                        ip: ip || t("settings.account.activeSessions.currentIp"),
-                        location:
-                          locationParts.length > 0
-                            ? locationParts.join(", ")
-                            : t("loginHistory.unknownLocation"),
-                      })}
-                    </p>
+                      <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
+                        {t("loginHistory.meta", {
+                          ip: ip || t("settings.account.activeSessions.currentIp"),
+                          location:
+                            locationParts.length > 0
+                              ? locationParts.join(", ")
+                              : t("loginHistory.unknownLocation"),
+                        })}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <p className="text-xs text-m3-secondary py-6 text-center">{t("loginHistory.empty")}</p>
-        )}
-      </Surface>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-xs text-m3-secondary py-6 text-center">{t("loginHistory.empty")}</p>
+          )}
+        </Surface>
       </div>
     </AccountCenter>
   );

@@ -6,7 +6,11 @@
 import type { AiChatContext, AiConfirmAction, AiSettingsPublic, AiUiMessage } from "../types/api";
 
 export type LogosTranslate = (key: string, vars?: Record<string, string | number>) => string;
-export type LogosTc = (key: string, count: number, vars?: Record<string, string | number>) => string;
+export type LogosTc = (
+  key: string,
+  count: number,
+  vars?: Record<string, string | number>,
+) => string;
 
 export type LogosSong = {
   id: string;

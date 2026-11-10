@@ -63,7 +63,9 @@ function parseMetadata(raw: unknown): Record<string, unknown> {
   return {};
 }
 
-function normalizeMember(m: OrgMember & { name?: string; email?: string; image?: string }): OrgMember {
+function normalizeMember(
+  m: OrgMember & { name?: string; email?: string; image?: string },
+): OrgMember {
   return {
     id: m.id,
     userId: m.userId || m.user?.id || m.id,
@@ -148,11 +150,9 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
     loginRedirect: "/login?redirect=/account",
   });
 
-  const [organizations, setOrganizations] = useState<OrgSummary[]>(
-    () => readCachedOrgList() ?? [],
-  );
-  const [organization, setOrganization] = useState<ActiveOrganization | null>(
-    () => readCachedActiveOrg(),
+  const [organizations, setOrganizations] = useState<OrgSummary[]>(() => readCachedOrgList() ?? []);
+  const [organization, setOrganization] = useState<ActiveOrganization | null>(() =>
+    readCachedActiveOrg(),
   );
   const [isLoading, setIsLoading] = useState(() => !readCachedActiveOrg());
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -259,10 +259,7 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
   const activeRole = activeMember?.role ?? null;
   const capabilities = useMemo(() => capabilitiesForRole(activeRole), [activeRole]);
 
-  const metadata = useMemo(
-    () => parseMetadata(organization?.metadata),
-    [organization?.metadata],
-  );
+  const metadata = useMemo(() => parseMetadata(organization?.metadata), [organization?.metadata]);
 
   return {
     user,

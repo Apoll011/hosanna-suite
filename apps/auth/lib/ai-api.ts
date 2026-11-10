@@ -135,9 +135,7 @@ export const aiApi = {
     return { cleared: data?.cleared ?? 0 };
   },
 
-  listPersonalMemory: async ({
-    organizationId,
-  }: OrgScoped): Promise<{ items: AiMemoryItem[] }> => {
+  listPersonalMemory: async ({ organizationId }: OrgScoped): Promise<{ items: AiMemoryItem[] }> => {
     const data = await apiFetch<{ items?: AiMemoryItem[] }>("/ai/memory/personal", {
       organizationId,
     });
@@ -157,9 +155,7 @@ export const aiApi = {
       organizationId,
     }),
 
-  clearPersonalMemory: async ({
-    organizationId,
-  }: OrgScoped): Promise<{ cleared: number }> => {
+  clearPersonalMemory: async ({ organizationId }: OrgScoped): Promise<{ cleared: number }> => {
     const data = await apiFetch<{ cleared?: number }>("/ai/memory/personal", {
       method: "DELETE",
       organizationId,

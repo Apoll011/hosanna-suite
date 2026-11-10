@@ -112,13 +112,7 @@ function NavLink({ item, search, active }: { item: NavItem; search: string; acti
   );
 }
 
-function PermissionGate({
-  item,
-  children,
-}: {
-  item: OrgNavItem;
-  children: ReactNode;
-}) {
+function PermissionGate({ item, children }: { item: OrgNavItem; children: ReactNode }) {
   if (item.anyRoles?.length) {
     return <AnyRoleGate roles={item.anyRoles}>{children}</AnyRoleGate>;
   }
@@ -141,11 +135,7 @@ export function AccountNav({ className = "" }: { className?: string }) {
   const renderOrgLinks = (compact = false) =>
     ORG_ITEMS.map((item) => (
       <PermissionGate key={item.href} item={item}>
-        <NavLink
-          item={item}
-          search={search}
-          active={isActivePath(pathname, item)}
-        />
+        <NavLink item={item} search={search} active={isActivePath(pathname, item)} />
       </PermissionGate>
     ));
 

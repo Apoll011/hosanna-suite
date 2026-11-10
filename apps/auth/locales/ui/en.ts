@@ -285,8 +285,7 @@ export const en: typeof pt = {
     restore: {
       confirmTitle: "Confirm restore",
       attention: "Attention when restoring:",
-      attentionDesc:
-        "This action replaces existing data with the selected backup file.",
+      attentionDesc: "This action replaces existing data with the selected backup file.",
       summary: "Content summary:",
       songs: "Songs",
       folders: "Folders",
@@ -520,15 +519,13 @@ export const en: typeof pt = {
       removeMember: "Remove member",
       rbacTitle: "Role & permissions",
       changeRole: "Change role",
-      promoteOwnerWarning:
-        "You are about to make {name} an owner. Confirm carefully.",
+      promoteOwnerWarning: "You are about to make {name} an owner. Confirm carefully.",
       saveRole: "Save role",
       currentRole: "Current role:",
       userId: "User ID",
       memberId: "Member ID",
       removeConfirmTitle: "Remove member",
-      removeConfirmText:
-        "Remove {name} from the organization? They will lose access immediately.",
+      removeConfirmText: "Remove {name} from the organization? They will lose access immediately.",
       leaveConfirmTitle: "Leave organization",
       leaveConfirmText:
         "Leave this organization? You will lose access and need a new invite to return.",

@@ -83,7 +83,9 @@ export function readOrgGeneral(metadata: Record<string, unknown>): OrgGeneralSet
     locale: typeof general.locale === "string" ? general.locale : DEFAULT_GENERAL.locale,
     timezone: typeof general.timezone === "string" ? general.timezone : DEFAULT_GENERAL.timezone,
     weekStartsOn:
-      typeof general.weekStartsOn === "number" ? general.weekStartsOn : DEFAULT_GENERAL.weekStartsOn,
+      typeof general.weekStartsOn === "number"
+        ? general.weekStartsOn
+        : DEFAULT_GENERAL.weekStartsOn,
   };
 }
 

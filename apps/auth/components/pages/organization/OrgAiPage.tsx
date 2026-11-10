@@ -33,13 +33,7 @@ import {
   Wallet,
   Zap,
 } from "lucide-react";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 
 const inputClass =
   "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
@@ -554,10 +548,7 @@ export function OrgAiPage() {
   if (!canManage) {
     return (
       <AccountCenter>
-        <PageHeader
-          title={t("accountOrg.ai.title")}
-          description={t("accountOrg.ai.description")}
-        />
+        <PageHeader title={t("accountOrg.ai.title")} description={t("accountOrg.ai.description")} />
         <Surface className="text-center py-10">
           <Lock className="w-5 h-5 text-m3-secondary mx-auto mb-3" />
           <h3 className="text-sm font-semibold text-m3-text">{t("ai.settings.noAccessTitle")}</h3>
@@ -769,13 +760,17 @@ export function OrgAiPage() {
                       placeholder={t("ai.settings.baseUrlRequiredPlaceholder")}
                       required
                     />
-                    <span className="text-xs text-m3-secondary">{t("ai.settings.baseUrlHint")}</span>
+                    <span className="text-xs text-m3-secondary">
+                      {t("ai.settings.baseUrlHint")}
+                    </span>
                   </label>
                 ) : null}
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-medium text-m3-text">{t("ai.settings.model")}</span>
+                    <span className="text-xs font-medium text-m3-text">
+                      {t("ai.settings.model")}
+                    </span>
                     <button
                       type="button"
                       className="text-xs text-m3-primary hover:underline cursor-pointer"

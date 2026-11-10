@@ -11,8 +11,7 @@
 import { authClient } from "@/lib/auth-client";
 
 export function apiBaseUrl(): string {
-  const fromEnv =
-    (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) || undefined;
+  const fromEnv = (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) || undefined;
   if (fromEnv) return fromEnv.replace(/\/+$/, "");
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
@@ -69,10 +68,7 @@ export type ApiFetchOptions = RequestInit & {
   organizationId?: string | null;
 };
 
-export async function apiFetch<T>(
-  path: string,
-  init?: ApiFetchOptions,
-): Promise<T> {
+export async function apiFetch<T>(path: string, init?: ApiFetchOptions): Promise<T> {
   const { organizationId, ...requestInit } = init ?? {};
   await ensureActiveOrganizationSession(organizationId);
 

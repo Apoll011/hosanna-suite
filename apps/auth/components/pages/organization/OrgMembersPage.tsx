@@ -48,13 +48,7 @@ type SubTab = "members" | "invites";
 
 export function OrgMembersPage() {
   const { t, locale } = useI18n();
-  const {
-    user,
-    organization,
-    capabilities,
-    isLoading,
-    refresh,
-  } = useActiveOrganization();
+  const { user, organization, capabilities, isLoading, refresh } = useActiveOrganization();
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [subTab, setSubTab] = useState<SubTab>("members");
@@ -83,7 +77,7 @@ export function OrgMembersPage() {
   const members = organization?.members ?? [];
 
   const selected = useMemo(
-    () => (selectedId ? members.find((m) => m.id === selectedId) ?? null : null),
+    () => (selectedId ? (members.find((m) => m.id === selectedId) ?? null) : null),
     [members, selectedId],
   );
 
@@ -215,10 +209,7 @@ export function OrgMembersPage() {
     setIsCancelling(true);
     try {
       await authClient.organization.cancelInvitation({ invitationId: cancelInvite.id });
-      showToast(
-        t("settings.members.inviteCancelled", { email: cancelInvite.email }),
-        "success",
-      );
+      showToast(t("settings.members.inviteCancelled", { email: cancelInvite.email }), "success");
       await fetchInvitations();
     } catch (err) {
       showToast(
@@ -339,8 +330,7 @@ export function OrgMembersPage() {
           year: "numeric",
         }).format(new Date(selected.createdAt))
       : null;
-    const promotingOwner =
-      editingRole && draftRole === "owner" && selected.role !== "owner";
+    const promotingOwner = editingRole && draftRole === "owner" && selected.role !== "owner";
     const showDanger = isSelf || capabilities.canManageMembers;
     const canEditRole = capabilities.canManageMembers && !isSelf;
     const userId = selected.userId || selected.user?.id || null;
@@ -368,11 +358,7 @@ export function OrgMembersPage() {
               <div className="-mt-12 mb-4 flex flex-wrap items-end justify-between gap-3">
                 <div className="relative z-10 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-4 border-m3-card bg-m3-primary/15 text-xl font-semibold text-m3-primary shadow-md sm:h-24 sm:w-24 sm:text-2xl">
                   {selected.user?.image ? (
-                    <img
-                      src={selected.user.image}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={selected.user.image} alt="" className="h-full w-full object-cover" />
                   ) : (
                     orgInitials(name)
                   )}
@@ -410,11 +396,7 @@ export function OrgMembersPage() {
 
                 <div className="flex flex-wrap gap-2">
                   {isSelf ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setConfirmLeave(true)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => setConfirmLeave(true)}>
                       {t("settings.memberProfile.leaveOrg")}
                     </Button>
                   ) : (
@@ -628,11 +610,7 @@ export function OrgMembersPage() {
                 <Button variant="outline" onClick={() => setConfirmRemove(false)}>
                   {t("common.back")}
                 </Button>
-                <Button
-                  variant="primary"
-                  isLoading={busy}
-                  onClick={() => void handleRemove()}
-                >
+                <Button variant="primary" isLoading={busy} onClick={() => void handleRemove()}>
                   {t("settings.memberProfile.removeMember")}
                 </Button>
               </div>
@@ -652,11 +630,7 @@ export function OrgMembersPage() {
                 <Button variant="outline" onClick={() => setConfirmLeave(false)}>
                   {t("common.back")}
                 </Button>
-                <Button
-                  variant="primary"
-                  isLoading={busy}
-                  onClick={() => void handleLeave()}
-                >
+                <Button variant="primary" isLoading={busy} onClick={() => void handleLeave()}>
                   {t("settings.memberProfile.leaveOrg")}
                 </Button>
               </div>
@@ -670,10 +644,7 @@ export function OrgMembersPage() {
   return (
     <AccountCenter toast={toast}>
       <div className="space-y-5">
-        <PageHeader
-          title={t("org.members.title")}
-          description={t("org.members.desc")}
-        />
+        <PageHeader title={t("org.members.title")} description={t("org.members.desc")} />
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <Tabs
@@ -757,9 +728,7 @@ export function OrgMembersPage() {
                           </span>
                         ) : null}
                       </p>
-                      <p className="text-xs text-m3-secondary truncate">
-                        {member.user?.email}
-                      </p>
+                      <p className="text-xs text-m3-secondary truncate">{member.user?.email}</p>
                     </div>
                     <Badge variant="neutral" size="sm" className="shrink-0">
                       {roleLabel(member.role, t)}
@@ -795,10 +764,7 @@ export function OrgMembersPage() {
                     ? new Date(invite.expiresAt).getTime() < Date.now()
                     : false;
                   return (
-                    <div
-                      key={invite.id}
-                      className="flex items-center gap-3 px-3 sm:px-4 py-2.5"
-                    >
+                    <div key={invite.id} className="flex items-center gap-3 px-3 sm:px-4 py-2.5">
                       <div className="w-9 h-9 rounded-full bg-m3-sidebar text-m3-secondary flex items-center justify-center shrink-0">
                         <Mail className="w-4 h-4" />
                       </div>

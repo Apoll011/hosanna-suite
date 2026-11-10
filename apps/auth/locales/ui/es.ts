@@ -285,8 +285,7 @@ export const es: typeof pt = {
     restore: {
       confirmTitle: "Confirmar restauración",
       attention: "Atención al restaurar:",
-      attentionDesc:
-        "Esta acción sustituye los datos existentes por los del archivo de copia.",
+      attentionDesc: "Esta acción sustituye los datos existentes por los del archivo de copia.",
       summary: "Resumen del contenido:",
       songs: "Canciones",
       folders: "Carpetas",
@@ -505,8 +504,7 @@ export const es: typeof pt = {
       inviteSuccess: "Invitación enviada a {email}.",
       inviteError: "Error al invitar a {email}.",
       cancelModalTitle: "Cancelar invitación",
-      cancelModalConfirm:
-        "¿Cancelar la invitación de {email}? Ya no podrá aceptarla.",
+      cancelModalConfirm: "¿Cancelar la invitación de {email}? Ya no podrá aceptarla.",
       cancelling: "Cancelando…",
       confirmCancel: "Cancelar invitación",
       noInviteAccess: "No tienes permiso para gestionar invitaciones.",
@@ -520,15 +518,13 @@ export const es: typeof pt = {
       removeMember: "Eliminar miembro",
       rbacTitle: "Rol y permisos",
       changeRole: "Cambiar rol",
-      promoteOwnerWarning:
-        "Estás a punto de hacer propietario a {name}. Confirma con cuidado.",
+      promoteOwnerWarning: "Estás a punto de hacer propietario a {name}. Confirma con cuidado.",
       saveRole: "Guardar rol",
       currentRole: "Rol actual:",
       userId: "ID de usuario",
       memberId: "ID de miembro",
       removeConfirmTitle: "Eliminar miembro",
-      removeConfirmText:
-        "¿Eliminar a {name} de la organización? Perderá el acceso de inmediato.",
+      removeConfirmText: "¿Eliminar a {name} de la organización? Perderá el acceso de inmediato.",
       leaveConfirmTitle: "Salir de la organización",
       leaveConfirmText:
         "¿Salir de esta organización? Perderás el acceso y necesitarás una nueva invitación.",

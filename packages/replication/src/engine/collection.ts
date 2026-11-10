@@ -110,18 +110,12 @@ function matchesSelector<T extends AnyDoc>(doc: T, selector: Selector): boolean 
         }
       }
       if ("$lte" in cond) {
-        if (
-          docVal == null ||
-          (docVal as string | number) > (cond["$lte"] as string | number)
-        ) {
+        if (docVal == null || (docVal as string | number) > (cond["$lte"] as string | number)) {
           return false;
         }
       }
       if ("$gte" in cond) {
-        if (
-          docVal == null ||
-          (docVal as string | number) < (cond["$gte"] as string | number)
-        ) {
+        if (docVal == null || (docVal as string | number) < (cond["$gte"] as string | number)) {
           return false;
         }
       }
@@ -268,9 +262,7 @@ export class HosanaCollection<T extends AnyDoc> {
   async _mergeFromServer(serverDoc: T, options: { force?: boolean } = {}): Promise<void> {
     if (!options.force) {
       const existing = this._store.get(serverDoc.id);
-      const existingAt = existing
-        ? (existing as Record<string, unknown>).updatedAt
-        : undefined;
+      const existingAt = existing ? (existing as Record<string, unknown>).updatedAt : undefined;
       const serverAt = (serverDoc as Record<string, unknown>).updatedAt;
       if (
         existing &&
@@ -294,9 +286,7 @@ export class HosanaCollection<T extends AnyDoc> {
       ? serverDocs
       : serverDocs.filter((sDoc) => {
           const existing = this._store.get(sDoc.id);
-          const existingAt = existing
-            ? (existing as Record<string, unknown>).updatedAt
-            : undefined;
+          const existingAt = existing ? (existing as Record<string, unknown>).updatedAt : undefined;
           const serverAt = (sDoc as Record<string, unknown>).updatedAt;
           if (
             existing &&

@@ -102,10 +102,7 @@ export function OrgRegionalPage() {
   return (
     <AccountCenter toast={toast}>
       <div className="space-y-6">
-        <PageHeader
-          title={t("settings.general.title")}
-          description={t("settings.general.desc")}
-        />
+        <PageHeader title={t("settings.general.title")} description={t("settings.general.desc")} />
 
         <form onSubmit={(e) => void handleSave(e)}>
           <Surface className="space-y-6">

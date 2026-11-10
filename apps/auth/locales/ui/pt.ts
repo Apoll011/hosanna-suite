@@ -283,8 +283,7 @@ export const pt = {
     restore: {
       confirmTitle: "Confirmar restauro",
       attention: "Atenção ao restaurar:",
-      attentionDesc:
-        "Esta ação substitui os dados existentes pelos do ficheiro de backup.",
+      attentionDesc: "Esta ação substitui os dados existentes pelos do ficheiro de backup.",
       summary: "Resumo do conteúdo:",
       songs: "Músicas",
       folders: "Pastas",
@@ -503,8 +502,7 @@ export const pt = {
       inviteSuccess: "Convite enviado para {email}.",
       inviteError: "Erro ao convidar {email}.",
       cancelModalTitle: "Cancelar convite",
-      cancelModalConfirm:
-        "Cancelar o convite para {email}? A pessoa deixará de o poder aceitar.",
+      cancelModalConfirm: "Cancelar o convite para {email}? A pessoa deixará de o poder aceitar.",
       cancelling: "A cancelar…",
       confirmCancel: "Cancelar convite",
       noInviteAccess: "Não tem permissão para gerir convites.",
@@ -518,18 +516,15 @@ export const pt = {
       removeMember: "Remover membro",
       rbacTitle: "Função e permissões",
       changeRole: "Alterar função",
-      promoteOwnerWarning:
-        "Está prestes a tornar {name} proprietário. Confirme com cuidado.",
+      promoteOwnerWarning: "Está prestes a tornar {name} proprietário. Confirme com cuidado.",
       saveRole: "Guardar função",
       currentRole: "Função atual:",
       userId: "ID do utilizador",
       memberId: "ID do membro",
       removeConfirmTitle: "Remover membro",
-      removeConfirmText:
-        "Remover {name} da organização? Perderá o acesso de imediato.",
+      removeConfirmText: "Remover {name} da organização? Perderá o acesso de imediato.",
       leaveConfirmTitle: "Sair da organização",
-      leaveConfirmText:
-        "Sair desta organização? Perderá o acesso e precisará de um novo convite.",
+      leaveConfirmText: "Sair desta organização? Perderá o acesso e precisará de um novo convite.",
       leaving: "A sair…",
       leaveSuccess: "Saiu da organização.",
       leaveError: "Falha ao sair: {error}",

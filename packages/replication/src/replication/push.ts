@@ -3,12 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type {
-  ChangeRow,
-  PendingChange,
-  ReplicationHttpClient,
-  SyncableDoc,
-} from "./types";
+import type { ChangeRow, PendingChange, ReplicationHttpClient, SyncableDoc } from "./types";
 import { diffNewDocumentState, isSpuriousConflict, toAssumedMasterState } from "./wire";
 
 const CONFLICT_RETRY_LIMIT = 3;

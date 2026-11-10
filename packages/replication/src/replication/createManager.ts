@@ -15,11 +15,7 @@ import {
   markPopulationEpoch,
 } from "./checkpoints";
 import { countConfiguredDocs, runSyncCycle, type DbWithCollections } from "./cycle";
-import {
-  clearServerCacheModule,
-  hydrateServerCache,
-  rememberPushBaseline,
-} from "./serverCache";
+import { clearServerCacheModule, hydrateServerCache, rememberPushBaseline } from "./serverCache";
 import { makeStatusSubject } from "./status";
 import type {
   ReplicationManager,

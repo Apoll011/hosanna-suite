@@ -9,12 +9,7 @@ import type { HosanaCollection } from "../engine/collection";
 import { loadCheckpoint, saveCheckpoint } from "./checkpoints";
 import type { ServerCache } from "./serverCache";
 import { persistServerCache } from "./serverCache";
-import type {
-  Checkpoint,
-  ReplicationHttpClient,
-  ReplicationStorage,
-  SyncableDoc,
-} from "./types";
+import type { Checkpoint, ReplicationHttpClient, ReplicationStorage, SyncableDoc } from "./types";
 import { stripNonReplicatedFields } from "./wire";
 
 export const PULL_BATCH = 100;

@@ -15,9 +15,7 @@ export function LogosSongAdapterProvider({
   value: LogosSongAdapter;
   children: React.ReactNode;
 }) {
-  return (
-    <LogosSongAdapterCtx.Provider value={value}>{children}</LogosSongAdapterCtx.Provider>
-  );
+  return <LogosSongAdapterCtx.Provider value={value}>{children}</LogosSongAdapterCtx.Provider>;
 }
 
 export function useLogosSongAdapter(): LogosSongAdapter {

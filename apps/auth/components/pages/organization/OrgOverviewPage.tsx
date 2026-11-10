@@ -98,9 +98,7 @@ export function OrgOverviewPage() {
 
       {!isLoading && !organization ? (
         <Surface>
-          <h2 className="text-sm font-semibold text-m3-text mb-1">
-            {t("accountOrg.empty.title")}
-          </h2>
+          <h2 className="text-sm font-semibold text-m3-text mb-1">{t("accountOrg.empty.title")}</h2>
           <p className="text-sm text-m3-secondary mb-4">{t("accountOrg.empty.description")}</p>
           <Link
             href="/onboarding"
@@ -124,11 +122,7 @@ export function OrgOverviewPage() {
               <div className="flex items-center gap-3.5 min-w-0">
                 <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-m3-border/60 bg-m3-primary/10 text-m3-primary flex items-center justify-center text-lg font-semibold">
                   {organization.logo ? (
-                    <img
-                      src={organization.logo}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={organization.logo} alt="" className="h-full w-full object-cover" />
                   ) : (
                     (organization.name.trim().charAt(0) || "·").toUpperCase()
                   )}

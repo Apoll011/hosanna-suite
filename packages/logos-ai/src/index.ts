@@ -23,12 +23,7 @@ export {
   type LogosTc,
   type LogosTranslate,
 } from "./host";
-export type {
-  AiChatContext,
-  AiConfirmAction,
-  AiSettingsPublic,
-  AiUiMessage,
-} from "./types";
+export type { AiChatContext, AiConfirmAction, AiSettingsPublic, AiUiMessage } from "./types";
 export {
   AI_LIBRARY_CHANGED_EVENT,
   AI_NAVIGATE_EVENT,

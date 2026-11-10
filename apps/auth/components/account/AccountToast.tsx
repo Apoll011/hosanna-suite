@@ -22,10 +22,7 @@ export function AccountToastProvider({ children }: { children: ReactNode }) {
 
   const clearToast = useCallback(() => setToast(null), []);
 
-  const value = useMemo(
-    () => ({ toast, showToast, clearToast }),
-    [toast, showToast, clearToast],
-  );
+  const value = useMemo(() => ({ toast, showToast, clearToast }), [toast, showToast, clearToast]);
 
   return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
 }

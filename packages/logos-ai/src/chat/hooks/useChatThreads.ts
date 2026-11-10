@@ -14,7 +14,13 @@ import {
 } from "react";
 import { deriveThreadTitle, threadStore } from "../../core/threads";
 import { useLogosHost } from "../../host";
-import { newId, type AiChatMessage, type AiThread, type AiThreadSummary, type LogosMood } from "../../types";
+import {
+  newId,
+  type AiChatMessage,
+  type AiThread,
+  type AiThreadSummary,
+  type LogosMood,
+} from "../../types";
 
 type MoodSetter = Dispatch<SetStateAction<LogosMood>>;
 
