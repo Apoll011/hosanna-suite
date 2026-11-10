@@ -641,12 +641,12 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List AI memory */
+    /** List organization AI memory */
     get: operations["listAiMemory"];
     put?: never;
-    /** Add AI memory */
+    /** Add organization AI memory */
     post: operations["createAiMemory"];
-    /** Clear all AI memory */
+    /** Clear organization AI memory */
     delete: operations["clearAiMemory"];
     options?: never;
     head?: never;
@@ -663,8 +663,44 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Delete AI memory item */
+    /** Delete organization AI memory item */
     delete: operations["deleteAiMemory"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/ai/memory/personal": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** List personal AI memory */
+    get: operations["listPersonalAiMemory"];
+    put?: never;
+    /** Add personal AI memory */
+    post: operations["createPersonalAiMemory"];
+    /** Clear personal AI memory */
+    delete: operations["clearPersonalAiMemory"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/ai/memory/personal/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /** Delete personal AI memory item */
+    delete: operations["deletePersonalAiMemory"];
     options?: never;
     head?: never;
     patch?: never;
@@ -796,57 +832,6 @@ export interface components {
       collectionIds?: string[];
       isDeleted?: boolean;
     };
-    SongImportJob: {
-      /** Format: uuid */
-      id?: string;
-      /** @enum {string} */
-      status?: "queued" | "running" | "completed" | "failed" | "cancelled";
-      steps?: {
-        id?: string;
-        label?: string;
-        done?: boolean;
-        active?: boolean;
-      }[];
-      result?: {
-        title?: string;
-        artist?: string;
-        content?: string;
-        key?: string;
-        tempo?: string;
-        timeSignature?: string;
-        confidence?: number;
-        warnings?: string[];
-        youtube?: string;
-        ccli?: string;
-        composer?: string;
-        copyright?: string;
-        subtitle?: string;
-        duration?: string;
-        diagnostics?: {
-          severity?: string;
-          message?: string;
-          line?: number;
-        }[];
-        possibleDuplicates?: {
-          id?: string;
-          title?: string;
-          artist?: string;
-          score?: number;
-        }[];
-      } | null;
-      errorMessage?: string | null;
-      /** @enum {string|null} */
-      cancelCode?:
-        | "not_a_song"
-        | "unreadable"
-        | "blank"
-        | "wrong_content"
-        | "multiple_unclear"
-        | null;
-      cancelReason?: string | null;
-      /** @enum {string|null} */
-      cancelledBy?: "ai" | "user" | null;
-    };
     Folder: {
       /** Format: uuid */
       id?: string;
@@ -870,13 +855,7 @@ export interface components {
     ServiceElement: {
       id?: string;
       /** @enum {string} */
-      type?:
-        | "welcome"
-        | "scripture"
-        | "message"
-        | "announcement"
-        | "custom"
-        | "song";
+      type?: "welcome" | "scripture" | "message" | "announcement" | "custom" | "song";
       title?: string;
       content?: string | null;
       position?: number | null;
@@ -987,8 +966,7 @@ export interface components {
       agendaEvents?: components["schemas"]["AgendaEvent"][];
     };
     /** @enum {string} */
-    ReplicationCollection:
-      "songs" | "folders" | "collections" | "services" | "agendaEvents";
+    ReplicationCollection: "songs" | "folders" | "collections" | "services" | "agendaEvents";
     PullRequest: {
       checkpoint?: components["schemas"]["Checkpoint"];
       /** @default 100 */
@@ -1014,6 +992,52 @@ export interface components {
       updatedAt?: string;
       updatedById?: string | null;
       revision?: number;
+    };
+    SongImportJob: {
+      /** Format: uuid */
+      id?: string;
+      /** @enum {string} */
+      status?: "queued" | "running" | "completed" | "failed" | "cancelled";
+      steps?: {
+        id?: string;
+        label?: string;
+        done?: boolean;
+        active?: boolean;
+      }[];
+      result?: {
+        title?: string;
+        artist?: string;
+        content?: string;
+        key?: string;
+        tempo?: string;
+        timeSignature?: string;
+        confidence?: number;
+        warnings?: string[];
+        youtube?: string;
+        ccli?: string;
+        composer?: string;
+        copyright?: string;
+        subtitle?: string;
+        duration?: string;
+        diagnostics?: {
+          severity?: string;
+          message?: string;
+          line?: number;
+        }[];
+        possibleDuplicates?: {
+          id?: string;
+          title?: string;
+          artist?: string;
+          score?: number;
+        }[];
+      } | null;
+      errorMessage?: string | null;
+      /** @enum {string|null} */
+      cancelCode?:
+        "not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear" | null;
+      cancelReason?: string | null;
+      /** @enum {string|null} */
+      cancelledBy?: "ai" | "user" | null;
     };
   };
   responses: never;
@@ -1210,6 +1234,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["SongImportJob"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Error"];
         };
       };
     };
@@ -2396,6 +2429,7 @@ export interface operations {
               source?: string;
               /** Format: date-time */
               createdAt?: string;
+              scope?: string;
             }[];
           };
         };
@@ -2453,6 +2487,105 @@ export interface operations {
     };
   };
   deleteAiMemory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  listPersonalAiMemory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            items?: {
+              id?: string;
+              content?: string;
+              source?: string;
+              /** Format: date-time */
+              createdAt?: string;
+              scope?: string;
+            }[];
+          };
+        };
+      };
+    };
+  };
+  createPersonalAiMemory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          content: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            [key: string]: unknown;
+          };
+        };
+      };
+    };
+  };
+  clearPersonalAiMemory: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            cleared?: number;
+          };
+        };
+      };
+    };
+  };
+  deletePersonalAiMemory: {
     parameters: {
       query?: never;
       header?: never;

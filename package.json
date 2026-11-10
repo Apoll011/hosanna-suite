@@ -21,7 +21,8 @@
     "db:generate": "pnpm --filter @hosanna/db db:generate",
     "db:migrate": "pnpm --filter @hosanna/db db:migrate",
     "db:migrate:dev": "pnpm --filter @hosanna/db db:migrate:dev",
-    "db:push": "pnpm --filter @hosanna/db db:push"
+    "db:push": "pnpm --filter @hosanna/db db:push",
+    "openapi:generate": "node ./scripts/generate-openapi.mjs && pnpm --filter @hosanna/types generate"
   },
   "prettier": "./packages/config/prettier.json",
   "devDependencies": {
@@ -29,6 +30,7 @@
     "prettier": "^3.7.3",
     "tailwint": "^1.1.16",
     "turbo": "^2.11.10",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "yaml": "^2.9.1"
   }
 }

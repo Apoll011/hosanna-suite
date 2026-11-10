@@ -224,6 +224,79 @@ const schemas = {
       revision: { type: "integer" },
     },
   },
+  SongImportJob: {
+    type: "object",
+    properties: {
+      id: { type: "string", format: "uuid" },
+      status: {
+        type: "string",
+        enum: ["queued", "running", "completed", "failed", "cancelled"],
+      },
+      steps: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            label: { type: "string" },
+            done: { type: "boolean" },
+            active: { type: "boolean" },
+          },
+        },
+      },
+      result: {
+        type: "object",
+        nullable: true,
+        properties: {
+          title: { type: "string" },
+          artist: { type: "string" },
+          content: { type: "string" },
+          key: { type: "string" },
+          tempo: { type: "string" },
+          timeSignature: { type: "string" },
+          confidence: { type: "number" },
+          warnings: { type: "array", items: { type: "string" } },
+          youtube: { type: "string" },
+          ccli: { type: "string" },
+          composer: { type: "string" },
+          copyright: { type: "string" },
+          subtitle: { type: "string" },
+          duration: { type: "string" },
+          diagnostics: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                severity: { type: "string" },
+                message: { type: "string" },
+                line: { type: "integer" },
+              },
+            },
+          },
+          possibleDuplicates: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: { type: "string" },
+                title: { type: "string" },
+                artist: { type: "string" },
+                score: { type: "number" },
+              },
+            },
+          },
+        },
+      },
+      errorMessage: { type: "string", nullable: true },
+      cancelCode: {
+        type: "string",
+        nullable: true,
+        enum: ["not_a_song", "unreadable", "blank", "wrong_content", "multiple_unclear"],
+      },
+      cancelReason: { type: "string", nullable: true },
+      cancelledBy: { type: "string", nullable: true, enum: ["ai", "user"] },
+    },
+  },
 };
 
 const session = [{ cookieAuth: [] }, { bearerAuth: [] }];
@@ -324,6 +397,73 @@ for (const name of ["agenda-reminders", "purge-trash"]) {
     );
   }
 }
+
+// Song import (Logos AI)
+add(
+  "/songs/import/jobs",
+  "post",
+  op("Start a Logos AI song-import job (photo/gallery/PDF)", {
+    tags: ["Songs"],
+    operationId: "createSongImportJob",
+    security: session,
+    description:
+      "Accepts a sheet-music image (and optional extra page screenshots for PDFs). Returns 202 with a job id immediately; poll GET /songs/import/jobs/{id} for real step progress. Cancel with DELETE. Does not persist a song — the client reviews the draft then creates locally.",
+    requestBody: jsonBody({
+      type: "object",
+      required: ["sourceType", "imageBase64"],
+      properties: {
+        sourceType: { type: "string", enum: ["photo", "gallery", "pdf"] },
+        imageBase64: {
+          type: "string",
+          description: "Photo/gallery bytes, or PDF page-1 screenshot (base64)",
+        },
+        imageMimeType: { type: "string", default: "image/jpeg" },
+        imagesBase64: {
+          type: "array",
+          maxItems: 4,
+          items: { type: "string" },
+          description: "Extra page screenshots (pages 2+)",
+        },
+        imageMimeTypes: { type: "array", maxItems: 4, items: { type: "string" } },
+        pdfBase64: { type: "string", description: "Required when sourceType is pdf" },
+        fileName: { type: "string" },
+      },
+    }),
+    responses: {
+      ...jsonResp(202, { $ref: "#/components/schemas/SongImportJob" }, "Job accepted (queued/running); poll GET for progress"),
+      401: {
+        description: "Unauthorized",
+        content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
+      },
+    },
+  }),
+);
+add(
+  "/songs/import/jobs/{id}",
+  "get",
+  op("Poll a Logos AI song-import job", {
+    tags: ["Songs"],
+    operationId: "getSongImportJob",
+    security: session,
+    parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
+    responses: jsonResp(200, { $ref: "#/components/schemas/SongImportJob" }),
+  }),
+);
+add(
+  "/songs/import/jobs/{id}",
+  "delete",
+  op("Cancel a running Logos AI song-import job", {
+    tags: ["Songs"],
+    operationId: "cancelSongImportJob",
+    security: session,
+    parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
+    responses: jsonResp(
+      200,
+      { $ref: "#/components/schemas/SongImportJob" },
+      "Job cancelled (or already terminal)",
+    ),
+  }),
+);
 
 // Songs
 add(
@@ -1338,12 +1478,12 @@ const doc = {
         in: "cookie",
         name: "hosanna.session_token",
         description:
-          "Better Auth session cookie (actual cookie name may vary by Better Auth version/prefix).",
+          "Better Auth session cookie forwarded to the auth app for validation (cookie name may vary by Better Auth version/prefix).",
       },
       bearerAuth: {
         type: "http",
         scheme: "bearer",
-        description: "Better Auth session token (Authorization: Bearer).",
+        description: "Better Auth session token (Authorization: Bearer), validated via the auth app.",
       },
       cronSecret: {
         type: "http",
@@ -1355,6 +1495,6 @@ const doc = {
   },
 };
 
-const specPath = new URL("../../../packages/types/openapi.yaml", import.meta.url);
+const specPath = new URL("../packages/types/openapi.yaml", import.meta.url);
 fs.writeFileSync(specPath, stringify(doc, { lineWidth: 0 }));
 console.log("Wrote packages/types/openapi.yaml paths=", Object.keys(paths).length);
