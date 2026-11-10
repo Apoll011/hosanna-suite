@@ -26,8 +26,12 @@ export const metadata: Metadata = {
   description: "Sign in to Hosanna Studio and related products.",
   metadataBase: new URL(process.env.AUTH_URL ?? "https://auth.hosanna.live"),
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.png" }],
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png", sizes: "512x512" },
+    ],
     apple: "/apple-touch-icon.png",
+    other: [{ rel: "mask-icon", url: "/hosanna_favicon.svg", color: "#0284c7" }],
   },
   openGraph: {
     title: "Hosanna Auth",

@@ -26,3 +26,12 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Synced from @hosanna/brand on next.config load — keep only app-owned public files
+/public/favicon.svg
+/public/favicon.png
+/public/hosanna_favicon.svg
+/public/apple-touch-icon.png
+/public/apple-touch-icon-*.png
+/public/og-image.jpg
+/public/bimi.svg
