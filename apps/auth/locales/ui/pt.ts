@@ -10,6 +10,20 @@ export const pt = {
     loading: "A carregar…",
     refresh: "Atualizar",
     retry: "Tentar novamente",
+    goHome: "Ir para o início",
+  },
+  errors: {
+    notFound: {
+      code: "404",
+      title: "Página não encontrada",
+      subtitle: "Este link não existe ou foi movido.",
+      login: "Ir para iniciar sessão",
+    },
+    unexpected: {
+      title: "Algo correu mal",
+      subtitle: "Ocorreu um erro inesperado a carregar esta página.",
+      retry: "Tentar novamente",
+    },
   },
   auth: {
     login: {

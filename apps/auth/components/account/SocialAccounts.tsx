@@ -2,39 +2,56 @@
 
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
+import {
+  readCachedAccounts,
+  writeCachedAccounts,
+  type CachedSocialAccount,
+} from "@/lib/session-cache";
 import { ConfirmDialog, GoogleIcon, Surface } from "@hosanna/ui";
 import { CheckCircle2, ExternalLink, Link2, Loader2, RefreshCw, Unlink } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-interface UserAccount {
-  id: string;
-  providerId: string;
-  accountId: string;
-}
+type UserAccount = CachedSocialAccount;
 
 export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type: "success" | "error") => void }) {
   const { t } = useI18n();
-  const [accounts, setAccounts] = useState<UserAccount[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [accounts, setAccounts] = useState<UserAccount[]>(() => readCachedAccounts() ?? []);
+  const [isLoading, setIsLoading] = useState(() => readCachedAccounts() === null);
+  const [isRefreshing, setIsRefreshing] = useState(() => readCachedAccounts() !== null);
   const [linkingProvider, setLinkingProvider] = useState<string | null>(null);
   const [unlinkingProvider, setUnlinkingProvider] = useState<string | null>(null);
   const [confirmUnlink, setConfirmUnlink] = useState(false);
 
-  const fetchAccounts = useCallback(async () => {
-    setIsLoading(true);
+  const fetchAccounts = useCallback(async (opts?: { background?: boolean }) => {
+    const hasCache = readCachedAccounts() !== null;
+    const background = Boolean(opts?.background && hasCache);
+    if (background) setIsRefreshing(true);
+    else setIsLoading(true);
     try {
       const { data, error } = await authClient.listAccounts({ query: {} });
-      if (!error && data) setAccounts(data as unknown as UserAccount[]);
-      else setAccounts([]);
+      const next =
+        !error && data
+          ? (data as unknown as UserAccount[]).map((a) => ({
+              id: a.id,
+              providerId: a.providerId,
+              accountId: a.accountId,
+            }))
+          : [];
+      writeCachedAccounts(next);
+      setAccounts(next);
     } catch {
-      setAccounts([]);
+      if (!background) {
+        setAccounts([]);
+        writeCachedAccounts([]);
+      }
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   }, []);
 
   useEffect(() => {
-    void fetchAccounts();
+    void fetchAccounts({ background: true });
   }, [fetchAccounts]);
 
   const linked = accounts.find((a) => a.providerId.toLowerCase() === "google");
@@ -101,10 +118,10 @@ export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type
         <button
           type="button"
           onClick={() => void fetchAccounts()}
-          disabled={isLoading}
+          disabled={isLoading || isRefreshing}
           className="p-1.5 text-m3-secondary hover:text-m3-text rounded-lg hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-4 h-4 ${isLoading || isRefreshing ? "animate-spin" : ""}`} />
         </button>
       </div>
 

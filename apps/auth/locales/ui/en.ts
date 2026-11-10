@@ -12,6 +12,20 @@ export const en: typeof pt = {
     loading: "Loading…",
     refresh: "Refresh",
     retry: "Retry",
+    goHome: "Go home",
+  },
+  errors: {
+    notFound: {
+      code: "404",
+      title: "Page not found",
+      subtitle: "This link doesn’t exist or was moved.",
+      login: "Go to sign in",
+    },
+    unexpected: {
+      title: "Something went wrong",
+      subtitle: "An unexpected error occurred while loading this page.",
+      retry: "Try again",
+    },
   },
   auth: {
     login: {
