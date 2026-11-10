@@ -48,7 +48,20 @@ export function AccountShell({
           }`}
         />
       </span>
-      <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
+      <span className="grid text-xs font-semibold tracking-tight sm:text-sm">
+        {canGoBack ? (
+          <>
+            <span className="col-start-1 row-start-1 transition-opacity duration-150 group-hover:opacity-0">
+              {t("brand.name")}
+            </span>
+            <span className="col-start-1 row-start-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+              {t("common.back")}
+            </span>
+          </>
+        ) : (
+          t("brand.name")
+        )}
+      </span>
     </>
   );
 
