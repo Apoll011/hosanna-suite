@@ -672,6 +672,35 @@ export const es: typeof pt = {
       memoryCount: "{count}/{max} notas",
       memoryError: "No se pudo actualizar la memoria.",
       clearKey: "Quitar clave",
+      setup: {
+        eyebrow: "Logos IA",
+        title: "Trae un asistente a la planificación del culto",
+        subtitle:
+          "Conecta un proveedor una vez. Tu equipo obtiene ayuda con canciones, ChordPro y cultos — dentro de Studio.",
+        cta: "Configurar Logos IA",
+        ctaHint: "A continuación eliges proveedor, modelo y clave de API.",
+        features: {
+          chordpro: {
+            title: "Ediciones ChordPro",
+            desc: "Corrige formato, completa acordes y limpia cifras sin salir del editor.",
+          },
+          songs: {
+            title: "Ideas de canciones",
+            desc: "Sugiere canciones, completa metadatos y transpón tonalidades para tu equipo.",
+          },
+          services: {
+            title: "Planificación de cultos",
+            desc: "Revisa setlists, propone estructura y mantén coherente el orden del culto.",
+          },
+          memory: {
+            title: "Memoria de la organización",
+            desc: "Recuerda preferencias — tonalidades, estilo, idioma — en todo el espacio.",
+          },
+        },
+        providersNote:
+          "Funciona con ChatGPT, Anthropic, Gemini, DeepSeek o un endpoint compatible con OpenAI.",
+        privacyNote: "Las claves de API se cifran en el servidor y nunca vuelven al navegador.",
+      },
       billing: {
         title: "Saldo DeepSeek",
         desc: "Saldo en vivo de tu clave de API de DeepSeek.",

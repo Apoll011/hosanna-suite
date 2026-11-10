@@ -673,6 +673,35 @@ export const en: typeof pt = {
       memoryCount: "{count}/{max} notes",
       memoryError: "Could not update memory.",
       clearKey: "Remove key",
+      setup: {
+        eyebrow: "Logos AI",
+        title: "Bring an assistant into your worship planning",
+        subtitle:
+          "Connect a provider once. Your team gets help with songs, ChordPro, and services — right inside Studio.",
+        cta: "Configure Logos AI",
+        ctaHint: "You’ll choose a provider, model, and API key next.",
+        features: {
+          chordpro: {
+            title: "ChordPro edits",
+            desc: "Fix formatting, complete chords, and tidy lyric sheets without leaving the editor.",
+          },
+          songs: {
+            title: "Song ideas",
+            desc: "Suggest songs, fill metadata, and transpose keys to match your team.",
+          },
+          services: {
+            title: "Service planning",
+            desc: "Review setlists, propose structure, and keep the order of worship coherent.",
+          },
+          memory: {
+            title: "Org memory",
+            desc: "Remember preferences — keys, style, language — shared across the workspace.",
+          },
+        },
+        providersNote:
+          "Works with ChatGPT, Anthropic, Gemini, DeepSeek, or a custom OpenAI-compatible endpoint.",
+        privacyNote: "API keys are encrypted on the server and never returned to the browser.",
+      },
       billing: {
         title: "DeepSeek balance",
         desc: "Live balance from your DeepSeek API key.",

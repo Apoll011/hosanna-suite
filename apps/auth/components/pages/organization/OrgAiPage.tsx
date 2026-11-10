@@ -14,15 +14,18 @@ import {
 import { useI18n } from "@/lib/i18n";
 import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
+  ArrowRight,
   Brain,
   Building2,
   Check,
   CheckCircle2,
   ChevronDown,
   CircleOff,
+  FileMusic,
   Gift,
   KeyRound,
   Lock,
+  Music2,
   Plus,
   RefreshCw,
   Save,
@@ -86,6 +89,96 @@ function SectionCard({
       </div>
       {children}
     </Surface>
+  );
+}
+
+function AiSetupHero({ onConfigure }: { onConfigure: () => void }) {
+  const { t } = useI18n();
+
+  const features = [
+    {
+      icon: FileMusic,
+      title: t("ai.settings.setup.features.chordpro.title"),
+      desc: t("ai.settings.setup.features.chordpro.desc"),
+    },
+    {
+      icon: Music2,
+      title: t("ai.settings.setup.features.songs.title"),
+      desc: t("ai.settings.setup.features.songs.desc"),
+    },
+    {
+      icon: Sparkles,
+      title: t("ai.settings.setup.features.services.title"),
+      desc: t("ai.settings.setup.features.services.desc"),
+    },
+    {
+      icon: Brain,
+      title: t("ai.settings.setup.features.memory.title"),
+      desc: t("ai.settings.setup.features.memory.desc"),
+    },
+  ] as const;
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-m3-border bg-m3-card">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-90"
+        aria-hidden
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 10% -10%, color-mix(in oklab, var(--m3-primary) 22%, transparent), transparent 55%), radial-gradient(ellipse 70% 50% at 95% 10%, color-mix(in oklab, var(--m3-primary) 12%, transparent), transparent 50%)",
+        }}
+      />
+      <div className="relative space-y-8 p-6 sm:p-8 lg:p-10">
+        <div className="max-w-2xl space-y-3">
+          <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-m3-primary">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            {t("ai.settings.setup.eyebrow")}
+          </p>
+          <h2 className="text-2xl font-semibold tracking-tight text-m3-text sm:text-3xl text-balance">
+            {t("ai.settings.setup.title")}
+          </h2>
+          <p className="text-sm leading-relaxed text-m3-secondary sm:text-base">
+            {t("ai.settings.setup.subtitle")}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {features.map(({ icon: Icon, title, desc }) => (
+            <div
+              key={title}
+              className="rounded-xl border border-m3-border/80 bg-m3-sidebar/35 p-4 backdrop-blur-[2px]"
+            >
+              <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-m3-primary/10 text-m3-primary">
+                <Icon className="h-4 w-4" aria-hidden />
+              </div>
+              <h3 className="text-sm font-semibold text-m3-text">{title}</h3>
+              <p className="mt-1 text-xs leading-relaxed text-m3-secondary">{desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-4 border-t border-m3-border/70 pt-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-md space-y-1.5">
+            <p className="text-xs leading-relaxed text-m3-secondary">
+              {t("ai.settings.setup.providersNote")}
+            </p>
+            <p className="text-xs leading-relaxed text-m3-secondary">
+              {t("ai.settings.setup.privacyNote")}
+            </p>
+          </div>
+          <div className="shrink-0 space-y-1.5 sm:text-right">
+            <Button
+              variant="primary"
+              icon={<ArrowRight className="h-4 w-4" />}
+              onClick={onConfigure}
+            >
+              {t("ai.settings.setup.cta")}
+            </Button>
+            <p className="text-[11px] text-m3-secondary">{t("ai.settings.setup.ctaHint")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -479,6 +572,7 @@ export function OrgAiPage() {
   const [memoryEnabled, setMemoryEnabled] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [billingRefreshKey, setBillingRefreshKey] = useState(0);
+  const [setupDismissed, setSetupDismissed] = useState(false);
 
   const { granted: canManage, loading: canLoading } = useCan("ai.manage");
 
@@ -491,6 +585,7 @@ export function OrgAiPage() {
     if (!canManage || !organization) return;
     let cancelled = false;
     setLoading(true);
+    setSetupDismissed(false);
     void aiApi
       .getSettings({ organizationId: organization.id })
       .then((data) => {
@@ -612,6 +707,7 @@ export function OrgAiPage() {
       setEnabled(false);
       setApiKey("");
       setApiKeyEditing(false);
+      setSetupDismissed(false);
       showToast(t("ai.settings.keyCleared"), "success");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : t("ai.settings.saveError");
@@ -624,61 +720,66 @@ export function OrgAiPage() {
   const providers = settings?.providers ?? [];
   const ready = Boolean(settings?.configured && enabled);
   const showMaskedKey = Boolean(settings?.configured) && !apiKeyEditing;
+  const showSetup = Boolean(settings && !settings.configured && !setupDismissed);
 
   return (
     <AccountCenter toast={toast}>
       <div className="space-y-6 pb-8">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-          <PageHeader
-            title={t("accountOrg.ai.title")}
-            description={t("accountOrg.ai.description")}
-          />
-          {settings ? (
-            <label className="flex items-center gap-3 shrink-0 self-start rounded-lg border border-m3-border px-3.5 py-2.5 cursor-pointer">
-              <span className="text-sm font-medium text-m3-text">{t("ai.settings.enabled")}</span>
-              <input
-                type="checkbox"
-                className="w-4 h-4 accent-m3-primary"
-                checked={enabled}
-                disabled={!settings.configured && !apiKey.trim()}
-                onChange={(e) => setEnabled(e.currentTarget.checked)}
-              />
-            </label>
-          ) : null}
-        </div>
-
-        {settings ? (
-          <div className="flex flex-wrap items-center gap-2">
-            {ready ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                {t("ai.settings.statusOn")}
-              </span>
-            ) : settings.configured ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
-                <CircleOff className="w-3.5 h-3.5" />
-                {t("ai.settings.statusPaused")}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border">
-                <KeyRound className="w-3.5 h-3.5" />
-                {t("ai.settings.statusSetup")}
-              </span>
-            )}
-            {settings.configured ? (
-              <span className="text-xs text-m3-secondary">
-                {PROVIDER_META[settings.provider]?.label ?? settings.provider} · {settings.model}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
-
         {loading || !settings ? (
-          <div className="flex justify-center py-16">
-            <Spinner size="md" label={t("ai.settings.loading")} />
-          </div>
+          <>
+            <PageHeader
+              title={t("accountOrg.ai.title")}
+              description={t("accountOrg.ai.description")}
+            />
+            <div className="flex justify-center py-16">
+              <Spinner size="md" label={t("ai.settings.loading")} />
+            </div>
+          </>
+        ) : showSetup ? (
+          <AiSetupHero onConfigure={() => setSetupDismissed(true)} />
         ) : (
           <>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <PageHeader
+                title={t("accountOrg.ai.title")}
+                description={t("accountOrg.ai.description")}
+              />
+              <label className="flex items-center gap-3 shrink-0 self-start rounded-lg border border-m3-border px-3.5 py-2.5 cursor-pointer">
+                <span className="text-sm font-medium text-m3-text">{t("ai.settings.enabled")}</span>
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 accent-m3-primary"
+                  checked={enabled}
+                  disabled={!settings.configured && !apiKey.trim()}
+                  onChange={(e) => setEnabled(e.currentTarget.checked)}
+                />
+              </label>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {ready ? (
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {t("ai.settings.statusOn")}
+                </span>
+              ) : settings.configured ? (
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
+                  <CircleOff className="w-3.5 h-3.5" />
+                  {t("ai.settings.statusPaused")}
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border">
+                  <KeyRound className="w-3.5 h-3.5" />
+                  {t("ai.settings.statusSetup")}
+                </span>
+              )}
+              {settings.configured ? (
+                <span className="text-xs text-m3-secondary">
+                  {PROVIDER_META[settings.provider]?.label ?? settings.provider} · {settings.model}
+                </span>
+              ) : null}
+            </div>
+
             {!settings.encryptionReady ? (
               <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
                 {t("ai.settings.encryptionMissing")}

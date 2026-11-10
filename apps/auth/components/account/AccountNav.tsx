@@ -136,9 +136,10 @@ export function AccountNav({ className = "" }: { className?: string }) {
   const { t } = useI18n();
   const pathname = usePathname() || "/account";
   const search = usePreservedSearch();
-  const inOrgSection = pathname.startsWith("/account/organization");
+  const { organization, organizations } = useActiveOrganization();
+  const showOrgNav = Boolean(organization) || organizations.length > 0;
 
-  const renderOrgLinks = (compact = false) =>
+  const renderOrgLinks = () =>
     ORG_ITEMS.map((item) => (
       <PermissionGate key={item.href} item={item}>
         <NavLink item={item} search={search} active={isActivePath(pathname, item)} />
@@ -151,7 +152,7 @@ export function AccountNav({ className = "" }: { className?: string }) {
       aria-label={t("account.nav.ariaLabel")}
     >
       <div className="md:hidden space-y-2">
-        {inOrgSection ? <OrgSwitcher /> : null}
+        {showOrgNav ? <OrgSwitcher /> : null}
         <div className="-mx-1 overflow-x-auto pb-1">
           <div className="flex min-w-min items-stretch gap-1 px-1">
             {PERSONAL_ITEMS.map((item) => (
@@ -162,8 +163,12 @@ export function AccountNav({ className = "" }: { className?: string }) {
                 active={isActivePath(pathname, item)}
               />
             ))}
-            <span className="mx-1 w-px shrink-0 self-stretch bg-m3-border/70" aria-hidden />
-            {renderOrgLinks(true)}
+            {showOrgNav ? (
+              <>
+                <span className="mx-1 w-px shrink-0 self-stretch bg-m3-border/70" aria-hidden />
+                {renderOrgLinks()}
+              </>
+            ) : null}
           </div>
         </div>
       </div>
@@ -185,15 +190,17 @@ export function AccountNav({ className = "" }: { className?: string }) {
           </div>
         </div>
 
-        <div>
-          <p className="mb-1.5 px-2.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
-            {t("account.nav.organization")}
-          </p>
-          <div className="mb-2 px-0.5">
-            <OrgSwitcher />
+        {showOrgNav ? (
+          <div>
+            <p className="mb-1.5 px-2.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
+              {t("account.nav.organization")}
+            </p>
+            <div className="mb-2 px-0.5">
+              <OrgSwitcher />
+            </div>
+            <div className="flex flex-col gap-0.5">{renderOrgLinks()}</div>
           </div>
-          <div className="flex flex-col gap-0.5">{renderOrgLinks()}</div>
-        </div>
+        ) : null}
       </div>
     </nav>
   );
