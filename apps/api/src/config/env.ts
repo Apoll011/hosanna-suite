@@ -12,6 +12,20 @@ function optional(name: string): string | undefined {
   return process.env[name] || undefined;
 }
 
+/** Force https for non-loopback AUTH_URL so Better Auth issuer matches the auth app. */
+function normalizeAuthUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    const loopback = host === "localhost" || host === "127.0.0.1" || host === "::1";
+    if (!loopback && parsed.protocol === "http:") parsed.protocol = "https:";
+    return parsed.toString().replace(/\/+$/, "");
+  } catch {
+    return url.replace(/\/+$/, "");
+  }
+}
+
 /** True when running inside a Vercel Function. */
 const isVercel = Boolean(process.env.VERCEL);
 
@@ -80,7 +94,7 @@ export const env = {
    * Dedicated auth app origin (auth.hosanna.live). Issuer / JWKS / deep links,
    * and 308 target when Vercel flag `auth-mount` is `delegate`.
    */
-  authUrl: optional("AUTH_URL"),
+  authUrl: normalizeAuthUrl(optional("AUTH_URL")),
 
   // ── Cron ──────────────────────────────────────────────────────────────────
   cronSecret: optional("CRON_SECRET"),

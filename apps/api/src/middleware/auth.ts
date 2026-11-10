@@ -174,9 +174,24 @@ export function invalidateAuthCaches() {
 /**
  * Resolves a session from cookies on the incoming request (web dashboard flow).
  */
+function requestHeadersForAuth(req: Request): Headers {
+  const headers = new Headers();
+  const cookie = req.headers.cookie;
+  if (cookie) headers.set("cookie", cookie);
+  const origin = req.headers.origin;
+  if (typeof origin === "string") headers.set("origin", origin);
+  const referer = req.headers.referer;
+  if (typeof referer === "string") headers.set("referer", referer);
+  const ua = req.headers["user-agent"];
+  if (typeof ua === "string") headers.set("user-agent", ua);
+  const authHeader = req.headers.authorization;
+  if (typeof authHeader === "string") headers.set("authorization", authHeader);
+  return headers;
+}
+
 async function getSessionFromCookies(req: Request): Promise<SessionResult | null> {
   const sessionData = await auth.api.getSession({
-    headers: req.headers as any,
+    headers: requestHeadersForAuth(req),
   });
   return sessionData ?? null;
 }
