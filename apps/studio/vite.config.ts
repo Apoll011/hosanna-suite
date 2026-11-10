@@ -1,9 +1,30 @@
 import { hosannaBrandPublic } from "@hosanna/brand/vite-plugin";
 import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
+import { createRequire } from "node:module";
 import path from "path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+
+/** Resolve a package root from this app, then follow nested peers from that copy. */
+function resolvePackageRoot(id: string, from = import.meta.url): string {
+  return path.dirname(createRequire(from).resolve(`${id}/package.json`));
+}
+
+// Studio is Preact-only (`react`/`react-dom` → `@preact/compat`). Workspace
+// packages like `@hosanna/logos-ai` can still pull a second `react-router-dom`
+// bound to real React via pnpm. Pin exact package ids (not subpaths) to the
+// Preact-compat copy so production keeps a single Router context.
+const requireFromStudio = createRequire(import.meta.url);
+const reactRouterDomRoot = resolvePackageRoot("react-router-dom");
+const reactRouterRoot = resolvePackageRoot(
+  "react-router",
+  path.join(reactRouterDomRoot, "package.json"),
+);
+const requireFromReactRouter = createRequire(path.join(reactRouterRoot, "package.json"));
+const reactRouterDomEntry = requireFromStudio.resolve("react-router-dom");
+const reactRouterEntry = requireFromReactRouter.resolve("react-router");
+const reactRouterDomSubpath = requireFromReactRouter.resolve("react-router/dom");
 
 export default defineConfig(() => {
   return {
@@ -71,15 +92,18 @@ export default defineConfig(() => {
       }),
     ],
     resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "."),
-        react: "preact/compat",
-        "react-dom": "preact/compat",
-        "react-dom/client": "preact/compat",
-      },
-      // Workspace packages (e.g. @hosanna/chordpro) are symlinked outside this
-      // app, so the aliased preact/compat must resolve from here.
-      dedupe: ["preact"],
+      // Exact-id aliases only — string aliases to package roots break subpaths
+      // like `react-router/dom`.
+      alias: [
+        { find: "@", replacement: path.resolve(__dirname, ".") },
+        { find: /^react$/, replacement: "preact/compat" },
+        { find: /^react-dom$/, replacement: "preact/compat" },
+        { find: /^react-dom\/client$/, replacement: "preact/compat" },
+        { find: /^react-router-dom$/, replacement: reactRouterDomEntry },
+        { find: /^react-router$/, replacement: reactRouterEntry },
+        { find: /^react-router\/dom$/, replacement: reactRouterDomSubpath },
+      ],
+      dedupe: ["preact", "react", "react-dom", "react-router-dom", "react-router"],
     },
     build: {
       outDir: "dist",
