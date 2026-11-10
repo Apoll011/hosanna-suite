@@ -3,6 +3,8 @@
 @plugin "@tailwindcss/typography";
 
 @source "../src";
+/* Workspace packages live outside the app tree — scan them explicitly. */
+@source "../../../packages";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
