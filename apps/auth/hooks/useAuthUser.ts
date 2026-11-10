@@ -58,6 +58,13 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
     setIsRefreshing(true);
     try {
       const session = await authClient.getSession();
+
+      // Network / client errors: keep cached UI, do not bounce to login.
+      if (session.error) {
+        console.warn("[auth] getSession failed:", session.error);
+        return readCachedUser();
+      }
+
       const next = session.data?.user
         ? toCachedUser(session.data.user as CachedAuthUser)
         : null;
@@ -74,6 +81,9 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
       writeCachedUser(next);
       setUser(next);
       return next;
+    } catch (err) {
+      console.warn("[auth] getSession threw:", err);
+      return readCachedUser();
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
