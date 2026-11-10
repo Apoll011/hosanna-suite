@@ -53,7 +53,7 @@ describe("org-cache", () => {
       readCachedOrgList,
       writeCachedActiveOrg,
       writeCachedOrgList,
-    } = await import("../lib/org-cache.ts");
+    } = await import("../lib/org-cache");
 
     writeCachedActiveOrg({
       id: "o1",
@@ -81,7 +81,7 @@ describe("org-cache", () => {
   });
 
   it("rejects incomplete active org payloads", async () => {
-    const { readCachedActiveOrg } = await import("../lib/org-cache.ts");
+    const { readCachedActiveOrg } = await import("../lib/org-cache");
     localStorage.setItem(
       "hosanna.auth.cached_active_org",
       JSON.stringify({ id: "o1", name: "Missing slug" }),

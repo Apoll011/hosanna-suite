@@ -29,9 +29,7 @@ describe("wantsBrowserNavigation", () => {
   it("treats document / iframe / frame destinations as navigation", () => {
     for (const dest of ["document", "iframe", "frame"]) {
       assert.equal(
-        wantsBrowserNavigation(
-          new Request(authorizeUrl, { headers: { "sec-fetch-dest": dest } }),
-        ),
+        wantsBrowserNavigation(new Request(authorizeUrl, { headers: { "sec-fetch-dest": dest } })),
         true,
       );
     }
@@ -87,14 +85,9 @@ describe("isOauthAuthorizeGet", () => {
   });
 
   it("rejects non-GET methods and non-authorize paths", () => {
+    assert.equal(isOauthAuthorizeGet(new Request(authorizeUrl, { method: "POST" })), false);
     assert.equal(
-      isOauthAuthorizeGet(new Request(authorizeUrl, { method: "POST" })),
-      false,
-    );
-    assert.equal(
-      isOauthAuthorizeGet(
-        new Request("https://x/api/auth/oauth2/consent", { method: "GET" }),
-      ),
+      isOauthAuthorizeGet(new Request("https://x/api/auth/oauth2/consent", { method: "GET" })),
       false,
     );
   });
@@ -168,9 +161,7 @@ describe("withOauthNavigationRedirect", () => {
         }),
     );
 
-    const res = await wrapped(
-      new Request(authorizeUrl, { headers: { accept: "*/*" } }),
-    );
+    const res = await wrapped(new Request(authorizeUrl, { headers: { accept: "*/*" } }));
 
     assert.equal(res.status, 302);
     assert.equal(res.headers.get("location"), jsonRedirect.url);
@@ -188,9 +179,7 @@ describe("withOauthNavigationRedirect", () => {
     assert.equal(ok.status, 200);
     assert.deepEqual(await ok.json(), { ok: true });
 
-    const errored = withOauthNavigationRedirect(
-      async () => new Response("nope", { status: 500 }),
-    );
+    const errored = withOauthNavigationRedirect(async () => new Response("nope", { status: 500 }));
     const err = await errored(new Request(authorizeUrl));
     assert.equal(err.status, 500);
   });

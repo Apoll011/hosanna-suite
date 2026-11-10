@@ -58,7 +58,7 @@ describe("session-cache", () => {
       writeCachedLoginHistory,
       writeCachedSessions,
       writeCachedUser,
-    } = await import("../lib/session-cache.ts");
+    } = await import("../lib/session-cache");
 
     const user = toCachedUser({
       id: "u1",
@@ -91,9 +91,7 @@ describe("session-cache", () => {
     assert.equal(readCachedSessions()?.[0]?.id, "s1");
 
     writeCachedAccounts([{ id: "a1", providerId: "google", accountId: "g-1" }]);
-    assert.deepEqual(readCachedAccounts(), [
-      { id: "a1", providerId: "google", accountId: "g-1" },
-    ]);
+    assert.deepEqual(readCachedAccounts(), [{ id: "a1", providerId: "google", accountId: "g-1" }]);
 
     writeCachedLoginHistory({
       total: 1,
@@ -121,7 +119,7 @@ describe("session-cache", () => {
     // @ts-expect-error remove doubles
     delete globalThis.localStorage;
 
-    const { readCachedUser, writeCachedUser } = await import("../lib/session-cache.ts");
+    const { readCachedUser, writeCachedUser } = await import("../lib/session-cache");
     writeCachedUser({ id: "u2" });
     assert.equal(readCachedUser(), null);
   });

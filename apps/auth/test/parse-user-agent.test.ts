@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { parseUserAgent } from "../lib/parse-user-agent.ts";
+import { parseUserAgent } from "../lib/parse-user-agent";
 
 describe("parseUserAgent", () => {
   it("returns unknown for null/empty", () => {
@@ -17,9 +17,7 @@ describe("parseUserAgent", () => {
   });
 
   it("parses Flutter Hosanna UA", () => {
-    const parsed = parseUserAgent(
-      "Hosanna/1.0.4 (Android 14 (API 34); Pixel 8) Flutter/3.47.2",
-    );
+    const parsed = parseUserAgent("Hosanna/1.0.4 (Android 14 (API 34); Pixel 8) Flutter/3.47.2");
     assert.equal(parsed.client, "Hosanna 1.0.4");
     assert.equal(parsed.os, "Android 14");
     assert.equal(parsed.device, "Pixel 8");

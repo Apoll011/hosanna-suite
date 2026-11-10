@@ -6,7 +6,7 @@ import {
   isSafeRedirectTarget,
   readRedirectParam,
   resolveSocialCallbackURL,
-} from "../lib/redirect.ts";
+} from "../lib/redirect";
 
 function memoryStorage() {
   const map = new Map<string, string>();
@@ -51,10 +51,7 @@ describe("isSafeRedirectTarget", () => {
 
 describe("readRedirectParam", () => {
   it("reads redirect and returnUrl when safe", () => {
-    assert.equal(
-      readRedirectParam(new URLSearchParams("redirect=%2Faccount")),
-      "/account",
-    );
+    assert.equal(readRedirectParam(new URLSearchParams("redirect=%2Faccount")), "/account");
     assert.equal(
       readRedirectParam(new URLSearchParams("returnUrl=https%3A%2F%2Fstudio.hosanna.live%2Fx")),
       "https://studio.hosanna.live/x",
@@ -63,18 +60,12 @@ describe("readRedirectParam", () => {
 
   it("returns null when missing or unsafe", () => {
     assert.equal(readRedirectParam(new URLSearchParams("")), null);
-    assert.equal(
-      readRedirectParam(new URLSearchParams("redirect=javascript%3Aalert(1)")),
-      null,
-    );
+    assert.equal(readRedirectParam(new URLSearchParams("redirect=javascript%3Aalert(1)")), null);
     assert.equal(readRedirectParam(new URLSearchParams("redirect=%2F%2Fevil.test")), null);
   });
 
   it("prefers redirect over returnUrl", () => {
-    assert.equal(
-      readRedirectParam(new URLSearchParams("redirect=%2Fa&returnUrl=%2Fb")),
-      "/a",
-    );
+    assert.equal(readRedirectParam(new URLSearchParams("redirect=%2Fa&returnUrl=%2Fb")), "/a");
   });
 });
 

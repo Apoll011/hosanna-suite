@@ -24,10 +24,7 @@ describe("extractDestructiveConfirmation", () => {
       detail: "remove it",
       folderAction: undefined,
     });
-    assert.equal(
-      extractDestructiveConfirmation(JSON.stringify(payload))?.id,
-      "s1",
-    );
+    assert.equal(extractDestructiveConfirmation(JSON.stringify(payload))?.id, "s1");
   });
 
   it("falls back title to id and accepts folderAction", () => {
@@ -53,11 +50,11 @@ describe("extractDestructiveConfirmation", () => {
   it("rejects invalid payloads", () => {
     assert.equal(extractDestructiveConfirmation(null), null);
     assert.equal(extractDestructiveConfirmation("not-json"), null);
-    assert.equal(extractDestructiveConfirmation({ confirmation: { action: "nope", id: "1" } }), null);
     assert.equal(
-      extractDestructiveConfirmation({ confirmation: { action: "delete_song" } }),
+      extractDestructiveConfirmation({ confirmation: { action: "nope", id: "1" } }),
       null,
     );
+    assert.equal(extractDestructiveConfirmation({ confirmation: { action: "delete_song" } }), null);
   });
 });
 

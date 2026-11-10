@@ -10,10 +10,7 @@ describe("stripChordProForSearch", () => {
   it("strips chords and collapses whitespace", () => {
     const content =
       "{title: Exemplo}\n\nPois [D9]só Tu és o [C#m]Deus eterno,\n[Bm7]digno de [E]louvor";
-    assert.equal(
-      stripChordProForSearch(content).includes("pois só tu és o deus eterno"),
-      true,
-    );
+    assert.equal(stripChordProForSearch(content).includes("pois só tu és o deus eterno"), true);
   });
 
   it("removes empty and stacked chord markers", () => {
@@ -27,7 +24,10 @@ describe("stripChordProForSearch", () => {
   });
 
   it("returns empty string for directives-only content", () => {
-    assert.equal(stripChordProForSearch("{title: Only}\n{key: C}\n{start_of_verse}\n{end_of_verse}"), "");
+    assert.equal(
+      stripChordProForSearch("{title: Only}\n{key: C}\n{start_of_verse}\n{end_of_verse}"),
+      "",
+    );
   });
 
   it("returns empty string for blank input", () => {

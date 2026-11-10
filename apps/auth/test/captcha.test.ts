@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { captchaFetchOptions } from "../lib/captcha.ts";
+import { captchaFetchOptions } from "../lib/captcha";
 
 describe("captchaFetchOptions", () => {
   it("returns undefined when token is missing", () => {

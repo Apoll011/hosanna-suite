@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { AgendaEvent, Assignee, Responsibility, ResponsibilityCategory } from "../../src/types";
+import type {
+  AgendaEvent,
+  Assignee,
+  Responsibility,
+  ResponsibilityCategory,
+} from "../../src/types";
 import {
   assigneeKey,
   bulletList,

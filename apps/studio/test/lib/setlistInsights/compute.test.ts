@@ -24,11 +24,7 @@ const services: SetlistServiceInput[] = [
     id: "past-1",
     name: "Sunday Past",
     date: "2026-01-01",
-    elements: [
-      { type: "song", songId: "a" },
-      { type: "song", songId: "a" },
-      { type: "welcome" },
-    ],
+    elements: [{ type: "song", songId: "a" }, { type: "song", songId: "a" }, { type: "welcome" }],
   },
   {
     id: "past-2",

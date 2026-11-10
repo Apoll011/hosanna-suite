@@ -27,9 +27,7 @@ test("calculateFolderSongCount ignores deleted songs", () => {
 test("calculateFolderSongCount returns 0 for empty folder", () => {
   assert.equal(calculateFolderSongCount("missing", []), 0);
   assert.equal(
-    calculateFolderSongCount("missing", [
-      { folderId: "other", isDeleted: false, _deleted: false },
-    ]),
+    calculateFolderSongCount("missing", [{ folderId: "other", isDeleted: false, _deleted: false }]),
     0,
   );
 });

@@ -6,7 +6,7 @@ import {
   THEME_BG,
   THEME_COOKIE,
   THEME_STORAGE_KEY,
-} from "../lib/theme-boot.ts";
+} from "../lib/theme-boot";
 
 describe("theme-boot constants", () => {
   it("exposes cookie and storage keys", () => {

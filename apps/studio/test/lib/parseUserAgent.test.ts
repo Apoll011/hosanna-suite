@@ -33,9 +33,7 @@ test("parseUserAgent returns unknowns for nullish input", () => {
 });
 
 test("parseUserAgent parses Flutter app UA", () => {
-  const info = parseUserAgent(
-    "Hosanna/1.0.4 (Android 14 (API 34); Pixel 8) Flutter/3.47.2",
-  );
+  const info = parseUserAgent("Hosanna/1.0.4 (Android 14 (API 34); Pixel 8) Flutter/3.47.2");
 
   assert.equal(info.isApp, true);
   assert.equal(info.client, "Hosanna 1.0.4");

@@ -59,10 +59,13 @@ describe("idempotency", () => {
         return runs;
       });
     assert.equal(await run(), 1);
-    assert.equal(await withClientRequestId(org, undefined, async () => {
-      runs += 1;
-      return runs;
-    }), 2);
+    assert.equal(
+      await withClientRequestId(org, undefined, async () => {
+        runs += 1;
+        return runs;
+      }),
+      2,
+    );
     assert.equal(runs, 2);
   });
 

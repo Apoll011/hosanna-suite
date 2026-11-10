@@ -1,12 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import {
-  DEFAULT_LANGUAGE,
-  getLanguageMeta,
-  LANGUAGES,
-  localeToLanguage,
-} from "../src/index.js";
+import { DEFAULT_LANGUAGE, getLanguageMeta, LANGUAGES, localeToLanguage } from "../src/index.js";
 import type { Language } from "../src/types.js";
 
 describe("LANGUAGES catalog", () => {

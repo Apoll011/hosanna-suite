@@ -102,7 +102,6 @@ test("toAssumedMasterState keeps only id + updatedAt", () => {
     toAssumedMasterState({
       id: "1",
       updatedAt: "2024-01-01T00:00:00.000Z",
-      title: "X",
       _deleted: false,
     }),
     { id: "1", updatedAt: "2024-01-01T00:00:00.000Z" },
