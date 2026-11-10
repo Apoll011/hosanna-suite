@@ -1,29 +1,14 @@
 /**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ *
  * Hosana Collection — the core engine.
  *
- * Implements just the API surface Hosana actually uses:
- *   collection.find({selector}).exec()
- *   collection.find({selector}).$.subscribe(docs => …)
- *   collection.findOne(id).exec()
- *   collection.findOne(id).$.subscribe(doc => …)
- *   collection.insert(doc)
- *   collection.upsert(doc)
- *   collection.bulkInsert(docs)
- *   collection.remove()              ← wipe entire collection (logout)
- *   doc.patch(partial)
- *   doc.remove()                     ← hard-delete (replication tombstone)
- *   doc.toJSON()
- *   doc[field]                       ← direct property access (via intersection type)
- *
- * Selector support — exactly what Hosana uses:
- *   { field: value }                 ← equality (incl. null)
- *   { field: { $ne: value } }        ← not-equal
- *   { field: { $lte: value, $ne: null } }
- *   { field: { $gte: value } }
- *   { field: { $in: [...] } }
- *
- * All queries run against the in-memory store (fast; collections are small).
- * IndexedDB is used only for persistence.
+ * Implements the API surface Hosana apps use:
+ *   collection.find({selector}).exec() / .$
+ *   collection.findOne(id).exec() / .$
+ *   collection.insert / upsert / bulkInsert / remove
+ *   doc.patch / remove / toJSON
  */
 
 import { idbBulkDelete, idbBulkPut, idbClear, idbGetAll, idbPut } from "./idb";
@@ -60,14 +45,6 @@ export interface LiveDocument<T> {
   $: Observable<T | null>;
 }
 
-//
-//
-// We cannot `class Foo extends T {}` in TS, so we build the wrapper as a
-// plain object intersection. The factory `makeDoc(raw, collection)` returns
-// an object that IS the raw doc (via Object.assign) augmented with the three
-// mutation methods, giving full property access (doc.title, doc.id, etc.)
-// and the mutation surface (doc.patch, doc.remove, doc.toJSON).
-
 export type HosanaDoc<T extends AnyDoc> = T & {
   /** Partially update this document. */
   patch(fields: Partial<T>): Promise<void>;
@@ -84,8 +61,6 @@ export type HosanaDoc<T extends AnyDoc> = T & {
 function makeDoc<T extends AnyDoc>(raw: T, collection: HosanaCollection<T>): HosanaDoc<T> {
   const doc = Object.assign(Object.create(null) as object, raw) as HosanaDoc<T>;
 
-  // Store references to the mutable collection so patch/remove can call back.
-  // Use non-enumerable properties so toJSON() spread doesn't pick them up.
   Object.defineProperty(doc, "_collection", {
     value: collection,
     enumerable: false,
@@ -135,10 +110,20 @@ function matchesSelector<T extends AnyDoc>(doc: T, selector: Selector): boolean 
         }
       }
       if ("$lte" in cond) {
-        if (docVal == null || docVal > (cond["$lte"] as unknown)) return false;
+        if (
+          docVal == null ||
+          (docVal as string | number) > (cond["$lte"] as string | number)
+        ) {
+          return false;
+        }
       }
       if ("$gte" in cond) {
-        if (docVal == null || docVal < (cond["$gte"] as unknown)) return false;
+        if (
+          docVal == null ||
+          (docVal as string | number) < (cond["$gte"] as string | number)
+        ) {
+          return false;
+        }
       }
       if ("$in" in cond) {
         const arr = cond["$in"] as unknown[];
@@ -194,14 +179,10 @@ export class HosanaCollection<T extends AnyDoc> {
    *
    * `origin` distinguishes a genuine local write (insert/upsert/patch) from a
    * write caused by replication itself (`_mergeFromServer`):
-   *  - "local" (default): stamps `updatedAt` to now — this is what makes the
-   *    checkpoint-based replication filter (see replication.ts) reliably pick
-   *    up every local change, including trash/isDeleted flips, without
-   *    depending on every call site remembering to bump `updatedAt` itself.
-   *    Also fires `notifyLocalChange` so replication can push-on-save.
-   *  - "remote": keeps the server-provided `updatedAt` verbatim (it's the
-   *    conflict-detection field) and never fires `notifyLocalChange`, so a
-   *    pull-triggered write can't loop back into another push/pull cycle.
+   *  - "local" (default): stamps `updatedAt` to now and fires `notifyLocalChange`.
+   *  - "remote": keeps the server-provided `updatedAt` and never fires
+   *    `notifyLocalChange`, so a pull-triggered write can't loop back into
+   *    another push/pull cycle.
    */
   async _put(doc: T, origin: "local" | "remote" = "local"): Promise<void> {
     if (origin === "local") {
@@ -254,21 +235,48 @@ export class HosanaCollection<T extends AnyDoc> {
   }
 
   /**
+   * Update local-only (or derived) fields without scheduling a push.
+   * Writes with origin `"remote"` so SyncContext / replication won't treat
+   * count-only patches as outbound changes.
+   */
+  async applyLocalFields(id: string, fields: Partial<T>): Promise<void> {
+    const existing = this._store.get(id);
+    if (!existing) return;
+    await this._put({ ...existing, ...fields } as T, "remote");
+  }
+
+  /**
+   * Batch variant of {@link applyLocalFields} — single IDB transaction.
+   */
+  async applyLocalFieldsBatch(updates: Array<{ id: string; fields: Partial<T> }>): Promise<void> {
+    if (updates.length === 0) return;
+    const docs: T[] = [];
+    for (const { id, fields } of updates) {
+      const existing = this._store.get(id);
+      if (!existing) continue;
+      docs.push({ ...existing, ...fields } as T);
+    }
+    await this._putBatch(docs, "remote");
+  }
+
+  /**
    * @internal Merge a doc from the server, preserving local-only fields.
-   * If a local field is missing or null on the existing doc, it is (re)computed.
    * Computed fields are always recalculated.
    *
-   * Drops stale server docs if local doc was updated more recently (e.g. edit during in-flight pull).
+   * Drops stale server docs if local doc was updated more recently.
    */
   async _mergeFromServer(serverDoc: T, options: { force?: boolean } = {}): Promise<void> {
     if (!options.force) {
       const existing = this._store.get(serverDoc.id);
+      const existingAt = existing
+        ? (existing as Record<string, unknown>).updatedAt
+        : undefined;
+      const serverAt = (serverDoc as Record<string, unknown>).updatedAt;
       if (
         existing &&
-        typeof (existing as Record<string, unknown>).updatedAt === "string" &&
-        typeof (serverDoc as Record<string, unknown>).updatedAt === "string" &&
-        (existing as Record<string, unknown>).updatedAt >
-          (serverDoc as Record<string, unknown>).updatedAt
+        typeof existingAt === "string" &&
+        typeof serverAt === "string" &&
+        existingAt > serverAt
       ) {
         return;
       }
@@ -278,9 +286,6 @@ export class HosanaCollection<T extends AnyDoc> {
 
   /**
    * @internal Batch-merge server docs in a single IDB transaction.
-   * Much faster than N individual `_mergeFromServer` calls during pull.
-   *
-   * Drops stale server docs if local doc was updated more recently (e.g. edit during in-flight pull).
    */
   async _mergeBatchFromServer(serverDocs: T[], options: { force?: boolean } = {}): Promise<void> {
     if (serverDocs.length === 0) return;
@@ -289,12 +294,15 @@ export class HosanaCollection<T extends AnyDoc> {
       ? serverDocs
       : serverDocs.filter((sDoc) => {
           const existing = this._store.get(sDoc.id);
+          const existingAt = existing
+            ? (existing as Record<string, unknown>).updatedAt
+            : undefined;
+          const serverAt = (sDoc as Record<string, unknown>).updatedAt;
           if (
             existing &&
-            typeof (existing as Record<string, unknown>).updatedAt === "string" &&
-            typeof (sDoc as Record<string, unknown>).updatedAt === "string" &&
-            (existing as Record<string, unknown>).updatedAt >
-              (sDoc as Record<string, unknown>).updatedAt
+            typeof existingAt === "string" &&
+            typeof serverAt === "string" &&
+            existingAt > serverAt
           ) {
             return false;
           }
@@ -454,5 +462,5 @@ export class HosanaCollection<T extends AnyDoc> {
   }
 }
 
-// Re-export so database.ts has a single internal import path.
+// Re-export so consumers have a single engine import path.
 export { idbGetAll };

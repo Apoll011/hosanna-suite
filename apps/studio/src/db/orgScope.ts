@@ -7,9 +7,9 @@
  * Org A rows can never leak into Org B (sync alone cannot remove them).
  */
 
+import { idbDelete, idbGet, idbPut } from "@hosanna/replication";
 import { isDemoMode } from "../demo/flags";
 import type { HosanaDatabase } from "./database";
-import { idbDelete, idbGet, idbPut } from "./engine/idb";
 
 export const META_STORE = "meta";
 export const META_ORG_SLUG_KEY = "orgSlug";

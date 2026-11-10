@@ -1,9 +1,12 @@
 /**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ *
  * Low-level IndexedDB helpers.
  * No external dependencies. No abstractions beyond what the engine needs.
  */
 
-// Lazy import to avoid a circular dependency: database.ts → idb.ts → database.ts.
+// Lazy import to avoid a circular dependency with host database modules.
 // We only call resetDatabase() inside event handlers, never at module-load time.
 let _resetDatabase: (() => void) | null = null;
 export function _registerResetDatabase(fn: () => void): void {
@@ -13,15 +16,10 @@ export function _registerResetDatabase(fn: () => void): void {
 /**
  * Open an IndexedDB database.
  *
- * Key improvements over the original:
- * - `onblocked` closes any old connections held by this tab before retrying
- *   (prevents indefinite blocking when the same tab reopens the DB after a
- *   version bump, which is the most common cause of the "IDB wiped on refresh"
- *   race condition).
- * - `onversionchange` is wired on the opened connection so that if another tab
- *   opens a newer version the current tab closes gracefully instead of blocking
- *   it. Without this the newer tab's upgrade is blocked indefinitely and it may
- *   re-create stores, effectively wiping any locally-opened data.
+ * Key improvements over a naive open:
+ * - `onblocked` logs when another connection holds an older version.
+ * - `onversionchange` / `onclose` clear the host singleton so the next open
+ *   gets a fresh connection instead of a closed one.
  */
 export function openIDB(
   name: string,
@@ -38,8 +36,6 @@ export function openIDB(
     req.onsuccess = () => {
       const db = req.result;
 
-      // Clears the singleton so the next getDatabase() reopens a fresh
-      // connection instead of reusing this closed one.
       const onConnectionClosed = (reason: string) => {
         console.warn(`[hosana-idb] connection closed (${reason}) — resetting singleton`);
         _resetDatabase?.();
@@ -51,10 +47,6 @@ export function openIDB(
         onConnectionClosed("versionchange");
       };
 
-      // Fired when the connection is closed externally (e.g. deleteDatabase
-      // during logout). Without this the dbPromise singleton stays pointing at
-      // the now-dead connection, causing "The database connection is closing"
-      // errors on the next write after an in-tab re-login.
       db.onclose = () => {
         onConnectionClosed("close");
       };
@@ -64,9 +56,6 @@ export function openIDB(
 
     req.onerror = () => reject(req.error);
 
-    // `onblocked` fires when this open request is blocked by another open
-    // connection (e.g. another tab still at an older version).  We can't force
-    // the other tab to close, but we log it so developers know what is happening.
     req.onblocked = () => {
       console.warn(
         "[hosana-idb] open blocked – another tab or connection holds the DB at an older version. " +

@@ -1,15 +1,11 @@
 /**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ *
  * Reactive subscription bus.
  *
  * All subscribers are grouped by (collection, queryKey).
  * When a write lands, only the relevant subscribers are notified.
- * This keeps subscriptions granular and avoids full-table fan-out.
- *
- * Improvements over the original:
- * - `notifyCollection` no longer double-fires the "*" scope; it iterates the
- *   internal listeners map once and only notifies each listener set exactly once.
- * - All exported functions are pure and have no side-effects beyond the intended
- *   subscription / notification.
  */
 
 export type Listener = () => void;
@@ -38,10 +34,6 @@ export function subscribe(collection: string, scope: string, fn: Listener): () =
 
 /**
  * Notify listeners for a specific document AND for the whole-collection scope.
- *
- * Bug fix: iterate over a snapshot of each Set before calling listeners so that
- * a listener that synchronously unsubscribes during notification does not cause
- * a skipped or double-fired callback.
  */
 export function notify(collection: string, id: string): void {
   const docSet = listeners.get(busKey(collection, id));
@@ -94,8 +86,7 @@ export function notifyCollection(collection: string, changedIds?: readonly strin
 /**
  * Separate bus for LOCAL writes only (insert/upsert/patch) — used to trigger
  * immediate push-on-save. Deliberately NOT fired for writes that originate
- * from replication itself (_mergeFromServer), otherwise every pull would
- * schedule another push/pull cycle and the two would feed each other.
+ * from replication itself (_mergeFromServer).
  */
 const localChangeListeners = new Map<string, Set<Listener>>();
 
