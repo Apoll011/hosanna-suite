@@ -168,29 +168,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             <button
               onClick={() => {
                 if (!isSidebarCollapsed) return;
-                if (hasMultipleOrgs) {
-                  setIsOrgMenuOpen((v) => !v);
-                  return;
-                }
+                setIsOrgMenuOpen(false);
                 setIsSidebarCollapsed(false);
               }}
               disabled={!isSidebarCollapsed}
-              title={
-                isSidebarCollapsed
-                  ? hasMultipleOrgs
-                    ? t("sidebar.switchWorkspace")
-                    : t("sidebar.expand")
-                  : undefined
-              }
-              aria-label={
-                isSidebarCollapsed
-                  ? hasMultipleOrgs
-                    ? t("sidebar.switchWorkspace")
-                    : t("sidebar.expand")
-                  : undefined
-              }
-              aria-haspopup={isSidebarCollapsed && hasMultipleOrgs ? "menu" : undefined}
-              aria-expanded={isSidebarCollapsed && hasMultipleOrgs ? isOrgMenuOpen : undefined}
+              title={isSidebarCollapsed ? t("sidebar.expand") : undefined}
+              aria-label={isSidebarCollapsed ? t("sidebar.expand") : undefined}
               className={`w-11 h-11 rounded-md flex items-center justify-center border border-m3-border/50 bg-m3-card text-m3-secondary shadow-sm shrink-0 relative group transition-colors duration-200 ${
                 isSidebarCollapsed
                   ? "cursor-pointer hover:bg-m3-hover hover:border-m3-border hover:text-m3-text"
