@@ -296,7 +296,7 @@ export function NewOrganizationPage() {
               {step < 3 ? (
                 <Button
                   type="button"
-                  size="lg"
+                  size="md"
                   onClick={handleNext}
                   disabled={step === 1 ? !isStep1Valid : !isStep2Valid}
                   className="rounded-full"
@@ -306,7 +306,7 @@ export function NewOrganizationPage() {
               ) : (
                 <Button
                   type="button"
-                  size="lg"
+                  size="md"
                   onClick={() => void handleCreateSubmit()}
                   isLoading={isLoading}
                   disabled={!isStep3Valid || isLoading}

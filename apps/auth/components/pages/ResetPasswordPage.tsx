@@ -182,7 +182,7 @@ export function ResetPasswordPage() {
             {t("auth.forgotPassword.backToLogin")}
           </Link>
 
-          <Button type="submit" size="lg" isLoading={isLoading} className="rounded-full">
+          <Button type="submit" size="md" isLoading={isLoading} className="rounded-full">
             {t("auth.resetPassword.resetBtn")}
           </Button>
         </div>

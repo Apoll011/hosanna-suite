@@ -88,7 +88,7 @@ export function VerifyEmailPage() {
                     onChange={(e) => setResendEmail(e.target.value)}
                   />
                 </div>
-                <Button type="submit" size="lg" isLoading={resendLoading} className="rounded-full shrink-0 px-5">
+                <Button type="submit" size="md" isLoading={resendLoading} className="rounded-full shrink-0 px-5">
                   <RefreshCw className="w-4 h-4" />
                 </Button>
               </form>
@@ -159,7 +159,7 @@ export function VerifyEmailPage() {
                 onChange={(e) => setResendEmail(e.target.value)}
               />
             </div>
-            <Button type="submit" size="lg" isLoading={resendLoading} className="rounded-full shrink-0 px-5">
+            <Button type="submit" size="md" isLoading={resendLoading} className="rounded-full shrink-0 px-5">
               <RefreshCw className="w-4 h-4" />
             </Button>
           </form>

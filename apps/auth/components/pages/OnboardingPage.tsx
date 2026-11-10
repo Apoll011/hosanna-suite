@@ -476,7 +476,7 @@ export function OnboardingPage() {
             </button>
             <Button
               type="submit"
-              size="lg"
+              size="md"
               disabled={isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"}
               isLoading={isLoading}
               className="rounded-full"

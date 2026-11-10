@@ -171,7 +171,7 @@ export function RegisterPage() {
             {t("auth.register.loginLink")}
           </Link>
 
-          <Button type="submit" size="lg" isLoading={isLoading} className="rounded-full">
+          <Button type="submit" size="md" isLoading={isLoading} className="rounded-full">
             {t("auth.register.registerBtn")}
           </Button>
         </div>
