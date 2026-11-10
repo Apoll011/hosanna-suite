@@ -7,6 +7,7 @@
     "types": ["node"],
     "isolatedModules": true,
     "strict": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true
   },
   "include": ["src", "test"]
