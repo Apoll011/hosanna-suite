@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { prisma } from "../../database/prisma.js";
-import { RESPONSIBILITIES } from "../../locales/responsabilities.js";
+import { RESPONSIBILITIES } from "@hosanna/auth";
 import type { McpContext } from "../context.js";
 
 export type OrgAssignee = {
