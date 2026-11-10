@@ -15,7 +15,7 @@ export interface AuthEmailUser {
   name: string;
 }
 
-/** Email senders used by Better Auth hooks (injected by the host app). */
+/** Email senders used by Better Auth hooks (injected by the auth app). */
 export interface AuthEmails {
   sendPasswordResetEmail: (
     to: string,
@@ -129,10 +129,34 @@ export interface AuthAvatarHelpers {
   uploadUrlAvatar: (userId: string, imageUrl: string) => Promise<string>;
 }
 
-export interface CreateAuthConfig {
+/** Shared Redis secondary-storage adapter shape (Better Auth). */
+export type AuthSecondaryStorage = {
+  get: (key: string) => Promise<string | null>;
+  set: (key: string, value: string, ttl?: number) => Promise<void>;
+  delete: (key: string) => Promise<void>;
+  getAndDelete: (key: string) => Promise<string | null>;
+  increment: (key: string, ttl?: number) => Promise<number>;
+};
+
+/**
+ * Slim config for resource servers (API): getSession + inbox notify + JWKS.
+ * No Stripe / Google / Turnstile / mail / MCP login surface.
+ */
+export interface CreateAuthSlimConfig {
   betterAuthSecret: string;
-  /** Better Auth baseURL / issuer (auth app origin after migration). */
+  /** Better Auth baseURL / issuer — must be the auth app origin. */
   publicAppUrl: string;
+  /** Extra trusted origins merged with the built-in Hosanna / MCP list. */
+  trustedOriginsExtra?: string[];
+  /**
+   * Shared Redis URL for Better Auth secondary storage (sessions / rate limits).
+   * Same instance as the API `@hosanna/cache` REDIS_URL — different key namespaces.
+   */
+  redisUrl?: string;
+}
+
+/** Full config for the auth app HTTP handler. */
+export interface CreateAuthConfig extends CreateAuthSlimConfig {
   betterAuthApiKey?: string;
   googleClientId: string;
   googleClientSecret: string;
@@ -149,16 +173,22 @@ export interface CreateAuthConfig {
    * Defaults to appUrl when omitted.
    */
   studioUrl?: string;
-  /** Extra trusted origins merged with the built-in Hosanna / MCP list. */
-  trustedOriginsExtra?: string[];
-  /**
-   * Shared Redis URL for Better Auth secondary storage (sessions / rate limits).
-   * Same instance as the API `@hosanna/cache` REDIS_URL — different key namespaces.
-   */
-  redisUrl?: string;
 }
 
-export interface CreateAuthOptions {
+export interface CreateAuthSlimOptions {
+  mode: "slim";
+  prisma: PrismaClient;
+  config: CreateAuthSlimConfig;
+  /**
+   * Optional Better Auth secondary storage. When omitted, created from
+   * `config.redisUrl` / `REDIS_URL` via `@hosanna/cache`.
+   */
+  secondaryStorage?: AuthSecondaryStorage | null;
+}
+
+export interface CreateAuthFullOptions {
+  /** Default when omitted — auth app HTTP surface. */
+  mode?: "full";
   prisma: PrismaClient;
   stripeClient: Stripe;
   config: CreateAuthConfig;
@@ -172,11 +202,7 @@ export interface CreateAuthOptions {
    * Optional Better Auth secondary storage. When omitted, created from
    * `config.redisUrl` / `REDIS_URL` via `@hosanna/cache`.
    */
-  secondaryStorage?: {
-    get: (key: string) => Promise<string | null>;
-    set: (key: string, value: string, ttl?: number) => Promise<void>;
-    delete: (key: string) => Promise<void>;
-    getAndDelete: (key: string) => Promise<string | null>;
-    increment: (key: string, ttl?: number) => Promise<number>;
-  } | null;
+  secondaryStorage?: AuthSecondaryStorage | null;
 }
+
+export type CreateAuthOptions = CreateAuthFullOptions | CreateAuthSlimOptions;

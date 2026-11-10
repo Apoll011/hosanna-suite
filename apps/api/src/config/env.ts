@@ -92,16 +92,8 @@ export const env = {
   /** Same Redis as the auth app — Better Auth secondary storage + `@hosanna/cache`. */
   redisUrl: optional("REDIS_URL"),
 
+  /** Shared with the auth app — cookie/JWE session validation. */
   betterAuthSecret: required("BETTER_AUTH_SECRET"),
-  betterAuthApiKey: optional("BETTER_AUTH_API_KEY"),
-
-  googleClientId: required("GOOGLE_CLIENT_ID"),
-  googleClientSecret: required("GOOGLE_CLIENT_SECRET"),
-
-  stripeSecretKey: required("STRIPE_SECRET_KEY"),
-  stripeWebhookSecret: required("STRIPE_WEBHOOK_SECRET"),
-
-  turnstileSecretKey: required("TURNSTILE_SECRET_KEY"),
 
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
   /**
@@ -109,7 +101,7 @@ export const env = {
    * `withRelatedProject` → matching hosanna-auth deploy; else AUTH_URL.
    */
   authUrl,
-  /** createAuth `baseURL` / public issuer (same as authUrl). */
+  /** createAuth slim `baseURL` / public issuer (same as authUrl). */
   authIssuer: authUrl,
 
   cronSecret: optional("CRON_SECRET"),

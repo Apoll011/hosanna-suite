@@ -20,22 +20,173 @@ import { createSecondaryStorage } from "@hosanna/cache";
 import { roles } from "../roles.js";
 import { pluginLocaleOverrides } from "../plugin-locale-overrides.js";
 import { RESPONSIBILITIES } from "../responsibilities.js";
-import type { CreateAuthOptions } from "./types.js";
+import type {
+  AuthSecondaryStorage,
+  CreateAuthFullOptions,
+  CreateAuthOptions,
+  CreateAuthSlimOptions,
+} from "./types.js";
 
 export type {
   CreateAuthOptions,
+  CreateAuthFullOptions,
+  CreateAuthSlimOptions,
   AuthEmails,
   AuthAvatarHelpers,
   CreateAuthConfig,
+  CreateAuthSlimConfig,
   AuthOrgNotifyPayload,
+  AuthSecondaryStorage,
 } from "./types.js";
 
+const TRUSTED_ORIGINS = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
+  "https://*.hosanna.live",
+  "https://hosanna.live",
+  "hosanna://localhost",
+  // External MCP hosts (Claude / ChatGPT / Cursor) — browser DCR + redirects
+  "https://claude.ai",
+  "https://www.claude.ai",
+  "https://chatgpt.com",
+  "https://chat.openai.com",
+  "https://*.openai.com",
+  "https://cursor.com",
+  "https://*.cursor.com",
+  "https://*.cursor.sh",
+] as const;
+
+function resolveSecondaryStorage(
+  option: AuthSecondaryStorage | null | undefined,
+  redisUrl: string | undefined,
+): AuthSecondaryStorage | undefined {
+  if (option === null) return undefined;
+  if (option) return option;
+  return (
+    createSecondaryStorage({ redisUrl: redisUrl ?? process.env.REDIS_URL }) ?? undefined
+  );
+}
+
+function sharedSessionAndCookies(secondaryStorage: AuthSecondaryStorage | undefined) {
+  return {
+    advanced: {
+      ipAddress: {
+        ipAddressHeaders: ["cf-connecting-ip", "x-forwarded-for"],
+      },
+      cookiePrefix: "hosanna",
+      // Studio (studio.hosanna.live) and API are different origins; SameSite=None
+      // + Secure is required for credentialed cross-origin requests. CSRF is
+      // still covered by Better Auth origin checks + trustedOrigins.
+      defaultCookieAttributes: {
+        sameSite: "none" as const,
+        secure: true,
+        httpOnly: true,
+      },
+      crossSubDomainCookies: {
+        enabled: true,
+        domain: "hosanna.live",
+      },
+      database: {
+        joins: true,
+      },
+    },
+    session: {
+      freshAge: 0,
+      expiresIn: 60 * 60 * 24 * 30,
+      updateAge: 60 * 60 * 24,
+      // Keep Postgres as source of truth; Redis is a hot cache across auth isolates.
+      ...(secondaryStorage
+        ? {
+            storeSessionInDatabase: true,
+            preserveSessionInDatabase: true,
+          }
+        : {}),
+      cookieCache: {
+        enabled: true,
+        strategy: "jwe" as const,
+        maxAge: 15 * 60,
+        version: "1",
+      },
+      additionalFields: {
+        fcm: {
+          type: "string" as const,
+          required: false,
+        },
+        notify: {
+          type: "boolean" as const,
+          defaultValue: false,
+        },
+      },
+    },
+    rateLimit: {
+      enabled: true,
+      ...(secondaryStorage ? { storage: "secondary-storage" as const } : {}),
+      window: 60,
+      max: 100,
+    },
+  };
+}
+
 /**
- * Shared Better Auth factory used by the auth app (HTTP handler) and the API
- * (session validation / notify) against the same Prisma database.
+ * Resource-server Better Auth: getSession, bearer, JWKS, org session fields, inbox notify.
+ * No Stripe / Google / Turnstile / mail / MCP login / sentinel / captcha.
  */
-// Explicit `any` — Better Auth's inferred instance type is too large / non-portable for declaration emit.
-export function createAuth(options: CreateAuthOptions): any {
+function createSlimAuth(options: CreateAuthSlimOptions): any {
+  const { prisma, config, secondaryStorage: secondaryStorageOption } = options;
+  const secondaryStorage = resolveSecondaryStorage(
+    secondaryStorageOption,
+    config.redisUrl,
+  );
+  const shared = sharedSessionAndCookies(secondaryStorage);
+
+  return betterAuth({
+    secret: config.betterAuthSecret,
+    baseURL: config.publicAppUrl,
+    appName: "Hosanna",
+    database: prismaAdapter(prisma, {
+      provider: "postgresql",
+    }),
+    ...(secondaryStorage ? { secondaryStorage } : {}),
+    trustedOrigins: [...TRUSTED_ORIGINS, ...(config.trustedOriginsExtra ?? [])],
+    // Password auth stays registered so schema/session shape matches the auth app;
+    // send hooks are omitted — the auth app owns mail.
+    emailAndPassword: {
+      enabled: true,
+      requireEmailVerification: false,
+      minPasswordLength: 8,
+      maxPasswordLength: 128,
+      autoSignIn: false,
+    },
+    plugins: [
+      inbox(),
+      bearer(),
+      jwt(),
+      organization({
+        organizationLimit: 1,
+        membershipLimit: 500,
+        teams: {
+          enabled: true,
+          maximumTeams: 50,
+        },
+        roles,
+      }),
+    ],
+    user: {
+      additionalFields: {
+        metadata: {
+          type: "string",
+          required: false,
+        },
+      },
+    },
+    ...shared,
+  });
+}
+
+function createFullAuth(options: CreateAuthFullOptions): any {
   const {
     prisma,
     stripeClient,
@@ -51,12 +202,11 @@ export function createAuth(options: CreateAuthOptions): any {
   const appUrl = config.appUrl.replace(/\/+$/, "");
   const studioUrl = (config.studioUrl ?? config.appUrl).replace(/\/+$/, "");
 
-  const secondaryStorage =
-    secondaryStorageOption === null
-      ? undefined
-      : (secondaryStorageOption ??
-        createSecondaryStorage({ redisUrl: config.redisUrl ?? process.env.REDIS_URL }) ??
-        undefined);
+  const secondaryStorage = resolveSecondaryStorage(
+    secondaryStorageOption,
+    config.redisUrl,
+  );
+  const shared = sharedSessionAndCookies(secondaryStorage);
 
   /** Reads the locale configured in an organisation's settings metadata. */
   async function getOrgLocale(organizationId: string): Promise<string> {
@@ -156,26 +306,7 @@ export function createAuth(options: CreateAuthOptions): any {
       provider: "postgresql",
     }),
     ...(secondaryStorage ? { secondaryStorage } : {}),
-    trustedOrigins: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost",
-      "http://127.0.0.1:5173",
-      "http://127.0.0.1:5174",
-      "https://*.hosanna.live",
-      "https://hosanna.live",
-      "hosanna://localhost",
-      // External MCP hosts (Claude / ChatGPT / Cursor) — browser DCR + redirects
-      "https://claude.ai",
-      "https://www.claude.ai",
-      "https://chatgpt.com",
-      "https://chat.openai.com",
-      "https://*.openai.com",
-      "https://cursor.com",
-      "https://*.cursor.com",
-      "https://*.cursor.sh",
-      ...(config.trustedOriginsExtra ?? []),
-    ],
+    trustedOrigins: [...TRUSTED_ORIGINS, ...(config.trustedOriginsExtra ?? [])],
     // OAuth cancel/callback failures must land in Studio, not Better Auth's
     // built-in /api/auth/error page (dev-only UX).
     onAPIError: {
@@ -717,27 +848,7 @@ export function createAuth(options: CreateAuthOptions): any {
         },
       }),
     ],
-    advanced: {
-      ipAddress: {
-        ipAddressHeaders: ["cf-connecting-ip", "x-forwarded-for"],
-      },
-      cookiePrefix: "hosanna",
-      // Studio (studio.hosanna.live) and API are different origins; SameSite=None
-      // + Secure is required for credentialed cross-origin requests. CSRF is
-      // still covered by Better Auth origin checks + trustedOrigins.
-      defaultCookieAttributes: {
-        sameSite: "none",
-        secure: true,
-        httpOnly: true,
-      },
-      crossSubDomainCookies: {
-        enabled: true,
-        domain: "hosanna.live",
-      },
-      database: {
-        joins: true,
-      },
-    },
+    ...shared,
     user: {
       changeEmail: {
         enabled: true,
@@ -768,34 +879,6 @@ export function createAuth(options: CreateAuthOptions): any {
         },
       },
     },
-    session: {
-      freshAge: 0,
-      expiresIn: 60 * 60 * 24 * 30,
-      updateAge: 60 * 60 * 24,
-      // Keep Postgres as source of truth; Redis is a hot cache across auth isolates.
-      ...(secondaryStorage
-        ? {
-            storeSessionInDatabase: true,
-            preserveSessionInDatabase: true,
-          }
-        : {}),
-      cookieCache: {
-        enabled: true,
-        strategy: "jwe",
-        maxAge: 15 * 60,
-        version: "1",
-      },
-      additionalFields: {
-        fcm: {
-          type: "string",
-          required: false,
-        },
-        notify: {
-          type: "boolean",
-          defaultValue: false,
-        },
-      },
-    },
     // Link Google to an existing user with the same verified email (covers
     // orphan users left when account.create failed on required `issuer`).
     account: {
@@ -805,12 +888,6 @@ export function createAuth(options: CreateAuthOptions): any {
         // Local email may be unverified after a partial sign-up failure.
         requireLocalEmailVerified: false,
       },
-    },
-    rateLimit: {
-      enabled: true,
-      ...(secondaryStorage ? { storage: "secondary-storage" as const } : {}),
-      window: 60,
-      max: 100,
     },
     socialProviders: {
       google: {
@@ -826,6 +903,20 @@ export function createAuth(options: CreateAuthOptions): any {
       },
     },
   });
+}
+
+/**
+ * Shared Better Auth factory.
+ *
+ * - `mode: "full"` (default) — auth app HTTP handler (mail, Stripe, Google, MCP, …)
+ * - `mode: "slim"` — API resource server (getSession + inbox notify + JWKS)
+ */
+// Explicit `any` — Better Auth's inferred instance type is too large / non-portable for declaration emit.
+export function createAuth(options: CreateAuthOptions): any {
+  if (options.mode === "slim") {
+    return createSlimAuth(options);
+  }
+  return createFullAuth(options);
 }
 
 export type HosannaAuth = any;

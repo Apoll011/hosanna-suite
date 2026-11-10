@@ -4,8 +4,12 @@ export type {
   AuthAvatarHelpers,
   AuthEmails,
   AuthOrgNotifyPayload,
+  AuthSecondaryStorage,
   CreateAuthConfig,
+  CreateAuthFullOptions,
   CreateAuthOptions,
+  CreateAuthSlimConfig,
+  CreateAuthSlimOptions,
 } from "./types.js";
 export { withOauthNavigationRedirect } from "../oauth-navigation-redirect.js";
 export { wantsBrowserNavigation, isOauthAuthorizeGet } from "../oauth-navigation-redirect.js";
