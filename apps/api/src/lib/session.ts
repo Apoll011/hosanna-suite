@@ -1,5 +1,4 @@
-import { env } from "../config/env.js";
-import { attachTrustedOidcHeader } from "./vercelOidc.js";
+import { auth } from "./auth.js";
 
 export type AuthSessionUser = {
   id: string;
@@ -25,42 +24,23 @@ export type SessionResult = {
   member?: { role?: string | null } | null;
 } | null;
 
-function authBaseUrl(): string {
-  const base = (env.authUrl ?? env.publicAppUrl).replace(/\/+$/, "");
-  if (!base) throw new Error("AUTH_URL (or PUBLIC_APP_URL) is required for session validation");
-  return base;
-}
-
 function toHeaders(input?: Headers | Record<string, string> | Iterable<[string, string]>): Headers {
   if (!input) return new Headers();
   if (input instanceof Headers) return new Headers(input);
   return new Headers(input as Record<string, string>);
 }
 
-const GET_SESSION_TIMEOUT_MS = 12_000;
-
-/** Validate a session via the auth app (cookie / bearer), not a local Better Auth instance. */
+/** Validate a session locally via shared Better Auth (cookie / bearer). */
 export async function getSession(input?: {
   headers?: Headers | Record<string, string>;
 }): Promise<SessionResult> {
-  const headers = await attachTrustedOidcHeader(toHeaders(input?.headers));
-  let res: Response;
   try {
-    res = await fetch(`${authBaseUrl()}/api/auth/get-session`, {
-      method: "GET",
-      headers,
-      redirect: "manual",
-      signal: AbortSignal.timeout(GET_SESSION_TIMEOUT_MS),
+    const data = await auth.api.getSession({
+      headers: toHeaders(input?.headers),
     });
+    if (!data?.session || !data?.user) return null;
+    return data as Exclude<SessionResult, null>;
   } catch {
     return null;
   }
-
-  // Deployment protection SSO redirect = missing/invalid Trusted Sources OIDC.
-  if (res.status >= 300 && res.status < 400) return null;
-  if (!res.ok) return null;
-
-  const data = (await res.json()) as SessionResult | { session?: null; user?: null } | null;
-  if (!data?.session || !data?.user) return null;
-  return data as Exclude<SessionResult, null>;
 }

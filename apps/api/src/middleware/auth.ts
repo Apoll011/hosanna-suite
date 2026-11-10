@@ -152,7 +152,7 @@ export function requireOwnTeamResource(
   };
 }
 
-/** Full auth context — one cache hit, zero Prisma / AUTH_URL on warm path. */
+/** Full auth context — one cache hit, zero Prisma / getSession on warm path. */
 type AuthContext = {
   userId: string;
   workspaceId: string;
@@ -161,7 +161,7 @@ type AuthContext = {
   locale: string;
 };
 
-/** Longer than Studio's 15s sync poll so idle pulls hit memory/Redis instead of AUTH_URL. */
+/** Longer than Studio's 15s sync poll so idle pulls hit memory/Redis instead of getSession. */
 const AUTH_CTX_TTL_MS = 120_000;
 const ORG_LOCALE_TTL_MS = 300_000;
 const USER_ROLE_TTL_MS = 300_000;
@@ -215,9 +215,7 @@ function authCacheKey(req: Request): string | null {
 
 function requestHeadersForAuth(req: Request): Headers {
   const headers = new Headers();
-  // Server-to-server get-session: only forward credentials. Do not forward
-  // browser Origin/Referer — they are irrelevant here and can interact badly
-  // with deployment-protection / CSRF checks on ephemeral auth hosts.
+  // Local Better Auth getSession only needs credentials (cookie / bearer).
   const cookie = req.headers.cookie;
   if (cookie) headers.set("cookie", cookie);
   const authHeader = req.headers.authorization;
