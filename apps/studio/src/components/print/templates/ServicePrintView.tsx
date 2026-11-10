@@ -197,6 +197,7 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
                 showChurchIdentity={index === 0}
               />
             ))}
+            <TemplateFooter options={options} brand={brand} />
           </div>
         ) : (
           songsToPrint.map((song) => (

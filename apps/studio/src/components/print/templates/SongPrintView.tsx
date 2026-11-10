@@ -11,7 +11,7 @@ import { buildSongBlocks } from "../songBlocks";
 import { PrintBrand, PrintOptions } from "../types";
 import { PrintSheet } from "./PrintSheet";
 import { PrintSongBody } from "./PrintSongBody";
-import { TemplateFooter } from "./TemplateFooter";
+import { SongCredit, TemplateFooter } from "./TemplateFooter";
 import { TemplateHeader } from "./TemplateHeader";
 
 interface SongPrintViewProps {
@@ -68,14 +68,9 @@ export const SongPrintView = React.memo<SongPrintViewProps>(function SongPrintVi
   return (
     <PrintSheet
       className={packed ? "hp-sheet--song hp-sheet--packed" : "hp-sheet--song"}
-      footer={
-        <TemplateFooter
-          options={options}
-          brand={brand}
-          ccli={meta.ccli}
-          copyright={meta.copyright}
-        />
-      }
+      // Packed songs share a pack-level footer (one per page). Standalone
+      // songs keep an in-flow footer for the preview; print uses @page.
+      footer={packed ? undefined : <TemplateFooter options={options} brand={brand} />}
     >
       <TemplateHeader
         title={title}
@@ -107,6 +102,8 @@ export const SongPrintView = React.memo<SongPrintViewProps>(function SongPrintVi
       ) : (
         <p className="hp-empty">{t("print.song.empty")}</p>
       )}
+
+      <SongCredit ccli={meta.ccli} copyright={meta.copyright} />
     </PrintSheet>
   );
 });

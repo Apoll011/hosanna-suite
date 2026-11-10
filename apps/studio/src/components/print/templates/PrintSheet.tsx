@@ -7,7 +7,8 @@ import React from "react";
 
 interface PrintSheetProps {
   children: React.ReactNode;
-  footer: React.ReactNode;
+  /** Optional in-flow footer for the screen preview; print uses @page footers. */
+  footer?: React.ReactNode;
   className?: string;
 }
 

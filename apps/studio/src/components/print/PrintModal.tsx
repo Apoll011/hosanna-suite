@@ -33,6 +33,7 @@ import { PrintOptionsPanel } from "./PrintOptionsPanel";
 import { triggerPrint } from "./printEngine";
 import { ensurePrintStyles } from "./printStyles";
 import { PrintDocument } from "./templates/PrintDocument";
+import { printFooterNote } from "./templates/TemplateFooter";
 import { PrintBrand, PrintOptions, PrintPayload } from "./types";
 import { usePrintDefaults } from "./usePrintDefaults";
 
@@ -108,15 +109,19 @@ const PrintModalContent: React.FC<{
     const hasSongContainers = items.some(
       (i) => i.type === "folder" || i.type === "collection" || i.type === "service",
     );
-    const hasSongs = items.some(
-      (i) =>
-        i.type === "song" ||
-        ((i.type === "folder" || i.type === "collection" || i.type === "service") &&
-          (i.songs?.length ?? 0) > 0),
-    );
+    let songCount = 0;
+    for (const item of items) {
+      if (item.type === "song") songCount += 1;
+      else if (item.type === "folder" || item.type === "collection" || item.type === "service") {
+        songCount += item.songs?.length ?? 0;
+      }
+    }
+    const hasSongs = songCount > 0 || hasSongContainers;
     return {
-      hasSongs: hasSongs || hasSongContainers,
+      hasSongs,
       hasSongContainers,
+      // "One song per page" only matters when more than one song can print.
+      canPageBreak: songCount > 1 || hasSongContainers,
     };
   }, [payload.items]);
 
@@ -203,11 +208,11 @@ const PrintModalContent: React.FC<{
     if (!previewRef.current || isPrinting) return;
     setIsPrinting(true);
     try {
-      await triggerPrint(previewRef.current, title, options);
+      await triggerPrint(previewRef.current, title, options, printFooterNote(options, brand));
     } finally {
       setIsPrinting(false);
     }
-  }, [isPrinting, options, title]);
+  }, [brand, isPrinting, options, title]);
 
   const handleSaveDefault = async () => {
     setIsSaving(true);

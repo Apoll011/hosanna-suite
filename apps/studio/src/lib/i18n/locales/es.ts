@@ -2220,6 +2220,7 @@ export const es: typeof pt = {
       artistCol: "Artista / Autor",
       emptyFolder: "Esta carpeta no contiene cánticos.",
       emptyCollection: "Esta colección no contiene cánticos.",
+      emptySelection: "No hay cánticos seleccionados.",
     },
     service: {
       badge: "Orden de Culto",

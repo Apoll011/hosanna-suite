@@ -2210,6 +2210,7 @@ export const pt = {
       artistCol: "Artista / Autor",
       emptyFolder: "Esta pasta não contém cânticos.",
       emptyCollection: "Esta coleção não contém cânticos.",
+      emptySelection: "Nenhum cântico selecionado.",
     },
     service: {
       badge: "Ordem de Culto",

@@ -2197,6 +2197,7 @@ export const en: typeof pt = {
       artistCol: "Artist / Author",
       emptyFolder: "This folder has no songs.",
       emptyCollection: "This collection has no songs.",
+      emptySelection: "No songs selected.",
     },
     service: {
       badge: "Order of Service",

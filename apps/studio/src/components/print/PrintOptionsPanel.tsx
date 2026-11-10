@@ -180,6 +180,8 @@ export interface PrintOptionsContext {
   hasSongs: boolean;
   /** Whether "include full songs" applies (folders, collections, services). */
   hasSongContainers: boolean;
+  /** Whether "one song per page" can change layout (2+ songs to break between). */
+  canPageBreak: boolean;
 }
 
 interface PrintOptionsPanelProps {
@@ -202,6 +204,11 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
 }) => {
   const { t } = useI18n();
   const wide = layout === "wide";
+  // Song body options only matter when song charts will actually print.
+  const showSongBodyOptions =
+    context.hasSongs && (!context.hasSongContainers || options.includeSongs);
+  const showPageBreak =
+    context.canPageBreak && (!context.hasSongContainers || options.includeSongs);
 
   const selectTemplate = (family: PrintTemplateFamily) =>
     onChange({
@@ -213,7 +220,16 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
     <>
       <Group title={t("print.options.groups.content")}>
         <div className="divide-y divide-m3-border/50">
-          {context.hasSongs && (
+          {context.hasSongContainers && (
+            <ToggleRow
+              label={t("print.options.includeSongs")}
+              hint={t("print.options.includeSongsHint")}
+              checked={options.includeSongs}
+              onChange={(v) => onChange({ includeSongs: v })}
+              disabled={disabled}
+            />
+          )}
+          {showSongBodyOptions && (
             <>
               <ToggleRow
                 label={t("print.options.chords")}
@@ -238,15 +254,6 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
               />
             </>
           )}
-          {context.hasSongContainers && (
-            <ToggleRow
-              label={t("print.options.includeSongs")}
-              hint={t("print.options.includeSongsHint")}
-              checked={options.includeSongs}
-              onChange={(v) => onChange({ includeSongs: v })}
-              disabled={disabled}
-            />
-          )}
           <ToggleRow
             label={t("print.options.churchHeader")}
             hint={t("print.options.churchHeaderHint")}
@@ -254,12 +261,14 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
             onChange={(v) => onChange({ showChurchHeader: v })}
             disabled={disabled}
           />
-          <ToggleRow
-            label={t("print.options.churchLogo")}
-            checked={options.showChurchLogo}
-            onChange={(v) => onChange({ showChurchLogo: v })}
-            disabled={disabled || !options.showChurchHeader}
-          />
+          {options.showChurchHeader && (
+            <ToggleRow
+              label={t("print.options.churchLogo")}
+              checked={options.showChurchLogo}
+              onChange={(v) => onChange({ showChurchLogo: v })}
+              disabled={disabled}
+            />
+          )}
         </div>
       </Group>
 
@@ -281,7 +290,7 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
               { value: "relaxed", label: t("print.options.densityRelaxed") },
             ]}
           />
-          {context.hasSongs && (
+          {showSongBodyOptions && (
             <Segmented<"1" | "2">
               label={t("print.options.columns")}
               value={options.twoColumnLayout ? "2" : "1"}
@@ -293,19 +302,17 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
               ]}
             />
           )}
-          <div className="divide-y divide-m3-border/50">
-            <ToggleRow
-              label={t("print.options.pageBreak")}
-              hint={
-                context.hasSongs
-                  ? t("print.options.pageBreakSongsHint")
-                  : t("print.options.pageBreakHint")
-              }
-              checked={options.pageBreakBetweenItems}
-              onChange={(v) => onChange({ pageBreakBetweenItems: v })}
-              disabled={disabled || (context.hasSongContainers && !options.includeSongs)}
-            />
-          </div>
+          {showPageBreak && (
+            <div className="divide-y divide-m3-border/50">
+              <ToggleRow
+                label={t("print.options.pageBreak")}
+                hint={t("print.options.pageBreakSongsHint")}
+                checked={options.pageBreakBetweenItems}
+                onChange={(v) => onChange({ pageBreakBetweenItems: v })}
+                disabled={disabled}
+              />
+            </div>
+          )}
         </div>
       </Group>
 

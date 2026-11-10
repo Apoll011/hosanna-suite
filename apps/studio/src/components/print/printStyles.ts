@@ -68,10 +68,10 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   --hp-lh: 1.45; --hp-chord-lh: 1.1; --hp-line-gap: 0.14em; --hp-stanza-gap: 0.7em;
   --hp-section-gap: 1.15em; --hp-block-gap: 1.3em; --hp-cell-y: 0.5em;
 }
- * One-song-per-page sheets are at least one page tall so the footer can
+/* One-song-per-page sheets are at least one page tall so the footer can
  * sit on the page bottom (margin-top: auto). The body must NOT flex-grow —
  * growing it made 2-column songs fill the page and orphaned the footer
- * mid-page. Packed songbooks skip the min-height so songs share pages. */
+ * mid-page. Packed song packs pin a single pack-level footer the same way. */
 .hp-sheet { display: flow-root; box-sizing: border-box; }
 .hp-sheet-body { display: block; flex: 0 0 auto; }
 .hp-breaks > .hp-sheet:not(.hp-sheet--packed) {
@@ -80,7 +80,12 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 }
 .hp-breaks > .hp-sheet:not(.hp-sheet--packed) > .hp-footer { margin-top: auto; }
 .hp-breaks > .hp-sheet:not(:last-child):not(.hp-sheet--packed) { break-after: page; }
-.hp-breaks > .hp-song-pack { break-before: page; }
+.hp-breaks > .hp-song-pack {
+  display: flex; flex-direction: column;
+  break-before: page;
+  min-height: calc(var(--hp-paper-h) - 2 * var(--hp-margin));
+}
+.hp-breaks > .hp-song-pack > .hp-footer { margin-top: auto; flex-shrink: 0; }
 .hp-breaks > .hp-song-pack > .hp-sheet + .hp-sheet {
   margin-top: 1.1em; padding-top: 0.85em; border-top: 1px solid var(--hp-rule);
 }
@@ -240,6 +245,13 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   font-weight: 700; color: var(--hp-muted);
 }
 .hp-index-title { flex: 1; min-width: 0; color: var(--hp-ink); font-weight: 500; }
+.hp-index-type { font-weight: 500; color: var(--hp-muted); }
+
+.hp-song-credit {
+  display: flex; flex-wrap: wrap; gap: 0 0.9em;
+  margin-top: 0.55em; font-size: 0.68em; color: var(--hp-muted);
+  break-inside: avoid;
+}
 
 .hp-footer {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25em 1em;
@@ -427,11 +439,13 @@ export const PRINT_SCREEN_CSS = /* css */ `
   margin-top: 24px;
 }
 .hp-screen .hp-song-pack {
+  display: flex; flex-direction: column;
   background: #fff; width: var(--hp-paper-w); min-height: var(--hp-paper-h);
   padding: var(--hp-margin); margin: 0 auto;
   box-shadow: 0 1px 2px rgba(15,23,42,.08), 0 8px 24px rgba(15,23,42,.10);
   border-radius: 2px;
 }
+.hp-screen .hp-song-pack > .hp-footer { margin-top: auto; }
 .hp-screen .hp-doc.hp-breaks > .hp-sheet:not(:last-child) { break-after: auto; }
 .hp-screen .hp-breaks > .hp-sheet:not(.hp-sheet--packed) {
   content-visibility: auto;
@@ -455,15 +469,32 @@ export function ensurePrintStyles(): void {
   if (style.textContent !== css) style.textContent = css;
 }
 
+const escapeCssContent = (value: string) =>
+  value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, " ");
+
+/**
+ * @page rules for the print iframe. The document footer and page numbers live
+ * in margin boxes so every printed page gets one footer at the bottom — even
+ * when the content only fills half the sheet, and never once-per-song.
+ */
 export function buildPageCss(
   options: Pick<PrintOptions, "paperSize" | "margins" | "showPageNumbers">,
+  footerNote = "",
 ): string {
   const paper = PAPER_SIZES[options.paperSize];
   const margin = PAGE_MARGINS_MM[options.margins];
-  const pageNumbers = options.showPageNumbers
+  const note = footerNote.trim();
+  const left = note
+    ? `@bottom-left { content: "${escapeCssContent(note)}"; font: 500 8pt "Figtree", system-ui, sans-serif; color: #94a3b8; }`
+    : `@bottom-left { content: "Hosana"; font: 500 8pt "Figtree", system-ui, sans-serif; color: #94a3b8; }`;
+  const right = options.showPageNumbers
     ? `@bottom-right { content: counter(page) " / " counter(pages); font: 500 8pt "Figtree", system-ui, sans-serif; color: #94a3b8; }`
-    : "";
-  return `@page { size: ${paper.w}mm ${paper.h}mm; margin: ${margin}mm; ${pageNumbers} }`;
+    : note
+      ? `@bottom-right { content: "Hosana"; font: 500 8pt "Figtree", system-ui, sans-serif; color: #94a3b8; }`
+      : "";
+  // Hide in-flow preview footers so they don't duplicate the @page footer.
+  return `@page { size: ${paper.w}mm ${paper.h}mm; margin: ${margin}mm; ${left} ${right} }
+.hp-footer { display: none !important; }`;
 }
 
 /** Inline CSS variables that size the document for the chosen paper. */

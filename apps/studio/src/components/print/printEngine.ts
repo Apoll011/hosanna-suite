@@ -44,6 +44,7 @@ export async function triggerPrint(
   element: HTMLElement,
   documentTitle: string,
   options: Pick<PrintOptions, "paperSize" | "margins" | "showPageNumbers">,
+  footerNote = "",
 ): Promise<void> {
   document.getElementById(IFRAME_ID)?.remove();
 
@@ -77,7 +78,7 @@ export async function triggerPrint(
     <title>${escapeHtml(documentTitle)}</title>
     <link rel="stylesheet" href="${PRINT_FONTS_URL}" />
     <style>
-      ${buildPageCss(options)}
+      ${buildPageCss(options, footerNote)}
       html, body { margin: 0; padding: 0; background: #fff; }
       ${PRINT_DOCUMENT_CSS}
     </style>
