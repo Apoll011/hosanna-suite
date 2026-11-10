@@ -33,18 +33,23 @@ export const Tabs: React.FC<TabsProps> = ({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={`flex items-center gap-1 overflow-x-auto hide-scrollbar ${
-        variant === "underline" ? "border-b border-m3-border" : "p-1 rounded-md bg-m3-sidebar/80"
+      className={`flex items-center gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+        variant === "underline"
+          ? "h-10 border-b border-m3-border"
+          : "rounded-md bg-m3-sidebar/80 p-1"
       } ${className}`}
     >
       {items.map((item) => {
         const selected = item.id === value;
         const base =
-          "inline-flex items-center gap-2 shrink-0 min-h-10 px-3.5 text-sm font-semibold transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+          "inline-flex items-center gap-2 shrink-0 box-border px-3.5 text-sm font-semibold transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed " +
+          (variant === "underline" ? "h-10" : "h-8");
 
         const styles =
           variant === "underline"
-            ? selected
+            ? // -mb-px overlaps the tablist border; overflow-y-hidden on the list
+              // prevents that 1px from spawning a tiny vertical scrollbar.
+              selected
               ? "text-m3-primary border-b-2 border-m3-primary -mb-px"
               : "text-m3-secondary hover:text-m3-text border-b-2 border-transparent -mb-px"
             : selected
