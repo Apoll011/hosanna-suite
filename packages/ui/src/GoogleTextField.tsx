@@ -15,6 +15,10 @@ export interface GoogleTextFieldProps extends React.InputHTMLAttributes<HTMLInpu
   trailingIcon?: React.ReactNode;
 }
 
+/**
+ * Outlined text field — fixed 56px height, 16px+ horizontal inset so the
+ * floating label / typed text never sits in the rounded corner.
+ */
 export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFieldProps>(
   (
     {
@@ -23,7 +27,7 @@ export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFiel
       helperText,
       leadingIcon,
       trailingIcon,
-      className = "",
+      className,
       id,
       value,
       defaultValue,
@@ -31,13 +35,14 @@ export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFiel
       onFocus,
       onBlur,
       type = "text",
+      disabled,
       ...props
     },
     ref,
   ) => {
     const generatedId = useId();
     const inputId = id || generatedId;
-    const [isFocused, setIsFocused] = useState(false);
+    const [focused, setFocused] = useState(false);
 
     const hasValue =
       value !== undefined
@@ -46,46 +51,31 @@ export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFiel
           ? String(defaultValue).length > 0
           : false;
 
-    const isFloating = isFocused || hasValue;
+    const floating = focused || hasValue;
 
     return (
-      <div className="w-full flex flex-col group/field text-left">
+      <div className="w-full text-left">
         <div
           className={cn(
-            "relative flex items-center h-14 rounded-xl border transition-all duration-200 bg-transparent",
+            "relative h-[56px] w-full rounded-xl border bg-transparent transition-[border-color,box-shadow] duration-200",
             error
               ? "border-m3-danger ring-1 ring-m3-danger"
-              : isFocused
-                ? "border-m3-primary ring-2 ring-m3-primary/25"
+              : focused
+                ? "border-m3-primary ring-2 ring-m3-primary/20"
                 : "border-m3-border hover:border-m3-primary/40",
+            disabled && "opacity-60",
           )}
         >
-          {leadingIcon && (
-            <div
+          {leadingIcon ? (
+            <span
               className={cn(
-                "pl-3.5 pr-1 shrink-0 transition-colors",
-                error ? "text-m3-danger" : isFocused ? "text-m3-primary" : "text-m3-secondary",
+                "pointer-events-none absolute left-4 top-1/2 z-[1] -translate-y-1/2",
+                error ? "text-m3-danger" : focused ? "text-m3-primary" : "text-m3-secondary",
               )}
             >
               {leadingIcon}
-            </div>
-          )}
-
-          <label
-            htmlFor={inputId}
-            className={cn(
-              "absolute pointer-events-none transition-all duration-150 ease-out origin-top-left select-none truncate max-w-[calc(100%-2rem)]",
-              leadingIcon ? "left-10" : "left-3.5",
-              isFloating
-                ? cn(
-                    "-top-2.5 px-1.5 text-label bg-m3-card",
-                    error ? "text-m3-danger" : isFocused ? "text-m3-primary" : "text-m3-secondary",
-                  )
-                : "top-1/2 -translate-y-1/2 text-[15px] text-m3-secondary",
-            )}
-          >
-            {label}
-          </label>
+            </span>
+          ) : null}
 
           <input
             id={inputId}
@@ -93,30 +83,53 @@ export const GoogleTextField = React.forwardRef<HTMLInputElement, GoogleTextFiel
             type={type}
             value={value}
             defaultValue={defaultValue}
+            disabled={disabled}
             onChange={onChange}
             onFocus={(e) => {
-              setIsFocused(true);
+              setFocused(true);
               onFocus?.(e);
             }}
             onBlur={(e) => {
-              setIsFocused(false);
+              setFocused(false);
               onBlur?.(e);
             }}
+            placeholder={label}
             className={cn(
-              "w-full h-full bg-transparent px-3.5 text-[15px] leading-snug text-m3-text rounded-xl focus:outline-none placeholder-transparent",
-              isFloating ? "pt-4 pb-2.5" : "py-3.5",
+              "absolute inset-0 z-0 h-full w-full rounded-xl bg-transparent text-[15px] leading-normal text-m3-text",
+              "outline-none focus:outline-none placeholder:text-transparent",
+              leadingIcon ? "pl-11" : "pl-4",
+              trailingIcon ? "pr-11" : "pr-4",
+              floating ? "pt-4 pb-2" : "py-0",
               className,
             )}
             {...props}
           />
 
-          {trailingIcon && <div className="pr-3.5 pl-1 shrink-0 flex items-center">{trailingIcon}</div>}
+          <label
+            htmlFor={inputId}
+            className={cn(
+              "pointer-events-none absolute z-[1] max-w-[calc(100%-2.75rem)] truncate transition-all duration-150 ease-out",
+              leadingIcon ? "left-11" : "left-4",
+              floating
+                ? cn(
+                    "top-0 -translate-y-1/2 px-1 text-xs font-semibold leading-none bg-m3-card",
+                    error ? "text-m3-danger" : focused ? "text-m3-primary" : "text-m3-secondary",
+                  )
+                : "top-1/2 -translate-y-1/2 text-[15px] font-normal leading-none text-m3-secondary",
+            )}
+          >
+            {label}
+          </label>
+
+          {trailingIcon ? (
+            <span className="absolute right-3 top-1/2 z-[1] flex -translate-y-1/2 items-center text-m3-secondary">
+              {trailingIcon}
+            </span>
+          ) : null}
         </div>
 
         {error ? (
-          <p className="mt-1.5 ml-1 text-xs text-m3-danger flex items-center gap-1 animate-in fade-in duration-150">
-            <span>{error}</span>
-          </p>
+          <p className="mt-1.5 ml-1 text-xs text-m3-danger">{error}</p>
         ) : helperText ? (
           <p className="mt-1.5 ml-1 text-caption">{helperText}</p>
         ) : null}
