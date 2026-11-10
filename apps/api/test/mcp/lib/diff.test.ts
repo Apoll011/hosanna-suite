@@ -9,6 +9,7 @@ describe("summarizeDiff", () => {
   it("detects unchanged content", () => {
     const result = summarizeDiff("a\nb", "a\nb");
     assert.equal(result.unchanged, true);
+    assert.equal(result.preview, "(no changes)");
   });
 
   it("counts added and removed lines", () => {
@@ -16,6 +17,24 @@ describe("summarizeDiff", () => {
     assert.equal(result.unchanged, false);
     assert.ok(result.addedLines >= 1);
     assert.ok(result.removedLines >= 1);
+  });
+
+  it("treats empty → content as pure additions", () => {
+    const result = summarizeDiff("", "one\ntwo");
+    assert.equal(result.unchanged, false);
+    assert.equal(result.addedLines, 2);
+    assert.equal(result.removedLines, 1); // empty string still yields one "" line
+    assert.match(result.preview, /\+ one/);
+    assert.match(result.preview, /\+ two/);
+  });
+
+  it("caps preview length for large diffs", () => {
+    const before = Array.from({ length: 30 }, (_, i) => `old-${i}`).join("\n");
+    const after = Array.from({ length: 30 }, (_, i) => `new-${i}`).join("\n");
+    const result = summarizeDiff(before, after);
+    assert.ok(result.addedLines + result.removedLines > 40);
+    assert.match(result.preview, /more line changes/);
+    assert.ok(result.preview.split("\n").length <= 41);
   });
 });
 

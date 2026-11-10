@@ -12,6 +12,13 @@ describe("clockContext", () => {
     assert.equal(c.nextSunday, "2026-11-01");
   });
 
+  it("skips ahead a full week when today is already Sunday", () => {
+    const now = new Date("2026-11-01T15:00:00.000Z");
+    const c = buildClockContext(now, "UTC");
+    assert.equal(c.weekday, "Sunday");
+    assert.equal(c.nextSunday, "2026-11-08");
+  });
+
   it("prompt block mentions duration seconds", () => {
     const block = clockContextPromptBlock(new Date("2026-10-29T12:00:00.000Z"), "UTC");
     assert.match(block, /2026-10-29/);

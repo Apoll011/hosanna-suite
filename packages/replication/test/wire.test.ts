@@ -7,10 +7,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  chunkArray,
   deepEqual,
   diffNewDocumentState,
+  isSpuriousConflict,
   omitVolatile,
   stripNonReplicatedFields,
+  toAssumedMasterState,
 } from "../src/replication/wire";
 
 test("deepEqual: primitives and nested objects", () => {
@@ -92,4 +95,40 @@ test("diffNewDocumentState: update sends only changed fields + id/updatedAt", ()
     updatedAt: "2024-01-02T00:00:00.000Z",
     title: "B",
   });
+});
+
+test("toAssumedMasterState keeps only id + updatedAt", () => {
+  assert.deepEqual(
+    toAssumedMasterState({
+      id: "1",
+      updatedAt: "2024-01-01T00:00:00.000Z",
+      title: "X",
+      _deleted: false,
+    }),
+    { id: "1", updatedAt: "2024-01-01T00:00:00.000Z" },
+  );
+});
+
+test("isSpuriousConflict ignores volatile field drift", () => {
+  const assumed = {
+    id: "1",
+    updatedAt: "2024-01-01T00:00:00.000Z",
+    title: "A",
+    _rev: "1",
+  };
+  const server = {
+    id: "1",
+    updatedAt: "2024-01-02T00:00:00.000Z",
+    title: "A",
+    _rev: "2",
+  };
+  assert.equal(isSpuriousConflict(undefined, server), false);
+  assert.equal(isSpuriousConflict(assumed, server), true);
+  assert.equal(isSpuriousConflict({ ...assumed, title: "B" }, server), false);
+});
+
+test("chunkArray batches by size", () => {
+  assert.deepEqual(chunkArray([1, 2, 3], 10), [[1, 2, 3]]);
+  assert.deepEqual(chunkArray([1, 2, 3, 4, 5], 2), [[1, 2], [3, 4], [5]]);
+  assert.deepEqual(chunkArray([], 2), [[]]);
 });

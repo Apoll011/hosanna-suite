@@ -7,11 +7,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  calculateCollectionSongCount,
   calculateFolderCount,
   calculateFolderSongCount,
   recalculateCollectionCounts,
   recalculateFolderCounts,
-} from "./counts";
+} from "../../src/db/counts";
 
 test("calculateFolderSongCount ignores deleted songs", () => {
   const songs = [
@@ -21,6 +22,16 @@ test("calculateFolderSongCount ignores deleted songs", () => {
     { folderId: "f2", isDeleted: false, _deleted: false },
   ];
   assert.equal(calculateFolderSongCount("f1", songs), 1);
+});
+
+test("calculateFolderSongCount returns 0 for empty folder", () => {
+  assert.equal(calculateFolderSongCount("missing", []), 0);
+  assert.equal(
+    calculateFolderSongCount("missing", [
+      { folderId: "other", isDeleted: false, _deleted: false },
+    ]),
+    0,
+  );
 });
 
 test("calculateFolderCount ignores deleted subfolders", () => {
@@ -85,4 +96,13 @@ test("recalculateCollectionCounts syncs songIds and songCount", () => {
   const next = recalculateCollectionCounts(collections as never, songs);
   assert.equal(next[0]!.songCount, 2);
   assert.deepEqual(new Set(next[0]!.songIds), new Set(["s1", "orphan"]));
+});
+
+test("calculateCollectionSongCount ignores deleted songs", () => {
+  const songs = [
+    { id: "s1", collectionIds: ["c1"], isDeleted: false, _deleted: false },
+    { id: "s2", collectionIds: ["c1"], isDeleted: true, _deleted: false },
+    { id: "s3", collectionIds: ["c1"], isDeleted: false, _deleted: true },
+  ];
+  assert.equal(calculateCollectionSongCount("c1", songs), 1);
 });

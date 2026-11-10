@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { AgendaEvent, Assignee, Responsibility, ResponsibilityCategory } from "../types";
+import type { AgendaEvent, Assignee, Responsibility, ResponsibilityCategory } from "../../src/types";
 import {
+  assigneeKey,
+  bulletList,
+  collectEventMembers,
   collectUnnotifiedAssignments,
   groupAssignees,
   markMembersNotified,
   mergeAssigneeNotificationState,
-} from "./agendaNotify";
+  responsibilityLabel,
+} from "../../src/utils/agendaNotify";
 
 const categories: Record<string, ResponsibilityCategory> = {
   guitar: { id: "guitar", label: "Guitarra", icon: "music", color: "amber" },
@@ -69,6 +73,17 @@ test("unreachable (manual) assignees are skipped entirely", () => {
   assert.deepEqual(collectUnnotifiedAssignments(event, categories, "Resp"), []);
 });
 
+test("isReachable filter excludes members the caller cannot push to", () => {
+  const groups = collectUnnotifiedAssignments(
+    buildEvent(),
+    categories,
+    "Resp",
+    (memberId) => memberId !== "m1",
+  );
+
+  assert.deepEqual(groups, []);
+});
+
 test("only members accepted by the API are marked as notified", () => {
   const pending: Responsibility[] = [
     responsibility("r1", "guitar", [
@@ -121,4 +136,28 @@ test("removals aggregate every affected member under one label", () => {
 
   assert.deepEqual(groups.map((g) => g.memberId).sort(), ["m1", "m2"]);
   assert.ok(groups.every((g) => g.labels.length === 1));
+});
+
+test("assigneeKey prefers memberId over display name", () => {
+  assert.equal(assigneeKey({ id: "a", memberId: "m1", name: "Rita" }), "member:m1");
+  assert.equal(assigneeKey({ id: "b", name: " Convidado " }), "name:convidado");
+});
+
+test("responsibilityLabel falls back when category is missing", () => {
+  assert.equal(
+    responsibilityLabel(responsibility("r1", "unknown", []), categories, "Fallback"),
+    "Fallback",
+  );
+  assert.equal(
+    responsibilityLabel(responsibility("r1", "guitar", []), categories, "Fallback"),
+    "Guitarra",
+  );
+});
+
+test("bulletList formats labels for push body content", () => {
+  assert.equal(bulletList(["Guitarra", "Vocais"]), "• Guitarra\n• Vocais");
+});
+
+test("collectEventMembers returns distinct reachable assignees", () => {
+  assert.deepEqual(collectEventMembers(buildEvent()).sort(), ["m1", "m2"]);
 });

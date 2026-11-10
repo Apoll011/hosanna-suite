@@ -49,4 +49,24 @@ describe("idempotency", () => {
       (err: unknown) => err instanceof IdempotencyConflictError,
     );
   });
+
+  it("skips the cache when clientRequestId is missing or blank", async () => {
+    let runs = 0;
+    const org = `org-${Math.random()}`;
+    const run = () =>
+      withClientRequestId(org, "   ", async () => {
+        runs += 1;
+        return runs;
+      });
+    assert.equal(await run(), 1);
+    assert.equal(await withClientRequestId(org, undefined, async () => {
+      runs += 1;
+      return runs;
+    }), 2);
+    assert.equal(runs, 2);
+  });
+
+  it("hashes nullish payloads the same way", () => {
+    assert.equal(payloadHash(undefined), payloadHash(null));
+  });
 });

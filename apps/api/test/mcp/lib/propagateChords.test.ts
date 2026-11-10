@@ -24,6 +24,12 @@ describe("parseChordLine / applyChordAnchors", () => {
     assert.equal(out, "[G][C]Hi");
     assert.equal(stripChords(out), "Hi");
   });
+
+  it("clamps anchors past the end of the target line", () => {
+    const out = applyChordAnchors("Hi", [{ chord: "G", at: 99 }]);
+    assert.equal(out, "Hi[G]");
+    assert.equal(stripChords(""), "");
+  });
 });
 
 describe("syllableStarts", () => {
