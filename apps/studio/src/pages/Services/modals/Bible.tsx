@@ -8,7 +8,6 @@ import { useI18n } from "@/src/lib/i18n";
 import { BookOpen, Check, ChevronDown, Loader2, Search } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
-// ── Bolls Life Bible API Integration ──────────────────────────────────
 // API explicitly permits free web usage. It replaces the buggy NPM package.
 
 const PRIORITY_TRANSLATIONS = ["ARA", "NVI", "NTLH", "ARK", "ARC"];
@@ -18,7 +17,6 @@ interface Translation {
   full_name: string;
 }
 
-// Fallback translations if the initial list fetch fails
 const FALLBACK_TRANSLATIONS: Translation[] = [
   { short_name: "ARA", full_name: "Almeida Revista e Atualizada" },
   { short_name: "NVI", full_name: "Nova Versão Internacional" },
@@ -55,7 +53,6 @@ const normalizeBookName = (name: string) => {
   return normalized.replace(/\s+/g, "");
 };
 
-// ── Book Name Mapping ─────────────────────────────────────────────────
 const BOOK_NAME_MAP: Record<string, number> = {
   genesis: 1,
   gn: 1,
@@ -273,7 +270,6 @@ interface ParsedPassage {
   raw: string;
 }
 
-// Timeout fetch abstraction helper
 async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 8000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
@@ -334,7 +330,6 @@ function parsePassageInput(input: string): ParsedPassage | null {
 }
 
 // ══════════════════════════════════════════════════════════════════════
-// ── Scripture Modal Component ─────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════
 
 interface ScriptureModalProps {
@@ -380,7 +375,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [accepted, setAccepted] = useState(false);
 
-  // Load translations on first open (cached globally)
   useEffect(() => {
     if (!isOpen) return;
     let cancelled = false;
@@ -403,7 +397,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           if (!cancelled) setTranslations(sorted);
         }
       } catch {
-        // Silently fail – fallback to FALLBACK_TRANSLATIONS
       } finally {
         if (!cancelled) setTranslationsLoading(false);
       }
@@ -524,7 +517,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           </div>
         </div>
 
-        {/* Title */}
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.bible.titleLabel")}
@@ -538,7 +530,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           />
         </div>
 
-        {/* Translation Selector */}
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.bible.translationLabel")}
@@ -570,7 +561,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           )}
         </div>
 
-        {/* Passage Input + Search */}
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.bible.passageLabel")}
@@ -614,14 +604,12 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           <p className="text-[10px] text-slate-400">{t("serviceModals.bible.acceptedFormats")}</p>
         </div>
 
-        {/* Error */}
         {fetchError && (
           <div className="p-3 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 rounded-xl border border-red-200 dark:border-red-800/80">
             {fetchError}
           </div>
         )}
 
-        {/* Fetched text preview */}
         {fetchedText && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -653,7 +641,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           </div>
         )}
 
-        {/* Notes */}
         <div className="space-y-1.5">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.bible.notesLabel")}
@@ -680,7 +667,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           ]}
         />
 
-        {/* Actions */}
         <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
           <Button type="button" variant="ghost" size="sm" onClick={onClose}>
             {t("common.cancel")}

@@ -55,14 +55,12 @@ const SHORTCUTS: [string, string][] = [
   ["ESC", "Fechar pesquisa, sugestões ou esta janela"],
 ];
 
-// Componente visual para as teclas
 const Key = ({ children }: { children: React.ReactNode }) => (
   <kbd className="inline-flex items-center justify-center min-w-6 px-1.5 py-0.5 rounded-md bg-m3-card border border-m3-border shadow-[0_2px_0_0_rgba(15,23,42,0.1)] dark:shadow-[0_2px_0_0_rgba(0,0,0,0.5)] text-[10px] sm:text-xs font-mono font-bold text-m3-text">
     {children}
   </kbd>
 );
 
-// Função auxiliar para renderizar combinações de teclas bonitas
 const renderShortcut = (shortcut: string) => {
   return shortcut.split(" + ").map((key, index, array) => (
     <React.Fragment key={key}>
@@ -75,7 +73,6 @@ const renderShortcut = (shortcut: string) => {
 export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
   const { t } = useI18n();
 
-  // Fechar no ESCape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) onClose();
@@ -95,7 +92,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         className="bg-m3-card rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header Fixo */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-m3-border/60 bg-m3-sidebar/50">
           <h2 className="text-label text-m3-primary flex items-center gap-2">
             <Lightbulb className="w-4 h-4" />
@@ -109,9 +105,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Corpo com Scroll */}
         <div className="overflow-y-auto p-6 grid md:grid-cols-2 gap-8 md:gap-12">
-          {/* Coluna 1: Snippets */}
           <div>
             <div className="flex items-center gap-2 mb-2 text-m3-primary">
               <h3 className="text-lg font-bold">{t("misc.help.smartSnippets")}</h3>
@@ -146,7 +140,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Coluna 2: Atalhos */}
           <div>
             <div className="flex items-center gap-2 mb-2 text-m3-primary">
               <Keyboard className="w-5 h-5" />

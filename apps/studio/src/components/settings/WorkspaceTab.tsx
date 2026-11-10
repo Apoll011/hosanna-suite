@@ -85,7 +85,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
   const { t } = useI18n();
   const orgMetadata = (organization?.metadata as OrgMetadataStructure) || {};
 
-  // --- Refs & Async States ---
   const restoreInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -93,7 +92,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
   const [isSavingOrganization, setIsSavingOrganization] = useState(false);
   const [switchingOrgId, setSwitchingOrgId] = useState<string | null>(null);
 
-  // --- Read-Only / Saved State ---
   const [currentName, setCurrentName] = useState(organization?.name || "");
   const [currentLogo, setCurrentLogo] = useState<string | null | undefined>(organization?.logo);
   const [currentDescription, setCurrentDescription] = useState(orgMetadata.description || "");
@@ -108,7 +106,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
     resolveOrgPrintSettings(orgMetadata.settings?.print),
   );
 
-  // --- Draft State (Edit Mode) ---
   const [isEditing, setIsEditing] = useState(false);
   const [draftName, setDraftName] = useState(currentName);
   const [draftLogo, setDraftLogo] = useState<string | null | undefined>(currentLogo);
@@ -118,10 +115,8 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
   const [draftPrintSettings, setDraftPrintSettings] =
     useState<OrgPrintSettings>(currentPrintSettings);
 
-  // --- Permissions ---
   const { granted: canManageOrg, loading: canLoading } = useCan("organization.update");
 
-  // Sync state when organization auth context changes
   useEffect(() => {
     if (organization) {
       const meta = (organization.metadata as OrgMetadataStructure) || {};
@@ -155,7 +150,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
   if (!active) return null;
 
-  // --- Handlers ---
   const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -190,7 +184,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       return;
     }
 
-    // Backup state for rollback
     const prev = {
       name: currentName,
       logo: currentLogo,
@@ -200,7 +193,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       print: currentPrintSettings,
     };
 
-    // Optimistic UI updates
     setCurrentName(draftName.trim());
     setCurrentLogo(draftLogo);
     setCurrentDescription(draftDescription.trim());
@@ -236,7 +228,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
       await refetchAuth();
       showToast(t("settings.workspace.saved"), "success");
     } catch (err) {
-      // Rollback on failure
       setCurrentName(prev.name);
       setCurrentLogo(prev.logo);
       setCurrentDescription(prev.desc);
@@ -294,7 +285,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
     if (switchingOrgId) return;
     setSwitchingOrgId(org.id);
     try {
-      // On success this hard-navigates to the new workspace.
       await switchOrganization(org);
     } catch (err) {
       showToast(
@@ -352,12 +342,8 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
   return (
     <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      {/* ========================================== */}
-      {/* 1. PERFIL E IDENTIDADE DA ORGANIZAÇÃO      */}
-      {/* ========================================== */}
       <form id="org-main-form" onSubmit={handleSaveOrganization}>
         <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden">
-          {/* Card Header */}
           <div className="px-6 py-5 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
             <div>
               <h2 className="text-lg font-bold text-m3-text flex items-center gap-2">
@@ -375,11 +361,8 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
             )}
           </div>
 
-          {/* Card Body */}
           <div className="p-6 space-y-8">
-            {/* Secção Superior: Logótipo + Dados Básicos */}
             <div className="flex flex-col md:flex-row gap-8 items-start">
-              {/* Logo Upload Box */}
               <div className="flex flex-col items-center gap-3 shrink-0 mx-auto md:mx-0">
                 <div className="relative group w-32 h-32 rounded-xl bg-m3-sidebar flex items-center justify-center border-2 border-dashed border-m3-border overflow-hidden shadow-inner">
                   {displayLogo ? (
@@ -395,7 +378,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                     </div>
                   )}
 
-                  {/* Edit/Hover Overlay */}
                   {isEditing && canManageOrg && (
                     <label className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-colors backdrop-blur-xs">
                       {isCompressing ? (
@@ -441,7 +423,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                 )}
               </div>
 
-              {/* Informações Textuais */}
               <div className="flex-1 w-full space-y-4">
                 {isEditing ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -499,7 +480,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                       )}
                     </p>
 
-                    {/* Metadata Specs Pills */}
                     <div className="pt-2 flex flex-wrap gap-4 text-xs">
                       <div className="bg-m3-sidebar px-3 py-1.5 rounded-lg border border-m3-border/70 dark:border-m3-border flex items-center gap-2">
                         <span className="font-semibold text-m3-secondary uppercase text-[10px] tracking-wider">
@@ -519,10 +499,8 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
               </div>
             </div>
 
-            {/* Separador */}
             <hr className="border-m3-border/60" />
 
-            {/* Secção de Identidade Visual e Cores */}
             <div className="space-y-5">
               <div>
                 <h3 className="text-label text-m3-text flex items-center gap-2">
@@ -536,7 +514,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
 
               {isEditing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-m3-sidebar/70 dark:bg-m3-sidebar/40 p-5 rounded-xl border border-m3-border/70 dark:border-m3-border">
-                  {/* Cor de Destaque */}
                   <div className="space-y-3">
                     <label className="text-label text-m3-text block">
                       {t("settings.workspace.accentColorLabel")}
@@ -575,7 +552,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                       </div>
                     </div>
 
-                    {/* Predefinições Rápidas */}
                     <div className="pt-1">
                       <span className="text-[11px] text-m3-secondary font-medium block mb-1.5">
                         {t("settings.workspace.quickColors")}
@@ -608,7 +584,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                     </div>
                   </div>
 
-                  {/* Toggle de Marca & Live Preview */}
                   <div className="flex flex-col justify-between space-y-4">
                     <label
                       className={`flex items-start gap-3 p-3.5 bg-m3-card border border-m3-border rounded-md transition-colors ${
@@ -640,7 +615,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                       </div>
                     </label>
 
-                    {/* Preview Box */}
                     <div className="p-3 bg-m3-card rounded-xl border border-m3-border flex items-center justify-between text-xs">
                       <span className="text-m3-secondary font-medium flex items-center gap-1.5">
                         {t("settings.workspace.preview")}
@@ -664,7 +638,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                   </div>
                 </div>
               ) : (
-                /* Modo Visualização de Identidade */
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 p-3.5 rounded-xl border border-m3-border/60 bg-m3-sidebar/50 dark:bg-m3-sidebar/30">
                     <div
@@ -708,7 +681,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
               )}
             </div>
 
-            {/* Secção 3: Modelos & Impressão */}
             <PrintingSettingsCard
               isEditing={isEditing}
               settings={isEditing ? draftPrintSettings : currentPrintSettings}
@@ -718,7 +690,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
             />
           </div>
 
-          {/* Card Footer (Actions) */}
           {canManageOrg && (
             <div className="px-6 py-4 bg-m3-sidebar/70 border-t border-m3-border/60 flex justify-end items-center gap-3">
               {isEditing ? (
@@ -764,9 +735,6 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
         </div>
       </form>
 
-      {/* ========================================== */}
-      {/* 2. CÓPIAS DE SEGURANÇA & DADOS             */}
-      {/* ========================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
         <CanAny permissions={["backup.export", "backup.import"]}>
           <div className="bg-m3-card border border-m3-border rounded-xl shadow-sm overflow-hidden h-full flex flex-col">

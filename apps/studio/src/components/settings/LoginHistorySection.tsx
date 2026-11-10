@@ -163,7 +163,6 @@ async function fetchOrganizationLoginEvents(
   const errors = settled.map((s) => s.error).filter(Boolean);
   const events = settled.flatMap((s) => s.events).sort(sortByNewest);
 
-  // If every member request failed, surface the first error.
   if (events.length === 0 && errors.length === members.length) {
     return { events: [], error: errors[0] };
   }

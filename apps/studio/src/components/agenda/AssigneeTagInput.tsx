@@ -125,7 +125,6 @@ export const AssigneeTagInput: React.FC<AssigneeTagInputProps> = ({
     }
   };
 
-  // Close the dropdown when clicking anywhere outside the input.
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) {

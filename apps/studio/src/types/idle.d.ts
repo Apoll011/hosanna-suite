@@ -1,4 +1,3 @@
-// idle.d.ts
 interface IdleDeadline {
   readonly didTimeout: boolean;
   timeRemaining(): DOMHighResTimeStamp;

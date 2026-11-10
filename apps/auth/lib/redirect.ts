@@ -69,7 +69,6 @@ export async function redirectAfterSuccessfulAuth(
       try {
         await authClient.organization.setActive({ organizationSlug: slug });
       } catch {
-        // ignore setActive failures — still send the user to Studio
       }
       window.location.assign(`${getStudioUrl()}/${slug}`);
       return;

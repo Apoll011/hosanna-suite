@@ -29,7 +29,6 @@ export default function AppGallery() {
   return (
     <section className="bg-secondary py-16 md:py-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        {/* Desktop: Minimal editorial showcase */}
         <div className="reveal mt-4 hidden md:block w-full">
           <InteractiveFolderGallery
             photos={galleryPhotos}
@@ -38,7 +37,6 @@ export default function AppGallery() {
           />
         </div>
 
-        {/* Mobile: one-at-a-time carousel */}
         <div className="reveal mt-8 max-w-sm mx-auto md:hidden">
           <SectionHeader eyebrow={t("landing.gallery.eyebrow")} title={t("landing.gallery.title")}>
             {t("landing.gallery.description")}

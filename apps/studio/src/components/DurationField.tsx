@@ -1,8 +1,6 @@
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
 import React from "react";
 
-// ─── Pure helpers (exported for reuse) ───────────────────────────────────────
-
 export function secondsToDurationInput(seconds?: number): string {
   const safe = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds || 0)) : 0;
   const mm = Math.floor(safe / 60);
@@ -36,8 +34,6 @@ export function formatHumanDuration(seconds: number, t: TranslateFn): string {
   return t("settings.general.minAndSeg", { min: mins, sec: secs });
 }
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 export interface DurationPreset {
   label: string;
   sec: number;
@@ -62,8 +58,6 @@ export interface DurationFieldProps {
   /** Placeholder text; defaults to "00:00" */
   placeholder?: string;
 }
-
-// ─── Component ────────────────────────────────────────────────────────────────
 
 /**
  * A rich duration input field showing:
@@ -93,7 +87,6 @@ export const DurationField: React.FC<DurationFieldProps> = ({
 
   return (
     <div className="space-y-2.5 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-m3-bg">
-      {/* Header: label + live-preview badge */}
       <div className="flex items-center justify-between">
         <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide flex items-center gap-1.5">
           {icon}
@@ -104,7 +97,6 @@ export const DurationField: React.FC<DurationFieldProps> = ({
         </span>
       </div>
 
-      {/* MM:SS input */}
       <input
         type="text"
         value={value}
@@ -115,7 +107,6 @@ export const DurationField: React.FC<DurationFieldProps> = ({
         className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-sm px-3.5 py-2.5 font-mono tracking-widest text-center focus:outline-none focus:ring-2 ${accentRingClass} focus:border-m3-primary disabled:opacity-60 disabled:bg-slate-50 dark:disabled:bg-slate-800/50 transition-colors`}
       />
 
-      {/* Preset chips */}
       {presets && presets.length > 0 && !disabled && (
         <div className="flex items-center gap-1.5 pt-0.5">
           <span className="text-[11px] text-slate-400 font-medium shrink-0">

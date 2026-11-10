@@ -18,8 +18,6 @@ import {
   PrintTemplateFamily,
 } from "./types";
 
-/* ── Small controls ─────────────────────────────────────────────── */
-
 const Group: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <section className="space-y-2.5">
     <h3 className="text-[11px] font-bold uppercase tracking-wider text-m3-secondary">{title}</h3>
@@ -176,8 +174,6 @@ const FontSizeControl: React.FC<{
     </div>
   );
 };
-
-/* ── Panel ──────────────────────────────────────────────────────── */
 
 export interface PrintOptionsContext {
   /** Whether any song body will be printed (controls song-only options). */

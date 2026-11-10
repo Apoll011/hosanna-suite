@@ -8,10 +8,6 @@ import { ParsedSong, SearchableSong, Song } from "@/src/types";
 import { filter as liqeFilter, parse as liqeParse } from "liqe";
 import { CifraResult, FolderNode } from "../types";
 
-// ---------------------------------------------------------------------------
-// Folder tree
-// ---------------------------------------------------------------------------
-
 export function buildFolderTree(songs: Song[], search: string = ""): FolderNode[] {
   const root: FolderNode[] = [];
   const query = search.trim().toLowerCase();
@@ -81,7 +77,6 @@ export function buildFolderTree(songs: Song[], search: string = ""): FolderNode[
 export function printHtmlDirectly(html: string) {
   const iframe = document.createElement("iframe");
 
-  // Hide it completely from view
   iframe.style.position = "fixed";
   iframe.style.right = "0";
   iframe.style.bottom = "0";
@@ -89,12 +84,10 @@ export function printHtmlDirectly(html: string) {
   iframe.style.height = "0";
   iframe.style.border = "0";
 
-  // Add the iframe to the page body
   document.body.appendChild(iframe);
 
   if (!iframe.contentWindow) return;
 
-  // Write your HTML content inside the iframe
   const doc = iframe.contentWindow.document;
   doc.open();
   doc.write(html);
@@ -201,12 +194,10 @@ export function parseDurationToSeconds(durationStr: string | undefined): number 
   const trimmed = durationStr.trim();
   if (!trimmed) return undefined;
 
-  // If already purely digits, treat as seconds
   if (/^\d+$/.test(trimmed)) {
     return parseInt(trimmed, 10);
   }
 
-  // Handle mm:ss or hh:mm:ss
   const parts = trimmed.split(":").map((p) => parseInt(p, 10));
   if (parts.some(isNaN)) return undefined;
 
@@ -229,7 +220,6 @@ export function parseDurationToSeconds(durationStr: string | undefined): number 
 export function parsedSongToSearchableSong(parsedSong: ParsedSong): SearchableSong {
   const meta = parsedSong.metadata || {};
 
-  // Year parsing
   let yearNum: number | undefined;
   if (meta.year) {
     const parsedYear = parseInt(meta.year, 10);
@@ -238,7 +228,6 @@ export function parsedSongToSearchableSong(parsedSong: ParsedSong): SearchableSo
     }
   }
 
-  // Tempo parsing
   let tempoNum: number | undefined;
   if (meta.tempo) {
     const parsedTempo = parseInt(meta.tempo, 10);
@@ -247,7 +236,6 @@ export function parsedSongToSearchableSong(parsedSong: ParsedSong): SearchableSo
     }
   }
 
-  // Song number parsing
   let songNum: number | undefined;
   if (parsedSong.song_number !== null && parsedSong.song_number !== undefined) {
     songNum = parsedSong.song_number;
@@ -258,7 +246,6 @@ export function parsedSongToSearchableSong(parsedSong: ParsedSong): SearchableSo
     }
   }
 
-  // Duration in seconds
   const durationNum = parseDurationToSeconds(meta.duration);
 
   return {

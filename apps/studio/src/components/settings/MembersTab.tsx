@@ -65,7 +65,6 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
 
-  // Invite Form
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<AppRole>("member");
 
@@ -77,7 +76,6 @@ export const MembersTab: React.FC<{ active: boolean }> = ({ active }) => {
     setInviteToCancel(null);
   }, []);
 
-  // Pending invite actions
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [inviteToCancel, setInviteToCancel] = useState<OrgInvitation | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);

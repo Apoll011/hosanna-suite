@@ -36,8 +36,6 @@ type Props = {
 const ACTIONS =
   "flex items-center gap-0.5 opacity-0 group-hover/msg:opacity-100 focus-within:opacity-100 pointer-coarse:opacity-100 transition-opacity";
 
-/* -------------------------------- user turn ------------------------------- */
-
 const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
   msg,
   streaming,
@@ -126,8 +124,6 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
   );
 };
 
-/* ------------------------------ reasoning block --------------------------- */
-
 const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({ text, live }) => {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
@@ -153,8 +149,6 @@ const ReasoningBlock: React.FC<{ text: string; live: boolean }> = ({ text, live 
     </div>
   );
 };
-
-/* ------------------------------ assistant turn ---------------------------- */
 
 const AssistantMessage: React.FC<Props> = ({
   msg,
@@ -316,8 +310,6 @@ const AssistantMessage: React.FC<Props> = ({
     </div>
   );
 };
-
-/* --------------------------------- public --------------------------------- */
 
 export const AiChatMessageView = memo(function AiChatMessageView(props: Props) {
   return (

@@ -9,7 +9,6 @@ export { AiChatToggle } from "./AiChatToggle";
 export { LogosMascot } from "./LogosMascot";
 export { useAiCommandPaletteActions } from "./useAiCommandPaletteActions";
 export { AiProposalBanner } from "./AiProposalBanner";
-export { AiConfirmCard } from "./AiConfirmCard";
 export {
   AI_LIBRARY_CHANGED_EVENT,
   AI_NAVIGATE_EVENT,
@@ -35,4 +34,3 @@ export {
   type SongProposal,
 } from "./proposalStore";
 export { DIFF_THEME_STYLE, useDiffLabels } from "./proposalDiff";
-export { shouldStudioSyncAfterTool } from "./studioSync";

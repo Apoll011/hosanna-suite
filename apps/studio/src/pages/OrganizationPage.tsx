@@ -84,7 +84,6 @@ export const OrganizationPage: React.FC = () => {
     }
   }, [searchParams, setSearchParams, showToast, t]);
 
-  // If a non-admin lands on loginActivity, fall back to workspace.
   useEffect(() => {
     if (roleLoading) return;
     if (activeTab === "loginActivity" && !canViewLoginActivity) {

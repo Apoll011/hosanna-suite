@@ -110,7 +110,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 pb-10">
-      {/* Back button */}
       <button
         type="button"
         onClick={onBack}
@@ -120,7 +119,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
         {t("settings.memberProfile.backToList")}
       </button>
 
-      {/* Profile Hero */}
       <div className="bg-m3-card border border-m3-border rounded-xl overflow-hidden shadow-xs">
         <div className="h-24 bg-linear-to-r from-sky-700 via-indigo-700 to-slate-800 relative" />
 
@@ -167,7 +165,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Self: leave organization */}
               {isSelf && (
                 <Button
                   variant="outline"
@@ -179,7 +176,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
                 </Button>
               )}
 
-              {/* Others: remove member, gated by permission */}
               {!isSelf && (
                 <Can permission="member.delete">
                   <Button
@@ -197,7 +193,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
         </div>
       </div>
 
-      {/* Role Management Card */}
       <Can permission="member.update">
         <div className="bg-m3-card border border-m3-border rounded-xl p-5 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
@@ -275,7 +270,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
         </div>
       </Can>
 
-      {/* Remove confirmation */}
       {showRemoveConfirm && (
         <Modal
           isOpen={showRemoveConfirm}
@@ -307,7 +301,6 @@ export const MemberProfilePage: React.FC<MemberProfilePageProps> = ({
         </Modal>
       )}
 
-      {/* Leave confirmation */}
       {showLeaveConfirm && (
         <Modal
           isOpen={showLeaveConfirm}

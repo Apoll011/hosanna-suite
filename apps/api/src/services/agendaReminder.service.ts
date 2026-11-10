@@ -30,8 +30,6 @@ import { sendFcmToToken } from "../lib/fcm.js";
 import { DEFAULT_LOCALE, t, type TranslationKey } from "../lib/i18n.js";
 import { RESPONSIBILITIES } from "../locales/responsabilities.js";
 
-// ── Constants ───────────────────────────────────────────────────────────────
-
 /** Lead times (in days) a reminder is sent for. Order matters: index 0 → 1 day. */
 const REMINDER_OFFSETS_DAYS = [1, 3] as const;
 
@@ -39,8 +37,6 @@ const DEFAULT_TIMEZONE = "Europe/Lisbon";
 
 /** Max number of reminder payloads pushed to FCM at the same time. */
 const FCM_CONCURRENCY = 10;
-
-// ── Types ───────────────────────────────────────────────────────────────────
 
 interface Assignee {
   id: string;
@@ -98,8 +94,6 @@ export interface AgendaReminderResult {
   errors: string[];
 }
 
-// ── Date helpers (org-timezone aware, calendar-key math) ────────────────────
-
 /** Cache of Intl formatters keyed by timezone — constructing them is expensive. */
 const dateKeyFormatters = new Map<string, Intl.DateTimeFormat>();
 
@@ -135,8 +129,6 @@ function getTargetDateKeys(timeZone: string, now: Date): string[] {
   return REMINDER_OFFSETS_DAYS.map((days) => addDaysToDateKey(todayKey, days));
 }
 
-// ── Org metadata ────────────────────────────────────────────────────────────
-
 function parseOrgMetadata(metadata: unknown): OrgMeta {
   if (!metadata) return {};
   try {
@@ -167,8 +159,6 @@ function buildCategoryLabels(meta: OrgMeta, locale: string): Map<string, string>
 
   return labels;
 }
-
-// ── Assignee resolution ─────────────────────────────────────────────────────
 
 /**
  * Maps assignee ids (Better Auth member ids) to Better Auth user ids.
@@ -201,8 +191,6 @@ async function resolveMemberUserIds(
   return memberToUser;
 }
 
-// ── Concurrency ─────────────────────────────────────────────────────────────
-
 /** Runs `fn` over `items` with at most `limit` promises in flight. */
 async function mapWithConcurrency<T>(
   items: T[],
@@ -220,8 +208,6 @@ async function mapWithConcurrency<T>(
   await Promise.all(workers);
 }
 
-// ── Main job ────────────────────────────────────────────────────────────────
-
 export async function runAgendaReminders(now: Date = new Date()): Promise<AgendaReminderResult> {
   const result: AgendaReminderResult = {
     eventsChecked: 0,
@@ -235,7 +221,6 @@ export async function runAgendaReminders(now: Date = new Date()): Promise<Agenda
     select: { id: true, metadata: true },
   });
 
-  // ── Phase 1: collect every reminder to deliver (DB I/O per org, no sends) ──
   const reminders: PendingReminder[] = [];
 
   for (const org of organizations) {
@@ -333,7 +318,6 @@ export async function runAgendaReminders(now: Date = new Date()): Promise<Agenda
 
   if (reminders.length === 0) return result;
 
-  // ── Phase 2: drop already-delivered reminders, then fan out ───────────────
   const alreadySent = await prisma.agendaReminderDispatch.findMany({
     where: {
       OR: reminders.map((r) => ({
@@ -427,8 +411,6 @@ export async function runAgendaReminders(now: Date = new Date()): Promise<Agenda
   return result;
 }
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
 function dispatchKey(d: { eventId: string; userId: string; daysUntil: number }): string {
   return `${d.eventId}\u0000${d.userId}\u0000${d.daysUntil}`;
 }
@@ -474,8 +456,6 @@ function recordError(result: AgendaReminderResult, scope: string, err: unknown):
   console.error(message);
   result.errors.push(message);
 }
-
-// ── Locale helpers ──────────────────────────────────────────────────────────
 
 /** Maps an org locale tag to one of the registry keys known to lib/i18n. */
 function resolveI18nLocale(locale: string): string {

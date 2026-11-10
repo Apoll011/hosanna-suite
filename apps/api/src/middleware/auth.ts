@@ -260,7 +260,6 @@ export const authenticate = asyncHandler(
     const roleFromSession =
       (session as any).role || (sessionData as any).member?.role || (user as any).role;
 
-    // Concurrently resolve cached role and cached locale
     const [resolvedRole, locale] = await Promise.all([
       roleFromSession
         ? Promise.resolve(roleFromSession as string)

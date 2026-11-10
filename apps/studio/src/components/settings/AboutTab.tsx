@@ -29,13 +29,11 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
 
   if (!active) return null;
   const productionDependencies = [
-    // --- Dependências Existentes ---
     { name: "Better Auth", license: "MIT", type: "Autenticação & RBAC" },
     { name: "@tailwindcss/vite", license: "MIT", type: "Estilização" },
     { name: "Lucide React", license: "ISC", type: "Ícones" },
     { name: "React Router Dom", license: "MIT", type: "Navegação" },
 
-    // --- Adicionadas do @hosanna/studio ---
     {
       name: "@atlaskit/pragmatic-drag-and-drop",
       license: "Apache-2.0",
@@ -107,7 +105,6 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
           </div>
         </div>
 
-        {/* Open Source Banner */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 rounded-xl gap-3">
           <div className="flex items-center gap-2.5">
             <Heart className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 fill-emerald-500/20" />
@@ -163,7 +160,6 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
         )}
       </div>
 
-      {/* Import Formats */}
       <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs space-y-4">
         <h3 className="text-sm font-bold text-m3-text border-b border-m3-border pb-3 flex items-center gap-2">
           <FileUp className="w-4 h-4 text-m3-primary" />
@@ -192,7 +188,6 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
         </div>
       </div>
 
-      {/* Open Source Licenses Accordion */}
       <div className="bg-m3-card border border-m3-border rounded-xl p-6 shadow-xs">
         <button
           onClick={() => setShowLicenses(!showLicenses)}

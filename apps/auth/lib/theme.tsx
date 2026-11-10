@@ -23,7 +23,6 @@ function applyDarkClass(dark: boolean) {
   const root = document.documentElement;
   root.classList.toggle("dark", dark);
   root.style.colorScheme = dark ? "dark" : "light";
-  // Clear the boot-script inline bg so CSS tokens own the surface.
   root.style.backgroundColor = "";
 }
 
@@ -36,7 +35,6 @@ function readInitialDark(): boolean {
     if (stored === "dark") return true;
     if (stored === "light") return false;
   } catch {
-    // ignore
   }
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
@@ -55,7 +53,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       try {
         localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
       } catch {
-        // ignore
       }
       writeThemeCookie(next ? "dark" : "light");
       applyDarkClass(next);

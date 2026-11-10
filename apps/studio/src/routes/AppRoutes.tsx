@@ -202,7 +202,6 @@ export const AppRoutes: React.FC = () => {
                 <Route path="analytics" element={<AnalyticsPage />} />
               </Route>
             </Route>
-            {/* Unknown paths → home; ProtectedRoute sends authed users to folders. */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

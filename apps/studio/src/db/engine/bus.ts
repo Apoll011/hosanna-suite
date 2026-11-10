@@ -44,12 +44,10 @@ export function subscribe(collection: string, scope: string, fn: Listener): () =
  * a skipped or double-fired callback.
  */
 export function notify(collection: string, id: string): void {
-  // Notify doc-level subscribers
   const docSet = listeners.get(busKey(collection, id));
   if (docSet) {
     for (const fn of Array.from(docSet)) fn();
   }
-  // Notify collection-level subscribers (queries)
   const colSet = listeners.get(busKey(collection, "*"));
   if (colSet) {
     for (const fn of Array.from(colSet)) fn();
@@ -65,14 +63,12 @@ export function notify(collection: string, id: string): void {
  * listeners for this collection (e.g. after a full collection wipe).
  */
 export function notifyCollection(collection: string, changedIds?: readonly string[]): void {
-  // Always notify collection-level subscribers (queries like find())
   const colSet = listeners.get(busKey(collection, "*"));
   if (colSet) {
     for (const fn of Array.from(colSet)) fn();
   }
 
   if (changedIds) {
-    // Notify specific doc-level listeners for each changed ID
     for (const id of changedIds) {
       const docSet = listeners.get(busKey(collection, id));
       if (docSet) {
@@ -80,7 +76,6 @@ export function notifyCollection(collection: string, changedIds?: readonly strin
       }
     }
   } else {
-    // If changedIds is omitted, notify all listeners for this collection
     const prefix = `${collection}:`;
     const fired = new Set<Set<Listener>>();
     if (colSet) fired.add(colSet);

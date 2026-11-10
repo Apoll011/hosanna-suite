@@ -40,7 +40,6 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
   const totalItems = selectedFolders.length + selectedSongsCount;
 
   const requiresTypedConfirmation = hasFolders && folderAction === "delete_songs";
-  // Expected text: name of first folder if 1 folder, or 'APAGAR' if multiple
   const expectedConfirmText =
     selectedFolders.length === 1 ? selectedFolders[0].name.trim() : t("modals.confirmKeyword");
 

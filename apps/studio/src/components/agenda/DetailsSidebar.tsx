@@ -145,7 +145,6 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
           </h3>
 
           <div className="space-y-3">
-            {/* Assignments — only people not yet notified */}
             <div>
               <p className="text-xs font-semibold text-m3-text">
                 {t("agenda.notify.assignSection")}
@@ -171,7 +170,6 @@ export const DetailsSidebar: React.FC<DetailsSidebarProps> = ({
               </p>
             </div>
 
-            {/* Date / location changes — explicit, aggregated when both */}
             <div className="pt-3 border-t border-m3-border/40">
               <p className="text-xs font-semibold text-m3-text">
                 {t("agenda.notify.updateSection")}

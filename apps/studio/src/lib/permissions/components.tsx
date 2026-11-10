@@ -10,10 +10,6 @@ import {
 } from "./client";
 import type { AppRole, PermissionString } from "@hosanna/auth";
 
-// ---------------------------------------------------------------------------
-// Shared props
-// ---------------------------------------------------------------------------
-
 interface GateBaseProps<T> {
   fallback?: ReactNode;
   loading?: ReactNode;
@@ -24,7 +20,6 @@ interface GateBaseProps<T> {
   children: ReactNode | ((status: T) => ReactNode);
 }
 
-// Helper to resolve children (handles Render Props vs Standard Children)
 function resolveChildren<T>(
   children: GateBaseProps<T>["children"],
   status: T,
@@ -36,10 +31,6 @@ function resolveChildren<T>(
   }
   return <>{condition ? children : fallback}</>;
 }
-
-// ---------------------------------------------------------------------------
-// Single Permission Gates
-// ---------------------------------------------------------------------------
 
 interface CanProps extends GateBaseProps<{
   granted: boolean;
@@ -89,10 +80,6 @@ export const Cannot: React.FC<CannotProps> = ({
   return resolveChildren(children, status, status.denied, fallback);
 };
 
-// ---------------------------------------------------------------------------
-// Multi-Permission Gates
-// ---------------------------------------------------------------------------
-
 interface MultiCanProps extends GateBaseProps<{
   granted: boolean;
   loading: boolean;
@@ -123,10 +110,6 @@ export const CanAny: React.FC<MultiCanProps> = ({
   if (status.loading && typeof children !== "function") return <>{loadingSlot}</>;
   return resolveChildren(children, status, status.granted, fallback);
 };
-
-// ---------------------------------------------------------------------------
-// Role Gates & Switches
-// ---------------------------------------------------------------------------
 
 interface RoleGateProps extends GateBaseProps<{
   matched: boolean;
@@ -192,10 +175,6 @@ export const RoleSwitch: React.FC<RoleSwitchProps> = ({
   if (role && roles[role]) return <>{roles[role]}</>;
   return <>{fallback}</>;
 };
-
-// ---------------------------------------------------------------------------
-// Higher-Order Components (HOCs) for Page/Route Protection
-// ---------------------------------------------------------------------------
 
 /**
  * Wraps a component so it can only be accessed if the user has the required permission.

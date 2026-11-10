@@ -12,10 +12,7 @@ export interface PageHeaderProps {
   className?: string;
 }
 
-/**
- * Shared page shell for non-explorer screens (settings, account center).
- * Title uses display type; keep one primary action in `actions`.
- */
+/** Page title row for settings/account-style screens. */
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   description,

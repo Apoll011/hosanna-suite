@@ -234,7 +234,6 @@ export const SongGridCard: React.FC<SongGridCardProps> = React.memo(
             : ""}
         </span>
 
-        {/* Bar / dots rendered below the artist name, full width */}
         {hasScore && (songScoreLayout === "bar" || songScoreLayout === "dots") && (
           <div className="w-full px-1">
             <SongScoreVisualizer score={scoreValue!} layout={songScoreLayout} compact={isCompact} />

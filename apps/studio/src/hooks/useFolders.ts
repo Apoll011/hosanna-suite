@@ -137,7 +137,6 @@ export function useFolders() {
           updatedAt: now,
         });
 
-        // Cascade path updates to all child songs in local RxDB matching server behavior
         for (const { doc, newPath } of songsToUpdate) {
           await doc.patch({
             path: newPath,
@@ -220,7 +219,6 @@ export function useFolders() {
             });
           }
 
-          // Recalculate folder counts on affected source and destination parent folders
           if (oldParentId && oldParentId !== targetParentId) {
             await updateFolderCounts(db, oldParentId);
           }
@@ -249,7 +247,6 @@ export function useFolders() {
 
         const purgeAt = getPurgeAt();
 
-        // 1. Move folder to trash
         const folderDoc = await db.folders.findOne(id).exec();
         const parentId = folderDoc?.parentId ?? null;
         if (folderDoc) {
@@ -260,7 +257,6 @@ export function useFolders() {
           });
         }
 
-        // 2. Handle child songs
         const songsInFolder = await db.songs
           .find({
             selector: {
@@ -278,7 +274,6 @@ export function useFolders() {
               updatedAt: now,
             });
           } else {
-            // Move song to root: recalculate its path from the title so it
             // no longer references the deleted folder ("Title.pro")
             const newPath = await computeSongPath(db, songDoc.title, null);
             await songDoc.patch({
@@ -289,7 +284,6 @@ export function useFolders() {
           }
         }
 
-        // 3. Handle subfolders recursively / move to root
         const subfolders = await db.folders
           .find({
             selector: {
@@ -306,7 +300,6 @@ export function useFolders() {
           });
         }
 
-        // Recalculate parent folder count
         if (parentId) {
           await updateFolderCounts(db, parentId);
         }
@@ -346,7 +339,6 @@ export function useFolders() {
             updatedAt: new Date().toISOString(),
           });
 
-          // Recalculate counts for the restored folder and its parent
           await updateFolderCounts(db, id);
           if (targetParentId) {
             await updateFolderCounts(db, targetParentId);

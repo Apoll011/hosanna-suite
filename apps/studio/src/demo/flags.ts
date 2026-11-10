@@ -36,7 +36,6 @@ export function disableDemoMode(): void {
     sessionStorage.removeItem(DEMO_SESSION_KEY);
     sessionStorage.removeItem(DEMO_SEEDED_KEY);
   } catch {
-    // ignore
   }
 }
 
@@ -54,6 +53,5 @@ export function markDemoSeeded(): void {
   try {
     sessionStorage.setItem(DEMO_SEEDED_KEY, "true");
   } catch {
-    // ignore
   }
 }

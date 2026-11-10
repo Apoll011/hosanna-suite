@@ -83,8 +83,6 @@ export function useAgendaNotifications(options: {
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
   const agendaHref = `${slugPrefix}/agenda`;
 
-  /* ── Pending state ───────────────────────────────────────────────────── */
-
   const pendingAssignments = useMemo(
     () =>
       event
@@ -118,8 +116,6 @@ export function useAgendaNotifications(options: {
       return next;
     });
   }, []);
-
-  /* ── Sending ─────────────────────────────────────────────────────────── */
 
   const formatEventDate = useCallback(
     (target: AgendaEvent) =>
@@ -197,8 +193,6 @@ export function useAgendaNotifications(options: {
     [showToast, t, tc],
   );
 
-  /* ── 1. Assignments (only entries with notified !== true) ────────────── */
-
   const notifyAssignments = useCallback(async () => {
     if (!event || isNotifying) return;
     if (!canNotify) {
@@ -234,7 +228,6 @@ export function useAgendaNotifications(options: {
       report(outcome.result);
 
       // Flip ONLY what the API actually accepted — a failed delivery leaves
-      // the entries pending so the next press retries them.
       if (outcome.succeededMemberIds.length > 0) {
         await store.setResponsibilities(
           event.id,
@@ -402,8 +395,6 @@ export function useAgendaNotifications(options: {
     },
     [event, isNotifying, canNotify, deliver, formatEventDate, report, showToast, t],
   );
-
-  /* ── 4. Event cancellation (explicit toggle in the delete flow) ──────── */
 
   const notifyEventCancelled = useCallback(
     async (targetEvent: AgendaEvent, groups: AssignmentGroup[]): Promise<boolean> => {

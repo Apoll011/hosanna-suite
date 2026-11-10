@@ -32,7 +32,6 @@ export function useRxDbSearch({
   useEffect(() => {
     const trimmed = searchQuery.trim();
 
-    // Hide dynamic items unless user types >= 2 characters
     if (trimmed.length < 2) {
       unregisterDynamicActions("rxdb-results");
       setIsDebouncing(false);
@@ -54,7 +53,6 @@ export function useRxDbSearch({
 
         const results: CommandAction[] = [];
 
-        // Folders
         folders.forEach((f) => {
           results.push({
             id: `folder-${f.id}`,
@@ -70,7 +68,6 @@ export function useRxDbSearch({
           });
         });
 
-        // Songs
         songs.forEach((s) => {
           results.push({
             id: `song-${s.id}`,
@@ -87,7 +84,6 @@ export function useRxDbSearch({
           });
         });
 
-        // Services
         services.forEach((srv) => {
           results.push({
             id: `service-${srv.id}`,

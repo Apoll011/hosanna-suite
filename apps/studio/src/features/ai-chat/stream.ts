@@ -56,7 +56,6 @@ export async function* readUiMessageStream(response: Response): AsyncGenerator<S
         try {
           yield JSON.parse(payload) as StreamEvent;
         } catch {
-          // Ignore malformed chunks
         }
       }
     }

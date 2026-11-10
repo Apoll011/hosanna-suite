@@ -19,7 +19,6 @@ export class JsonImportProvider implements SongImportProvider {
         const fileText = await file.text();
         const parsedJson = JSON.parse(fileText);
 
-        // Process object-based formats: { "root": [...], "folder-uuid-123": [...] }
         if (typeof parsedJson === "object" && !Array.isArray(parsedJson)) {
           for (const [key, songs] of Object.entries(parsedJson)) {
             if (!Array.isArray(songs)) continue;
@@ -44,7 +43,6 @@ export class JsonImportProvider implements SongImportProvider {
             }
           }
         }
-        // Process flat array formats: [ { title: "...", content: "..." } ]
         else if (Array.isArray(parsedJson)) {
           for (const item of parsedJson) {
             if (nameSet.has(item.title)) {

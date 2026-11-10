@@ -42,7 +42,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
     }
   }, [folder, isOpen]);
 
-  // Filtragem de ícones inteligente (insensível a maiúsculas e acentos)
   const filteredIcons = useMemo(() => {
     if (!searchQuery.trim()) return FOLDER_ICONS;
 
@@ -84,7 +83,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("modals.customizeFolder")}>
       <div className="flex flex-col gap-5 max-h-[calc(85vh-6rem)]">
-        {/* Hero Preview Card */}
         <div className="relative overflow-hidden flex items-center gap-4 p-3.5 sm:p-4 rounded-2xl bg-linear-to-br from-m3-sidebar to-m3-hover/70 dark:from-m3-sidebar dark:to-m3-card border border-m3-border/80 dark:border-m3-border/60 shadow-inner">
           <div
             className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center border shadow-sm transition-all duration-300 shrink-0 ${previewColorStyle.bgClass} ${previewColorStyle.borderClass} ${previewColorStyle.textClass}`}
@@ -114,7 +112,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
             </div>
           </div>
 
-          {/* Quick Reset to Default Action */}
           {(selectedColor !== "default" || selectedIcon !== "default") && (
             <button
               type="button"
@@ -127,7 +124,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
           )}
         </div>
 
-        {/* Color Swatches Selection */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-m3-secondary dark:text-m3-secondary flex items-center gap-1.5">
@@ -171,7 +167,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
           </div>
         </div>
 
-        {/* Icon Selection with Search Header */}
         <div className="flex flex-col gap-2 min-h-0 flex-1">
           <div className="flex items-center justify-between gap-2">
             <label className="text-xs font-semibold text-m3-secondary dark:text-m3-secondary flex items-center gap-1.5 shrink-0">
@@ -179,7 +174,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
               <span>{t("modals.iconCount", { count: filteredIcons.length })}</span>
             </label>
 
-            {/* Quick Search */}
             <div className="relative w-36 sm:w-48">
               <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-m3-secondary pointer-events-none" />
               <input
@@ -201,7 +195,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
             </div>
           </div>
 
-          {/* Icons Grid with dedicated scroll containment */}
           <div className="relative flex-1 min-h-35 max-h-55 sm:max-h-60 overflow-y-auto rounded-xl border border-m3-border/80 dark:border-m3-border bg-m3-sidebar/40 dark:bg-m3-card/40 p-2 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700">
             {filteredIcons.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center py-8 text-center text-m3-secondary">
@@ -238,7 +231,6 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
           </div>
         </div>
 
-        {/* Footer Actions */}
         <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-m3-border mt-auto">
           <Button type="button" variant="ghost" onClick={onClose} disabled={isSaving}>
             {t("common.cancel")}

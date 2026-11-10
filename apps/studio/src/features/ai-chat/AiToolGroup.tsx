@@ -28,8 +28,6 @@ function clipPayload(text: string): string {
   return text.length > PAYLOAD_MAX ? `${text.slice(0, PAYLOAD_MAX)}\n…` : text;
 }
 
-/* ------------------------------ single tool ------------------------------ */
-
 const PayloadBlock: React.FC<{
   title: string;
   text: string;
@@ -136,8 +134,6 @@ const AiToolRow = memo(function AiToolRow({
   );
 });
 
-/* ------------------------------ grouped run ------------------------------ */
-
 const MAX_NAMES = 3;
 
 /**
@@ -239,12 +235,10 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
         </div>
       </div>
 
-      {/* Song edits can be reviewed and applied right here. */}
       {songProposals.map((p, i) =>
         p ? <AiProposalCard key={`p-${tools[i].toolCallId}`} proposal={p} /> : null,
       )}
 
-      {/* Pending confirmations stay visible even while the list is collapsed. */}
       {confirmations.map((c, i) =>
         c ? <AiConfirmCard key={tools[i].toolCallId} confirmation={c} /> : null,
       )}

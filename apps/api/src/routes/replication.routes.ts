@@ -32,8 +32,6 @@ import {
 
 export const replicationRouter = Router();
 
-// ── Permission map ─────────────────────────────────────────────────────────
-
 const PULL_PERMISSIONS: Record<ReplicatedCollection, string> = {
   songs: "song.access",
   folders: "folder.access",
@@ -50,15 +48,12 @@ const PUSH_PERMISSIONS: Record<ReplicatedCollection, string> = {
   agendaEvents: "agenda.create",
 };
 
-// ── Pull endpoint ──────────────────────────────────────────────────────────
-
 replicationRouter.post(
   "/:collection/pull",
   validate({ params: collectionParamSchema, body: pullBodySchema }),
   asyncHandler(async (req, res) => {
     const collection = req.params.collection as ReplicatedCollection;
 
-    // Dynamic permission check based on collection
     const permKey = PULL_PERMISSIONS[collection];
     if (!permKey) throw AppError.badRequest("Invalid collection.");
 
@@ -86,7 +81,6 @@ replicationRouter.post(
       ? (Object.keys(checkpoints) as ReplicatedCollection[])
       : ALL_COLLECTIONS;
 
-    // Check permission for every requested collection up front
     for (const collection of requestedCollections) {
       const permKey = PULL_PERMISSIONS[collection];
       if (!permKey) throw AppError.badRequest(`Invalid collection: ${collection}`);
@@ -101,7 +95,6 @@ replicationRouter.post(
     res.json(result);
   }),
 );
-// ── Push endpoint ──────────────────────────────────────────────────────────
 
 replicationRouter.post(
   "/:collection/push",

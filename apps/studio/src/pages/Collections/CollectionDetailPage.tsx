@@ -84,11 +84,9 @@ export const CollectionDetailPage: React.FC = () => {
     [songsQuery.data?.songs],
   );
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(50);
 
-  // Modals & menus
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddSongsModalOpen, setIsAddSongsModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -124,14 +122,12 @@ export const CollectionDetailPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Reset page when search / filters / sort change
   useEffect(() => {
     setCurrentPage(1);
     setSelectedSongIds(new Set());
     setLastClickedId(null);
   }, [searchQuery, sortBy, sortOrder, selectedKey, selectedTag]);
 
-  // Songs in this collection (union of both sides of the relationship)
   const songsInCollection = useMemo(() => {
     if (!collection) return [];
     const songIdSet = new Set(collection.songIds || []);
@@ -142,7 +138,6 @@ export const CollectionDetailPage: React.FC = () => {
     );
   }, [collection, allSongs]);
 
-  // Register collection actions on the explorer toolbar (replaces the old identity header)
   useEffect(() => {
     if (!collection || !setCollectionToolbarActions) return;
     setCollectionToolbarActions({
@@ -156,7 +151,6 @@ export const CollectionDetailPage: React.FC = () => {
     return () => setCollectionToolbarActions(null);
   }, [collection, songsInCollection, printCollection, setCollectionToolbarActions]);
 
-  // Search, key/tag filters, and sort
   const filteredSongs = useMemo(() => {
     let result = songsInCollection;
     const gq = searchQuery.trim().toLowerCase();
@@ -204,7 +198,6 @@ export const CollectionDetailPage: React.FC = () => {
     return result;
   }, [songsInCollection, searchQuery, selectedKey, selectedTag, sortBy, sortOrder]);
 
-  // Pagination
   const totalSongs = filteredSongs.length;
   const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
   const paginatedSongs = useMemo(() => {
@@ -346,7 +339,6 @@ export const CollectionDetailPage: React.FC = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [filteredSongs, selectedSongIds, canUpdateCollection, navigate, slugPrefix]);
 
-  // ── Loading ─────────────────────────────────────────────────────────────────
   if (isCollectionLoading) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
@@ -355,7 +347,6 @@ export const CollectionDetailPage: React.FC = () => {
     );
   }
 
-  // ── Not found ───────────────────────────────────────────────────────────────
   if (!collection) {
     return (
       <div className="flex-1 flex flex-col w-full animate-in fade-in duration-500 h-full p-6">
@@ -511,7 +502,6 @@ export const CollectionDetailPage: React.FC = () => {
         </Table>
       </div>
 
-      {/* ── MODALS ───────────────────────────────────────────────────────────── */}
       <CreateCollectionModal
         isOpen={isEditModalOpen}
         collection={collection}

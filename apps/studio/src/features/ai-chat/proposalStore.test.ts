@@ -41,7 +41,6 @@ describe("aiProposals", () => {
   it("reports pending, accepted, declined and stale for chat cards", () => {
     aiProposals.stageSong({ songId: "a", content: "v1" });
     assert.equal(aiProposals.statusOf("song:a", "v1"), "pending");
-    // A newer proposal for the same song supersedes the old card.
     aiProposals.stageSong({ songId: "a", content: "v2" });
     assert.equal(aiProposals.statusOf("song:a", "v1"), "stale");
     assert.equal(aiProposals.statusOf("song:a", "v2"), "pending");

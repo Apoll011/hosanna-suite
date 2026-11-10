@@ -32,7 +32,6 @@ export function isExternalImageUrl(value: string): boolean {
   if (!value.startsWith("http://") && !value.startsWith("https://")) {
     return false;
   }
-  // Already a Supabase storage URL — nothing to do
   if (supabaseUrl && value.startsWith(supabaseUrl)) {
     return false;
   }

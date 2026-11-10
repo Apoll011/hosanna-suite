@@ -53,8 +53,6 @@ import { HosanaCollection } from "./engine/collection";
 import { idbClear, idbGet, idbPut, openIDB } from "./engine/idb";
 import { orgScopeAllowsSync } from "./orgScope";
 
-// ─── Public types (unchanged interface) ──────────────────────────────────────
-
 export type ReplicationSyncState = "syncing" | "synced" | "offline" | "error";
 
 /** Minimal Subject-like object so SyncContext can subscribe with .subscribe() */
@@ -72,8 +70,6 @@ export interface ReplicationManager {
   status$: StatusSubject;
   getStatus: () => ReplicationSyncState;
 }
-
-// ─── Internal types ───────────────────────────────────────────────────────────
 
 interface Checkpoint {
   updatedAt: number;
@@ -99,8 +95,6 @@ const ALL_COLLECTION_NAMES: CollectionName[] = [
 const PULL_BATCH = 100;
 const PUSH_BATCH = 50;
 
-// ─── Simple status subject ────────────────────────────────────────────────────
-
 function makeStatusSubject(): StatusSubject {
   const listeners = new Set<(s: ReplicationSyncState) => void>();
   return {
@@ -113,8 +107,6 @@ function makeStatusSubject(): StatusSubject {
     },
   };
 }
-
-// ─── Conflict resolution (identical logic to old implementation) ──────────────
 
 const CONFLICT_RETRY_LIMIT = 3;
 const VOLATILE_FIELDS = ["updatedAt", "_rev", "_meta", "_attachments"] as const;
@@ -148,8 +140,6 @@ function isSpuriousConflict<T extends SyncableDoc>(
   if (!assumedMasterState) return false;
   return deepEqual(omitVolatile(assumedMasterState), omitVolatile(serverDoc));
 }
-
-// ─── Push payload helpers ─────────────────────────────────────────────────────
 
 /**
  * Strip local-only / engine-internal fields before anything hits the wire.
@@ -313,8 +303,6 @@ async function pushWithConflictRetry<T extends SyncableDoc>(
   return realConflicts;
 }
 
-// ─── Checkpoint + server-cache persistence (dual-write: IDB + localStorage) ──
-
 let _cpDb: IDBDatabase | null = null;
 let _cpDbName: string | null = null;
 const CP_IDB_VERSION = 2;
@@ -385,11 +373,8 @@ async function saveCheckpoint(collectionName: CollectionName, cp: Checkpoint): P
   try {
     localStorage.setItem(`${getCheckpointLsPrefix()}_${collectionName}`, JSON.stringify(cp));
   } catch {
-    // Storage quota exceeded — non-fatal
   }
 }
-
-// ─── IDB-wipe detection ───────────────────────────────────────────────────────
 
 /**
  * Mark that the main IDB has been confirmed populated.
@@ -401,7 +386,6 @@ function markPopulationEpoch(): void {
     if (getPopulationEpoch() > 0) return;
     localStorage.setItem(getEpochLsKey(), "1");
   } catch {
-    // non-fatal
   }
 }
 
@@ -412,8 +396,6 @@ function getPopulationEpoch(): number {
     return 0;
   }
 }
-
-// ─── Server-state cache for push diffs ───────────────────────────────────────
 
 type ServerCache = Map<string, SyncableDoc & { _deleted: boolean }>;
 const serverStateCache = new Map<CollectionName, ServerCache>();
@@ -491,8 +473,6 @@ function rememberPushBaseline(
   cache.set(id, stripped);
 }
 
-// ─── Per-collection replication ───────────────────────────────────────────────
-
 type AnyCollection = HosanaCollection<SyncableDoc & Record<string, unknown>>;
 
 /**
@@ -525,7 +505,6 @@ async function replicateCollection<T extends SyncableDoc & Record<string, unknow
   const localFields = collection.getLocalFieldNames();
   let cacheDirty = false;
 
-  // ─ Push FIRST ──────────────────────────────────────────────────────────────
   const checkpointTs = checkpoint ? checkpointToIso(checkpoint) : null;
   const allDocs = (collection as unknown as HosanaCollection<T>).getAllRaw();
 
@@ -552,7 +531,6 @@ async function replicateCollection<T extends SyncableDoc & Record<string, unknow
       );
     }
 
-    // No baseline yet — fall back to the pull checkpoint watermark.
     return !checkpointTs || (typeof d.updatedAt === "string" && d.updatedAt > checkpointTs);
   });
 
@@ -588,7 +566,6 @@ async function replicateCollection<T extends SyncableDoc & Record<string, unknow
 
     const conflictIds = new Set(realConflicts.map((c) => c.id));
 
-    // Update cache for successfully pushed docs; purge local tombstones.
     const tombstonesToPurge: string[] = [];
     for (const [id, full] of pushedFull) {
       if (conflictIds.has(id)) continue;
@@ -605,7 +582,6 @@ async function replicateCollection<T extends SyncableDoc & Record<string, unknow
       await (collection as unknown as HosanaCollection<T>)._purgeIds(tombstonesToPurge);
     }
 
-    // Merge real conflicts (server wins on content)
     if (realConflicts.length > 0) {
       const live: (T & { _deleted: boolean })[] = [];
       const deletedIds: string[] = [];
@@ -630,7 +606,6 @@ async function replicateCollection<T extends SyncableDoc & Record<string, unknow
     }
   }
 
-  // ─ Pull ────────────────────────────────────────────────────────────────────
   let pullCheckpoint = forceFullPull ? null : checkpoint;
 
   while (!shouldAbort()) {
@@ -686,8 +661,6 @@ async function replicateCollection<T extends SyncableDoc & Record<string, unknow
   }
 }
 
-// ─── Replication manager singleton ───────────────────────────────────────────
-
 let replicationManagerInstance: ReplicationManager | null = null;
 
 /** Tear down the existing singleton so a fresh one can be created (e.g. on re-login). */
@@ -714,7 +687,6 @@ export async function clearReplicationState(): Promise<void> {
   try {
     localStorage.removeItem(getEpochLsKey());
   } catch {
-    // non-fatal
   }
 
   try {
@@ -726,7 +698,6 @@ export async function clearReplicationState(): Promise<void> {
     }
     for (const key of keysToRemove) localStorage.removeItem(key);
   } catch {
-    // non-fatal
   }
 
   try {
@@ -740,7 +711,6 @@ export async function clearReplicationState(): Promise<void> {
       const { deleteIndexedDbByName } = await import("./dbNames");
       await deleteIndexedDbByName(getCheckpointDbName());
     } catch {
-      // non-fatal
     }
   }
 }
@@ -841,7 +811,6 @@ export function setupReplication(db: HosanaDatabase, orgSlug: string): Replicati
       );
     }
 
-    // services first (FK ordering for agendaEvents)
     await replicateCollection(
       db.services as unknown as AnyCollection,
       "services",

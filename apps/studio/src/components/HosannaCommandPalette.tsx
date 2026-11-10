@@ -39,7 +39,6 @@ export interface HosannaCommandPaletteProps {
   slugPrefix: string;
   navigate: (path: string) => void;
   logout: () => void;
-  // State from view contexts
   currentFolderId?: string | null;
   currentSong?: Song | null;
   currentService?: Service | null;
@@ -55,7 +54,6 @@ export interface HosannaCommandPaletteProps {
   setDeleteSongTarget: (song: Song | null) => void;
   deleteService: (id: string) => Promise<void>;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
-  // RxDB finders
   searchSongsDb: (query: string) => Promise<Song[]>;
   searchFoldersDb: (query: string) => Promise<Folder[]>;
   searchServicesDb: (query: string) => Promise<Service[]>;
@@ -106,7 +104,6 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
 
   const staticActions = useMemo<CommandAction[]>(() => {
     const actions: CommandAction[] = [
-      // --- NAVEGAÇÃO ---
       {
         id: "nav-drive",
         name: t("commandPalette.navDrive"),
@@ -180,7 +177,6 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         perform: () => navigate(`${slugPrefix}/agenda`),
       },
 
-      // --- AÇÕES RÁPIDAS ---
       {
         id: "action-create-song",
         name: t("commandPalette.createSong"),
@@ -242,7 +238,6 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         perform: () => fileInputRef.current?.click(),
       },
 
-      // --- TEMA E PREFERÊNCIAS ---
       {
         id: "toggle-theme",
         name: t("commandPalette.toggleTheme"),

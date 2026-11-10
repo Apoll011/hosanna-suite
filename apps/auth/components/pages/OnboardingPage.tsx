@@ -84,7 +84,6 @@ export function OnboardingPage() {
         setInvitations(pendingInvs);
       }
     } catch {
-      // ignore
     } finally {
       setIsFetchingInvitations(false);
     }
@@ -119,7 +118,6 @@ export function OnboardingPage() {
         if (resolved) {
           setActiveOrgId(resolved.id);
           localStorage.setItem("active_org_slug", resolved.slug);
-          // Ensure Better Auth session matches what we show.
           if (!activeFromSession || activeFromSession.id !== resolved.id) {
             void authClient.organization.setActive({ organizationSlug: resolved.slug });
           }

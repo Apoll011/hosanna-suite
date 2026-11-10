@@ -73,7 +73,6 @@ export class SongService {
       try {
         fields = { ...fields, ...JSON.parse(query.searchFields) };
       } catch {
-        // ignore malformed filter
       }
     }
 

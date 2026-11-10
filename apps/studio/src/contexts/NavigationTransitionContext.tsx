@@ -1,4 +1,3 @@
-// contexts/NavigationTransitionContext.tsx
 import React, {
   createContext,
   useCallback,

@@ -181,7 +181,6 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
         className="bg-m3-card rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-m3-border"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-m3-border/60 bg-m3-sidebar/50">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center font-bold">
@@ -212,9 +211,7 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
           </button>
         </div>
 
-        {/* Modal Body */}
         <div className="overflow-y-auto p-6 space-y-6">
-          {/* Quick Intro Banner */}
           <div className="p-4 bg-m3-primary/5 rounded-xl border border-m3-primary/20 flex items-start gap-3">
             <Sparkles className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
             <div className="text-xs text-m3-secondary leading-relaxed">
@@ -227,7 +224,6 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
             </div>
           </div>
 
-          {/* Categories Selector */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
             {categories.map((c) => (
               <button
@@ -245,7 +241,6 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
           </div>
 
           <div className="grid md:grid-cols-12 gap-6">
-            {/* Examples Column */}
             <div className="md:col-span-7 space-y-2.5">
               <div className="flex items-center gap-2 text-label text-m3-primary mb-2">
                 <Code className="w-4 h-4" />
@@ -281,7 +276,6 @@ export const SearchSyntaxModal: React.FC<SearchSyntaxModalProps> = ({
               </div>
             </div>
 
-            {/* Available Fields Column */}
             <div className="md:col-span-5 space-y-2.5">
               <div className="flex items-center gap-2 text-label text-m3-primary mb-2">
                 <BookOpen className="w-4 h-4" />

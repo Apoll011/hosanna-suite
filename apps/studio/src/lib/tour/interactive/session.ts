@@ -22,7 +22,6 @@ export function enableInteractiveOnboardingSession(role?: string): void {
       sessionStorage.setItem(DEMO_ONBOARDING_ROLE_KEY, role);
     }
   } catch {
-    // ignore
   }
 }
 
@@ -31,7 +30,6 @@ export function disableInteractiveOnboardingSession(): void {
     sessionStorage.removeItem(DEMO_ONBOARDING_KEY);
     sessionStorage.removeItem(DEMO_ONBOARDING_ROLE_KEY);
   } catch {
-    // ignore
   }
 }
 
@@ -40,7 +38,6 @@ export function getInteractiveOnboardingRole(): AppRole {
     const raw = sessionStorage.getItem(DEMO_ONBOARDING_ROLE_KEY);
     if (raw && raw in roles) return raw as AppRole;
   } catch {
-    // ignore
   }
   return "owner";
 }

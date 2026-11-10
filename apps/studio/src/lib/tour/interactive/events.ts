@@ -41,7 +41,6 @@ export function emitOnboardingEvent(name: OnboardingEventName, detail?: unknown)
     try {
       listener(detail);
     } catch {
-      // ignore consumer errors
     }
   }
 }

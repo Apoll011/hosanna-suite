@@ -46,7 +46,6 @@ export const InteractiveOnboardingController: React.FC = () => {
     if (view === "song-editor") emitOnboardingEvent("song-opened");
   }, [view]);
 
-  // Keep the spotlight alive after Drive → Library → editor (etc.).
   useEffect(() => {
     if (!isDemoMode() || !isInteractiveOnboardingSession()) return;
     if (!isInteractiveOnboardingRunning()) return;
@@ -78,7 +77,6 @@ export const InteractiveOnboardingController: React.FC = () => {
           updateSetting("interactiveOnboardingCompleted", true);
         },
         onDismissed: () => {
-          // User can relaunch via /demo?onboarding=1
         },
       });
     }, 700);

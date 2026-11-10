@@ -64,7 +64,6 @@ export const AgendaPage: React.FC = () => {
   /** Snapshot kept open while delete + optional notify finish. */
   const [pendingDeleteEvent, setPendingDeleteEvent] = useState<AgendaEvent | null>(null);
 
-  // Open create modal when navigated here with ?create=1 (e.g. from command palette)
   useEffect(() => {
     if (searchParams.get("create") === "1" && canCreateAgenda) {
       setIsNewEventOpen(true);
@@ -85,7 +84,6 @@ export const AgendaPage: React.FC = () => {
     [store, selectedDate],
   );
 
-  // Keep a valid selection whenever the day or the underlying data changes.
   const effectiveEventId = useMemo(() => {
     if (selectedEventId && eventsForSelectedDate.some((ev) => ev.id === selectedEventId)) {
       return selectedEventId;
@@ -130,7 +128,6 @@ export const AgendaPage: React.FC = () => {
     [reachableMemberIds],
   );
 
-  // Studio-side notification flows (assignments / date / location).
   const notifications = useAgendaNotifications({
     event: selectedEvent,
     store,
@@ -142,7 +139,6 @@ export const AgendaPage: React.FC = () => {
     [pendingDeleteEvent, isReachable],
   );
 
-  // What the pending removal dialog is about to delete (null → hidden).
   const removalInfo = useMemo(() => {
     if (!pendingRemoval) return null;
     const target = store.events.find((e) => e.id === pendingRemoval.eventId);
@@ -192,7 +188,6 @@ export const AgendaPage: React.FC = () => {
         }
       }
     } catch {
-      // error toast already shown by the store
     } finally {
       setIsRemoving(false);
       setPendingRemoval(null);
@@ -208,8 +203,6 @@ export const AgendaPage: React.FC = () => {
     }));
 
     try {
-      // Capture recipients first, then delete — the cancel notice needs the
-      // event snapshot after the row is gone from the store.
       await store.deleteEvent(snapshot.id);
       if (notifyUsers && groups.length > 0) {
         await notifications.notifyEventCancelled(snapshot, groups);
@@ -217,12 +210,9 @@ export const AgendaPage: React.FC = () => {
       setSelectedEventId(null);
       setPendingDeleteEvent(null);
     } catch {
-      // error toast already shown by the store
     }
   };
 
-  // The responsibility being edited, plus the event it lives in (needed to
-  // persist assignee changes since responsibilities are embedded in events).
   const editingAssigneesResp = useMemo(() => {
     if (!editingAssigneesFor) return null;
     for (const ev of store.events) {
@@ -325,7 +315,6 @@ export const AgendaPage: React.FC = () => {
             <Spinner label={t("common.loading")} />
           </div>
         ) : (
-          /* Body: calendar / events / details */
           <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr_280px] gap-5 items-start">
             <div className="space-y-4">
               <MiniCalendar
@@ -386,7 +375,6 @@ export const AgendaPage: React.FC = () => {
         )}
       </div>
 
-      {/* Create event */}
       <EventFormModal
         isOpen={isNewEventOpen}
         onClose={() => setIsNewEventOpen(false)}
@@ -396,17 +384,12 @@ export const AgendaPage: React.FC = () => {
         initial={{ date: selectedDate }}
       />
 
-      {/* Edit event (title / type / date-time / duration / linked service /
-          location / notes) */}
       {selectedEvent && (
         <EventFormModal
           isOpen={isEditEventOpen}
           onClose={() => setIsEditEventOpen(false)}
           onSubmit={(value) => {
             store.updateEvent(selectedEvent.id, value);
-            // The edit is saved first; notifying stays an explicit action.
-            // Track what changed so the "notify" buttons know what to send
-            // (date+location together → one aggregated update).
             const changes: { date?: boolean; location?: boolean } = {};
             if (value.date !== selectedEvent.date || value.time !== selectedEvent.time) {
               changes.date = true;
@@ -434,7 +417,6 @@ export const AgendaPage: React.FC = () => {
         />
       )}
 
-      {/* Add responsibility */}
       {selectedEvent && (
         <AddResponsibilityModal
           isOpen={isAddResponsibilityOpen}
@@ -449,13 +431,11 @@ export const AgendaPage: React.FC = () => {
               await store.addResponsibility(selectedEvent.id, categoryId, assignees);
               setIsAddResponsibilityOpen(false);
             } catch {
-              // error toast already shown by the hook; keep the modal open
             }
           }}
         />
       )}
 
-      {/* Edit assignees of one responsibility */}
       {editingAssigneesResp && (
         <EditAssigneesModal
           isOpen={!!editingAssigneesFor}
@@ -492,13 +472,11 @@ export const AgendaPage: React.FC = () => {
               );
               setEditingAssigneesFor(null);
             } catch {
-              // error toast already shown by the hook; keep the modal open
             }
           }}
         />
       )}
 
-      {/* Remove assignment(s) — optional cancellation notice */}
       {pendingRemoval && removalInfo && (
         <RemoveAssignmentModal
           isOpen

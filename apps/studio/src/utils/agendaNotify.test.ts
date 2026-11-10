@@ -91,7 +91,6 @@ test("marking is a no-op when nothing succeeded", () => {
 });
 
 test("a newly assigned person starts pending, even if notified elsewhere", () => {
-  // This responsibility previously had nobody → the join is a NEW assignment.
   const merged = mergeAssigneeNotificationState([], [{ id: "m1", memberId: "m1", name: "Rita" }]);
 
   assert.equal(merged[0].notified, false);

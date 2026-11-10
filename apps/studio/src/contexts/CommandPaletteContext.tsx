@@ -99,7 +99,6 @@ export function CommandPaletteProvider({
     });
   }, []);
 
-  // Keyboard shortcut listener (supports single key and sequence shortcuts like 'g' then 'd')
   const keySequenceRef = useRef<{
     keys: string[];
     timer: NodeJS.Timeout | null;
@@ -109,7 +108,6 @@ export function CommandPaletteProvider({
   });
 
   const allActions = useMemo(() => {
-    // Logos AI actions first so “Ask …” is easy to pick when typing a prompt
     const { "ai-palette": aiActions = [], ...restGroups } = dynamicActionGroups;
     const otherDynamic = Object.values(restGroups).flat();
     return [...aiActions, ...staticActions, ...otherDynamic];
@@ -117,7 +115,6 @@ export function CommandPaletteProvider({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Toggle Palette with Ctrl+K or Cmd+K
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         togglePalette();
@@ -134,7 +131,6 @@ export function CommandPaletteProvider({
       if (isInput && !isOpen) return;
 
       if (!isOpen) {
-        // Multi-key Sequence Listener (e.g. g -> d, c -> s)
         const key = e.key.toLowerCase();
         const seq = keySequenceRef.current;
 
@@ -145,7 +141,6 @@ export function CommandPaletteProvider({
           seq.keys = [];
         }, 600); // 600ms window between keys
 
-        // Check if current key sequence matches an action shortcut
         const currentSeqStr = seq.keys.join("");
         const matchedAction = allActions.find((action) => {
           if (!action.shortcut || action.shortcut.length === 0) return false;

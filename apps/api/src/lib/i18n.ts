@@ -13,8 +13,6 @@ import es from "../locales/es.js";
 import type { I18nKeys } from "../locales/pt-PT.js";
 import ptPT from "../locales/pt-PT.js";
 
-// ── Registry ───────────────────────────────────────────────────────────────
-
 /** Map of loaded locale objects. pt-PT is always present. */
 const registry = new Map<string, Record<string, any>>();
 registry.set("pt-PT", ptPT);
@@ -36,8 +34,6 @@ async function loadLocale(locale: string): Promise<Record<string, any>> {
     return ptPT;
   }
 }
-
-// ── Key resolution ─────────────────────────────────────────────────────────
 
 type DotPath<T, Prefix extends string = ""> =
   T extends Record<string, unknown>
@@ -63,8 +59,6 @@ function interpolate(template: string, vars: Record<string, string | number>): s
     key in vars ? String(vars[key]) : `{{${key}}}`,
   );
 }
-
-// ── Public API ─────────────────────────────────────────────────────────────
 
 /**
  * Synchronous translation using the pre-loaded registry.

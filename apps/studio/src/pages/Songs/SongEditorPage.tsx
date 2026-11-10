@@ -116,7 +116,6 @@ export const SongEditorPage: React.FC = () => {
   useEffect(() => {
     if (!song) return;
 
-    // First load or navigated to a different song: initialize editor
     if (song.id !== currentSongIdRef.current) {
       currentSongIdRef.current = song.id;
       appliedUpdatedAtRef.current = song.updatedAt;
@@ -128,7 +127,6 @@ export const SongEditorPage: React.FC = () => {
     // Same song: never overwrite active unsaved user changes!
     if (hasUnsavedChanges) return;
 
-    // Same song with no unsaved changes: update if remote/stored version advanced
     if (song.updatedAt && song.updatedAt !== appliedUpdatedAtRef.current) {
       appliedUpdatedAtRef.current = song.updatedAt;
       setContent(song.content);
@@ -139,7 +137,6 @@ export const SongEditorPage: React.FC = () => {
     setSelectedVariant(null);
   }, [song?.id, deferredContent]);
 
-  // A proposal needs the editor pane: leave "preview only" when one shows up.
   useEffect(() => {
     if (aiProposal) {
       setLayoutMode((mode) => (mode === "preview" ? "split" : mode));
@@ -222,7 +219,6 @@ export const SongEditorPage: React.FC = () => {
         setHasUnsavedChanges(false);
         emitOnboardingEvent("song-saved");
       } catch {
-        // Error toast is already displayed by useSongMutations
       } finally {
         isSavingRef.current = false;
       }
@@ -366,7 +362,6 @@ export const SongEditorPage: React.FC = () => {
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-        {/* Editor pane — always mounted so layout-mode switches animate smoothly */}
         <div
           data-tour="song-editor"
           className={[
@@ -383,7 +378,6 @@ export const SongEditorPage: React.FC = () => {
             layoutMode === "preview" ? "md:opacity-0" : "md:opacity-100",
           ].join(" ")}
         >
-          {/* Editor Tab Header */}
           <div className="h-9 bg-m3-sidebar/30 border-b border-m3-border flex items-center justify-between px-3 shrink-0">
             <span className="text-[10px] font-semibold text-m3-secondary uppercase tracking-wider flex items-center gap-1.5">
               <EditIcon className="w-3 h-3" />
@@ -398,7 +392,6 @@ export const SongEditorPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Contextual Editor Settings Modal */}
           <EditorSettingsPanel
             isOpen={showEditorSettings}
             onClose={() => setShowEditorSettings(false)}
@@ -428,7 +421,6 @@ export const SongEditorPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Preview pane — always mounted so layout-mode switches animate smoothly */}
         <div
           data-tour="song-preview"
           className={[
@@ -445,7 +437,6 @@ export const SongEditorPage: React.FC = () => {
             layoutMode === "editor" ? "md:opacity-0" : "md:opacity-100",
           ].join(" ")}
         >
-          {/* Preview Tab Header */}
           <div className="h-9 bg-m3-sidebar/30 border-b border-m3-border flex items-center justify-between px-3 shrink-0">
             <span className="text-[10px] font-semibold text-m3-secondary uppercase tracking-wider flex items-center gap-1.5">
               <LayoutTemplate className="w-3 h-3" />

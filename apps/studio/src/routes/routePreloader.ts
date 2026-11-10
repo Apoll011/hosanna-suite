@@ -49,9 +49,6 @@ export const lazyImport = <T>(componentImport: LazyImportFn<T>): LazyPreloadable
   return LazyComp;
 };
 
-// ----------------------------------------------------------------------
-// ROUTE COMPONENTS (auth UI lives on the auth app — no Studio login pages)
-// ----------------------------------------------------------------------
 export const AgendaPage = lazyImport(() =>
   import("../pages/AgendaPage").then((m) => ({ default: m.AgendaPage })),
 );

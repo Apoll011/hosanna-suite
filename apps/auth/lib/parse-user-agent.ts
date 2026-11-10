@@ -98,7 +98,6 @@ function parseFlutterUA(ua: string): ParsedUserAgentInfo | null {
  * Chrome/151.0.0.0 Safari/537.36`
  */
 function parseWebUA(ua: string): ParsedUserAgentInfo {
-  /* Browser — check vendor products before the generic `Chrome/`. */
   const browserPatterns: Array<[RegExp, string]> = [
     [/Edg\/([\d.]+)/, "Edge"],
     [/OPR\/([\d.]+)/, "Opera"],
@@ -129,7 +128,6 @@ function parseWebUA(ua: string): ParsedUserAgentInfo {
       : browser
     : null;
 
-  /* Operating system. */
   let os: string | null = null;
   const windows = ua.match(/Windows NT ([\d.]+)/);
   if (windows) {
@@ -155,7 +153,6 @@ function parseWebUA(ua: string): ParsedUserAgentInfo {
     }
   }
 
-  /* Device type and model. */
   let device: string | null = null;
   let deviceType: DeviceType = "desktop";
   if (/iPad/.test(ua)) {

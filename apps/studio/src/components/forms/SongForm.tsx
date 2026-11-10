@@ -15,7 +15,6 @@ interface SongFormData {
   tags: string;
 }
 
-// Extracted pure validation function
 const validateSongForm = (
   values: SongFormData,
   t: (key: string) => string,
@@ -72,7 +71,6 @@ export const SongForm: React.FC<SongFormProps> = ({
 
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear the specific field error when the user starts modifying it
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }

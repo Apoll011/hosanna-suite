@@ -122,7 +122,6 @@ function loadSettings(): PersonalSettings {
     const parsedStored = parseSettingsJson(stored);
     if (parsedStored) Object.assign(settings, parsedStored);
 
-    // 2. Fall back to cached auth metadata when no local snapshot exists.
     const hasLocalSettings = Boolean(parsedStored);
     const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
     if (cachedUserStr && !hasLocalSettings) {
@@ -133,7 +132,6 @@ function loadSettings(): PersonalSettings {
           Object.assign(settings, parsedMetadata);
         }
       } catch {
-        // ignore invalid cached user
       }
     }
 
@@ -170,12 +168,10 @@ function loadSettings(): PersonalSettings {
       Object.values(LEGACY_KEYS).forEach((key) => localStorage.removeItem(key));
     }
   } catch {
-    // ignore unavailable/corrupt storage
   }
   return settings;
 }
 
-// Module-level store: syncs state across all component instances instantly
 let state: PersonalSettings = loadSettings();
 const listeners = new Set<() => void>();
 
@@ -184,7 +180,6 @@ let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 async function syncMetadataToServer(settingsToSave: PersonalSettings) {
   const serialized = JSON.stringify(settingsToSave);
 
-  // Update cached user in localStorage immediately so offline/refresh remains consistent
   try {
     const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
     if (cachedUserStr) {
@@ -193,10 +188,8 @@ async function syncMetadataToServer(settingsToSave: PersonalSettings) {
       localStorage.setItem(CACHED_USER_KEY, JSON.stringify(cachedUser));
     }
   } catch {
-    // ignore storage errors
   }
 
-  // Persist to better-auth backend
   try {
     await (authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>)({
       metadata: serialized,
@@ -262,14 +255,12 @@ export function syncSettingsFromMetadata(metadata: unknown) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       } catch {
-        // ignore
       }
       listeners.forEach((l) => l());
     }
   }
 }
 
-// Sync across open browser tabs/windows
 if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
     if (e.key === STORAGE_KEY && e.newValue) {
@@ -277,14 +268,12 @@ if (typeof window !== "undefined") {
         state = { ...DEFAULT_SETTINGS, ...JSON.parse(e.newValue) };
         listeners.forEach((l) => l());
       } catch {
-        // ignore invalid JSON from another tab
       }
     } else if (e.key === CACHED_USER_KEY && e.newValue) {
       try {
         const cachedUser = JSON.parse(e.newValue) as SessionUser;
         syncSettingsFromMetadata(cachedUser?.metadata);
       } catch {
-        // ignore invalid JSON
       }
     }
   });

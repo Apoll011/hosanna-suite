@@ -304,7 +304,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 space-y-5">
-          {/* Who */}
           <Surface padding="none" className="overflow-hidden">
             <div className="px-5 py-4 border-b border-m3-border">
               <h3 className="text-sm font-semibold text-m3-text">
@@ -513,7 +512,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
             </div>
           </Surface>
 
-          {/* Delivery — single member only */}
           {!isOrgTarget && (
             <Surface padding="none" className="overflow-hidden">
               <div className="px-5 py-4 border-b border-m3-border">
@@ -570,7 +568,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
             </Surface>
           )}
 
-          {/* Message */}
           <Surface padding="none" className="overflow-hidden">
             <div className="px-5 py-4 border-b border-m3-border">
               <h3 className="text-sm font-semibold text-m3-text">
@@ -647,7 +644,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
           </Surface>
         </div>
 
-        {/* Preview + send */}
         <div className="lg:col-span-2 space-y-5">
           <Surface padding="none" className="overflow-hidden sticky top-4">
             <div className="px-5 py-4 border-b border-m3-border">

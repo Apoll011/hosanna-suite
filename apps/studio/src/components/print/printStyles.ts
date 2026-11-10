@@ -68,7 +68,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   --hp-lh: 1.45; --hp-chord-lh: 1.1; --hp-line-gap: 0.14em; --hp-stanza-gap: 0.7em;
   --hp-section-gap: 1.15em; --hp-block-gap: 1.3em; --hp-cell-y: 0.5em;
 }
-/* ── Sheets & page flow ───────────────────────────────────────────
  * One-song-per-page sheets are at least one page tall so the footer can
  * sit on the page bottom (margin-top: auto). The body must NOT flex-grow —
  * growing it made 2-column songs fill the page and orphaned the footer
@@ -89,7 +88,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   margin-top: 1.4em; padding-top: 1.1em; border-top: 1px dashed var(--hp-rule);
 }
 
-/* ── Header ─────────────────────────────────────────────────────── */
 .hp-header {
   display: flex; align-items: flex-start; gap: 0.75em;
   margin-bottom: var(--hp-block-gap); padding-bottom: 0.55em;
@@ -113,7 +111,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
   background: var(--hp-soft); white-space: nowrap;
 }
 
-/* ── Song metadata ──────────────────────────────────────────────── */
 .hp-meta {
   display: flex; flex-wrap: wrap; gap: 0.35em; margin: calc(var(--hp-block-gap) * -0.4) 0 var(--hp-block-gap);
   font-size: 0.78em; break-after: avoid;
@@ -125,7 +122,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-meta-label { color: var(--hp-muted); font-weight: 500; }
 .hp-meta-value { color: var(--hp-ink); font-weight: 700; }
 
-/* ── Song body ──────────────────────────────────────────────────── */
 .hp-song { font-size: 1em; }
 .hp-cols-2 {
   column-count: 2; column-gap: 2em; column-fill: balance;
@@ -173,7 +169,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-measure { color: var(--hp-chord); font-weight: 700; }
 .hp-divider { border-top: 1px dashed var(--hp-faint); margin: var(--hp-block-gap) 0; column-span: all; }
 
-/* ── Generic blocks (services, events, songbooks) ───────────────── */
 .hp-block + .hp-block { margin-top: var(--hp-block-gap); }
 .hp-h2 {
   display: flex; align-items: baseline; justify-content: space-between; gap: 1em;
@@ -230,7 +225,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-toc-dots { flex: 1; border-bottom: 1px dotted var(--hp-faint); transform: translateY(-0.25em); min-width: 1em; }
 .hp-toc-type { font-size: 0.82em; color: var(--hp-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 
-/* ── Compact multi-column song index ────────────────────────────── */
 .hp-index {
   column-count: 2; column-gap: 1.6em; column-fill: balance;
   font-size: 0.86em;
@@ -247,7 +241,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 }
 .hp-index-title { flex: 1; min-width: 0; color: var(--hp-ink); font-weight: 500; }
 
-/* ── Footer ─────────────────────────────────────────────────────── */
 .hp-footer {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25em 1em;
   margin-top: var(--hp-block-gap); padding-top: 0.4em; border-top: 1px solid var(--hp-rule);
@@ -258,7 +251,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 
 /* ═══ THEMES ═══════════════════════════════════════════════════════ */
 
-/* Classic — liturgical serif, centred masthead, double rules. */
 .hp-theme-classic { --hp-body-font: var(--hp-serif); --hp-display-font: var(--hp-serif); --hp-chord-font: var(--hp-sans); }
 .hp-theme-classic .hp-header { flex-direction: column; align-items: center; text-align: center; gap: 0.3em; border-bottom: 3px double var(--hp-ink); }
 .hp-theme-classic .hp-logo { filter: grayscale(1) contrast(1.15); height: 2.6em; }
@@ -281,7 +273,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-classic .hp-index-num { font-style: normal; font-weight: 600; color: var(--hp-text); }
 .hp-theme-classic .hp-index-title { font-weight: 400; }
 
-/* Contemporary / Stage — big, bold, high contrast for music stands. */
 .hp-theme-contemporary { --hp-chord: #000; --hp-ink: #000; --hp-text: #0a0a0a; --hp-chord-font: var(--hp-mono); }
 .hp-theme-contemporary .hp-header { align-items: center; border-bottom: 3px solid #000; }
 .hp-theme-contemporary .hp-logo { height: 2.6em; border: 1px solid #000; border-radius: 4px; }
@@ -307,7 +298,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-contemporary .hp-tag { background: none; border: 1px solid #000; color: #000; text-transform: uppercase; font-family: var(--hp-mono); font-size: 0.75em; }
 .hp-theme-contemporary .hp-footer { border-top: 2px solid #000; font-family: var(--hp-mono); text-transform: uppercase; }
 
-/* Compact — dense single-line masthead, minimal chrome to save paper. */
 .hp-theme-compact .hp-header { align-items: baseline; gap: 0.5em; padding-bottom: 0.3em; }
 .hp-theme-compact .hp-logo { height: 1.4em; align-self: center; }
 .hp-theme-compact .hp-header-main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.6em; }
@@ -323,7 +313,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-compact .hp-table { font-size: 0.84em; }
 .hp-theme-compact .hp-footer { font-size: 0.62em; padding-top: 0.25em; }
 
-/* Elegant — editorial: serif display, small-caps labels, accent hairline. */
 .hp-theme-elegant { --hp-display-font: var(--hp-serif); }
 .hp-theme-elegant .hp-header { flex-direction: column; gap: 0.1em; border-bottom: 0; padding-bottom: 0; position: relative; }
 .hp-theme-elegant .hp-header::after { content: ""; display: block; width: 3em; height: 2px; background: var(--hp-accent); margin-top: 0.5em; }
@@ -343,7 +332,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-elegant .hp-tag { background: none; padding: 0; color: var(--hp-accent); font-style: italic; font-weight: 500; }
 .hp-theme-elegant .hp-footer { border-top-color: color-mix(in srgb, var(--hp-accent) 35%, #fff); }
 
-/* Bulletin — church bulletin: accent band masthead, tinted tables. */
 .hp-theme-bulletin .hp-header {
   align-items: center; border: 0; border-radius: 8px; padding: 0.7em 0.95em;
   background: var(--hp-accent); color: #fff;
@@ -366,7 +354,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-bulletin .hp-note, .hp-theme-bulletin .hp-facts { background: var(--hp-tint); border-color: transparent; }
 .hp-theme-bulletin .hp-footer { border-top: 2px solid var(--hp-accent); }
 
-/* Lead sheet — musician chart: label gutter, mono chords, boxed metadata. */
 .hp-theme-leadsheet { --hp-chord-font: var(--hp-mono); --hp-chord: var(--hp-ink); }
 .hp-theme-leadsheet .hp-header { align-items: flex-end; border-bottom: 2px solid var(--hp-ink); }
 .hp-theme-leadsheet .hp-title { font-size: 1.6em; font-weight: 800; }
@@ -393,7 +380,6 @@ export const PRINT_DOCUMENT_CSS = /* css */ `
 .hp-theme-leadsheet .hp-tag { background: none; border: 1px solid var(--hp-rule); font-family: var(--hp-mono); font-size: 0.78em; }
 .hp-theme-leadsheet .hp-footer { font-family: var(--hp-mono); border-top-color: var(--hp-ink); }
 
-/* Hymnal — hymn book: centred serif, numbered stanzas, ornament. */
 .hp-theme-hymnal { --hp-body-font: var(--hp-serif); --hp-display-font: var(--hp-serif); --hp-chord-font: var(--hp-sans); }
 .hp-theme-hymnal .hp-header { flex-direction: column; align-items: center; text-align: center; gap: 0.1em; border-bottom: 0; padding-bottom: 0; }
 .hp-theme-hymnal .hp-header::after { content: "\\2766"; color: var(--hp-accent); font-size: 0.95em; line-height: 1; margin-top: 0.35em; }
@@ -432,7 +418,6 @@ export const PRINT_SCREEN_CSS = /* css */ `
   box-shadow: 0 1px 2px rgba(15,23,42,.08), 0 8px 24px rgba(15,23,42,.10);
   border-radius: 2px;
 }
-/* Preview padding is inside the border-box, so pin against the full paper. */
 .hp-screen .hp-doc.hp-breaks > .hp-sheet:not(.hp-sheet--packed) {
   min-height: var(--hp-paper-h);
 }

@@ -47,7 +47,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
   const [annual, setAnnual] = useState(false);
   const [planPricing, setPlanPricing] = useState<PlanPricing>(PLAN_PRICING);
 
-  // Keep the data fresh every time the tab is opened.
   useEffect(() => {
     if (active && organization) void refresh();
   }, [active, organization, refresh]);
@@ -99,8 +98,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
     const { error } = await startCheckout({
       annual,
       locale: language,
-      // If checkout is cancelled, keep the owner on the billing tab instead of
-      // bouncing them back to the studio folders.
       cancelUrl: `${window.location.origin}/${organization.slug}/organization?tab=billing`,
     });
     if (error) {
@@ -168,7 +165,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
             </div>
           ) : activeSub ? (
             <div className="space-y-5">
-              {/* Status row */}
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant={activeSub.status === "trialing" ? "amber" : "emerald"} size="md">
                   {activeSub.status === "trialing"
@@ -188,7 +184,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
                 )}
               </div>
 
-              {/* Trial banner */}
               {activeSub.status === "trialing" && activeSub.trialEnd && (
                 <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-3">
                   <div className="text-sm text-amber-800 dark:text-amber-300">
@@ -206,7 +201,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
                 </div>
               )}
 
-              {/* Cancel-at-period-end warning */}
               {activeSub.cancelAtPeriodEnd && (
                 <div className="p-4 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-start gap-3">
@@ -235,7 +229,6 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
                 </div>
               )}
 
-              {/* Billing period info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div className="p-3.5 bg-m3-sidebar rounded-xl">
                   <span className="block text-label text-m3-secondary">

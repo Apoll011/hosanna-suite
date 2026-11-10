@@ -15,9 +15,6 @@ export interface InteractiveFolderGalleryProps {
   className?: string;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Shared lightbox                                                   */
-/* ------------------------------------------------------------------ */
 function PhotoLightbox({ photo, onClose }: { photo: GalleryPhoto | null; onClose: () => void }) {
   return (
     <AnimatePresence>
@@ -81,7 +78,6 @@ export function InteractiveFolderGallery({
     <div
       className={`w-full py-8 md:py-16 flex flex-col items-center justify-center bg-transparent ${className || ""}`}
     >
-      {/* Heading & Description */}
       <div className="text-center mb-10 max-w-lg mx-auto px-4">
         {title && (
           <h2 className="font-display text-3xl md:text-4xl text-foreground mb-3 font-medium tracking-tight">
@@ -95,7 +91,6 @@ export function InteractiveFolderGallery({
         )}
       </div>
 
-      {/* Main product screenshot */}
       <div className="flex flex-col items-center">
         <AnimatePresence mode="wait">
           <motion.div
@@ -114,7 +109,6 @@ export function InteractiveFolderGallery({
           </motion.div>
         </AnimatePresence>
 
-        {/* Caption */}
         <AnimatePresence mode="wait">
           <motion.p
             key={`caption-${index}`}
@@ -129,7 +123,6 @@ export function InteractiveFolderGallery({
         </AnimatePresence>
       </div>
 
-      {/* Thumbnail Filmstrip */}
       <div className="mt-8 flex items-center justify-center gap-3">
         {photos.map((photo, i) => (
           <button
@@ -187,7 +180,6 @@ export function MobileFolderGallery({ photos }: { photos: GalleryPhoto[] }) {
         )}
       </div>
 
-      {/* Navigation buttons */}
       <div className="absolute bottom-3 left-3 flex flex-col gap-2">
         <button
           type="button"
@@ -207,7 +199,6 @@ export function MobileFolderGallery({ photos }: { photos: GalleryPhoto[] }) {
         </button>
       </div>
 
-      {/* Dot sidebar */}
       <div className="absolute right-3 top-1/2 flex -translate-y-1/2 flex-col gap-2.5">
         {photos.map((p, i) => (
           <button

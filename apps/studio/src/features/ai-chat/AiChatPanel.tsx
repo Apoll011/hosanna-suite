@@ -124,10 +124,6 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
     return () => ro.disconnect();
   }, [open, empty, scrollToBottom]);
 
-  // A new user turn (or opening / switching a thread) re-pins to the latest
-  // message. An empty chat has nothing to follow: it starts at the top so the
-  // greeting is always the first thing you see, however many suggestions
-  // there are below it.
   const lastUserId = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i--) {
       if (messages[i].role === "user") return messages[i].id;

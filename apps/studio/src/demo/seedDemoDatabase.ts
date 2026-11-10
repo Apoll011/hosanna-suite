@@ -21,7 +21,6 @@ export async function seedDemoDatabase(db: HosanaDatabase, locale: string): Prom
 
   const { folders, songs, collections, services, agendaEvents } = generateDemoData(locale);
 
-  // Engine collections require `T & Record<string, unknown>`; domain types
   // (Folder/Song/…) are structurally compatible at runtime.
   type Upsertable = { id: string } & Record<string, unknown>;
   const asUpsertable = <T extends { id: string }>(doc: T): Upsertable =>

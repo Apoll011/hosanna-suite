@@ -34,7 +34,6 @@ export interface FeaturesTabProps {
   active: boolean;
 }
 
-/* ─── Section heading ─────────────────────────────────────────────── */
 const SectionHeading: React.FC<{
   icon: React.ElementType;
   title: string;
@@ -58,7 +57,6 @@ const ErrorNote: React.FC<{ message: string }> = ({ message }) => (
   </div>
 );
 
-/* ─── Early-Access Panel ──────────────────────────────────────────── */
 // Concept-stage features never flip their linked feature flag (see PostHog's
 // early-access lifecycle: Draft/Concept never enable the flag), so we can't
 // use isFeatureEnabled() to know if the user registered interest. We track
@@ -77,7 +75,6 @@ const writeLocalInterest = (state: Record<string, boolean>) => {
   try {
     localStorage.setItem(INTEREST_STORAGE_KEY, JSON.stringify(state));
   } catch {
-    // ignore storage errors (private browsing, quota, etc.)
   }
 };
 
@@ -267,7 +264,6 @@ const EarlyAccessPanel: React.FC = () => {
   );
 };
 
-/* ─── Support Panel ───────────────────────────────────────────────── */
 type SupportView = "tickets" | "chat" | "restore";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -351,8 +347,6 @@ const SupportPanel: React.FC = () => {
     if (view === "tickets") loadTickets();
   }, [view, loadTickets]);
 
-  // Handle recovery-link emails (`?ph_conv_restore=...`). The default widget
-  // does this automatically; a custom UI has to call it explicitly.
   useEffect(() => {
     if (!available) return;
     (async () => {
@@ -362,7 +356,6 @@ const SupportPanel: React.FC = () => {
           await loadTickets();
         }
       } catch {
-        // No restore token present, or the link expired — nothing to do.
       }
     })();
   }, [available, loadTickets]);
@@ -510,7 +503,6 @@ const SupportPanel: React.FC = () => {
 
   return (
     <div className="bg-m3-card border border-m3-border rounded-xl overflow-hidden">
-      {/* Header */}
       <div className="flex items-start gap-2 px-5 pt-5 pb-3">
         {view !== "tickets" && (
           <button
@@ -560,7 +552,6 @@ const SupportPanel: React.FC = () => {
         </div>
       )}
 
-      {/* Tickets list */}
       {view === "tickets" && (
         <div className="px-5 pb-5 space-y-3">
           {loadingTickets ? (
@@ -618,7 +609,6 @@ const SupportPanel: React.FC = () => {
               {t("settings.features.support.loadMore")}
             </button>
           )}
-          {/* Quick starters */}
           <div className="pt-1 space-y-2">
             <p className="text-[11px] font-semibold text-m3-secondary uppercase tracking-wide">
               {t("settings.features.support.startNew")}
@@ -652,7 +642,6 @@ const SupportPanel: React.FC = () => {
         </div>
       )}
 
-      {/* Chat */}
       {view === "chat" && (
         <div className="flex flex-col px-5 pb-5">
           <div className="h-80 overflow-y-auto space-y-3 py-2">
@@ -757,7 +746,6 @@ const SupportPanel: React.FC = () => {
         </div>
       )}
 
-      {/* Restore */}
       {view === "restore" && (
         <div className="px-5 pb-5 space-y-4">
           <p className="text-xs text-m3-secondary">{t("settings.features.support.restoreDesc")}</p>
@@ -798,7 +786,6 @@ const SupportPanel: React.FC = () => {
   );
 };
 
-/* ─── Main Tab ────────────────────────────────────────────────────── */
 export const FeaturesTab: React.FC<FeaturesTabProps> = ({ active }) => {
   if (!active) return null;
   return (

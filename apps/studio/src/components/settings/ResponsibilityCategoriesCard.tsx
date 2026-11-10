@@ -70,7 +70,6 @@ export const ResponsibilityCategoriesCard: React.FC<ResponsibilityCategoriesCard
 
   return (
     <div className="bg-m3-card border border-m3-border rounded-xl shadow-xs overflow-hidden">
-      {/* Header */}
       <div className="px-6 py-5 border-b border-m3-border bg-m3-sidebar/50">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -91,7 +90,6 @@ export const ResponsibilityCategoriesCard: React.FC<ResponsibilityCategoriesCard
       </div>
 
       <div className="p-6 space-y-5">
-        {/* Existing categories */}
         <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
           {categories.map((c) => {
             const Icon = ICON_MAP[c.icon];
@@ -129,7 +127,6 @@ export const ResponsibilityCategoriesCard: React.FC<ResponsibilityCategoriesCard
           )}
         </div>
 
-        {/* Create new category */}
         <div className="border-t border-m3-border pt-5 space-y-3">
           <p className="text-label text-m3-text">
             {t("settings.general.responsibilities.newLabel")}
@@ -150,7 +147,6 @@ export const ResponsibilityCategoriesCard: React.FC<ResponsibilityCategoriesCard
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Icon picker */}
             <div>
               <label className="block text-label mb-1">
                 {t("settings.general.responsibilities.iconLabel")}
@@ -179,7 +175,6 @@ export const ResponsibilityCategoriesCard: React.FC<ResponsibilityCategoriesCard
               </div>
             </div>
 
-            {/* Color picker */}
             <div>
               <label className="block text-label mb-1">
                 {t("settings.general.responsibilities.colorLabel")}

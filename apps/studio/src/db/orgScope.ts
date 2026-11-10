@@ -102,7 +102,6 @@ export async function ensureOrgScopedData(
       try {
         await idbDelete(getIdb(db), META_STORE, META_ORG_SLUG_KEY);
       } catch {
-        // non-fatal
       }
       return { matched: false, cleared: true };
     }

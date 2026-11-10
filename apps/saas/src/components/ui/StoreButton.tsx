@@ -27,15 +27,12 @@ export const PlayStoreButton: React.FC<PlayStoreButtonProps> = ({
         hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-xl hover:shadow-slate-200/60 hover:ring-slate-300/80 
         active:translate-y-0 active:scale-[0.98] ${className}`}
     >
-      {/* Soft Glow effect on hover */}
       <div className="absolute inset-0 -z-10 rounded-2xl bg-linear-to-r from-emerald-500/10 via-sky-500/10 to-amber-500/10 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100" />
 
-      {/* Logo Container */}
       <div className="flex shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105">
         <img src={logo} alt="Google Play Store Logo" width="32" height="auto" />
       </div>
 
-      {/* Label Text */}
       <div className="flex flex-col text-left">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 transition-colors group-hover:text-slate-400">
           {t("common.getItOn")}

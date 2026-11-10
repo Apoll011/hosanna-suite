@@ -35,7 +35,6 @@ const ORG_SCOPED_MODELS = new Set([
 ]);
 
 // Reuse the extended client across requests for the same org.
-// A plain Map is fine: the number of orgs is bounded and small.
 const orgClientCache = new Map<string, ReturnType<typeof buildOrgClient>>();
 const ORG_CACHE_MAX = 512;
 

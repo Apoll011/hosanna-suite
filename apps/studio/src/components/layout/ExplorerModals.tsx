@@ -49,7 +49,6 @@ export type ActiveModal =
   | "batch-add-to-collection"
   | null;
 
-// ─── Musical keys ───────────────────────────────────────────────────────────
 const MUSICAL_KEYS = [
   "C",
   "C#",
@@ -77,11 +76,9 @@ const MUSICAL_KEYS = [
   "Gm",
 ];
 
-// ─── Helper: parse existing Liqe query and remove/toggle a clause ────────────
 function addLiqeClause(query: string, clause: string): string {
   const trimmed = query.trim();
   if (!trimmed) return clause;
-  // If exact clause already present, remove it (toggle)
   if (trimmed.includes(clause)) {
     return trimmed
       .replace(clause, "")
@@ -93,7 +90,6 @@ function addLiqeClause(query: string, clause: string): string {
 }
 
 function removeLiqeClause(query: string, prefix: string): string {
-  // Remove any existing clause that starts with the given prefix
   return query
     .split(/\s+AND\s+/i)
     .filter((part) => !part.trim().toLowerCase().startsWith(prefix.toLowerCase()))
@@ -111,7 +107,6 @@ function getClauseValue(query: string, field: string): string | null {
   return match ? match[1].replace(/"/g, "") : null;
 }
 
-// ─── FilterSection: collapsible group ───────────────────────────────────────
 const FilterSection: React.FC<{
   icon: React.ReactNode;
   label: string;
@@ -144,7 +139,6 @@ const FilterSection: React.FC<{
   );
 };
 
-// ─── Chip button ─────────────────────────────────────────────────────────────
 const Chip: React.FC<{
   label: string;
   selected?: boolean;
@@ -163,7 +157,6 @@ const Chip: React.FC<{
   </button>
 );
 
-// ─── Advanced Filter Panel ───────────────────────────────────────────────────
 interface AdvancedFilterPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -185,15 +178,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
 }) => {
   const { t } = useI18n();
 
-  // Local draft state — only committed on "Apply"
   const [draft, setDraft] = useState(currentQuery);
 
-  // Sync draft when modal opens with latest query
   React.useEffect(() => {
     if (isOpen) setDraft(currentQuery);
   }, [isOpen, currentQuery]);
 
-  // Active detected values
   const activeTags = useMemo(
     () =>
       availableTags.filter((tag) =>
@@ -246,7 +236,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("explorer.modals.filterTitle")}>
       <div className="space-y-3 py-2 max-h-[70vh] overflow-y-auto">
-        {/* Live query preview */}
         <div className="flex items-center gap-2 p-3 bg-m3-sidebar/40 border border-m3-border rounded-2xl">
           <Search className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
           <input
@@ -275,7 +264,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           </p>
         )}
 
-        {/* ── Tags ──────────────────────────────────────────────────── */}
         {availableTags.length > 0 && (
           <FilterSection
             icon={<Tag className="w-3.5 h-3.5" />}
@@ -299,7 +287,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           </FilterSection>
         )}
 
-        {/* ── Musical Key ───────────────────────────────────────────── */}
         <FilterSection
           icon={<Music className="w-3.5 h-3.5" />}
           label="Tonalidade / Key"
@@ -318,7 +305,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           </div>
         </FilterSection>
 
-        {/* ── Folder ────────────────────────────────────────────────── */}
         {availableFolders.length > 0 && (
           <FilterSection
             icon={<HardDrive className="w-3.5 h-3.5" />}
@@ -339,7 +325,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           </FilterSection>
         )}
 
-        {/* ── Quick field selectors ─────────────────────────────────── */}
         <FilterSection
           icon={<Search className="w-3.5 h-3.5" />}
           label="Pesquisa por campo / Field search"
@@ -388,7 +373,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           </div>
         </FilterSection>
 
-        {/* ── Range helpers ─────────────────────────────────────────── */}
         <FilterSection
           icon={<Sliders className="w-3.5 h-3.5" />}
           label="Intervalos / Ranges"
@@ -433,7 +417,6 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
         </FilterSection>
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between pt-4 mt-2 border-t border-m3-border">
         <button
           type="button"
@@ -457,16 +440,13 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
   );
 };
 
-// ─── Props ───────────────────────────────────────────────────────────────────
 interface ExplorerModalsProps {
   activeModal: ActiveModal;
   onCloseModal: () => void;
   onOpenModal?: (modal: ActiveModal) => void;
 
-  // CifraClub
   onCifraClubSubmit: (chordpro: ConversionResult, artist: string, title: string) => Promise<void>;
 
-  // Create Song
   currentFolder: Folder | undefined;
   currentFolderId: string | null;
   allFolders?: Folder[];
@@ -477,26 +457,20 @@ interface ExplorerModalsProps {
     tags: string[];
   }) => Promise<void>;
 
-  // Create Service
   onCreateServiceSubmit: (data: { name: string; date: string; notes: string }) => Promise<void>;
 
-  // Create Event
   onCreateEventSubmit?: (value: EventFormValue) => Promise<void>;
 
-  // Create Folder
   onCreateFolderSubmit: (name: string) => Promise<void>;
 
-  // Rename Folder
   renameTarget: Folder | null;
   setRenameTarget: (f: Folder | null) => void;
   onRenameFolderSubmit: (name: string) => Promise<void>;
 
-  // Customize Folder
   customizeTarget?: Folder | null;
   setCustomizeTarget?: (f: Folder | null) => void;
   onCustomizeFolderSubmit?: (color: string, icon: string) => Promise<void>;
 
-  // Move Folder
   moveFolderTarget: Folder | null;
   setMoveFolderTarget: (f: Folder | null) => void;
   targetParentFolderId: string | null;
@@ -506,7 +480,6 @@ interface ExplorerModalsProps {
   toggleExpand: (id: string) => void;
   onMoveFolderSubmit: () => Promise<void>;
 
-  // Delete Folder
   deleteTarget: Folder | null;
   setDeleteTarget: (f: Folder | null) => void;
   deleteAcao: "move_to_root" | "delete_songs";
@@ -515,18 +488,15 @@ interface ExplorerModalsProps {
   setConfirmFolderName: (n: string) => void;
   onDeleteFolderSubmit: () => Promise<void>;
 
-  // Move Song
   moveSongTarget: Song | null;
   setMoveSongTarget: (s: Song | null) => void;
   targetSongFolderId: string | null;
   onMoveSongConfirm: (targetFolderId: string | null) => Promise<void>;
 
-  // Delete Song
   deleteSongTarget: Song | null;
   setDeleteSongTarget: (s: Song | null) => void;
   onDeleteSongSubmit: () => Promise<void>;
 
-  // Batch modals
   selectedFolderIds: Set<string>;
   selectedSongIds: Set<string>;
   disabledFolderIdsForBatchMove: Set<string>;
@@ -537,12 +507,10 @@ interface ExplorerModalsProps {
 
   onBatchTagConfirm: (tags: string[], mode: "append" | "replace" | "remove") => Promise<void>;
 
-  // Advanced Filter Modal — now Liqe-based
   currentQuery: string;
   onApplyQuery: (query: string) => void;
   availableTags: string[];
 
-  // Create Collection
   onCreateCollectionSubmit?: (data: {
     name: string;
     description?: string | null;
@@ -551,7 +519,6 @@ interface ExplorerModalsProps {
     image?: string | null;
   }) => Promise<void>;
 
-  // Add to Collection
   addToCollectionTarget?: Song | null;
   setAddToCollectionTarget?: (s: Song | null) => void;
   allCollections?: Collection[];
@@ -640,7 +607,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         handleSave={onCifraClubSubmit}
       />
 
-      {/* CREATE SONG MODAL */}
       <Modal
         isOpen={activeModal === "create-song"}
         onClose={onCloseModal}
@@ -661,7 +627,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         />
       </Modal>
 
-      {/* CREATE SERVICE MODAL */}
       <Modal
         isOpen={activeModal === "create-service"}
         onClose={onCloseModal}
@@ -671,7 +636,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         <ServiceForm onSubmit={onCreateServiceSubmit} onCancel={onCloseModal} />
       </Modal>
 
-      {/* CREATE EVENT MODAL */}
       {onCreateEventSubmit && (
         <EventFormModal
           isOpen={activeModal === "create-event"}
@@ -682,7 +646,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         />
       )}
 
-      {/* CREATE FOLDER MODAL */}
       <Modal
         isOpen={activeModal === "create-folder"}
         onClose={onCloseModal}
@@ -698,7 +661,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         <FolderForm onSubmit={onCreateFolderSubmit} onCancel={onCloseModal} />
       </Modal>
 
-      {/* RENAME FOLDER MODAL */}
       <Modal
         isOpen={!!renameTarget}
         onClose={() => setRenameTarget(null)}
@@ -714,7 +676,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         />
       </Modal>
 
-      {/* CUSTOMIZE FOLDER MODAL */}
       {customizeTarget && setCustomizeTarget && onCustomizeFolderSubmit && (
         <CustomizeFolderModal
           isOpen={!!customizeTarget}
@@ -724,7 +685,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         />
       )}
 
-      {/* MOVE FOLDER MODAL (TREE HIERARCHY) */}
       <Modal
         isOpen={!!moveFolderTarget}
         onClose={() => setMoveFolderTarget(null)}
@@ -755,7 +715,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
               </div>
             </label>
 
-            {/* Hierarchical Tree of Folders with Disabled Check for Self/Descendants */}
             <div className="flex flex-col gap-1.5 mt-1">
               {folderTree.map((node) => (
                 <MoveFolderTreeItem
@@ -786,7 +745,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         </div>
       </Modal>
 
-      {/* DELETE FOLDER MODAL */}
       <Modal
         isOpen={!!deleteTarget}
         onClose={() => {
@@ -933,7 +891,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         )}
       </Modal>
 
-      {/* MOVE SONG MODAL (TREE HIERARCHY) */}
       <MoveSongModal
         isOpen={!!moveSongTarget}
         onClose={() => setMoveSongTarget(null)}
@@ -943,7 +900,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         onConfirm={onMoveSongConfirm}
       />
 
-      {/* DELETE SONG MODAL */}
       <Modal
         isOpen={!!deleteSongTarget}
         onClose={() => setDeleteSongTarget(null)}
@@ -972,7 +928,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         </div>
       </Modal>
 
-      {/* BATCH MOVE MODAL */}
       <BatchMoveModal
         isOpen={activeModal === "batch-move"}
         onClose={onCloseModal}
@@ -983,7 +938,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         onConfirm={onBatchMoveConfirm}
       />
 
-      {/* BATCH DELETE MODAL */}
       <BatchDeleteModal
         isOpen={activeModal === "batch-delete"}
         onClose={onCloseModal}
@@ -992,7 +946,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         onConfirm={onBatchDeleteConfirm}
       />
 
-      {/* BATCH TAG MODAL */}
       <BatchTagModal
         isOpen={activeModal === "batch-tag"}
         onClose={onCloseModal}
@@ -1000,7 +953,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         onConfirm={onBatchTagConfirm}
       />
 
-      {/* ADVANCED FILTER MODAL — Liqe query builder */}
       <AdvancedFilterPanel
         isOpen={activeModal === "filter"}
         onClose={onCloseModal}
@@ -1011,7 +963,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         currentFolder={currentFolder}
       />
 
-      {/* CREATE COLLECTION MODAL */}
       {onCreateCollectionSubmit && (
         <CreateCollectionModal
           isOpen={activeModal === "create-collection"}
@@ -1020,7 +971,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         />
       )}
 
-      {/* ADD TO COLLECTION MODAL (SINGLE SONG) */}
       {addToCollectionTarget && setAddToCollectionTarget && onAddToCollectionConfirm && (
         <AddToCollectionModal
           isOpen={!!addToCollectionTarget}
@@ -1034,7 +984,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         />
       )}
 
-      {/* ADD TO COLLECTION MODAL (BATCH SONGS) */}
       {onAddToCollectionConfirm && (
         <AddToCollectionModal
           isOpen={activeModal === "batch-add-to-collection"}

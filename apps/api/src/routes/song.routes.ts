@@ -15,7 +15,6 @@ import {
 
 export const songRouter = Router();
 
-// GET /api/songs — admin or musician
 songRouter.get(
   "/",
   requirePermission("song.access"),
@@ -48,7 +47,6 @@ songRouter.put(
   }),
 );
 
-// GET /api/songs/:id — admin or musician
 songRouter.get(
   "/:id",
   requirePermission("song.access"),
@@ -85,7 +83,6 @@ songRouter.post(
   }),
 );
 
-// PUT /api/songs/:id — admin only, optimistic concurrency
 songRouter.put(
   "/:id",
   requirePermission("song.update"),
@@ -97,7 +94,6 @@ songRouter.put(
   }),
 );
 
-// DELETE /api/songs/:id — admin only
 songRouter.delete(
   "/:id",
   requirePermission("song.delete"),
@@ -109,7 +105,6 @@ songRouter.delete(
   }),
 );
 
-// PUT /api/songs/:id/move — admin only, optimistic concurrency
 songRouter.put(
   "/:id/move",
   requirePermission("song.update"),

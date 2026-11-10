@@ -35,8 +35,6 @@ import {
   subscribe as busSubscribe,
 } from "./bus";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type AnyDoc = { id: string } & Record<string, unknown>;
 export type Selector = Record<string, unknown>;
 
@@ -62,9 +60,7 @@ export interface LiveDocument<T> {
   $: Observable<T | null>;
 }
 
-// ─── Document wrapper ─────────────────────────────────────────────────────────
 //
-// HosanaDoc<T> = T & { patch, remove, toJSON }
 //
 // We cannot `class Foo extends T {}` in TS, so we build the wrapper as a
 // plain object intersection. The factory `makeDoc(raw, collection)` returns
@@ -110,7 +106,6 @@ function makeDoc<T extends AnyDoc>(raw: T, collection: HosanaCollection<T>): Hos
   doc.patch = async function (this: HosanaDoc<T>, fields: Partial<T>): Promise<void> {
     const next = { ...this._raw, ...fields } as T;
     await this._collection._put(next);
-    // Update own properties to reflect new state
     Object.assign(this, fields);
     (this as { _raw: T })._raw = next;
   };
@@ -126,8 +121,6 @@ function makeDoc<T extends AnyDoc>(raw: T, collection: HosanaCollection<T>): Hos
 
   return doc;
 }
-
-// ─── Selector matching ────────────────────────────────────────────────────────
 
 function matchesSelector<T extends AnyDoc>(doc: T, selector: Selector): boolean {
   for (const [key, condition] of Object.entries(selector)) {
@@ -152,17 +145,13 @@ function matchesSelector<T extends AnyDoc>(doc: T, selector: Selector): boolean 
         if (!arr.includes(docVal)) return false;
       }
     } else if (condition === null) {
-      // In document queries, matching null matches both null and undefined
       if (docVal != null) return false;
     } else {
-      // Equality
       if (docVal !== condition) return false;
     }
   }
   return true;
 }
-
-// ─── Collection ───────────────────────────────────────────────────────────────
 
 export class HosanaCollection<T extends AnyDoc> {
   /** In-memory cache: id → raw doc */
@@ -190,8 +179,6 @@ export class HosanaCollection<T extends AnyDoc> {
     }
   }
 
-  // ── Internal ──────────────────────────────────────────────────────────────
-
   /** @internal Used by doc.remove() / replication */
   _storeDelete(id: string): void {
     this._store.delete(id);
@@ -217,8 +204,6 @@ export class HosanaCollection<T extends AnyDoc> {
    *    pull-triggered write can't loop back into another push/pull cycle.
    */
   async _put(doc: T, origin: "local" | "remote" = "local"): Promise<void> {
-    // Capture pre-write snapshot before we overwrite — replication needs it
-    // as the push baseline when the server-state cache is cold after a refresh.
     if (origin === "local") {
       const previous = this._store.get(doc.id);
       if (previous) {
@@ -364,8 +349,6 @@ export class HosanaCollection<T extends AnyDoc> {
     return out as T;
   }
 
-  // ── Query ─────────────────────────────────────────────────────────────────
-
   find(opts: FindOptions): LiveQuery<HosanaDoc<T>> {
     const { selector } = opts;
     const execNow = (): HosanaDoc<T>[] =>
@@ -402,8 +385,6 @@ export class HosanaCollection<T extends AnyDoc> {
       },
     };
   }
-
-  // ── Mutations ─────────────────────────────────────────────────────────────
 
   async insert(doc: T): Promise<HosanaDoc<T>> {
     if (this._store.has(doc.id)) {
@@ -473,6 +454,5 @@ export class HosanaCollection<T extends AnyDoc> {
   }
 }
 
-// ─── Helpers for idbGetAll (needed by database.ts) ───────────────────────────
 // Re-export so database.ts has a single internal import path.
 export { idbGetAll };

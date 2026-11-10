@@ -298,7 +298,6 @@ export function useAgenda() {
         const db = await getDatabase();
         const doc = await db.agendaEvents.findOne(id).exec();
         if (doc) {
-          // Move to trash; permanent removal happens at purgeAt server-side.
           await doc.patch({
             isDeleted: true,
             purgeAt: getPurgeAt(),

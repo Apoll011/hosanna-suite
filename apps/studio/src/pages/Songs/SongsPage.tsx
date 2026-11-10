@@ -44,13 +44,11 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
   const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<string, unknown>;
 
-  // Density from context with the unified personal-settings fallback
   const contextDensity = context.density as "comfortable" | "compact" | undefined;
 
   const density = contextDensity ?? settings.explorerDensity;
   const isCompact = density === "compact";
 
-  // Search & Filter props resolution
   const contextSearchQuery = context.searchQuery as string | undefined;
   const contextSortBy = context.sortBy as "title" | "artist" | "updatedAt" | "number" | undefined;
   const contextSortOrder = context.sortOrder as "asc" | "desc" | undefined;
@@ -88,7 +86,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 
   const [itemsPerPage, setItemsPerPage] = useState<number>(50);
 
-  // Modals & Target delegates from layout context
   const openModal = context.openModal as ((modal: string) => void) | undefined;
   const setMoveSongTarget = context.setMoveSongTarget as ((song: Song | null) => void) | undefined;
   const setDeleteSongTarget = context.setDeleteSongTarget as
@@ -114,7 +111,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Context Menu State
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -122,7 +118,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     isMulti?: boolean;
   } | null>(null);
 
-  // Fetch full cached song & folder list
   const { songsQuery } = useAllSongs();
   const { foldersQuery } = useFolders();
 
@@ -137,14 +132,12 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     [songsQuery.data?.songs],
   );
 
-  // Helper: folder map for O(1) lookups
   const folderMap = useMemo(() => {
     const map = new Map<string, string>();
     folders.forEach((f) => map.set(f.id, f.name));
     return map;
   }, [folders]);
 
-  // Client-side filtering & sorting with high performance memoization (Liqe powered)
   const filteredSongs = useMemo(() => {
     let result = allSongs;
 
@@ -165,7 +158,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
       result = result.filter((song) => song.tags?.includes(actualSelectedTag));
     }
 
-    // Client-side sorting
     if (result.length > 1) {
       result = [...result].sort((a, b) => {
         let valA: string | number = "";
@@ -205,7 +197,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const totalSongs = filteredSongs.length;
   const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
 
-  // Reset page when filters change
   useEffect(() => {
     setPage(1);
     setSelectedSongIds(new Set());
@@ -226,7 +217,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     return filteredSongs.slice(start, start + effectivePerPage);
   }, [filteredSongs, page, effectivePerPage, itemsPerPage]);
 
-  // Rubberband marquee selection
   const { selectionBox, handleMouseDown: handleWorkspaceMouseDown } = useMarqueeSelection({
     containerRef,
     enabled: true,
@@ -238,7 +228,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     },
   });
 
-  // Keyboard navigation & Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -276,7 +265,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [songsData, selectedSongIds, allSongs, setSelectedSongIds, setDeleteSongTarget, openModal]);
 
-  // Outside click to close context menu
   useEffect(() => {
     const handleClickOutside = () => setContextMenu(null);
     window.addEventListener("click", handleClickOutside);
@@ -510,7 +498,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
         </table>
       </Table>
 
-      {/* Floating Context Menu */}
       {contextMenu && (
         <div
           style={{ top: contextMenu.y, left: contextMenu.x }}
@@ -646,7 +633,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
         </div>
       )}
 
-      {/* Marquee Selection Box */}
       <MarqueeSelectionBox box={selectionBox} />
     </div>
   );

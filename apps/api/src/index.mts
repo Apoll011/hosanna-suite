@@ -32,7 +32,6 @@ app.disable("x-powered-by");
 app.disable("etag");
 app.set("trust proxy", 1);
 
-// ── HTTPS redirect — only for long-running hosts (Docker / bare metal) ─────
 // Vercel terminates TLS at the edge; redirecting here wastes cold-start CPU
 // and can fight the platform's own HTTPS enforcement.
 if (env.nodeEnv === "production" && !isVercel) {
@@ -44,7 +43,6 @@ if (env.nodeEnv === "production" && !isVercel) {
   });
 }
 
-// ── Security headers ────────────────────────────────────────────────────────
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -59,7 +57,6 @@ app.use(
   }),
 );
 
-// ── CORS ────────────────────────────────────────────────────────────────────
 const corsOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
@@ -72,7 +69,6 @@ const corsOrigins = [
   "https://auth.hosanna.live",
   "https://dev-auth.hosanna.live",
   "https://hosanna.live",
-  // External MCP OAuth hosts (browser DCR / authorize)
   "https://claude.ai",
   "https://www.claude.ai",
   "https://chatgpt.com",
@@ -85,7 +81,6 @@ app.use(
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
       if (corsOrigins.includes(origin)) return callback(null, true);
-      // Allow any *.hosanna.live / *.openai.com / *.cursor.com studio hosts
       try {
         const host = new URL(origin).hostname;
         if (
@@ -109,7 +104,6 @@ app.use(
   }),
 );
 
-// ── Compression — skip on Vercel (edge/CDN already compresses) ─────────────
 // Lazy-load so the Vercel serverless bundle does not pay for the middleware
 // on every cold start.
 if (!isVercel) {
@@ -125,28 +119,21 @@ if (!isVercel) {
   );
 }
 
-
-// ── Body parsing ─────────────────────────────────────────────────────────────
-// 5 MB headroom for large replication push batches (songs with full lyrics)
 // 20mb so mobile song-import jobs can send PDF + screenshot as base64 JSON.
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
-// ── Cache-Control — private APIs must not be cached by shared proxies ───────
 app.use((_req, res, next) => {
   res.setHeader("Cache-Control", "private, no-store");
   next();
 });
 
-// ── Default locale ──────────────────────────────────────────────────────────
 // Ensures req.locale is always defined. The authenticate middleware overwrites
-// this with the org-specific locale for authenticated routes.
 app.use((req, _res, next) => {
   if (!req.locale) req.locale = DEFAULT_LOCALE;
   next();
 });
 
-// ── Global rate limiter ─────────────────────────────────────────────────────
 // Note: in-memory store is per-instance. Fine for Docker; on Vercel Fluid it
 // only rate-limits within a warm isolate (still useful as a safety net).
 const globalLimiter = rateLimit({
@@ -165,15 +152,12 @@ const globalLimiter = rateLimit({
   skip: () => env.rateLimitDisabled,
 });
 
-// ── MCP (Streamable HTTP) ───────────────────────────────────────────────────
 // Mounted outside /api so MCP clients can use a stable /mcp path.
 // Auth is optional; org-scoped tools enforce Better Auth + permissions.
 app.use("/mcp", globalLimiter, mcpRouter);
 
-// ── API routes ──────────────────────────────────────────────────────────────
 app.use("/api", globalLimiter, apiRouter);
 
-// ── Error handling ──────────────────────────────────────────────────────────
 app.use(notFoundHandler);
 app.use(errorHandler);
 
@@ -185,7 +169,6 @@ export const config = {
   maxDuration: 60,
 };
 
-// ── Long-running server (local + Docker) ───────────────────────────────────
 if (!isVercel) {
   const server = app.listen(env.port, "0.0.0.0", () => {
     console.log(`Hosanna API listening on http://0.0.0.0:${env.port} (${env.nodeEnv})`);

@@ -108,8 +108,6 @@ function annotationDocPath(projectId: string, serviceId: string, songId: string)
   );
 }
 
-// ── Notes signal ───────────────────────────────────────────────────────────
-
 export type NotesSignalAction = "create" | "update" | "delete";
 
 export interface NotesSignalPayload {
@@ -166,8 +164,6 @@ export async function publishNotesSignal(payload: NotesSignalPayload): Promise<v
     console.error("[firestore] publishNotesSignal failed:", err);
   }
 }
-
-// ── Annotations (Firestore only — no Storage) ──────────────────────────────
 
 export interface AnnotationFirebasePayload {
   orgId: string;

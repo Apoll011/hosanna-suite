@@ -25,13 +25,11 @@ import { syncCache } from "./syncCache.service.js";
 const MAX_LIMIT = 2000;
 const DEFAULT_LIMIT = 100;
 
-// ── Checkpoint type ────────────────────────────────────────────────────────
 export interface ReplicationCheckpoint {
   updatedAt: number; // Unix epoch milliseconds
   id: string;
 }
 
-// ── Pull request / response types ──────────────────────────────────────────
 export interface PullRequest {
   checkpoint: ReplicationCheckpoint | null;
   limit: number;
@@ -53,7 +51,6 @@ export interface PullResponse<T> {
   checkpoint: ReplicationCheckpoint | null;
 }
 
-// ── Push request / response types ──────────────────────────────────────────
 export interface ChangeRow<T> {
   newDocumentState: T;
   assumedMasterState?: T | null;
@@ -63,7 +60,6 @@ export interface PushRequest<T> {
   changeRows: ChangeRow<T>[];
 }
 
-// ── Collection names we replicate ──────────────────────────────────────────
 export type ReplicatedCollection =
   "songs" | "folders" | "collections" | "services" | "agendaEvents";
 
@@ -74,8 +70,6 @@ export const ALL_COLLECTIONS: readonly ReplicatedCollection[] = [
   "services",
   "agendaEvents",
 ] as const;
-
-// ── Helpers ────────────────────────────────────────────────────────────────
 
 const DELEGATE_BY_COLLECTION = {
   songs: "song",
@@ -377,8 +371,6 @@ function buildCheckpointWhere(checkpoint: ReplicationCheckpoint | null) {
   };
 }
 
-// ── Generic pull ───────────────────────────────────────────────────────────
-
 async function pullOne(
   db: OrgScopedPrisma,
   tenantId: string,
@@ -386,7 +378,6 @@ async function pullOne(
   checkpoint: ReplicationCheckpoint | null,
   limit: number,
 ): Promise<PullResponse<any>> {
-  // Fast path: if syncCache knows nothing has changed since checkpoint, return immediately!
   if (await syncCache.hasNoChanges(tenantId, collection, checkpoint)) {
     return { documents: [], checkpoint };
   }
@@ -396,7 +387,6 @@ async function pullOne(
   const where = buildCheckpointWhere(checkpoint);
 
   if (collection === "folders") {
-    // Lean fetch without subquery JOINs in the main query
     const docs = await delegate.findMany({
       where,
       orderBy: [{ updatedAt: "asc" }, { id: "asc" }],
@@ -530,10 +520,7 @@ export async function pullAll(
   return response;
 }
 
-// Keep single-collection signature around for backward compatibility
 export const pull = pullOne;
-
-// ── Push: songs ────────────────────────────────────────────────────────────
 
 async function pushSongs(
   db: OrgScopedPrisma,
@@ -546,7 +533,6 @@ async function pushSongs(
     .map((r) => r.newDocumentState?.id)
     .filter((id): id is string => typeof id === "string" && id.length > 0);
 
-  // Lean lookup: only fetch id and updatedAt to detect conflicts for 300+ songs
   const existingList =
     candidateIds.length > 0
       ? await db.song.findMany({
@@ -676,8 +662,6 @@ async function pushSongs(
   return conflicts;
 }
 
-// ── Push: folders ──────────────────────────────────────────────────────────
-
 async function pushFolders(
   db: OrgScopedPrisma,
   tenantId: string,
@@ -787,8 +771,6 @@ async function pushFolders(
   }
   return conflicts;
 }
-
-// ── Push: collections ──────────────────────────────────────────────────────
 
 async function pushCollections(
   db: OrgScopedPrisma,
@@ -921,8 +903,6 @@ async function pushCollections(
   return conflicts;
 }
 
-// ── Push: services ─────────────────────────────────────────────────────────
-
 async function pushServices(
   db: OrgScopedPrisma,
   tenantId: string,
@@ -1030,8 +1010,6 @@ async function pushServices(
   }
   return conflicts;
 }
-
-// ── Push: agenda events ────────────────────────────────────────────────────
 
 async function pushAgendaEvents(
   db: OrgScopedPrisma,
@@ -1152,8 +1130,6 @@ async function pushAgendaEvents(
   }
   return conflicts;
 }
-
-// ── Public API ─────────────────────────────────────────────────────────────
 
 const pushHandlers: Record<
   ReplicatedCollection,

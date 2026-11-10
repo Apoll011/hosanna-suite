@@ -128,14 +128,12 @@ export const TeamsPage: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
 
-  // Form states
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamDesc, setNewTeamDesc] = useState("");
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberEmail, setNewMemberEmail] = useState("");
   const [newMemberRole, setNewMemberRole] = useState<"leader" | "member">("member");
 
-  // User role check
   const userRole = (user as { role?: string })?.role || "admin";
   const isOrgAdminOrOwner = ["owner", "admin"].includes(userRole);
 
@@ -304,14 +302,12 @@ export const TeamsPage: React.FC = () => {
     showToast(t("teamsPage.permissionsUpdated"), "success");
   };
 
-  // If viewing single team detail page (TEAM-05)
   if (selectedTeam) {
     const members = teamMembers[selectedTeam.id] || [];
     const isLeaderOfTeam = selectedTeam.leaderId === user?.id || isOrgAdminOrOwner;
 
     return (
       <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6 animate-in fade-in duration-200">
-        {/* Back navigation header */}
         <div className="flex items-center justify-between">
           <button
             onClick={() => setSelectedTeam(null)}
@@ -353,7 +349,6 @@ export const TeamsPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Members List (TEAM-03 & TEAM-04) */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-title text-m3-text flex items-center gap-2">
@@ -426,7 +421,6 @@ export const TeamsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Team Permissions & Settings (TEAM-05) */}
           <div className="space-y-4">
             <h2 className="text-title text-m3-text flex items-center gap-2">
               <Shield className="w-5 h-5 text-m3-primary" />
@@ -504,7 +498,6 @@ export const TeamsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Modal: Add Member */}
         {isAddMemberModalOpen && (
           <Modal
             isOpen={isAddMemberModalOpen}
@@ -581,7 +574,6 @@ export const TeamsPage: React.FC = () => {
         }
       />
 
-      {/* Search & Stats */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-m3-card p-4 border border-m3-border rounded-xl shadow-sm">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-m3-secondary absolute left-3 top-3.5" />
@@ -599,7 +591,6 @@ export const TeamsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Teams Grid (TEAM-01) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredTeams.map((team) => (
           <div
@@ -658,7 +649,6 @@ export const TeamsPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Modal: Create Team (TEAM-02) */}
       {isCreateModalOpen && (
         <Modal
           isOpen={isCreateModalOpen}
