@@ -261,10 +261,10 @@ export function AiProviderLogoBadge({
 }) {
   const box =
     size === "lg"
-      ? "w-14 h-14 rounded-[var(--radius-lg)]"
+      ? "w-14 h-14 rounded-lg"
       : size === "sm"
-        ? "w-8 h-8 rounded-[var(--radius-md)]"
-        : "w-11 h-11 rounded-[var(--radius-md)]";
+        ? "w-8 h-8 rounded-md"
+        : "w-11 h-11 rounded-md";
   const icon = size === "lg" ? "w-7 h-7" : size === "sm" ? "w-4 h-4" : "w-5 h-5";
 
   const tint: Record<AiProvider, string> = {

@@ -236,7 +236,7 @@ const PrintModalContent: React.FC<{
   }, [handlePrint, onClose]);
 
   const iconButton =
-    "inline-flex items-center justify-center min-h-9 min-w-9 rounded-[var(--radius-md)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center min-h-9 min-w-9 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
   const pillButton =
     "inline-flex items-center justify-center h-8 min-w-8 px-1.5 rounded-full text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed";
 

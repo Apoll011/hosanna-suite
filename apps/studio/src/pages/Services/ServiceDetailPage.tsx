@@ -290,9 +290,9 @@ interface ServiceRowProps {
 }
 
 const SERVICE_MENU_ITEM =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer";
 const SERVICE_MENU_DANGER =
-  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-[var(--radius-md)] text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
+  "w-full flex items-center gap-2.5 px-3 py-2 min-h-10 rounded-md text-m3-danger hover:bg-m3-danger/10 font-semibold transition-colors text-left cursor-pointer";
 const SERVICE_MENU_ICON = "w-4 h-4 text-m3-secondary shrink-0";
 
 const ServiceRow: React.FC<ServiceRowProps> = ({

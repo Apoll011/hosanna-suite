@@ -120,7 +120,7 @@ const FontSizeControl: React.FC<{
 }> = ({ value, onChange, disabled }) => {
   const { t } = useI18n();
   const stepClass =
-    "inline-flex items-center justify-center w-8 h-8 rounded-[var(--radius-sm)] text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer";
+    "inline-flex items-center justify-center w-8 h-8 rounded-sm text-m3-secondary hover:text-m3-text hover:bg-m3-hover disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer";
   return (
     <div className={disabled ? "opacity-50" : ""}>
       <div className="flex items-center justify-between mb-1">

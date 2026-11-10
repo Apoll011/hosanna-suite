@@ -32,10 +32,10 @@ export interface AiSettingsTabProps {
 }
 
 const selectClass =
-  "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
+  "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors cursor-pointer";
 
 const inputClass =
-  "w-full rounded-[var(--radius-md)] border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
+  "w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary disabled:opacity-60 disabled:bg-m3-sidebar transition-colors";
 
 const API_KEY_MASK = "••••••••••••••••••••••••";
 
@@ -333,7 +333,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
             </div>
           )}
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 *:min-w-0 *:h-full">
           <SectionCard
             className="h-full"
             icon={<Zap className="w-4 h-4" />}
@@ -698,7 +698,7 @@ export const AiSettingsTab: React.FC<AiSettingsTabProps> = ({ active, showToast 
           ) : null}
 
           {memoryEnabled ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 [&>*]:min-w-0 [&>*]:h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
               <AiMemoryPanel scope="organization" limits={settings.limits} showToast={showToast} />
               <AiMemoryPanel scope="personal" limits={settings.limits} showToast={showToast} />
             </div>

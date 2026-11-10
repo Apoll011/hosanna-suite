@@ -23,7 +23,7 @@ import { useProposalActions } from "./proposalActions";
 import { aiProposals, useAiProposals, type AiProposal, type SongProposal } from "./proposalStore";
 
 const iconBtn =
-  "inline-flex items-center justify-center w-7 h-7 rounded-[var(--radius-md)] text-m3-secondary hover:bg-m3-hover hover:text-m3-text disabled:opacity-50 transition-colors";
+  "inline-flex items-center justify-center w-7 h-7 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text disabled:opacity-50 transition-colors";
 
 /**
  * Every AI edit waiting for a decision, reviewable from any page. This is

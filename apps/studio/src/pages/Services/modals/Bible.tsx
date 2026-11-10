@@ -1,10 +1,10 @@
-import { Button, Modal } from "@hosanna/ui";
 import {
   DurationField,
   durationInputToSeconds,
   secondsToDurationInput,
 } from "@/src/components/DurationField";
 import { useI18n } from "@/src/lib/i18n";
+import { Button, Modal } from "@hosanna/ui";
 import { BookOpen, Check, ChevronDown, Loader2, Search } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -328,9 +328,6 @@ function parsePassageInput(input: string): ParsedPassage | null {
 
   return { bookId, chapter, startVerse, endVerse, raw: trimmed };
 }
-
-// ══════════════════════════════════════════════════════════════════════
-// ══════════════════════════════════════════════════════════════════════
 
 interface ScriptureModalProps {
   isOpen: boolean;

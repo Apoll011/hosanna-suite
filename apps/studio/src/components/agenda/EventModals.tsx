@@ -51,7 +51,7 @@ const FieldLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const fieldInputClass =
-  "w-full h-11 pl-10 pr-3 bg-m3-sidebar border border-m3-border rounded-[var(--radius-md)] text-sm font-semibold focus:outline-none focus:border-m3-primary transition-colors";
+  "w-full h-11 pl-10 pr-3 bg-m3-sidebar border border-m3-border rounded-md text-sm font-semibold focus:outline-none focus:border-m3-primary transition-colors";
 
 /** Small icon-only round button, used for steppers and dismiss actions. */
 const IconButton: React.FC<
