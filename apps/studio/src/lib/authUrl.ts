@@ -3,13 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/** Auth app origin (Better Auth UI + `/api/auth`). */
+/**
+ * Auth app origin (Better Auth UI + `/api/auth`).
+ * Never falls back to the API host — session/org calls must hit auth.
+ */
 export function getAuthAppUrl(): string {
-  const raw =
-    import.meta.env.VITE_AUTH_URL ||
-    (typeof window !== "undefined" ? "" : "") ||
-    "https://auth.hosanna.live";
-  return String(raw).replace(/\/+$/, "") || "https://auth.hosanna.live";
+  const fromEnv = import.meta.env.VITE_AUTH_URL?.trim();
+  if (fromEnv) return fromEnv.replace(/\/+$/, "");
+  if (import.meta.env.DEV) return "http://localhost:5174";
+  return "https://auth.hosanna.live";
 }
 
 /** Build an auth-app URL, preserving query and optional returnUrl. */

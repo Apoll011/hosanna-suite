@@ -6,20 +6,12 @@
 import { createHosannaAuthClient } from "@hosanna/auth/client";
 import { getAuthAppUrl } from "./authUrl";
 
-const authBase =
-  import.meta.env.VITE_AUTH_URL ||
-  (import.meta.env.VITE_API_URL
-    ? `${import.meta.env.VITE_API_URL.replace(/\/api$/, "")}`
-    : typeof window !== "undefined"
-      ? window.location.origin
-      : getAuthAppUrl());
-
 /**
- * Studio talks to the auth app's Better Auth host.
- * 2FA redirects default to `{baseURL}/two-factor` on that host.
+ * Studio Better Auth client — always targets the auth app host.
+ * getSession / organization.* / subscription.* / 2FA all go here, never the API.
  */
 export const authClient = createHosannaAuthClient({
-  baseURL: String(authBase).replace(/\/+$/, ""),
+  baseURL: getAuthAppUrl(),
 });
 
 export type { Session, User } from "better-auth";

@@ -50,66 +50,13 @@ export const lazyImport = <T>(componentImport: LazyImportFn<T>): LazyPreloadable
 };
 
 // ----------------------------------------------------------------------
-// ROUTE COMPONENTS
+// ROUTE COMPONENTS (auth UI lives on the auth app — no Studio login pages)
 // ----------------------------------------------------------------------
-export const LoginPage = lazyImport(() =>
-  import("../pages/Login/LoginPage").then((m) => ({ default: m.LoginPage })),
-);
-export const AuthErrorPage = lazyImport(() =>
-  import("../pages/Login/AuthErrorPage").then((m) => ({
-    default: m.AuthErrorPage,
-  })),
-);
-export const OAuthConsentPage = lazyImport(() =>
-  import("../pages/OAuthConsentPage").then((m) => ({
-    default: m.OAuthConsentPage,
-  })),
-);
-export const TwoFactorPage = lazyImport(() =>
-  import("../pages/Login/TwoFactorPage").then((m) => ({
-    default: m.TwoFactorPage,
-  })),
-);
-export const RegisterPage = lazyImport(() =>
-  import("../pages/Login/RegisterPage").then((m) => ({
-    default: m.RegisterPage,
-  })),
-);
-export const RegisterOrganizationPage = lazyImport(() =>
-  import("../pages/Login/Tenant").then((m) => ({
-    default: m.RegisterOrganizationPage,
-  })),
-);
-export const VerifyEmailPage = lazyImport(() =>
-  import("../pages/Login/VerifyEmailPage").then((m) => ({
-    default: m.VerifyEmailPage,
-  })),
-);
-export const ForgotPasswordPage = lazyImport(() =>
-  import("../pages/Login/ForgotPasswordPage").then((m) => ({
-    default: m.ForgotPasswordPage,
-  })),
-);
-export const ResetPasswordPage = lazyImport(() =>
-  import("../pages/Login/ResetPasswordPage").then((m) => ({
-    default: m.ResetPasswordPage,
-  })),
-);
-export const AcceptInvitationPage = lazyImport(() =>
-  import("../pages/Login/AcceptInvitationPage").then((m) => ({
-    default: m.AcceptInvitationPage,
-  })),
-);
 export const AgendaPage = lazyImport(() =>
   import("../pages/AgendaPage").then((m) => ({ default: m.AgendaPage })),
 );
 export const DemoPage = lazyImport(() =>
   import("../pages/DemoPage").then((m) => ({ default: m.DemoPage })),
-);
-export const OnboardingPage = lazyImport(() =>
-  import("../pages/OnboardingPage").then((m) => ({
-    default: m.OnboardingPage,
-  })),
 );
 export const FoldersPage = lazyImport(() =>
   import("../pages/FoldersPage").then((m) => ({ default: m.FoldersPage })),
@@ -188,42 +135,8 @@ export const routePreloaders: Array<{
     pattern: /\/analytics(\/|\?|#|$)/,
     preload: () => AnalyticsPage.preload(),
   },
-  { pattern: /\/login(\/|\?|#|$)/, preload: () => LoginPage.preload() },
-  {
-    pattern: /\/auth\/error(\/|\?|#|$)/,
-    preload: () => AuthErrorPage.preload(),
-  },
-  {
-    pattern: /\/two-factor(\/|\?|#|$)/,
-    preload: () => TwoFactorPage.preload(),
-  },
-  { pattern: /\/register(\/|\?|#|$)/, preload: () => RegisterPage.preload() },
-  {
-    pattern: /\/new(\/|\?|#|$)/,
-    preload: () => RegisterOrganizationPage.preload(),
-  },
-  {
-    pattern: /\/verify-email(\/|\?|#|$)/,
-    preload: () => VerifyEmailPage.preload(),
-  },
-  {
-    pattern: /\/forgot-password(\/|\?|#|$)/,
-    preload: () => ForgotPasswordPage.preload(),
-  },
-  {
-    pattern: /\/reset-password(\/|\?|#|$)/,
-    preload: () => ResetPasswordPage.preload(),
-  },
-  {
-    pattern: /\/accept-invitation(\/|\?|#|$)/,
-    preload: () => AcceptInvitationPage.preload(),
-  },
   { pattern: /\/agenda(\/|\?|#|$)/, preload: () => AgendaPage.preload() },
   { pattern: /\/demo(\/|\?|#|$)/, preload: () => DemoPage.preload() },
-  {
-    pattern: /\/onboarding(\/|\?|#|$)/,
-    preload: () => OnboardingPage.preload(),
-  },
 ];
 
 export function preloadRoute(pathname: string): Promise<unknown> | null {

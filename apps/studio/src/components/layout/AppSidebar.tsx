@@ -4,6 +4,7 @@
  */
 
 import { Badge, Button } from "@/src/components/common";
+import { authAppHref } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
 import { Folder } from "@/src/types";
@@ -23,6 +24,7 @@ import {
   Music,
   Settings,
   Trash2,
+  UserRound,
   Users,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -609,6 +611,18 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 >
                   <Settings className="w-4 h-4 text-m3-secondary" />
                   {t("sidebar.openSettings")}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    window.location.assign(
+                      authAppHref("/account", { returnUrl: window.location.href }),
+                    );
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
+                >
+                  <UserRound className="w-4 h-4 text-m3-secondary" />
+                  {t("sidebar.openAccount")}
                 </button>
                 <div className="my-1 border-t border-m3-border" />
                 <button
