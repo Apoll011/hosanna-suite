@@ -3,6 +3,13 @@
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth-client";
 import {
+  clearCachedOrg,
+  readCachedActiveOrg,
+  readCachedOrgList,
+  writeCachedActiveOrg,
+  writeCachedOrgList,
+} from "@/lib/org-cache";
+import {
   createContext,
   createElement,
   useCallback,
@@ -71,6 +78,16 @@ function normalizeMember(m: OrgMember & { name?: string; email?: string; image?:
   };
 }
 
+function normalizeOrg(raw: ActiveOrganization): ActiveOrganization {
+  return {
+    ...raw,
+    metadata: parseMetadata(raw.metadata),
+    members: (raw.members ?? []).map((m) =>
+      normalizeMember(m as OrgMember & { name?: string; email?: string; image?: string }),
+    ),
+  };
+}
+
 export type OrgCapabilities = {
   canManageOrg: boolean;
   canManageInvites: boolean;
@@ -81,9 +98,7 @@ export type OrgCapabilities = {
   canImportBackup: boolean;
   canViewLoginActivity: boolean;
   canManageMembers: boolean;
-  /** Maps to Studio `notification.sent` — owner / admin / teamLeader. */
   canSendNotifications: boolean;
-  /** Maps to Studio `ai.manage` — owner / admin. */
   canManageAi: boolean;
 };
 
@@ -116,7 +131,9 @@ export type ActiveOrganizationValue = {
   activeMember: OrgMember | null;
   activeRole: string | null;
   capabilities: OrgCapabilities;
+  /** True only when there is no cached/live org yet. */
   isLoading: boolean;
+  /** Background refresh in flight (cache may already be showing). */
   isRefreshing: boolean;
   error: string | null;
   refresh: () => Promise<void>;
@@ -128,14 +145,24 @@ const ActiveOrganizationContext = createContext<ActiveOrganizationValue | null>(
 
 function useActiveOrganizationState(): ActiveOrganizationValue {
   const { user, isLoading: userLoading } = useAuthUser({
-    loginRedirect: "/login?redirect=/account/organization/profile",
+    loginRedirect: "/login?redirect=/account",
   });
 
-  const [organizations, setOrganizations] = useState<OrgSummary[]>([]);
-  const [organization, setOrganization] = useState<ActiveOrganization | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [organizations, setOrganizations] = useState<OrgSummary[]>(
+    () => readCachedOrgList() ?? [],
+  );
+  const [organization, setOrganization] = useState<ActiveOrganization | null>(
+    () => readCachedActiveOrg(),
+  );
+  const [isLoading, setIsLoading] = useState(() => !readCachedActiveOrg());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const applyOrg = useCallback((org: ActiveOrganization | null) => {
+    setOrganization(org);
+    writeCachedActiveOrg(org);
+    if (org?.slug) localStorage.setItem("active_org_slug", org.slug);
+  }, []);
 
   const refresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -148,18 +175,11 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
 
       const list = ((listRes.data ?? []) as OrgSummary[]) || [];
       setOrganizations(list);
+      writeCachedOrgList(list);
 
       const full = fullRes.data as ActiveOrganization | null | undefined;
       if (full?.id) {
-        const members = (full.members ?? []).map((m) =>
-          normalizeMember(m as OrgMember & { name?: string; email?: string; image?: string }),
-        );
-        setOrganization({
-          ...full,
-          metadata: parseMetadata(full.metadata),
-          members,
-        });
-        if (full.slug) localStorage.setItem("active_org_slug", full.slug);
+        applyOrg(normalizeOrg(full));
       } else {
         const storedSlug =
           typeof localStorage !== "undefined" ? localStorage.getItem("active_org_slug") : null;
@@ -169,36 +189,27 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
           await authClient.organization.setActive({ organizationSlug: fallback.slug });
           const again = await authClient.organization.getFullOrganization({ query: {} });
           const org = again.data as ActiveOrganization | null | undefined;
-          if (org?.id) {
-            const members = (org.members ?? []).map((m) =>
-              normalizeMember(m as OrgMember & { name?: string; email?: string; image?: string }),
-            );
-            setOrganization({
-              ...org,
-              metadata: parseMetadata(org.metadata),
-              members,
-            });
-            localStorage.setItem("active_org_slug", org.slug);
-          } else {
-            setOrganization(null);
-          }
+          applyOrg(org?.id ? normalizeOrg(org) : null);
         } else {
-          setOrganization(null);
+          applyOrg(null);
         }
       }
     } catch (err) {
       setError((err as Error)?.message || "Failed to load organization");
-      setOrganization(null);
+      // Keep cached org on transient failures.
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [applyOrg]);
 
   useEffect(() => {
     if (userLoading) return;
     if (!user) {
       setIsLoading(false);
+      clearCachedOrg();
+      setOrganization(null);
+      setOrganizations([]);
       return;
     }
     void refresh();
@@ -206,8 +217,23 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
 
   const setActive = useCallback(
     async (org: OrgSummary) => {
-      await authClient.organization.setActive({ organizationSlug: org.slug });
+      // Optimistic paint so the switcher + pages update immediately.
+      setOrganization((prev) => {
+        if (prev?.id === org.id) return prev;
+        const optimistic: ActiveOrganization = {
+          id: org.id,
+          name: org.name,
+          slug: org.slug,
+          logo: org.logo ?? null,
+          metadata: {},
+          members: [],
+        };
+        writeCachedActiveOrg(optimistic);
+        return optimistic;
+      });
       localStorage.setItem("active_org_slug", org.slug);
+
+      await authClient.organization.setActive({ organizationSlug: org.slug });
       await refresh();
     },
     [refresh],
@@ -247,8 +273,8 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
     activeMember,
     activeRole,
     capabilities,
-    isLoading: userLoading || isLoading,
-    isRefreshing,
+    isLoading: (userLoading || isLoading) && !organization,
+    isRefreshing: isRefreshing || (userLoading && Boolean(organization)),
     error,
     refresh,
     setActive,
@@ -256,7 +282,7 @@ function useActiveOrganizationState(): ActiveOrganizationValue {
   };
 }
 
-/** Shared org state for AccountCenter nav + org pages (one fetch). */
+/** Shared org state for account nav + org pages (one fetch, cached). */
 export function ActiveOrganizationProvider({ children }: { children: ReactNode }) {
   const value = useActiveOrganizationState();
   return createElement(ActiveOrganizationContext.Provider, { value }, children);

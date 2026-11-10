@@ -311,7 +311,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 onClick={() => {
                   setIsOrgMenuOpen(false);
                   navigateToAuthAccount({
-                    path: "/account/organization",
+                    path: "/account/organization/profile",
                     returnUrl: window.location.href,
                   });
                 }}

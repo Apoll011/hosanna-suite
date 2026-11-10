@@ -1,39 +1,31 @@
 "use client";
 
-import { AccountShell } from "@/components/AccountShell";
-import { AccountNav } from "@/components/account/AccountNav";
-import { readRedirectParam } from "@/lib/redirect";
+import { useAccountToast } from "@/components/account/AccountToast";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
+import { useEffect } from "react";
 
 /**
- * Account center chrome: header + Personal/Organization nav + content column.
- * Org context comes from `app/account/layout.tsx` (AccountProviders).
+ * Thin page helper: forwards page toasts into the layout banner.
+ * Shell + nav live in `AccountLayoutChrome` (account layout) so they don't remount.
  */
 export function AccountCenter({
   children,
   toast,
-  headerActions,
-  returnUrl: returnUrlProp,
 }: {
   children: ReactNode;
   toast?: { msg: string; type: "success" | "error" } | null;
+  /** @deprecated Layout owns header actions */
   headerActions?: ReactNode;
-  /** Override for tests; defaults to ?redirect / ?returnUrl. */
+  /** @deprecated Layout owns returnUrl */
   returnUrl?: string | null;
 }) {
-  const returnUrl = useMemo(() => {
-    if (returnUrlProp !== undefined) return returnUrlProp;
-    if (typeof window === "undefined") return null;
-    return readRedirectParam(new URLSearchParams(window.location.search));
-  }, [returnUrlProp]);
+  const { showToast, clearToast } = useAccountToast();
 
-  return (
-    <AccountShell toast={toast} returnUrl={returnUrl} headerActions={headerActions}>
-      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8 lg:gap-10">
-        <AccountNav />
-        <div className="min-w-0 flex-1">{children}</div>
-      </div>
-    </AccountShell>
-  );
+  useEffect(() => {
+    if (!toast) return;
+    showToast(toast.msg, toast.type);
+    return () => clearToast();
+  }, [toast, showToast, clearToast]);
+
+  return <>{children}</>;
 }

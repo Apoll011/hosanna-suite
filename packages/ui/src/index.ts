@@ -9,5 +9,6 @@ export { Input, type InputProps } from "./Input";
 export { Modal, type ModalProps } from "./Modal";
 export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { Spinner, type SpinnerProps } from "./Spinner";
+export { LoadingBar, type LoadingBarProps } from "./LoadingBar";
 export { Surface, type SurfaceProps } from "./Surface";
 export { Tabs, type TabItem } from "./Tabs";

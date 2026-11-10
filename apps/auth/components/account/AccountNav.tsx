@@ -10,15 +10,13 @@ import {
   Building2,
   CreditCard,
   Database,
-  Globe2,
-  LayoutDashboard,
   MapPin,
   User,
   Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, type ComponentType } from "react";
+import { useMemo, type ComponentType, type MouseEvent } from "react";
 
 type NavItem = {
   href: string;
@@ -33,12 +31,6 @@ const PERSONAL_ITEMS: NavItem[] = [
 ];
 
 const ORG_ITEMS: NavItem[] = [
-  {
-    href: "/account/organization",
-    labelKey: "account.nav.overview",
-    icon: LayoutDashboard,
-    exact: true,
-  },
   { href: "/account/organization/profile", labelKey: "account.nav.profile", icon: Building2 },
   { href: "/account/organization/members", labelKey: "account.nav.members", icon: Users },
   { href: "/account/organization/billing", labelKey: "account.nav.billing", icon: CreditCard },
@@ -68,9 +60,19 @@ function isActivePath(pathname: string, item: NavItem) {
 function NavLink({ item, search, active }: { item: NavItem; search: string; active: boolean }) {
   const { t } = useI18n();
   const Icon = item.icon;
+
+  const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    // Already here — skip navigation so we don't flash loaders / remount.
+    if (active) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Link
       href={`${item.href}${search}`}
+      prefetch
+      onClick={onClick}
       className={`flex shrink-0 items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors sm:text-sm ${
         active
           ? "bg-m3-primary/10 text-m3-primary"
@@ -96,7 +98,6 @@ export function AccountNav({ className = "" }: { className?: string }) {
       className={`w-full md:w-56 lg:w-60 shrink-0 ${className}`}
       aria-label={t("account.nav.ariaLabel")}
     >
-      {/* Mobile: switcher + horizontal chip strip */}
       <div className="md:hidden space-y-2">
         {inOrgSection ? <OrgSwitcher /> : null}
         <div className="-mx-1 overflow-x-auto pb-1">
@@ -122,7 +123,6 @@ export function AccountNav({ className = "" }: { className?: string }) {
         </div>
       </div>
 
-      {/* Desktop sidebar */}
       <div className="hidden md:flex md:flex-col md:gap-6">
         <div>
           <p className="mb-1.5 px-2.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
@@ -144,19 +144,9 @@ export function AccountNav({ className = "" }: { className?: string }) {
           <p className="mb-1.5 px-2.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
             {t("account.nav.organization")}
           </p>
-          {inOrgSection ? (
-            <div className="mb-2 px-0.5">
-              <OrgSwitcher />
-            </div>
-          ) : (
-            <Link
-              href={`/account/organization${search}`}
-              className="mb-2 flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-m3-secondary hover:bg-m3-hover hover:text-m3-text transition-colors"
-            >
-              <Globe2 className="h-4 w-4 shrink-0" aria-hidden />
-              <span>{t("account.nav.openOrganization")}</span>
-            </Link>
-          )}
+          <div className="mb-2 px-0.5">
+            <OrgSwitcher />
+          </div>
           <div className="flex flex-col gap-0.5">
             {ORG_ITEMS.map((item) => (
               <NavLink

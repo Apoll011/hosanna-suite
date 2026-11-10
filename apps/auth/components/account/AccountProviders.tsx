@@ -1,9 +1,14 @@
 "use client";
 
+import { AccountLayoutChrome } from "@/components/account/AccountLayoutChrome";
 import { ActiveOrganizationProvider } from "@/hooks/useActiveOrganization";
 import type { ReactNode } from "react";
 
-/** Client providers for the `/account` segment (org context shared by all pages). */
+/** Client providers + persistent chrome for the `/account` segment. */
 export function AccountProviders({ children }: { children: ReactNode }) {
-  return <ActiveOrganizationProvider>{children}</ActiveOrganizationProvider>;
+  return (
+    <ActiveOrganizationProvider>
+      <AccountLayoutChrome>{children}</AccountLayoutChrome>
+    </ActiveOrganizationProvider>
+  );
 }

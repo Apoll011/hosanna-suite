@@ -1,9 +1,6 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import { OrgOverviewPage } from "@/components/pages/organization/OrgOverviewPage";
-
-export const metadata: Metadata = { title: "Organization" };
-
-export default function Page() {
-  return <OrgOverviewPage />;
+/** Overview removed — land on org profile. */
+export default function OrganizationIndexPage() {
+  redirect("/account/organization/profile");
 }
