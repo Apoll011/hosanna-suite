@@ -252,6 +252,8 @@ export const en: typeof pt = {
       title: "Regional preferences & calendar",
       desc: "Primary language, timezone for alerts, and weekly convention.",
       readOnly: "Read-only",
+      noAccessTitle: "No access",
+      noAccessDesc: "Only organization owners and admins can change regional settings.",
       orgLanguage: "Organization language",
       timezone: "Timezone",
       weekStartsOn: "First day of the week",

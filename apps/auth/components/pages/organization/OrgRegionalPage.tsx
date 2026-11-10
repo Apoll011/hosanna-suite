@@ -10,14 +10,14 @@ import {
   selectClass,
   type OrgGeneralSettings,
 } from "@/lib/org-ui";
-import { Button, Cannot, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
-import { Save } from "lucide-react";
+import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
+import { Lock, Save } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 export function OrgRegionalPage() {
   const { t } = useI18n();
   const { organization, metadata, isLoading, refresh } = useActiveOrganization();
-  const { granted: canEdit } = useCan("organization.update");
+  const { granted: canEdit, loading: canLoading } = useCan("organization.update");
 
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [general, setGeneral] = useState<OrgGeneralSettings>(DEFAULT_GENERAL);
@@ -77,7 +77,7 @@ export function OrgRegionalPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || canLoading) {
     return (
       <AccountCenter>
         <div className="flex justify-center py-16">
@@ -97,6 +97,24 @@ export function OrgRegionalPage() {
     );
   }
 
+  if (!canEdit) {
+    return (
+      <AccountCenter>
+        <PageHeader
+          title={t("accountOrg.regional.title")}
+          description={t("accountOrg.regional.description")}
+        />
+        <Surface className="text-center py-10">
+          <Lock className="w-5 h-5 text-m3-secondary mx-auto mb-3" />
+          <h3 className="text-sm font-semibold text-m3-text">
+            {t("settings.general.noAccessTitle")}
+          </h3>
+          <p className="text-sm text-m3-secondary mt-1">{t("settings.general.noAccessDesc")}</p>
+        </Surface>
+      </AccountCenter>
+    );
+  }
+
   const isDirty = JSON.stringify(general) !== JSON.stringify(saved);
 
   return (
@@ -106,16 +124,10 @@ export function OrgRegionalPage() {
 
         <form onSubmit={(e) => void handleSave(e)}>
           <Surface className="space-y-6">
-            <Cannot permission="organization.update">
-              <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
-                {t("settings.general.readOnly")}
-              </p>
-            </Cannot>
-
             <div className="flex flex-col gap-1.5">
               <label className="text-label">{t("settings.general.orgLanguage")}</label>
               <select
-                disabled={!canEdit || isSaving}
+                disabled={isSaving}
                 value={general.locale}
                 onChange={(e) => update("locale", e.target.value)}
                 className={selectClass}
@@ -130,7 +142,7 @@ export function OrgRegionalPage() {
             <div className="flex flex-col gap-1.5">
               <label className="text-label">{t("settings.general.timezone")}</label>
               <select
-                disabled={!canEdit || isSaving}
+                disabled={isSaving}
                 value={general.timezone}
                 onChange={(e) => update("timezone", e.target.value)}
                 className={selectClass}
@@ -178,14 +190,14 @@ export function OrgRegionalPage() {
                         checked
                           ? "border-m3-primary bg-m3-primary/5 text-m3-primary ring-1 ring-m3-primary/30"
                           : "border-m3-border hover:bg-m3-sidebar text-m3-text"
-                      } ${!canEdit ? "opacity-60 cursor-not-allowed" : ""}`}
+                      }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-semibold">{day.label}</span>
                         <input
                           type="radio"
                           name="weekStartsOn"
-                          disabled={!canEdit || isSaving}
+                          disabled={isSaving}
                           checked={checked}
                           onChange={() => update("weekStartsOn", day.value)}
                           className="w-4 h-4 text-m3-primary"
@@ -198,19 +210,17 @@ export function OrgRegionalPage() {
               </div>
             </div>
 
-            {canEdit ? (
-              <div className="flex justify-end pt-2 border-t border-m3-border/60">
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={isSaving || !isDirty}
-                  isLoading={isSaving}
-                  icon={<Save className="w-4 h-4" />}
-                >
-                  {isSaving ? t("settings.general.saving") : t("settings.general.save")}
-                </Button>
-              </div>
-            ) : null}
+            <div className="flex justify-end pt-2 border-t border-m3-border/60">
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={isSaving || !isDirty}
+                isLoading={isSaving}
+                icon={<Save className="w-4 h-4" />}
+              >
+                {isSaving ? t("settings.general.saving") : t("settings.general.save")}
+              </Button>
+            </div>
           </Surface>
         </form>
       </div>

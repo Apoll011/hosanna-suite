@@ -480,7 +480,7 @@ export function OrgAiPage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [billingRefreshKey, setBillingRefreshKey] = useState(0);
 
-  const { granted: canManage } = useCan("ai.manage");
+  const { granted: canManage, loading: canLoading } = useCan("ai.manage");
 
   const showToast = useCallback((msg: string, type: "success" | "error") => {
     setToast({ msg, type });
@@ -524,7 +524,7 @@ export function OrgAiPage() {
 
   const presets = useMemo(() => settings?.modelPresets[provider] ?? [], [settings, provider]);
 
-  if (orgLoading) {
+  if (orgLoading || canLoading) {
     return (
       <AccountCenter>
         <div className="flex justify-center py-16">

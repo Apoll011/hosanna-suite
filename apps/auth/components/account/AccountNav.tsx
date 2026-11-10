@@ -1,6 +1,7 @@
 "use client";
 
 import { OrgSwitcher } from "@/components/account/OrgSwitcher";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import type { TranslationKey } from "@/lib/i18n";
 import { useI18n } from "@/lib/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
@@ -59,7 +60,12 @@ const ORG_ITEMS: OrgNavItem[] = [
     icon: Bot,
     permission: "ai.manage",
   },
-  { href: "/account/organization/regional", labelKey: "account.nav.regional", icon: MapPin },
+  {
+    href: "/account/organization/regional",
+    labelKey: "account.nav.regional",
+    icon: MapPin,
+    permission: "organization.update",
+  },
   {
     href: "/account/organization/activity",
     labelKey: "account.nav.activity",
@@ -70,7 +76,7 @@ const ORG_ITEMS: OrgNavItem[] = [
     href: "/account/organization/data",
     labelKey: "account.nav.data",
     icon: Database,
-    permission: "backup.export",
+    anyPermissions: ["backup.export", "backup.import"],
   },
 ];
 

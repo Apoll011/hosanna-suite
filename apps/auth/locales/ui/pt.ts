@@ -250,6 +250,8 @@ export const pt = {
       title: "Preferências regionais e calendário",
       desc: "Idioma principal, fuso horário e início da semana.",
       readOnly: "Só leitura",
+      noAccessTitle: "Sem acesso",
+      noAccessDesc: "Apenas proprietários e administradores podem alterar as definições regionais.",
       orgLanguage: "Idioma da organização",
       timezone: "Fuso horário",
       weekStartsOn: "Primeiro dia da semana",

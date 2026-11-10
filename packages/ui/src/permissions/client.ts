@@ -169,7 +169,7 @@ export function checkPermissionAnyLocally(
  * Super efficient: Fires exactly ONE batched API request, checking synchronous cache/role first.
  */
 export function useCanAll(permissions: PermissionString[]): PermResult {
-  const { role } = useActiveRole();
+  const { role, loading: roleLoading } = useActiveRole();
   const { checkPermissions } = usePermissionsContext();
   const cacheKey = useMemo(() => getCacheKey(permissions), [permissions]);
 
@@ -181,6 +181,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
         error: null,
       };
     }
+    if (roleLoading) return DEFAULT_RESULT;
     const local = checkPermissionsLocally(permissions, role);
     if (local !== null) {
       permCache.set(cacheKey, local);
@@ -209,6 +210,12 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
       return;
     }
 
+    // Wait for the org role to resolve before deciding / calling the API.
+    if (roleLoading) {
+      setResult(DEFAULT_RESULT);
+      return;
+    }
+
     const local = checkPermissionsLocally(permissions, role);
     if (local !== null) {
       permCache.set(cacheKey, local);
@@ -230,7 +237,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
       mounted.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- cacheKey deterministically tracks permissions
-  }, [cacheKey, role, checkPermissions]);
+  }, [cacheKey, role, roleLoading, checkPermissions]);
 
   return result;
 }
@@ -241,7 +248,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
  * concurrently. Caching handles the efficiency natively.
  */
 export function useCanAny(permissions: PermissionString[]): PermResult {
-  const { role } = useActiveRole();
+  const { role, loading: roleLoading } = useActiveRole();
   const { checkPermissions } = usePermissionsContext();
   const cacheKey = useMemo(() => getCacheKey(permissions), [permissions]);
 
@@ -258,6 +265,7 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
         error: null,
       };
     }
+    if (roleLoading) return DEFAULT_RESULT;
     const local = checkPermissionAnyLocally(permissions, role);
     if (local !== null) {
       return { granted: local, loading: false, error: null };
@@ -295,6 +303,11 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
         return;
       }
 
+      if (roleLoading) {
+        if (mounted.current) setResult(DEFAULT_RESULT);
+        return;
+      }
+
       const local = checkPermissionAnyLocally(permissions, role);
       if (local !== null) {
         if (mounted.current) {
@@ -317,13 +330,13 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
       }
     };
 
-    checkAny();
+    void checkAny();
 
     return () => {
       mounted.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- cacheKey deterministically tracks permissions
-  }, [cacheKey, role, checkPermissions]);
+  }, [cacheKey, role, roleLoading, checkPermissions]);
 
   return result;
 }

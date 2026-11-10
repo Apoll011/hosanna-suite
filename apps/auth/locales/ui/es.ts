@@ -252,6 +252,8 @@ export const es: typeof pt = {
       title: "Preferencias regionales y calendario",
       desc: "Idioma principal, zona horaria e inicio de la semana.",
       readOnly: "Solo lectura",
+      noAccessTitle: "Sin acceso",
+      noAccessDesc: "Solo propietarios y administradores pueden cambiar la configuración regional.",
       orgLanguage: "Idioma de la organización",
       timezone: "Zona horaria",
       weekStartsOn: "Primer día de la semana",
