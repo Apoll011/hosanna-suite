@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { useAgenda } from "@/src/hooks/useAgenda";
 import { useI18n } from "@/src/lib/i18n";
 import { Service, ServiceElement, Song } from "@/src/types";
 import React, { useMemo } from "react";
@@ -40,10 +41,21 @@ const formatDuration = (seconds?: number) => {
   return s ? `${m}m ${s}s` : `${m} min`;
 };
 
-const formatOffset = (seconds: number) => {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  return `${h}:${String(m).padStart(2, "0")}`;
+/** Parse "HH:MM" / "H:MM" / "HH:MM:SS" into minutes from midnight. */
+export function parseClockToMinutes(time: string): number | null {
+  const match = /^(\d{1,2}):(\d{2})(?::\d{2})?/.exec((time || "").trim());
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours > 23 || minutes > 59) return null;
+  return hours * 60 + minutes;
+}
+
+const formatClock = (totalMinutes: number) => {
+  const normalized = ((totalMinutes % (24 * 60)) + 24 * 60) % (24 * 60);
+  const h = Math.floor(normalized / 60);
+  const m = normalized % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 };
 
 export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
@@ -53,11 +65,22 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
   brand,
 }) => {
   const { t } = useI18n();
+  const { events } = useAgenda();
 
   const elements = useMemo(() => service.elements || [], [service.elements]);
   const totalSeconds = elements.reduce((acc, el) => acc + (el.duration || 0), 0);
   const hasTiming = totalSeconds > 0;
-  const hasPassages = elements.some((el) => el.passage);
+
+  const linkedEvent = useMemo(() => {
+    const linked = events.filter((e) => e.linkedServiceId === service.id);
+    if (linked.length === 0) return null;
+    const serviceDay = (service.date || "").slice(0, 10);
+    return linked.find((e) => (e.date || "").slice(0, 10) === serviceDay) || linked[0];
+  }, [events, service.date, service.id]);
+
+  const serviceStartMinutes = linkedEvent ? parseClockToMinutes(linkedEvent.time) : null;
+  // Only show Início when a linked agenda event gives a real wall-clock start.
+  const showClockStart = serviceStartMinutes != null && hasTiming;
 
   const startOffsets = useMemo(() => {
     let acc = 0;
@@ -100,6 +123,13 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
     }
   };
 
+  const subtitle = [
+    formatPrintDate(service.date, brand.locale),
+    linkedEvent?.time ? linkedEvent.time.slice(0, 5) : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
     <>
       <PrintSheet
@@ -108,7 +138,7 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
       >
         <TemplateHeader
           title={service.name}
-          subtitle={formatPrintDate(service.date, brand.locale)}
+          subtitle={subtitle}
           badge={t("print.service.badge")}
           options={options}
           brand={brand}
@@ -133,10 +163,9 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
               <thead>
                 <tr>
                   <th className="hp-num">#</th>
-                  {hasTiming && <th className="hp-right">{t("print.service.startCol")}</th>}
+                  {showClockStart && <th className="hp-right">{t("print.service.startCol")}</th>}
                   <th>{t("print.service.momentCol")}</th>
                   <th>{t("print.service.itemCol")}</th>
-                  {hasPassages && <th>{t("print.service.passageCol")}</th>}
                   {hasTiming && <th className="hp-right">{t("print.service.durationCol")}</th>}
                 </tr>
               </thead>
@@ -144,14 +173,19 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
                 {elements.map((el, idx) => (
                   <tr key={el.id || idx}>
                     <td className="hp-num">{idx + 1}</td>
-                    {hasTiming && (
-                      <td className="hp-right hp-mono">{formatOffset(startOffsets[idx])}</td>
+                    {showClockStart && serviceStartMinutes != null && (
+                      <td className="hp-right hp-mono">
+                        {formatClock(serviceStartMinutes + Math.floor(startOffsets[idx] / 60))}
+                      </td>
                     )}
                     <td>
                       <span className={`hp-tag hp-tag--${el.type}`}>{typeLabel(el.type)}</span>
                     </td>
                     <td>
-                      <div className="hp-cell-title">{el.title}</div>
+                      <div className="hp-cell-title">
+                        <span>{el.title}</span>
+                        {el.passage && <span className="hp-passage">{el.passage}</span>}
+                      </div>
                       {el.type === "scripture" && el.content ? (
                         <div className="hp-cell-quote">{el.content}</div>
                       ) : (
@@ -163,7 +197,6 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
                         </div>
                       )}
                     </td>
-                    {hasPassages && <td className="hp-cell-title">{el.passage || ""}</td>}
                     {hasTiming && (
                       <td className="hp-right">
                         {formatDuration(el.duration) || <span className="hp-dim">—</span>}

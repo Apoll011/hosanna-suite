@@ -8,10 +8,10 @@ import { Song } from "@/src/types";
 import { Check } from "lucide-react";
 import React, { useLayoutEffect } from "react";
 import { DEFAULT_PRINT_OPTIONS } from "./options";
-import { ensurePrintStyles } from "./printStyles";
+import { documentStyleVars, ensurePrintStyles } from "./printStyles";
 import { TEMPLATE_FAMILIES } from "./templateFamilies";
-import { PrintDocument } from "./templates/PrintDocument";
-import { PrintBrand, PrintTemplateFamily } from "./types";
+import { SongPrintView } from "./templates/SongPrintView";
+import { PrintBrand, PrintOptions, PrintTemplateFamily } from "./types";
 
 const SAMPLE_SONG: Song = {
   id: "template-thumbnail",
@@ -44,35 +44,53 @@ Quão grande és [G]Tu! Quão grande és [D]Tu!
   updatedAt: "",
 };
 
-const SAMPLE_ITEMS = [{ type: "song" as const, data: SAMPLE_SONG }];
-
 interface TemplateThumbnailProps {
   family: PrintTemplateFamily;
   showChords: boolean;
   brand: PrintBrand;
 }
 
-/** A real, miniature render of the template — not a hand-drawn mock-up. */
+/** Side-by-side normal + pack song previews for this template family. */
 const TemplateThumbnail = React.memo<TemplateThumbnailProps>(function TemplateThumbnail({
   family,
   showChords,
   brand,
 }) {
   const info = TEMPLATE_FAMILIES.find((f) => f.id === family);
+  const options: PrintOptions = {
+    ...DEFAULT_PRINT_OPTIONS,
+    ...info?.presets,
+    templateFamily: family,
+    showChords,
+    fontSize: 5,
+    pageBreakBetweenItems: true,
+    showChurchHeader: true,
+    showPageNumbers: false,
+  };
+
   return (
-    <div className="hp-thumb aspect-4/3 overflow-hidden bg-white p-1.75" aria-hidden="true">
-      <PrintDocument
-        items={SAMPLE_ITEMS}
-        options={{
-          ...DEFAULT_PRINT_OPTIONS,
-          ...info?.presets,
-          templateFamily: family,
-          showChords,
-          fontSize: 5,
-          pageBreakBetweenItems: false,
-        }}
-        brand={brand}
-      />
+    <div
+      className={[
+        "hp-thumb hp-doc hp-breaks",
+        `hp-theme-${family}`,
+        `hp-density-${options.density}`,
+        "grid grid-cols-2 gap-1.5 aspect-4/3 overflow-hidden bg-slate-100 p-1.5",
+      ].join(" ")}
+      style={documentStyleVars({ ...options, fontSize: 5 }, brand.accentColor) as React.CSSProperties}
+      aria-hidden="true"
+    >
+      <div className="hp-thumb-pane min-w-0 overflow-hidden bg-white p-1 rounded-[1px]">
+        <SongPrintView song={SAMPLE_SONG} options={options} brand={brand} />
+      </div>
+      <div className="hp-thumb-pane min-w-0 overflow-hidden bg-white p-1 rounded-[1px]">
+        <SongPrintView
+          song={SAMPLE_SONG}
+          options={options}
+          brand={brand}
+          packed
+          showChurchIdentity
+        />
+      </div>
     </div>
   );
 });

@@ -11,6 +11,8 @@ interface TemplateFooterProps {
   brand: PrintBrand;
 }
 
+export const PRINT_BRAND_NAME = "Hosanna";
+
 /** Document footer shown in the preview; print uses the matching @page margin box. */
 export const TemplateFooter: React.FC<TemplateFooterProps> = ({ options, brand }) => {
   const note = options.customFooter.trim() || brand.churchName;
@@ -18,7 +20,7 @@ export const TemplateFooter: React.FC<TemplateFooterProps> = ({ options, brand }
   return (
     <footer className="hp-footer">
       <div className="hp-footer-left">{note && <span>{note}</span>}</div>
-      <span>Hosana</span>
+      <span>{PRINT_BRAND_NAME}</span>
     </footer>
   );
 };
