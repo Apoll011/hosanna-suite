@@ -2429,7 +2429,8 @@ export const en: typeof pt = {
   organization: {
     offlineTitle: "You're offline",
     offlineDesc: "Organization settings need an internet connection.",
-    studioDesc: "Printing defaults, moment durations, and agenda responsibilities for this workspace.",
+    studioDesc:
+      "Printing defaults, moment durations, and agenda responsibilities for this workspace.",
     tabs: {
       workspace: "Workspace",
       members: "Members",

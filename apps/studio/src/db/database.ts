@@ -9,13 +9,12 @@
  */
 
 import { parseChordPro } from "@hosanna/chordpro";
+import { _registerResetDatabase, HosanaCollection, idbGetAll, openIDB } from "@hosanna/replication";
 import {
-  _registerResetDatabase,
-  HosanaCollection,
-  idbGetAll,
-  openIDB,
-} from "@hosanna/replication";
-import { recalculateAllDerivedCounts, recalculateCollectionCounts, recalculateFolderCounts } from "./counts";
+  recalculateAllDerivedCounts,
+  recalculateCollectionCounts,
+  recalculateFolderCounts,
+} from "./counts";
 import { getMainDbName } from "./dbNames";
 import { META_STORE } from "./orgScope";
 import type {

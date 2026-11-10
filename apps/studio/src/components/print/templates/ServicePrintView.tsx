@@ -85,8 +85,7 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
     (linkedEvent ? parseClockToMinutes(linkedEvent.time) : null) ??
     parseClockToMinutes(settings.services.usualStartTime);
   const showClockStart = serviceStartMinutes != null && hasTiming;
-  const startLabel =
-    linkedEvent?.time?.slice(0, 5) || settings.services.usualStartTime || null;
+  const startLabel = linkedEvent?.time?.slice(0, 5) || settings.services.usualStartTime || null;
 
   const startOffsets = useMemo(() => {
     let acc = 0;

@@ -20,8 +20,7 @@ type AsCollectionDoc = CollectionDocType & Record<string, unknown>;
 export function calculateFolderSongCount(
   folderId: string,
   songs:
-    | Array<Pick<SongDocType, "folderId" | "isDeleted" | "_deleted">>
-    | HosanaCollection<AsSongDoc>,
+    Array<Pick<SongDocType, "folderId" | "isDeleted" | "_deleted">> | HosanaCollection<AsSongDoc>,
 ): number {
   const list = Array.isArray(songs) ? songs : songs.getAllRaw();
   return list.filter((s) => s.folderId === folderId && !s.isDeleted && !s._deleted).length;

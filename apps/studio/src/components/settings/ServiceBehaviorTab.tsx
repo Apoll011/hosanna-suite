@@ -238,11 +238,7 @@ export const ServiceBehaviorTab: React.FC<ServiceBehaviorTabProps> = ({ active, 
             variant="primary"
             disabled={isSaving}
             icon={
-              isSaving ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Save className="w-4 h-4" />
-              )
+              isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />
             }
           >
             {isSaving ? t("settings.general.saving") : t("settings.general.save")}

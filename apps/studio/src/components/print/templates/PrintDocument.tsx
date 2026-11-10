@@ -43,9 +43,9 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, opti
   const songsOnly = items.length > 0 && items.every((item) => item.type === "song");
   const songList = useMemo(() => {
     if (!songsOnly) return [] as Song[];
-    return items.filter((item): item is Extract<PrintItem, { type: "song" }> => item.type === "song").map(
-      (item) => item.data,
-    );
+    return items
+      .filter((item): item is Extract<PrintItem, { type: "song" }> => item.type === "song")
+      .map((item) => item.data);
   }, [items, songsOnly]);
 
   const showCover = !songsOnly && items.length > 2 && !!title;
@@ -93,7 +93,7 @@ export const PrintDocument: React.FC<PrintDocumentProps> = ({ items, title, opti
 
   const body: React.ReactNode[] = [];
   let songOrdinal = 0;
-  for (let index = 0; index < items.length; ) {
+  for (let index = 0; index < items.length;) {
     const item = items[index];
     const key = `${item.type}-${item.data.id || index}`;
 

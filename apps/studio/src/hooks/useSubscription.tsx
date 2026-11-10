@@ -164,10 +164,7 @@ export function useSubscription(): SubscriptionApi {
             (() => {
               const url = new URL(authAppHref("/account/organization/billing"));
               url.searchParams.set("billing", "success");
-              url.searchParams.set(
-                "returnUrl",
-                `${window.location.origin}/${slug}/folders`,
-              );
+              url.searchParams.set("returnUrl", `${window.location.origin}/${slug}/folders`);
               return url.toString();
             })(),
           cancelUrl: cancelUrl ?? `${window.location.origin}/${slug}/folders`,
@@ -199,8 +196,7 @@ export function useSubscription(): SubscriptionApi {
         const { error: apiError } = await authClient.subscription.billingPortal({
           referenceId: orgId,
           customerType: "organization",
-          returnUrl:
-            options.returnUrl ?? authAppHref("/account/organization/billing"),
+          returnUrl: options.returnUrl ?? authAppHref("/account/organization/billing"),
         });
         if (apiError) {
           setPendingAction(null);
