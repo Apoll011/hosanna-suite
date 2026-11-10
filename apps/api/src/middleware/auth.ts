@@ -152,7 +152,7 @@ export function requireOwnTeamResource(
   };
 }
 
-/** Full auth context — one cache hit, zero Prisma / getSession on warm path. */
+/** Auth context cached per session-token + active org (org switches keep the same token). */
 type AuthContext = {
   userId: string;
   workspaceId: string;
@@ -161,7 +161,7 @@ type AuthContext = {
   locale: string;
 };
 
-/** Longer than Studio's 15s sync poll so idle pulls hit memory/Redis instead of getSession. */
+/** Longer than Studio's 15s sync poll so idle pulls skip membership/locale Prisma. */
 const AUTH_CTX_TTL_MS = 120_000;
 const ORG_LOCALE_TTL_MS = 300_000;
 const USER_ROLE_TTL_MS = 300_000;
@@ -264,26 +264,14 @@ async function getCachedUserRole(workspaceId: string, userId: string): Promise<s
   return role;
 }
 
-function roleFromSessionData(sessionData: Exclude<SessionResult, null>): string | null {
-  const { user, session } = sessionData;
-  const role =
-    (session as { role?: string | null }).role ||
-    sessionData.member?.role ||
-    (user as { role?: string | null }).role;
-  return typeof role === "string" && role.length > 0 ? role : null;
-}
-
 async function resolveAuthContext(req: Request): Promise<AuthContext> {
-  const cacheKey = authCacheKey(req);
-  if (cacheKey) {
-    const cached = await authCtxCache.get<AuthContext>(cacheKey);
-    if (cached?.userId && cached.workspaceId) return cached;
-  }
-
-  if (!cacheKey) {
+  const tokenKey = authCacheKey(req);
+  if (!tokenKey) {
     throw AppError.unauthorized("Invalid or missing authentication session.");
   }
 
+  // Always resolve the session: `session_token` does not change on org switch,
+  // so a token-only cache kept serving the previous org's role/workspace.
   const sessionData = await getSession({ headers: requestHeadersForAuth(req) });
   if (!sessionData?.session || !sessionData?.user) {
     throw AppError.unauthorized("Invalid or missing authentication session.");
@@ -295,11 +283,16 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
     throw AppError.forbidden("An active workspace/organization context is required.");
   }
 
-  const teamId = session.activeTeamId || undefined;
-  const roleFromSession = roleFromSessionData(sessionData);
+  const ctxKey = `${tokenKey}:${workspaceId}`;
+  const cached = await authCtxCache.get<AuthContext>(ctxKey);
+  if (cached?.userId && cached.workspaceId === workspaceId) return cached;
 
+  const teamId = session.activeTeamId || undefined;
+
+  // Membership table is source of truth per org. Do not use admin-plugin
+  // `user.role` (often `"user"`) or a stale cookie-cache member role.
   const [resolvedRole, locale] = await Promise.all([
-    roleFromSession ? Promise.resolve(roleFromSession) : getCachedUserRole(workspaceId, user.id),
+    getCachedUserRole(workspaceId, user.id),
     getCachedOrgLocale(workspaceId),
   ]);
 
@@ -311,7 +304,7 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
     locale,
   };
 
-  await authCtxCache.set(cacheKey, ctx);
+  await authCtxCache.set(ctxKey, ctx);
   return ctx;
 }
 
