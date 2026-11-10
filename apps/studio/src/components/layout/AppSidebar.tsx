@@ -624,17 +624,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 <button
                   onClick={() => {
                     setIsUserMenuOpen(false);
-                    navigate(`${slugPrefix}/settings?tab=printing`);
-                    if (window.innerWidth < 768) setIsSidebarOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
-                >
-                  <Building2 className="w-4 h-4 text-m3-secondary" />
-                  {t("sidebar.openOrganization")}
-                </button>
-                <button
-                  onClick={() => {
-                    setIsUserMenuOpen(false);
                     navigate(`${slugPrefix}/settings`);
                     if (window.innerWidth < 768) setIsSidebarOpen(false);
                   }}

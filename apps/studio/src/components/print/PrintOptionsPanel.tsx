@@ -192,6 +192,8 @@ interface PrintOptionsPanelProps {
   disabled?: boolean;
   /** "sidebar" stacks everything; "wide" lays groups out in columns. */
   layout?: "sidebar" | "wide";
+  /** Hide the template picker (e.g. when templates live in a sibling card). */
+  hideTemplate?: boolean;
 }
 
 export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
@@ -201,6 +203,7 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
   context,
   disabled,
   layout = "sidebar",
+  hideTemplate = false,
 }) => {
   const { t } = useI18n();
   const wide = layout === "wide";
@@ -377,23 +380,25 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
 
   return (
     <div className="space-y-6">
-      <Group title={t("print.options.groups.template")}>
-        <TemplatePicker
-          value={options.templateFamily}
-          onSelect={selectTemplate}
-          brand={brand}
-          showChords={options.showChords}
-          disabled={disabled}
-          className={
-            wide
-              ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
-              : "grid grid-cols-2 gap-2.5"
-          }
-        />
-        <p className="text-[11px] text-m3-secondary leading-snug">
-          {t(`print.templates.${options.templateFamily}.description`)}
-        </p>
-      </Group>
+      {!hideTemplate && (
+        <Group title={t("print.options.groups.template")}>
+          <TemplatePicker
+            value={options.templateFamily}
+            onSelect={selectTemplate}
+            brand={brand}
+            showChords={options.showChords}
+            disabled={disabled}
+            className={
+              wide
+                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
+                : "grid grid-cols-2 gap-2.5"
+            }
+          />
+          <p className="text-[11px] text-m3-secondary leading-snug">
+            {t(`print.templates.${options.templateFamily}.description`)}
+          </p>
+        </Group>
+      )}
 
       {wide ? <div className="grid grid-cols-1 md:grid-cols-3 gap-6">{groups}</div> : groups}
     </div>

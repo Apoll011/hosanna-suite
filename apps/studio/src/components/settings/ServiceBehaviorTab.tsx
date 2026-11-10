@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner } from "@hosanna/ui";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
 import { Clock, Loader2, Lock, RotateCcw, Save, Shield } from "lucide-react";
@@ -75,67 +75,74 @@ export const ServiceBehaviorTab: React.FC<ServiceBehaviorTabProps> = ({ active, 
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
     >
-      <header className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-title text-m3-text flex items-center gap-2">
-            <Shield className="w-5 h-5 text-m3-primary" />
-            {t("settings.tabs.services")}
-          </h2>
-          <p className="text-muted mt-1">{t("settings.services.pageDesc")}</p>
-        </div>
-        {!canManageOrg && (
-          <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold shrink-0">
+      {!canManageOrg && (
+        <div className="flex justify-end">
+          <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold">
             <Lock className="w-3.5 h-3.5" />
             {t("settings.general.readOnly")}
           </span>
-        )}
-      </header>
+        </div>
+      )}
 
-      <section className="space-y-2">
-        <label className="flex items-center gap-2 text-sm font-semibold text-m3-text">
-          <Clock className="w-4 h-4 text-m3-primary" />
-          {t("settings.general.usualStartTime")}
-        </label>
-        <p className="text-caption">{t("settings.general.usualStartTimeDesc")}</p>
-        <input
-          type="time"
-          value={settings.services.usualStartTime}
-          disabled={!canManageOrg || isSaving}
-          onChange={(e) => update("services", "usualStartTime", e.target.value || "10:00")}
-          className={`${inputClass} max-w-40`}
-        />
-      </section>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <Surface className="h-full">
+          <div className="mb-6">
+            <h2 className="text-title text-m3-text flex items-center gap-2">
+              <Clock className="w-5 h-5 text-m3-primary" />
+              {t("settings.general.usualStartTime")}
+            </h2>
+            <p className="mt-1 text-muted">{t("settings.general.usualStartTimeDesc")}</p>
+          </div>
+          <input
+            type="time"
+            value={settings.services.usualStartTime}
+            disabled={!canManageOrg || isSaving}
+            onChange={(e) => update("services", "usualStartTime", e.target.value || "10:00")}
+            className={`${inputClass} max-w-48`}
+          />
+        </Surface>
 
-      <section className="space-y-3">
-        <h3 className="text-label">{t("settings.general.behaviorTitle")}</h3>
-        {toggles.map((toggle) => (
-          <label
-            key={toggle.id}
-            className={`flex items-start gap-4 py-3 border-b border-m3-border last:border-0 transition-colors ${
-              canManageOrg && !isSaving ? "cursor-pointer" : "opacity-75 cursor-not-allowed"
-            }`}
-          >
-            <div className="flex items-center h-5 mt-0.5">
-              <input
-                type="checkbox"
-                disabled={!canManageOrg || isSaving}
-                checked={toggle.checked}
-                onChange={(e) => update("services", toggle.id, e.target.checked)}
-                className="w-4.5 h-4.5 text-m3-primary border-m3-border rounded focus:ring-m3-primary cursor-pointer"
-              />
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-sm font-semibold text-m3-text">{toggle.label}</span>
-              <p className="text-caption mt-0.5">{toggle.description}</p>
-            </div>
-          </label>
-        ))}
-      </section>
+        <Surface className="h-full">
+          <div className="mb-6">
+            <h2 className="text-title text-m3-text flex items-center gap-2">
+              <Shield className="w-5 h-5 text-m3-primary" />
+              {t("settings.general.behaviorTitle")}
+            </h2>
+            <p className="mt-1 text-muted">{t("settings.services.pageDesc")}</p>
+          </div>
+          <div className="space-y-3">
+            {toggles.map((toggle) => (
+              <label
+                key={toggle.id}
+                className={`flex items-start gap-4 p-4 border border-m3-border rounded-md transition-colors ${
+                  canManageOrg && !isSaving
+                    ? "cursor-pointer hover:bg-m3-sidebar/80"
+                    : "opacity-75 cursor-not-allowed"
+                }`}
+              >
+                <div className="flex items-center h-5 mt-0.5">
+                  <input
+                    type="checkbox"
+                    disabled={!canManageOrg || isSaving}
+                    checked={toggle.checked}
+                    onChange={(e) => update("services", toggle.id, e.target.checked)}
+                    className="w-4.5 h-4.5 text-m3-primary border-m3-border rounded focus:ring-m3-primary cursor-pointer"
+                  />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-semibold text-m3-text">{toggle.label}</span>
+                  <p className="text-caption mt-0.5">{toggle.description}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+        </Surface>
+      </div>
 
       {canManageOrg && (
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex justify-between items-center">
           <button
             type="button"
             onClick={reset}

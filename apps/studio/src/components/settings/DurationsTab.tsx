@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Spinner } from "@hosanna/ui";
+import { Button, Spinner, Surface } from "@hosanna/ui";
 import {
   DurationField,
   durationInputToSeconds,
@@ -13,7 +13,7 @@ import { useAuth } from "@/src/contexts/AuthContext";
 import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { useCan } from "@/src/lib/permissions/client";
-import { Loader2, Lock, Mic2, Music, RotateCcw, Save, Timer } from "lucide-react";
+import { Loader2, Lock, Mic2, Music, RotateCcw, Save } from "lucide-react";
 import React from "react";
 
 export interface DurationsTabProps {
@@ -84,57 +84,69 @@ export const DurationsTab: React.FC<DurationsTabProps> = ({ active, showToast })
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300"
+      className="w-full space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
     >
-      <header className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-title text-m3-text flex items-center gap-2">
-            <Timer className="w-5 h-5 text-m3-primary" />
-            {t("settings.tabs.durations")}
-          </h2>
-          <p className="text-muted mt-1">{t("settings.durations.pageDesc")}</p>
-        </div>
-        {!canManageOrg && (
-          <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold shrink-0">
+      {!canManageOrg && (
+        <div className="flex justify-end">
+          <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-md flex items-center gap-1.5 font-semibold">
             <Lock className="w-3.5 h-3.5" />
             {t("settings.general.readOnly")}
           </span>
-        )}
-      </header>
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <DurationField
-          label={t("settings.general.songLabel")}
-          icon={<Music className="w-4 h-4 text-indigo-500" />}
-          value={songRaw}
-          onChange={(v) => {
-            setSongRaw(v);
-            update("services", "songDuration", durationInputToSeconds(v));
-          }}
-          accentRingClass="focus:ring-indigo-400/60"
-          badgeClass="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200/50 dark:border-indigo-800/50"
-          presets={SONG_PRESETS}
-          disabled={!canManageOrg || isSaving}
-          placeholder="05:00"
-        />
-        <DurationField
-          label={t("settings.general.sermonLabel")}
-          icon={<Mic2 className="w-4 h-4 text-rose-500" />}
-          value={sermonRaw}
-          onChange={(v) => {
-            setSermonRaw(v);
-            update("services", "sermonDuration", durationInputToSeconds(v));
-          }}
-          accentRingClass="focus:ring-rose-400/60"
-          badgeClass="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 border-rose-200/50 dark:border-rose-800/50"
-          presets={SERMON_PRESETS}
-          disabled={!canManageOrg || isSaving}
-          placeholder="40:00"
-        />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <Surface className="h-full">
+          <div className="mb-6">
+            <h2 className="text-title text-m3-text flex items-center gap-2">
+              <Music className="w-5 h-5 text-indigo-500" />
+              {t("settings.general.songLabel")}
+            </h2>
+            <p className="mt-1 text-muted">{t("settings.durations.pageDesc")}</p>
+          </div>
+          <DurationField
+            label={t("settings.general.songLabel")}
+            icon={<Music className="w-4 h-4 text-indigo-500" />}
+            value={songRaw}
+            onChange={(v) => {
+              setSongRaw(v);
+              update("services", "songDuration", durationInputToSeconds(v));
+            }}
+            accentRingClass="focus:ring-indigo-400/60"
+            badgeClass="text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200/50 dark:border-indigo-800/50"
+            presets={SONG_PRESETS}
+            disabled={!canManageOrg || isSaving}
+            placeholder="05:00"
+          />
+        </Surface>
+
+        <Surface className="h-full">
+          <div className="mb-6">
+            <h2 className="text-title text-m3-text flex items-center gap-2">
+              <Mic2 className="w-5 h-5 text-rose-500" />
+              {t("settings.general.sermonLabel")}
+            </h2>
+            <p className="mt-1 text-muted">{t("settings.general.durationsDesc")}</p>
+          </div>
+          <DurationField
+            label={t("settings.general.sermonLabel")}
+            icon={<Mic2 className="w-4 h-4 text-rose-500" />}
+            value={sermonRaw}
+            onChange={(v) => {
+              setSermonRaw(v);
+              update("services", "sermonDuration", durationInputToSeconds(v));
+            }}
+            accentRingClass="focus:ring-rose-400/60"
+            badgeClass="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 border-rose-200/50 dark:border-rose-800/50"
+            presets={SERMON_PRESETS}
+            disabled={!canManageOrg || isSaving}
+            placeholder="40:00"
+          />
+        </Surface>
       </div>
 
       {canManageOrg && (
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex justify-between items-center">
           <button
             type="button"
             onClick={reset}

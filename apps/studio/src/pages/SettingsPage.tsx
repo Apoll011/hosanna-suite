@@ -171,7 +171,7 @@ export const SettingsPage: React.FC = () => {
 
   return (
     <div className="h-full w-full overflow-y-auto bg-m3-bg text-m3-text p-6">
-      <div className="w-full max-w-5xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         <PageHeader title={t("common.settings")} description={t("settings.pageDesc")} />
 
         {!isOnline && (
