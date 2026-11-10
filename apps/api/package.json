@@ -34,6 +34,7 @@
     "@prisma/adapter-pg": "^7.9.1",
     "@supabase/supabase-js": "^2.49.0",
     "@vercel/functions": "^3.9.9",
+    "@vercel/oidc": "^4.0.7",
     "@vercel/related-projects": "^1.1.1",
     "ai": "^7.0.157",
     "compression": "^1.8.1",

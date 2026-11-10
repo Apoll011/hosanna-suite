@@ -16,7 +16,7 @@ function optional(name: string): string | undefined {
   return process.env[name] || undefined;
 }
 
-/** Force https for non-loopback auth URLs so Better Auth issuer matches the auth app. */
+/** Force https for non-loopback AUTH_URL so Better Auth issuer matches the auth app. */
 function normalizeAuthUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;
   try {
@@ -30,43 +30,21 @@ function normalizeAuthUrl(url: string | undefined): string | undefined {
   }
 }
 
-function isVercelEphemeralHost(url: string): boolean {
-  try {
-    const host = new URL(url).hostname.toLowerCase();
-    return host.endsWith(".vercel.app") || host.endsWith(".vercel.sh");
-  } catch {
-    return false;
-  }
-}
-
 /**
- * Server-to-server origin for the auth app (get-session, JWKS fetch).
- *
- * `withRelatedProject({ defaultHost: INTERNAL_AUTH_URL })` — same pattern as
- * the Vercel docs. Preview related hosts that resolve to `*.vercel.app` are
- * rejected when INTERNAL_AUTH_URL/AUTH_URL is already a custom domain: those
- * ephemeral hosts are behind Vercel Deployment Protection (SSO 302), while
- * cookies live on `auth.hosanna.live`.
+ * Auth app origin for get-session / JWKS.
+ * Uses `@vercel/related-projects` so preview API hits the matching auth deploy;
+ * falls back to AUTH_URL (then PUBLIC_APP_URL). Protected preview hosts need the
+ * Trusted Sources OIDC header (see `lib/session.ts` / MCP JWKS fetch).
  */
-function resolveInternalAuthUrl(): string | undefined {
-  const fallback =
-    optional("INTERNAL_AUTH_URL") ?? optional("AUTH_URL") ?? optional("PUBLIC_APP_URL");
+function resolveAuthUrl(): string | undefined {
+  const fallback = optional("AUTH_URL") ?? optional("PUBLIC_APP_URL");
   if (!fallback) return undefined;
-  const related = withRelatedProject({
-    projectName: AUTH_RELATED_PROJECT_NAME,
-    defaultHost: fallback,
-  });
-  const normalizedRelated = normalizeAuthUrl(related);
-  const normalizedFallback = normalizeAuthUrl(fallback);
-  if (
-    normalizedRelated &&
-    normalizedFallback &&
-    isVercelEphemeralHost(normalizedRelated) &&
-    !isVercelEphemeralHost(normalizedFallback)
-  ) {
-    return normalizedFallback;
-  }
-  return normalizedRelated ?? normalizedFallback;
+  return normalizeAuthUrl(
+    withRelatedProject({
+      projectName: AUTH_RELATED_PROJECT_NAME,
+      defaultHost: fallback,
+    }),
+  );
 }
 
 /** True when running inside a Vercel Function. */
@@ -113,16 +91,10 @@ export const env = {
 
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
   /**
-   * Public auth app origin (issuer / cookie host). Prefer AUTH_URL in env.
-   * Falls back to PUBLIC_APP_URL for legacy local setups.
+   * Auth app origin (get-session + JWKS).
+   * `withRelatedProject` → matching hosanna-auth deploy; else AUTH_URL.
    */
-  authUrl: normalizeAuthUrl(optional("AUTH_URL")),
-  /**
-   * Internal auth origin for API → auth HTTP (session + JWKS).
-   * Resolved via `withRelatedProject`; set INTERNAL_AUTH_URL as the fallback
-   * (defaults to AUTH_URL when unset).
-   */
-  internalAuthUrl: resolveInternalAuthUrl(),
+  authUrl: resolveAuthUrl(),
 
   cronSecret: optional("CRON_SECRET"),
 

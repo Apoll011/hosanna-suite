@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { attachTrustedOidcHeader } from "./vercelOidc.js";
 
 export type AuthSessionUser = {
   id: string;
@@ -24,22 +25,10 @@ export type SessionResult = {
   member?: { role?: string | null } | null;
 } | null;
 
-function authCandidates(): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const raw of [env.internalAuthUrl, env.authUrl, env.publicAppUrl]) {
-    if (!raw) continue;
-    const base = raw.replace(/\/+$/, "");
-    if (!base || seen.has(base)) continue;
-    seen.add(base);
-    out.push(base);
-  }
-  if (out.length === 0) {
-    throw new Error(
-      "INTERNAL_AUTH_URL (or AUTH_URL / PUBLIC_APP_URL) is required for session validation",
-    );
-  }
-  return out;
+function authBaseUrl(): string {
+  const base = (env.authUrl ?? env.publicAppUrl).replace(/\/+$/, "");
+  if (!base) throw new Error("AUTH_URL (or PUBLIC_APP_URL) is required for session validation");
+  return base;
 }
 
 function toHeaders(input?: Headers | Record<string, string> | Iterable<[string, string]>): Headers {
@@ -48,49 +37,30 @@ function toHeaders(input?: Headers | Record<string, string> | Iterable<[string, 
   return new Headers(input as Record<string, string>);
 }
 
-/** Allow Next/auth cold paths without turning slow answers into 401s. */
 const GET_SESSION_TIMEOUT_MS = 12_000;
 
-/**
- * Validate a session via the auth app (cookie / bearer).
- *
- * Tries `INTERNAL_AUTH_URL` / related-project host first, then `AUTH_URL`.
- * Preview related hosts are often `*.vercel.app` behind Vercel SSO — those
- * respond 302 to login HTML, which previously became a silent 401 until a
- * later request happened to hit `auth.hosanna.live`.
- */
+/** Validate a session via the auth app (cookie / bearer), not a local Better Auth instance. */
 export async function getSession(input?: {
   headers?: Headers | Record<string, string>;
 }): Promise<SessionResult> {
-  const headers = toHeaders(input?.headers);
-
-  for (const base of authCandidates()) {
-    let res: Response;
-    try {
-      res = await fetch(`${base}/api/auth/get-session`, {
-        method: "GET",
-        headers,
-        // Never follow Vercel deployment-protection SSO redirects.
-        redirect: "manual",
-        signal: AbortSignal.timeout(GET_SESSION_TIMEOUT_MS),
-      });
-    } catch {
-      continue;
-    }
-
-    // 3xx = deployment protection / wrong host — try the next candidate.
-    if (res.status >= 300 && res.status < 400) continue;
-    if (!res.ok) continue;
-
-    let data: SessionResult | { session?: null; user?: null } | null;
-    try {
-      data = (await res.json()) as SessionResult | { session?: null; user?: null } | null;
-    } catch {
-      continue;
-    }
-    if (!data?.session || !data?.user) return null;
-    return data as Exclude<SessionResult, null>;
+  const headers = await attachTrustedOidcHeader(toHeaders(input?.headers));
+  let res: Response;
+  try {
+    res = await fetch(`${authBaseUrl()}/api/auth/get-session`, {
+      method: "GET",
+      headers,
+      redirect: "manual",
+      signal: AbortSignal.timeout(GET_SESSION_TIMEOUT_MS),
+    });
+  } catch {
+    return null;
   }
 
-  return null;
+  // Deployment protection SSO redirect = missing/invalid Trusted Sources OIDC.
+  if (res.status >= 300 && res.status < 400) return null;
+  if (!res.ok) return null;
+
+  const data = (await res.json()) as SessionResult | { session?: null; user?: null } | null;
+  if (!data?.session || !data?.user) return null;
+  return data as Exclude<SessionResult, null>;
 }
