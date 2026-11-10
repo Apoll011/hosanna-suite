@@ -20,7 +20,7 @@ import {
   sendVerificationEmail,
   sendWelcomeEmail,
 } from "./email.service";
-import { DEFAULT_LOCALE, t } from "./i18n";
+import { DEFAULT_LOCALE, t } from "@/locales/server";
 import {
   isBase64Image,
   isExternalImageUrl,

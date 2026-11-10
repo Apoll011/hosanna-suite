@@ -1,6 +1,6 @@
 import Handlebars from "handlebars";
 import { env } from "./env";
-import { DEFAULT_LOCALE, t } from "./i18n";
+import { DEFAULT_LOCALE, t } from "@/locales/server";
 import { getResendClient } from "./resend";
 
 export interface SendEmailOptions {

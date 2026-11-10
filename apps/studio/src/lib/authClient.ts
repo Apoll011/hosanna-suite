@@ -14,9 +14,12 @@ const authBase =
       ? window.location.origin
       : getAuthAppUrl());
 
+/**
+ * Studio talks to the auth app's Better Auth host.
+ * 2FA redirects default to `{baseURL}/two-factor` on that host.
+ */
 export const authClient = createHosannaAuthClient({
   baseURL: String(authBase).replace(/\/+$/, ""),
-  twoFactorPage: `${getAuthAppUrl()}/two-factor`,
 });
 
 export type { Session, User } from "better-auth";

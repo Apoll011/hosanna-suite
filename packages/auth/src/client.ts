@@ -8,29 +8,49 @@ import { ac } from "./permission.js";
 import { roles } from "./roles.js";
 
 export interface CreateHosannaAuthClientOptions {
-  /** Better Auth base URL (auth app origin). */
+  /** Better Auth base URL (auth app origin, e.g. https://auth.hosanna.live). */
   baseURL: string;
-  /** Path for the 2FA challenge page (relative to the auth UI). */
+  /**
+   * Page Better Auth sends the browser to when 2FA is required.
+   * Defaults to `{baseURL}/two-factor` so Studio and other apps land on the
+   * auth app — not a Studio-relative path.
+   */
   twoFactorPage?: string;
+  /** Better Auth Infra project identify URL for sentinel (optional). */
+  identifyUrl?: string;
+  fetchOptions?: {
+    credentials?: "include" | "omit" | "same-origin";
+    headers?: Record<string, string>;
+  };
 }
 
-/** Shared browser/client Better Auth instance for Hosanna apps. */
+/**
+ * Shared browser Better Auth client for Hosanna apps (auth app, Studio, etc.).
+ *
+ * 2FA page defaults to the auth host so consumers do not need to pass it unless
+ * they override the route.
+ */
 // Explicit `any` — Better Auth client inference is non-portable for declaration emit.
 export function createHosannaAuthClient(options: CreateHosannaAuthClientOptions): any {
+  const baseURL = options.baseURL.replace(/\/+$/, "");
+  const twoFactorPage = options.twoFactorPage ?? `${baseURL}/two-factor`;
+
   return createAuthClient({
-    baseURL: options.baseURL.replace(/\/+$/, ""),
+    baseURL,
     fetchOptions: {
       credentials: "include",
+      ...options.fetchOptions,
     },
     plugins: [
       i18nClient(),
       dashClient(),
       sentinelClient({
         autoSolveChallenge: true,
+        ...(options.identifyUrl ? { identifyUrl: options.identifyUrl } : {}),
       }),
       inboxClient(),
       twoFactorClient({
-        twoFactorPage: options.twoFactorPage ?? "/two-factor",
+        twoFactorPage,
       }),
       stripeClient({
         subscription: true,
