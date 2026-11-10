@@ -35,3 +35,5 @@ yarn-error.log*
 /public/apple-touch-icon-*.png
 /public/og-image.jpg
 /public/bimi.svg
+.vercel
+.env*
