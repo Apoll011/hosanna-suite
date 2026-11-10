@@ -266,6 +266,21 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ active, showToast }) => 
               />
             </div>
 
+            <div className="rounded-md border border-m3-border p-4 space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-m3-text">
+                <Clock className="w-4 h-4 text-m3-primary" />
+                {t("settings.general.usualStartTime")}
+              </label>
+              <p className="text-caption">{t("settings.general.usualStartTimeDesc")}</p>
+              <input
+                type="time"
+                value={settings.services.usualStartTime}
+                disabled={!canManageOrg || isSaving}
+                onChange={(e) => update("services", "usualStartTime", e.target.value || "10:00")}
+                className={`${selectClass} max-w-40`}
+              />
+            </div>
+
             <hr className="border-m3-border" />
 
             <div className="space-y-3">

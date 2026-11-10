@@ -442,6 +442,9 @@ export const pt = {
         "Introduza os tempos médios em minutos e segundos para estimar a duração dos cultos.",
       songLabel: "Cântico / Música",
       sermonLabel: "Pregação / Sermão",
+      usualStartTime: "Hora habitual de início do culto",
+      usualStartTimeDesc:
+        "Hora proposta para eventos do tipo Culto Dominical e usada na impressão quando não há evento de agenda ligado.",
       suggestions: "Sugestões:",
       behaviorTitle: "Comportamento do Alinhamento e Culto",
       showDuration: "Apresentar Duração Total Estimada",

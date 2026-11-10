@@ -48,6 +48,7 @@ export type Organization = {
           sermon?: number;
           song?: number;
         };
+        usualStartTime?: string;
         showNotes?: boolean;
         showServiceDuration?: boolean;
         autoSave?: boolean;

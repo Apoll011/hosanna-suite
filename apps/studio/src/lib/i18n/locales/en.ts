@@ -440,6 +440,9 @@ export const en: typeof pt = {
       durationsDesc: "Enter average times in minutes and seconds to estimate service duration.",
       songLabel: "Song / Music",
       sermonLabel: "Preaching / Sermon",
+      usualStartTime: "Usual service start time",
+      usualStartTimeDesc:
+        "Proposed start for Sunday Service events, and used when printing a service with no linked agenda event.",
       suggestions: "Suggestions:",
       behaviorTitle: "Service & Order of Service Behavior",
       showDuration: "Show Estimated Total Duration",

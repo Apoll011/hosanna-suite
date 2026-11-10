@@ -4,6 +4,7 @@
  */
 
 import { useAgenda } from "@/src/hooks/useAgenda";
+import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { Service, ServiceElement, Song } from "@/src/types";
 import React, { useMemo } from "react";
@@ -66,6 +67,7 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
 }) => {
   const { t } = useI18n();
   const { events } = useAgenda();
+  const { settings } = useOrgSettings();
 
   const elements = useMemo(() => service.elements || [], [service.elements]);
   const totalSeconds = elements.reduce((acc, el) => acc + (el.duration || 0), 0);
@@ -78,9 +80,13 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
     return linked.find((e) => (e.date || "").slice(0, 10) === serviceDay) || linked[0];
   }, [events, service.date, service.id]);
 
-  const serviceStartMinutes = linkedEvent ? parseClockToMinutes(linkedEvent.time) : null;
-  // Only show Início when a linked agenda event gives a real wall-clock start.
+  // Prefer the linked agenda event; otherwise fall back to the org's usual start.
+  const serviceStartMinutes =
+    (linkedEvent ? parseClockToMinutes(linkedEvent.time) : null) ??
+    parseClockToMinutes(settings.services.usualStartTime);
   const showClockStart = serviceStartMinutes != null && hasTiming;
+  const startLabel =
+    linkedEvent?.time?.slice(0, 5) || settings.services.usualStartTime || null;
 
   const startOffsets = useMemo(() => {
     let acc = 0;
@@ -123,10 +129,7 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
     }
   };
 
-  const subtitle = [
-    formatPrintDate(service.date, brand.locale),
-    linkedEvent?.time ? linkedEvent.time.slice(0, 5) : null,
-  ]
+  const subtitle = [formatPrintDate(service.date, brand.locale), startLabel]
     .filter(Boolean)
     .join(" · ");
 
