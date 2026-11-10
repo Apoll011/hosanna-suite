@@ -2,14 +2,13 @@
 
 import { AccountShell } from "@/components/AccountShell";
 import { AccountNav } from "@/components/account/AccountNav";
-import { ActiveOrganizationProvider } from "@/hooks/useActiveOrganization";
 import { readRedirectParam } from "@/lib/redirect";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 
 /**
  * Account center chrome: header + Personal/Organization nav + content column.
- * Reads returnUrl from the query string (same pattern as AccountPage).
+ * Org context comes from `app/account/layout.tsx` (AccountProviders).
  */
 export function AccountCenter({
   children,
@@ -30,13 +29,11 @@ export function AccountCenter({
   }, [returnUrlProp]);
 
   return (
-    <ActiveOrganizationProvider>
-      <AccountShell toast={toast} returnUrl={returnUrl} headerActions={headerActions}>
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8 lg:gap-10">
-          <AccountNav />
-          <div className="min-w-0 flex-1">{children}</div>
-        </div>
-      </AccountShell>
-    </ActiveOrganizationProvider>
+    <AccountShell toast={toast} returnUrl={returnUrl} headerActions={headerActions}>
+      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8 lg:gap-10">
+        <AccountNav />
+        <div className="min-w-0 flex-1">{children}</div>
+      </div>
+    </AccountShell>
   );
 }

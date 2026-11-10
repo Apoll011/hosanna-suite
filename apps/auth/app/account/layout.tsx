@@ -1,6 +1,7 @@
+import { AccountProviders } from "@/components/account/AccountProviders";
 import type { ReactNode } from "react";
 
-/** Thin segment wrapper — chrome lives in AccountCenter client components. */
+/** Account segment — org context wraps every page so hooks can run before AccountCenter. */
 export default function AccountLayout({ children }: { children: ReactNode }) {
-  return children;
+  return <AccountProviders>{children}</AccountProviders>;
 }
