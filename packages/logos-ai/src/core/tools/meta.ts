@@ -31,7 +31,7 @@ import {
   Users,
   WandSparkles,
   Wrench,
-  Youtube,
+  Video,
   type LucideIcon,
 } from "lucide-react";
 import type { AiToolCallState } from "../../types";
@@ -72,7 +72,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   studio_generate_pdf: Printer,
   studio_search: Search,
   metadata_musicbrainz_search: Search,
-  metadata_youtube_search: Youtube,
+  metadata_youtube_search: Video,
   metadata_web_search: Globe,
   metadata_web_fetch: Globe,
   chordpro_validate: ListChecks,
