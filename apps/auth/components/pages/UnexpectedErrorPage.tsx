@@ -20,18 +20,17 @@ export function UnexpectedErrorPage({
       headerSubtitle={t("errors.unexpected.subtitle")}
       errorMsg={digest ? `Ref: ${digest}` : undefined}
     >
-      <div className="flex flex-col gap-3 sm:flex-row">
-        {reset ? (
-          <Button type="button" className="w-full rounded-full sm:flex-1" onClick={reset}>
-            {t("errors.unexpected.retry")}
-          </Button>
-        ) : null}
-        <Link href="/" className="block sm:flex-1">
-          <Button type="button" variant="outline" className="w-full rounded-full">
-            {t("common.goHome")}
+      {reset ? (
+        <Button type="button" className="w-full rounded-full" onClick={reset}>
+          {t("errors.unexpected.retry")}
+        </Button>
+      ) : (
+        <Link href="/login" className="block">
+          <Button type="button" className="w-full rounded-full">
+            {t("errors.notFound.login")}
           </Button>
         </Link>
-      </div>
+      )}
     </AuthLayout>
   );
 }
