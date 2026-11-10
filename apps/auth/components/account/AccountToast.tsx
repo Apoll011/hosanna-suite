@@ -43,7 +43,10 @@ export function useAccountToast(): ToastApi {
 export function AccountToastBanner({ toast }: { toast?: Toast }) {
   if (!toast) return null;
   return (
-    <div className="w-full px-4 pt-4 sm:px-6 lg:px-8" role="status">
+    <div
+      className="relative z-40 w-full px-4 pt-4 sm:px-6 lg:px-8 md:pl-[calc(1.5rem+14rem+2rem)] lg:pl-[calc(2rem+15rem+2.5rem)]"
+      role="status"
+    >
       <div
         className={`rounded-xl border px-3.5 py-2.5 text-sm font-medium animate-in fade-in duration-200 ${
           toast.type === "error"
