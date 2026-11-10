@@ -117,7 +117,8 @@ const OrganizationGuard = () => {
   if (isLoading) return <PageLoader />;
 
   if (!organization) {
-    return <Navigate to="/onboarding" replace />;
+    // Let ProtectedRoute send unauthenticated / no-org users to the auth app.
+    return <Navigate to="/" replace />;
   }
 
   if (slug && slug !== organization.slug) {
@@ -163,7 +164,10 @@ export const AppRoutes: React.FC = () => {
           <Route path="/demo" element={<DemoPage />} />
 
           <Route element={<ProtectedRoute />}>
-            {/* Wrap the slug routes with our new OrganizationGuard */}
+            {/* `/` must be under ProtectedRoute — the old catch-all sent it to
+                `/onboarding` → auth app even for logged-in users.
+                ProtectedRoute itself redirects `/` → `/{slug}/folders`. */}
+            <Route path="/" element={<Outlet />} />
             <Route path="/:slug" element={<OrganizationGuard />}>
               <Route element={<MainLayout />}>
                 <Route index element={<Navigate to="folders" replace />} />
@@ -194,9 +198,9 @@ export const AppRoutes: React.FC = () => {
                 <Route path="analytics" element={<AnalyticsPage />} />
               </Route>
             </Route>
+            {/* Unknown paths → home; ProtectedRoute sends authed users to folders. */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
-
-          <Route path="*" element={<Navigate to="/onboarding" replace />} />
         </Routes>
       </Suspense>
     </ErrorBoundary>
