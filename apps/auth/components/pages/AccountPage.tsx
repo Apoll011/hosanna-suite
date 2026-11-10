@@ -24,7 +24,7 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 function initials(name?: string | null) {
@@ -40,8 +40,11 @@ function initials(name?: string | null) {
 export function AccountPage() {
   const { t } = useI18n();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const returnUrl = useMemo(() => readRedirectParam(searchParams), [searchParams]);
+  // Read from window so we don't wrap the page in Suspense (that forced a spinner).
+  const returnUrl = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    return readRedirectParam(new URLSearchParams(window.location.search));
+  }, []);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { user, setUser, isLoading, isRefreshing, refresh, clear } = useAuthUser();
 
@@ -210,12 +213,22 @@ export function AccountPage() {
         title={t("account.title")}
         description={t("account.subtitle")}
         actions={
-          isRefreshing ? (
-            <span className="inline-flex items-center gap-1.5 text-caption text-m3-secondary">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              {t("common.loading")}
-            </span>
-          ) : undefined
+          <div className="flex items-center gap-3">
+            {isRefreshing ? (
+              <span className="inline-flex items-center gap-1.5 text-caption text-m3-secondary">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                {t("common.loading")}
+              </span>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => void logout()}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>{t("account.signOut")}</span>
+            </button>
+          </div>
         }
       />
 
@@ -473,17 +486,6 @@ export function AccountPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
           <ActiveSessionsSection onToast={showToast} />
           <LoginHistorySection />
-        </div>
-
-        <div className="flex justify-end pt-2">
-          <button
-            type="button"
-            onClick={() => void logout()}
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>{t("account.signOut")}</span>
-          </button>
         </div>
       </div>
     </AccountShell>

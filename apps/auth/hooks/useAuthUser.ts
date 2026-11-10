@@ -8,7 +8,15 @@ import {
   writeCachedUser,
   type CachedAuthUser,
 } from "@/lib/session-cache";
-import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 type UseAuthUserOptions = {
   loginRedirect?: string;
@@ -27,15 +35,20 @@ type UseAuthUserResult = {
 };
 
 /**
- * Hydrate account UI from localStorage immediately, then refresh from the network.
- * Avoids a blank spinner on every /account visit when a prior session was cached.
+ * Show cached account UI before paint when localStorage has a user, then refresh.
  */
 export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult {
   const { loginRedirect = "/login?redirect=/account", requireAuth = true } = options;
+  const loginRedirectRef = useRef(loginRedirect);
+  const requireAuthRef = useRef(requireAuth);
+  loginRedirectRef.current = loginRedirect;
+  requireAuthRef.current = requireAuth;
 
+  // Match SSR + first client paint (no window on server); hydrate from cache in layout effect.
   const [user, setUser] = useState<CachedAuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const didHydrateCache = useRef(false);
 
   const clear = useCallback(() => {
     clearCachedUser();
@@ -53,8 +66,8 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
       if (!next) {
         clearCachedUser();
         setUser(null);
-        if (requireAuth && typeof window !== "undefined") {
-          window.location.replace(loginRedirect);
+        if (requireAuthRef.current && typeof window !== "undefined") {
+          window.location.replace(loginRedirectRef.current);
         }
         return null;
       }
@@ -66,14 +79,20 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, [loginRedirect, requireAuth]);
+  }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (didHydrateCache.current) return;
+    didHydrateCache.current = true;
     const cached = readCachedUser();
     if (cached) {
       setUser(cached);
       setIsLoading(false);
+      setIsRefreshing(true);
     }
+  }, []);
+
+  useEffect(() => {
     void refresh();
   }, [refresh]);
 
