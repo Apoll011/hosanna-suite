@@ -30,7 +30,7 @@ Point API issuer / deep links (optional local dual-run):
 ```bash
 # apps/api/.env
 AUTH_URL=http://localhost:5174
-AUTH_MOUNT=local   # or delegate / off
+# Auth HTTP mode on the API: Vercel Flags `auth-mount` (local | delegate | off)
 ```
 
 ## Routes

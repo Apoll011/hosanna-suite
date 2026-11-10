@@ -1,13 +1,14 @@
-import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express from "express";
 import type { RequestHandler } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmetImport from "helmet";
 import { env } from "./config/env.js";
-import { auth } from "./lib/auth.js";
 import { DEFAULT_LOCALE, t } from "./lib/i18n.js";
-import { withOauthNavigationRedirect } from "@hosanna/auth/server";
+import {
+  authMountAuthorizationServerRoot,
+  authMountDispatch,
+} from "./middleware/authMount.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { mcpRouter } from "./mcp/http.js";
 import { apiRouter } from "./routes/index.js";
@@ -128,39 +129,16 @@ if (!isVercel) {
   );
 }
 
-// Better Auth HTTP: local mount (legacy), 308 to AUTH_URL (cutover), or off.
-if (env.authMount === "local") {
-  // Convert Better Auth JSON `{ redirect, url }` to HTTP 302 for browser
-  // navigations (MCP Connect opens /oauth2/authorize as a document).
-  const authHandler = toNodeHandler(withOauthNavigationRedirect(auth.handler));
-
-  app.all("/api/auth/*", authHandler);
-  app.all("/.well-known/oauth-protected-resource", authHandler);
-  app.all("/.well-known/oauth-protected-resource/*", authHandler);
-  app.all("/.well-known/oauth-authorization-server", (_req, res) => {
-    res.redirect(302, "/.well-known/oauth-authorization-server/api/auth");
-  });
-  app.all("/.well-known/oauth-authorization-server/*", authHandler);
-  app.all("/.well-known/openid-configuration", authHandler);
-  app.all("/.well-known/openid-configuration/*", authHandler);
-} else if (env.authMount === "delegate") {
-  const target = (env.authUrl ?? "").replace(/\/+$/, "");
-  if (!target) {
-    throw new Error("AUTH_MOUNT=delegate requires AUTH_URL");
-  }
-  const delegate: RequestHandler = (req, res) => {
-    res.redirect(308, `${target}${req.originalUrl}`);
-  };
-  app.all("/api/auth", delegate);
-  app.all("/api/auth/*", delegate);
-  app.all("/.well-known/oauth-protected-resource", delegate);
-  app.all("/.well-known/oauth-protected-resource/*", delegate);
-  app.all("/.well-known/oauth-authorization-server", delegate);
-  app.all("/.well-known/oauth-authorization-server/*", delegate);
-  app.all("/.well-known/openid-configuration", delegate);
-  app.all("/.well-known/openid-configuration/*", delegate);
-}
-// authMount === "off" → resource server only (session via shared createAuth)
+// Better Auth HTTP — mode from Vercel Flags `auth-mount` (local | delegate | off).
+// Evaluated per request via @vercel/flags-core (not AUTH_MOUNT env).
+app.all("/api/auth", authMountDispatch);
+app.all("/api/auth/*", authMountDispatch);
+app.all("/.well-known/oauth-protected-resource", authMountDispatch);
+app.all("/.well-known/oauth-protected-resource/*", authMountDispatch);
+app.all("/.well-known/oauth-authorization-server", authMountAuthorizationServerRoot);
+app.all("/.well-known/oauth-authorization-server/*", authMountDispatch);
+app.all("/.well-known/openid-configuration", authMountDispatch);
+app.all("/.well-known/openid-configuration/*", authMountDispatch);
 
 // ── Body parsing ─────────────────────────────────────────────────────────────
 // 5 MB headroom for large replication push batches (songs with full lyrics)
