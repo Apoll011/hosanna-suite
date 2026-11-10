@@ -40,8 +40,7 @@ function normalizeMcpResourceUrl(url: string): string {
 const isVercel = Boolean(process.env.VERCEL);
 
 /** Auth app origin — AUTH_URL, else PUBLIC_APP_URL, else local Next port. */
-const authUrl =
-  process.env.AUTH_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:5174";
+const authUrl = process.env.AUTH_URL ?? process.env.PUBLIC_APP_URL ?? "http://localhost:5174";
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? "development",

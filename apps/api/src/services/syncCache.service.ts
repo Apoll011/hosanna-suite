@@ -1,11 +1,7 @@
 import { createCache } from "@hosanna/cache";
 
 export type ReplicatedCollection =
-  | "songs"
-  | "folders"
-  | "collections"
-  | "services"
-  | "agendaEvents";
+  "songs" | "folders" | "collections" | "services" | "agendaEvents";
 
 export interface ReplicationCheckpoint {
   updatedAt: number;
@@ -51,9 +47,7 @@ export const syncCache = {
     checkpoint: ReplicationCheckpoint | null,
   ): Promise<void> {
     await checkpoints.set(key(tenantId, collection), {
-      checkpoint: checkpoint
-        ? { updatedAt: checkpoint.updatedAt, id: checkpoint.id }
-        : null,
+      checkpoint: checkpoint ? { updatedAt: checkpoint.updatedAt, id: checkpoint.id } : null,
     });
   },
 

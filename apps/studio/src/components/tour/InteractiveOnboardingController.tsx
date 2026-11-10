@@ -76,8 +76,7 @@ export const InteractiveOnboardingController: React.FC = () => {
         onCompleted: () => {
           updateSetting("interactiveOnboardingCompleted", true);
         },
-        onDismissed: () => {
-        },
+        onDismissed: () => {},
       });
     }, 700);
 

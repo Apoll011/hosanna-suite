@@ -209,8 +209,7 @@ export const AgendaPage: React.FC = () => {
       }
       setSelectedEventId(null);
       setPendingDeleteEvent(null);
-    } catch {
-    }
+    } catch {}
   };
 
   const editingAssigneesResp = useMemo(() => {
@@ -430,8 +429,7 @@ export const AgendaPage: React.FC = () => {
               // shows the error toast) instead of closing it silently.
               await store.addResponsibility(selectedEvent.id, categoryId, assignees);
               setIsAddResponsibilityOpen(false);
-            } catch {
-            }
+            } catch {}
           }}
         />
       )}
@@ -471,8 +469,7 @@ export const AgendaPage: React.FC = () => {
                 assignees,
               );
               setEditingAssigneesFor(null);
-            } catch {
-            }
+            } catch {}
           }}
         />
       )}

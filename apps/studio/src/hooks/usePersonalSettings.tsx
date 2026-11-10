@@ -131,8 +131,7 @@ function loadSettings(): PersonalSettings {
         if (parsedMetadata) {
           Object.assign(settings, parsedMetadata);
         }
-      } catch {
-      }
+      } catch {}
     }
 
     // One-time migration from legacy scattered keys.
@@ -167,8 +166,7 @@ function loadSettings(): PersonalSettings {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
       Object.values(LEGACY_KEYS).forEach((key) => localStorage.removeItem(key));
     }
-  } catch {
-  }
+  } catch {}
   return settings;
 }
 
@@ -187,8 +185,7 @@ async function syncMetadataToServer(settingsToSave: PersonalSettings) {
       cachedUser.metadata = serialized;
       localStorage.setItem(CACHED_USER_KEY, JSON.stringify(cachedUser));
     }
-  } catch {
-  }
+  } catch {}
 
   try {
     await (authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>)({
@@ -254,8 +251,7 @@ export function syncSettingsFromMetadata(metadata: unknown) {
       state = merged;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch {
-      }
+      } catch {}
       listeners.forEach((l) => l());
     }
   }
@@ -267,14 +263,12 @@ if (typeof window !== "undefined") {
       try {
         state = { ...DEFAULT_SETTINGS, ...JSON.parse(e.newValue) };
         listeners.forEach((l) => l());
-      } catch {
-      }
+      } catch {}
     } else if (e.key === CACHED_USER_KEY && e.newValue) {
       try {
         const cachedUser = JSON.parse(e.newValue) as SessionUser;
         syncSettingsFromMetadata(cachedUser?.metadata);
-      } catch {
-      }
+      } catch {}
     }
   });
 }

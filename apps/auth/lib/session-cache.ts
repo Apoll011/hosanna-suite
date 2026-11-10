@@ -96,7 +96,8 @@ export function writeCachedSessions(sessions: CachedSessionRow[]): void {
     SESSIONS_KEY,
     sessions.map((s) => ({
       ...s,
-      createdAt: typeof s.createdAt === "string" ? s.createdAt : new Date(s.createdAt).toISOString(),
+      createdAt:
+        typeof s.createdAt === "string" ? s.createdAt : new Date(s.createdAt).toISOString(),
     })),
   );
 }

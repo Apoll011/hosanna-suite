@@ -941,8 +941,7 @@ export const ServiceDetailPage: React.FC = () => {
             updatedAt: service.updatedAt,
           },
         });
-      } catch {
-      }
+      } catch {}
     }, 1500);
     return () => clearTimeout(timer);
   }, [generalNotes, orgSettings.services.autoSave, service, isEditingGeneralNotes, updateService]);

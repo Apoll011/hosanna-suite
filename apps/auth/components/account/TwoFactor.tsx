@@ -50,7 +50,10 @@ export function TwoFactorSection({
         setStep("setup");
       }
     } catch (err: unknown) {
-      onToast(t("settings.twoFactor.enableError", { error: (err as Error).message || "Error" }), "error");
+      onToast(
+        t("settings.twoFactor.enableError", { error: (err as Error).message || "Error" }),
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +77,10 @@ export function TwoFactorSection({
         setStep("backup");
       }
     } catch (err: unknown) {
-      onToast(t("settings.twoFactor.verifyError", { error: (err as Error).message || "Error" }), "error");
+      onToast(
+        t("settings.twoFactor.verifyError", { error: (err as Error).message || "Error" }),
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +108,10 @@ export function TwoFactorSection({
         closeModal();
       }
     } catch (err: unknown) {
-      onToast(t("settings.twoFactor.disableError", { error: (err as Error).message || "Error" }), "error");
+      onToast(
+        t("settings.twoFactor.disableError", { error: (err as Error).message || "Error" }),
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +154,9 @@ export function TwoFactorSection({
 
             {step === "password" && (
               <div className="space-y-4">
-                <p className="text-xs text-m3-secondary">{t("settings.twoFactor.passwordStepDesc")}</p>
+                <p className="text-xs text-m3-secondary">
+                  {t("settings.twoFactor.passwordStepDesc")}
+                </p>
                 <GoogleTextField
                   type="password"
                   label={t("settings.twoFactor.passwordLabel")}
@@ -156,7 +167,12 @@ export function TwoFactorSection({
                   <Button variant="outline" size="sm" onClick={closeModal}>
                     {t("common.cancel")}
                   </Button>
-                  <Button variant="primary" size="sm" isLoading={isLoading} onClick={() => void handleEnable2FA()}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    isLoading={isLoading}
+                    onClick={() => void handleEnable2FA()}
+                  >
                     {t("settings.twoFactor.continue")}
                   </Button>
                 </div>
@@ -186,7 +202,12 @@ export function TwoFactorSection({
                   <Button variant="outline" size="sm" onClick={closeModal}>
                     {t("common.cancel")}
                   </Button>
-                  <Button variant="primary" size="sm" isLoading={isLoading} onClick={() => void handleVerify2FA()}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    isLoading={isLoading}
+                    onClick={() => void handleVerify2FA()}
+                  >
                     {t("settings.twoFactor.verify")}
                   </Button>
                 </div>
@@ -197,7 +218,9 @@ export function TwoFactorSection({
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
                   <CheckCircle2 className="w-5 h-5" />
-                  <span className="text-sm font-bold">{t("settings.twoFactor.backupSuccessTitle")}</span>
+                  <span className="text-sm font-bold">
+                    {t("settings.twoFactor.backupSuccessTitle")}
+                  </span>
                 </div>
                 <div className="bg-amber-50 dark:bg-amber-950/30 p-3 rounded-xl border border-amber-200 dark:border-amber-900/50 flex gap-3">
                   <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500 shrink-0" />
@@ -229,7 +252,9 @@ export function TwoFactorSection({
 
             {step === "disable" && (
               <div className="space-y-4">
-                <p className="text-xs text-m3-secondary">{t("settings.twoFactor.disableStepDesc")}</p>
+                <p className="text-xs text-m3-secondary">
+                  {t("settings.twoFactor.disableStepDesc")}
+                </p>
                 <GoogleTextField
                   type="password"
                   label={t("settings.twoFactor.passwordLabel")}

@@ -182,7 +182,8 @@ export const en: typeof pt = {
       verify: "Verify",
       codeVerified: "Code verified.",
       backupSuccessTitle: "Save your backup codes",
-      backupWarning: "Store these codes somewhere safe. Each can be used once if you lose your device.",
+      backupWarning:
+        "Store these codes somewhere safe. Each can be used once if you lose your device.",
       backupSavedBtn: "I've saved them",
       setupSuccess: "Two-factor authentication is enabled.",
       disableStepDesc: "Enter your password to disable 2FA.",

@@ -372,8 +372,7 @@ async function saveCheckpoint(collectionName: CollectionName, cp: Checkpoint): P
 
   try {
     localStorage.setItem(`${getCheckpointLsPrefix()}_${collectionName}`, JSON.stringify(cp));
-  } catch {
-  }
+  } catch {}
 }
 
 /**
@@ -385,8 +384,7 @@ function markPopulationEpoch(): void {
   try {
     if (getPopulationEpoch() > 0) return;
     localStorage.setItem(getEpochLsKey(), "1");
-  } catch {
-  }
+  } catch {}
 }
 
 function getPopulationEpoch(): number {
@@ -686,8 +684,7 @@ export async function clearReplicationState(): Promise<void> {
 
   try {
     localStorage.removeItem(getEpochLsKey());
-  } catch {
-  }
+  } catch {}
 
   try {
     const prefix = `${getCheckpointLsPrefix()}_`;
@@ -697,8 +694,7 @@ export async function clearReplicationState(): Promise<void> {
       if (key?.startsWith(prefix)) keysToRemove.push(key);
     }
     for (const key of keysToRemove) localStorage.removeItem(key);
-  } catch {
-  }
+  } catch {}
 
   try {
     const cpDb = await getCheckpointDb();
@@ -710,8 +706,7 @@ export async function clearReplicationState(): Promise<void> {
     try {
       const { deleteIndexedDbByName } = await import("./dbNames");
       await deleteIndexedDbByName(getCheckpointDbName());
-    } catch {
-    }
+    } catch {}
   }
 }
 

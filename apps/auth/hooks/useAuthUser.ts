@@ -8,7 +8,14 @@ import {
   writeCachedUser,
   type CachedAuthUser,
 } from "@/lib/session-cache";
-import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 type UseAuthUserOptions = {
   /** User from a server session — skips the cold-load spinner. */
@@ -38,8 +45,11 @@ function seedUser(initialUser?: CachedAuthUser | null): CachedAuthUser | null {
  * Never blank the page for a background session refresh.
  */
 export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult {
-  const { initialUser = null, loginRedirect = "/login?redirect=/account", requireAuth = true } =
-    options;
+  const {
+    initialUser = null,
+    loginRedirect = "/login?redirect=/account",
+    requireAuth = true,
+  } = options;
   const loginRedirectRef = useRef(loginRedirect);
   const requireAuthRef = useRef(requireAuth);
   loginRedirectRef.current = loginRedirect;
@@ -65,9 +75,7 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
         return readCachedUser();
       }
 
-      const next = session.data?.user
-        ? toCachedUser(session.data.user as CachedAuthUser)
-        : null;
+      const next = session.data?.user ? toCachedUser(session.data.user as CachedAuthUser) : null;
 
       if (!next) {
         clearCachedUser();

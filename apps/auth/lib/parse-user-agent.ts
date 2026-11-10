@@ -1,4 +1,3 @@
-
 export type DeviceType = "mobile" | "tablet" | "desktop" | "unknown";
 
 export interface ParsedUserAgentInfo {

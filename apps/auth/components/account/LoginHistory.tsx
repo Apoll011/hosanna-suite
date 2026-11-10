@@ -50,40 +50,43 @@ export function LoginHistorySection() {
   const [offset, setOffset] = useState(0);
   const limit = 25;
 
-  const fetchLogs = useCallback(async (nextOffset = 0, append = false) => {
-    const cached = readCachedLoginHistory();
-    const background = !append && nextOffset === 0 && cached !== null;
-    if (background) setIsRefreshing(true);
-    else setIsLoading(true);
-    setError(null);
-    try {
-      const session = await authClient.getSession({ query: {} });
-      const result = await authClient.dash.getAuditLogs({
-        session: session.data,
-        eventType: "user_signed_in",
-        limit,
-        offset: nextOffset,
-      });
-      if (result.error) {
-        throw new Error(result.error.message || t("loginHistory.loadError"));
+  const fetchLogs = useCallback(
+    async (nextOffset = 0, append = false) => {
+      const cached = readCachedLoginHistory();
+      const background = !append && nextOffset === 0 && cached !== null;
+      if (background) setIsRefreshing(true);
+      else setIsLoading(true);
+      setError(null);
+      try {
+        const session = await authClient.getSession({ query: {} });
+        const result = await authClient.dash.getAuditLogs({
+          session: session.data,
+          eventType: "user_signed_in",
+          limit,
+          offset: nextOffset,
+        });
+        if (result.error) {
+          throw new Error(result.error.message || t("loginHistory.loadError"));
+        }
+        const raw = (result.data?.events ?? []) as AuditEvent[];
+        const filtered = raw.filter((e) => LOGIN_EVENT_TYPES.has(e.eventType));
+        setEvents((prev) => (append && prev ? [...prev, ...filtered] : filtered));
+        const nextTotal = result.data?.total ?? filtered.length;
+        setTotal(nextTotal);
+        setOffset(nextOffset);
+        if (!append && nextOffset === 0) {
+          writeCachedLoginHistory({ events: filtered, total: nextTotal });
+        }
+      } catch (err) {
+        setError((err as Error)?.message || t("loginHistory.loadError"));
+        if (!append && cached === null) setEvents([]);
+      } finally {
+        setIsLoading(false);
+        setIsRefreshing(false);
       }
-      const raw = (result.data?.events ?? []) as AuditEvent[];
-      const filtered = raw.filter((e) => LOGIN_EVENT_TYPES.has(e.eventType));
-      setEvents((prev) => (append && prev ? [...prev, ...filtered] : filtered));
-      const nextTotal = result.data?.total ?? filtered.length;
-      setTotal(nextTotal);
-      setOffset(nextOffset);
-      if (!append && nextOffset === 0) {
-        writeCachedLoginHistory({ events: filtered, total: nextTotal });
-      }
-    } catch (err) {
-      setError((err as Error)?.message || t("loginHistory.loadError"));
-      if (!append && cached === null) setEvents([]);
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  }, [t]);
+    },
+    [t],
+  );
 
   useEffect(() => {
     void fetchLogs(0, false);
@@ -133,7 +136,12 @@ export function LoginHistorySection() {
             <ShieldAlert className="w-4 h-4" />
             {error}
           </p>
-          <Button type="button" variant="outline" size="sm" onClick={() => void fetchLogs(0, false)}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchLogs(0, false)}
+          >
             {t("common.retry")}
           </Button>
         </div>

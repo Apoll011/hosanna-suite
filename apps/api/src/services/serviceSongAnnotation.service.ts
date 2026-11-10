@@ -1,4 +1,3 @@
-
 import { OrgScopedPrisma } from "../database/prisma.js";
 import { getAnnotationDoc, publishAnnotation, resolveAnnotationBytes } from "../lib/firestore.js";
 

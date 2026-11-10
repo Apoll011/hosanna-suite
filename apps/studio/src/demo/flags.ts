@@ -35,8 +35,7 @@ export function disableDemoMode(): void {
   try {
     sessionStorage.removeItem(DEMO_SESSION_KEY);
     sessionStorage.removeItem(DEMO_SEEDED_KEY);
-  } catch {
-  }
+  } catch {}
 }
 
 /** Returns true if the demo DB has already been seeded in this session. */
@@ -52,6 +51,5 @@ export function isDemoSeeded(): boolean {
 export function markDemoSeeded(): void {
   try {
     sessionStorage.setItem(DEMO_SEEDED_KEY, "true");
-  } catch {
-  }
+  } catch {}
 }

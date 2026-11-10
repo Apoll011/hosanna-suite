@@ -78,8 +78,7 @@ export function destroyInteractiveOnboarding(): void {
     allowDestroy = true;
     try {
       activeDriver.destroy();
-    } catch {
-    }
+    } catch {}
     activeDriver = null;
   }
   allowDestroy = false;
@@ -140,8 +139,7 @@ function stripDriverTabTrap(): void {
     if (events?.onKeydown) {
       window.removeEventListener("keydown", events.onKeydown);
     }
-  } catch {
-  }
+  } catch {}
 }
 
 function waitForSelector(
@@ -596,8 +594,7 @@ export async function runInteractiveOnboarding(options: InteractiveRunOptions): 
           if (myToken !== paintToken) return;
           advanceStepOnAction();
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     }
 
     await advancePromise;

@@ -305,7 +305,11 @@ export function OnboardingPage() {
   };
 
   return (
-    <AuthLayout headerTitle={getHeaderTitle()} headerSubtitle={getHeaderSubtitle()} errorMsg={errorMsg}>
+    <AuthLayout
+      headerTitle={getHeaderTitle()}
+      headerSubtitle={getHeaderSubtitle()}
+      errorMsg={errorMsg}
+    >
       {mode === "trial" && newOrg && (
         <div className="text-center space-y-5">
           <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-4 text-left space-y-2.5">
@@ -468,7 +472,9 @@ export function OnboardingPage() {
                               )}
                             </div>
                             <span className="flex-1 min-w-0">
-                              <span className="block text-xs font-semibold truncate">{org.name}</span>
+                              <span className="block text-xs font-semibold truncate">
+                                {org.name}
+                              </span>
                               <span className="block text-caption text-m3-secondary truncate">
                                 @{org.slug}
                               </span>
@@ -625,7 +631,9 @@ export function OnboardingPage() {
             <Button
               type="submit"
               size="md"
-              disabled={isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"}
+              disabled={
+                isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"
+              }
               isLoading={isLoading}
               className="rounded-full"
             >

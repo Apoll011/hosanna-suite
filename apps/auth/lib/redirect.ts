@@ -68,8 +68,7 @@ export async function redirectAfterSuccessfulAuth(
       localStorage.setItem("active_org_slug", slug);
       try {
         await authClient.organization.setActive({ organizationSlug: slug });
-      } catch {
-      }
+      } catch {}
       window.location.assign(`${getStudioUrl()}/${slug}`);
       return;
     }
@@ -86,15 +85,11 @@ export function resolveSocialCallbackURL(
   override?: string,
 ): string {
   if (override && isSafeRedirectTarget(override)) {
-    return override.startsWith("http")
-      ? override
-      : `${window.location.origin}${override}`;
+    return override.startsWith("http") ? override : `${window.location.origin}${override}`;
   }
   const explicit = searchParams ? readRedirectParam(searchParams) : null;
   if (explicit) {
-    return explicit.startsWith("http")
-      ? explicit
-      : `${window.location.origin}${explicit}`;
+    return explicit.startsWith("http") ? explicit : `${window.location.origin}${explicit}`;
   }
   const storedSlug = localStorage.getItem("active_org_slug");
   if (storedSlug) {

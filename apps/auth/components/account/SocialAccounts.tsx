@@ -13,7 +13,11 @@ import { useCallback, useEffect, useState } from "react";
 
 type UserAccount = CachedSocialAccount;
 
-export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type: "success" | "error") => void }) {
+export function SocialAccountsSection({
+  onToast,
+}: {
+  onToast: (msg: string, type: "success" | "error") => void;
+}) {
   const { t } = useI18n();
   const [accounts, setAccounts] = useState<UserAccount[]>(() => readCachedAccounts() ?? []);
   const [isLoading, setIsLoading] = useState(() => readCachedAccounts() === null);
@@ -162,7 +166,11 @@ export function SocialAccountsSection({ onToast }: { onToast: (msg: string, type
               onClick={() => setConfirmUnlink(true)}
               className="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg border border-rose-200 dark:border-rose-900/50 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
-              {unlinkingProvider ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Unlink className="w-3.5 h-3.5" />}
+              {unlinkingProvider ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Unlink className="w-3.5 h-3.5" />
+              )}
               <span>{t("settings.account.socialAccounts.disconnect")}</span>
             </button>
           ) : (

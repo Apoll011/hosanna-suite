@@ -182,7 +182,8 @@ export const es: typeof pt = {
       verify: "Verificar",
       codeVerified: "Código verificado.",
       backupSuccessTitle: "Guarda tus códigos de recuperación",
-      backupWarning: "Guarda estos códigos en un lugar seguro. Cada uno se puede usar una vez si pierdes el dispositivo.",
+      backupWarning:
+        "Guarda estos códigos en un lugar seguro. Cada uno se puede usar una vez si pierdes el dispositivo.",
       backupSavedBtn: "Ya los guardé",
       setupSuccess: "Autenticación en dos pasos activada.",
       disableStepDesc: "Introduce tu contraseña para desactivar el 2FA.",

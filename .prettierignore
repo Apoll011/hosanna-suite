@@ -7,3 +7,4 @@ pnpm-lock.yaml
 routeTree.gen.ts
 packages/types/src/schema.ts
 packages/db/prisma/migrations
+.next

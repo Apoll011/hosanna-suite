@@ -55,8 +55,7 @@ export async function* readUiMessageStream(response: Response): AsyncGenerator<S
         if (!payload || payload === "[DONE]") continue;
         try {
           yield JSON.parse(payload) as StreamEvent;
-        } catch {
-        }
+        } catch {}
       }
     }
 

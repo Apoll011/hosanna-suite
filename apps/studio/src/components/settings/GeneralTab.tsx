@@ -168,7 +168,9 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ active, showToast }) => 
                 </optgroup>
                 <optgroup label={t("settings.general.timezones.otherRegionsGroup")}>
                   <option value="Europe/London">{t("settings.general.timezones.london")}</option>
-                  <option value="America/New_York">{t("settings.general.timezones.newYork")}</option>
+                  <option value="America/New_York">
+                    {t("settings.general.timezones.newYork")}
+                  </option>
                   <option value="UTC">{t("settings.general.timezones.utc")}</option>
                 </optgroup>
               </select>

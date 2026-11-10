@@ -67,8 +67,7 @@ if (typeof window !== "undefined") {
       try {
         state = { ...DEFAULT_SETTINGS, ...JSON.parse(e.newValue) };
         listeners.forEach((l) => l());
-      } catch {
-      }
+      } catch {}
     }
   });
 }

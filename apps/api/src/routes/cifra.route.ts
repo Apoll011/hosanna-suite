@@ -131,8 +131,7 @@ function extractJsonLd(html: string): JsonLdSong | undefined {
           return item;
         }
       }
-    } catch {
-    }
+    } catch {}
   }
 
   return undefined;

@@ -158,7 +158,10 @@ export const AppRoutes: React.FC = () => {
           <Route path="/register" element={<ExternalAuthRedirect path="/register" />} />
           <Route path="/new" element={<ExternalAuthRedirect path="/new" />} />
           <Route path="/verify-email" element={<ExternalAuthRedirect path="/verify-email" />} />
-          <Route path="/forgot-password" element={<ExternalAuthRedirect path="/forgot-password" />} />
+          <Route
+            path="/forgot-password"
+            element={<ExternalAuthRedirect path="/forgot-password" />}
+          />
           <Route path="/reset-password" element={<ExternalAuthRedirect path="/reset-password" />} />
           <Route
             path="/accept-invitation"

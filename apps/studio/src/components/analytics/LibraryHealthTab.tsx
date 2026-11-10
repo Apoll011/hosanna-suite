@@ -164,7 +164,9 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className={`text-3xl font-semibold tabular-nums tracking-tight ${healthTone.text}`}>
+                <span
+                  className={`text-3xl font-semibold tabular-nums tracking-tight ${healthTone.text}`}
+                >
                   {summary.healthPercentage}%
                 </span>
                 <span className="text-caption mt-0.5">
@@ -214,9 +216,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
                 <Music2 className="w-5 h-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-caption block">
-                  {t("analytics.libraryHealth.statSongs")}
-                </span>
+                <span className="text-caption block">{t("analytics.libraryHealth.statSongs")}</span>
                 <span className="block text-2xl font-semibold tabular-nums tracking-tight text-m3-text leading-tight">
                   {summary.songCount}
                 </span>
@@ -229,9 +229,7 @@ export const LibraryHealthTab: React.FC<LibraryHealthTabProps> = ({ active }) =>
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-caption">
-                    {t("analytics.libraryHealth.statHealthy")}
-                  </span>
+                  <span className="text-caption">{t("analytics.libraryHealth.statHealthy")}</span>
                   <span className="text-caption tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
                     {healthyShare}%
                   </span>

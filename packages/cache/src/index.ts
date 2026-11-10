@@ -41,9 +41,7 @@ async function openStore(opts: CreateCacheOptions): Promise<KeyvLike> {
   if (backend === "redis") {
     const url = resolveRedisUrl(opts);
     if (!url) {
-      throw new Error(
-        `@hosanna/cache: redis backend for "${opts.namespace}" needs REDIS_URL`,
-      );
+      throw new Error(`@hosanna/cache: redis backend for "${opts.namespace}" needs REDIS_URL`);
     }
     const { createKeyv } = await import("@keyv/redis");
     return createKeyv(url, {

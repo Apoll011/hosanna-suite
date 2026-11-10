@@ -430,7 +430,11 @@ add(
       },
     }),
     responses: {
-      ...jsonResp(202, { $ref: "#/components/schemas/SongImportJob" }, "Job accepted (queued/running); poll GET for progress"),
+      ...jsonResp(
+        202,
+        { $ref: "#/components/schemas/SongImportJob" },
+        "Job accepted (queued/running); poll GET for progress",
+      ),
       401: {
         description: "Unauthorized",
         content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
@@ -445,7 +449,9 @@ add(
     tags: ["Songs"],
     operationId: "getSongImportJob",
     security: session,
-    parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
+    parameters: [
+      { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+    ],
     responses: jsonResp(200, { $ref: "#/components/schemas/SongImportJob" }),
   }),
 );
@@ -456,7 +462,9 @@ add(
     tags: ["Songs"],
     operationId: "cancelSongImportJob",
     security: session,
-    parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } }],
+    parameters: [
+      { name: "id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
+    ],
     responses: jsonResp(
       200,
       { $ref: "#/components/schemas/SongImportJob" },
@@ -1483,7 +1491,8 @@ const doc = {
       bearerAuth: {
         type: "http",
         scheme: "bearer",
-        description: "Better Auth session token (Authorization: Bearer), validated via the auth app.",
+        description:
+          "Better Auth session token (Authorization: Bearer), validated via the auth app.",
       },
       cronSecret: {
         type: "http",

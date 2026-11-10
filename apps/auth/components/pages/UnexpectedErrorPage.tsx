@@ -5,13 +5,7 @@ import { useI18n } from "@/lib/i18n";
 import { Button } from "@hosanna/ui";
 import Link from "next/link";
 
-export function UnexpectedErrorPage({
-  reset,
-  digest,
-}: {
-  reset?: () => void;
-  digest?: string;
-}) {
+export function UnexpectedErrorPage({ reset, digest }: { reset?: () => void; digest?: string }) {
   const { t } = useI18n();
 
   return (

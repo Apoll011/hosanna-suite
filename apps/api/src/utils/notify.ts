@@ -90,9 +90,7 @@ export async function inboxNotify(payload: NotifyBody): Promise<{ count: number 
   const members = await prisma.member.findMany({
     where: {
       organizationId,
-      ...(roleFilter?.length
-        ? { role: { in: roleFilter.map((r) => r.toLowerCase()) } }
-        : {}),
+      ...(roleFilter?.length ? { role: { in: roleFilter.map((r) => r.toLowerCase()) } } : {}),
     },
     select: { userId: true },
     take: MAX_FANOUT + 1,

@@ -13,10 +13,10 @@ pnpm --filter @hosanna/api openapi:generate
 
 ## Scope
 
-| Included | Excluded |
-| -------- | -------- |
+| Included                                                                                                                          | Excluded                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | Health, billing, cron, songs, folders, services, notes, annotations, replication, trash, backup, AI, YouTube/Cifra, notifications | Better Auth (`AUTH_URL/api/auth/*`, hosted by `apps/auth`) — use Better Auth docs/clients |
-| | MCP (`/mcp`) |
+|                                                                                                                                   | MCP (`/mcp`)                                                                              |
 
 Auth: the API validates sessions via the auth app (`AUTH_URL`) using the Better Auth session cookie **or** `Authorization: Bearer`. Cron routes use `CRON_SECRET` as Bearer.
 

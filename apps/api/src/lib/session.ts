@@ -30,9 +30,7 @@ function authBaseUrl(): string {
   return base;
 }
 
-function toHeaders(
-  input?: Headers | Record<string, string> | Iterable<[string, string]>,
-): Headers {
+function toHeaders(input?: Headers | Record<string, string> | Iterable<[string, string]>): Headers {
   if (!input) return new Headers();
   if (input instanceof Headers) return new Headers(input);
   return new Headers(input as Record<string, string>);

@@ -74,8 +74,7 @@ const readLocalInterest = (): Record<string, boolean> => {
 const writeLocalInterest = (state: Record<string, boolean>) => {
   try {
     localStorage.setItem(INTEREST_STORAGE_KEY, JSON.stringify(state));
-  } catch {
-  }
+  } catch {}
 };
 
 const EarlyAccessPanel: React.FC = () => {
@@ -355,8 +354,7 @@ const SupportPanel: React.FC = () => {
         if (result?.migrated_ticket_ids?.length) {
           await loadTickets();
         }
-      } catch {
-      }
+      } catch {}
     })();
   }, [available, loadTickets]);
 

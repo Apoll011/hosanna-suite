@@ -296,8 +296,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
       posthog.capture("service_created", { has_notes: !!data.notes });
       setIsCreateModalOpen(false);
       navigate(`${slugPrefix}/services/${newService.id}`);
-    } catch {
-    }
+    } catch {}
   };
 
   const handleEditServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
@@ -313,8 +312,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         },
       });
       setEditTarget(null);
-    } catch {
-    }
+    } catch {}
   };
 
   const handleDuplicateService = async (service: Service) => {
@@ -363,8 +361,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         },
       });
       posthog.capture("service_archived", { archived: nextArchived });
-    } catch {
-    }
+    } catch {}
     setArchiveTarget(null);
     setContextMenu(null);
   };

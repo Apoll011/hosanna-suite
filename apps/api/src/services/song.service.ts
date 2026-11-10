@@ -72,8 +72,7 @@ export class SongService {
     if (query.search && query.searchFields) {
       try {
         fields = { ...fields, ...JSON.parse(query.searchFields) };
-      } catch {
-      }
+      } catch {}
     }
 
     if (query.search) {

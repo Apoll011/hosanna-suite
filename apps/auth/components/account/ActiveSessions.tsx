@@ -135,7 +135,10 @@ export function ActiveSessionsSection({
                     <DeviceIcon className="w-4 h-4 text-m3-primary" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-m3-text truncate" title={sess.userAgent ?? undefined}>
+                    <p
+                      className="text-xs font-bold text-m3-text truncate"
+                      title={sess.userAgent ?? undefined}
+                    >
                       {sessionTitle}
                     </p>
                     <p className="text-[10px] text-m3-secondary font-mono mt-0.5">

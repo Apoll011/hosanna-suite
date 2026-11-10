@@ -42,8 +42,7 @@ export class JsonImportProvider implements SongImportProvider {
               nameSet.add(item.title);
             }
           }
-        }
-        else if (Array.isArray(parsedJson)) {
+        } else if (Array.isArray(parsedJson)) {
           for (const item of parsedJson) {
             if (nameSet.has(item.title)) {
               ignoredCount++;

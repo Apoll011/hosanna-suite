@@ -8,8 +8,5 @@ export type {
   CreateAuthOptions,
 } from "./types.js";
 export { withOauthNavigationRedirect } from "../oauth-navigation-redirect.js";
-export {
-  wantsBrowserNavigation,
-  isOauthAuthorizeGet,
-} from "../oauth-navigation-redirect.js";
+export { wantsBrowserNavigation, isOauthAuthorizeGet } from "../oauth-navigation-redirect.js";
 export { withAuthCors, isTrustedCorsOrigin } from "../cors.js";

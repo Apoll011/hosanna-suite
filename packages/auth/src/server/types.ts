@@ -21,10 +21,7 @@ export interface AuthEmails {
     to: string,
     vars: { name: string; url: string; expireMinutes: number },
   ) => Promise<unknown>;
-  sendPasswordResetSuccessEmail: (
-    to: string,
-    vars: { first_name: string },
-  ) => Promise<unknown>;
+  sendPasswordResetSuccessEmail: (to: string, vars: { first_name: string }) => Promise<unknown>;
   sendVerificationEmail: (
     to: string,
     vars: { name: string; url: string; expireMinutes: number },
@@ -38,10 +35,7 @@ export interface AuthEmails {
       locale?: string;
     },
   ) => Promise<unknown>;
-  sendAccountDeletedEmail: (
-    to: string,
-    vars: { first_name: string },
-  ) => Promise<unknown>;
+  sendAccountDeletedEmail: (to: string, vars: { first_name: string }) => Promise<unknown>;
   sendOtpEmail: (
     to: string,
     vars: { name: string; otp: string; expireMinutes: number },

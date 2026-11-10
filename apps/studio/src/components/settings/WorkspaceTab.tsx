@@ -861,7 +861,9 @@ export const WorkspaceTab: React.FC<WorkspaceTabProps> = ({
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-m3-text truncate">{org.name}</p>
-                          <p className="text-xs text-m3-secondary font-mono truncate">@{org.slug}</p>
+                          <p className="text-xs text-m3-secondary font-mono truncate">
+                            @{org.slug}
+                          </p>
                         </div>
                       </div>
 

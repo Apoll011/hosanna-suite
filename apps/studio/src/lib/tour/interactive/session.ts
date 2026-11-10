@@ -21,24 +21,21 @@ export function enableInteractiveOnboardingSession(role?: string): void {
     if (role && role in roles) {
       sessionStorage.setItem(DEMO_ONBOARDING_ROLE_KEY, role);
     }
-  } catch {
-  }
+  } catch {}
 }
 
 export function disableInteractiveOnboardingSession(): void {
   try {
     sessionStorage.removeItem(DEMO_ONBOARDING_KEY);
     sessionStorage.removeItem(DEMO_ONBOARDING_ROLE_KEY);
-  } catch {
-  }
+  } catch {}
 }
 
 export function getInteractiveOnboardingRole(): AppRole {
   try {
     const raw = sessionStorage.getItem(DEMO_ONBOARDING_ROLE_KEY);
     if (raw && raw in roles) return raw as AppRole;
-  } catch {
-  }
+  } catch {}
   return "owner";
 }
 

@@ -146,8 +146,7 @@ export function parseUrlFallback(rawUrl: string): {
       const parsed = provider.parseUrlFallback(url);
       return { ...parsed, provider };
     }
-  } catch {
-  }
+  } catch {}
 
   return { artist: "", title: "", provider: null };
 }

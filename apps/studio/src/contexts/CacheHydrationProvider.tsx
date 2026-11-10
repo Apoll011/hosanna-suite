@@ -48,8 +48,7 @@ export const CacheHydrationProvider: React.FC<Props> = ({ children }) => {
           const db = await getDatabase();
           // Null org slug clears collections, replication state, and meta.
           await ensureOrgScopedData(db, null);
-        } catch {
-        }
+        } catch {}
       })();
     }
   }, [isAuthenticated]);

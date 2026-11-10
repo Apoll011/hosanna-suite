@@ -946,8 +946,7 @@ export const MainLayout: React.FC = () => {
         await addEvent(value);
         closeModal();
         emitOnboardingEvent("event-created");
-      } catch {
-      }
+      } catch {}
     },
     [addEvent, closeModal],
   );
@@ -1132,8 +1131,7 @@ export const MainLayout: React.FC = () => {
       await createFolder({ name, parentId: currentFolderId });
       closeModal();
       emitOnboardingEvent("folder-created");
-    } catch {
-    }
+    } catch {}
   };
 
   const handleRenameFolderSubmit = async (name: string) => {
@@ -1145,8 +1143,7 @@ export const MainLayout: React.FC = () => {
         updatedAt: renameTarget.updatedAt!,
       });
       setRenameTarget(null);
-    } catch {
-    }
+    } catch {}
   };
 
   const handleCustomizeFolderSubmit = async (color: string, icon: string) => {
@@ -1159,8 +1156,7 @@ export const MainLayout: React.FC = () => {
         updatedAt: customizeTarget.updatedAt!,
       });
       setCustomizeTarget(null);
-    } catch {
-    }
+    } catch {}
   };
 
   const handleMoveFolderSubmit = async () => {
@@ -1173,8 +1169,7 @@ export const MainLayout: React.FC = () => {
       });
       setMoveFolderTarget(null);
       emitOnboardingEvent("folder-moved");
-    } catch {
-    }
+    } catch {}
   };
 
   const handleDeleteFolderSubmit = async () => {
@@ -1211,8 +1206,7 @@ export const MainLayout: React.FC = () => {
       if (getActiveOnboardingWaitFor() !== "song-created") {
         navigate(`${slugPrefix}/songs/${song.id}`);
       }
-    } catch {
-    }
+    } catch {}
   };
 
   const handleCifraClubSubmit = async (
@@ -1234,8 +1228,7 @@ export const MainLayout: React.FC = () => {
       if (getActiveOnboardingWaitFor() !== "song-created") {
         navigate(`${slugPrefix}/songs/${song.id}`);
       }
-    } catch {
-    }
+    } catch {}
   };
 
   const handleCreateServiceSubmit = async (data: { name: string; date: string; notes: string }) => {
@@ -1249,8 +1242,7 @@ export const MainLayout: React.FC = () => {
       closeModal();
       emitOnboardingEvent("service-created");
       navigate(`${slugPrefix}/services/${newService.id}`);
-    } catch {
-    }
+    } catch {}
   };
 
   const handleDeleteSongSubmit = async () => {
@@ -1892,8 +1884,7 @@ export const MainLayout: React.FC = () => {
               updatedAt: moveSongTarget.updatedAt,
             });
             setMoveSongTarget(null);
-          } catch {
-          }
+          } catch {}
         }}
         deleteSongTarget={deleteSongTarget}
         setDeleteSongTarget={setDeleteSongTarget}

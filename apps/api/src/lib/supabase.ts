@@ -17,9 +17,7 @@ function getSupabase(): SupabaseClient {
 const AVATAR_BUCKET = "avatars";
 
 export function isBase64Image(value: string): boolean {
-  return (
-    value.startsWith("data:image/") || /^[A-Za-z0-9+/=]{100,}/.test(value)
-  );
+  return value.startsWith("data:image/") || /^[A-Za-z0-9+/=]{100,}/.test(value);
 }
 
 export function isExternalImageUrl(value: string): boolean {

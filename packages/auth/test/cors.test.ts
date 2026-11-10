@@ -38,7 +38,11 @@ describe("withAuthCors", () => {
 
   it("adds CORS headers to handler responses", async () => {
     const wrapped = withAuthCors(
-      async () => new Response(JSON.stringify(null), { status: 200, headers: { "content-type": "application/json" } }),
+      async () =>
+        new Response(JSON.stringify(null), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
     );
     const res = await wrapped(
       new Request("https://auth.hosanna.live/api/auth/get-session", {

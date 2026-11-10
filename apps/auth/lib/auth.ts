@@ -21,12 +21,7 @@ import {
   sendWelcomeEmail,
 } from "./email.service";
 import { DEFAULT_LOCALE, t } from "@/locales/server";
-import {
-  isBase64Image,
-  isExternalImageUrl,
-  uploadBase64Avatar,
-  uploadUrlAvatar,
-} from "./supabase";
+import { isBase64Image, isExternalImageUrl, uploadBase64Avatar, uploadUrlAvatar } from "./supabase";
 
 export const stripeClient = new Stripe(env.stripeSecretKey, {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
