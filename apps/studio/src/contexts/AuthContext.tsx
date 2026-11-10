@@ -320,8 +320,8 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const subscriptions = await fetchSubscriptionRows(activeOrg.id);
           acceptedTrial = subscriptions.length > 0;
         } catch {
-          // Unknown — fail open so existing users are never locked out.
-          acceptedTrial = null;
+          // Unknown — fail open so existing users are never locked out of `/`.
+          acceptedTrial = true;
         }
       }
       setHasAcceptedTrial(acceptedTrial);

@@ -106,6 +106,13 @@ const ErrorFallback = ({ resetErrorBoundary }: { resetErrorBoundary: () => void 
   );
 };
 
+/** Logged-in home: always land on the active org's folders. */
+const HomeRedirect = () => {
+  const { organization } = useAuth();
+  if (!organization?.slug) return <PageLoader />;
+  return <Navigate to={`/${organization.slug}/folders`} replace />;
+};
+
 const OrganizationGuard = () => {
   const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
@@ -164,10 +171,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/demo" element={<DemoPage />} />
 
           <Route element={<ProtectedRoute />}>
-            {/* `/` must be under ProtectedRoute — the old catch-all sent it to
-                `/onboarding` → auth app even for logged-in users.
-                ProtectedRoute itself redirects `/` → `/{slug}/folders`. */}
-            <Route path="/" element={<Outlet />} />
+            <Route path="/" element={<HomeRedirect />} />
             <Route path="/:slug" element={<OrganizationGuard />}>
               <Route element={<MainLayout />}>
                 <Route index element={<Navigate to="folders" replace />} />
