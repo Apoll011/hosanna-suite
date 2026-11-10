@@ -1,6 +1,7 @@
-import type { NextFunction, Request, Response } from "express";
-import { createCache } from "@hosanna/cache";
 import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
+import { createCache } from "@hosanna/cache";
+import type { NextFunction, Request, Response } from "express";
+import { createHash } from "node:crypto";
 import { forOrganization, prisma } from "../database/prisma.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
 import { getSession, type SessionResult } from "../lib/session.js";
@@ -151,12 +152,61 @@ export function requireOwnTeamResource(
   };
 }
 
-const sessionCache = createCache({ namespace: "auth:session", ttlMs: 20_000 });
-const orgLocaleCache = createCache({ namespace: "auth:locale", ttlMs: 300_000 });
-const userRoleCache = createCache({ namespace: "auth:role", ttlMs: 60_000 });
+/** Full auth context — one cache hit, zero Prisma / AUTH_URL on warm path. */
+type AuthContext = {
+  userId: string;
+  workspaceId: string;
+  role: string;
+  teamId?: string;
+  locale: string;
+};
+
+/** Longer than Studio's 15s sync poll so idle pulls hit memory/Redis instead of AUTH_URL. */
+const AUTH_CTX_TTL_MS = 120_000;
+const ORG_LOCALE_TTL_MS = 300_000;
+const USER_ROLE_TTL_MS = 300_000;
+
+const authCtxCache = createCache({ namespace: "auth:ctx", ttlMs: AUTH_CTX_TTL_MS });
+const orgLocaleCache = createCache({ namespace: "auth:locale", ttlMs: ORG_LOCALE_TTL_MS });
+const userRoleCache = createCache({ namespace: "auth:role", ttlMs: USER_ROLE_TTL_MS });
 
 export async function invalidateAuthCaches() {
-  await Promise.all([sessionCache.clear(), orgLocaleCache.clear(), userRoleCache.clear()]);
+  await Promise.all([authCtxCache.clear(), orgLocaleCache.clear(), userRoleCache.clear()]);
+}
+
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("base64url");
+}
+
+function readCookie(cookieHeader: string, name: string): string | null {
+  const parts = cookieHeader.split(";");
+  const prefix = `${name}=`;
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (trimmed.startsWith(prefix)) {
+      return decodeURIComponent(trimmed.slice(prefix.length));
+    }
+  }
+  return null;
+}
+
+/** Stable token key — avoid hashing the whole Cookie header (other cookies churn). */
+function authCacheKey(req: Request): string | null {
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.slice(7).trim();
+    return token ? `b:${sha256(token)}` : null;
+  }
+
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return null;
+
+  const sessionToken =
+    readCookie(cookieHeader, "hosanna.session_token") ??
+    readCookie(cookieHeader, "better-auth.session_token");
+  if (sessionToken) return `c:${sha256(sessionToken)}`;
+
+  return `h:${sha256(cookieHeader)}`;
 }
 
 function requestHeadersForAuth(req: Request): Headers {
@@ -172,31 +222,6 @@ function requestHeadersForAuth(req: Request): Headers {
   const authHeader = req.headers.authorization;
   if (typeof authHeader === "string") headers.set("authorization", authHeader);
   return headers;
-}
-
-async function resolveSession(req: Request): Promise<SessionResult> {
-  const authHeader = req.headers.authorization;
-  const isBearer = Boolean(authHeader?.startsWith("Bearer "));
-  const cookieHeader = req.headers.cookie;
-
-  const cacheKey = isBearer
-    ? `b:${authHeader!.slice(7).trim()}`
-    : cookieHeader
-      ? `c:${cookieHeader}`
-      : null;
-
-  if (cacheKey) {
-    const cached = await sessionCache.get<Exclude<SessionResult, null>>(cacheKey);
-    if (cached?.session && cached?.user) return cached;
-  }
-
-  if (!cacheKey) return null;
-
-  const sessionData = await getSession({ headers: requestHeadersForAuth(req) });
-  if (sessionData?.session && sessionData?.user) {
-    await sessionCache.set(cacheKey, sessionData);
-  }
-  return sessionData;
 }
 
 /** Parse locale out of an org's JSON metadata blob. */
@@ -240,41 +265,69 @@ async function getCachedUserRole(workspaceId: string, userId: string): Promise<s
   return role;
 }
 
+function roleFromSessionData(sessionData: Exclude<SessionResult, null>): string | null {
+  const { user, session } = sessionData;
+  const role =
+    (session as { role?: string | null }).role ||
+    sessionData.member?.role ||
+    (user as { role?: string | null }).role;
+  return typeof role === "string" && role.length > 0 ? role : null;
+}
+
+async function resolveAuthContext(req: Request): Promise<AuthContext> {
+  const cacheKey = authCacheKey(req);
+  if (cacheKey) {
+    const cached = await authCtxCache.get<AuthContext>(cacheKey);
+    if (cached?.userId && cached.workspaceId) return cached;
+  }
+
+  if (!cacheKey) {
+    throw AppError.unauthorized("Invalid or missing authentication session.");
+  }
+
+  const sessionData = await getSession({ headers: requestHeadersForAuth(req) });
+  if (!sessionData?.session || !sessionData?.user) {
+    throw AppError.unauthorized("Invalid or missing authentication session.");
+  }
+
+  const { user, session } = sessionData;
+  const workspaceId = session.activeOrganizationId;
+  if (!workspaceId) {
+    throw AppError.forbidden("An active workspace/organization context is required.");
+  }
+
+  const teamId = session.activeTeamId || undefined;
+  const roleFromSession = roleFromSessionData(sessionData);
+
+  const [resolvedRole, locale] = await Promise.all([
+    roleFromSession ? Promise.resolve(roleFromSession) : getCachedUserRole(workspaceId, user.id),
+    getCachedOrgLocale(workspaceId),
+  ]);
+
+  const ctx: AuthContext = {
+    userId: user.id,
+    workspaceId,
+    role: resolvedRole,
+    teamId,
+    locale,
+  };
+
+  await authCtxCache.set(cacheKey, ctx);
+  return ctx;
+}
+
 export const authenticate = asyncHandler(
   async (req: Request, _res: Response, next: NextFunction) => {
-    const sessionData = await resolveSession(req);
+    const ctx = await resolveAuthContext(req);
 
-    if (!sessionData?.session || !sessionData?.user) {
-      throw AppError.unauthorized("Invalid or missing authentication session.");
-    }
-
-    const { user, session } = sessionData;
-
-    const workspaceId = (session as any).activeOrganizationId;
-    if (!workspaceId) {
-      throw AppError.forbidden("An active workspace/organization context is required.");
-    }
-
-    const teamId = (session as any).activeTeamId || undefined;
-
-    const roleFromSession =
-      (session as any).role || (sessionData as any).member?.role || (user as any).role;
-
-    const [resolvedRole, locale] = await Promise.all([
-      roleFromSession
-        ? Promise.resolve(roleFromSession as string)
-        : getCachedUserRole(workspaceId, user.id),
-      getCachedOrgLocale(workspaceId),
-    ]);
-
-    req.locale = locale;
-    req.orgId = workspaceId;
-    req.db = forOrganization(workspaceId);
+    req.locale = ctx.locale;
+    req.orgId = ctx.workspaceId;
+    req.db = forOrganization(ctx.workspaceId);
     req.user = {
-      id: user.id,
-      workspaceId,
-      role: resolvedRole,
-      teamId,
+      id: ctx.userId,
+      workspaceId: ctx.workspaceId,
+      role: ctx.role,
+      teamId: ctx.teamId,
     };
 
     next();

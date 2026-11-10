@@ -27,7 +27,7 @@ export class FolderService {
   }
 
   async invalidateCache() {
-    await syncCache.invalidate(this.tenantId);
+    await syncCache.invalidate(this.tenantId, "folders");
   }
 
   async listWithCounts() {

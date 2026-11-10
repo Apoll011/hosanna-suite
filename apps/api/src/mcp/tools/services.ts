@@ -646,7 +646,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
             verifiedService.elements,
             songService(ctx),
           );
-          await syncCache.invalidate(ctx.orgId);
+          await syncCache.invalidate(ctx.orgId, "services");
           steps.push("verified");
 
           const finalResult = {

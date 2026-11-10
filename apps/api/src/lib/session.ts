@@ -36,16 +36,24 @@ function toHeaders(input?: Headers | Record<string, string> | Iterable<[string, 
   return new Headers(input as Record<string, string>);
 }
 
+const GET_SESSION_TIMEOUT_MS = 2_500;
+
 /** Validate a session via the auth app (cookie / bearer), not a local Better Auth instance. */
 export async function getSession(input?: {
   headers?: Headers | Record<string, string>;
 }): Promise<SessionResult> {
   const headers = toHeaders(input?.headers);
-  const res = await fetch(`${authBaseUrl()}/api/auth/get-session`, {
-    method: "GET",
-    headers,
-    redirect: "manual",
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${authBaseUrl()}/api/auth/get-session`, {
+      method: "GET",
+      headers,
+      redirect: "manual",
+      signal: AbortSignal.timeout(GET_SESSION_TIMEOUT_MS),
+    });
+  } catch {
+    return null;
+  }
 
   if (!res.ok) return null;
 

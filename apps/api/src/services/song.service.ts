@@ -39,7 +39,10 @@ export class SongService {
   }
 
   async invalidateCache() {
-    await syncCache.invalidate(this.tenantId);
+    await Promise.all([
+      syncCache.invalidate(this.tenantId, "songs"),
+      syncCache.invalidate(this.tenantId, "folders"),
+    ]);
   }
 
   private async computePath(

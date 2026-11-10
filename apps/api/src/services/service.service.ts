@@ -78,7 +78,7 @@ export class ServiceService {
   }
 
   async invalidateCache() {
-    await syncCache.invalidate(this.tenantId);
+    await syncCache.invalidate(this.tenantId, "services");
   }
 
   async list(body: {

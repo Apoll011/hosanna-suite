@@ -161,6 +161,13 @@ app.use("/api", globalLimiter, apiRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
+// Warm shared Redis once per isolate so the first user request isn't paying connect.
+if (process.env.REDIS_URL) {
+  void import("@hosanna/cache")
+    .then(({ createCache }) => createCache({ namespace: "boot" }).ready())
+    .catch((err) => console.error("[api] redis cache warm failed:", err));
+}
+
 // Vercel Fluid / Express detection: export the app (do not listen).
 export default app;
 

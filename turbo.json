@@ -24,6 +24,7 @@
         "AUTH_URL",
         "STUDIO_URL",
         "MCP_RESOURCE_URL",
+        "REDIS_URL",
         "NEXT_PUBLIC_*",
         "SKIP_ENV_VALIDATION",
         "PORT"

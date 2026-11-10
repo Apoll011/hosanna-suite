@@ -47,6 +47,7 @@ export const auth = createAuth({
     mcpResourceUrl: env.mcpResourceUrl,
     appUrl: env.authUrl,
     studioUrl: env.studioUrl,
+    redisUrl: env.redisUrl,
   },
   emails: {
     sendPasswordResetEmail,

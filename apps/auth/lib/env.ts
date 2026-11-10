@@ -49,6 +49,9 @@ export const env = {
   databaseUrl: required("DATABASE_URL"),
   dbPoolMax: parseInt(process.env.DB_POOL_MAX ?? (isVercel ? "5" : "20"), 10),
 
+  /** Same Redis as the API — Better Auth secondary storage + shared caches. */
+  redisUrl: optional("REDIS_URL"),
+
   betterAuthSecret: required("BETTER_AUTH_SECRET"),
   /** Better Auth baseURL / issuer — must be this auth app origin. */
   publicAppUrl: authUrl,

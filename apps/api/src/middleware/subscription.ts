@@ -1,5 +1,5 @@
-import type { NextFunction, Request, Response } from "express";
 import { createCache } from "@hosanna/cache";
+import type { NextFunction, Request, Response } from "express";
 import { prisma } from "../database/prisma.js";
 import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -7,7 +7,7 @@ import { AppError } from "../utils/errors.js";
 
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
-const SUB_CACHE_TTL_MS = 30_000;
+const SUB_CACHE_TTL_MS = 400_000;
 const subCache = createCache({ namespace: "sub:entitled", ttlMs: SUB_CACHE_TTL_MS });
 
 export function isEntitledSubscription(sub: { status: string; trialEnd?: Date | null }): boolean {

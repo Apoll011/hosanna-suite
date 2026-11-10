@@ -12,7 +12,8 @@ type CheckpointEntry = {
   checkpoint: ReplicationCheckpoint | null;
 };
 
-const CHECKPOINT_TTL_MS = 60_000;
+/** Long enough to cover idle sync polls; writes invalidate the touched collection. */
+const CHECKPOINT_TTL_MS = 300_000;
 
 const checkpoints = createCache({
   namespace: "sync:checkpoint",

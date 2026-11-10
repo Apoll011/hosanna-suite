@@ -16,6 +16,7 @@ import {
   twoFactor,
 } from "better-auth/plugins";
 import { inbox } from "better-inbox";
+import { createSecondaryStorage } from "@hosanna/cache";
 import { roles } from "../roles.js";
 import { pluginLocaleOverrides } from "../plugin-locale-overrides.js";
 import { RESPONSIBILITIES } from "../responsibilities.js";
@@ -44,10 +45,18 @@ export function createAuth(options: CreateAuthOptions): any {
     avatars,
     t,
     defaultLocale = "pt-PT",
+    secondaryStorage: secondaryStorageOption,
   } = options;
 
   const appUrl = config.appUrl.replace(/\/+$/, "");
   const studioUrl = (config.studioUrl ?? config.appUrl).replace(/\/+$/, "");
+
+  const secondaryStorage =
+    secondaryStorageOption === null
+      ? undefined
+      : (secondaryStorageOption ??
+        createSecondaryStorage({ redisUrl: config.redisUrl ?? process.env.REDIS_URL }) ??
+        undefined);
 
   /** Reads the locale configured in an organisation's settings metadata. */
   async function getOrgLocale(organizationId: string): Promise<string> {
@@ -146,6 +155,7 @@ export function createAuth(options: CreateAuthOptions): any {
     database: prismaAdapter(prisma, {
       provider: "postgresql",
     }),
+    ...(secondaryStorage ? { secondaryStorage } : {}),
     trustedOrigins: [
       "http://localhost:5173",
       "http://localhost:5174",
@@ -761,6 +771,13 @@ export function createAuth(options: CreateAuthOptions): any {
       freshAge: 0,
       expiresIn: 60 * 60 * 24 * 30,
       updateAge: 60 * 60 * 24,
+      // Keep Postgres as source of truth; Redis is a hot cache across auth isolates.
+      ...(secondaryStorage
+        ? {
+            storeSessionInDatabase: true,
+            preserveSessionInDatabase: true,
+          }
+        : {}),
       cookieCache: {
         enabled: true,
         strategy: "jwe",
@@ -790,7 +807,7 @@ export function createAuth(options: CreateAuthOptions): any {
     },
     rateLimit: {
       enabled: true,
-
+      ...(secondaryStorage ? { storage: "secondary-storage" as const } : {}),
       window: 60,
       max: 100,
     },
