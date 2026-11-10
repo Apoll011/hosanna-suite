@@ -13,7 +13,23 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./styles.css": "./src/logos.css"
+    "./host": {
+      "types": "./src/host/index.ts",
+      "default": "./src/host/index.ts"
+    },
+    "./chat": {
+      "types": "./src/chat/index.ts",
+      "default": "./src/chat/index.ts"
+    },
+    "./proposals": {
+      "types": "./src/proposals/index.ts",
+      "default": "./src/proposals/index.ts"
+    },
+    "./mascot": {
+      "types": "./src/mascot/index.ts",
+      "default": "./src/mascot/index.ts"
+    },
+    "./styles.css": "./src/mascot/styles.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

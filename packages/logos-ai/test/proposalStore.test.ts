@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { beforeEach, describe, it } from "node:test";
-import { aiProposals } from "../src/proposalStore";
+import { aiProposals } from "../src/proposals/store";
 
 describe("aiProposals", () => {
   beforeEach(() => aiProposals.resolveAll());

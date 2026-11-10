@@ -7,8 +7,8 @@ import {
   groupParts,
   settleRunningTools,
   toolRunStatus,
-} from "../src/messageState";
-import type { StreamEvent } from "../src/stream";
+} from "../src/core/stream";
+import type { StreamEvent } from "../src/core/stream";
 import { toUiMessages, type AiChatMessage } from "../src/types";
 
 const base = (): AiChatMessage => ({

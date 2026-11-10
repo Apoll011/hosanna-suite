@@ -6,8 +6,10 @@
 import {
   AiChatProvider,
   LogosHostProvider,
+  LogosSongAdapterProvider,
   type LogosHost,
   type LogosSong,
+  type LogosSongAdapter,
 } from "@hosanna/logos-ai";
 import React, { useMemo } from "react";
 import { aiApi } from "../api/ai";
@@ -37,7 +39,7 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
   const { granted: canUseAi } = useCan("ai.use");
   const { granted: canUpdateSong } = useCan("song.update");
 
-  const value = useMemo<LogosHost>(
+  const host = useMemo<LogosHost>(
     () => ({
       api: {
         getSettings: () => aiApi.getSettings(),
@@ -54,15 +56,34 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
       canUseAi,
       canUpdateSong,
       deriveView,
+    }),
+    [
+      t,
+      tc,
+      language,
+      locale,
+      user?.name,
+      user?.id,
+      organization?.id,
+      organization?.slug,
+      canUseAi,
+      canUpdateSong,
+    ],
+  );
+
+  const songs = useMemo<LogosSongAdapter>(
+    () => ({
       useSong: useStudioSong,
       useUpdateSong: useUpdateSongFromMutations,
     }),
-    [t, tc, language, locale, user?.name, user?.id, organization?.id, organization?.slug, canUseAi, canUpdateSong],
+    [],
   );
 
   return (
-    <LogosHostProvider value={value}>
-      <AiChatProvider>{children}</AiChatProvider>
+    <LogosHostProvider value={host}>
+      <LogosSongAdapterProvider value={songs}>
+        <AiChatProvider>{children}</AiChatProvider>
+      </LogosSongAdapterProvider>
     </LogosHostProvider>
   );
 }

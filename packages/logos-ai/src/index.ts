@@ -3,13 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export { AiChatDock } from "./AiChatDock";
-export { AiChatProvider, useAiChat, useAiChatOptional } from "./AiChatProvider";
-export { AiChatToggle } from "./AiChatToggle";
-export { LogosMascot } from "./LogosMascot";
-export { AiProposalBanner } from "./AiProposalBanner";
+export { AiChatDock } from "./chat/components/Dock";
+export { AiChatProvider, useAiChat, useAiChatOptional } from "./chat/provider";
+export { AiChatToggle } from "./chat/components/Toggle";
+export { LogosMascot } from "./mascot";
+export { AiProposalBanner } from "./proposals/components/Banner";
 export {
   LogosHostProvider,
+  LogosSongAdapterProvider,
   useHostSong,
   useHostUpdateSong,
   useLogosHost,
@@ -18,6 +19,7 @@ export {
   type LogosHost,
   type LogosServiceElement,
   type LogosSong,
+  type LogosSongAdapter,
   type LogosTc,
   type LogosTranslate,
 } from "./host";
@@ -26,7 +28,7 @@ export type {
   AiConfirmAction,
   AiSettingsPublic,
   AiUiMessage,
-} from "./apiTypes";
+} from "./types";
 export {
   AI_LIBRARY_CHANGED_EVENT,
   AI_NAVIGATE_EVENT,
@@ -39,7 +41,7 @@ export {
   dispatchLibraryChanged,
   type AiNavigateDetail,
   type AiPrintDetail,
-} from "./contextBridge";
+} from "./core/bridge";
 export {
   aiProposals,
   useAiProposals,
@@ -50,5 +52,5 @@ export {
   type AiProposal,
   type ServiceProposal,
   type SongProposal,
-} from "./proposalStore";
-export { DIFF_THEME_STYLE, useDiffLabels } from "./proposalDiff";
+} from "./proposals/store";
+export { DIFF_THEME_STYLE, useDiffLabels } from "./proposals/diff";
