@@ -32,7 +32,7 @@ Agenda responsibilities accept assignees with **only `name`**. `memberId` is opt
 - Do **not** refuse, block, or leave blank an assignee because they are not in the member directory.
 - Pass `{ "name": "Pr. Nelson" }`. Saves may return warning `assignee_unlinked` — informational, not an error.
 - **After** the agenda/service is saved successfully, you may tell the user which names have no org account.
-- `members_invite` is a **separate** org tool. Never fold invites into agenda create/update/publish. Only call it when the user explicitly asks to invite someone (with a real email).
+- `members_invite` is a **separate** org tool (HTTPS to the auth app so the invitation email is sent). Never fold invites into agenda create/update/publish. Only call it when the user explicitly asks to invite someone (with a real email).
 
 Category ids come from `org_get`. There is no org-switch tool — the session org is fixed.
 

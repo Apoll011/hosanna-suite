@@ -77,6 +77,9 @@ importers:
       '@vercel/functions':
         specifier: ^3.9.9
         version: 3.11.0(ws@8.21.0)
+      '@vercel/oidc':
+        specifier: ^4.0.7
+        version: 4.0.7
       '@vercel/related-projects':
         specifier: ^1.1.1
         version: 1.1.1

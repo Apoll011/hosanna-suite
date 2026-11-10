@@ -106,7 +106,7 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
     {
       title: "Invite organization member",
       description:
-        "Standalone org tool: create a pending email invitation (owner/admin/teamLeader). Independent of agenda — never required for event assignments. Call only when the user explicitly wants to invite someone into the organization.",
+        "Standalone org tool: invite someone by email via the auth app (sends the invitation email). Independent of agenda — never required for event assignments. Call only when the user explicitly wants to invite someone.",
       inputSchema: z.object({
         email: z.string().email(),
         name: z.string().optional().describe("Display name hint for the invitee"),
@@ -115,6 +115,10 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
           .optional()
           .default("musician")
           .describe("Org role: musician, editor, admin, guest, …"),
+        resend: z
+          .boolean()
+          .optional()
+          .describe("If an invite is already pending, resend the email (default: auto when pending)"),
       }),
     },
     async (args) => {

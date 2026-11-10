@@ -277,10 +277,13 @@ function allResolvedTip(ok: boolean, unresolvedCount: number): string {
     : `${unresolvedCount} name(s) are not org members. Assign them by name on the agenda anyway; after saving, you may mention they have no account. Do not block the agenda or call members_invite unless the user asks to invite someone.`;
 }
 
-/** Invite by email (creates a pending Better Auth invitation row). Does not invent people. */
+/**
+ * Invite by email via the auth app HTTP API (sends the invitation email).
+ * Slim in-API Better Auth has no mail — never create invitations locally.
+ */
 export async function inviteMember(
   ctx: McpContext,
-  args: { email: string; name?: string; role?: string },
+  args: { email: string; name?: string; role?: string; resend?: boolean },
 ) {
   requireInvitePermission(ctx);
   requireWriteEntitlement(ctx);
@@ -293,6 +296,9 @@ export async function inviteMember(
   if (!allowed.has(role)) {
     throw new Error(`Invalid role "${role}". Use musician, editor, admin, guest, …`);
   }
+  if (!ctx.token) {
+    throw new Error("Session token required to invite via the auth app");
+  }
 
   const existingMember = await prisma.member.findFirst({
     where: { organizationId: ctx.orgId, user: { email } },
@@ -304,7 +310,7 @@ export async function inviteMember(
       alreadyMember: true as const,
       memberId: existingMember.id,
       email,
-      hint: "User is already an org member — use their memberId on agenda assignees.",
+      hint: "User is already an org member.",
     };
   }
 
@@ -312,45 +318,46 @@ export async function inviteMember(
     where: { organizationId: ctx.orgId, email, status: "pending" },
     select: { id: true, expiresAt: true, role: true },
   });
-  if (pending) {
-    return {
-      invited: false as const,
-      alreadyPending: true as const,
-      invitation: {
-        id: pending.id,
-        email,
-        role: pending.role,
-        expiresAt: pending.expiresAt.toISOString(),
-        name: args.name?.trim() || null,
-      },
-      hint: "Invitation already pending — resend from Studio Members settings if needed.",
-    };
-  }
+  const resend = args.resend === true || Boolean(pending);
 
-  const id = randomUUID();
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  await prisma.invitation.create({
-    data: {
-      id,
-      organizationId: ctx.orgId,
-      email,
-      role,
-      status: "pending",
-      expiresAt,
-      inviterId: ctx.user.id,
-    },
+  const { inviteMemberViaAuthApp } = await import("../../lib/authAppClient.js");
+  const result = await inviteMemberViaAuthApp({
+    bearerToken: ctx.token,
+    email,
+    role,
+    organizationId: ctx.orgId,
+    resend,
   });
+
+  if (!result.ok) {
+    // Auth already treats pending invites specially — surface a clean payload.
+    if (pending && /already invited/i.test(result.message)) {
+      return {
+        invited: false as const,
+        alreadyPending: true as const,
+        invitation: {
+          id: pending.id,
+          email,
+          role: pending.role,
+          expiresAt: pending.expiresAt.toISOString(),
+          name: args.name?.trim() || null,
+        },
+        hint: "Invitation already pending. Pass resend=true to send the email again via the auth app.",
+      };
+    }
+    throw new Error(result.message);
+  }
 
   return {
     invited: true as const,
+    resent: result.resent,
     invitation: {
-      id,
-      email,
-      role,
-      expiresAt: expiresAt.toISOString(),
+      ...result.invitation,
       name: args.name?.trim() || null,
     },
-    hint: "Invitation created.",
+    hint: result.resent
+      ? "Invitation email resent via the auth app."
+      : "Invitation created and email sent via the auth app.",
   };
 }
 
