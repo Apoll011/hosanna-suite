@@ -62,35 +62,19 @@ export const env = {
    */
   dbPoolMax: parseInt(process.env.DB_POOL_MAX ?? (isVercel ? "5" : "20"), 10),
 
-  // ── Better Auth ──────────────────────────────────────────────────────────
-  betterAuthSecret: required("BETTER_AUTH_SECRET"),
   publicAppUrl: required("PUBLIC_APP_URL"),
-  /** Sentinel plugin API key — required in production. */
-  betterAuthApiKey: optional("BETTER_AUTH_API_KEY"),
 
-  // ── OAuth providers ───────────────────────────────────────────────────────
-  googleClientId: required("GOOGLE_CLIENT_ID"),
-  googleClientSecret: required("GOOGLE_CLIENT_SECRET"),
+  // ── Supabase (optional legacy avatar/helpers) ─────────────────────────────
+  supabaseUrl: optional("SUPABASE_URL"),
+  supabaseSecretKey: optional("SUPABASE_SECRET_KEY"),
 
-  // ── Stripe ────────────────────────────────────────────────────────────────
-  stripeSecretKey: required("STRIPE_SECRET_KEY"),
-  stripeWebhookSecret: required("STRIPE_WEBHOOK_SECRET"),
-
-  // ── Captcha ───────────────────────────────────────────────────────────────
-  turnstileSecretKey: required("TURNSTILE_SECRET_KEY"),
-
-  // ── Supabase ──────────────────────────────────────────────────────────────
-  supabaseUrl: required("SUPABASE_URL"),
-  supabaseSecretKey: required("SUPABASE_SECRET_KEY"),
-
-  // ── Email (Resend) ────────────────────────────────────────────────────────
-  resendApiKey: required("RESEND_API_KEY"),
+  // ── Email (Resend) — optional; auth app owns transactional auth mail ─────
+  resendApiKey: optional("RESEND_API_KEY"),
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
   // ── Studio / Auth URLs ────────────────────────────────────────────────────
-  /** The Studio product URL (post-login / settings deep links). */
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
-  /** Auth app origin (issuer, JWKS, deep links). */
+  /** Auth app origin — get-session + JWKS. Falls back to PUBLIC_APP_URL. */
   authUrl: normalizeAuthUrl(optional("AUTH_URL")),
 
   // ── Cron ──────────────────────────────────────────────────────────────────

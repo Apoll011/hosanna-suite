@@ -2,8 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { createCache } from "@hosanna/cache";
 import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
 import { forOrganization, prisma } from "../database/prisma.js";
-import { auth } from "../lib/auth.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
+import { getSession, type SessionResult } from "../lib/session.js";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
@@ -151,8 +151,6 @@ export function requireOwnTeamResource(
   };
 }
 
-type SessionResult = Awaited<ReturnType<typeof auth.api.getSession>>;
-
 const sessionCache = createCache({ namespace: "auth:session", ttlMs: 20_000 });
 const orgLocaleCache = createCache({ namespace: "auth:locale", ttlMs: 300_000 });
 const userRoleCache = createCache({ namespace: "auth:role", ttlMs: 60_000 });
@@ -161,9 +159,6 @@ export async function invalidateAuthCaches() {
   await Promise.all([sessionCache.clear(), orgLocaleCache.clear(), userRoleCache.clear()]);
 }
 
-/**
- * Resolves a session from cookies on the incoming request (web dashboard flow).
- */
 function requestHeadersForAuth(req: Request): Headers {
   const headers = new Headers();
   const cookie = req.headers.cookie;
@@ -179,32 +174,7 @@ function requestHeadersForAuth(req: Request): Headers {
   return headers;
 }
 
-async function getSessionFromCookies(req: Request): Promise<SessionResult | null> {
-  const sessionData = await auth.api.getSession({
-    headers: requestHeadersForAuth(req),
-  });
-  return sessionData ?? null;
-}
-
-/**
- * Resolves a session from an `Authorization: Bearer <token>` header
- * (mobile app / API clients using the better-auth bearer plugin).
- */
-async function getSessionFromBearerToken(req: Request): Promise<SessionResult | null> {
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith("Bearer ")) return null;
-
-  const token = authHeader.slice("Bearer ".length).trim();
-  if (!token) return null;
-
-  const headers = new Headers();
-  headers.set("authorization", `Bearer ${token}`);
-
-  const sessionData = await auth.api.getSession({ headers });
-  return sessionData ?? null;
-}
-
-async function resolveSession(req: Request): Promise<SessionResult | null> {
+async function resolveSession(req: Request): Promise<SessionResult> {
   const authHeader = req.headers.authorization;
   const isBearer = Boolean(authHeader?.startsWith("Bearer "));
   const cookieHeader = req.headers.cookie;
@@ -216,24 +186,16 @@ async function resolveSession(req: Request): Promise<SessionResult | null> {
       : null;
 
   if (cacheKey) {
-    const cached = await sessionCache.get<SessionResult>(cacheKey);
+    const cached = await sessionCache.get<Exclude<SessionResult, null>>(cacheKey);
     if (cached?.session && cached?.user) return cached;
   }
 
-  let sessionData: SessionResult | null = null;
-  if (isBearer) {
-    sessionData = await getSessionFromBearerToken(req);
-    if (!sessionData?.session && cookieHeader) {
-      sessionData = await getSessionFromCookies(req);
-    }
-  } else if (cookieHeader) {
-    sessionData = await getSessionFromCookies(req);
-  }
+  if (!cacheKey) return null;
 
-  if (cacheKey && sessionData?.session && sessionData?.user) {
+  const sessionData = await getSession({ headers: requestHeadersForAuth(req) });
+  if (sessionData?.session && sessionData?.user) {
     await sessionCache.set(cacheKey, sessionData);
   }
-
   return sessionData;
 }
 

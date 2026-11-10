@@ -1,102 +1,71 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { env } from "../config/env.js";
 
-const supabaseUrl = env.supabaseUrl;
-const supabaseServiceKey = env.supabaseSecretKey;
+let client: SupabaseClient | null = null;
 
-export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: { persistSession: false },
-});
+function getSupabase(): SupabaseClient {
+  if (client) return client;
+  if (!env.supabaseUrl || !env.supabaseSecretKey) {
+    throw new Error("SUPABASE_URL and SUPABASE_SECRET_KEY are required for avatar uploads");
+  }
+  client = createClient(env.supabaseUrl, env.supabaseSecretKey, {
+    auth: { persistSession: false },
+  });
+  return client;
+}
 
 const AVATAR_BUCKET = "avatars";
 
-/**
- * Detects whether a string is a base64 data URI or a raw base64 image.
- */
 export function isBase64Image(value: string): boolean {
   return (
-    value.startsWith("data:image/") || /^[A-Za-z0-9+/=]{100,}/.test(value) // raw base64 without data: prefix
+    value.startsWith("data:image/") || /^[A-Za-z0-9+/=]{100,}/.test(value)
   );
 }
 
-/**
- * Detects whether a string is an HTTP(S) URL pointing to an image
- * (not already in our Supabase storage).
- */
 export function isExternalImageUrl(value: string): boolean {
-  if (!value.startsWith("http://") && !value.startsWith("https://")) {
-    return false;
-  }
-  // Already a Supabase storage URL — nothing to do
-  if (supabaseUrl && value.startsWith(supabaseUrl)) {
-    return false;
-  }
+  if (!value.startsWith("http://") && !value.startsWith("https://")) return false;
+  if (env.supabaseUrl && value.startsWith(env.supabaseUrl)) return false;
   return true;
 }
 
-/**
- * Uploads a base64 image to Supabase Storage and returns the public URL.
- */
 export async function uploadBase64Avatar(userId: string, base64: string): Promise<string> {
-  let mimeType = "image/png";
-  let rawBase64 = base64;
-
-  // Parse data URI: data:image/png;base64,iVBOR...
-  const dataUriMatch = base64.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
-  if (dataUriMatch) {
-    mimeType = dataUriMatch[1];
-    rawBase64 = dataUriMatch[2];
-  }
-
-  const ext = mimeType.split("/")[1].replace("+xml", ""); // e.g. png, jpeg, svg
-  const filePath = `${userId}/avatar.${ext}`;
-  const buffer = Buffer.from(rawBase64, "base64");
-
-  const { error } = await supabase.storage.from(AVATAR_BUCKET).upload(filePath, buffer, {
-    contentType: mimeType,
-    upsert: true,
-  });
-
-  if (error) {
-    console.error("[supabase] avatar upload failed:", error);
-    throw new Error(`Avatar upload failed: ${error.message}`);
-  }
-
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(filePath);
-
-  return publicUrl;
-}
-
-/**
- * Downloads an image from an external URL, uploads it to Supabase Storage,
- * and returns the public URL.
- */
-export async function uploadUrlAvatar(userId: string, imageUrl: string): Promise<string> {
-  const response = await fetch(imageUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch avatar from URL: ${response.status} ${response.statusText}`);
-  }
-
-  const contentType = response.headers.get("content-type") || "image/png";
-  const ext = contentType.split("/")[1]?.replace("+xml", "") || "png";
-  const filePath = `${userId}/avatar.${ext}`;
-  const buffer = Buffer.from(await response.arrayBuffer());
+  const supabase = getSupabase();
+  const match = base64.match(/^data:(image\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
+  const contentType = match?.[1] ?? "image/png";
+  const raw = match?.[2] ?? base64;
+  const buffer = Buffer.from(raw, "base64");
+  const ext = contentType.split("/")[1] ?? "png";
+  const filePath = `${userId}/${Date.now()}.${ext}`;
 
   const { error } = await supabase.storage.from(AVATAR_BUCKET).upload(filePath, buffer, {
     contentType,
     upsert: true,
   });
+  if (error) {
+    console.error("[supabase] avatar upload failed:", error);
+    throw error;
+  }
+  const { data } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(filePath);
+  return data.publicUrl;
+}
 
+export async function uploadUrlAvatar(userId: string, url: string): Promise<string> {
+  const supabase = getSupabase();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch avatar URL (${res.status})`);
+  const contentType = res.headers.get("content-type") || "image/png";
+  const buffer = Buffer.from(await res.arrayBuffer());
+  const ext = contentType.split("/")[1]?.split(";")[0] ?? "png";
+  const filePath = `${userId}/${Date.now()}.${ext}`;
+
+  const { error } = await supabase.storage.from(AVATAR_BUCKET).upload(filePath, buffer, {
+    contentType,
+    upsert: true,
+  });
   if (error) {
     console.error("[supabase] avatar URL upload failed:", error);
-    throw new Error(`Avatar upload failed: ${error.message}`);
+    throw error;
   }
-
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(filePath);
-
-  return publicUrl;
+  const { data } = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(filePath);
+  return data.publicUrl;
 }
