@@ -148,7 +148,13 @@ export const AppRoutes: React.FC = () => {
   }, []);
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onError={(error) => {
+        console.error("[AppRoutes] ErrorBoundary caught:", error);
+        posthog?.captureException?.(error);
+      }}
+    >
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/login" element={<ExternalAuthRedirect path="/login" />} />
