@@ -25,8 +25,12 @@ export type SessionResult = {
 } | null;
 
 function authBaseUrl(): string {
-  const base = (env.authUrl ?? env.publicAppUrl).replace(/\/+$/, "");
-  if (!base) throw new Error("AUTH_URL (or PUBLIC_APP_URL) is required for session validation");
+  const base = (env.internalAuthUrl ?? env.authUrl ?? env.publicAppUrl).replace(/\/+$/, "");
+  if (!base) {
+    throw new Error(
+      "INTERNAL_AUTH_URL (or AUTH_URL / PUBLIC_APP_URL) is required for session validation",
+    );
+  }
   return base;
 }
 

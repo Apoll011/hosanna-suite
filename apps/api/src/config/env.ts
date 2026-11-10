@@ -1,4 +1,8 @@
+import { withRelatedProject } from "@vercel/related-projects";
 import "dotenv/config";
+
+/** Vercel project name for `apps/auth` (see apps/auth/.vercel/project.json). */
+const AUTH_RELATED_PROJECT_NAME = "hosanna-auth";
 
 function required(name: string): string {
   const value = process.env[name];
@@ -24,6 +28,23 @@ function normalizeAuthUrl(url: string | undefined): string | undefined {
   } catch {
     return url.replace(/\/+$/, "");
   }
+}
+
+/**
+ * Server-to-server origin for the auth app (get-session, JWKS fetch).
+ * On Vercel, prefers the matching related-project preview/production host
+ * from `VERCEL_RELATED_PROJECTS`; otherwise INTERNAL_AUTH_URL → AUTH_URL.
+ */
+function resolveInternalAuthUrl(): string | undefined {
+  const fallback =
+    optional("INTERNAL_AUTH_URL") ?? optional("AUTH_URL") ?? optional("PUBLIC_APP_URL");
+  if (!fallback) return undefined;
+  return normalizeAuthUrl(
+    withRelatedProject({
+      projectName: AUTH_RELATED_PROJECT_NAME,
+      defaultHost: fallback,
+    }),
+  );
 }
 
 /** True when running inside a Vercel Function. */
@@ -69,8 +90,15 @@ export const env = {
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
   studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
-  /** Auth app origin — get-session + JWKS. Falls back to PUBLIC_APP_URL. */
+  /**
+   * Public auth app origin (issuer / cookie host). Prefer AUTH_URL in env.
+   * Falls back to PUBLIC_APP_URL for legacy local setups.
+   */
   authUrl: normalizeAuthUrl(optional("AUTH_URL")),
+  /**
+   * Internal auth origin for API → auth HTTP (session + JWKS).
+   */
+  internalAuthUrl: resolveInternalAuthUrl(),
 
   cronSecret: optional("CRON_SECRET"),
 

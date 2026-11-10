@@ -80,6 +80,9 @@ importers:
       '@vercel/functions':
         specifier: ^3.9.9
         version: 3.11.0(ws@8.21.0)
+      '@vercel/related-projects':
+        specifier: ^1.1.1
+        version: 1.1.1
       ai:
         specifier: ^7.0.157
         version: 7.0.163(zod@4.6.7)
@@ -4070,6 +4073,9 @@ packages:
   '@vercel/oidc@4.0.7':
     resolution: {integrity: sha512-ZiplzlXLWdKPj36yp23LBwaKWt4hR+kNULULeMVwtrx+iDpxnMk1nFKiHEtUWRjGpnqi/rDGwtnE/Xkfl9xXvQ==}
     engines: {node: '>= 20'}
+
+  '@vercel/related-projects@1.1.1':
+    resolution: {integrity: sha512-Lr56tbvVXPMsBuHwAa2NEPCCLWwk+/IDMeZjrZSG1kDEztJg+bI7YPzguyPvaJrDSCEi6SEZe4U8EnxM5XdIZw==}
 
   '@visx/curve@4.0.1-alpha.0':
     resolution: {integrity: sha512-jRu61Uz274pV1zyioXmboyrLutYbnKsgjj4njSGCnhdXj5GkZvZbg+ThDb6oOzoAnJOBRLz4rzPlWvNJOzuVMg==}
@@ -10569,6 +10575,10 @@ snapshots:
       '@vercel/cli-config': 0.3.7
       '@vercel/cli-exec': 1.0.1
       jose: 5.10.0
+
+  '@vercel/related-projects@1.1.1':
+    optionalDependencies:
+      ajv: 6.15.0
 
   '@visx/curve@4.0.1-alpha.0':
     dependencies:

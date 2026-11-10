@@ -17,7 +17,13 @@ import { SongService } from "../services/song.service.js";
 import { mapToolError } from "./lib/toolErrors.js";
 
 const apiOrigin = env.mcpResourceUrl.replace(/\/mcp\/?$/, "");
-const authIssuer = (env.authUrl ?? apiOrigin ?? `http://127.0.0.1:${env.port}`).replace(/\/+$/, "");
+/** Fetch JWKS from the related/internal auth host; issuer still matches AUTH_URL cookies. */
+const authIssuer = (
+  env.internalAuthUrl ??
+  env.authUrl ??
+  apiOrigin ??
+  `http://127.0.0.1:${env.port}`
+).replace(/\/+$/, "");
 const jwksUrl = new URL("/api/auth/jwks", authIssuer);
 const remoteJwks = createRemoteJWKSet(jwksUrl);
 
