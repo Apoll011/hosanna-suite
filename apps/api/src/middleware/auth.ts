@@ -180,11 +180,15 @@ function sha256(value: string): string {
 
 function readCookie(cookieHeader: string, name: string): string | null {
   const parts = cookieHeader.split(";");
-  const prefix = `${name}=`;
-  for (const part of parts) {
-    const trimmed = part.trim();
-    if (trimmed.startsWith(prefix)) {
-      return decodeURIComponent(trimmed.slice(prefix.length));
+  // Better Auth secure cookies are stored as `__Secure-<name>` (and rarely `__Host-`).
+  const candidates = [`__Secure-${name}`, `__Host-${name}`, name];
+  for (const candidate of candidates) {
+    const prefix = `${candidate}=`;
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (trimmed.startsWith(prefix)) {
+        return decodeURIComponent(trimmed.slice(prefix.length));
+      }
     }
   }
   return null;
@@ -211,14 +215,11 @@ function authCacheKey(req: Request): string | null {
 
 function requestHeadersForAuth(req: Request): Headers {
   const headers = new Headers();
+  // Server-to-server get-session: only forward credentials. Do not forward
+  // browser Origin/Referer — they are irrelevant here and can interact badly
+  // with deployment-protection / CSRF checks on ephemeral auth hosts.
   const cookie = req.headers.cookie;
   if (cookie) headers.set("cookie", cookie);
-  const origin = req.headers.origin;
-  if (typeof origin === "string") headers.set("origin", origin);
-  const referer = req.headers.referer;
-  if (typeof referer === "string") headers.set("referer", referer);
-  const ua = req.headers["user-agent"];
-  if (typeof ua === "string") headers.set("user-agent", ua);
   const authHeader = req.headers.authorization;
   if (typeof authHeader === "string") headers.set("authorization", authHeader);
   return headers;
