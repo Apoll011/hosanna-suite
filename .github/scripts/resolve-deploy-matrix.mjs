@@ -164,14 +164,16 @@ for (const app of config.apps) {
   if (!target) continue;
 
   const patterns = watchPatternsFor(app.dir, packageMap);
+  console.log(`${app.id} watched paths:`);
+  for (const p of patterns) console.log(`  - ${p}`);
+
   const changed = files === null || files.some((f) => pathMatched(f, patterns));
   if (!changed) {
     console.log(`skip ${app.id}: no matching path changes`);
-    console.log(`  watched: ${patterns.join(", ")}`);
     continue;
   }
 
-  console.log(`${app.id}: deploy (watched ${patterns.length} paths)`);
+  console.log(`deploy ${app.id}`);
   matrix.push({
     id: app.id,
     package: app.package,
