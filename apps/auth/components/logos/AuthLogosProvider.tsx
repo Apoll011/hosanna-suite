@@ -67,9 +67,7 @@ function AuthOpenAppListener() {
           }),
         navigateSameOrigin: (path) => router.push(path),
         prepareCrossOriginNavigate: ({ url }) => {
-          writeThemeCookie(
-            document.documentElement.classList.contains("dark") ? "dark" : "light",
-          );
+          writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
           return url;
         },
       });
@@ -121,16 +119,7 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
       canUpdateSong: false,
       deriveView: deriveAccountView,
     }),
-    [
-      t,
-      tc,
-      language,
-      locale,
-      user?.name,
-      user?.id,
-      organization?.id,
-      canUseAi,
-    ],
+    [t, tc, language, locale, user?.name, user?.id, organization?.id, canUseAi],
   );
 
   return (

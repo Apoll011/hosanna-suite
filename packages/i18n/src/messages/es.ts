@@ -8,7 +8,7 @@ import type { sharedPt } from "./pt";
 /** Cross-app UI strings shared by Studio and Auth. */
 export const sharedEs: typeof sharedPt = {
   brand: {
-    name: "Hosanna"
+    name: "Hosanna",
   },
   common: {
     save: "Guardar",
@@ -16,7 +16,7 @@ export const sharedEs: typeof sharedPt = {
     back: "Volver",
     retry: "Reintentar",
     refresh: "Actualizar",
-    loading: "Cargando…"
+    loading: "Cargando…",
   },
   organization: {
     loginActivity: {
@@ -25,12 +25,13 @@ export const sharedEs: typeof sharedPt = {
       listTitle: "Accesos de la organización",
       listDesc: "Eventos recientes de autenticación de los miembros de este espacio.",
       noAccessTitle: "Sin acceso",
-      noAccessDesc: "Solo propietarios y admins pueden ver esta actividad."
-    }
+      noAccessDesc: "Solo propietarios y admins pueden ver esta actividad.",
+    },
   },
   loginHistory: {
     title: "Historial de accesos",
-    personalDesc: "Inicios de sesión recientes en tu cuenta, con dispositivo y ubicación cuando estén disponibles.",
+    personalDesc:
+      "Inicios de sesión recientes en tu cuenta, con dispositivo y ubicación cuando estén disponibles.",
     orgDesc: "Actividad de inicio de sesión de todos los miembros de esta organización.",
     loading: "Cargando historial…",
     loadError: "No se pudo cargar el historial de inicio de sesión.",
@@ -44,15 +45,15 @@ export const sharedEs: typeof sharedPt = {
       sessionCreated: "Sesión creada",
       sessionRevoked: "Sesión revocada",
       sessionsRevokedAll: "Todas las sesiones revocadas",
-      other: "Evento de seguridad"
-    }
+      other: "Evento de seguridad",
+    },
   },
   oauth: {
     consent: {
       scopes: "Ámbitos solicitados",
       allow: "Permitir",
-      deny: "Denegar"
-    }
+      deny: "Denegar",
+    },
   },
   settings: {
     roles: {
@@ -62,7 +63,7 @@ export const sharedEs: typeof sharedPt = {
       editor: "Editor",
       musician: "Músico",
       guest: "Invitado",
-      member: "Miembro"
+      member: "Miembro",
     },
     notifications: {
       title: "Notificaciones",
@@ -91,7 +92,7 @@ export const sharedEs: typeof sharedPt = {
         rolesFilter: "Filtrar por rol",
         everyone: "Todos los roles",
         inboxOnly: "Se envía al buzón de la aplicación.",
-        loadError: "No se pudieron cargar los miembros."
+        loadError: "No se pudieron cargar los miembros.",
       },
       content: {
         title: "Mensaje",
@@ -102,7 +103,7 @@ export const sharedEs: typeof sharedPt = {
           organization: "Organización",
           team: "Equipo",
           security: "Seguridad",
-          billing: "Facturación"
+          billing: "Facturación",
         },
         titleLabel: "Título",
         titlePlaceholder: "ej.: Ensayo movido a las 20:00",
@@ -114,7 +115,7 @@ export const sharedEs: typeof sharedPt = {
         preview: "Vista previa",
         previewEmpty: "Vista previa del título",
         now: "ahora",
-        appName: "Hosanna Studio"
+        appName: "Hosanna Studio",
       },
       delivery: {
         title: "Entrega",
@@ -124,8 +125,8 @@ export const sharedEs: typeof sharedPt = {
         push: "Push",
         pushDesc: "En el dispositivo",
         both: "Ambos",
-        bothDesc: "Buzón y push"
-      }
-    }
-  }
+        bothDesc: "Buzón y push",
+      },
+    },
+  },
 };

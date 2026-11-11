@@ -8,7 +8,7 @@ import type { sharedPt } from "./pt";
 /** Cross-app UI strings shared by Studio and Auth. */
 export const sharedEn: typeof sharedPt = {
   brand: {
-    name: "Hosanna"
+    name: "Hosanna",
   },
   common: {
     save: "Save",
@@ -16,7 +16,7 @@ export const sharedEn: typeof sharedPt = {
     back: "Back",
     retry: "Retry",
     refresh: "Refresh",
-    loading: "Loading…"
+    loading: "Loading…",
   },
   organization: {
     loginActivity: {
@@ -25,8 +25,8 @@ export const sharedEn: typeof sharedPt = {
       listTitle: "Organization sign-ins",
       listDesc: "Recent authentication events from members of this workspace.",
       noAccessTitle: "No access",
-      noAccessDesc: "Only owners and admins can view organization login activity."
-    }
+      noAccessDesc: "Only owners and admins can view organization login activity.",
+    },
   },
   loginHistory: {
     title: "Login history",
@@ -44,15 +44,15 @@ export const sharedEn: typeof sharedPt = {
       sessionCreated: "Session created",
       sessionRevoked: "Session revoked",
       sessionsRevokedAll: "All sessions revoked",
-      other: "Security event"
-    }
+      other: "Security event",
+    },
   },
   oauth: {
     consent: {
       scopes: "Requested scopes",
       allow: "Allow",
-      deny: "Deny"
-    }
+      deny: "Deny",
+    },
   },
   settings: {
     roles: {
@@ -62,7 +62,7 @@ export const sharedEn: typeof sharedPt = {
       editor: "Editor",
       musician: "Musician",
       guest: "Guest",
-      member: "Member"
+      member: "Member",
     },
     notifications: {
       title: "Notifications",
@@ -91,7 +91,7 @@ export const sharedEn: typeof sharedPt = {
         rolesFilter: "Filter by role",
         everyone: "All roles",
         inboxOnly: "Sent to the in-app inbox.",
-        loadError: "Couldn't load members."
+        loadError: "Couldn't load members.",
       },
       content: {
         title: "Message",
@@ -102,7 +102,7 @@ export const sharedEn: typeof sharedPt = {
           organization: "Organization",
           team: "Team",
           security: "Security",
-          billing: "Billing"
+          billing: "Billing",
         },
         titleLabel: "Title",
         titlePlaceholder: "e.g. Rehearsal moved to 8 PM",
@@ -114,7 +114,7 @@ export const sharedEn: typeof sharedPt = {
         preview: "Preview",
         previewEmpty: "Title preview",
         now: "now",
-        appName: "Hosanna Studio"
+        appName: "Hosanna Studio",
       },
       delivery: {
         title: "Delivery",
@@ -124,8 +124,8 @@ export const sharedEn: typeof sharedPt = {
         push: "Push",
         pushDesc: "On the device",
         both: "Both",
-        bothDesc: "Inbox and push"
-      }
-    }
-  }
+        bothDesc: "Inbox and push",
+      },
+    },
+  },
 };

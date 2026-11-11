@@ -6,12 +6,12 @@ This is not a new brand brief. It records what already ships. Prefer tokens and 
 
 **Source of truth**
 
-| Layer | Where |
-| --- | --- |
-| CSS tokens | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css` |
+| Layer             | Where                                                                                                 |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                  |
 | Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, …) |
-| Workspace chrome | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read |
-| Account chrome | Auth `AccountNav`, `AccountLayoutChrome`, account pages |
+| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read                                       |
+| Account chrome    | Auth `AccountNav`, `AccountLayoutChrome`, account pages                                               |
 
 When Studio and Auth disagree, **Studio tokens win** and Auth should catch up — except Auth has no lyric/score surface, so it may omit `--font-lyric`.
 
@@ -33,32 +33,32 @@ Semantic tokens (`--m3-*`). One accent; status colors only for status.
 
 ### Light
 
-| Role | Token | Value |
-| --- | --- | --- |
-| Accent | `--m3-primary` | `#0284c7` |
-| Accent pressed | `--m3-primary-dark` | `#0369a1` |
-| Accent tint | `--m3-primary-light` | `#e0f2fe` |
-| Text | `--m3-text` | `#1a1d24` |
-| Secondary text | `--m3-secondary` | `#5c6570` |
-| Page | `--m3-bg` | `#f4f6f8` |
-| Sidebar / toolbar | `--m3-sidebar` / `--m3-toolbar` | `#eef1f4` |
-| Card | `--m3-card` | `#ffffff` |
-| Border | `--m3-border` | `#d0d7e0` |
-| Hover | `--m3-hover` | `#e8ecf0` |
-| Placeholder / muted control | `--m3-input` | `#6b7280` |
-| Success | `--m3-success` | `#059669` |
-| Warning | `--m3-warning` | `#d97706` |
-| Danger | `--m3-danger` | `#e11d48` |
+| Role                        | Token                           | Value     |
+| --------------------------- | ------------------------------- | --------- |
+| Accent                      | `--m3-primary`                  | `#0284c7` |
+| Accent pressed              | `--m3-primary-dark`             | `#0369a1` |
+| Accent tint                 | `--m3-primary-light`            | `#e0f2fe` |
+| Text                        | `--m3-text`                     | `#1a1d24` |
+| Secondary text              | `--m3-secondary`                | `#5c6570` |
+| Page                        | `--m3-bg`                       | `#f4f6f8` |
+| Sidebar / toolbar           | `--m3-sidebar` / `--m3-toolbar` | `#eef1f4` |
+| Card                        | `--m3-card`                     | `#ffffff` |
+| Border                      | `--m3-border`                   | `#d0d7e0` |
+| Hover                       | `--m3-hover`                    | `#e8ecf0` |
+| Placeholder / muted control | `--m3-input`                    | `#6b7280` |
+| Success                     | `--m3-success`                  | `#059669` |
+| Warning                     | `--m3-warning`                  | `#d97706` |
+| Danger                      | `--m3-danger`                   | `#e11d48` |
 
 ### Dark
 
-| Role | Value |
-| --- | --- |
-| Accent | `#5babdb` (pressed `#3d8ab8`, tint `#0f2d40`) |
-| Surfaces | `#0b0d12` / `#12151c` / `#181b23` |
-| Text / secondary | `#eceef2` / `#9aa0b0` |
-| Border / hover | `#2d3244` / `#1f2330` |
-| Success / warning / danger | `#34d399` / `#fbbf24` / `#fb7185` |
+| Role                       | Value                                         |
+| -------------------------- | --------------------------------------------- |
+| Accent                     | `#5babdb` (pressed `#3d8ab8`, tint `#0f2d40`) |
+| Surfaces                   | `#0b0d12` / `#12151c` / `#181b23`             |
+| Text / secondary           | `#eceef2` / `#9aa0b0`                         |
+| Border / hover             | `#2d3244` / `#1f2330`                         |
+| Success / warning / danger | `#34d399` / `#fbbf24` / `#fb7185`             |
 
 **Use accent for:** current selection, active nav, links, focus rings, primary commits.
 
@@ -68,24 +68,24 @@ Semantic tokens (`--m3-*`). One accent; status colors only for status.
 
 ## Type
 
-| Face | Token | Use |
-| --- | --- | --- |
-| Figtree | `--font-sans` / `--font-display` | All chrome, titles, nav, forms |
-| Source Serif 4 | `--font-lyric` | Lyrics and readings only (Studio) |
-| JetBrains Mono | `--font-mono` | Chord symbols |
+| Face           | Token                            | Use                               |
+| -------------- | -------------------------------- | --------------------------------- |
+| Figtree        | `--font-sans` / `--font-display` | All chrome, titles, nav, forms    |
+| Source Serif 4 | `--font-lyric`                   | Lyrics and readings only (Studio) |
+| JetBrains Mono | `--font-mono`                    | Chord symbols                     |
 
 Never add a second display face (no Outfit, Inter-as-brand, poster type).
 
 ### Scale (do not go larger)
 
-| Role | Class / token | Size | Weight | Tracking |
-| --- | --- | --- | --- | --- |
-| Page title | `.text-display` / `--text-display` | 24px (clamped on small viewports) | 600 | -0.02em |
-| Section title | `.text-title` / `--text-title` | 17px | 600 | -0.015em |
-| Body | `.text-body` / `--text-body` | 14px | 400 | — |
-| Secondary | `.text-muted` / `--text-secondary` | 13px | 500 | secondary color |
-| Label | `.text-label` / `--text-label` | 12px | 600 | +0.01em, secondary |
-| Caption | `.text-caption` / `--text-caption` | 11px | 500 | secondary |
+| Role          | Class / token                      | Size                              | Weight | Tracking           |
+| ------------- | ---------------------------------- | --------------------------------- | ------ | ------------------ |
+| Page title    | `.text-display` / `--text-display` | 24px (clamped on small viewports) | 600    | -0.02em            |
+| Section title | `.text-title` / `--text-title`     | 17px                              | 600    | -0.015em           |
+| Body          | `.text-body` / `--text-body`       | 14px                              | 400    | —                  |
+| Secondary     | `.text-muted` / `--text-secondary` | 13px                              | 500    | secondary color    |
+| Label         | `.text-label` / `--text-label`     | 12px                              | 600    | +0.01em, secondary |
+| Caption       | `.text-caption` / `--text-caption` | 11px                              | 500    | secondary          |
 
 Numbers that are compared (durations, counts, hymn numbers) use tabular figures (`.tabular-nums`). Song and folder titles are medium, not bold.
 
@@ -95,22 +95,22 @@ Numbers that are compared (durations, counts, hymn numbers) use tabular figures 
 
 ### Radius
 
-| Token | Size | Use |
-| --- | --- | --- |
-| `--radius-sm` | 6px | Chips, dense controls, pill-tab selected chip |
-| `--radius-md` | 10px | Buttons, inputs, inset surfaces |
-| `--radius-lg` | 14px | Cards, panels, empty states |
-| `--radius-xl` | 20px | Menus, dialogs, toasts |
-| `--radius-pill` | full | Counts, scrollbar thumbs |
+| Token           | Size | Use                                           |
+| --------------- | ---- | --------------------------------------------- |
+| `--radius-sm`   | 6px  | Chips, dense controls, pill-tab selected chip |
+| `--radius-md`   | 10px | Buttons, inputs, inset surfaces               |
+| `--radius-lg`   | 14px | Cards, panels, empty states                   |
+| `--radius-xl`   | 20px | Menus, dialogs, toasts                        |
+| `--radius-pill` | full | Counts, scrollbar thumbs                      |
 
 ### Shadows (quiet)
 
-| Token | Use |
-| --- | --- |
-| Hairline border | Resting structure |
-| `--shadow-sm` | Resting cards / primary button lift |
-| `--shadow-md` | Popovers, float surfaces |
-| `--shadow-lg` | Dialogs |
+| Token           | Use                                 |
+| --------------- | ----------------------------------- |
+| Hairline border | Resting structure                   |
+| `--shadow-sm`   | Resting cards / primary button lift |
+| `--shadow-md`   | Popovers, float surfaces            |
+| `--shadow-lg`   | Dialogs                             |
 
 No glow, no colored shadow.
 
@@ -124,12 +124,12 @@ No glow, no colored shadow.
 
 Two real densities (Studio explorers):
 
-| | Comfortable (default) | Compact |
-| --- | --- | --- |
-| Card padding | ~16px | tighter |
-| Icon targets | 40–44px | smaller but still usable |
-| List rows | ~56px | shorter |
-| Collection covers | ~144px tall | reduced |
+|                   | Comfortable (default) | Compact                  |
+| ----------------- | --------------------- | ------------------------ |
+| Card padding      | ~16px                 | tighter                  |
+| Icon targets      | 40–44px               | smaller but still usable |
+| List rows         | ~56px                 | shorter                  |
+| Collection covers | ~144px tall           | reduced                  |
 
 Compact tightens padding, type, icons, and cover height. It does not remove actions or metadata. Hit targets stay ≥40px; primary commit / sole icon actions ≥44px. On phone, respect safe areas; comfortable is the default density.
 
@@ -206,12 +206,12 @@ One title, one toolbar, then the work. No hero banners, gradient headers, or a c
 
 ### Auth vs Studio
 
-| | Studio | Auth |
-| --- | --- | --- |
-| Tokens | Full set + lyric font | Same m3 tokens; no lyric surface |
-| Shell | App sidebar + main stage | Account nav + scrolling content |
-| Toasts | Product toasts | Banner under header, **offset past the fixed sidebar** on desktop |
-| Login | — | Quiet form chrome; brand present but not a marketing hero |
+|        | Studio                   | Auth                                                              |
+| ------ | ------------------------ | ----------------------------------------------------------------- |
+| Tokens | Full set + lyric font    | Same m3 tokens; no lyric surface                                  |
+| Shell  | App sidebar + main stage | Account nav + scrolling content                                   |
+| Toasts | Product toasts           | Banner under header, **offset past the fixed sidebar** on desktop |
+| Login  | —                        | Quiet form chrome; brand present but not a marketing hero         |
 
 Account settings pages should feel like Studio settings: `PageHeader`, `Surface` / bordered cards, `Tabs`, shared buttons — not a separate “admin theme.”
 
@@ -221,14 +221,14 @@ Account settings pages should feel like Studio settings: `PageHeader`, `Surface`
 
 Motion explains size or presence. No bounce, flash, or blocking the next click.
 
-| Pattern | Duration | Notes |
-| --- | --- | --- |
+| Pattern                                                         | Duration              | Notes                                                                                                                                      |
+| --------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Panel open/close (editor panes, library beside order, sidebars) | **300ms** ease-in-out | Keep mounted; animate width/flex + opacity. Closed = width 0, opacity 0, no pointer events. Avoid `display: none` / `hidden` mid-animation |
-| Mode crossfade (Plan ↔ Read) | ~300ms | Both views mounted; ~4px travel |
-| Expanding row body/notes | ~300ms | Animate height; keep content mounted |
-| Menu enter | **180ms** | `.hosanna-enter` |
-| Dialog / toast | **200ms** | Scrim fade + panel scale 0.98 |
-| Button / color hover | ~150ms | Color only |
+| Mode crossfade (Plan ↔ Read)                                    | ~300ms                | Both views mounted; ~4px travel                                                                                                            |
+| Expanding row body/notes                                        | ~300ms                | Animate height; keep content mounted                                                                                                       |
+| Menu enter                                                      | **180ms**             | `.hosanna-enter`                                                                                                                           |
+| Dialog / toast                                                  | **200ms**             | Scrim fade + panel scale 0.98                                                                                                              |
+| Button / color hover                                            | ~150ms                | Color only                                                                                                                                 |
 
 On phone, a covering panel may **translate** instead of changing width — same duration and easing, still mounted through close.
 

@@ -153,20 +153,20 @@ Do **not** move shared RBAC/factory code into the app — keep that in `packages
 
 Ran after `pnpm install --frozen-lockfile` (deps present). Full `pnpm typecheck` / `pnpm test` not completed end-to-end (time); sampled packages:
 
-| Check | Result |
-|-------|--------|
-| `@hosanna/i18n` typecheck | pass |
-| `@hosanna/brand` typecheck | pass |
-| `@hosanna/cache` typecheck | pass |
-| `@hosanna/replication` typecheck | pass |
-| `@hosanna/types` typecheck | pass |
-| `@hosanna/db` typecheck | pass |
-| `@hosanna/auth` typecheck (no prior build) | **fail** — missing `@hosanna/cache` / `@hosanna/db` dist types |
-| `@hosanna/ui` typecheck (no prior auth build) | **fail** — missing `@hosanna/auth` |
-| After `cache`+`db`+`auth` build: auth + ui typecheck | pass |
-| `@hosanna/ui` tests (after auth build) | 9 pass |
-| `@hosanna/i18n` / `cache` / `brand` tests | pass |
-| `@hosanna/logos-ai` typecheck (no chordpro build) | **fail** — missing `@hosanna/chordpro` |
+| Check                                                | Result                                                         |
+| ---------------------------------------------------- | -------------------------------------------------------------- |
+| `@hosanna/i18n` typecheck                            | pass                                                           |
+| `@hosanna/brand` typecheck                           | pass                                                           |
+| `@hosanna/cache` typecheck                           | pass                                                           |
+| `@hosanna/replication` typecheck                     | pass                                                           |
+| `@hosanna/types` typecheck                           | pass                                                           |
+| `@hosanna/db` typecheck                              | pass                                                           |
+| `@hosanna/auth` typecheck (no prior build)           | **fail** — missing `@hosanna/cache` / `@hosanna/db` dist types |
+| `@hosanna/ui` typecheck (no prior auth build)        | **fail** — missing `@hosanna/auth`                             |
+| After `cache`+`db`+`auth` build: auth + ui typecheck | pass                                                           |
+| `@hosanna/ui` tests (after auth build)               | 9 pass                                                         |
+| `@hosanna/i18n` / `cache` / `brand` tests            | pass                                                           |
+| `@hosanna/logos-ai` typecheck (no chordpro build)    | **fail** — missing `@hosanna/chordpro`                         |
 
 **Interpretation:** Not necessarily broken tree — turbo `dependsOn: ["^build"]` is load-bearing. Agents must build dist packages (or use root turbo) before isolated filter typechecks. CI path should remain the source of truth for green.
 
@@ -174,13 +174,13 @@ Ran after `pnpm install --frozen-lockfile` (deps present). Full `pnpm typecheck`
 
 ## Duplication / extraction opportunities (summary)
 
-| Opportunity | Suggested home | Consumers |
-|-------------|----------------|-----------|
-| parseUserAgent | `packages/ui` or small `packages/user-agent` | auth, studio |
-| theme-boot / handoff helpers | `packages/auth/client` or brand | auth, studio |
-| session-cache patterns | stay app-local or auth client helpers | auth, studio |
-| Shared Button/Modal already in ui | grow `@hosanna/ui` carefully | studio, auth; saas optional |
-| Email templates/service | split under `apps/auth` (not a shared package unless API needs it) | auth-app |
+| Opportunity                       | Suggested home                                                     | Consumers                   |
+| --------------------------------- | ------------------------------------------------------------------ | --------------------------- |
+| parseUserAgent                    | `packages/ui` or small `packages/user-agent`                       | auth, studio                |
+| theme-boot / handoff helpers      | `packages/auth/client` or brand                                    | auth, studio                |
+| session-cache patterns            | stay app-local or auth client helpers                              | auth, studio                |
+| Shared Button/Modal already in ui | grow `@hosanna/ui` carefully                                       | studio, auth; saas optional |
+| Email templates/service           | split under `apps/auth` (not a shared package unless API needs it) | auth-app                    |
 
 ---
 

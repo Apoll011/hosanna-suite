@@ -5,10 +5,7 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  resolveHosannaAppOrigin,
-  warmHosannaAppOrigin,
-} from "../src/core/bridge/openApp.ts";
+import { resolveHosannaAppOrigin, warmHosannaAppOrigin } from "../src/core/bridge/openApp.ts";
 
 describe("resolveHosannaAppOrigin", () => {
   it("uses saas for apex marketing site", () => {

@@ -27,19 +27,21 @@ flowchart TD
 ## 2. Current State vs. Future Architecture
 
 ### Today
+
 - **Hosanna Mobile (Musician)**: Stage tool — ChordPro, transpose, capo, metronome, auto-scroll, chord diagrams, offline sync.
 - **Hosanna Studio (Web)**: Music library (ChordPro, collections, AI import) and services/agendas in one product.
 
 ### Future
+
 Services and scheduling move into **Planning**. Studio is renamed **Hosanna Music** and stays the song and repertoire product. Four more products join the suite around the same org and auth.
 
-| App | Primary audience | Mission |
-| :--- | :--- | :--- |
-| **Hosanna Music** | Worship leaders, vocalists, band | Songs, collections, sheets, libraries, stage-oriented charts |
-| **Hosanna Presenter** | Media & tech teams | Native desktop show control — lyrics, media, screens, stream feed; ChordPro-native and Music hitch-sync |
-| **Hosanna Planning** | Service & ministry leads, facility leads | Services, events, teams, light resource booking |
-| **Hosanna Community** | Pastors, staff, members (via Member app) | People/CRM, content, engagement |
-| **Hosanna Finance** | Treasurers, admins, donors | Giving, funds, budgets, expenses, statements |
+| App                   | Primary audience                         | Mission                                                                                                 |
+| :-------------------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------ |
+| **Hosanna Music**     | Worship leaders, vocalists, band         | Songs, collections, sheets, libraries, stage-oriented charts                                            |
+| **Hosanna Presenter** | Media & tech teams                       | Native desktop show control — lyrics, media, screens, stream feed; ChordPro-native and Music hitch-sync |
+| **Hosanna Planning**  | Service & ministry leads, facility leads | Services, events, teams, light resource booking                                                         |
+| **Hosanna Community** | Pastors, staff, members (via Member app) | People/CRM, content, engagement                                                                         |
+| **Hosanna Finance**   | Treasurers, admins, donors               | Giving, funds, budgets, expenses, statements                                                            |
 
 ---
 
@@ -50,6 +52,7 @@ Services and scheduling move into **Planning**. Studio is renamed **Hosanna Musi
 The song and repertoire product — what Studio does today for music, without owning services.
 
 **Owns**
+
 - ChordPro authoring and formatting; collections and church song libraries
 - Optional arrangements: a song may have one chart or many variants (different full charts, or simple key changes — up to the editor)
 - Metadata such as original key, tempo, time signature, and a YouTube link on the song; in the Musician app a link becomes a play control in the spirit of a streaming player
@@ -58,6 +61,7 @@ The song and repertoire product — what Studio does today for music, without ow
 - Open ChordPro export
 
 **Does not own**
+
 - Service building, rosters, or agendas (Planning). Planning stores **song IDs** only and reads catalog data from Music.
 - A public song gallery. A later option may be hosting **open-licensed** songs that churches can import into their own library — nothing beyond that.
 
@@ -89,19 +93,20 @@ flowchart LR
 
 The Operator loads the Planning service order and expands each item into slides or cues. Lyric slides come from Hosanna Music ChordPro (or a Presenter-specific variant when one exists) — not a separate plaintext lyric library.
 
-| Item type | Behavior |
-| :-------- | :------- |
-| **Songs** | Lyric slides from Music ChordPro (sections / verses), or a Presenter-specific variant |
-| **Bible** | Built-in translations; packs downloaded per church and cached offline |
-| **Images** | Library or folder slideshow with simple transitions |
-| **Video / audio** | Local media and loops, with preview before go-live |
-| **Slides** | Hosanna Canvas scenes (web-authored, simple built-in animations) as the native slide format; PPTX / PDF import converts into Canvas or a slide grid |
-| **Website** | Audience display of a URL (announcements, giving, related pages) |
-| **Screen share** | Operator or guest share into Audience (LAN-first) |
-| **Alerts** | Lower-third and lower popups (names, welcome, urgent notices) as non-blocking overlays |
-| **Timer** | Countdown / count-up on Confidence (optionally Audience), with optional Operator-controlled worship-pad / bed audio |
+| Item type         | Behavior                                                                                                                                            |
+| :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Songs**         | Lyric slides from Music ChordPro (sections / verses), or a Presenter-specific variant                                                               |
+| **Bible**         | Built-in translations; packs downloaded per church and cached offline                                                                               |
+| **Images**        | Library or folder slideshow with simple transitions                                                                                                 |
+| **Video / audio** | Local media and loops, with preview before go-live                                                                                                  |
+| **Slides**        | Hosanna Canvas scenes (web-authored, simple built-in animations) as the native slide format; PPTX / PDF import converts into Canvas or a slide grid |
+| **Website**       | Audience display of a URL (announcements, giving, related pages)                                                                                    |
+| **Screen share**  | Operator or guest share into Audience (LAN-first)                                                                                                   |
+| **Alerts**        | Lower-third and lower popups (names, welcome, urgent notices) as non-blocking overlays                                                              |
+| **Timer**         | Countdown / count-up on Confidence (optionally Audience), with optional Operator-controlled worship-pad / bed audio                                 |
 
 **Outputs**
+
 - **Audience** — lyrics, Scripture, Canvas / slides, media, website, screen share, alerts, and live annotate overlays
 - **Confidence** — current and next cue, clocks, private booth cues, annotations, optional advance when granted
 - **Program feed** — NDI, virtual camera, or clean program window into the church’s existing OBS / vMix → YouTube pipeline
@@ -127,6 +132,7 @@ A separate **Hosanna Live** capability (ingest camera, program, and house audio;
 Operational planning for church life: services, events, people on teams, and light facility/gear booking.
 
 **Services and events**
+
 - Creating a **service** also creates its linked **event**
 - Other gatherings are the same event model with **no** service link
 - Events can be published into Community for member-facing visibility and registration
@@ -134,13 +140,16 @@ Operational planning for church life: services, events, people on teams, and lig
 - Planning publishes the plan; it does **not** run a live “behind/ahead” clock — that is not its job
 
 **People and teams**
+
 - People join the org with accounts, can belong to several orgs, and join **teams**
 - Scheduling flows (including Accept / Decline on the Member app) hang off that membership model
 
 **Resources**
+
 - Rooms, vehicles, and equipment stay **lightweight**: attach what an event needs and surface **warnings** when rooms, gear, or people collide — not a heavy CMMS
 
 **Integrations**
+
 - Music: setlists reference song IDs
 - Presenter and Musician consume the plan and catalog elsewhere
 - Reminders and alerts go through the shared **notification API**, not a Planning-only stack
@@ -154,13 +163,16 @@ Admin-facing church life and CRM. **Members interact in the Hosanna Member app**
 Three domains:
 
 **People**
+
 - CRM, families/households, membership, pastoral care, and groups
 
 **Content**
+
 - Feed and announcements (**Posts** — staff/admins only)
 - Sermons and media: churches publish manually (e.g. YouTube), with series/speaker/scripture-style metadata; the Member app can show live when the church is broadcasting
 
 **Engagement**
+
 - Events and registrations (including events published from Planning)
 - Prayer requests
 - Notifications via the shared notification API
@@ -179,6 +191,7 @@ Wiki-style manuals and in-app team chat are **out**. Prayer requests cover that 
 Stewardship and books for people who need trust, history, and clarity.
 
 **Giving**
+
 - Online giving (including Stripe and Pix) plus manual cash, check, and envelope entry
 - Anyone can give — members and guests
 - Recurring and one-off gifts; members can set up tithes in the Member app
@@ -186,12 +199,14 @@ Stewardship and books for people who need trust, history, and clarity.
 - Campaign or event-linked giving when Community/Planning surfaces call for it
 
 **Books and reporting**
+
 - Designated funds and allocation
 - Budgets and **expenses** (a principal part of the product, not an afterthought)
 - Official tax / giving statements and periodic (e.g. semester) reports
 - Treasurers, owners, and admins as the financial audience; every action keeps a history
 
 **Board materials**
+
 - Initially export charts and tables for external decks
 - Later, optional handoff into Presenter for in-room financial presentations
 

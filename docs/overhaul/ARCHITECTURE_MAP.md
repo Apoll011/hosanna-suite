@@ -106,21 +106,21 @@ Leaf package (config only). Consumed by **studio** for offline sync. Not in Dock
 
 ### Layering summary
 
-| Layer | Packages | Notes |
-|-------|----------|-------|
-| Foundations | `config`, `brand`, `i18n`, `types`, `chordpro`, `cache`, `db`, `replication` | Mostly acyclic |
-| Auth core | `auth` → `db`, `cache` | Dist-built; used by api + auth-app + studio + ui |
-| UI kit | `ui` → peer `auth` | Permissions hooks import RBAC from auth |
-| Product AI | `logos-ai` → `chordpro`, `i18n`, `ui` | Source-exported React package |
-| Apps | api, auth-app, studio, saas | Composition roots |
+| Layer       | Packages                                                                     | Notes                                            |
+| ----------- | ---------------------------------------------------------------------------- | ------------------------------------------------ |
+| Foundations | `config`, `brand`, `i18n`, `types`, `chordpro`, `cache`, `db`, `replication` | Mostly acyclic                                   |
+| Auth core   | `auth` → `db`, `cache`                                                       | Dist-built; used by api + auth-app + studio + ui |
+| UI kit      | `ui` → peer `auth`                                                           | Permissions hooks import RBAC from auth          |
+| Product AI  | `logos-ai` → `chordpro`, `i18n`, `ui`                                        | Source-exported React package                    |
+| Apps        | api, auth-app, studio, saas                                                  | Composition roots                                |
 
 ## 4. Build / consume modes (inconsistency)
 
-| Package | Consume mode | Has `build` script |
-|---------|--------------|--------------------|
-| auth, cache, chordpro, db | **dist** (`tsc` → `dist/`) | yes |
+| Package                                       | Consume mode                             | Has `build` script       |
+| --------------------------------------------- | ---------------------------------------- | ------------------------ |
+| auth, cache, chordpro, db                     | **dist** (`tsc` → `dist/`)               | yes                      |
 | brand, i18n, logos-ai, replication, types, ui | **src-direct** (exports point at `src/`) | no (except brand assets) |
-| config | JSON assets | no |
+| config                                        | JSON assets                              | no                       |
 
 Implication: typecheck/test of consumers that import dist packages **require `^build` first**. Turbo encodes this (`typecheck.dependsOn: ["^build", ...]`). Running `pnpm --filter X typecheck` in isolation fails until deps are built (observed for `@hosanna/ui` → `@hosanna/auth`, `@hosanna/auth` → `@hosanna/cache`/`db`, `@hosanna/logos-ai` → `@hosanna/chordpro`).
 
@@ -155,24 +155,24 @@ Implication: typecheck/test of consumers that import dist packages **require `^b
 
 ## 6. Turbo (`turbo.json`)
 
-| Task | dependsOn | Notes |
-|------|-----------|-------|
-| `build` | `^build`, `^db:generate`, `db:generate` | Large `env` allowlist (VITE_*, BETTER_AUTH_*, STRIPE_*, …) |
-| `typecheck` / `test` / `dev` | same as build for generate + `^build` | Correct for dist packages |
-| `lint` | `^build` | CI runs with `continue-on-error` |
-| `db:generate` | — | `cache: false` |
+| Task                         | dependsOn                               | Notes                                                      |
+| ---------------------------- | --------------------------------------- | ---------------------------------------------------------- |
+| `build`                      | `^build`, `^db:generate`, `db:generate` | Large `env` allowlist (VITE__, BETTER_AUTH__, STRIPE_*, …) |
+| `typecheck` / `test` / `dev` | same as build for generate + `^build`   | Correct for dist packages                                  |
+| `lint`                       | `^build`                                | CI runs with `continue-on-error`                           |
+| `db:generate`                | —                                       | `cache: false`                                             |
 
 Root scripts: `dev|build|typecheck|lint|test|clean|format|fix*`, `db:*`, `openapi:generate`, `docker:*`.
 
 ## 7. CI / deploy
 
-| Workflow | Trigger | Action |
-|----------|---------|--------|
-| `ci.yml` | push `main`/`develop`, PRs | install → typecheck → build → test; lint report-only |
-| `deploy-auth.yml` | main + path filters | auth + auth/db/brand/config/i18n/ui |
-| `deploy-saas.yml` | main + path filters | saas + brand/config/i18n/ui |
-| `deploy-studio-*.yml` | develop (preview) / main (prod) | studio + auth/brand/chordpro/config/i18n/types/ui — **missing** logos-ai, replication, cache in path filters |
-| `publish-chordpro.yml` | release tags `chordpro-v*` / `@hosanna/chordpro@*` | npm publish |
+| Workflow               | Trigger                                            | Action                                                                                                       |
+| ---------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `ci.yml`               | push `main`/`develop`, PRs                         | install → typecheck → build → test; lint report-only                                                         |
+| `deploy-auth.yml`      | main + path filters                                | auth + auth/db/brand/config/i18n/ui                                                                          |
+| `deploy-saas.yml`      | main + path filters                                | saas + brand/config/i18n/ui                                                                                  |
+| `deploy-studio-*.yml`  | develop (preview) / main (prod)                    | studio + auth/brand/chordpro/config/i18n/types/ui — **missing** logos-ai, replication, cache in path filters |
+| `publish-chordpro.yml` | release tags `chordpro-v*` / `@hosanna/chordpro@*` | npm publish                                                                                                  |
 
 Docker `Dockerfile`:
 
@@ -183,11 +183,11 @@ Compose: Postgres 16 + api + studio nginx. Auth/saas not in compose.
 
 ## 8. Scripts
 
-| Script | Role |
-|--------|------|
+| Script                         | Role                                                       |
+| ------------------------------ | ---------------------------------------------------------- |
 | `scripts/generate-openapi.mjs` | Large hand-maintained OpenAPI assembler → `packages/types` |
-| `scripts/fix-tailwind.mjs` | Canonical Tailwind class autofix via language server |
-| `scripts/openapi.md` | Notes for generator |
+| `scripts/fix-tailwind.mjs`     | Canonical Tailwind class autofix via language server       |
+| `scripts/openapi.md`           | Notes for generator                                        |
 
 ## 9. Existing docs (do not replace)
 

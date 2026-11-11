@@ -758,11 +758,10 @@ function buildHosannaTools(
           .string()
           .min(1)
           .max(64)
-          .describe('App id: "saas" for the marketing site, or a subdomain slug (studio, auth, …).'),
-        path: z
-          .string()
-          .optional()
-          .describe("Path including leading slash. Defaults to /."),
+          .describe(
+            'App id: "saas" for the marketing site, or a subdomain slug (studio, auth, …).',
+          ),
+        path: z.string().optional().describe("Path including leading slash. Defaults to /."),
         openIn: z
           .enum(OPEN_APP_TARGETS)
           .optional()

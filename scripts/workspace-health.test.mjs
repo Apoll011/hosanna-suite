@@ -62,9 +62,7 @@ describe("workspace health", () => {
         const testDir = join(groupDir, name, "test");
         const hasTests =
           existsSync(testDir) &&
-          readdirSync(testDir, { recursive: true }).some((f) =>
-            String(f).endsWith(".test.ts"),
-          );
+          readdirSync(testDir, { recursive: true }).some((f) => String(f).endsWith(".test.ts"));
         if (!hasTests) missing.push(pkg.name ?? `${group}/${name}`);
       }
     }

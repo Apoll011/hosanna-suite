@@ -22,7 +22,7 @@ export const chat = {
   greeting: {
     morning: "Bom dia",
     afternoon: "Boa tarde",
-    evening: "Boa noite"
+    evening: "Boa noite",
   },
   suggestions: "Sugestões",
   quickActions: "Ações rápidas",
@@ -35,7 +35,7 @@ export const chat = {
     singing: "A escrever…",
     happy: "Pronto",
     celebrating: "Concluído",
-    oops: "Algo correu mal"
+    oops: "Algo correu mal",
   },
   contextSong: "Canção: {title}",
   contextService: "Serviço: {title}",
@@ -58,7 +58,7 @@ export const chat = {
   toolErrorDetail: "Erro",
   toolsUsed: {
     one: "Usou {count} ferramenta",
-    other: "Usou {count} ferramentas"
+    other: "Usou {count} ferramentas",
   },
   toolsWorking: "A trabalhar… {done}/{total}",
   toolsFailed: "{count} com falha",
@@ -98,12 +98,12 @@ export const chat = {
     apply: "Aplicar alterações",
     applyPartial: "Aplicar {kept} de {total}",
     discard: "Recusar",
-    jumpToChange: "Ir para a alteração {n}"
+    jumpToChange: "Ir para a alteração {n}",
   },
   proposals: {
     pending: {
       one: "{count} proposta pendente",
-      other: "{count} propostas pendentes"
+      other: "{count} propostas pendentes",
     },
     review: "Rever",
     reviewTitle: "Rever proposta: {title}",
@@ -122,7 +122,7 @@ export const chat = {
     statusDeclined: "Recusada",
     statusStale: "Substituída",
     inEditorNote: "Está aberta no editor — reveja o diff lá.",
-    fullReview: "Rever tudo"
+    fullReview: "Rever tudo",
   },
   confirm: "Confirmar",
   confirming: "A eliminar…",
@@ -152,7 +152,7 @@ export const chat = {
     organizeFolders: "Organizar pastas",
     upcomingAgenda: "Próxima agenda",
     reviewTrash: "Rever lixo",
-    general: "O que podes fazer?"
+    general: "O que podes fazer?",
   },
   chipDesc: {
     fixChordPro: "Limpar formatação e diretivas",
@@ -171,26 +171,40 @@ export const chat = {
     organizeFolders: "Cores e ícones por tipo de pasta",
     upcomingAgenda: "Ver o que aí vem e o que falta",
     reviewTrash: "Ver o que é seguro restaurar",
-    general: "Ver tudo em que posso ajudar"
+    general: "Ver tudo em que posso ajudar",
   },
   chipPrompt: {
-    fixChordPro: "Revê e corrige o ChordPro da canção atual (formatação, diretivas, metadados). Propõe as edições; não guardes ainda.",
-    reviewSong: "Revê esta canção quanto à qualidade do ChordPro, metadados em falta e tocabilidade. Resume os problemas e propõe correções.",
-    transpose: "Ajuda-me a transpor esta canção. Pergunta o tom de destino se não for claro e depois propõe o ChordPro transposto.",
-    completeChords: "Completar acordes: usa chordpro_propagate_chords na canção atual. Copia os marcadores de acordes da primeira estrofe com acordes para as restantes estrofes nos mesmos pontos da letra — NÃO inventes acordes novos. A ferramenta devolve um rascunho: verifica cada linha marcada `check`, corrige tu próprio a posição dos acordes e depois propõe o resultado corrigido no editor com songs_propose_edit; não guardes ainda.",
-    completeMeta: "Completa os metadados em falta da canção (título, artista, tom, tempo, etiquetas) com base no conteúdo ChordPro. Apenas propõe edições.",
-    explainSelection: "Explica a estrutura ChordPro e quaisquer diretivas invulgares no excerto da canção atual.",
-    reviewPlan: "Revê este plano de serviço quanto à estrutura, referências de canções em falta e fluxo. Sugere melhorias sem guardar.",
-    suggestSongs: "Sugere canções da biblioteca que se adequem a este contexto. Propõe um rascunho; não guardes ainda.",
-    fixSongRefs: "Verifica as referências de canções neste serviço e corrige elementos de canção quebrados ou incompletos. Apenas propõe.",
-    completeStructure: "Completa uma estrutura de serviço equilibrada (boas-vindas, canções, mensagem, etc.) para este plano. Propõe os elementos; não guardes.",
-    createSong: "Ajuda-me a criar uma nova canção em ChordPro. Pergunta título/artista se necessário e depois propõe o conteúdo (não guardes até eu confirmar).",
+    fixChordPro:
+      "Revê e corrige o ChordPro da canção atual (formatação, diretivas, metadados). Propõe as edições; não guardes ainda.",
+    reviewSong:
+      "Revê esta canção quanto à qualidade do ChordPro, metadados em falta e tocabilidade. Resume os problemas e propõe correções.",
+    transpose:
+      "Ajuda-me a transpor esta canção. Pergunta o tom de destino se não for claro e depois propõe o ChordPro transposto.",
+    completeChords:
+      "Completar acordes: usa chordpro_propagate_chords na canção atual. Copia os marcadores de acordes da primeira estrofe com acordes para as restantes estrofes nos mesmos pontos da letra — NÃO inventes acordes novos. A ferramenta devolve um rascunho: verifica cada linha marcada `check`, corrige tu próprio a posição dos acordes e depois propõe o resultado corrigido no editor com songs_propose_edit; não guardes ainda.",
+    completeMeta:
+      "Completa os metadados em falta da canção (título, artista, tom, tempo, etiquetas) com base no conteúdo ChordPro. Apenas propõe edições.",
+    explainSelection:
+      "Explica a estrutura ChordPro e quaisquer diretivas invulgares no excerto da canção atual.",
+    reviewPlan:
+      "Revê este plano de serviço quanto à estrutura, referências de canções em falta e fluxo. Sugere melhorias sem guardar.",
+    suggestSongs:
+      "Sugere canções da biblioteca que se adequem a este contexto. Propõe um rascunho; não guardes ainda.",
+    fixSongRefs:
+      "Verifica as referências de canções neste serviço e corrige elementos de canção quebrados ou incompletos. Apenas propõe.",
+    completeStructure:
+      "Completa uma estrutura de serviço equilibrada (boas-vindas, canções, mensagem, etc.) para este plano. Propõe os elementos; não guardes.",
+    createSong:
+      "Ajuda-me a criar uma nova canção em ChordPro. Pergunta título/artista se necessário e depois propõe o conteúdo (não guardes até eu confirmar).",
     searchHelp: "Ajuda-me a pesquisar e organizar as canções da biblioteca.",
-    planService: "Ajuda-me a planear um novo serviço de culto. Pergunta data/tema se necessário e depois propõe um alinhamento da biblioteca.",
-    organizeFolders: "Revê as minhas pastas e dá a cada uma uma cor e um ícone adequados para distinguir bem cada tipo. Aplica tudo de uma vez.",
-    upcomingAgenda: "Mostra os próximos eventos da minha agenda e aponta o que falta (responsabilidades, canções, notas).",
+    planService:
+      "Ajuda-me a planear um novo serviço de culto. Pergunta data/tema se necessário e depois propõe um alinhamento da biblioteca.",
+    organizeFolders:
+      "Revê as minhas pastas e dá a cada uma uma cor e um ícone adequados para distinguir bem cada tipo. Aplica tudo de uma vez.",
+    upcomingAgenda:
+      "Mostra os próximos eventos da minha agenda e aponta o que falta (responsabilidades, canções, notas).",
     reviewTrash: "Lista o que está no lixo e diz-me o que é seguro restaurar ou deixar.",
-    general: "Em que me podes ajudar no Hosanna Studio (canções, serviços, ChordPro, biblioteca)?"
+    general: "Em que me podes ajudar no Hosanna Studio (canções, serviços, ChordPro, biblioteca)?",
   },
   tools: {
     hosanna_capabilities: "Verificar capacidades",
@@ -265,8 +279,8 @@ export const chat = {
     services_restore: "Restaurar serviço",
     folders_update_many: "Atualizar pastas",
     folders_create_many: "Criar pastas",
-    collections_update_many: "Atualizar coleções"
-  }
+    collections_update_many: "Atualizar coleções",
+  },
 };
 
 /** Shared Logos AI settings UI (hosts may overlay member/setup keys). */
@@ -285,7 +299,8 @@ export const settings = {
   statusSetup: "Não configurado",
   connectionTitle: "Ligação",
   connectionDesc: "Fornecedor, modelo e chave de API.",
-  encryptionMissing: "Falta AI_SETTINGS_ENCRYPTION_KEY no servidor. Configure-a antes de guardar chaves.",
+  encryptionMissing:
+    "Falta AI_SETTINGS_ENCRYPTION_KEY no servidor. Configure-a antes de guardar chaves.",
   provider: "Fornecedor",
   providerHint: "Escolha quem serve os modelos.",
   defaultEndpoint: "API predefinida",
@@ -353,8 +368,8 @@ export const settings = {
     refreshedAt: "Atualizado {time}",
     notConfigured: "Guarde uma chave de API para ver o saldo.",
     cryptoMissing: "A encriptação do servidor não está configurada; não é possível obter o saldo.",
-    unsupported: "O saldo só está disponível para o DeepSeek."
-  }
+    unsupported: "O saldo só está disponível para o DeepSeek.",
+  },
 };
 
 export const logosAiMessages = { ai: { chat, settings } };

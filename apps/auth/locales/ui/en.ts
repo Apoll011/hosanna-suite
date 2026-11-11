@@ -3,20 +3,20 @@ import type { pt } from "./pt";
 
 export const en: typeof pt = {
   common: {
-    goHome: "Go home"
+    goHome: "Go home",
   },
   errors: {
     notFound: {
       code: "404",
       title: "Page not found",
       subtitle: "This link doesn’t exist or was moved.",
-      login: "Go to sign in"
+      login: "Go to sign in",
     },
     unexpected: {
       title: "Something went wrong",
       subtitle: "An unexpected error occurred while loading this page.",
-      retry: "Try again"
-    }
+      retry: "Try again",
+    },
   },
   auth: {
     login: {
@@ -32,7 +32,7 @@ export const en: typeof pt = {
       errorGeneric: "Something went wrong. Try again.",
       orContinueWith: "or continue with",
       continueWithGoogle: "Continue with Google",
-      continueWith: "Continue with"
+      continueWith: "Continue with",
     },
     register: {
       title: "Create account",
@@ -46,7 +46,7 @@ export const en: typeof pt = {
       loginLink: "Already have an account? Sign in",
       successTitle: "Check your email",
       successDesc: "We sent a verification link to activate your account.",
-      showPassword: "Show password"
+      showPassword: "Show password",
     },
     forgotPassword: {
       title: "Reset password",
@@ -55,7 +55,7 @@ export const en: typeof pt = {
       sendLinkBtn: "Send link",
       backToLogin: "Back to sign in",
       emailSentTitle: "Email sent",
-      emailSentDesc: "Check your inbox for the recovery link."
+      emailSentDesc: "Check your inbox for the recovery link.",
     },
     resetPassword: {
       title: "Choose a new password",
@@ -65,7 +65,7 @@ export const en: typeof pt = {
       resetBtn: "Reset password",
       successTitle: "Password updated",
       successDesc: "You can sign in with your new password.",
-      goToLoginBtn: "Go to sign in"
+      goToLoginBtn: "Go to sign in",
     },
     verifyEmail: {
       title: "Verify email",
@@ -73,7 +73,7 @@ export const en: typeof pt = {
       successTitle: "Email verified",
       successDesc: "Your account is ready. You can sign in now.",
       errorTitle: "Verification failed",
-      errorDesc: "This link is invalid or has already been used."
+      errorDesc: "This link is invalid or has already been used.",
     },
     twoFactor: {
       title: "Two-factor authentication",
@@ -81,18 +81,18 @@ export const en: typeof pt = {
       useBackupCode: "Enter a backup recovery code",
       backupCodeLabel: "Backup code",
       backupCodePlaceholder: "xxxx-xxxx",
-      verifyBtn: "Verify"
+      verifyBtn: "Verify",
     },
     captcha: {
       pending: "Complete the captcha to continue.",
-      failed: "Captcha failed. Try again."
+      failed: "Captcha failed. Try again.",
     },
     error: {
       title: "Authentication error",
       subtitle: "We couldn't complete sign-in",
       generic: "An unexpected error occurred.",
       hint: "Try signing in again. If the problem continues, contact support.",
-      backToLogin: "Back to sign in"
+      backToLogin: "Back to sign in",
     },
     acceptInvitation: {
       title: "Workspace invitation",
@@ -101,14 +101,14 @@ export const en: typeof pt = {
       rejectBtn: "Decline",
       successDesc: "Invitation accepted. Redirecting…",
       invalidTitle: "Invalid or expired link",
-      invalidDesc: "This invitation is no longer valid."
+      invalidDesc: "This invitation is no longer valid.",
     },
     password: {
-      minLength: "Password must be at least 6 characters."
+      minLength: "Password must be at least 6 characters.",
     },
     email: {
-      invalid: "Enter a valid email address."
-    }
+      invalid: "Enter a valid email address.",
+    },
   },
   onboarding: {
     createOrgTab: "Create workspace",
@@ -128,20 +128,20 @@ export const en: typeof pt = {
         sync: "Cloud sync across devices",
         unlimited: "Unlimited songs & services",
         print: "Print-ready charts",
-        backups: "Automatic backups"
-      }
+        backups: "Automatic backups",
+      },
     },
     logout: "Sign out",
     otherOptions: "Other options",
     activeWorkspace: "Current workspace",
     continueToStudio: "Continue to Studio",
     switchWorkspace: "Switch workspace",
-    switchingWorkspace: "Switching…"
+    switchingWorkspace: "Switching…",
   },
   settings: {
     toast: {
       orgSaved: "Organization preferences saved.",
-      orgSaveError: "Error saving preferences: {error}"
+      orgSaveError: "Error saving preferences: {error}",
     },
     billing: {
       title: "Billing",
@@ -153,7 +153,7 @@ export const en: typeof pt = {
       noAccessDesc: "Only the organization owner can view billing.",
       status: {
         trialing: "Trial",
-        active: "Active"
+        active: "Active",
       },
       planName: "Hosanna Cloud",
       planDesc: "Cloud sync, automatic backups, and priority support for your organization.",
@@ -168,8 +168,8 @@ export const en: typeof pt = {
           unlimited: "Unlimited songs and services",
           print: "Export and print chord sheets",
           backups: "Automatic backups",
-          support: "Priority support"
-        }
+          support: "Priority support",
+        },
       },
       trialUntil: "Until {date}",
       trialDaysLeft: "{days} days left in your free trial",
@@ -191,7 +191,7 @@ export const en: typeof pt = {
       askOwner: "Ask the organization owner to set up billing.",
       checkoutError: "Couldn't start checkout.",
       portalError: "Couldn't open the billing portal.",
-      subscribedToast: "Subscription activated!"
+      subscribedToast: "Subscription activated!",
     },
     workspace: {
       title: "Organization profile",
@@ -238,7 +238,7 @@ export const en: typeof pt = {
       restoreData: "Restore data",
       restoreWarning: "May update or replace existing data.",
       restoreUploadBtn: "Upload HOSANNA file",
-      invalidJson: "Invalid backup file."
+      invalidJson: "Invalid backup file.",
     },
     general: {
       title: "Regional preferences & calendar",
@@ -261,7 +261,7 @@ export const en: typeof pt = {
         ptPT: "Português (Portugal)",
         ptBR: "Português (Brasil)",
         enUS: "English (US)",
-        esES: "Español"
+        esES: "Español",
       },
       timezones: {
         portugalGroup: "Portugal & islands",
@@ -273,8 +273,8 @@ export const en: typeof pt = {
         otherRegionsGroup: "Other regions",
         london: "London (GMT+0)",
         newYork: "New York (EST / GMT-5)",
-        utc: "UTC"
-      }
+        utc: "UTC",
+      },
     },
     restore: {
       confirmTitle: "Confirm restore",
@@ -286,10 +286,10 @@ export const en: typeof pt = {
       services: "Services",
       restoreNow: "Restore now",
       success: "Database restored. Reloading…",
-      error: "Failed to restore database."
+      error: "Failed to restore database.",
     },
     tabs: {
-      account: "Account"
+      account: "Account",
     },
     twoFactor: {
       continue: "Continue",
@@ -311,14 +311,15 @@ export const en: typeof pt = {
       verify: "Verify",
       codeVerified: "Code verified.",
       backupSuccessTitle: "Save your backup codes",
-      backupWarning: "Store these codes somewhere safe. Each can be used once if you lose your device.",
+      backupWarning:
+        "Store these codes somewhere safe. Each can be used once if you lose your device.",
       backupSavedBtn: "I've saved them",
       setupSuccess: "Two-factor authentication is enabled.",
       disableStepDesc: "Enter your password to disable 2FA.",
       disableSuccess: "Two-factor authentication disabled.",
       enableError: "Could not enable 2FA: {error}",
       disableError: "Could not disable 2FA: {error}",
-      verifyError: "Could not verify: {error}"
+      verifyError: "Could not verify: {error}",
     },
     account: {
       user: "User",
@@ -356,7 +357,7 @@ export const en: typeof pt = {
         accountInfo: "Account information",
         userId: "User ID",
         accountStatus: "Status",
-        active: "Active"
+        active: "Active",
       },
       socialAccounts: {
         title: "Connected accounts",
@@ -372,7 +373,7 @@ export const en: typeof pt = {
         unlinkError: "Could not unlink: {error}",
         unlinkSuccess: "Account disconnected.",
         unlinkConfirmTitle: "Disconnect account?",
-        unlinkConfirmMessage: "Remove {provider} from your Hosanna account?"
+        unlinkConfirmMessage: "Remove {provider} from your Hosanna account?",
       },
       activeSessions: {
         title: "Active sessions",
@@ -386,8 +387,8 @@ export const en: typeof pt = {
         browserSession: "Browser session",
         nativeApp: "{name} app",
         ip: "IP {ip} · {date}",
-        currentIp: "current"
-      }
+        currentIp: "current",
+      },
     },
     members: {
       activeMembers: "Active members ({count})",
@@ -425,10 +426,11 @@ export const en: typeof pt = {
       inviteSuccess: "Invitation sent to {email}.",
       inviteError: "Error inviting {email}.",
       cancelModalTitle: "Cancel invitation",
-      cancelModalConfirm: "Cancel the invitation for {email}? They will no longer be able to accept it.",
+      cancelModalConfirm:
+        "Cancel the invitation for {email}? They will no longer be able to accept it.",
       cancelling: "Cancelling…",
       confirmCancel: "Cancel invitation",
-      noInviteAccess: "You don't have permission to manage invitations."
+      noInviteAccess: "You don't have permission to manage invitations.",
     },
     memberProfile: {
       backToList: "Back to members",
@@ -447,20 +449,21 @@ export const en: typeof pt = {
       removeConfirmTitle: "Remove member",
       removeConfirmText: "Remove {name} from the organization? They will lose access immediately.",
       leaveConfirmTitle: "Leave organization",
-      leaveConfirmText: "Leave this organization? You will lose access and need a new invite to return.",
+      leaveConfirmText:
+        "Leave this organization? You will lose access and need a new invite to return.",
       leaving: "Leaving…",
       leaveSuccess: "Left the organization.",
-      leaveError: "Failed to leave: {error}"
-    }
+      leaveError: "Failed to leave: {error}",
+    },
   },
   org: {
     noOrganization: "No active organization. Create or select a workspace.",
     members: {
       title: "Members",
-      desc: "Invites, roles, and team permissions."
+      desc: "Invites, roles, and team permissions.",
     },
     data: {
-      noBackupAccess: "You don't have permission to export or restore backups."
+      noBackupAccess: "You don't have permission to export or restore backups.",
     },
     danger: {
       title: "Danger zone",
@@ -470,22 +473,22 @@ export const en: typeof pt = {
       deleteDesc: "Permanently deletes the workspace and all associated data.",
       deleteBtn: "Delete organization",
       deleteConfirmTitle: "Delete organization?",
-      deleteConfirmText: "Type \"{name}\" to confirm deletion.",
+      deleteConfirmText: 'Type "{name}" to confirm deletion.',
       deleteSuccess: "Organization deleted.",
-      deleteError: "Could not delete: {error}"
-    }
+      deleteError: "Could not delete: {error}",
+    },
   },
   oauth: {
     consent: {
       title: "Authorize access",
       desc: "{client} wants to access your Hosanna account.",
-      genericError: "Could not complete consent."
-    }
+      genericError: "Could not complete consent.",
+    },
   },
   footer: {
     help: "Help",
     privacy: "Privacy",
-    terms: "Terms"
+    terms: "Terms",
   },
   ai: {
     settings: {
@@ -497,34 +500,36 @@ export const en: typeof pt = {
       setup: {
         eyebrow: "Logos AI",
         title: "Bring an assistant into your worship planning",
-        subtitle: "Connect a provider once. Your team gets help with songs, ChordPro, and services — right inside Studio.",
+        subtitle:
+          "Connect a provider once. Your team gets help with songs, ChordPro, and services — right inside Studio.",
         cta: "Configure Logos AI",
         ctaHint: "You’ll choose a provider, model, and API key next.",
         features: {
           chordpro: {
             title: "ChordPro edits",
-            desc: "Fix formatting, complete chords, and tidy lyric sheets without leaving the editor."
+            desc: "Fix formatting, complete chords, and tidy lyric sheets without leaving the editor.",
           },
           songs: {
             title: "Song ideas",
-            desc: "Suggest songs, fill metadata, and transpose keys to match your team."
+            desc: "Suggest songs, fill metadata, and transpose keys to match your team.",
           },
           services: {
             title: "Service planning",
-            desc: "Review setlists, propose structure, and keep the order of worship coherent."
+            desc: "Review setlists, propose structure, and keep the order of worship coherent.",
           },
           memory: {
             title: "Org memory",
-            desc: "Remember preferences — keys, style, language — shared across the workspace."
-          }
+            desc: "Remember preferences — keys, style, language — shared across the workspace.",
+          },
         },
-        providersNote: "Works with ChatGPT, Anthropic, Gemini, DeepSeek, or a custom OpenAI-compatible endpoint.",
-        privacyNote: "API keys are encrypted on the server and never returned to the browser."
-      }
+        providersNote:
+          "Works with ChatGPT, Anthropic, Gemini, DeepSeek, or a custom OpenAI-compatible endpoint.",
+        privacyNote: "API keys are encrypted on the server and never returned to the browser.",
+      },
     },
     chat: {
-      contextGeneral: "Hosanna Account"
-    }
+      contextGeneral: "Hosanna Account",
+    },
   },
   account: {
     title: "Account",
@@ -544,8 +549,8 @@ export const en: typeof pt = {
       ai: "AI",
       regional: "Regional",
       activity: "Activity",
-      data: "Data"
-    }
+      data: "Data",
+    },
   },
   accountOrg: {
     loading: "Loading organization…",
@@ -555,51 +560,51 @@ export const en: typeof pt = {
       switch: "Switch workspace",
       switching: "Switching…",
       noOrgs: "No workspaces",
-      createOrg: "Create workspace"
+      createOrg: "Create workspace",
     },
     empty: {
       title: "No workspace selected",
       description: "Create or join a workspace to manage organization settings.",
-      cta: "Go to onboarding"
+      cta: "Go to onboarding",
     },
     overview: {
       title: "Organization",
       description: "Overview of the active workspace and shortcuts to settings.",
       currentOrg: "Current workspace",
       openStudio: "Open Studio",
-      quickLinks: "Shortcuts"
+      quickLinks: "Shortcuts",
     },
     profile: {
       title: "Organization profile",
-      description: "Name, logo, and workspace identity."
+      description: "Name, logo, and workspace identity.",
     },
     members: {
       title: "Members",
-      description: "Invites, roles, and team permissions."
+      description: "Invites, roles, and team permissions.",
     },
     billing: {
       title: "Billing",
-      description: "Plan, invoices, and payment methods."
+      description: "Plan, invoices, and payment methods.",
     },
     notifications: {
       title: "Notifications",
-      description: "Send team messages via inbox or push."
+      description: "Send team messages via inbox or push.",
     },
     ai: {
       title: "AI",
-      description: "Provider, API key, and assistant behavior."
+      description: "Provider, API key, and assistant behavior.",
     },
     regional: {
       title: "Regional",
-      description: "Timezone, language, and regional workspace preferences."
+      description: "Timezone, language, and regional workspace preferences.",
     },
     activity: {
       title: "Activity",
-      description: "Recent events and organization audit trail."
+      description: "Recent events and organization audit trail.",
     },
     data: {
       title: "Data",
-      description: "Backup, restore, and danger zone."
-    }
-  }
+      description: "Backup, restore, and danger zone.",
+    },
+  },
 };

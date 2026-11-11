@@ -24,7 +24,7 @@ export const chat: typeof chatPt = {
   greeting: {
     morning: "Good morning",
     afternoon: "Good afternoon",
-    evening: "Good evening"
+    evening: "Good evening",
   },
   suggestions: "Suggestions",
   quickActions: "Quick actions",
@@ -37,7 +37,7 @@ export const chat: typeof chatPt = {
     singing: "Writing…",
     happy: "Ready",
     celebrating: "Done",
-    oops: "Something went wrong"
+    oops: "Something went wrong",
   },
   contextSong: "Song: {title}",
   contextService: "Service: {title}",
@@ -60,7 +60,7 @@ export const chat: typeof chatPt = {
   toolErrorDetail: "Error",
   toolsUsed: {
     one: "Used {count} tool",
-    other: "Used {count} tools"
+    other: "Used {count} tools",
   },
   toolsWorking: "Working… {done}/{total}",
   toolsFailed: "{count} failed",
@@ -100,12 +100,12 @@ export const chat: typeof chatPt = {
     apply: "Apply changes",
     applyPartial: "Apply {kept} of {total}",
     discard: "Discard",
-    jumpToChange: "Go to change {n}"
+    jumpToChange: "Go to change {n}",
   },
   proposals: {
     pending: {
       one: "{count} pending proposal",
-      other: "{count} pending proposals"
+      other: "{count} pending proposals",
     },
     review: "Review",
     reviewTitle: "Review proposal: {title}",
@@ -124,7 +124,7 @@ export const chat: typeof chatPt = {
     statusDeclined: "Declined",
     statusStale: "Superseded",
     inEditorNote: "This song is open — review the diff in the editor.",
-    fullReview: "Full review"
+    fullReview: "Full review",
   },
   confirm: "Confirm",
   confirming: "Deleting…",
@@ -154,7 +154,7 @@ export const chat: typeof chatPt = {
     organizeFolders: "Organize folders",
     upcomingAgenda: "Upcoming agenda",
     reviewTrash: "Review trash",
-    general: "What can you do?"
+    general: "What can you do?",
   },
   chipDesc: {
     fixChordPro: "Clean up formatting and directives",
@@ -173,26 +173,40 @@ export const chat: typeof chatPt = {
     organizeFolders: "Colors and icons by folder type",
     upcomingAgenda: "See what's coming up and what's missing",
     reviewTrash: "See what's safe to restore",
-    general: "See everything I can help with"
+    general: "See everything I can help with",
   },
   chipPrompt: {
-    fixChordPro: "Review and fix the current song's ChordPro (formatting, directives, metadata). Propose edits; do not save yet.",
-    reviewSong: "Review this song for ChordPro quality, missing metadata, and playability. Summarize issues and propose fixes.",
-    transpose: "Help me transpose this song. Ask which target key if unclear, then propose the transposed ChordPro.",
-    completeChords: "Complete chords: use chordpro_propagate_chords on the current song. Copy chord markers from the first chorded verse onto the other verses at the same lyric places — do NOT invent new chords. The tool returns a draft: check every line it marks `check`, fix chord placement yourself, then propose the corrected result in the editor with songs_propose_edit; do not save yet.",
-    completeMeta: "Complete missing song metadata (title, artist, key, tempo, tags) based on the ChordPro content. Propose edits only.",
-    explainSelection: "Explain the ChordPro structure and any unusual directives in the current song excerpt.",
-    reviewPlan: "Review this service plan for structure, missing song refs, and flow. Suggest improvements without saving.",
-    suggestSongs: "Suggest songs from the library that fit this context. Propose a draft; do not save yet.",
-    fixSongRefs: "Check song references in this service and fix any broken or incomplete song elements. Propose only.",
-    completeStructure: "Complete a balanced service structure (welcome, songs, message, etc.) for this plan. Propose elements; do not save.",
-    createSong: "Help me create a new ChordPro song. Ask for title/artist if needed, then propose content (do not save until I confirm).",
+    fixChordPro:
+      "Review and fix the current song's ChordPro (formatting, directives, metadata). Propose edits; do not save yet.",
+    reviewSong:
+      "Review this song for ChordPro quality, missing metadata, and playability. Summarize issues and propose fixes.",
+    transpose:
+      "Help me transpose this song. Ask which target key if unclear, then propose the transposed ChordPro.",
+    completeChords:
+      "Complete chords: use chordpro_propagate_chords on the current song. Copy chord markers from the first chorded verse onto the other verses at the same lyric places — do NOT invent new chords. The tool returns a draft: check every line it marks `check`, fix chord placement yourself, then propose the corrected result in the editor with songs_propose_edit; do not save yet.",
+    completeMeta:
+      "Complete missing song metadata (title, artist, key, tempo, tags) based on the ChordPro content. Propose edits only.",
+    explainSelection:
+      "Explain the ChordPro structure and any unusual directives in the current song excerpt.",
+    reviewPlan:
+      "Review this service plan for structure, missing song refs, and flow. Suggest improvements without saving.",
+    suggestSongs:
+      "Suggest songs from the library that fit this context. Propose a draft; do not save yet.",
+    fixSongRefs:
+      "Check song references in this service and fix any broken or incomplete song elements. Propose only.",
+    completeStructure:
+      "Complete a balanced service structure (welcome, songs, message, etc.) for this plan. Propose elements; do not save.",
+    createSong:
+      "Help me create a new ChordPro song. Ask for title/artist if needed, then propose content (do not save until I confirm).",
     searchHelp: "Help me search and organize songs in the library.",
-    planService: "Help me plan a new worship service. Ask for date/theme if needed, then propose a draft setlist from the library.",
-    organizeFolders: "Review my folders and give each a fitting color and icon so every type is easy to tell apart. Apply it in one batch.",
-    upcomingAgenda: "Show my upcoming agenda events and point out anything missing (responsibilities, songs, notes).",
+    planService:
+      "Help me plan a new worship service. Ask for date/theme if needed, then propose a draft setlist from the library.",
+    organizeFolders:
+      "Review my folders and give each a fitting color and icon so every type is easy to tell apart. Apply it in one batch.",
+    upcomingAgenda:
+      "Show my upcoming agenda events and point out anything missing (responsibilities, songs, notes).",
     reviewTrash: "List what is in the trash and tell me what is safe to restore or leave.",
-    general: "What can you help me with in Hosanna Studio (songs, services, ChordPro, library)?"
+    general: "What can you help me with in Hosanna Studio (songs, services, ChordPro, library)?",
   },
   tools: {
     hosanna_capabilities: "Check capabilities",
@@ -267,8 +281,8 @@ export const chat: typeof chatPt = {
     services_restore: "Restore service",
     folders_update_many: "Update folders",
     folders_create_many: "Create folders",
-    collections_update_many: "Update collections"
-  }
+    collections_update_many: "Update collections",
+  },
 };
 
 /** Shared Logos AI settings UI (hosts may overlay member/setup keys). */
@@ -287,7 +301,8 @@ export const settings: typeof settingsPt = {
   statusSetup: "Not configured",
   connectionTitle: "Connection",
   connectionDesc: "Provider, model, and API key.",
-  encryptionMissing: "Server is missing AI_SETTINGS_ENCRYPTION_KEY. Configure it before saving keys.",
+  encryptionMissing:
+    "Server is missing AI_SETTINGS_ENCRYPTION_KEY. Configure it before saving keys.",
   provider: "Provider",
   providerHint: "Pick who serves the models.",
   defaultEndpoint: "Default API",
@@ -355,8 +370,8 @@ export const settings: typeof settingsPt = {
     refreshedAt: "Updated {time}",
     notConfigured: "Save an API key to see your balance.",
     cryptoMissing: "Server encryption is not configured, so balance cannot be fetched.",
-    unsupported: "Balance is only available for DeepSeek."
-  }
+    unsupported: "Balance is only available for DeepSeek.",
+  },
 };
 
 export const logosAiMessages = { ai: { chat, settings } };

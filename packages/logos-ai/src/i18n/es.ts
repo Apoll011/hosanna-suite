@@ -24,7 +24,7 @@ export const chat: typeof chatPt = {
   greeting: {
     morning: "Buenos días",
     afternoon: "Buenas tardes",
-    evening: "Buenas noches"
+    evening: "Buenas noches",
   },
   suggestions: "Sugerencias",
   quickActions: "Acciones rápidas",
@@ -37,7 +37,7 @@ export const chat: typeof chatPt = {
     singing: "Escribiendo…",
     happy: "Listo",
     celebrating: "Hecho",
-    oops: "Algo salió mal"
+    oops: "Algo salió mal",
   },
   contextSong: "Canción: {title}",
   contextService: "Servicio: {title}",
@@ -60,7 +60,7 @@ export const chat: typeof chatPt = {
   toolErrorDetail: "Error",
   toolsUsed: {
     one: "Usó {count} herramienta",
-    other: "Usó {count} herramientas"
+    other: "Usó {count} herramientas",
   },
   toolsWorking: "Trabajando… {done}/{total}",
   toolsFailed: "{count} con error",
@@ -100,12 +100,12 @@ export const chat: typeof chatPt = {
     apply: "Aplicar cambios",
     applyPartial: "Aplicar {kept} de {total}",
     discard: "Descartar",
-    jumpToChange: "Ir al cambio {n}"
+    jumpToChange: "Ir al cambio {n}",
   },
   proposals: {
     pending: {
       one: "{count} propuesta pendiente",
-      other: "{count} propuestas pendientes"
+      other: "{count} propuestas pendientes",
     },
     review: "Revisar",
     reviewTitle: "Revisar propuesta: {title}",
@@ -124,7 +124,7 @@ export const chat: typeof chatPt = {
     statusDeclined: "Rechazada",
     statusStale: "Reemplazada",
     inEditorNote: "La canción está abierta — revisa el diff en el editor.",
-    fullReview: "Revisión completa"
+    fullReview: "Revisión completa",
   },
   confirm: "Confirmar",
   confirming: "Eliminando…",
@@ -154,7 +154,7 @@ export const chat: typeof chatPt = {
     organizeFolders: "Organizar carpetas",
     upcomingAgenda: "Próxima agenda",
     reviewTrash: "Revisar papelera",
-    general: "¿Qué puedes hacer?"
+    general: "¿Qué puedes hacer?",
   },
   chipDesc: {
     fixChordPro: "Limpiar formato y directivas",
@@ -173,26 +173,41 @@ export const chat: typeof chatPt = {
     organizeFolders: "Colores e iconos por tipo de carpeta",
     upcomingAgenda: "Ver lo que viene y lo que falta",
     reviewTrash: "Ver qué es seguro restaurar",
-    general: "Ver en qué puedo ayudarte"
+    general: "Ver en qué puedo ayudarte",
   },
   chipPrompt: {
-    fixChordPro: "Revisa y corrige el ChordPro de la canción actual (formato, directivas, metadatos). Propón las ediciones; no guardes todavía.",
-    reviewSong: "Revisa esta canción: calidad del ChordPro, metadatos que faltan y tocabilidad. Resume los problemas y propón correcciones.",
-    transpose: "Ayúdame a transponer esta canción. Pregunta el tono de destino si no está claro y luego propón el ChordPro transpuesto.",
-    completeChords: "Completar acordes: usa chordpro_propagate_chords en la canción actual. Copia los marcadores de acordes de la primera estrofa con acordes a las demás estrofas en los mismos puntos de la letra — NO inventes acordes nuevos. La herramienta devuelve un borrador: revisa cada línea marcada `check`, corrige tú mismo la posición de los acordes y luego propón el resultado corregido en el editor con songs_propose_edit; no guardes todavía.",
-    completeMeta: "Completa los metadatos que faltan de la canción (título, artista, tono, tempo, etiquetas) según el contenido ChordPro. Solo propón ediciones.",
-    explainSelection: "Explica la estructura ChordPro y las directivas poco habituales en el fragmento de la canción actual.",
-    reviewPlan: "Revisa este plan de servicio: estructura, referencias de canciones que faltan y flujo. Sugiere mejoras sin guardar.",
-    suggestSongs: "Sugiere canciones de la biblioteca que encajen en este contexto. Propón un borrador; no guardes todavía.",
-    fixSongRefs: "Comprueba las referencias de canciones de este servicio y corrige los elementos rotos o incompletos. Solo propón.",
-    completeStructure: "Completa una estructura de servicio equilibrada (bienvenida, canciones, mensaje, etc.) para este plan. Propón los elementos; no guardes.",
-    createSong: "Ayúdame a crear una canción nueva en ChordPro. Pregunta título/artista si hace falta y luego propón el contenido (no guardes hasta que confirme).",
+    fixChordPro:
+      "Revisa y corrige el ChordPro de la canción actual (formato, directivas, metadatos). Propón las ediciones; no guardes todavía.",
+    reviewSong:
+      "Revisa esta canción: calidad del ChordPro, metadatos que faltan y tocabilidad. Resume los problemas y propón correcciones.",
+    transpose:
+      "Ayúdame a transponer esta canción. Pregunta el tono de destino si no está claro y luego propón el ChordPro transpuesto.",
+    completeChords:
+      "Completar acordes: usa chordpro_propagate_chords en la canción actual. Copia los marcadores de acordes de la primera estrofa con acordes a las demás estrofas en los mismos puntos de la letra — NO inventes acordes nuevos. La herramienta devuelve un borrador: revisa cada línea marcada `check`, corrige tú mismo la posición de los acordes y luego propón el resultado corregido en el editor con songs_propose_edit; no guardes todavía.",
+    completeMeta:
+      "Completa los metadatos que faltan de la canción (título, artista, tono, tempo, etiquetas) según el contenido ChordPro. Solo propón ediciones.",
+    explainSelection:
+      "Explica la estructura ChordPro y las directivas poco habituales en el fragmento de la canción actual.",
+    reviewPlan:
+      "Revisa este plan de servicio: estructura, referencias de canciones que faltan y flujo. Sugiere mejoras sin guardar.",
+    suggestSongs:
+      "Sugiere canciones de la biblioteca que encajen en este contexto. Propón un borrador; no guardes todavía.",
+    fixSongRefs:
+      "Comprueba las referencias de canciones de este servicio y corrige los elementos rotos o incompletos. Solo propón.",
+    completeStructure:
+      "Completa una estructura de servicio equilibrada (bienvenida, canciones, mensaje, etc.) para este plan. Propón los elementos; no guardes.",
+    createSong:
+      "Ayúdame a crear una canción nueva en ChordPro. Pregunta título/artista si hace falta y luego propón el contenido (no guardes hasta que confirme).",
     searchHelp: "Ayúdame a buscar y organizar las canciones de la biblioteca.",
-    planService: "Ayúdame a planear un nuevo servicio de adoración. Pregunta fecha/tema si hace falta y luego propón un repertorio de la biblioteca.",
-    organizeFolders: "Revisa mis carpetas y dale a cada una un color e icono adecuados para distinguir bien cada tipo. Aplícalo todo de una vez.",
-    upcomingAgenda: "Muestra los próximos eventos de mi agenda y señala lo que falta (responsabilidades, canciones, notas).",
+    planService:
+      "Ayúdame a planear un nuevo servicio de adoración. Pregunta fecha/tema si hace falta y luego propón un repertorio de la biblioteca.",
+    organizeFolders:
+      "Revisa mis carpetas y dale a cada una un color e icono adecuados para distinguir bien cada tipo. Aplícalo todo de una vez.",
+    upcomingAgenda:
+      "Muestra los próximos eventos de mi agenda y señala lo que falta (responsabilidades, canciones, notas).",
     reviewTrash: "Lista lo que hay en la papelera e indícame qué es seguro restaurar o dejar.",
-    general: "¿En qué puedes ayudarme en Hosanna Studio (canciones, servicios, ChordPro, biblioteca)?"
+    general:
+      "¿En qué puedes ayudarme en Hosanna Studio (canciones, servicios, ChordPro, biblioteca)?",
   },
   tools: {
     hosanna_capabilities: "Comprobar capacidades",
@@ -267,8 +282,8 @@ export const chat: typeof chatPt = {
     services_restore: "Restaurar servicio",
     folders_update_many: "Actualizar carpetas",
     folders_create_many: "Crear carpetas",
-    collections_update_many: "Actualizar colecciones"
-  }
+    collections_update_many: "Actualizar colecciones",
+  },
 };
 
 /** Shared Logos AI settings UI (hosts may overlay member/setup keys). */
@@ -287,7 +302,8 @@ export const settings: typeof settingsPt = {
   statusSetup: "No configurado",
   connectionTitle: "Conexión",
   connectionDesc: "Proveedor, modelo y clave de API.",
-  encryptionMissing: "Falta AI_SETTINGS_ENCRYPTION_KEY en el servidor. Configúrala antes de guardar claves.",
+  encryptionMissing:
+    "Falta AI_SETTINGS_ENCRYPTION_KEY en el servidor. Configúrala antes de guardar claves.",
   provider: "Proveedor",
   providerHint: "Elige quién sirve los modelos.",
   defaultEndpoint: "API predeterminada",
@@ -355,8 +371,8 @@ export const settings: typeof settingsPt = {
     refreshedAt: "Actualizado {time}",
     notConfigured: "Guarda una clave de API para ver el saldo.",
     cryptoMissing: "El cifrado del servidor no está configurado; no se puede obtener el saldo.",
-    unsupported: "El saldo solo está disponible para DeepSeek."
-  }
+    unsupported: "El saldo solo está disponible para DeepSeek.",
+  },
 };
 
 export const logosAiMessages = { ai: { chat, settings } };

@@ -6,7 +6,7 @@
 /** Cross-app UI strings shared by Studio and Auth. */
 export const sharedPt = {
   brand: {
-    name: "Hosanna"
+    name: "Hosanna",
   },
   common: {
     save: "Guardar",
@@ -14,7 +14,7 @@ export const sharedPt = {
     back: "Voltar",
     retry: "Tentar novamente",
     refresh: "Atualizar",
-    loading: "A carregar…"
+    loading: "A carregar…",
   },
   organization: {
     loginActivity: {
@@ -23,12 +23,13 @@ export const sharedPt = {
       listTitle: "Acessos da organização",
       listDesc: "Eventos recentes de autenticação dos membros deste espaço.",
       noAccessTitle: "Sem acesso",
-      noAccessDesc: "Apenas proprietários e admins podem ver esta atividade."
-    }
+      noAccessDesc: "Apenas proprietários e admins podem ver esta atividade.",
+    },
   },
   loginHistory: {
     title: "Histórico de acessos",
-    personalDesc: "Inícios de sessão recentes na sua conta, com dispositivo e localização quando disponíveis.",
+    personalDesc:
+      "Inícios de sessão recentes na sua conta, com dispositivo e localização quando disponíveis.",
     orgDesc: "Atividade de início de sessão de todos os membros desta organização.",
     loading: "A carregar histórico…",
     loadError: "Não foi possível carregar o histórico de início de sessão.",
@@ -42,15 +43,15 @@ export const sharedPt = {
       sessionCreated: "Sessão criada",
       sessionRevoked: "Sessão revogada",
       sessionsRevokedAll: "Todas as sessões revogadas",
-      other: "Evento de segurança"
-    }
+      other: "Evento de segurança",
+    },
   },
   oauth: {
     consent: {
       scopes: "Âmbitos pedidos",
       allow: "Permitir",
-      deny: "Negar"
-    }
+      deny: "Negar",
+    },
   },
   settings: {
     roles: {
@@ -60,7 +61,7 @@ export const sharedPt = {
       editor: "Editor",
       musician: "Músico",
       guest: "Convidado",
-      member: "Membro"
+      member: "Membro",
     },
     notifications: {
       title: "Notificações",
@@ -89,7 +90,7 @@ export const sharedPt = {
         rolesFilter: "Filtrar por função",
         everyone: "Todas as funções",
         inboxOnly: "Enviado para a caixa de entrada da aplicação.",
-        loadError: "Não foi possível carregar os membros."
+        loadError: "Não foi possível carregar os membros.",
       },
       content: {
         title: "Mensagem",
@@ -100,7 +101,7 @@ export const sharedPt = {
           organization: "Organização",
           team: "Equipa",
           security: "Segurança",
-          billing: "Faturação"
+          billing: "Faturação",
         },
         titleLabel: "Título",
         titlePlaceholder: "Ex.: Ensaio adiado para as 20:00",
@@ -112,7 +113,7 @@ export const sharedPt = {
         preview: "Pré-visualização",
         previewEmpty: "Pré-visualização do título",
         now: "agora",
-        appName: "Hosanna Studio"
+        appName: "Hosanna Studio",
       },
       delivery: {
         title: "Entrega",
@@ -122,8 +123,8 @@ export const sharedPt = {
         push: "Push",
         pushDesc: "No dispositivo",
         both: "Ambos",
-        bothDesc: "Caixa de entrada e push"
-      }
-    }
-  }
+        bothDesc: "Caixa de entrada e push",
+      },
+    },
+  },
 };

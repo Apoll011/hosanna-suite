@@ -6,32 +6,32 @@ Environment: Node `v24.22.1` (local runner also had nvm `v26` on PATH for some p
 
 ## Command results
 
-| Command | Result | Notes |
-| --- | --- | --- |
-| `pnpm install --frozen-lockfile` | **PASS** | Prisma client generated via `@hosanna/db` postinstall |
-| `pnpm typecheck` | **PASS** | 19/19 turbo tasks |
-| `pnpm lint` (before fix) | **FAIL** | `@hosanna/studio#lint` — 845 auto-fixable `prettier/prettier` errors |
-| `pnpm lint` (after fix) | **PASS** | 8/8 turbo tasks (`auth-app`, `saas`, `studio` + deps) |
-| `pnpm test` (`NODE_ENV=test`) | **PASS** | 16/16 turbo tasks · **413** unit tests · 0 failures |
-| `pnpm build` | **PASS** | 9/9 turbo tasks |
-| `pnpm test:workspace` | **PASS** | New infra smoke (4 checks) |
+| Command                          | Result   | Notes                                                                |
+| -------------------------------- | -------- | -------------------------------------------------------------------- |
+| `pnpm install --frozen-lockfile` | **PASS** | Prisma client generated via `@hosanna/db` postinstall                |
+| `pnpm typecheck`                 | **PASS** | 19/19 turbo tasks                                                    |
+| `pnpm lint` (before fix)         | **FAIL** | `@hosanna/studio#lint` — 845 auto-fixable `prettier/prettier` errors |
+| `pnpm lint` (after fix)          | **PASS** | 8/8 turbo tasks (`auth-app`, `saas`, `studio` + deps)                |
+| `pnpm test` (`NODE_ENV=test`)    | **PASS** | 16/16 turbo tasks · **413** unit tests · 0 failures                  |
+| `pnpm build`                     | **PASS** | 9/9 turbo tasks                                                      |
+| `pnpm test:workspace`            | **PASS** | New infra smoke (4 checks)                                           |
 
 ### Per-package unit tests (`pnpm test`)
 
-| Package | Pass | Fail |
-| --- | ---: | ---: |
-| `@hosanna/api` | 117 | 0 |
-| `@hosanna/chordpro` | 84 | 0 |
-| `@hosanna/auth-app` | 63 | 0 |
-| `@hosanna/studio` | 52 | 0 |
-| `@hosanna/auth` | 26 | 0 |
-| `@hosanna/logos-ai` | 26 | 0 |
-| `@hosanna/i18n` | 16 | 0 |
-| `@hosanna/replication` | 10 | 0 |
-| `@hosanna/ui` | 9 | 0 |
-| `@hosanna/brand` | 5 | 0 |
-| `@hosanna/cache` | 5 | 0 |
-| **Total** | **413** | **0** |
+| Package                |    Pass |  Fail |
+| ---------------------- | ------: | ----: |
+| `@hosanna/api`         |     117 |     0 |
+| `@hosanna/chordpro`    |      84 |     0 |
+| `@hosanna/auth-app`    |      63 |     0 |
+| `@hosanna/studio`      |      52 |     0 |
+| `@hosanna/auth`        |      26 |     0 |
+| `@hosanna/logos-ai`    |      26 |     0 |
+| `@hosanna/i18n`        |      16 |     0 |
+| `@hosanna/replication` |      10 |     0 |
+| `@hosanna/ui`          |       9 |     0 |
+| `@hosanna/brand`       |       5 |     0 |
+| `@hosanna/cache`       |       5 |     0 |
+| **Total**              | **413** | **0** |
 
 Packages with **no** `test` script: `@hosanna/saas`, `@hosanna/config`, `@hosanna/db`, `@hosanna/types`.
 
@@ -41,14 +41,14 @@ Packages with **no** `lint` script: all packages under `packages/*` plus `@hosan
 
 ### Root scripts (`package.json`)
 
-| Script | Purpose |
-| --- | --- |
-| `dev` / `build` / `typecheck` / `lint` / `test` / `clean` | Turbo task runners |
-| `test:workspace` | Infra smoke: pnpm/CI version lock, turbo tasks, test-script coverage |
-| `format` / `fix*` | Prettier + eslint autofix helpers |
-| `docker:*` | Compose up/down |
-| `db:*` | Proxied to `@hosanna/db` Prisma |
-| `openapi:generate` | Regenerates OpenAPI + `@hosanna/types` |
+| Script                                                    | Purpose                                                              |
+| --------------------------------------------------------- | -------------------------------------------------------------------- |
+| `dev` / `build` / `typecheck` / `lint` / `test` / `clean` | Turbo task runners                                                   |
+| `test:workspace`                                          | Infra smoke: pnpm/CI version lock, turbo tasks, test-script coverage |
+| `format` / `fix*`                                         | Prettier + eslint autofix helpers                                    |
+| `docker:*`                                                | Compose up/down                                                      |
+| `db:*`                                                    | Proxied to `@hosanna/db` Prisma                                      |
+| `openapi:generate`                                        | Regenerates OpenAPI + `@hosanna/types`                               |
 
 ### Turbo (`turbo.json`)
 
@@ -58,13 +58,13 @@ Tasks: `build`, `db:generate`, `typecheck`, `lint`, `test`, `dev`, `clean`, `for
 
 ### CI workflows (`.github/workflows`)
 
-| Workflow | Role |
-| --- | --- |
-| `ci.yml` | Install → workspace health → typecheck → **lint (blocking)** → build → test |
-| `deploy-auth.yml` | Auth app deploy |
-| `deploy-saas.yml` | SaaS deploy |
-| `deploy-studio-preview.yml` / `deploy-studio-production.yml` | Studio Cloudflare deploys |
-| `publish-chordpro.yml` | ChordPro package publish |
+| Workflow                                                     | Role                                                                        |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `ci.yml`                                                     | Install → workspace health → typecheck → **lint (blocking)** → build → test |
+| `deploy-auth.yml`                                            | Auth app deploy                                                             |
+| `deploy-saas.yml`                                            | SaaS deploy                                                                 |
+| `deploy-studio-preview.yml` / `deploy-studio-production.yml` | Studio Cloudflare deploys                                                   |
+| `publish-chordpro.yml`                                       | ChordPro package publish                                                    |
 
 ### Workspace layout
 

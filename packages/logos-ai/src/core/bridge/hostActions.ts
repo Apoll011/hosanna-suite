@@ -32,11 +32,7 @@ function asRecord(output: unknown): Record<string, unknown> | null {
 function parseToolJson(output: unknown): Record<string, unknown> | null {
   const direct = asRecord(output);
   if (direct) {
-    if (
-      direct.studioNavigate === true ||
-      direct.studioPrint === true ||
-      direct.openApp === true
-    ) {
+    if (direct.studioNavigate === true || direct.studioPrint === true || direct.openApp === true) {
       return direct;
     }
     if (typeof direct.text === "string") return parseToolJson(direct.text);

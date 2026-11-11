@@ -34,8 +34,7 @@ export function resolveHosannaAppOrigin(
   const override = opts?.overrides?.[id]?.replace(/\/+$/, "");
   if (override) return override;
 
-  const host =
-    opts?.currentHost ?? (typeof window !== "undefined" ? window.location.hostname : "");
+  const host = opts?.currentHost ?? (typeof window !== "undefined" ? window.location.hostname : "");
   const isLocal = host === "localhost" || host === "127.0.0.1" || host.endsWith(".local");
   const isDevHosanna =
     !isLocal && (host.startsWith("dev-") || host.includes(".dev-") || host.startsWith("dev."));

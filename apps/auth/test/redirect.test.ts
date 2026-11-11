@@ -135,10 +135,7 @@ describe("resolvePostOrgDestination", () => {
     // @ts-expect-error minimal window
     globalThis.window = { location: { origin: "https://auth.hosanna.live" } };
     assert.equal(
-      resolvePostOrgDestination(
-        "grace",
-        new URLSearchParams("returnUrl=%2Faccount"),
-      ),
+      resolvePostOrgDestination("grace", new URLSearchParams("returnUrl=%2Faccount")),
       "/account",
     );
   });
