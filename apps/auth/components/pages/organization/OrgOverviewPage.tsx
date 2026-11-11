@@ -3,9 +3,9 @@
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { OrgSwitcher } from "@/components/account/OrgSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { useI18n } from "@/lib/i18n";
-import type { TranslationKey } from "@/lib/i18n";
-import { getStudioUrl } from "@/lib/redirect";
+import { useI18n } from "@/lib/ui/i18n";
+import type { TranslationKey } from "@/lib/ui/i18n";
+import { getStudioUrl } from "@/lib/auth/redirect";
 import { Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import {
   Activity,

@@ -2,6 +2,8 @@
  * Local cache for account-center data so revisits paint instantly while network refreshes.
  */
 
+import { readJson, removeKey, writeJson } from "@/lib/utils/local-storage";
+
 export type CachedAuthUser = {
   id: string;
   name?: string | null;
@@ -41,39 +43,6 @@ const USER_KEY = "hosanna.auth.cached_user";
 const SESSIONS_KEY = "hosanna.auth.cached_sessions";
 const ACCOUNTS_KEY = "hosanna.auth.cached_accounts";
 const LOGIN_HISTORY_KEY = "hosanna.auth.cached_login_history";
-
-function canUseStorage(): boolean {
-  return typeof window !== "undefined" && typeof localStorage !== "undefined";
-}
-
-function readJson<T>(key: string): T | null {
-  if (!canUseStorage()) return null;
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    return JSON.parse(raw) as T;
-  } catch {
-    return null;
-  }
-}
-
-function writeJson(key: string, value: unknown): void {
-  if (!canUseStorage()) return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* quota / private mode */
-  }
-}
-
-function removeKey(key: string): void {
-  if (!canUseStorage()) return;
-  try {
-    localStorage.removeItem(key);
-  } catch {
-    /* ignore */
-  }
-}
 
 export function readCachedUser(): CachedAuthUser | null {
   const parsed = readJson<CachedAuthUser>(USER_KEY);

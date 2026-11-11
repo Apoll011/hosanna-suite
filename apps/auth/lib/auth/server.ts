@@ -1,7 +1,7 @@
 import { createAuth } from "@hosanna/auth/server";
 import Stripe from "stripe";
-import { env } from "./env";
-import { prisma } from "./prisma";
+import { env } from "@/lib/config/env";
+import { prisma } from "@/lib/db/prisma";
 import {
   sendAccountDeletedEmail,
   sendCanceledEmail,
@@ -19,9 +19,14 @@ import {
   sendTrialStartedEmail,
   sendVerificationEmail,
   sendWelcomeEmail,
-} from "./email.service";
+} from "@/lib/services/email";
 import { DEFAULT_LOCALE, t } from "@/locales/server";
-import { isBase64Image, isExternalImageUrl, uploadBase64Avatar, uploadUrlAvatar } from "./supabase";
+import {
+  isBase64Image,
+  isExternalImageUrl,
+  uploadBase64Avatar,
+  uploadUrlAvatar,
+} from "@/lib/db/supabase";
 
 export const stripeClient = new Stripe(env.stripeSecretKey, {
   // SDK types lag API versions; cast keeps a pinned Stripe API version.

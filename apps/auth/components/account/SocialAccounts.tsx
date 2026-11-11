@@ -1,12 +1,12 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
 import {
   readCachedAccounts,
   writeCachedAccounts,
   type CachedSocialAccount,
-} from "@/lib/session-cache";
+} from "@/lib/session/cache";
 import { ConfirmDialog, GoogleIcon, Surface } from "@hosanna/ui";
 import { CheckCircle2, ExternalLink, Link2, Loader2, RefreshCw, Unlink } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";

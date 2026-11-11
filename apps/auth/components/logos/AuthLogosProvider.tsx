@@ -1,11 +1,11 @@
 "use client";
 
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { aiApi } from "@/lib/ai-api";
-import { useI18n } from "@/lib/i18n";
-import { getStudioUrl } from "@/lib/redirect";
-import { navigateToStudioApp, prefetchStudioApp } from "@/lib/studioHandoff";
-import { writeThemeCookie } from "@/lib/theme-boot";
+import { aiApi } from "@/lib/services/ai-api";
+import { useI18n } from "@/lib/ui/i18n";
+import { getStudioUrl } from "@/lib/auth/redirect";
+import { navigateToStudioApp, prefetchStudioApp } from "@/lib/auth/studio-handoff";
+import { writeThemeCookie } from "@/lib/ui/theme-boot";
 import {
   AiChatDock,
   AiChatProvider,

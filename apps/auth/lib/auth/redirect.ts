@@ -1,4 +1,4 @@
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
 
 /** Studio origin for post-login redirects. */
 export function getStudioUrl(): string {

@@ -8,7 +8,7 @@
  * `organizationId` so we sync Better Auth's active org before the request.
  */
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
 
 export function apiBaseUrl(): string {
   const fromEnv = (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) || undefined;

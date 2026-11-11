@@ -3,8 +3,7 @@ import {
   ensureActiveOrganizationSession,
   readApiError,
   apiFetch,
-} from "@/lib/hosanna-api";
-
+} from "@/lib/services/api";
 export type AiProvider = "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
 
 export type NativeWebCapability = {

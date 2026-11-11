@@ -2,8 +2,8 @@
 
 import { OrgSwitcher } from "@/components/account/OrgSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import type { TranslationKey } from "@/lib/i18n";
-import { useI18n } from "@/lib/i18n";
+import type { TranslationKey } from "@/lib/ui/i18n";
+import { useI18n } from "@/lib/ui/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
 import { AnyRoleGate, Can, CanAny } from "@hosanna/ui";
 import {

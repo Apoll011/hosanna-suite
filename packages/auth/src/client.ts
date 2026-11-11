@@ -4,8 +4,8 @@ import { stripeClient } from "@better-auth/stripe/client";
 import { createAuthClient } from "better-auth/client";
 import { organizationClient, twoFactorClient } from "better-auth/client/plugins";
 import { inboxClient } from "better-inbox/client";
-import { ac } from "./permission.js";
-import { roles } from "./roles.js";
+import { ac } from "./authorization/permission.js";
+import { roles } from "./authorization/roles.js";
 
 export interface CreateHosannaAuthClientOptions {
   /** Better Auth base URL (auth app origin, e.g. https://auth.hosanna.live). */

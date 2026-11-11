@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { env } from "./env";
+import { env } from "@/lib/config/env";
 
 /** Real project URL at runtime; HTTPS placeholder during `next build` without secrets. */
 const supabaseUrl = env.supabaseUrl.startsWith("http")

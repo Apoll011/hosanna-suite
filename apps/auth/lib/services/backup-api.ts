@@ -12,7 +12,7 @@ import {
   apiFetch,
   ensureActiveOrganizationSession,
   readApiError,
-} from "@/lib/hosanna-api";
+} from "@/lib/services/api";
 
 export type BackupDocument = Record<string, unknown> & {
   songs?: unknown[];

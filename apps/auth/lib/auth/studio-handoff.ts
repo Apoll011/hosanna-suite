@@ -3,8 +3,8 @@
  * Warm TLS early, sync theme cookie, then assign — no overlay/flash path.
  */
 
-import { getStudioUrl } from "@/lib/redirect";
-import { writeThemeCookie } from "@/lib/theme-boot";
+import { getStudioUrl } from "@/lib/auth/redirect";
+import { writeThemeCookie } from "@/lib/ui/theme-boot";
 import { warmHosannaAppOrigin } from "@hosanna/logos-ai";
 
 let warmed = false;

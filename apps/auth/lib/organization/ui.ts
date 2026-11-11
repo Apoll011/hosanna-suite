@@ -1,4 +1,4 @@
-import type { TranslateFn } from "@/lib/i18n";
+import type { TranslateFn } from "@/lib/ui/i18n";
 
 export function orgInitials(name?: string | null): string {
   if (!name?.trim()) return "·";

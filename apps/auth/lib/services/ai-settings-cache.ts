@@ -3,7 +3,7 @@
  * while a background refresh runs.
  */
 
-import type { AiBillingResponse, AiSettingsPublic } from "@/lib/ai-api";
+import type { AiBillingResponse, AiSettingsPublic } from "@/lib/services/ai-api";
 
 const SETTINGS_PREFIX = "hosanna.auth.cached_ai_settings.";
 const BILLING_PREFIX = "hosanna.auth.cached_ai_billing.";

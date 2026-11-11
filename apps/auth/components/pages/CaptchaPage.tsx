@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "@/lib/theme";
+import { useTheme } from "@/lib/ui/theme";
 import { useEffect, useRef } from "react";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";

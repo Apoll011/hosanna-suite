@@ -17,9 +17,9 @@ import {
 } from "better-auth/plugins";
 import { inbox } from "better-inbox";
 import { createSecondaryStorage } from "@hosanna/cache";
-import { roles } from "../roles.js";
-import { pluginLocaleOverrides } from "../plugin-locale-overrides.js";
-import { RESPONSIBILITIES } from "../responsibilities.js";
+import { roles } from "../authorization/roles.js";
+import { pluginLocaleOverrides } from "../i18n/plugin-locale-overrides.js";
+import { RESPONSIBILITIES } from "../authorization/responsibilities.js";
 import type {
   AuthSecondaryStorage,
   CreateAuthFullOptions,
