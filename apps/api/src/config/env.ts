@@ -95,6 +95,7 @@ export const env = {
   /** Shared with the auth app — cookie/JWE session validation. */
   betterAuthSecret: required("BETTER_AUTH_SECRET"),
 
+  publicAuthUrl: optional("AUTH_URL") ?? authUrl,
   /**
    * Auth app origin — Better Auth issuer / deep links.
    * `withRelatedProject` → matching hosanna-auth deploy; else AUTH_URL.
