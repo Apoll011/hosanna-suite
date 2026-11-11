@@ -898,9 +898,7 @@ export const MainLayout: React.FC = () => {
           }),
         navigateSameOrigin: (path) => navigate(path),
         prepareCrossOriginNavigate: ({ url }) => {
-          writeThemeCookie(
-            document.documentElement.classList.contains("dark") ? "dark" : "light",
-          );
+          writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
           return url;
         },
       });
