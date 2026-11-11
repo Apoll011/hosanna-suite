@@ -46,11 +46,7 @@ function trashedHint(kind: ResourceKind, id: string): string {
   return `This ${kind} is in the trash. Call ${kind}s_restore with id=${id}, or retry with includeTrashed=true for a read-only view.`;
 }
 
-export async function loadSong(
-  ctx: McpContext,
-  songId: string,
-  opts?: LoadResourceOptions,
-) {
+export async function loadSong(ctx: McpContext, songId: string, opts?: LoadResourceOptions) {
   const song = await ctx.db.song.findFirst({ where: { id: songId } });
   if (!song) {
     throw new ResourceAccessError("NOT_FOUND", "A música não existe.", {
@@ -68,11 +64,7 @@ export async function loadSong(
   return song;
 }
 
-export async function loadService(
-  ctx: McpContext,
-  serviceId: string,
-  opts?: LoadResourceOptions,
-) {
+export async function loadService(ctx: McpContext, serviceId: string, opts?: LoadResourceOptions) {
   const service = await ctx.db.service.findFirst({ where: { id: serviceId } });
   if (!service) {
     throw new ResourceAccessError("NOT_FOUND", "O culto não existe.", {

@@ -5,14 +5,7 @@ import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { Badge, Button, Can, Cannot, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
-import {
-  AlertTriangle,
-  CalendarRange,
-  Check,
-  CreditCard,
-  Receipt,
-  RotateCcw,
-} from "lucide-react";
+import { AlertTriangle, CalendarRange, Check, CreditCard, Receipt, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Subscription = {

@@ -2,12 +2,13 @@ import { lyricsMatchQuery, normalizeLyricQuery } from "../../lib/lyricSearch.js"
 
 export type SongMatchField = "title" | "artist" | "lyrics" | "tag";
 
-export type RankedSongMatch<T extends { title: string; artist: string; content: string; tags: string[] }> =
-  {
-    song: T;
-    score: number;
-    matchedField: SongMatchField;
-  };
+export type RankedSongMatch<
+  T extends { title: string; artist: string; content: string; tags: string[] },
+> = {
+  song: T;
+  score: number;
+  matchedField: SongMatchField;
+};
 
 function scoreField(haystack: string, needle: string, weight: number): number {
   const h = haystack.toLowerCase();
@@ -32,9 +33,7 @@ export function rankSongsByRelevance<
   for (const song of songs) {
     const titleScore = scoreField(song.title, q, 100);
     const artistScore = scoreField(song.artist ?? "", q, 60);
-    const tagScore = song.tags.some((t) => t.toLowerCase().includes(q.toLowerCase()))
-      ? 40
-      : 0;
+    const tagScore = song.tags.some((t) => t.toLowerCase().includes(q.toLowerCase())) ? 40 : 0;
     const lyricsScore = song.content.toLowerCase().includes(q.toLowerCase()) ? 20 : 0;
 
     const scores: Array<{ field: SongMatchField; score: number }> = [
@@ -57,9 +56,10 @@ export function rankSongsByRelevance<
 }
 
 /** Rank songs for lyric-stripped search. */
-export function rankSongsByLyricRelevance<
-  T extends { title: string; content: string },
->(songs: T[], query: string): RankedSongMatch<T & { artist: string; tags: string[] }>[] {
+export function rankSongsByLyricRelevance<T extends { title: string; content: string }>(
+  songs: T[],
+  query: string,
+): RankedSongMatch<T & { artist: string; tags: string[] }>[] {
   const q = normalizeLyricQuery(query);
   const out: RankedSongMatch<T & { artist: string; tags: string[] }>[] = [];
   for (const song of songs) {

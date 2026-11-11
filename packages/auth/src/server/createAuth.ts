@@ -65,9 +65,7 @@ function resolveSecondaryStorage(
 ): AuthSecondaryStorage | undefined {
   if (option === null) return undefined;
   if (option) return option;
-  return (
-    createSecondaryStorage({ redisUrl: redisUrl ?? process.env.REDIS_URL }) ?? undefined
-  );
+  return createSecondaryStorage({ redisUrl: redisUrl ?? process.env.REDIS_URL }) ?? undefined;
 }
 
 function sharedSessionAndCookies(secondaryStorage: AuthSecondaryStorage | undefined) {
@@ -136,10 +134,7 @@ function sharedSessionAndCookies(secondaryStorage: AuthSecondaryStorage | undefi
  */
 function createSlimAuth(options: CreateAuthSlimOptions): any {
   const { prisma, config, secondaryStorage: secondaryStorageOption } = options;
-  const secondaryStorage = resolveSecondaryStorage(
-    secondaryStorageOption,
-    config.redisUrl,
-  );
+  const secondaryStorage = resolveSecondaryStorage(secondaryStorageOption, config.redisUrl);
   const shared = sharedSessionAndCookies(secondaryStorage);
 
   return betterAuth({
@@ -202,10 +197,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
   const appUrl = config.appUrl.replace(/\/+$/, "");
   const studioUrl = (config.studioUrl ?? config.appUrl).replace(/\/+$/, "");
 
-  const secondaryStorage = resolveSecondaryStorage(
-    secondaryStorageOption,
-    config.redisUrl,
-  );
+  const secondaryStorage = resolveSecondaryStorage(secondaryStorageOption, config.redisUrl);
   const shared = sharedSessionAndCookies(secondaryStorage);
 
   /** Reads the locale configured in an organisation's settings metadata. */

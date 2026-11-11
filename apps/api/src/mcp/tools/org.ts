@@ -118,7 +118,9 @@ export function registerOrgTools(server: McpServer, authInfo?: AuthInfo): void {
         resend: z
           .boolean()
           .optional()
-          .describe("If an invite is already pending, resend the email (default: auto when pending)"),
+          .describe(
+            "If an invite is already pending, resend the email (default: auto when pending)",
+          ),
       }),
     },
     async (args) => {

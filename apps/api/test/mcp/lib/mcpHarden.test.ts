@@ -116,7 +116,10 @@ describe("MCP harden — P4 relevance + P5 key + P6 duplicates + P8 transpose", 
     ];
     const ranked = rankSongsByRelevance(songs, "sangue");
     assert.ok(ranked.length >= 2);
-    assert.equal(ranked[0]!.matchedField === "title" || ranked[0]!.song.title.includes("Sangue"), true);
+    assert.equal(
+      ranked[0]!.matchedField === "title" || ranked[0]!.song.title.includes("Sangue"),
+      true,
+    );
     assert.ok(ranked[0]!.score >= ranked[ranked.length - 1]!.score);
   });
 

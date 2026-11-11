@@ -22,10 +22,7 @@ import { withClientRequestId } from "../lib/idempotency.js";
 import { keyCanonicalWarning } from "../lib/keyCanonical.js";
 import { propagateVerseChords } from "../lib/propagateChords.js";
 import { loadSong, ResourceAccessError } from "../lib/resourceAccess.js";
-import {
-  rankSongsByLyricRelevance,
-  rankSongsByRelevance,
-} from "../lib/searchRelevance.js";
+import { rankSongsByLyricRelevance, rankSongsByRelevance } from "../lib/searchRelevance.js";
 import { findSongDuplicates } from "../lib/songDuplicates.js";
 import { transposeChordProSource } from "../lib/transposeSource.js";
 

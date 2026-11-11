@@ -104,8 +104,7 @@ export function transposeChordProSource(
   // Prefer shortest ascending interval (0..11) when targeting a key.
   // Explicit signed semitones keep the caller's direction.
   const ascending = ((semitones % 12) + 12) % 12;
-  const usedToKey =
-    typeof options !== "number" && "toKey" in options && Boolean(options.toKey);
+  const usedToKey = typeof options !== "number" && "toKey" in options && Boolean(options.toKey);
   let applied: number;
   let direction: "up" | "down" | "none";
   if (usedToKey) {

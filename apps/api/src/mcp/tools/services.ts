@@ -651,8 +651,7 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
               const responsibilities = (args.agenda.responsibilities ?? []).map((r) => ({
                 categoryId: r.categoryId,
                 assignees: r.assignees.map((a) => {
-                  const memberId =
-                    a.memberId ?? resolvedByName.get(a.name.trim().toLowerCase());
+                  const memberId = a.memberId ?? resolvedByName.get(a.name.trim().toLowerCase());
                   return {
                     name: a.name,
                     memberId,

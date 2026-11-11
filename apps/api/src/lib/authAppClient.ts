@@ -110,9 +110,7 @@ export async function inviteMemberViaAuthApp(opts: {
         inviterId: String(inv.inviterId ?? ""),
         status: String(inv.status ?? "pending"),
         expiresAt:
-          inv.expiresAt instanceof Date
-            ? inv.expiresAt.toISOString()
-            : String(inv.expiresAt ?? ""),
+          inv.expiresAt instanceof Date ? inv.expiresAt.toISOString() : String(inv.expiresAt ?? ""),
         createdAt:
           inv.createdAt != null
             ? inv.createdAt instanceof Date
