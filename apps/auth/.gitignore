@@ -27,6 +27,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+# Serwist generated service worker
+/public/sw*
+/public/swe-worker*
+
 # Synced from @hosanna/brand on next.config load — keep only app-owned public files
 /public/favicon.svg
 /public/favicon.png

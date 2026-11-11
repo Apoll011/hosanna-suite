@@ -47,9 +47,9 @@
   --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.07);
   --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.1);
 
-  --font-sans: "Figtree", system-ui, -apple-system, sans-serif;
-  --font-display: "Figtree", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: var(--font-figtree), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-figtree), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
   --text-display: 1.5rem;
   --text-title: 1.0625rem;
