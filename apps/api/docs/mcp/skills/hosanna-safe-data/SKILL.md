@@ -24,7 +24,17 @@ Auth is Better Auth bearer (or cookie) with `activeOrganizationId`. Org scoping 
 
 Unauthenticated clients may still use pure ChordPro tools (`chordpro_validate`, `chordpro_format`, …).
 
-For people/roles on the agenda, call `me` / `members_list` / `org_get` and set `responsibilities` on `agenda_create` / `agenda_update` (do not invent memberIds). There is no org-switch tool — the session org is fixed.
+### Agenda people (name is enough)
+
+Agenda responsibilities accept assignees with **only `name`**. `memberId` is optional and only for people who already have an org membership (`me` / `members_list` / `members_resolve`).
+
+- Do **not** invent `memberId`s.
+- Do **not** refuse, block, or leave blank an assignee because they are not in the member directory.
+- Pass `{ "name": "Pr. Nelson" }`. Saves may return warning `assignee_unlinked` — informational, not an error.
+- **After** the agenda/service is saved successfully, you may tell the user which names have no org account.
+- `members_invite` is a **separate** org tool (HTTPS to the auth app so the invitation email is sent). Never fold invites into agenda create/update/publish. Only call it when the user explicitly asks to invite someone (with a real email).
+
+Category ids come from `org_get`. There is no org-switch tool — the session org is fixed.
 
 ## Draft before save (mandatory)
 

@@ -1,11 +1,9 @@
-import { randomUUID } from "node:crypto";
 import { roles } from "@hosanna/auth";
 import { prisma } from "../database/prisma.js";
+import { auth } from "../lib/auth.js";
 import { sendFcmToToken, type FcmMessage } from "../lib/fcm.js";
 
 type OrgRole = keyof typeof roles;
-
-const MAX_FANOUT = 1_000;
 
 export interface OrgNotifyPayload {
   organizationId: string;
@@ -38,88 +36,25 @@ type NotifyBody = {
   description?: string;
   body?: string;
   href?: string;
-  data?: unknown;
+  data?: Record<string, unknown>;
 };
 
-async function createNotificationRow(input: {
-  userId: string;
-  organizationId?: string;
-  type: string;
-  title: string;
-  body?: string | null;
-  href?: string | null;
-  data?: unknown;
-}) {
-  return prisma.notification.create({
-    data: {
-      id: randomUUID(),
-      userId: input.userId,
-      organizationId: input.organizationId ?? null,
-      type: input.type,
-      title: input.title,
-      body: input.body ?? null,
-      href: input.href ?? null,
-      data: input.data === undefined ? undefined : (input.data as never),
-      read: false,
-      createdAt: new Date(),
-    },
-  });
-}
-
-/** Write inbox rows the same way better-inbox `notify` does — no Better Auth instance. */
+/** Write inbox rows via better-inbox on the local Better Auth instance. */
 export async function inboxNotify(payload: NotifyBody): Promise<{ count: number }> {
-  const body = payload.body ?? payload.description ?? null;
-  const { userId, organizationId, roles: roleFilter, type, title, href, data } = payload;
-
-  if (!!userId === !!organizationId) {
-    throw new Error("Provide exactly one of userId or organizationId");
-  }
-
-  if (!organizationId) {
-    await createNotificationRow({
-      userId: userId!,
-      type,
-      title,
-      body,
-      href,
-      data,
-    });
-    return { count: 1 };
-  }
-
-  const members = await prisma.member.findMany({
-    where: {
-      organizationId,
-      ...(roleFilter?.length ? { role: { in: roleFilter.map((r) => r.toLowerCase()) } } : {}),
+  const body = payload.body ?? payload.description;
+  const result = await auth.api.notify({
+    body: {
+      userId: payload.userId,
+      organizationId: payload.organizationId,
+      roles: payload.roles,
+      type: payload.type,
+      title: payload.title,
+      ...(body != null ? { body } : {}),
+      ...(payload.href != null ? { href: payload.href } : {}),
+      ...(payload.data != null ? { data: payload.data } : {}),
     },
-    select: { userId: true },
-    take: MAX_FANOUT + 1,
   });
-
-  if (members.length > MAX_FANOUT) {
-    throw new Error(`Organization fan-out exceeds max of ${MAX_FANOUT} members`);
-  }
-
-  await prisma.$transaction(
-    members.map((m) =>
-      prisma.notification.create({
-        data: {
-          id: randomUUID(),
-          userId: m.userId,
-          organizationId,
-          type,
-          title,
-          body,
-          href: href ?? null,
-          data: data === undefined ? undefined : (data as never),
-          read: false,
-          createdAt: new Date(),
-        },
-      }),
-    ),
-  );
-
-  return { count: members.length };
+  return { count: result?.count ?? 0 };
 }
 
 export async function notifyOrg(payload: OrgNotifyPayload): Promise<void> {

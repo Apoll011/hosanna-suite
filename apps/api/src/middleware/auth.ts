@@ -142,7 +142,7 @@ export function requireOwnTeamResource(
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!requireUser(req, res, options)) return;
-    if (req.user.role === "OWNER" || req.user.role === "ADMIN") return next();
+    if (req.user.role === "owner" || req.user.role === "admin") return next();
 
     const resourceTeamId = getResourceTeamId(req);
     if (!resourceTeamId || resourceTeamId !== req.user.teamId) {
@@ -152,16 +152,16 @@ export function requireOwnTeamResource(
   };
 }
 
-/** Full auth context — one cache hit, zero Prisma / AUTH_URL on warm path. */
+/** Auth context cached per session-token + active org (org switches keep the same token). */
 type AuthContext = {
   userId: string;
   workspaceId: string;
-  role: string;
+  role: AppRole;
   teamId?: string;
   locale: string;
 };
 
-/** Longer than Studio's 15s sync poll so idle pulls hit memory/Redis instead of AUTH_URL. */
+/** Longer than Studio's 15s sync poll so idle pulls skip membership/locale Prisma. */
 const AUTH_CTX_TTL_MS = 120_000;
 const ORG_LOCALE_TTL_MS = 300_000;
 const USER_ROLE_TTL_MS = 300_000;
@@ -215,9 +215,7 @@ function authCacheKey(req: Request): string | null {
 
 function requestHeadersForAuth(req: Request): Headers {
   const headers = new Headers();
-  // Server-to-server get-session: only forward credentials. Do not forward
-  // browser Origin/Referer — they are irrelevant here and can interact badly
-  // with deployment-protection / CSRF checks on ephemeral auth hosts.
+  // Local Better Auth getSession only needs credentials (cookie / bearer).
   const cookie = req.headers.cookie;
   if (cookie) headers.set("cookie", cookie);
   const authHeader = req.headers.authorization;
@@ -261,31 +259,19 @@ async function getCachedUserRole(workspaceId: string, userId: string): Promise<s
     select: { role: true },
   });
 
-  const role = member?.role ?? "guest";
+  const role = (member?.role ?? "guest").toLowerCase();
   await userRoleCache.set(key, role);
   return role;
 }
 
-function roleFromSessionData(sessionData: Exclude<SessionResult, null>): string | null {
-  const { user, session } = sessionData;
-  const role =
-    (session as { role?: string | null }).role ||
-    sessionData.member?.role ||
-    (user as { role?: string | null }).role;
-  return typeof role === "string" && role.length > 0 ? role : null;
-}
-
 async function resolveAuthContext(req: Request): Promise<AuthContext> {
-  const cacheKey = authCacheKey(req);
-  if (cacheKey) {
-    const cached = await authCtxCache.get<AuthContext>(cacheKey);
-    if (cached?.userId && cached.workspaceId) return cached;
-  }
-
-  if (!cacheKey) {
+  const tokenKey = authCacheKey(req);
+  if (!tokenKey) {
     throw AppError.unauthorized("Invalid or missing authentication session.");
   }
 
+  // Always resolve the session: `session_token` does not change on org switch,
+  // so a token-only cache kept serving the previous org's role/workspace.
   const sessionData = await getSession({ headers: requestHeadersForAuth(req) });
   if (!sessionData?.session || !sessionData?.user) {
     throw AppError.unauthorized("Invalid or missing authentication session.");
@@ -297,23 +283,27 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
     throw AppError.forbidden("An active workspace/organization context is required.");
   }
 
-  const teamId = session.activeTeamId || undefined;
-  const roleFromSession = roleFromSessionData(sessionData);
+  const ctxKey = `${tokenKey}:${workspaceId}`;
+  const cached = await authCtxCache.get<AuthContext>(ctxKey);
+  if (cached?.userId && cached.workspaceId === workspaceId) return cached;
 
+  const teamId = session.activeTeamId || undefined;
+
+  // Org RBAC = `member.role` only. Never Better Auth admin-plugin `user.role`.
   const [resolvedRole, locale] = await Promise.all([
-    roleFromSession ? Promise.resolve(roleFromSession) : getCachedUserRole(workspaceId, user.id),
+    getCachedUserRole(workspaceId, user.id),
     getCachedOrgLocale(workspaceId),
   ]);
 
   const ctx: AuthContext = {
     userId: user.id,
     workspaceId,
-    role: resolvedRole,
+    role: (resolvedRole in roles ? resolvedRole : "guest") as AppRole,
     teamId,
     locale,
   };
 
-  await authCtxCache.set(cacheKey, ctx);
+  await authCtxCache.set(ctxKey, ctx);
   return ctx;
 }
 

@@ -24,6 +24,7 @@ export const MCP_TOOL_GROUPS = {
     "members_list",
     "members_get",
     "members_resolve",
+    "members_invite",
     "org_get",
   ],
   chordpro: [
@@ -41,6 +42,7 @@ export const MCP_TOOL_GROUPS = {
     "songs_search_lyrics",
     "songs_get",
     "songs_get_many",
+    "songs_find_duplicates",
     "songs_validate_many",
     "songs_create_draft",
     "songs_propose_edit",
@@ -84,6 +86,7 @@ export const MCP_TOOL_GROUPS = {
     "agenda_update",
     "agenda_delete",
     "trash_list",
+    "trash_get",
     "library_overview",
     "metadata_musicbrainz_search",
     "metadata_youtube_search",

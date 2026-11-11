@@ -19,8 +19,17 @@ import { clipContent, FULL_CONTENT_MAX, SEARCH_CONTENT_MAX } from "../lib/conten
 import { summarizeDiff } from "../lib/diff.js";
 import { FOLDER_SONGS_MAX_LIMIT, listSongsInFolder } from "../lib/folderSongs.js";
 import { withClientRequestId } from "../lib/idempotency.js";
+import { keyCanonicalWarning } from "../lib/keyCanonical.js";
 import { propagateVerseChords } from "../lib/propagateChords.js";
+import { loadSong, ResourceAccessError } from "../lib/resourceAccess.js";
+import { rankSongsByLyricRelevance, rankSongsByRelevance } from "../lib/searchRelevance.js";
+import { findSongDuplicates } from "../lib/songDuplicates.js";
 import { transposeChordProSource } from "../lib/transposeSource.js";
+
+function extractKeyDirective(content: string): string | null {
+  const m = content.match(/\{(?:key|k)\s*:\s*([^}]+)\}/i);
+  return m?.[1]?.trim() ?? null;
+}
 
 function serializeSong(song: {
   id: string;
@@ -54,12 +63,17 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
     {
       title: "Search songs",
       description:
-        "Search the org library by title/artist/lyrics/tags (combined). key is exact metadata key string (not enharmonic-normalized). Default page=1, limit=20 (max 100). includeContent clips bodies to 8k chars and sets truncated.",
+        "Search the org library by title/artist/lyrics/tags (combined). Default sort=relevance (matchedField: title|artist|lyrics|tag). sort=title|artist|updatedAt keep alphabetical/date order. key is exact metadata key string. Default page=1, limit=20 (max 100).",
       inputSchema: z.object({
         search: z.string().optional().describe("Matches title, artist, lyrics content, and tags"),
         key: z.string().optional().describe("Exact key filter as stored (e.g. Db not C#)"),
         tag: z.string().optional(),
         folder: z.string().optional().describe("Folder id filter"),
+        sort: z
+          .enum(["relevance", "title", "artist", "updatedAt"])
+          .optional()
+          .default("relevance")
+          .describe("Default relevance when search is set; title when search is empty"),
         page: z.number().int().positive().optional().default(1),
         limit: z.number().int().positive().max(100).optional().default(20),
         includeContent: z.boolean().optional().default(false),
@@ -69,34 +83,78 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
       try {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.access");
-        const result = await songService(ctx).list({
-          search: args.search,
-          key: args.key,
-          tag: args.tag,
-          folder: args.folder,
-          page: args.page,
-          limit: args.limit,
-          sortBy: "title",
-          sortOrder: "asc",
-        });
-        const nextPage = result.page < result.totalPages ? result.page + 1 : null;
+        const useRelevance = args.sort === "relevance" && Boolean(args.search?.trim());
+        let rankedSongs: Array<{
+          song: Awaited<ReturnType<ReturnType<typeof songService>["list"]>>["songs"][number];
+          matchedField?: "title" | "artist" | "lyrics" | "tag";
+          score?: number;
+        }>;
+        let total: number;
+        let page = args.page;
+        let totalPages: number;
+
+        if (useRelevance) {
+          const allForRank = await songService(ctx).list({
+            search: args.search,
+            key: args.key,
+            tag: args.tag,
+            folder: args.folder,
+            page: 1,
+            limit: 100,
+            sortBy: "title",
+            sortOrder: "asc",
+          });
+          const ranked = rankSongsByRelevance(allForRank.songs, args.search);
+          total = ranked.length;
+          totalPages = Math.ceil(total / args.limit) || 1;
+          const start = (page - 1) * args.limit;
+          rankedSongs = ranked.slice(start, start + args.limit).map((r) => ({
+            song: r.song,
+            matchedField: r.matchedField,
+            score: r.score,
+          }));
+        } else {
+          const result = await songService(ctx).list({
+            search: args.search,
+            key: args.key,
+            tag: args.tag,
+            folder: args.folder,
+            page: args.page,
+            limit: args.limit,
+            sortBy: args.sort === "artist" || args.sort === "updatedAt" ? args.sort : "title",
+            sortOrder: "asc",
+          });
+          total = result.total;
+          page = result.page;
+          totalPages = result.totalPages;
+          rankedSongs = result.songs.map((song) => ({ song }));
+        }
+
+        const nextPage = page < totalPages ? page + 1 : null;
         return jsonResult({
-          total: result.total,
-          page: result.page,
-          totalPages: result.totalPages,
+          total,
+          page,
+          totalPages,
           nextPage,
-          songs: result.songs.map((s) => {
+          sort: useRelevance ? "relevance" : args.sort === "relevance" ? "title" : args.sort,
+          songs: rankedSongs.map(({ song: s, matchedField, score }) => {
             const base = serializeSong(s);
+            const extra = {
+              ...(matchedField ? { matchedField } : {}),
+              ...(score != null ? { relevanceScore: score } : {}),
+            };
             if (!args.includeContent) {
               const { content: _c, ...rest } = base;
               return {
                 ...rest,
+                ...extra,
                 contentPreview: s.content.slice(0, 200),
               };
             }
             const clipped = clipContent(s.content, SEARCH_CONTENT_MAX);
             return {
               ...base,
+              ...extra,
               content: clipped.content,
               truncated: clipped.truncated,
               contentLength: clipped.contentLength,
@@ -142,10 +200,11 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
     {
       title: "Search song lyrics (ignore chords)",
       description:
-        'Search lyrics after stripping ChordPro chords and directives. Query "Pois só Tu és o Deus eterno" matches "Pois [D9]só Tu és o [C#m]Deus eterno". Prefer this over songs_search when the user quotes plain lyrics.',
+        'Search lyrics after stripping ChordPro chords and directives. Default sort=relevance (matchedField=lyrics). Query "Pois só Tu és o Deus eterno" matches "Pois [D9]só Tu és o [C#m]Deus eterno".',
       inputSchema: z.object({
         query: z.string().min(1).describe("Plain lyrics / phrase without chord markers"),
         folder: z.string().optional().describe("Folder id filter"),
+        sort: z.enum(["relevance", "title"]).optional().default("relevance"),
         page: z.number().int().positive().optional().default(1),
         limit: z.number().int().positive().max(100).optional().default(20),
         includeContent: z.boolean().optional().default(false),
@@ -158,28 +217,43 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
         const result = await songService(ctx).searchLyrics({
           query: args.query,
           folder: args.folder,
-          page: args.page,
-          limit: args.limit,
+          page: 1,
+          limit: 100,
         });
-        const nextPage = result.page < result.totalPages ? result.page + 1 : null;
+        const ranked =
+          args.sort === "title"
+            ? result.songs
+                .slice()
+                .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }))
+                .map((song) => ({ song, matchedField: "lyrics" as const, score: 0 }))
+            : rankSongsByLyricRelevance(result.songs, args.query);
+        const total = ranked.length;
+        const totalPages = Math.ceil(total / args.limit) || 1;
+        const start = (args.page - 1) * args.limit;
+        const pageSongs = ranked.slice(start, start + args.limit);
+        const nextPage = args.page < totalPages ? args.page + 1 : null;
         return jsonResult({
-          total: result.total,
-          page: result.page,
-          totalPages: result.totalPages,
+          total,
+          page: args.page,
+          totalPages,
           nextPage,
           query: args.query,
-          songs: result.songs.map((s) => {
+          sort: args.sort,
+          songs: pageSongs.map(({ song: s, matchedField, score }) => {
             const base = serializeSong(s);
+            const extra = { matchedField, relevanceScore: score };
             if (!args.includeContent) {
               const { content: _c, ...rest } = base;
               return {
                 ...rest,
+                ...extra,
                 contentPreview: s.content.slice(0, 200),
               };
             }
             const clipped = clipContent(s.content, SEARCH_CONTENT_MAX);
             return {
               ...base,
+              ...extra,
               content: clipped.content,
               truncated: clipped.truncated,
               contentLength: clipped.contentLength,
@@ -196,25 +270,35 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
     "songs_get",
     {
       title: "Get song",
-      description: "Retrieve a song by id, including full ChordPro content.",
+      description:
+        "Retrieve a song by id, including full ChordPro content. Soft-deleted songs return code TRASHED (not NOT_FOUND); pass includeTrashed=true for a read-only trash view.",
       inputSchema: z.object({
         songId: z.string().uuid(),
+        includeTrashed: z
+          .boolean()
+          .optional()
+          .default(false)
+          .describe("When true, return soft-deleted songs instead of TRASHED"),
       }),
     },
-    async ({ songId }) => {
+    async ({ songId, includeTrashed }) => {
       try {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.access");
-        const song = await songService(ctx).getById(songId);
+        const song = await loadSong(ctx, songId, { includeTrashed });
         const clipped = clipContent(song.content, FULL_CONTENT_MAX);
+        const keyWarning = keyCanonicalWarning(extractKeyDirective(song.content));
         return jsonResult({
           song: {
             ...serializeSong(song),
             content: clipped.content,
             truncated: clipped.truncated,
             contentLength: clipped.contentLength,
+            deleted: Boolean(song.deleted),
+            purgeAt: song.purgeAt?.toISOString() ?? null,
           },
           validation: validateChordProContent(song.content),
+          warnings: keyWarning ? [keyWarning] : [],
         });
       } catch (error) {
         return errorResult(error);
@@ -227,41 +311,105 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
     {
       title: "Get many songs",
       description:
-        "Batch-fetch up to 20 songs by id. Set includeContent=false for metadata-only (cheaper).",
+        "Batch-fetch up to 20 songs by id. Separates missing into trashed[], notFound[], forbidden[] (missing[] kept as union for compatibility). Set includeContent=false for metadata-only.",
       inputSchema: z.object({
         songIds: z.array(z.string().uuid()).min(1).max(20),
         includeContent: z.boolean().optional().default(true),
+        includeTrashed: z.boolean().optional().default(false),
       }),
     },
-    async ({ songIds, includeContent }) => {
+    async ({ songIds, includeContent, includeTrashed }) => {
       try {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.access");
         const songs = [];
         const missing: string[] = [];
+        const trashed: string[] = [];
+        const notFound: string[] = [];
+        const forbidden: string[] = [];
         for (const id of songIds) {
           try {
-            const song = await songService(ctx).getById(id);
+            const song = await loadSong(ctx, id, { includeTrashed });
             if (!includeContent) {
               const { content: _c, ...rest } = serializeSong(song);
               songs.push({
                 ...rest,
+                deleted: Boolean(song.deleted),
                 contentPreview: song.content.slice(0, 200),
               });
             } else {
               const clipped = clipContent(song.content, FULL_CONTENT_MAX);
               songs.push({
                 ...serializeSong(song),
+                deleted: Boolean(song.deleted),
                 content: clipped.content,
                 truncated: clipped.truncated,
                 contentLength: clipped.contentLength,
               });
             }
-          } catch {
-            missing.push(id);
+          } catch (err) {
+            if (err instanceof ResourceAccessError && err.canonicalCode === "TRASHED") {
+              trashed.push(id);
+              missing.push(id);
+            } else if (err instanceof ResourceAccessError && err.canonicalCode === "NOT_FOUND") {
+              notFound.push(id);
+              missing.push(id);
+            } else {
+              const msg = err instanceof Error ? err.message.toLowerCase() : "";
+              if (msg.includes("permission") || msg.includes("forbidden")) {
+                forbidden.push(id);
+              } else {
+                notFound.push(id);
+              }
+              missing.push(id);
+            }
           }
         }
-        return jsonResult({ songs, missing, count: songs.length });
+        return jsonResult({
+          songs,
+          missing,
+          trashed,
+          notFound,
+          forbidden,
+          count: songs.length,
+        });
+      } catch (error) {
+        return errorResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "songs_find_duplicates",
+    {
+      title: "Find duplicate songs",
+      description:
+        "Read-only scan for likely duplicate songs (normalized title + lyric fingerprint). Returns similarity score and reasons. Does not invent or merge content.",
+      inputSchema: z.object({
+        minScore: z.number().min(0.5).max(1).optional().default(0.72),
+        limit: z.number().int().positive().max(100).optional().default(50),
+      }),
+    },
+    async (args) => {
+      try {
+        const ctx = requireMcpContext(authInfo);
+        requirePermission(ctx, "song.access");
+        const rows = await ctx.db.song.findMany({
+          where: { deleted: false },
+          select: { id: true, title: true, artist: true, content: true },
+          take: 400,
+          orderBy: { title: "asc" },
+        });
+        const { pairs, scanned } = findSongDuplicates(rows, {
+          minScore: args.minScore,
+          limit: args.limit,
+        });
+        return jsonResult({
+          pairs,
+          scanned,
+          totalInSample: rows.length,
+          hint: "Read-only. Confirm with the user before deleting or merging — never invent lyrics.",
+        });
       } catch (error) {
         return errorResult(error);
       }
@@ -615,6 +763,7 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
                 {
                   error: true,
                   code: "validation_error",
+                  canonicalCode: "VALIDATION_ERROR",
                   message:
                     metadataWarnings.length > 0
                       ? "Database metadata does not match ChordPro directives"
@@ -629,6 +778,9 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
                 true,
               );
             }
+
+            const keyWarning = keyCanonicalWarning(extractKeyDirective(args.content));
+            const keyWarnings = keyWarning ? [keyWarning] : [];
 
             if (args.mode === "create") {
               requirePermission(ctx, "song.create");
@@ -645,6 +797,7 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
                 saved: true,
                 song: serializeSong(created),
                 validation: { ...validation, metadataWarnings },
+                warnings: keyWarnings,
               });
             }
 
@@ -674,6 +827,7 @@ export function registerSongTools(server: McpServer, authInfo?: AuthInfo): void 
                 saved: true,
                 song: serializeSong(updated),
                 validation: { ...validation, metadataWarnings },
+                warnings: keyWarnings,
               });
             } catch (error) {
               let current: unknown;

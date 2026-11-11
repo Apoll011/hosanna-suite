@@ -75,18 +75,41 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
     {
       title: "Get service",
       description:
-        "Retrieve a service plan including elements. Set expandSongs=true to attach song metadata (and optional content) for each song element in one call.",
+        "Retrieve a service plan including elements. Soft-deleted services return code TRASHED (not NOT_FOUND); pass includeTrashed=true for a read-only trash view. Set expandSongs=true to attach song metadata.",
       inputSchema: z.object({
         serviceId: z.string().uuid(),
         expandSongs: z.boolean().optional().default(false),
         includeSongContent: z.boolean().optional().default(false),
+        includeTrashed: z
+          .boolean()
+          .optional()
+          .default(false)
+          .describe("When true, return soft-deleted services instead of TRASHED"),
       }),
     },
-    async ({ serviceId, expandSongs, includeSongContent }) => {
+    async ({ serviceId, expandSongs, includeSongContent, includeTrashed }) => {
       try {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.access");
-        const service = await serviceService(ctx).getByIdForMcp(serviceId);
+        const { loadService } = await import("../lib/resourceAccess.js");
+        const raw = await loadService(ctx, serviceId, { includeTrashed });
+        const dateOnly =
+          raw.date instanceof Date
+            ? raw.date.toISOString().slice(0, 10)
+            : String(raw.date).slice(0, 10);
+        const service = {
+          id: raw.id,
+          name: raw.name,
+          date: dateOnly,
+          notes: raw.notes ?? "",
+          elements: raw.elements ?? [],
+          archived: Boolean(raw.archived),
+          deleted: Boolean(raw.deleted),
+          purgeAt: raw.purgeAt?.toISOString() ?? null,
+          elementCount: Array.isArray(raw.elements) ? raw.elements.length : 0,
+          createdAt: raw.createdAt.toISOString(),
+          updatedAt: raw.updatedAt.toISOString(),
+        };
         const validation = await validateServicePlan(service.elements, songService(ctx));
         let expandedSongs: unknown[] | undefined;
         if (expandSongs) {
@@ -105,7 +128,8 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
           expandedSongs = [];
           for (const id of ids) {
             try {
-              const song = await songService(ctx).getById(id);
+              const { loadSong } = await import("../lib/resourceAccess.js");
+              const song = await loadSong(ctx, id, { includeTrashed: false });
               expandedSongs.push({
                 id: song.id,
                 title: song.title,
@@ -159,17 +183,38 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
       inputSchema: z.object({
         serviceIds: z.array(z.string().uuid()).min(1).max(10),
         expandSongs: z.boolean().optional().default(false),
+        includeTrashed: z.boolean().optional().default(false),
       }),
     },
-    async ({ serviceIds, expandSongs }) =>
+    async ({ serviceIds, expandSongs, includeTrashed }) =>
       timedToolResult("services_get_many", async () => {
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "service.access");
+        const { loadService, ResourceAccessError } = await import("../lib/resourceAccess.js");
         const services: unknown[] = [];
         const missing: string[] = [];
+        const trashed: string[] = [];
+        const notFound: string[] = [];
+        const forbidden: string[] = [];
         for (const id of serviceIds) {
           try {
-            const service = await serviceService(ctx).getByIdForMcp(id);
+            const raw = await loadService(ctx, id, { includeTrashed });
+            const service = {
+              id: raw.id,
+              name: raw.name,
+              date:
+                raw.date instanceof Date
+                  ? raw.date.toISOString().slice(0, 10)
+                  : String(raw.date).slice(0, 10),
+              notes: raw.notes ?? "",
+              elements: raw.elements ?? [],
+              archived: Boolean(raw.archived),
+              deleted: Boolean(raw.deleted),
+              purgeAt: raw.purgeAt?.toISOString() ?? null,
+              elementCount: Array.isArray(raw.elements) ? raw.elements.length : 0,
+              createdAt: raw.createdAt.toISOString(),
+              updatedAt: raw.updatedAt.toISOString(),
+            };
             const validation = await validateServicePlan(service.elements, songService(ctx));
             let expandedSongs: unknown[] | undefined;
             if (expandSongs) {
@@ -211,11 +256,27 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
               },
               expandedSongs,
             });
-          } catch {
+          } catch (err) {
             missing.push(id);
+            if (err instanceof ResourceAccessError && err.canonicalCode === "TRASHED") {
+              trashed.push(id);
+            } else if (err instanceof ResourceAccessError && err.canonicalCode === "NOT_FOUND") {
+              notFound.push(id);
+            } else {
+              const msg = err instanceof Error ? err.message.toLowerCase() : "";
+              if (msg.includes("permission") || msg.includes("forbidden")) forbidden.push(id);
+              else notFound.push(id);
+            }
           }
         }
-        return { services, missing, count: services.length };
+        return {
+          services,
+          missing,
+          trashed,
+          notFound,
+          forbidden,
+          count: services.length,
+        };
       }),
   );
 
@@ -452,9 +513,9 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
         allowUnlinkedAssignees: z
           .boolean()
           .optional()
-          .default(false)
+          .default(true)
           .describe(
-            "If false (default), refuse agenda when members_resolve finds unresolved names",
+            "Deprecated no-op (always true): name-only assignees never block publish. Kept for compatibility.",
           ),
         agenda: z
           .object({
@@ -473,6 +534,10 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
                       z.object({
                         name: z.string().min(1),
                         memberId: z.string().optional(),
+                        unlinked: z
+                          .boolean()
+                          .optional()
+                          .describe("Name-only assignee; never blocks publish"),
                       }),
                     )
                     .default([]),
@@ -557,9 +622,10 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
                   name: a.name,
                   category: r.categoryId,
                   memberId: a.memberId,
+                  unlinked: a.unlinked === true,
                 })),
               );
-              const toResolve = assignees.filter((a) => !a.memberId);
+              const toResolve = assignees.filter((a) => !a.memberId && !a.unlinked);
               const resolution =
                 toResolve.length > 0
                   ? await resolveMembers(
@@ -573,33 +639,30 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
                       resolved: [],
                       unresolved: [],
                       allResolved: true,
+                      nameOnlyOk: true as const,
                     };
               report.memberResolution = resolution;
-
-              if (!args.allowUnlinkedAssignees && resolution.unresolved.length > 0) {
-                return jsonResult({
-                  status: "partial",
-                  phase: "agenda_blocked_unresolved_members",
-                  message:
-                    "Service saved; agenda not created — resolve members or set allowUnlinkedAssignees=true",
-                  steps,
-                  service: report.service,
-                  memberResolution: resolution,
-                  resume: true,
-                  hint: "Retry services_publish with the same clientRequestId after fixing assignees.",
-                });
-              }
+              // Never block agenda on missing members — assign by name and note afterward.
+              void args.allowUnlinkedAssignees;
 
               const resolvedByName = new Map(
                 resolution.resolved.map((r) => [r.name.trim().toLowerCase(), r.memberId]),
               );
               const responsibilities = (args.agenda.responsibilities ?? []).map((r) => ({
                 categoryId: r.categoryId,
-                assignees: r.assignees.map((a) => ({
-                  name: a.name,
-                  memberId: a.memberId ?? resolvedByName.get(a.name.trim().toLowerCase()),
-                })),
+                assignees: r.assignees.map((a) => {
+                  const memberId = a.memberId ?? resolvedByName.get(a.name.trim().toLowerCase());
+                  return {
+                    name: a.name,
+                    memberId,
+                    ...(memberId ? {} : { unlinked: true as const }),
+                  };
+                }),
               }));
+              const unlinkedNames = responsibilities
+                .flatMap((r) => r.assignees)
+                .filter((a) => !a.memberId)
+                .map((a) => a.name);
 
               try {
                 const agendaResult = await createAgendaEvent(ctx, {
@@ -621,7 +684,15 @@ export function registerServiceTools(server: McpServer, authInfo?: AuthInfo): vo
                 };
                 await setPublishProgress(ctx.orgId, clientRequestId, progress);
                 steps.push("agenda_saved");
-                report.agenda = agendaResult;
+                report.agenda = {
+                  ...agendaResult,
+                  /** Informational only — mention after success; do not invite unless asked. */
+                  afterSaveNote:
+                    unlinkedNames.length > 0
+                      ? `Assigned by name (no org account): ${unlinkedNames.join(", ")}. members_invite is separate and only if the user asks.`
+                      : undefined,
+                  unlinkedAssigneeNames: unlinkedNames,
+                };
               } catch (agendaErr) {
                 const message = agendaErr instanceof Error ? agendaErr.message : String(agendaErr);
                 return jsonResult({

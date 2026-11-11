@@ -31,24 +31,30 @@ function normalizeAuthUrl(url: string | undefined): string | undefined {
 }
 
 /**
- * Auth app origin for get-session / JWKS.
- * Uses `@vercel/related-projects` so preview API hits the matching auth deploy;
- * falls back to AUTH_URL (then PUBLIC_APP_URL). Protected preview hosts need the
- * Trusted Sources OIDC header (see `lib/session.ts` / MCP JWKS fetch).
+ * Auth app origin (Better Auth baseURL / issuer + deep links).
+ * Uses `@vercel/related-projects` so preview API matches the hosanna-auth deploy;
+ * falls back to AUTH_URL (then PUBLIC_APP_URL).
  */
-function resolveAuthUrl(): string | undefined {
+function resolveAuthUrl(): string {
   const fallback = optional("AUTH_URL") ?? optional("PUBLIC_APP_URL");
-  if (!fallback) return undefined;
-  return normalizeAuthUrl(
-    withRelatedProject({
-      projectName: AUTH_RELATED_PROJECT_NAME,
-      defaultHost: fallback,
-    }),
+  if (!fallback) {
+    throw new Error("Missing required environment variable: AUTH_URL (or PUBLIC_APP_URL)");
+  }
+  return (
+    normalizeAuthUrl(
+      withRelatedProject({
+        projectName: AUTH_RELATED_PROJECT_NAME,
+        defaultHost: fallback,
+      }),
+    ) ?? fallback.replace(/\/+$/, "")
   );
 }
 
 /** True when running inside a Vercel Function. */
 const isVercel = Boolean(process.env.VERCEL);
+
+/** Auth app origin — Better Auth issuer / deep links. */
+const authUrl = resolveAuthUrl();
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? "development",
@@ -83,18 +89,20 @@ export const env = {
 
   publicAppUrl: required("PUBLIC_APP_URL"),
 
-  supabaseUrl: optional("SUPABASE_URL"),
-  supabaseSecretKey: optional("SUPABASE_SECRET_KEY"),
+  /** Same Redis as the auth app — Better Auth secondary storage + `@hosanna/cache`. */
+  redisUrl: optional("REDIS_URL"),
 
-  resendApiKey: optional("RESEND_API_KEY"),
-  emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
+  /** Shared with the auth app — cookie/JWE session validation. */
+  betterAuthSecret: required("BETTER_AUTH_SECRET"),
 
-  studioUrl: process.env.STUDIO_URL ?? "https://studio.hosanna.live",
+  publicAuthUrl: optional("AUTH_URL") ?? authUrl,
   /**
-   * Auth app origin (get-session + JWKS).
+   * Auth app origin — Better Auth issuer / deep links.
    * `withRelatedProject` → matching hosanna-auth deploy; else AUTH_URL.
    */
-  authUrl: resolveAuthUrl(),
+  authUrl,
+  /** createAuth slim `baseURL` / public issuer (same as authUrl). */
+  authIssuer: authUrl,
 
   cronSecret: optional("CRON_SECRET"),
 

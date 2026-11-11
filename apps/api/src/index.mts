@@ -7,6 +7,7 @@ import { env } from "./config/env.js";
 import { DEFAULT_LOCALE, t } from "./lib/i18n.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { mcpRouter } from "./mcp/http.js";
+import { sendOauthProtectedResourceMetadata } from "./mcp/oauthProtectedResource.js";
 import { apiRouter } from "./routes/index.js";
 
 /**
@@ -151,6 +152,13 @@ const globalLimiter = rateLimit({
   // via RATE_LIMIT_DISABLED (see env.rateLimitDisabled).
   skip: () => env.rateLimitDisabled,
 });
+
+// RFC 9728: ChatGPT discovers the auth issuer from the MCP host (API),
+// even though authorize/token/register live on the auth app.
+app.get(
+  ["/.well-known/oauth-protected-resource", "/.well-known/oauth-protected-resource/mcp"],
+  sendOauthProtectedResourceMetadata,
+);
 
 // Mounted outside /api so MCP clients can use a stable /mcp path.
 // Auth is optional; org-scoped tools enforce Better Auth + permissions.

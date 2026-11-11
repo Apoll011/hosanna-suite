@@ -74,9 +74,6 @@ importers:
       '@prisma/adapter-pg':
         specifier: ^7.9.1
         version: 7.10.1
-      '@supabase/supabase-js':
-        specifier: ^2.49.0
-        version: 2.119.0
       '@vercel/functions':
         specifier: ^3.9.9
         version: 3.11.0(ws@8.21.0)
@@ -104,9 +101,6 @@ importers:
       express-rate-limit:
         specifier: ^8.6.2
         version: 8.7.3(express@4.22.3(supports-color@10.2.2))(supports-color@10.2.2)
-      handlebars:
-        specifier: ^4.7.9
-        version: 4.7.10
       helmet:
         specifier: ^7.1.0
         version: 7.2.0
@@ -119,9 +113,6 @@ importers:
       pg:
         specifier: ^8.23.0
         version: 8.23.1
-      resend:
-        specifier: ^6.22.0
-        version: 6.37.0
       uuid:
         specifier: ^11.1.1
         version: 11.1.1
@@ -141,9 +132,6 @@ importers:
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.25
-      '@types/handlebars':
-        specifier: ^4.0.40
-        version: 4.1.0
       '@types/jsonwebtoken':
         specifier: ^9.0.7
         version: 9.0.10
@@ -3950,10 +3938,6 @@ packages:
 
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
-
-  '@types/handlebars@4.1.0':
-    resolution: {integrity: sha512-gq9YweFKNNB1uFK71eRqsd4niVkXrxHugqWFQkeLRJvGjnxsLr16bYtcsG4tOFwmYi0Bax+wCkbf1reUfdl4kA==}
-    deprecated: This is a stub types definition. handlebars provides its own type definitions, so you do not need this installed.
 
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
@@ -10451,10 +10435,6 @@ snapshots:
       '@types/serve-static': 1.15.10
 
   '@types/geojson@7946.0.16': {}
-
-  '@types/handlebars@4.1.0':
-    dependencies:
-      handlebars: 4.7.10
 
   '@types/hast@3.0.5':
     dependencies:

@@ -28,7 +28,7 @@
 import { prisma } from "../database/prisma.js";
 import { sendFcmToToken } from "../lib/fcm.js";
 import { DEFAULT_LOCALE, t, type TranslationKey } from "../lib/i18n.js";
-import { RESPONSIBILITIES } from "../locales/responsabilities.js";
+import { RESPONSIBILITIES } from "@hosanna/auth";
 
 /** Lead times (in days) a reminder is sent for. Order matters: index 0 → 1 day. */
 const REMINDER_OFFSETS_DAYS = [1, 3] as const;

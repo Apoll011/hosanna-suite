@@ -92,7 +92,7 @@ export function OrgNotificationsPage() {
   const [channel, setChannel] = useState<NotificationChannel>("inbox");
   const [isSending, setIsSending] = useState(false);
 
-  const { granted: canSend } = useCan("notification.sent");
+  const { granted: canSend, loading: canLoading } = useCan("notification.sent");
   const isOrgTarget = target === "org";
   const showTypeField = isOrgTarget || channel !== "push";
 
@@ -240,7 +240,7 @@ export function OrgNotificationsPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || canLoading) {
     return (
       <AccountCenter>
         <div className="flex justify-center py-16">

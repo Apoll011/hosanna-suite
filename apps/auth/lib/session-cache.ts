@@ -7,7 +7,6 @@ export type CachedAuthUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
-  role?: string | null;
   twoFactorEnabled?: boolean;
 };
 
@@ -137,7 +136,6 @@ export function toCachedUser(user: {
   name?: string | null;
   email?: string | null;
   image?: string | null;
-  role?: string | null;
   twoFactorEnabled?: boolean | null;
 }): CachedAuthUser {
   return {
@@ -145,7 +143,6 @@ export function toCachedUser(user: {
     name: user.name ?? null,
     email: user.email ?? null,
     image: user.image ?? null,
-    role: user.role ?? null,
     twoFactorEnabled: Boolean(user.twoFactorEnabled),
   };
 }

@@ -28,7 +28,7 @@ Before doing song or service work, load skills and docs. Skill bodies are NOT in
 2. Always read \`hosanna://skills/hosanna-safe-data\` when creating, editing, fixing, saving, or deleting anything.
 3. Read the task skills that match the job (see map below) before using tools.
 4. Prefer MCP prompts (\`songs_create\`, \`services_plan\`, etc.) when the user picks one; still load the matching skills.
-5. Before agenda assignees: call \`members_resolve\` (or \`members_list\` / \`me\`). Prefer real \`memberId\`s. Name-only assignees are allowed only after disclosing unresolved people.
+5. Agenda assignees require **only \`name\`**. \`memberId\` is optional when the person is already an org member. People without accounts are assigned by name alone — finish the agenda/service first; only afterward mention who has no account. Do **not** refuse the agenda, invent memberIds, or call \`members_invite\` as part of agenda work (\`members_invite\` is a separate org tool, only when the user explicitly asks to invite someone).
 6. For lyric search ignoring chords, use \`songs_search_lyrics\`.
 7. Service \`duration\` is **seconds**. Agenda \`durationMinutes\` is minutes. Service/agenda **dates** are \`YYYY-MM-DD\` (stored at noon UTC). Prefer \`services_publish\` when creating a service + linked agenda in one flow (pass \`clientRequestId\`).
 

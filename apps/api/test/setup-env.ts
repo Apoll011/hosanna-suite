@@ -10,6 +10,7 @@ const defaults: Record<string, string> = {
   DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:5432/hosanna_test",
   PUBLIC_APP_URL: "http://127.0.0.1:3000",
   AUTH_URL: "http://127.0.0.1:5174",
+  BETTER_AUTH_SECRET: "test-better-auth-secret-min-32-chars!!",
   AI_SETTINGS_ENCRYPTION_KEY: "a".repeat(64),
   NODE_ENV: "test",
 };

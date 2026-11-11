@@ -1,17 +1,25 @@
 import { AppError } from "../../utils/errors.js";
 import { IdempotencyConflictError } from "./idempotency.js";
 import { ProviderError } from "./providerError.js";
+import {
+  ResourceAccessError,
+  resourceAccessHint,
+  type CanonicalErrorCode,
+} from "./resourceAccess.js";
 
 /**
- * Stable MCP tool error codes (audit contract).
- * Prefer these over ad-hoc strings in tool responses.
+ * Stable MCP tool error codes (snake_case, retained for compatibility).
+ * Prefer `canonicalCode` (UPPER_SNAKE) for new clients.
  */
 export type ToolErrorCode =
   | "validation_error"
   | "not_found"
+  | "trashed"
   | "permission_denied"
   | "subscription_required"
   | "conflict"
+  | "stale"
+  | "invalid"
   | "rate_limited"
   | "provider_unavailable"
   | "internal_error";
@@ -19,13 +27,30 @@ export type ToolErrorCode =
 export type ToolErrorPayload = {
   error: true;
   code: ToolErrorCode;
+  /** Audit / agent-facing stable code (NOT_FOUND | TRASHED | …). */
+  canonicalCode: CanonicalErrorCode;
   message: string;
   field?: string;
   hint?: string;
+  details?: unknown;
   retryable: boolean;
   provider?: string;
   /** On conflict/stale writes, the refreshed entity so the caller can re-merge. */
   current?: unknown;
+};
+
+const CANONICAL: Record<ToolErrorCode, CanonicalErrorCode> = {
+  validation_error: "VALIDATION_ERROR",
+  not_found: "NOT_FOUND",
+  trashed: "TRASHED",
+  permission_denied: "FORBIDDEN",
+  subscription_required: "SUBSCRIPTION_REQUIRED",
+  conflict: "CONFLICT",
+  stale: "STALE",
+  invalid: "INVALID",
+  rate_limited: "RATE_LIMITED",
+  provider_unavailable: "PROVIDER_UNAVAILABLE",
+  internal_error: "INTERNAL_ERROR",
 };
 
 export function toolError(opts: {
@@ -33,16 +58,20 @@ export function toolError(opts: {
   message: string;
   field?: string;
   hint?: string;
+  details?: unknown;
   retryable?: boolean;
   current?: unknown;
   provider?: string;
+  canonicalCode?: CanonicalErrorCode;
 }): ToolErrorPayload {
   return {
     error: true,
     code: opts.code,
+    canonicalCode: opts.canonicalCode ?? CANONICAL[opts.code],
     message: opts.message,
     field: opts.field,
     hint: opts.hint,
+    details: opts.details,
     retryable: opts.retryable ?? false,
     provider: opts.provider,
     current: opts.current,
@@ -53,6 +82,17 @@ export function mapToolError(
   error: unknown,
   opts?: { current?: unknown; field?: string },
 ): ToolErrorPayload {
+  if (error instanceof ResourceAccessError) {
+    return toolError({
+      code: error.canonicalCode === "TRASHED" ? "trashed" : "not_found",
+      canonicalCode: error.canonicalCode,
+      message: error.message,
+      hint: resourceAccessHint(error),
+      details: error.details,
+      retryable: false,
+    });
+  }
+
   if (error instanceof IdempotencyConflictError) {
     return toolError({
       code: "conflict",
@@ -86,6 +126,7 @@ export function mapToolError(
     if (error.code === "CONFLICT") {
       return toolError({
         code: "conflict",
+        canonicalCode: "STALE",
         message: error.message,
         field: opts?.field ?? "updatedAt",
         hint: "Resource changed; re-merge using current.updatedAt and retry.",
@@ -113,6 +154,7 @@ export function mapToolError(
         code: "not_found",
         message: error.message,
         retryable: false,
+        details: error.details,
       });
     }
     if (error.code === "VALIDATION_ERROR") {
@@ -121,6 +163,7 @@ export function mapToolError(
         message: error.message,
         field: opts?.field,
         retryable: false,
+        details: error.details,
         current: error.details,
       });
     }
@@ -142,7 +185,15 @@ export function mapToolError(
       retryable: false,
     });
   }
-  if (lower.includes("not found")) {
+  if (lower.includes("lixeira") || lower.includes("trash")) {
+    return toolError({
+      code: "trashed",
+      message,
+      retryable: false,
+      hint: "Item is soft-deleted; restore or use includeTrashed=true.",
+    });
+  }
+  if (lower.includes("not found") || lower.includes("não existe")) {
     return toolError({ code: "not_found", message, retryable: false });
   }
   if (lower.includes("rate") || lower.includes("429") || lower.includes("too many")) {
@@ -176,6 +227,7 @@ export function mapToolError(
   ) {
     return toolError({
       code: "validation_error",
+      canonicalCode: "INVALID",
       message,
       field: opts?.field,
       hint: "Fix the invalid field/argument and retry.",
@@ -191,6 +243,7 @@ export function mapToolError(
   ) {
     return toolError({
       code: "conflict",
+      canonicalCode: "STALE",
       message,
       field: opts?.field ?? "updatedAt",
       hint: "Resource changed or idempotency key conflict; reload and retry.",

@@ -1,6 +1,7 @@
 "use client";
 
 import { OrgSwitcher } from "@/components/account/OrgSwitcher";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import type { TranslationKey } from "@/lib/i18n";
 import { useI18n } from "@/lib/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
@@ -59,7 +60,12 @@ const ORG_ITEMS: OrgNavItem[] = [
     icon: Bot,
     permission: "ai.manage",
   },
-  { href: "/account/organization/regional", labelKey: "account.nav.regional", icon: MapPin },
+  {
+    href: "/account/organization/regional",
+    labelKey: "account.nav.regional",
+    icon: MapPin,
+    permission: "organization.update",
+  },
   {
     href: "/account/organization/activity",
     labelKey: "account.nav.activity",
@@ -70,7 +76,7 @@ const ORG_ITEMS: OrgNavItem[] = [
     href: "/account/organization/data",
     labelKey: "account.nav.data",
     icon: Database,
-    permission: "backup.export",
+    anyPermissions: ["backup.export", "backup.import"],
   },
 ];
 
@@ -125,14 +131,15 @@ function PermissionGate({ item, children }: { item: OrgNavItem; children: ReactN
   return <>{children}</>;
 }
 
-/** Google-accounts style left sidebar (sticky on desktop while content scrolls). */
+/** Google-accounts style left sidebar (fixed on desktop while content scrolls). */
 export function AccountNav({ className = "" }: { className?: string }) {
   const { t } = useI18n();
   const pathname = usePathname() || "/account";
   const search = usePreservedSearch();
-  const inOrgSection = pathname.startsWith("/account/organization");
+  const { organization, organizations } = useActiveOrganization();
+  const showOrgNav = Boolean(organization) || organizations.length > 0;
 
-  const renderOrgLinks = (compact = false) =>
+  const renderOrgLinks = () =>
     ORG_ITEMS.map((item) => (
       <PermissionGate key={item.href} item={item}>
         <NavLink item={item} search={search} active={isActivePath(pathname, item)} />
@@ -141,11 +148,11 @@ export function AccountNav({ className = "" }: { className?: string }) {
 
   return (
     <nav
-      className={`w-full shrink-0 md:sticky md:top-14 md:max-h-[calc(100dvh-3.5rem)] md:w-56 md:self-start md:overflow-y-auto lg:w-60 ${className}`}
+      className={`w-full shrink-0 md:fixed md:top-[4.25rem] md:left-6 md:z-20 md:max-h-[calc(100dvh-4.25rem)] md:w-56 md:overflow-y-auto md:overscroll-contain lg:left-8 lg:w-60 ${className}`}
       aria-label={t("account.nav.ariaLabel")}
     >
       <div className="md:hidden space-y-2">
-        {inOrgSection ? <OrgSwitcher /> : null}
+        {showOrgNav ? <OrgSwitcher /> : null}
         <div className="-mx-1 overflow-x-auto pb-1">
           <div className="flex min-w-min items-stretch gap-1 px-1">
             {PERSONAL_ITEMS.map((item) => (
@@ -156,8 +163,12 @@ export function AccountNav({ className = "" }: { className?: string }) {
                 active={isActivePath(pathname, item)}
               />
             ))}
-            <span className="mx-1 w-px shrink-0 self-stretch bg-m3-border/70" aria-hidden />
-            {renderOrgLinks(true)}
+            {showOrgNav ? (
+              <>
+                <span className="mx-1 w-px shrink-0 self-stretch bg-m3-border/70" aria-hidden />
+                {renderOrgLinks()}
+              </>
+            ) : null}
           </div>
         </div>
       </div>
@@ -179,15 +190,17 @@ export function AccountNav({ className = "" }: { className?: string }) {
           </div>
         </div>
 
-        <div>
-          <p className="mb-1.5 px-2.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
-            {t("account.nav.organization")}
-          </p>
-          <div className="mb-2 px-0.5">
-            <OrgSwitcher />
+        {showOrgNav ? (
+          <div>
+            <p className="mb-1.5 px-2.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
+              {t("account.nav.organization")}
+            </p>
+            <div className="mb-2 px-0.5">
+              <OrgSwitcher />
+            </div>
+            <div className="flex flex-col gap-0.5">{renderOrgLinks()}</div>
           </div>
-          <div className="flex flex-col gap-0.5">{renderOrgLinks()}</div>
-        </div>
+        ) : null}
       </div>
     </nav>
   );

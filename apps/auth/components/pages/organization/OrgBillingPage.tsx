@@ -5,15 +5,7 @@ import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
 import { Badge, Button, Can, Cannot, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
-import {
-  AlertTriangle,
-  CalendarRange,
-  Check,
-  CreditCard,
-  Receipt,
-  RotateCcw,
-  Sparkles,
-} from "lucide-react";
+import { AlertTriangle, CalendarRange, Check, CreditCard, Receipt, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Subscription = {
@@ -201,11 +193,6 @@ export function OrgBillingPage() {
     });
   };
 
-  const daysLeft = (end?: string | Date | null) => {
-    if (!end) return 0;
-    return Math.max(0, Math.ceil((new Date(end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
-  };
-
   const handleCheckout = async () => {
     if (!canManage.granted || !organization) return;
     setPendingAction("checkout");
@@ -357,33 +344,15 @@ export function OrgBillingPage() {
               <p className="text-xs text-m3-secondary">{t("settings.billing.loading")}</p>
             ) : null}
 
-            {activeSub.status === "trialing" && activeSub.trialEnd ? (
-              <div className="flex items-start gap-3 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-3.5 dark:border-amber-800 dark:from-amber-950/40 dark:to-orange-950/20">
-                <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
-                <div className="text-sm text-amber-900 dark:text-amber-200">
-                  <p className="font-semibold">
-                    {t("settings.billing.trialDaysLeft", {
-                      days: daysLeft(activeSub.trialEnd),
-                    })}
-                  </p>
-                  <p className="mt-0.5 opacity-90">
-                    {t("settings.billing.trialEndsOn", {
-                      date: formatDate(activeSub.trialEnd),
-                    })}
-                  </p>
-                </div>
-              </div>
-            ) : null}
-
             {activeSub.cancelAtPeriodEnd ? (
-              <div className="flex flex-col justify-between gap-3 rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-red-50 px-4 py-3.5 sm:flex-row sm:items-center dark:border-rose-800 dark:from-rose-950/40 dark:to-red-950/20">
-                <div className="text-sm text-rose-800 dark:text-rose-300">
-                  <p className="font-semibold">{t("settings.billing.cancelingTitle")}</p>
-                  <p className="mt-0.5 opacity-90">
-                    {t("settings.billing.cancelingDesc", {
+              <div className="flex flex-col justify-between gap-3 rounded-xl border border-m3-border bg-m3-card px-4 py-3.5 sm:flex-row sm:items-center">
+                <div className="text-sm text-m3-text">
+                  <p className="font-medium">
+                    {t("settings.billing.cancelingTitle", {
                       date: formatDate(activeSub.periodEnd),
                     })}
                   </p>
+                  <p className="mt-0.5 text-m3-secondary">{t("settings.billing.cancelingDesc")}</p>
                 </div>
                 <Can permission="billing.manage">
                   <Button
@@ -431,6 +400,13 @@ export function OrgBillingPage() {
                       <p className="mt-1.5 max-w-lg text-sm text-white/75">
                         {t("settings.billing.planDesc")}
                       </p>
+                      {activeSub.status === "trialing" && activeSub.trialEnd ? (
+                        <p className="mt-2 text-sm text-white/60">
+                          {t("settings.billing.trialUntil", {
+                            date: formatDate(activeSub.trialEnd),
+                          })}
+                        </p>
+                      ) : null}
                     </div>
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                       <span className="text-4xl font-semibold tabular-nums tracking-tight sm:text-5xl">

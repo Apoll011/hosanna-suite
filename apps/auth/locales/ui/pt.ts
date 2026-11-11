@@ -178,10 +178,11 @@ export const pt = {
           support: "Suporte prioritário",
         },
       },
+      trialUntil: "Até {date}",
       trialDaysLeft: "Restam {days} dias do período experimental",
       trialEndsOn: "O trial termina a {date}.",
-      cancelingTitle: "Subscrição a terminar",
-      cancelingDesc: "A subscrição termina a {date} e não será renovada.",
+      cancelingTitle: "Cancela a {date}",
+      cancelingDesc: "O acesso continua até essa data. Não será renovada.",
       restore: "Restaurar subscrição",
       restoreSuccess: "Subscrição restaurada.",
       restoreError: "Não foi possível restaurar a subscrição.",
@@ -250,6 +251,8 @@ export const pt = {
       title: "Preferências regionais e calendário",
       desc: "Idioma principal, fuso horário e início da semana.",
       readOnly: "Só leitura",
+      noAccessTitle: "Sem acesso",
+      noAccessDesc: "Apenas proprietários e administradores podem alterar as definições regionais.",
       orgLanguage: "Idioma da organização",
       timezone: "Fuso horário",
       weekStartsOn: "Primeiro dia da semana",
@@ -667,6 +670,35 @@ export const pt = {
       memoryCount: "{count}/{max} notas",
       memoryError: "Não foi possível atualizar a memória.",
       clearKey: "Remover chave",
+      setup: {
+        eyebrow: "Logos IA",
+        title: "Traga um assistente para o planeamento de culto",
+        subtitle:
+          "Ligue um fornecedor uma vez. A equipa ganha ajuda com músicas, ChordPro e cultos — dentro do Studio.",
+        cta: "Configurar Logos IA",
+        ctaHint: "A seguir escolhe fornecedor, modelo e chave de API.",
+        features: {
+          chordpro: {
+            title: "Edições ChordPro",
+            desc: "Corrigir formatação, completar acordes e limpar cifras sem sair do editor.",
+          },
+          songs: {
+            title: "Ideias de músicas",
+            desc: "Sugerir músicas, preencher metadados e transpor tonalidades para a equipa.",
+          },
+          services: {
+            title: "Planeamento de cultos",
+            desc: "Rever setlists, propor estrutura e manter a ordem do culto coerente.",
+          },
+          memory: {
+            title: "Memória da organização",
+            desc: "Lembrar preferências — tonalidades, estilo, idioma — em todo o espaço.",
+          },
+        },
+        providersNote:
+          "Funciona com ChatGPT, Anthropic, Gemini, DeepSeek ou um endpoint compatível com OpenAI.",
+        privacyNote: "As chaves de API são encriptadas no servidor e nunca regressam ao browser.",
+      },
       billing: {
         title: "Saldo DeepSeek",
         desc: "Saldo em tempo real da sua chave de API DeepSeek.",

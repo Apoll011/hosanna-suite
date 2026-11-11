@@ -37,7 +37,7 @@ export function OrgDataPage() {
   }, []);
 
   const handleBackup = async () => {
-    if (!organization?.id) return;
+    if (!organization?.id || !canExportPerm.granted) return;
     setIsDownloading(true);
     try {
       await backupApi.downloadBackup({ organizationId: organization.id });
@@ -50,6 +50,7 @@ export function OrgDataPage() {
   };
 
   const handleRestoreFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!canImportPerm.granted) return;
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -221,12 +222,6 @@ export function OrgDataPage() {
 
         {!canExport && !canImport && !canExportPerm.loading && !canImportPerm.loading ? (
           <Surface className="py-8 text-center">
-            <p className="text-sm text-m3-secondary">{t("org.data.noBackupAccess")}</p>
-          </Surface>
-        ) : null}
-
-        {!canExport && !canImport ? (
-          <Surface>
             <p className="text-sm text-m3-secondary">{t("org.data.noBackupAccess")}</p>
           </Surface>
         ) : null}

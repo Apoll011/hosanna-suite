@@ -13,7 +13,10 @@ export type TransposeChordProSourceOptions =
 
 export interface TransposeChordProSourceResult {
   content: string;
+  /** Applied interval. For toKey targets this is the shortest ascending shift (0–11). */
   semitones: number;
+  /** Explicit direction of the applied interval. */
+  direction: "up" | "down" | "none";
   fromKey: string | null;
   toKey: string | null;
 }
@@ -98,9 +101,22 @@ export function transposeChordProSource(
     toKey = fromKey ? transposeKeyToken(fromKey, semitones) : null;
   }
 
-  // Normalize to signed interval in -11..11 for reporting
-  const normalized = ((semitones % 12) + 12) % 12;
-  const applied = normalized > 6 ? normalized - 12 : normalized;
+  // Prefer shortest ascending interval (0..11) when targeting a key.
+  // Explicit signed semitones keep the caller's direction.
+  const ascending = ((semitones % 12) + 12) % 12;
+  const usedToKey = typeof options !== "number" && "toKey" in options && Boolean(options.toKey);
+  let applied: number;
+  let direction: "up" | "down" | "none";
+  if (usedToKey) {
+    applied = ascending;
+    direction = applied === 0 ? "none" : "up";
+  } else if (typeof options === "number") {
+    applied = options;
+    direction = applied === 0 ? "none" : applied > 0 ? "up" : "down";
+  } else {
+    applied = options.semitones ?? 0;
+    direction = applied === 0 ? "none" : applied > 0 ? "up" : "down";
+  }
 
   let content = rewriteChordBrackets(source, applied);
   content = rewriteKeyDirectives(content, applied);
@@ -115,6 +131,7 @@ export function transposeChordProSource(
   return {
     content,
     semitones: applied,
+    direction,
     fromKey,
     toKey:
       typeof options !== "number" && "toKey" in options && options.toKey ? options.toKey : toKey,

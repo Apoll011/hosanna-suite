@@ -4,7 +4,7 @@ import { getVercelOidcToken } from "@vercel/oidc";
 export const VERCEL_TRUSTED_OIDC_HEADER = "x-vercel-trusted-oidc-idp-token";
 
 /**
- * Attach this project's short-lived OIDC token so `hosanna-server` can call
+ * Attach this project's short-lived OIDC token so the API can call
  * protected `hosanna-auth` deployments (Trusted Sources).
  * No-op locally / when OIDC is unavailable.
  */
