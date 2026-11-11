@@ -1,7 +1,5 @@
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
-import { can } from "../../middleware/auth.js";
-import type { PermissionString } from "@hosanna/auth";
 import { getChordProCapabilities } from "../lib/capabilities.js";
 import {
   DOC_RESOURCES,
@@ -28,6 +26,11 @@ import {
   serviceElementSchema,
   serviceElementTypeSchema,
 } from "../../validators/serviceElement.validators.js";
+import {
+  permissionsReportForUser,
+  summarizeDomainsForUser,
+} from "../domains/discovery.js";
+import { ensureDomainPacksRegistered } from "../domains/packs.js";
 
 function zToRoughJson(schema: { description?: string; _def?: unknown }) {
   return {
@@ -36,44 +39,41 @@ function zToRoughJson(schema: { description?: string; _def?: unknown }) {
   };
 }
 
-const SONG_PERMS: PermissionString[] = [
-  "song.access",
-  "song.create",
-  "song.update",
-  "song.delete",
-  "song.import",
-];
-const SERVICE_PERMS: PermissionString[] = [
-  "service.access",
-  "service.create",
-  "service.update",
-  "service.delete",
-];
-
 export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): void {
+  ensureDomainPacksRegistered();
+
   server.registerTool(
     "hosanna_capabilities",
     {
       title: "Hosanna capabilities",
       description:
-        "Summarize Hosanna MCP tools, resources, prompts, and ChordPro feature support levels.",
+        "Summarize Hosanna MCP tools, resources, prompts, domain packs, and ChordPro feature support. When authenticated, each domain tool is marked allowed/denied for the current role.",
       inputSchema: z.object({}),
     },
     async () => {
       try {
         const chordpro = getChordProCapabilities();
+        const ctx = getMcpContext(authInfo);
+        const user = ctx?.user ?? null;
+        const domains = summarizeDomainsForUser(user);
+        const allowedToolCount = domains.reduce(
+          (n, d) => n + d.tools.filter((t) => t.allowed).length,
+          0,
+        );
         return jsonResult({
           server: {
             name: "hosanna",
             version: HOSANNA_MCP_VERSION,
             toolCount: ALL_MCP_TOOL_NAMES.length,
+            allowedToolCount: user ? allowedToolCount : null,
           },
           architecture: {
             core: TOOL_SURFACE.core,
             studioOnly: TOOL_SURFACE.studioOnly,
             studioOnlyTools: [...STUDIO_ONLY_TOOLS],
-            note: "This MCP server exposes CORE tools only. Studio-only tools are unavailable here.",
+            note: "This MCP server exposes CORE tools only. Studio-only tools are unavailable here. Domains are registered via MCP Domain Packs.",
           },
+          domains,
           tools: {
             ...MCP_TOOL_GROUPS,
             services: [
@@ -88,40 +88,16 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
             ...toolTimingSummary(),
             recent: recentToolTimings(10),
           },
-          prompts: {
-            system: ["hosanna_system"],
-            songs: [
-              "songs_create",
-              "songs_edit",
-              "songs_fix",
-              "songs_complete",
-              "songs_review",
-              "songs_transpose",
-              "songs_arrange",
-              "songs_explain_chordpro",
-            ],
-            services: [
-              "services_create",
-              "services_edit",
-              "services_complete",
-              "services_fix",
-              "services_review",
-              "services_plan",
-            ],
-          },
-          skills: [
-            "hosanna://skills/hosanna-safe-data",
-            "hosanna://skills/chordpro-create",
-            "hosanna://skills/songs-edit-fix",
-            "hosanna://skills/chordpro-directives-variants",
-            "hosanna://skills/songs-transpose-arrange",
-            "hosanna://skills/songs-validate-review",
-            "hosanna://skills/services-create-edit",
-            "hosanna://skills/services-plan-complete",
-          ],
+          prompts: Object.fromEntries(
+            domains
+              .filter((d) => d.prompts.length > 0)
+              .map((d) => [d.id, [...d.prompts]]),
+          ),
+          skills: domains.flatMap((d) => [...d.skills]),
           chordproFeatures: chordpro.features,
           studioUi: STUDIO_UI_CATALOG,
           notes: [
+            "Prefer domains[].tools where allowed=true for the current role; denied tools will fail requirePermission.",
             "Server instructions tell you to READ skill resources — they are not auto-injected into context.",
             "Start with prompt hosanna_system (or read hosanna://skills/hosanna-safe-data + job skills).",
             "Org-scoped song/service tools require Better Auth bearer session with activeOrganizationId.",
@@ -142,7 +118,8 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
     "hosanna_permissions",
     {
       title: "Current permissions",
-      description: "Return the authenticated user/org role and allowed song/service actions.",
+      description:
+        "Return the authenticated org role, effective domain permissions (allowed/denied), and which MCP tools those permissions unlock.",
       inputSchema: z.object({}),
     },
     async () => {
@@ -155,16 +132,23 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
               "Not authenticated. ChordPro tools still work; song/service tools require a session.",
           });
         }
-        const allowed = [...SONG_PERMS, ...SERVICE_PERMS].filter((p) => can(ctx.user, p));
+        const report = permissionsReportForUser({
+          orgRole: ctx.user.role,
+          entitled: ctx.entitled,
+        });
         return jsonResult({
           authenticated: true,
           userId: ctx.user.id,
           orgId: ctx.orgId,
           role: ctx.user.role,
+          orgRole: report.orgRole,
+          appRoles: report.appRoles,
           teamId: ctx.user.teamId ?? null,
           entitled: ctx.entitled,
           locale: ctx.locale,
-          permissions: allowed,
+          permissions: report.allowed,
+          denied: report.denied,
+          tools: report.tools,
         });
       } catch (error) {
         return errorResult(error);

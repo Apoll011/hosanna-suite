@@ -22,6 +22,11 @@ export function listResources(): ResourceDefinition[] {
   return Object.values(RESOURCES);
 }
 
+/** Look up a Logos resource by MCP / auth domain id (`music.song`). */
+export function getResourceByDomainId(domainId: string): ResourceDefinition | undefined {
+  return Object.values(RESOURCES).find((r) => r.domainId === domainId);
+}
+
 /** Register another resource later (presenter cues, finance funds, …). */
 export function registerResource(def: ResourceDefinition): void {
   RESOURCES[def.kind] = def;

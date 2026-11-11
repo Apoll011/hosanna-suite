@@ -21,8 +21,16 @@ export type StagedProposal = {
   source?: string;
 };
 
+/**
+ * Product domain id shared with `@hosanna/auth` DomainId / MCP Domain Packs
+ * (`music.song`, `music.service`, …). Keep in sync when adding resources.
+ */
+export type ResourceDomainId = "music.song" | "music.service" | (string & {});
+
 export type ResourceDefinition<K extends ResourceKind = ResourceKind> = {
   kind: K;
+  /** Same id as MCP Domain Pack / auth DomainId. */
+  domainId: ResourceDomainId;
   /** App that owns the full editor for this resource. */
   ownerApp: (profile: LogosHostProfile) => string;
   /** SPA path under org slug (for optional open). */

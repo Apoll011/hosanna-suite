@@ -60,11 +60,13 @@ export { createLogosHost, type CreateLogosHostInput, type LogosChatApi } from ".
 
 export {
   getResource,
+  getResourceByDomainId,
   listResources,
   registerResource,
   libraryPathForNavigate,
   libraryPathForPrint,
   type ResourceDefinition,
+  type ResourceDomainId,
   type ResourceKind,
   type StagedProposal,
 } from "./resources";

@@ -29,6 +29,7 @@ export type ServiceProposalPayload = {
 
 export const serviceResource: ResourceDefinition<"service"> = {
   kind: "service",
+  domainId: "music.service",
   ownerApp: (profile) => planningAppId(profile),
   pathFor: servicePath,
   extractProposal: (output) => {

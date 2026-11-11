@@ -23,6 +23,7 @@ function asRecord(output: unknown): Record<string, unknown> | null {
 
 export const songResource: ResourceDefinition<"song"> = {
   kind: "song",
+  domainId: "music.song",
   ownerApp: (profile) => musicAppId(profile),
   pathFor: songPath,
   extractProposal: (output) => {

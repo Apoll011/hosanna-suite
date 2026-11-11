@@ -343,11 +343,16 @@ function buildHosannaTools(
   return {
     ...memoryTools,
     hosanna_capabilities: tool({
-      description: "Summarize Hosanna tools and ChordPro feature support.",
+      description:
+        "Summarize Hosanna tools, domain packs (with allowed/denied for current role), and ChordPro feature support.",
       inputSchema: z.object({}),
-      execute: async () =>
-        textResult({
+      execute: async () => {
+        const { summarizeDomainsForUser } = await import("../mcp/domains/discovery.js");
+        const ctx = getMcpContext(authInfo);
+        const domains = summarizeDomainsForUser(ctx?.user ?? null);
+        return textResult({
           features: getChordProCapabilities().features,
+          domains,
           skills: SKILL_NAMES.map((n) => `hosanna://skills/${n}`),
           howToReadSkills:
             "Call hosanna_skills_list then hosanna_skill_read({name}). Skill bodies are NOT auto-injected — you must read them.",
@@ -434,15 +439,22 @@ function buildHosannaTools(
               "directives",
             ],
           },
-          note: "Studio: propose tools stage Accept/Decline in the editor; user Save there. *_delete tools only STAGE a Confirm button (do not mutate). songs_save/services_save only after explicit persist request (MCP hosts).",
-        }),
+          note: "Prefer domains[].tools where allowed=true. Studio: propose tools stage Accept/Decline in the editor; user Save there. *_delete tools only STAGE a Confirm button (do not mutate). songs_save/services_save only after explicit persist request (MCP hosts).",
+        });
+      },
     }),
     hosanna_permissions: tool({
-      description: "Current user role and org entitlement. Prefer `me` for name/email/memberId.",
+      description:
+        "Current user role, effective domain permissions (allowed/denied), and which tools those unlock. Prefer `me` for name/email/memberId.",
       inputSchema: z.object({}),
       execute: async () => {
         const ctx = getMcpContext(authInfo);
         if (!ctx) return textResult({ authenticated: false });
+        const { permissionsReportForUser } = await import("../mcp/domains/discovery.js");
+        const report = permissionsReportForUser({
+          orgRole: ctx.user.role,
+          entitled: ctx.entitled,
+        });
         try {
           const identity = await getMe(ctx);
           return textResult({
@@ -454,8 +466,13 @@ function buildHosannaTools(
             orgId: identity.organization.id,
             orgName: identity.organization.name,
             role: identity.member.role,
+            orgRole: report.orgRole,
+            appRoles: report.appRoles,
             entitled: identity.entitled,
             locale: identity.organization.locale,
+            permissions: report.allowed,
+            denied: report.denied,
+            tools: report.tools,
           });
         } catch {
           return textResult({
@@ -463,7 +480,12 @@ function buildHosannaTools(
             userId: ctx.user.id,
             orgId: ctx.orgId,
             role: ctx.user.role,
+            orgRole: report.orgRole,
+            appRoles: report.appRoles,
             entitled: ctx.entitled,
+            permissions: report.allowed,
+            denied: report.denied,
+            tools: report.tools,
           });
         }
       },
