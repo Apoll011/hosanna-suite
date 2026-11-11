@@ -49,10 +49,10 @@ function withPackageChatFallback(host: LogosHost): LogosHost {
 }
 
 function withDefaultProfile(host: LogosHost): LogosHost {
-  if (host.profile?.appId) return host;
   return {
     ...host,
-    profile: thinHostProfile(host.profile?.appId || "unknown"),
+    canUpdateService: host.canUpdateService ?? false,
+    profile: host.profile?.appId ? host.profile : thinHostProfile("unknown"),
   };
 }
 

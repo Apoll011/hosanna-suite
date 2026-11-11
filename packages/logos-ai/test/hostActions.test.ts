@@ -30,6 +30,7 @@ function stubHost(profile: LogosHost["profile"], slugPrefix = "/acme"): LogosHos
     slugPrefix,
     canUseAi: true,
     canUpdateSong: true,
+    canUpdateService: true,
     deriveView: () => "general",
     profile,
   };
@@ -79,7 +80,7 @@ describe("maybeDispatchHostActions", () => {
     });
   });
 
-  it("falls back to open_app for navigate on Auth", () => {
+  it("does NOT auto open_app for navigate on Auth (stay in chat)", () => {
     const events = installWindowCapture();
     maybeDispatchHostActions(
       "studio_navigate",
@@ -91,17 +92,10 @@ describe("maybeDispatchHostActions", () => {
       },
       stubHost(AUTH_HOST_PROFILE, "/acme"),
     );
-    assert.equal(events.length, 1);
-    assert.equal(events[0].type, AI_OPEN_APP_EVENT);
-    assert.deepEqual(events[0].detail, {
-      app: "studio",
-      path: "/acme/songs/song-1",
-      openIn: "same",
-      reason: "review",
-    });
+    assert.equal(events.length, 0);
   });
 
-  it("falls back to open_app for print on Auth", () => {
+  it("does NOT auto open_app for print on Auth (stay in chat)", () => {
     const events = installWindowCapture();
     maybeDispatchHostActions(
       "studio_generate_pdf",
@@ -113,14 +107,7 @@ describe("maybeDispatchHostActions", () => {
       },
       stubHost(AUTH_HOST_PROFILE, "/acme"),
     );
-    assert.equal(events.length, 1);
-    assert.equal(events[0].type, AI_OPEN_APP_EVENT);
-    assert.deepEqual(events[0].detail, {
-      app: "studio",
-      path: "/acme/songs/song-1",
-      openIn: "same",
-      reason: "print",
-    });
+    assert.equal(events.length, 0);
   });
 
   it("keeps local print on Studio", () => {
@@ -138,22 +125,24 @@ describe("maybeDispatchHostActions", () => {
     assert.equal(events[0].type, AI_PRINT_EVENT);
   });
 
-  it("dispatches open_app directives directly", () => {
+  it("still dispatches explicit open_app on Auth", () => {
     const events = installWindowCapture();
     maybeDispatchHostActions(
       "open_app",
       {
         openApp: true,
-        app: "auth",
-        path: "/account/organization/ai",
-        openIn: "new",
+        app: "studio",
+        path: "/acme/songs/song-1",
+        openIn: "same",
       },
-      stubHost(STUDIO_HOST_PROFILE),
+      stubHost(AUTH_HOST_PROFILE),
     );
+    assert.equal(events.length, 1);
+    assert.equal(events[0].type, AI_OPEN_APP_EVENT);
     assert.deepEqual(events[0].detail, {
-      app: "auth",
-      path: "/account/organization/ai",
-      openIn: "new",
+      app: "studio",
+      path: "/acme/songs/song-1",
+      openIn: "same",
       reason: undefined,
     });
   });

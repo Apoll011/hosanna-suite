@@ -3,14 +3,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useLogosI18n } from "../../host";
+import { useLogosHost, useLogosI18n } from "../../host";
+import { hasCapability } from "../../host/capabilities";
 import { AlertCircle, Check, ChevronDown, ChevronRight, Loader2, X } from "lucide-react";
 import React, { memo, useMemo, useState } from "react";
 import { AiConfirmCard } from "./ConfirmCard";
+import { AiHostActionCard } from "./HostActionCard";
 import { AiProposalCard } from "../../proposals/components/Card";
+import { AiServiceProposalCard } from "../../proposals/components/ServiceCard";
 import { CopyButton } from "./CopyButton";
 import { countByName, toolRunStatus } from "../../core/stream";
-import { extractDestructiveConfirmation, extractSongProposal } from "../../proposals/parse";
+import {
+  extractDestructiveConfirmation,
+  extractHostUiOffer,
+  extractServiceProposal,
+  extractSongProposal,
+} from "../../proposals/parse";
 import {
   formatDuration,
   parseToolOutput,
@@ -20,6 +28,7 @@ import {
   toolResultHint,
   toolSummary,
 } from "../../core/tools";
+import type { LogosServiceElement } from "../../host/types";
 import type { AiToolCallState } from "../../types";
 
 const PAYLOAD_MAX = 12_000;
@@ -142,8 +151,11 @@ const MAX_NAMES = 3;
  */
 export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolCallState[] }) {
   const { t, tc } = useLogosI18n();
+  const host = useLogosHost();
   const [open, setOpen] = useState(false);
   const [everOpened, setEverOpened] = useState(false);
+  const thinNavigate = !hasCapability(host.profile, "navigate.local");
+  const thinPrint = !hasCapability(host.profile, "print");
 
   const run = useMemo(() => toolRunStatus(tools), [tools]);
   const names = useMemo(() => countByName(tools), [tools]);
@@ -163,6 +175,35 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
         return p?.id ? { ...p, id: p.id } : null;
       }),
     [tools],
+  );
+
+  const serviceProposals = useMemo(
+    () =>
+      tools.map((tool) => {
+        if (tool.status !== "done") return null;
+        const p = extractServiceProposal(parseToolOutput(tool.output));
+        if (!p?.serviceId || !Array.isArray(p.elements)) return null;
+        return {
+          id: p.serviceId,
+          name: p.name,
+          notes: p.notes,
+          elements: p.elements as LogosServiceElement[],
+        };
+      }),
+    [tools],
+  );
+
+  const hostOffers = useMemo(
+    () =>
+      tools.map((tool) => {
+        if (tool.status !== "done") return null;
+        const offer = extractHostUiOffer(parseToolOutput(tool.output));
+        if (!offer) return null;
+        if (offer.type === "navigate" && !thinNavigate) return null;
+        if (offer.type === "print" && !thinPrint) return null;
+        return offer;
+      }),
+    [tools, thinNavigate, thinPrint],
   );
 
   const current = useMemo(() => {
@@ -237,6 +278,14 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
 
       {songProposals.map((p, i) =>
         p ? <AiProposalCard key={`p-${tools[i].toolCallId}`} proposal={p} /> : null,
+      )}
+
+      {serviceProposals.map((p, i) =>
+        p ? <AiServiceProposalCard key={`s-${tools[i].toolCallId}`} proposal={p} /> : null,
+      )}
+
+      {hostOffers.map((offer, i) =>
+        offer ? <AiHostActionCard key={`h-${tools[i].toolCallId}`} offer={offer} /> : null,
       )}
 
       {confirmations.map((c, i) =>

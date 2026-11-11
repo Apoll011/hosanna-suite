@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { hasCapability } from "./capabilities";
 import { useLogosHost } from "./context";
 import { useHostSong, useHostUpdateSong, useLogosSongAdapter } from "./songAdapter";
-import type { LogosSong } from "./types";
+import type { LogosService, LogosSong } from "./types";
 
 export type CatalogSongState = {
   data: LogosSong | null | undefined;
@@ -117,5 +117,79 @@ export function useCatalogUpdateSong() {
       await adapterUpdate(args);
     },
     [api, adapterUpdate, preferAdapter],
+  );
+}
+
+export type CatalogServiceState = {
+  data: LogosService | null | undefined;
+  isLoading: boolean;
+  notFound: boolean;
+};
+
+/** Load a service for proposal cards (API catalog — works on any host). */
+export function useCatalogService(id: string | null | undefined): CatalogServiceState {
+  const { api } = useLogosHost();
+  const [data, setData] = useState<LogosService | null | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setData(undefined);
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) {
+      setData(undefined);
+      setIsLoading(false);
+      return;
+    }
+    if (!api.getService) {
+      setData(null);
+      setIsLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+    void api
+      .getService(id)
+      .then((service) => {
+        if (!cancelled) setData(service);
+      })
+      .catch(() => {
+        if (!cancelled) setData(null);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, api]);
+
+  const notFound = Boolean(id) && !isLoading && !data;
+
+  return { data, isLoading, notFound };
+}
+
+/** Persist a service proposal via LogosApi (chat Accept on thin hosts / any app). */
+export function useCatalogUpdateService() {
+  const { api } = useLogosHost();
+
+  return useCallback(
+    async (args: {
+      id: string;
+      data: Partial<Pick<LogosService, "name" | "notes" | "elements" | "updatedAt">>;
+    }) => {
+      if (!api.updateService) throw new Error("Service updates are not available here");
+      let patch = args.data;
+      if (!patch.updatedAt && api.getService) {
+        const current = await api.getService(args.id);
+        if (!current?.updatedAt) throw new Error("Service not found or missing updatedAt");
+        patch = { ...patch, updatedAt: current.updatedAt };
+      }
+      await api.updateService(args.id, patch);
+    },
+    [api],
   );
 }

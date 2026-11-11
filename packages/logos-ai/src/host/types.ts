@@ -35,6 +35,16 @@ export type LogosServiceElement = {
   duration?: number;
 };
 
+export type LogosService = {
+  id: string;
+  name: string;
+  date?: string;
+  notes?: string | null;
+  elements: LogosServiceElement[];
+  /** ISO concurrency token when known (API updates). */
+  updatedAt?: string;
+};
+
 export type LogosApi = {
   getSettings: () => Promise<AiSettingsPublic>;
   streamChat: (body: {
@@ -50,6 +60,12 @@ export type LogosApi = {
    */
   getSong?: (id: string) => Promise<LogosSong | null>;
   updateSong?: (id: string, data: Partial<LogosSong>) => Promise<LogosSong | void>;
+  /** Cross-host service catalog for in-chat Accept on thin hosts. */
+  getService?: (id: string) => Promise<LogosService | null>;
+  updateService?: (
+    id: string,
+    data: Partial<Pick<LogosService, "name" | "notes" | "elements" | "updatedAt">>,
+  ) => Promise<LogosService | void>;
 };
 
 /** Core host — no React hooks. Song load/save lives on LogosSongAdapter + optional API catalog. */
@@ -68,11 +84,13 @@ export type LogosHost = {
   /** Whether AI feature is allowed */
   canUseAi: boolean;
   canUpdateSong: boolean;
+  /** Persist service proposals from chat (API catalog). Defaults false when omitted. */
+  canUpdateService?: boolean;
   /** Map pathname+slugPrefix → view name used by buildPageContext */
   deriveView: (pathname: string, slugPrefix: string) => string;
   /**
    * Declares which local capabilities this app has. Missing / empty → treat as
-   * thin host (catalog + open_app handoff only).
+   * thin host (catalog + chat proposals; optional open_app).
    */
   profile: LogosHostProfile;
 };

@@ -3,16 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * Route tool-output host directives according to the mounting app's capabilities.
- * Studio keeps local navigate/print/sync; other hosts fall back to `open_app`.
+ *
+ * Studio keeps local navigate/print/sync.
+ * Thin hosts (auth, future apps) stay in chat for proposals — navigate/print are
+ * NOT auto-executed (ToolGroup shows an optional "Open in Music" card instead).
+ * Explicit `open_app` still runs immediately.
  */
 
 import type { LogosHost } from "../../host/types";
-import {
-  hasCapability,
-  musicAppId,
-  planningAppId,
-  type LogosHostProfile,
-} from "../../host/capabilities";
+import { hasCapability } from "../../host/capabilities";
 import {
   dispatchAiNavigate,
   dispatchAiPrint,
@@ -20,7 +19,6 @@ import {
   type AiPrintDetail,
 } from "./contextBridge";
 import { dispatchAiOpenApp, type AiOpenAppDetail } from "./openApp";
-import { studioPathForNavigate, studioPathForPrint } from "./studioPaths";
 
 function asRecord(output: unknown): Record<string, unknown> | null {
   if (output == null) return null;
@@ -64,49 +62,25 @@ function parseToolJson(output: unknown): Record<string, unknown> | null {
   return direct;
 }
 
-function openMusic(path: string, reason: string | undefined, profile: LogosHostProfile) {
-  const detail: AiOpenAppDetail = {
-    app: musicAppId(profile),
-    path,
-    openIn: "same",
-    reason,
-  };
-  dispatchAiOpenApp(detail);
-}
-
-function openPlanning(path: string, reason: string | undefined, profile: LogosHostProfile) {
-  const detail: AiOpenAppDetail = {
-    app: planningAppId(profile),
-    path,
-    openIn: "same",
-    reason,
-  };
-  dispatchAiOpenApp(detail);
-}
-
 function routeNavigate(body: Record<string, unknown>, host: LogosHost) {
+  if (!hasCapability(host.profile, "navigate.local")) {
+    // Thin host: stay in chat. AiHostActionCard offers a manual open.
+    return;
+  }
   const detail: AiNavigateDetail = {
     kind: String(body.kind),
     id: typeof body.id === "string" ? body.id : ((body.id as null) ?? null),
     route: typeof body.route === "string" ? body.route : undefined,
     reason: typeof body.reason === "string" ? body.reason : undefined,
   };
-
-  if (hasCapability(host.profile, "navigate.local")) {
-    dispatchAiNavigate(detail);
-    return;
-  }
-
-  const path = studioPathForNavigate(detail, host.slugPrefix);
-  // Services/agenda → planning owner; songs/library → music owner.
-  if (detail.kind === "service" || detail.kind === "services" || detail.kind === "agenda") {
-    openPlanning(path, detail.reason, host.profile);
-  } else {
-    openMusic(path, detail.reason, host.profile);
-  }
+  dispatchAiNavigate(detail);
 }
 
 function routePrint(body: Record<string, unknown>, host: LogosHost) {
+  if (!hasCapability(host.profile, "print")) {
+    // Thin host: stay in chat. AiHostActionCard offers a manual open/print.
+    return;
+  }
   const ids = Array.isArray(body.ids)
     ? body.ids.filter((id): id is string => typeof id === "string")
     : [];
@@ -122,14 +96,7 @@ function routePrint(body: Record<string, unknown>, host: LogosHost) {
         : undefined,
     reason: typeof body.reason === "string" ? body.reason : undefined,
   };
-
-  if (hasCapability(host.profile, "print")) {
-    dispatchAiPrint(detail);
-    return;
-  }
-
-  // Thin hosts: open the entity in Music so the user can print there.
-  openMusic(studioPathForPrint(detail, host.slugPrefix), detail.reason ?? "print", host.profile);
+  dispatchAiPrint(detail);
 }
 
 /**
@@ -188,12 +155,11 @@ export function maybeDispatchHostActions(
   }
 
   if (body.studioSync === true) {
-    // Only meaningful when the host can refresh its local library cache.
     if (!hasCapability(profile, "library.sync")) return;
-    // Studio listens via library change / its own sync tool handler.
     return;
   }
 
+  // Explicit cross-app jump — always honor (user asked to leave / open another app).
   if (body.openApp === true && typeof body.app === "string") {
     const openIn = body.openIn === "new" ? "new" : "same";
     const detail: AiOpenAppDetail = {

@@ -24,10 +24,18 @@ export {
   type LogosCapability,
   type LogosHostProfile,
 } from "./capabilities";
-export { useCatalogSong, useCatalogUpdateSong, type CatalogSongState } from "./catalog";
+export {
+  useCatalogService,
+  useCatalogSong,
+  useCatalogUpdateService,
+  useCatalogUpdateSong,
+  type CatalogServiceState,
+  type CatalogSongState,
+} from "./catalog";
 export type {
   LogosApi,
   LogosHost,
+  LogosService,
   LogosServiceElement,
   LogosSong,
   LogosSongAdapter,

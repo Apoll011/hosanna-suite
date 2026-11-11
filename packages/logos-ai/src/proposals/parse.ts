@@ -115,3 +115,58 @@ export function extractServiceProposal(output: unknown): {
     elements: proposal.elements,
   };
 }
+
+/** Optional navigate/print offer for thin hosts (chat stays put until the user clicks). */
+export type AiHostUiOffer = {
+  type: "navigate" | "print";
+  kind: string;
+  id?: string | null;
+  ids?: string[];
+  route?: string;
+  title?: string;
+  reason?: string;
+};
+
+export function extractHostUiOffer(output: unknown): AiHostUiOffer | null {
+  let parsed: unknown = output;
+  if (typeof output === "string") {
+    try {
+      parsed = JSON.parse(output);
+    } catch {
+      return null;
+    }
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+  const body = parsed as Record<string, unknown>;
+
+  if (
+    (body.studioNavigate === true || body.hostNavigate === true) &&
+    typeof body.kind === "string"
+  ) {
+    return {
+      type: "navigate",
+      kind: body.kind,
+      id: typeof body.id === "string" ? body.id : ((body.id as null) ?? null),
+      route: typeof body.route === "string" ? body.route : undefined,
+      reason: typeof body.reason === "string" ? body.reason : undefined,
+    };
+  }
+
+  if (
+    (body.studioPrint === true || body.hostPrint === true) &&
+    typeof body.kind === "string" &&
+    Array.isArray(body.ids)
+  ) {
+    const ids = body.ids.filter((id): id is string => typeof id === "string");
+    if (!ids.length) return null;
+    return {
+      type: "print",
+      kind: body.kind,
+      ids,
+      title: typeof body.title === "string" ? body.title : undefined,
+      reason: typeof body.reason === "string" ? body.reason : undefined,
+    };
+  }
+
+  return null;
+}

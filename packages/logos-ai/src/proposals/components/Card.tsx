@@ -239,7 +239,8 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = mem
                   {t("ai.chat.proposals.fullReview")}
                 </button>
               )}
-              {live && !inEditor && (
+              <span className="flex-1" />
+              {live && !inEditor && hasLocalEditor && (
                 <button
                   type="button"
                   className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-1.5 py-1 rounded-sm hover:bg-m3-hover"
@@ -250,7 +251,6 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = mem
                   {openEditorLabel}
                 </button>
               )}
-              <span className="flex-1" />
               {live && (
                 <Button
                   variant="outline"
@@ -272,6 +272,18 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = mem
                 >
                   {t("ai.chat.accept")}
                 </Button>
+              )}
+              {/* Thin hosts: optional Music open — never the primary action. */}
+              {live && !inEditor && !hasLocalEditor && (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1 text-[10.5px] text-m3-secondary/80 hover:text-m3-text px-1 py-1 rounded-sm hover:bg-m3-hover"
+                  onClick={() => openInEditor(live)}
+                  title={openEditorLabel}
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  {openEditorLabel}
+                </button>
               )}
             </div>
           </>

@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 
 import {
   extractDestructiveConfirmation,
+  extractHostUiOffer,
   extractServiceProposal,
   extractSongProposal,
 } from "../src/proposals/parse.js";
@@ -102,5 +103,31 @@ describe("extractServiceProposal", () => {
       extractServiceProposal(JSON.stringify({ proposal: { elements: [] } }))?.elements,
       [],
     );
+  });
+});
+
+describe("extractHostUiOffer", () => {
+  it("extracts navigate and print offers for thin-host cards", () => {
+    assert.deepEqual(
+      extractHostUiOffer({ studioNavigate: true, kind: "song", id: "s1" }),
+      {
+        type: "navigate",
+        kind: "song",
+        id: "s1",
+        route: undefined,
+        reason: undefined,
+      },
+    );
+    assert.deepEqual(
+      extractHostUiOffer({ studioPrint: true, kind: "song", ids: ["a", "b"], title: "Set" }),
+      {
+        type: "print",
+        kind: "song",
+        ids: ["a", "b"],
+        title: "Set",
+        reason: undefined,
+      },
+    );
+    assert.equal(extractHostUiOffer({ openApp: true, app: "studio" }), null);
   });
 });

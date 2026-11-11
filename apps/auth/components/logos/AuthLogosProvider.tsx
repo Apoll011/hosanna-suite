@@ -2,6 +2,7 @@
 
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { aiApi } from "@/lib/services/ai-api";
+import { servicesApi } from "@/lib/services/services-api";
 import { songsApi } from "@/lib/services/songs-api";
 import { useI18n } from "@/lib/ui/i18n";
 import { getStudioUrl } from "@/lib/auth/redirect";
@@ -20,6 +21,7 @@ import {
   resolveHosannaAppOrigin,
   type AiOpenAppDetail,
   type LogosHost,
+  type LogosService,
   type LogosSong,
   type LogosSongAdapter,
 } from "@hosanna/logos-ai";
@@ -91,13 +93,14 @@ function AuthOpenAppListener() {
 
 /**
  * Wires account-center auth/i18n/permissions into Logos AI and mounts the dock.
- * Catalog proposals work via API; navigate/print hand off to Music (Studio).
+ * Song/service proposals Accept in chat via API; Open in Music is optional.
  */
 export function AuthLogosProvider({ children }: { children: ReactNode }) {
   const { t, tc, language, locale } = useI18n();
   const { user, organization } = useActiveOrganization();
   const { granted: canUseAi } = useCan("ai.use");
   const { granted: canUpdateSong } = useCan("song.update");
+  const { granted: canUpdateService } = useCan("service.update");
   const pathname = usePathname() || "/account";
   const orgId = organization?.id;
   const orgSlug = organization?.slug;
@@ -117,6 +120,22 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
       content: song.content,
       song_number: song.song_number,
       updatedAt: song.updatedAt,
+    });
+
+    const toLogosService = (service: {
+      id: string;
+      name: string;
+      date?: string;
+      notes?: string | null;
+      elements?: LogosService["elements"];
+      updatedAt: string;
+    }): LogosService => ({
+      id: service.id,
+      name: service.name,
+      date: service.date,
+      notes: service.notes,
+      elements: service.elements ?? [],
+      updatedAt: service.updatedAt,
     });
 
     return {
@@ -159,6 +178,51 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
           );
           return toLogosSong(updated);
         },
+        getService: async (id) => {
+          if (!orgId) return null;
+          const service = await servicesApi.getById(id, { organizationId: orgId });
+          return service ? toLogosService(service) : null;
+        },
+        updateService: async (id, data) => {
+          if (!orgId) throw new Error("No organization");
+          let updatedAt = data.updatedAt;
+          if (!updatedAt) {
+            const current = await servicesApi.getById(id, { organizationId: orgId });
+            if (!current) throw new Error("Service not found");
+            updatedAt = current.updatedAt;
+          }
+          if (data.elements) {
+            const updated = await servicesApi.updateElements(
+              id,
+              { updatedAt, elements: data.elements },
+              { organizationId: orgId },
+            );
+            // Name/notes may still need a follow-up PUT when provided.
+            if (data.name !== undefined || data.notes !== undefined) {
+              const again = await servicesApi.update(
+                id,
+                {
+                  updatedAt: updated.updatedAt,
+                  ...(data.name !== undefined ? { name: data.name } : {}),
+                  ...(data.notes !== undefined ? { notes: data.notes } : {}),
+                },
+                { organizationId: orgId },
+              );
+              return toLogosService({ ...again, elements: data.elements });
+            }
+            return toLogosService({ ...updated, elements: data.elements });
+          }
+          const updated = await servicesApi.update(
+            id,
+            {
+              updatedAt,
+              ...(data.name !== undefined ? { name: data.name } : {}),
+              ...(data.notes !== undefined ? { notes: data.notes } : {}),
+            },
+            { organizationId: orgId },
+          );
+          return toLogosService(updated);
+        },
       },
       t: t as LogosHost["t"],
       tc: tc as LogosHost["tc"],
@@ -166,10 +230,11 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
       locale,
       userName: user?.name,
       scope: orgId && user?.id ? `${orgId}:${user.id}` : null,
-      // Used when handing off to Music via open_app (Studio paths are slug-scoped).
+      // Used when the user optionally opens Music via open_app.
       slugPrefix: orgSlug ? `/${orgSlug}` : "",
       canUseAi,
       canUpdateSong,
+      canUpdateService,
       deriveView: deriveAccountView,
       profile: AUTH_HOST_PROFILE,
     };
@@ -184,6 +249,7 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
     orgSlug,
     canUseAi,
     canUpdateSong,
+    canUpdateService,
   ]);
 
   return (

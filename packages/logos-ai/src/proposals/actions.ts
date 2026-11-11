@@ -6,17 +6,19 @@
 import { parseChordPro } from "@hosanna/chordpro";
 import { useCallback } from "react";
 import { dispatchAiNavigate, dispatchAiOpenApp } from "../core/bridge";
-import { studioPathForNavigate } from "../core/bridge/studioPaths";
+import { studioPathForNavigate, studioPathForPrint } from "../core/bridge/studioPaths";
+import type { AiHostUiOffer } from "./parse";
 import { hasCapability, musicAppId, planningAppId } from "../host/capabilities";
-import { useCatalogUpdateSong } from "../host/catalog";
+import { useCatalogUpdateService, useCatalogUpdateSong } from "../host/catalog";
 import { useLogosHost } from "../host/context";
 import type { LogosSong } from "../host/types";
-import { aiProposals, type AiProposal, type SongProposal } from "./store";
+import { aiProposals, type AiProposal, type ServiceProposal, type SongProposal } from "./store";
 
-/** Persist a song proposal (API catalog or host adapter) and clear it. */
+/** Persist proposals and optional cross-app opens (never auto — user-driven). */
 export function useProposalActions() {
   const host = useLogosHost();
   const updateSong = useCatalogUpdateSong();
+  const updateService = useCatalogUpdateService();
 
   const applySong = useCallback(
     async (proposal: SongProposal, content?: string): Promise<boolean> => {
@@ -40,13 +42,34 @@ export function useProposalActions() {
     [host.canUpdateSong, updateSong],
   );
 
+  const applyService = useCallback(
+    async (proposal: ServiceProposal): Promise<boolean> => {
+      if (!host.canUpdateService) return false;
+      try {
+        await updateService({
+          id: proposal.entityId,
+          data: {
+            elements: proposal.elements,
+            ...(proposal.name ? { name: proposal.name } : {}),
+            ...(proposal.notes != null ? { notes: proposal.notes } : {}),
+          },
+        });
+        aiProposals.resolve(proposal.key, "accepted");
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [host.canUpdateService, updateService],
+  );
+
   const decline = useCallback((proposal: AiProposal) => {
     aiProposals.resolve(proposal.key);
   }, []);
 
   /**
-   * Open the entity in an editor.
-   * Local navigate when the host has an editor; otherwise open Music/Planning.
+   * Optional: open the entity in an editor / Music.
+   * Never required for Accept — proposals stay reviewable in chat.
    */
   const openInEditor = useCallback(
     (proposal: AiProposal) => {
@@ -77,5 +100,53 @@ export function useProposalActions() {
     [host.profile, host.slugPrefix],
   );
 
-  return { applySong, decline, openInEditor };
+  /** Run a deferred navigate/print offer from a thin-host chat card. */
+  const runHostUiOffer = useCallback(
+    (offer: AiHostUiOffer) => {
+      if (offer.type === "navigate") {
+        const detail = {
+          kind: offer.kind,
+          id: offer.id ?? null,
+          route: offer.route,
+          reason: offer.reason,
+        };
+        if (hasCapability(host.profile, "navigate.local")) {
+          dispatchAiNavigate(detail);
+          return;
+        }
+        const path = studioPathForNavigate(detail, host.slugPrefix);
+        const app =
+          offer.kind === "service" || offer.kind === "services" || offer.kind === "agenda"
+            ? planningAppId(host.profile)
+            : musicAppId(host.profile);
+        dispatchAiOpenApp({
+          app,
+          path,
+          openIn: "same",
+          reason: offer.reason ?? "open",
+        });
+        return;
+      }
+
+      const printDetail = {
+        kind: offer.kind,
+        ids: offer.ids ?? [],
+        title: offer.title,
+        reason: offer.reason,
+      };
+      if (hasCapability(host.profile, "print")) {
+        // Print is Studio-local; thin hosts open the entity instead.
+        return;
+      }
+      dispatchAiOpenApp({
+        app: musicAppId(host.profile),
+        path: studioPathForPrint(printDetail, host.slugPrefix),
+        openIn: "same",
+        reason: offer.reason ?? "print",
+      });
+    },
+    [host.profile, host.slugPrefix],
+  );
+
+  return { applySong, applyService, decline, openInEditor, runHostUiOffer };
 }

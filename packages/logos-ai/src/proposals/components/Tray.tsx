@@ -4,7 +4,7 @@
  */
 
 import { useLogosHost, useLogosI18n } from "../../host";
-import { hasCapability, musicAppId } from "../../host/capabilities";
+import { hasCapability, musicAppId, planningAppId } from "../../host/capabilities";
 import {
   CalendarDays,
   Check,
@@ -20,7 +20,13 @@ import React, { useCallback, useState } from "react";
 import { useOpenEditorKey } from "../hooks/useOpenEditorKey";
 import { AiProposalReview } from "./Review";
 import { useProposalActions } from "../actions";
-import { aiProposals, useAiProposals, type AiProposal, type SongProposal } from "../store";
+import {
+  aiProposals,
+  useAiProposals,
+  type AiProposal,
+  type ServiceProposal,
+  type SongProposal,
+} from "../store";
 
 const iconBtn =
   "inline-flex items-center justify-center w-7 h-7 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text disabled:opacity-50 transition-colors";
@@ -34,16 +40,20 @@ export const AiProposalTray: React.FC = () => {
   const host = useLogosHost();
   const proposals = useAiProposals();
   const openKey = useOpenEditorKey();
-  const { canUpdateSong } = host;
-  const { applySong, decline, openInEditor } = useProposalActions();
+  const { canUpdateSong, canUpdateService } = host;
+  const { applySong, applyService, decline, openInEditor } = useProposalActions();
   const [expanded, setExpanded] = useState(true);
   const [reviewing, setReviewing] = useState<SongProposal | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-  const openEditorLabel = hasCapability(host.profile, "editor.songs")
+
+  const openSongLabel = hasCapability(host.profile, "editor.songs")
     ? t("ai.chat.proposals.openEditor")
     : t("ai.chat.proposals.openInMusic", { app: musicAppId(host.profile) });
+  const openServiceLabel = hasCapability(host.profile, "editor.services")
+    ? t("ai.chat.proposals.openEditor")
+    : t("ai.chat.proposals.openInMusic", { app: planningAppId(host.profile) });
 
-  const accept = useCallback(
+  const acceptSong = useCallback(
     async (p: SongProposal) => {
       setBusy(p.key);
       try {
@@ -55,21 +65,38 @@ export const AiProposalTray: React.FC = () => {
     [applySong],
   );
 
+  const acceptService = useCallback(
+    async (p: ServiceProposal) => {
+      setBusy(p.key);
+      try {
+        await applyService(p);
+      } finally {
+        setBusy(null);
+      }
+    },
+    [applyService],
+  );
+
   const acceptAll = useCallback(async () => {
-    const targets = proposals.filter(
-      (p): p is SongProposal => p.kind === "song" && p.key !== openKey,
-    );
     setBusy("*");
     try {
-      for (const p of targets) await applySong(p);
+      for (const p of proposals) {
+        if (p.key === openKey) continue;
+        if (p.kind === "song" && canUpdateSong) await applySong(p);
+        if (p.kind === "service" && canUpdateService) await applyService(p);
+      }
     } finally {
       setBusy(null);
     }
-  }, [proposals, openKey, applySong]);
+  }, [proposals, openKey, applySong, applyService, canUpdateSong, canUpdateService]);
 
   if (proposals.length === 0) return null;
 
-  const acceptable = proposals.filter((p) => p.kind === "song" && p.key !== openKey).length;
+  const acceptable = proposals.filter((p) => {
+    if (p.key === openKey) return false;
+    if (p.kind === "song") return canUpdateSong;
+    return canUpdateService;
+  }).length;
 
   const rowTitle = (p: AiProposal) =>
     p.kind === "song"
@@ -99,7 +126,7 @@ export const AiProposalTray: React.FC = () => {
             <ChevronDown className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
           )}
         </button>
-        {canUpdateSong && acceptable > 1 && (
+        {acceptable > 1 && (
           <button
             type="button"
             className="text-[11px] font-medium text-m3-primary hover:underline px-1.5 py-1 disabled:opacity-50"
@@ -126,6 +153,7 @@ export const AiProposalTray: React.FC = () => {
           {proposals.map((p) => {
             const inEditor = p.key === openKey;
             const Icon = p.kind === "song" ? Music : CalendarDays;
+            const openLabel = p.kind === "song" ? openSongLabel : openServiceLabel;
             return (
               <li
                 key={p.key}
@@ -160,18 +188,30 @@ export const AiProposalTray: React.FC = () => {
                       title={t("ai.chat.accept")}
                       aria-label={t("ai.chat.accept")}
                       disabled={busy !== null}
-                      onClick={() => void accept(p)}
+                      onClick={() => void acceptSong(p)}
                     >
                       <Check className="w-3.5 h-3.5" />
                     </button>
                   </>
                 )}
-                {(p.kind === "service" || inEditor || !hasCapability(host.profile, "editor.songs")) && (
+                {p.kind === "service" && !inEditor && canUpdateService && (
+                  <button
+                    type="button"
+                    className={`${iconBtn} text-m3-success! hover:bg-m3-success/10!`}
+                    title={t("ai.chat.accept")}
+                    aria-label={t("ai.chat.accept")}
+                    disabled={busy !== null}
+                    onClick={() => void acceptService(p)}
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                {!inEditor && (
                   <button
                     type="button"
                     className={iconBtn}
-                    title={openEditorLabel}
-                    aria-label={openEditorLabel}
+                    title={openLabel}
+                    aria-label={openLabel}
                     onClick={() => openInEditor(p)}
                   >
                     <ExternalLink className="w-3.5 h-3.5" />

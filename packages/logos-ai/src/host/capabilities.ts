@@ -4,7 +4,9 @@
  *
  * Host capability model — every Hosanna web app that mounts Logos declares
  * what it can do locally. Tools that need more than the host provides are
- * routed to the owning app (usually Music/Studio) via `open_app`.
+ * Chat proposals/confirms work everywhere via API catalog. Local extras
+ * (editor, navigate, print, sync) stay on capable hosts; thin hosts offer
+ * optional open cards instead of auto-navigating away.
  */
 
 /** Stable app ids used by `open_app` and host profiles. */
