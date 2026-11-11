@@ -1,14 +1,11 @@
 # Cloudflare Workers deploy (studio, saas, …).
 #
 # Config: .github/deploy-apps.json
-#   - targets.dev  → push to develop  → GitHub Environment "dev"
-#   - targets.prod → push to main/master → GitHub Environment "prod"
+#   - targets.dev  → push to develop     → GitHub Environment "Preview"
+#   - targets.prod → push to main/master → GitHub Environment "Production"
 # Apps without a target for the branch are skipped. Path filters come from config.
 #
-# GitHub Environments (one-time setup):
-#   Merge Preview → "dev", Production+SaaS → "prod".
-#   Put CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID on repo secrets.
-#   Leave Auth alone (Vercel / deploy-auth.yml).
+# Build vars/secrets come from the GitHub Environment; CLOUDFLARE_* from repo secrets.
 
 name: Deploy (Cloudflare)
 
@@ -93,7 +90,7 @@ jobs:
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_AUTH_URL: ${{ vars.VITE_AUTH_URL }}
-          VITE_DASHBOARD_URL: ${{ vars.VITE_AUTH_URL }}
+          VITE_DASHBOARD_URL: ${{ vars.VITE_DASHBOARD_URL }}
           VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
           VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
           VITE_PUBLIC_POSTHOG_HOST: ${{ vars.VITE_PUBLIC_POSTHOG_HOST }}

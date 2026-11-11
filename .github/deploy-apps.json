@@ -45,8 +45,7 @@
         "packages/ui/**",
         "pnpm-lock.yaml"
       ],
-      "buildEnv": ["VITE_AUTH_URL", "VITE_API_URL"],
-      "buildEnvMap": { "VITE_DASHBOARD_URL": "VITE_AUTH_URL" },
+      "buildEnv": ["VITE_AUTH_URL", "VITE_API_URL", "VITE_DASHBOARD_URL"],
       "targets": {
         "prod": {
           "url": "https://hosanna.live"

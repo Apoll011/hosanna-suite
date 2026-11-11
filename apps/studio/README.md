@@ -19,7 +19,7 @@ pnpm --filter @hosanna/studio deploy:preview      # → studio-preview / dev-stu
 pnpm --filter @hosanna/studio deploy:production   # → studio / studio.hosanna.live
 ```
 
-CI: `.github/workflows/deploy.yml` + `.github/deploy-apps.json` — develop → GitHub Environment `dev`, main/master → `prod`.
+CI: `.github/workflows/deploy.yml` + `.github/deploy-apps.json` — develop → GitHub Environment `Preview`, main/master → `Production`.
 
 ### SEO / Search Console
 

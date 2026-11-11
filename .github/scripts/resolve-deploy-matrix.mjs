@@ -20,8 +20,8 @@ const STAGE_BY_BRANCH = {
 };
 
 const GITHUB_ENVIRONMENT_BY_STAGE = {
-  dev: "dev",
-  prod: "prod",
+  dev: "Preview",
+  prod: "Production",
 };
 
 function matchGlob(file, pattern) {
