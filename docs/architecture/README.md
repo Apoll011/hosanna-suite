@@ -13,6 +13,7 @@ Hosanna is a **local-first worship planning platform**: churches organize songs 
 | [data-and-sync.md](./data-and-sync.md)                 | Local stores, RxDB-style replication, trash         |
 | [auth-and-billing.md](./auth-and-billing.md)           | Better Auth, RBAC, Stripe, entitlements             |
 | [external-integrations.md](./external-integrations.md) | Supabase, Firebase, AI, YouTube, email, …           |
+| [mcp-domain-packs.md](./mcp-domain-packs.md)           | MCP + Logos domains: how tool calls work, how to expand |
 | [improvements.md](./improvements.md)                   | Bugs, TODOs, tech debt, and suggested fixes         |
 | [deploy-report.md](./deploy-report.md)                 | Vercel / Cloudflare / Supabase / Firebase checklist |
 

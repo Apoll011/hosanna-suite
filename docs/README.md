@@ -8,6 +8,7 @@
 | [FUTURE_DIRECTION.md](./FUTURE_DIRECTION.md)               | Longer-term product / ecosystem vision            |
 | [scketch/](./scketch/)                                     | Excalidraw architecture / product sketches        |
 
-MCP tool docs stay with the API (they ship in the MCP server build):
+MCP / AI expansion:
 
-- [`apps/api/docs/mcp/`](../apps/api/docs/mcp/README.md)
+- [`architecture/mcp-domain-packs.md`](./architecture/mcp-domain-packs.md) — how Domain Packs work and how to add a domain
+- [`apps/api/docs/mcp/`](../apps/api/docs/mcp/README.md) — ChordPro skills / `hosanna://` resources (shipped with the MCP server)
