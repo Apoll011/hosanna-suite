@@ -2,9 +2,9 @@
 
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { authClient } from "@/lib/auth-client";
-import { backupApi, type BackupDocument } from "@/lib/backup-api";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { backupApi, type BackupDocument } from "@/lib/services/backup-api";
+import { useI18n } from "@/lib/ui/i18n";
 import { Button, Can, Modal, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { AlertTriangle, Download, Upload } from "lucide-react";
 import { useCallback, useRef, useState } from "react";

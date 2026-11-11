@@ -9,7 +9,7 @@ import {
   readOrgAppearance,
   readOrgGeneral,
   roleLabel,
-} from "../lib/org-ui";
+} from "../lib/organization/ui";
 
 const t = (key: string) => key;
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { parseUserAgent } from "../lib/parse-user-agent";
+import { parseUserAgent } from "../lib/account/parse-user-agent";
 
 describe("parseUserAgent", () => {
   it("returns unknown for null/empty", () => {

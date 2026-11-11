@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 process.env.SKIP_ENV_VALIDATION ??= "true";
 
 const { getRegisteredTemplates, hasTemplate, registerEmailTemplate, renderEmailTemplate } =
-  await import("../lib/email.service");
+  await import("../lib/services/email");
 
 describe("email.service templates (no network)", () => {
   it("reports known built-in templates", () => {

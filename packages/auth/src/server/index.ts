@@ -11,6 +11,6 @@ export type {
   CreateAuthSlimConfig,
   CreateAuthSlimOptions,
 } from "./types.js";
-export { withOauthNavigationRedirect } from "../oauth-navigation-redirect.js";
-export { wantsBrowserNavigation, isOauthAuthorizeGet } from "../oauth-navigation-redirect.js";
-export { withAuthCors, isTrustedCorsOrigin } from "../cors.js";
+export { withOauthNavigationRedirect } from "../http/oauth-navigation-redirect.js";
+export { wantsBrowserNavigation, isOauthAuthorizeGet } from "../http/oauth-navigation-redirect.js";
+export { withAuthCors, isTrustedCorsOrigin } from "../http/cors.js";

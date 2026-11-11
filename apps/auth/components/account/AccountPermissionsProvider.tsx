@@ -3,7 +3,7 @@
 import type { AppRole, PermissionString } from "@hosanna/auth";
 import { PermissionsProvider, groupPermissions, usePreloadPermissions } from "@hosanna/ui";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
 import { useCallback, type ReactNode } from "react";
 
 function PreloadPermissions({ children }: { children: ReactNode }) {

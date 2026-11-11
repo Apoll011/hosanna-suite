@@ -1,5 +1,5 @@
 import { withAuthCors, withOauthNavigationRedirect } from "@hosanna/auth/server";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/server";
 
 const handler = withAuthCors(withOauthNavigationRedirect(auth.handler));
 

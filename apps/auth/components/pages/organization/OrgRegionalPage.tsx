@@ -2,14 +2,14 @@
 
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
 import {
   DEFAULT_GENERAL,
   readOrgGeneral,
   selectClass,
   type OrgGeneralSettings,
-} from "@/lib/org-ui";
+} from "@/lib/organization/ui";
 import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { Lock, Save } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";

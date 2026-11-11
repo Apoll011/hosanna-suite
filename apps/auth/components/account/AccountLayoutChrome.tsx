@@ -4,7 +4,7 @@ import { AccountShell } from "@/components/AccountShell";
 import { AccountNav } from "@/components/account/AccountNav";
 import { AccountToastProvider, useAccountToast } from "@/components/account/AccountToast";
 import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
-import { readRedirectParam } from "@/lib/redirect";
+import { readRedirectParam } from "@/lib/auth/redirect";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 

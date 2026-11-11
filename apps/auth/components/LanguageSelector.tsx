@@ -1,6 +1,6 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/ui/i18n";
 import { LANGUAGES, type Language, type LanguageMeta } from "@hosanna/i18n";
 import { Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

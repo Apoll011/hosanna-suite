@@ -10,14 +10,14 @@ import {
   type AiMemoryItem,
   type AiProvider,
   type AiSettingsPublic,
-} from "@/lib/ai-api";
+} from "@/lib/services/ai-api";
 import {
   readCachedAiBilling,
   readCachedAiSettings,
   writeCachedAiBilling,
   writeCachedAiSettings,
-} from "@/lib/ai-settings-cache";
-import { useI18n } from "@/lib/i18n";
+} from "@/lib/services/ai-settings-cache";
+import { useI18n } from "@/lib/ui/i18n";
 import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
   ArrowRight,

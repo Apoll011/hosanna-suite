@@ -7,7 +7,7 @@ import {
   readRedirectParam,
   resolvePostOrgDestination,
   resolveSocialCallbackURL,
-} from "../lib/redirect";
+} from "../lib/auth/redirect";
 
 function memoryStorage() {
   const map = new Map<string, string>();

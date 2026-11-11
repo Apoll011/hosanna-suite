@@ -1,14 +1,14 @@
 "use client";
 
 import { useAuthUser } from "@/hooks/useAuthUser";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
 import {
   clearCachedOrg,
   readCachedActiveOrg,
   readCachedOrgList,
   writeCachedActiveOrg,
   writeCachedOrgList,
-} from "@/lib/org-cache";
+} from "@/lib/organization/cache";
 import {
   createContext,
   createElement,

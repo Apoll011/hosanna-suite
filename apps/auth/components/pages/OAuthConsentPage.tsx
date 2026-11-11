@@ -1,8 +1,8 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
 import { Button, Spinner } from "@hosanna/ui";
 import { Shield } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";

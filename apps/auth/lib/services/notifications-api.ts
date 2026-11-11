@@ -1,5 +1,5 @@
 import type { AppRole } from "@hosanna/auth";
-import { apiFetch } from "@/lib/hosanna-api";
+import { apiFetch } from "@/lib/services/api";
 
 /**
  * Delivery channel for a single-user notification:

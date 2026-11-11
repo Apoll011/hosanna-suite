@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { AccountToastBanner } from "@/components/account/AccountToast";
 import { NavigationProgress } from "@/components/account/NavigationProgress";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/ui/i18n";
 import { LoadingBar } from "@hosanna/ui";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

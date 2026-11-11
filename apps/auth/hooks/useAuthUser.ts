@@ -1,14 +1,14 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { clearCachedOrg } from "@/lib/org-cache";
+import { authClient } from "@/lib/auth/client";
+import { clearCachedOrg } from "@/lib/organization/cache";
 import {
   clearCachedUser,
   readCachedUser,
   toCachedUser,
   writeCachedUser,
   type CachedAuthUser,
-} from "@/lib/session-cache";
+} from "@/lib/session/cache";
 import {
   useCallback,
   useEffect,

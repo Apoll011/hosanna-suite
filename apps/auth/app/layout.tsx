@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 
 import { AppProviders } from "@/components/providers";
-import { AUTH_THEME_BOOT_SCRIPT, THEME_BG } from "@/lib/theme-boot";
+import { AUTH_THEME_BOOT_SCRIPT, THEME_BG } from "@/lib/ui/theme-boot";
 
 import "./globals.css";
 

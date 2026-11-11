@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { THEME_STORAGE_KEY, writeThemeCookie } from "@/lib/theme-boot";
+import { THEME_STORAGE_KEY, writeThemeCookie } from "@/lib/ui/theme-boot";
 
 type ThemeContextValue = {
   darkMode: boolean;

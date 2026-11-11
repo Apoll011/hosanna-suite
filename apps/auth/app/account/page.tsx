@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 
 import { AccountPage } from "@/components/pages/AccountPage";
-import { auth } from "@/lib/auth";
-import { toCachedUser, type CachedAuthUser } from "@/lib/session-cache";
+import { auth } from "@/lib/auth/server";
+import { toCachedUser, type CachedAuthUser } from "@/lib/session/cache";
 
 export const metadata: Metadata = { title: "Account" };
 

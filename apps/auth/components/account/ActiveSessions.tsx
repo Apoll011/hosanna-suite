@@ -1,13 +1,13 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
-import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
+import { parseUserAgent, type DeviceType } from "@/lib/account/parse-user-agent";
 import {
   readCachedSessions,
   writeCachedSessions,
   type CachedSessionRow,
-} from "@/lib/session-cache";
+} from "@/lib/session/cache";
 import { Surface } from "@hosanna/ui";
 import {
   Globe,

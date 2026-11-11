@@ -2,9 +2,9 @@
 
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
-import { parseUserAgent, type DeviceType } from "@/lib/parse-user-agent";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
+import { parseUserAgent, type DeviceType } from "@/lib/account/parse-user-agent";
 import { Button, PageHeader, Spinner, Surface, useAnyRole } from "@hosanna/ui";
 import {
   Globe,

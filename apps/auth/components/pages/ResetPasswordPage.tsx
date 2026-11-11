@@ -2,8 +2,8 @@
 
 import { AuthLayout } from "@/components/AuthLayout";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";

@@ -6,13 +6,13 @@ import { LoginHistorySection } from "@/components/account/LoginHistory";
 import { SocialAccountsSection } from "@/components/account/SocialAccounts";
 import { TwoFactorSection } from "@/components/account/TwoFactor";
 import { useAuthUser } from "@/hooks/useAuthUser";
-import { authClient } from "@/lib/auth-client";
-import { compressImage } from "@/lib/compress-image";
-import { useI18n } from "@/lib/i18n";
-import { clearCachedOrg } from "@/lib/org-cache";
-import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session-cache";
+import { authClient } from "@/lib/auth/client";
+import { compressImage } from "@/lib/account/compress-image";
+import { useI18n } from "@/lib/ui/i18n";
+import { clearCachedOrg } from "@/lib/organization/cache";
+import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session/cache";
 import { Button, GoogleTextField, PageHeader, Spinner, Surface } from "@hosanna/ui";
-import type { CachedAuthUser } from "@/lib/session-cache";
+import type { CachedAuthUser } from "@/lib/session/cache";
 import {
   Camera,
   CheckCircle2,

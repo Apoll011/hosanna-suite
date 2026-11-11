@@ -1,7 +1,7 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@hosanna/db";
 import { Pool } from "pg";
-import { env } from "./env";
+import { env } from "@/lib/config/env";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;

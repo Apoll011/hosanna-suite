@@ -2,6 +2,8 @@
  * Persist active org + org list so account pages paint instantly while network refreshes.
  */
 
+import { canUseStorage, readJson, removeKey, writeJson } from "@/lib/utils/local-storage";
+
 export type CachedOrgSummary = {
   id: string;
   name: string;
@@ -30,30 +32,6 @@ export type CachedActiveOrganization = CachedOrgSummary & {
 const ORG_KEY = "hosanna.auth.cached_active_org";
 const ORGS_KEY = "hosanna.auth.cached_org_list";
 
-function canUseStorage(): boolean {
-  return typeof window !== "undefined" && typeof localStorage !== "undefined";
-}
-
-function readJson<T>(key: string): T | null {
-  if (!canUseStorage()) return null;
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
-    return JSON.parse(raw) as T;
-  } catch {
-    return null;
-  }
-}
-
-function writeJson(key: string, value: unknown): void {
-  if (!canUseStorage()) return;
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* quota / private mode */
-  }
-}
-
 export function readCachedActiveOrg(): CachedActiveOrganization | null {
   const parsed = readJson<CachedActiveOrganization>(ORG_KEY);
   if (!parsed || typeof parsed.id !== "string" || typeof parsed.slug !== "string") return null;
@@ -62,13 +40,7 @@ export function readCachedActiveOrg(): CachedActiveOrganization | null {
 
 export function writeCachedActiveOrg(org: CachedActiveOrganization | null): void {
   if (!org) {
-    if (canUseStorage()) {
-      try {
-        localStorage.removeItem(ORG_KEY);
-      } catch {
-        /* ignore */
-      }
-    }
+    removeKey(ORG_KEY);
     return;
   }
   writeJson(ORG_KEY, org);
@@ -85,10 +57,6 @@ export function writeCachedOrgList(orgs: CachedOrgSummary[]): void {
 
 export function clearCachedOrg(): void {
   if (!canUseStorage()) return;
-  try {
-    localStorage.removeItem(ORG_KEY);
-    localStorage.removeItem(ORGS_KEY);
-  } catch {
-    /* ignore */
-  }
+  removeKey(ORG_KEY);
+  removeKey(ORGS_KEY);
 }

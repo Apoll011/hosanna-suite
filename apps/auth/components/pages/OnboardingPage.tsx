@@ -1,9 +1,9 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
-import { getStudioUrl, navigateAfterOrgReady } from "@/lib/redirect";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
+import { getStudioUrl, navigateAfterOrgReady } from "@/lib/auth/redirect";
 import { Button, GoogleTextField, Spinner } from "@hosanna/ui";
 import {
   ArrowLeft,

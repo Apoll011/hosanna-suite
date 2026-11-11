@@ -1,8 +1,8 @@
-export { ac, statement, toPermissionRequest } from "./permission.js";
-export type { ActionFor, PermissionRequest, PermissionString, Resource } from "./permission.js";
+export { ac, statement, toPermissionRequest } from "./authorization/permission.js";
+export type { ActionFor, PermissionRequest, PermissionString, Resource } from "./authorization/permission.js";
 
-export { admin, editor, guest, musician, owner, roles, teamLeader } from "./roles.js";
-export type { AppRole } from "./roles.js";
+export { admin, editor, guest, musician, owner, roles, teamLeader } from "./authorization/roles.js";
+export type { AppRole } from "./authorization/roles.js";
 
-export { pluginLocaleOverrides } from "./plugin-locale-overrides.js";
-export { RESPONSIBILITIES } from "./responsibilities.js";
+export { pluginLocaleOverrides } from "./i18n/plugin-locale-overrides.js";
+export { RESPONSIBILITIES } from "./authorization/responsibilities.js";
