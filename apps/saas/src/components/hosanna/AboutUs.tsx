@@ -1,31 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { useReveal } from "@/hooks/useReveal";
 import { useI18n } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Code2, Palette } from "lucide-react";
-import { useEffect } from "react";
 import { StaffLines } from "./HosannaLanding";
 import tiagoPhoto from "@/assets/tiago_headshot.webp";
 import eberPhoto from "@/assets/eber_headshot.webp";
-
-function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>(".reveal");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("in-view");
-            io.unobserve(e.target);
-          }
-        }
-      },
-      { rootMargin: "-40px" },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
 
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
 
