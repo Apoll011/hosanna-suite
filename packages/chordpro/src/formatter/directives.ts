@@ -1,13 +1,4 @@
-/**
- * ChordPro Formatter — Directive recognition & normalization
- * No UI dependencies.
- */
-
 import type { FormatWarning } from "./types";
-
-// ---------------------------------------------------------------------------
-// Known directives and their aliases
-// ---------------------------------------------------------------------------
 
 /** Map from alias/short-form to canonical long-form directive name. */
 const DIRECTIVE_ALIAS_MAP: Record<string, string> = {
@@ -108,10 +99,6 @@ const KNOWN_DIRECTIVES = new Set([
   "pagetype",
 ]);
 
-// ---------------------------------------------------------------------------
-// Metadata value normalizers
-// ---------------------------------------------------------------------------
-
 /**
  * Normalize a musical key value.
  * "g" → "G", "bb" → "Bb", "F#" stays "F#"
@@ -143,10 +130,6 @@ function normalizeTempoValue(value: string): string {
 function normalizeTimeValue(value: string): string {
   return value.trim();
 }
-
-// ---------------------------------------------------------------------------
-// Directive parsing
-// ---------------------------------------------------------------------------
 
 export interface ParsedDirective {
   /** Canonical (lowercased, alias-expanded) directive name. */
@@ -200,10 +183,6 @@ export function parseDirectiveContent(interior: string): ParsedDirective | null 
     isKnown,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Value normalization per directive
-// ---------------------------------------------------------------------------
 
 /**
  * Normalize the value of a directive according to its type.
