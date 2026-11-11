@@ -2,16 +2,7 @@
 import type { pt } from "./pt";
 
 export const en: typeof pt = {
-  brand: {
-    name: "Hosanna",
-  },
   common: {
-    cancel: "Cancel",
-    save: "Save",
-    back: "Back",
-    loading: "Loading…",
-    refresh: "Refresh",
-    retry: "Retry",
     goHome: "Go home",
   },
   errors: {
@@ -614,6 +605,11 @@ export const en: typeof pt = {
       keyCleared: "API key removed.",
       noAccessTitle: "No access",
       noAccessDesc: "Only owners and admins can manage AI settings.",
+      memberTitle: "Logos AI",
+      memberDesc: "Organization memory (read-only) and your personal memory.",
+      memberOrgReadonly: "Organization notes are managed by admins — you can view them here.",
+      memberNotConfiguredTitle: "AI is not set up yet",
+      memberNotConfiguredDesc: "Ask an organization owner or admin to connect a provider.",
       statusOn: "Enabled",
       statusPaused: "Configured · disabled",
       statusSetup: "Not configured",
@@ -719,6 +715,9 @@ export const en: typeof pt = {
         cryptoMissing: "Server encryption is not configured, so balance cannot be fetched.",
         unsupported: "Balance is only available for DeepSeek.",
       },
+    },
+    chat: {
+      contextGeneral: "Hosanna Account",
     },
   },
   account: {

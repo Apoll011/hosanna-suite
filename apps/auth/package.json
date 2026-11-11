@@ -27,6 +27,7 @@
     "@hosanna/brand": "workspace:*",
     "@hosanna/db": "workspace:*",
     "@hosanna/i18n": "workspace:*",
+    "@hosanna/logos-ai": "workspace:*",
     "@hosanna/ui": "workspace:*",
     "@prisma/adapter-pg": "^7.9.1",
     "@supabase/supabase-js": "^2.49.0",

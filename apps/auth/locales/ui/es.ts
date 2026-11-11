@@ -2,16 +2,7 @@
 import type { pt } from "./pt";
 
 export const es: typeof pt = {
-  brand: {
-    name: "Hosanna",
-  },
   common: {
-    cancel: "Cancelar",
-    save: "Guardar",
-    back: "Volver",
-    loading: "Cargando…",
-    refresh: "Actualizar",
-    retry: "Reintentar",
     goHome: "Ir al inicio",
   },
   errors: {
@@ -613,6 +604,11 @@ export const es: typeof pt = {
       keyCleared: "Clave de API eliminada.",
       noAccessTitle: "Sin acceso",
       noAccessDesc: "Solo propietarios y administradores pueden gestionar la IA.",
+      memberTitle: "Logos IA",
+      memberDesc: "Memoria de la organización (solo lectura) y tu memoria personal.",
+      memberOrgReadonly: "Las notas de la organización las gestionan los admins — aquí solo puedes verlas.",
+      memberNotConfiguredTitle: "La IA aún no está configurada",
+      memberNotConfiguredDesc: "Pide a un propietario o administrador que conecte un proveedor.",
       statusOn: "Activado",
       statusPaused: "Configurado · desactivado",
       statusSetup: "No configurado",
@@ -718,6 +714,9 @@ export const es: typeof pt = {
         cryptoMissing: "El cifrado del servidor no está configurado; no se puede obtener el saldo.",
         unsupported: "El saldo solo está disponible para DeepSeek.",
       },
+    },
+    chat: {
+      contextGeneral: "Cuenta de Hosanna",
     },
   },
   account: {

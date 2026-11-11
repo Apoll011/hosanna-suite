@@ -10,6 +10,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./messages": {
+      "types": "./src/messages/index.ts",
+      "default": "./src/messages/index.ts"
     }
   },
   "scripts": {

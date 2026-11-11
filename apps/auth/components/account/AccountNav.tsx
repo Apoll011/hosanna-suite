@@ -58,7 +58,7 @@ const ORG_ITEMS: OrgNavItem[] = [
     href: "/account/organization/ai",
     labelKey: "account.nav.ai",
     icon: Bot,
-    permission: "ai.manage",
+    permission: "ai.use",
   },
   {
     href: "/account/organization/regional",

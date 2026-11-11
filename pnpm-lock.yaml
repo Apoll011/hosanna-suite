@@ -180,6 +180,9 @@ importers:
       '@hosanna/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@hosanna/logos-ai':
+        specifier: workspace:*
+        version: link:../../packages/logos-ai
       '@hosanna/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -799,6 +802,9 @@ importers:
       '@hosanna/chordpro':
         specifier: workspace:*
         version: link:../chordpro
+      '@hosanna/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@hosanna/ui':
         specifier: workspace:*
         version: link:../ui
@@ -827,9 +833,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.3.1(react@19.3.1)
-      react-router-dom:
-        specifier: ^7.11.0
-        version: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -13451,12 +13454,6 @@ snapshots:
       react-dom: '@preact/compat@18.3.2(preact@10.29.8)'
       react-router: 7.18.5(@preact/compat@18.3.2(preact@10.29.8))(@preact/compat@18.3.2(preact@10.29.8))
 
-  react-router-dom@7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
-    dependencies:
-      react: 19.3.1
-      react-dom: 19.3.1(react@19.3.1)
-      react-router: 7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-
   react-router@7.18.5(@preact/compat@18.3.2(preact@10.29.8))(@preact/compat@18.3.2(preact@10.29.8)):
     dependencies:
       cookie: 1.1.1
@@ -13464,14 +13461,6 @@ snapshots:
       set-cookie-parser: 2.7.3
     optionalDependencies:
       react-dom: '@preact/compat@18.3.2(preact@10.29.8)'
-
-  react-router@7.18.5(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
-    dependencies:
-      cookie: 1.1.1
-      react: 19.3.1
-      set-cookie-parser: 2.7.3
-    optionalDependencies:
-      react-dom: 19.3.1(react@19.3.1)
 
   react-style-singleton@2.2.3(@types/react@19.3.0)(react@19.3.1):
     dependencies:

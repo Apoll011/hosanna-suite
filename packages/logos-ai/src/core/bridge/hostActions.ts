@@ -9,6 +9,7 @@ import {
   type AiNavigateDetail,
   type AiPrintDetail,
 } from "./contextBridge";
+import { dispatchAiOpenApp, type AiOpenAppDetail } from "./openApp";
 
 function asRecord(output: unknown): Record<string, unknown> | null {
   if (output == null) return null;
@@ -31,7 +32,11 @@ function asRecord(output: unknown): Record<string, unknown> | null {
 function parseToolJson(output: unknown): Record<string, unknown> | null {
   const direct = asRecord(output);
   if (direct) {
-    if (direct.studioNavigate === true || direct.studioPrint === true) {
+    if (
+      direct.studioNavigate === true ||
+      direct.studioPrint === true ||
+      direct.openApp === true
+    ) {
       return direct;
     }
     if (typeof direct.text === "string") return parseToolJson(direct.text);
@@ -74,5 +79,16 @@ export function maybeDispatchHostActions(_toolName: string, output: unknown) {
       reason: typeof body.reason === "string" ? body.reason : undefined,
     };
     dispatchAiPrint(detail);
+  }
+
+  if (body.openApp === true && typeof body.app === "string") {
+    const openIn = body.openIn === "new" ? "new" : "same";
+    const detail: AiOpenAppDetail = {
+      app: body.app,
+      path: typeof body.path === "string" ? body.path : "/",
+      openIn,
+      reason: typeof body.reason === "string" ? body.reason : undefined,
+    };
+    dispatchAiOpenApp(detail);
   }
 }

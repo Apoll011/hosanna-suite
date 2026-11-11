@@ -36,13 +36,20 @@ import { getDatabase, purgeExpiredTrash } from "../db";
 import {
   AI_LIBRARY_CHANGED_EVENT,
   AI_NAVIGATE_EVENT,
+  AI_OPEN_APP_EVENT,
   AI_PRINT_EVENT,
   AiChatDock,
   aiContextBridge,
+  performOpenApp,
+  resolveHosannaAppOrigin,
+  warmHosannaAppOrigin,
   type AiNavigateDetail,
+  type AiOpenAppDetail,
   type AiPrintDetail,
 } from "@hosanna/logos-ai";
 import { StudioLogosProvider } from "../logos/StudioLogosProvider";
+import { getAuthAppUrl, navigateToAuthAccount, prefetchAuthAccount } from "../lib/authUrl";
+import { writeThemeCookie } from "../lib/themeBoot";
 import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
 import { useCollections } from "../hooks/useCollections";
@@ -869,11 +876,47 @@ export const MainLayout: React.FC = () => {
       })();
     };
 
+    const onOpenApp = (ev: Event) => {
+      const detail = (ev as CustomEvent<AiOpenAppDetail>).detail;
+      if (!detail?.app) return;
+
+      const app = detail.app.trim().toLowerCase();
+      // Same smoothness as the sidebar Account handoff (theme + warm + returnUrl).
+      if ((detail.openIn ?? "same") !== "new" && app === "auth") {
+        navigateToAuthAccount({ path: detail.path || "/account" });
+        return;
+      }
+
+      performOpenApp(detail, {
+        resolveOrigin: (id) =>
+          resolveHosannaAppOrigin(id, {
+            overrides: {
+              auth: getAuthAppUrl(),
+              studio: typeof window !== "undefined" ? window.location.origin : undefined,
+              saas: "https://hosanna.live",
+            },
+          }),
+        navigateSameOrigin: (path) => navigate(path),
+        prepareCrossOriginNavigate: ({ url }) => {
+          writeThemeCookie(
+            document.documentElement.classList.contains("dark") ? "dark" : "light",
+          );
+          return url;
+        },
+      });
+    };
+
+    // Keep auth warm while Logos is available so open_app feels like the Account link.
+    prefetchAuthAccount();
+    warmHosannaAppOrigin(getAuthAppUrl());
+
     window.addEventListener(AI_NAVIGATE_EVENT, onNavigate);
     window.addEventListener(AI_PRINT_EVENT, onPrint);
+    window.addEventListener(AI_OPEN_APP_EVENT, onOpenApp);
     return () => {
       window.removeEventListener(AI_NAVIGATE_EVENT, onNavigate);
       window.removeEventListener(AI_PRINT_EVENT, onPrint);
+      window.removeEventListener(AI_OPEN_APP_EVENT, onOpenApp);
     };
   }, [
     agendaCategories,

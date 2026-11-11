@@ -4,24 +4,22 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
 import { aiContextBridge, buildPageContext, contextKey } from "../../core/bridge";
 import { chipsForContext } from "../../core/tools";
-import { useLogosHost } from "../../host";
+import { useLogosHost, useLogosRoute } from "../../host";
 import type { PageContextSnapshot } from "../../types";
 
 export function usePageContextState(open: boolean) {
   const { slugPrefix, deriveView } = useLogosHost();
-  const location = useLocation();
-  const params = useParams<{ id?: string }>();
+  const { pathname, params } = useLogosRoute();
 
-  const routeRef = useRef({ pathname: location.pathname, slugPrefix, params });
-  routeRef.current = { pathname: location.pathname, slugPrefix, params };
+  const routeRef = useRef({ pathname, slugPrefix, params });
+  routeRef.current = { pathname, slugPrefix, params };
   const deriveViewRef = useRef(deriveView);
   deriveViewRef.current = deriveView;
 
   const [pageContext, setPageContext] = useState<PageContextSnapshot>(() =>
-    buildPageContext(location.pathname, slugPrefix, params, deriveView, false),
+    buildPageContext(pathname, slugPrefix, params, deriveView, false),
   );
 
   const recomputeContext = useCallback(() => {
@@ -32,7 +30,7 @@ export function usePageContextState(open: boolean) {
 
   useEffect(() => {
     recomputeContext();
-  }, [location.pathname, slugPrefix, params.id, recomputeContext]);
+  }, [pathname, slugPrefix, params.id, recomputeContext]);
 
   // Event-driven (no polling): editors/explorer push changes into the bridge.
   useEffect(() => {

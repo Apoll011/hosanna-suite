@@ -1,15 +1,6 @@
 /** Auth UI — Portuguese (canonical). */
 export const pt = {
-  brand: {
-    name: "Hosanna",
-  },
   common: {
-    cancel: "Cancelar",
-    save: "Guardar",
-    back: "Voltar",
-    loading: "A carregar…",
-    refresh: "Atualizar",
-    retry: "Tentar novamente",
     goHome: "Ir para o início",
   },
   errors: {
@@ -610,6 +601,11 @@ export const pt = {
       keyCleared: "Chave de API removida.",
       noAccessTitle: "Sem acesso",
       noAccessDesc: "Apenas proprietários e administradores podem gerir a IA.",
+      memberTitle: "Logos IA",
+      memberDesc: "Memória da organização (só de leitura) e a sua memória pessoal.",
+      memberOrgReadonly: "As notas da organização são geridas pelos admins — aqui só as pode ver.",
+      memberNotConfiguredTitle: "A IA ainda não está configurada",
+      memberNotConfiguredDesc: "Peça a um proprietário ou administrador para ligar um fornecedor.",
       statusOn: "Ativado",
       statusPaused: "Configurado · desativado",
       statusSetup: "Não configurado",
@@ -716,6 +712,9 @@ export const pt = {
           "A encriptação do servidor não está configurada; não é possível obter o saldo.",
         unsupported: "O saldo só está disponível para o DeepSeek.",
       },
+    },
+    chat: {
+      contextGeneral: "Conta Hosanna",
     },
   },
   account: {

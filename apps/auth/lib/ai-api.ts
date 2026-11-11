@@ -1,4 +1,9 @@
-import { apiFetch } from "@/lib/hosanna-api";
+import {
+  apiBaseUrl,
+  ensureActiveOrganizationSession,
+  readApiError,
+  apiFetch,
+} from "@/lib/hosanna-api";
 
 export type AiProvider = "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
 
@@ -86,6 +91,54 @@ export type AiBillingResponse =
 
 type OrgScoped = { organizationId: string };
 
+export type AiChatContext = {
+  kind?:
+    | "song_editor"
+    | "service_editor"
+    | "songs_list"
+    | "services_list"
+    | "explorer"
+    | "collection_detail"
+    | "agenda"
+    | "trash"
+    | "general";
+  route?: string;
+  songId?: string;
+  serviceId?: string;
+  folderId?: string | null;
+  collectionId?: string | null;
+  title?: string;
+  updatedAt?: string;
+  artist?: string;
+  contentExcerpt?: string;
+  contentTruncated?: boolean;
+  selectedSongIds?: string[];
+  selectedFolderIds?: string[];
+  serviceElementsSummary?: Array<{
+    id: string;
+    type: string;
+    title?: string;
+    songId?: string;
+  }>;
+};
+
+export type AiUiMessage = {
+  id: string;
+  role: "user" | "assistant" | "system";
+  parts: Array<{ type: string; [key: string]: unknown }>;
+};
+
+export type AiConfirmAction = {
+  action:
+    | "delete_song"
+    | "delete_service"
+    | "delete_folder"
+    | "delete_collection"
+    | "delete_agenda";
+  id: string;
+  folderAction?: "move_to_root" | "delete_songs";
+};
+
 export const aiApi = {
   getSettings: ({ organizationId }: OrgScoped): Promise<AiSettingsPublic> =>
     apiFetch<AiSettingsPublic>("/ai/settings", { organizationId }),
@@ -161,5 +214,43 @@ export const aiApi = {
       organizationId,
     });
     return { cleared: data?.cleared ?? 0 };
+  },
+
+  confirmAction: (
+    body: AiConfirmAction,
+    { organizationId }: OrgScoped,
+  ): Promise<{ confirmed: boolean }> =>
+    apiFetch<{ confirmed: boolean }>("/ai/confirm", {
+      method: "POST",
+      body: JSON.stringify(body),
+      organizationId,
+    }),
+
+  streamChat: async (
+    body: {
+      messages: AiUiMessage[];
+      context?: AiChatContext;
+      locale?: string;
+      signal?: AbortSignal;
+    },
+    { organizationId }: OrgScoped,
+  ): Promise<Response> => {
+    await ensureActiveOrganizationSession(organizationId);
+    const res = await fetch(`${apiBaseUrl()}/ai/chat`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "text/event-stream, application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messages: body.messages,
+        context: body.context,
+        locale: body.locale,
+      }),
+      signal: body.signal,
+    });
+    if (!res.ok) throw new Error(await readApiError(res));
+    return res;
   },
 };

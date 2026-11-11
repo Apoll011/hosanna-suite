@@ -10,6 +10,7 @@ export const STUDIO_ONLY_TOOLS = [
   "studio_navigate",
   "studio_generate_pdf",
   "studio_search",
+  "open_app",
 ] as const;
 
 export const MCP_TOOL_GROUPS = {
@@ -100,5 +101,5 @@ export const ALL_MCP_TOOL_NAMES: string[] = Object.values(MCP_TOOL_GROUPS).flatM
 export const TOOL_SURFACE = {
   core: "Registered on the Hosanna MCP server — available to external AI clients (ChatGPT, Claude, …).",
   studioOnly:
-    "Available only inside Hosanna Studio chat — UI navigation, PDF, search, and live sync. Not exposed via MCP.",
+    "Available only inside Hosanna embedded chat (Studio, Auth, …) — UI navigation, open_app, PDF, search, and live sync. Not exposed via MCP.",
 } as const;

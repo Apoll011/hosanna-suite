@@ -19,6 +19,16 @@ export {
   type ServiceEditorBridge,
   type SongEditorBridge,
 } from "./contextBridge";
+export {
+  AI_OPEN_APP_EVENT,
+  dispatchAiOpenApp,
+  performOpenApp,
+  resolveHosannaAppOrigin,
+  warmHosannaAppOrigin,
+  type AiOpenAppDetail,
+  type OpenAppNavigateContext,
+  type PerformOpenAppOptions,
+} from "./openApp";
 export { maybeDispatchHostActions } from "./hostActions";
 export { maybeSyncLibrary, shouldSyncLibraryAfterTool } from "./librarySync";
 export { buildPageContext, contextKey, EXCERPT_MAX } from "./pageContext";

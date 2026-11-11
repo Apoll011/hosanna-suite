@@ -3,10 +3,49 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { createContext, useContext } from "react";
+import { DEFAULT_LANGUAGE, resolveString, type Language } from "@hosanna/i18n";
+import React, { createContext, useContext, useMemo } from "react";
+import { logosAiMessages } from "../i18n";
 import type { LogosHost, LogosTc, LogosTranslate } from "./types";
 
 const LogosHostCtx = createContext<LogosHost | null>(null);
+
+function asLanguage(value: string): Language {
+  if (value === "en" || value === "es" || value === "pt") return value;
+  return DEFAULT_LANGUAGE;
+}
+
+/**
+ * Prefer host translations (app overlays like contextGeneral), then package chat
+ * dictionaries so hosts no longer need to ship the full `ai.chat` tree.
+ */
+function withPackageChatFallback(host: LogosHost): LogosHost {
+  const language = asLanguage(host.language);
+  const dict = logosAiMessages[language] ?? logosAiMessages[DEFAULT_LANGUAGE];
+  const fallbackDict = logosAiMessages[DEFAULT_LANGUAGE];
+
+  const t: LogosTranslate = (key, vars) => {
+    const fromHost = host.t(key, vars);
+    if (fromHost && fromHost !== key) return fromHost;
+
+    const fromPackage = resolveString(dict, key, vars);
+    if (fromPackage !== undefined) return fromPackage;
+
+    if (language !== DEFAULT_LANGUAGE) {
+      const fromDefault = resolveString(fallbackDict, key, vars);
+      if (fromDefault !== undefined) return fromDefault;
+    }
+
+    return fromHost || key;
+  };
+
+  const tc: LogosTc = (key, count, vars) => {
+    const form = count === 1 ? "one" : "other";
+    return t(`${key}.${form}`, { ...vars, count });
+  };
+
+  return { ...host, t, tc };
+}
 
 export function LogosHostProvider({
   value,
@@ -15,7 +54,8 @@ export function LogosHostProvider({
   value: LogosHost;
   children: React.ReactNode;
 }) {
-  return <LogosHostCtx.Provider value={value}>{children}</LogosHostCtx.Provider>;
+  const enhanced = useMemo(() => withPackageChatFallback(value), [value]);
+  return <LogosHostCtx.Provider value={enhanced}>{children}</LogosHostCtx.Provider>;
 }
 
 export function useLogosHost(): LogosHost {

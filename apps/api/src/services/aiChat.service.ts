@@ -94,6 +94,7 @@ import {
   studioNavigateDirective,
   studioPrintDirective,
 } from "../mcp/lib/studioActions.js";
+import { OPEN_APP_TARGETS, openAppDirective } from "../mcp/lib/openApp.js";
 import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS, STUDIO_UI_CATALOG } from "../mcp/lib/studioUi.js";
 import { searchWeb } from "../mcp/lib/webSearch.js";
 import { searchYouTube } from "../mcp/lib/youtubeSearch.js";
@@ -392,7 +393,14 @@ function buildHosannaTools(
               "restore",
             ],
             org: ["me", "members_list", "members_get", "members_resolve", "org_get"],
-            studioOnly: ["studio_sync", "studio_navigate", "studio_generate_pdf", "studio_search"],
+            studioOnly: [
+              "studio_sync",
+              "studio_navigate",
+              "studio_generate_pdf",
+              "studio_search",
+              "open_app",
+            ],
+            hostUi: ["open_app"],
             library: [
               "folders CRUD+restore",
               "folders_create_many / folders_update_many / collections_update_many (batch)",
@@ -403,6 +411,7 @@ function buildHosannaTools(
               "studio_navigate",
               "studio_generate_pdf",
               "studio_search",
+              "open_app",
             ],
             metadata: [
               "musicbrainz",
@@ -718,7 +727,7 @@ function buildHosannaTools(
     }),
     studio_navigate: tool({
       description:
-        "Studio-only: navigate the open Studio tab to a page (song/service/folder/collection/agenda/list/settings). Prefer kind+id over inventing routes.",
+        "Studio-only: navigate the open Studio tab to a page (song/service/folder/collection/agenda/list/settings). Prefer kind+id over inventing routes. For other Hosanna apps (auth, marketing, future) use open_app instead.",
       inputSchema: z.object({
         kind: z.enum(STUDIO_NAVIGATE_KINDS),
         id: z
@@ -737,6 +746,35 @@ function buildHosannaTools(
             kind: args.kind,
             id: args.id,
             route: args.route,
+            reason: args.reason,
+          }),
+        ),
+    }),
+    open_app: tool({
+      description:
+        'Open a Hosanna web app by subdomain id (modular for new apps). app="saas" → hosanna.live; app="studio" → studio.hosanna.live; app="auth" → auth.hosanna.live; any future slug follows {app}.hosanna.live. Pass path (e.g. /account/organization/ai or /{orgSlug}/songs) and openIn same|new.',
+      inputSchema: z.object({
+        app: z
+          .string()
+          .min(1)
+          .max(64)
+          .describe('App id: "saas" for the marketing site, or a subdomain slug (studio, auth, …).'),
+        path: z
+          .string()
+          .optional()
+          .describe("Path including leading slash. Defaults to /."),
+        openIn: z
+          .enum(OPEN_APP_TARGETS)
+          .optional()
+          .describe("same = current tab; new = new tab/window. Defaults to same."),
+        reason: z.string().optional(),
+      }),
+      execute: async (args) =>
+        textResult(
+          openAppDirective({
+            app: args.app,
+            path: args.path,
+            openIn: args.openIn,
             reason: args.reason,
           }),
         ),
@@ -2236,7 +2274,8 @@ const STUDIO_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosa
 - Collections: list/get/create/update/delete, add_songs/remove_songs (same icon/color ids)
 - Agenda: list/get/create/update/delete — set responsibilities with real memberIds (not only notes on service elements)
 - Services: services_search supports archived / includeArchived (rows include archived flag)
-- Studio-only UX: studio_navigate (open pages), studio_generate_pdf (print modal), studio_search (global find across library), suggest_followups (clickable chips)
+- Studio-only UX: studio_navigate (open pages inside Studio), studio_generate_pdf (print modal), studio_search (global find across library), suggest_followups (clickable chips)
+- Cross-app: open_app({ app, path?, openIn? }) — app="saas" → hosanna.live; app="studio"|"auth"|future slug → {app}.hosanna.live. Use for leaving Studio or opening Auth/account settings.
 - Metadata: MusicBrainz, YouTube (for \`{youtube:}\`), DuckDuckGo web search; ChordPro validate/format/transpose/convert/propagate
 - When completing metadata: MusicBrainz for title/artist/release; YouTube search for \`{youtube: URL}\` (use hits[].directive); web search for extra confirmation. If \`metadata_web_fetch\` is available (DeepSeek org AI), use it to read CCLI/artist pages or Cifra URLs blocked by Akamai. Call metadata tools one at a time (MusicBrainz rate-limits parallel bursts with 503). If a tool returns 403/503, report the structured error — do not claim success. Propose the ChordPro edit — do not invent lyrics.
 - Unknown Studio UI constants (icons, colors, etc.): call hosanna_capabilities or hosanna_resource_read on hosanna://domain/library — do not guess.

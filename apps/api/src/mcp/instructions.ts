@@ -11,7 +11,7 @@ ${clockContextPromptBlock(now, timeZone)}
 ## Tool surfaces
 
 - **Core MCP tools** (this server): songs, services, agenda, members, folders, collections, metadata, ChordPro — available to external AI clients.
-- **Studio-only tools** (\`studio_sync\`, \`studio_navigate\`, \`studio_generate_pdf\`, \`studio_search\`): NOT available here. They exist only inside Hosanna Studio chat. Do not call them on this MCP connection.
+- **Host UI tools** (\`studio_sync\`, \`studio_navigate\`, \`studio_generate_pdf\`, \`studio_search\`, \`open_app\`): NOT available here. They exist only inside Hosanna embedded chat. Do not call them on this MCP connection.
 
 ## Record status (never confuse these)
 

@@ -10,8 +10,10 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@hosanna/auth",
     "@hosanna/brand",
+    "@hosanna/chordpro",
     "@hosanna/db",
     "@hosanna/i18n",
+    "@hosanna/logos-ai",
     "@hosanna/ui",
     "@hosanna/config",
   ],

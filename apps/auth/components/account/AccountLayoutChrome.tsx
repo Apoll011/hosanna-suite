@@ -3,6 +3,7 @@
 import { AccountShell } from "@/components/AccountShell";
 import { AccountNav } from "@/components/account/AccountNav";
 import { AccountToastProvider, useAccountToast } from "@/components/account/AccountToast";
+import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
 import { readRedirectParam } from "@/lib/redirect";
 import type { ReactNode } from "react";
 import { useMemo } from "react";
@@ -15,7 +16,7 @@ function AccountLayoutInner({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AccountShell toast={toast} returnUrl={returnUrl}>
+    <AccountShell toast={toast} returnUrl={returnUrl} headerActions={<AuthLogosToggle />}>
       <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8 lg:gap-10">
         <AccountNav />
         {/* Width reserve — nav is fixed on md+ so it leaves the flow. */}
