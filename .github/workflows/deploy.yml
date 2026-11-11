@@ -1,0 +1,112 @@
+# Cloudflare Workers deploy (studio, saas, …).
+#
+# Config: .github/deploy-apps.json
+#   - targets.dev  → push to develop  → GitHub Environment "dev"
+#   - targets.prod → push to main/master → GitHub Environment "prod"
+# Apps without a target for the branch are skipped. Path filters come from config.
+#
+# GitHub Environments (one-time setup):
+#   Merge Preview → "dev", Production+SaaS → "prod".
+#   Put CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID on repo secrets.
+#   Leave Auth alone (Vercel / deploy-auth.yml).
+
+name: Deploy (Cloudflare)
+
+on:
+  push:
+    branches: [develop, main, master]
+    paths:
+      - "apps/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - ".github/deploy-apps.json"
+      - ".github/scripts/resolve-deploy-matrix.mjs"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App id to deploy (empty = all for this branch stage)"
+        required: false
+        type: string
+
+jobs:
+  resolve:
+    name: Resolve deploy matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+      deploy: ${{ steps.set.outputs.deploy }}
+      stage: ${{ steps.set.outputs.stage }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve matrix
+        id: set
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
+          GITHUB_SHA: ${{ github.sha }}
+          INPUT_APP: ${{ inputs.app }}
+        run: node .github/scripts/resolve-deploy-matrix.mjs
+
+  deploy:
+    name: ${{ matrix.id }} → ${{ matrix.url }}
+    needs: resolve
+    if: needs.resolve.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.resolve.outputs.matrix) }}
+    concurrency:
+      group: deploy-${{ matrix.id }}-${{ matrix.target }}
+      cancel-in-progress: true
+    environment:
+      name: ${{ matrix.githubEnvironment }}
+      url: ${{ matrix.url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.24.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.id }} (+ workspace deps)
+        run: pnpm turbo run build --filter=${{ matrix.package }}
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_AUTH_URL: ${{ vars.VITE_AUTH_URL }}
+          VITE_DASHBOARD_URL: ${{ vars.VITE_AUTH_URL }}
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets.VITE_TURNSTILE_SITE_KEY }}
+          VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
+          VITE_PUBLIC_POSTHOG_HOST: ${{ vars.VITE_PUBLIC_POSTHOG_HOST }}
+
+      - name: Deploy Worker (${{ matrix.id }})
+        working-directory: ${{ matrix.dir }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_ENV: ${{ matrix.wranglerEnv }}
+        run: |
+          if [ -n "$WRANGLER_ENV" ]; then
+            pnpm exec wrangler deploy --env "$WRANGLER_ENV"
+          else
+            pnpm exec wrangler deploy
+          fi
