@@ -19,11 +19,17 @@ describe("deepMerge", () => {
 });
 
 describe("sharedMessages", () => {
-  it("exposes brand + common verbs for every language", () => {
+  it("exposes brand, common verbs, and cross-app sections", () => {
     for (const lang of ["pt", "en", "es"] as const) {
-      assert.equal(sharedMessages[lang].brand.name, "Hosanna");
-      assert.equal(typeof sharedMessages[lang].common.save, "string");
-      assert.equal(typeof sharedMessages[lang].common.loading, "string");
+      const m = sharedMessages[lang];
+      assert.equal(m.brand.name, "Hosanna");
+      assert.equal(typeof m.common.save, "string");
+      assert.equal(typeof m.common.loading, "string");
+      assert.equal(typeof m.loginHistory.title, "string");
+      assert.equal(typeof m.organization.loginActivity.title, "string");
+      assert.equal(typeof m.oauth.consent.allow, "string");
+      assert.equal(typeof m.settings.roles.owner, "string");
+      assert.equal(typeof m.settings.notifications.title, "string");
     }
   });
 });

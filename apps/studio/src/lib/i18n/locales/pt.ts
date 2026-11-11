@@ -43,9 +43,8 @@ export const pt = {
     date: "Data",
     copySuffix: " (Cópia)",
     you: "Você",
-    items: "{count} Itens",
+    items: "{count} Itens"
   },
-
   table: {
     showing: "A mostrar",
     to: "a",
@@ -53,9 +52,8 @@ export const pt = {
     display: "Exibir:",
     all: "Todos ({count})",
     prevPage: "Página Anterior",
-    nextPage: "Página Seguinte",
+    nextPage: "Página Seguinte"
   },
-
   sidebar: {
     mainMenu: "Menu Principal",
     drive: "Drive da {name}",
@@ -69,9 +67,8 @@ export const pt = {
     openOrganization: "Predefinições de impressão",
     openAnalytics: "Análises",
     switchWorkspace: "Mudar de organização",
-    manageOrganization: "Gerir organização",
+    manageOrganization: "Gerir organização"
   },
-
   addressBar: {
     atRootLevel: "No Nível Raiz",
     upOneLevel: "Subir um nível",
@@ -88,9 +85,8 @@ export const pt = {
     importSongs: "Importar Cânticos de um outro Provedor",
     newService: "Novo Plano de Culto",
     newFolder: "Nova Pasta",
-    newCollection: "Nova Coleção",
+    newCollection: "Nova Coleção"
   },
-
   toolbar: {
     filters: "Filtros",
     openFilters: "Abrir Filtros Avançados",
@@ -114,9 +110,8 @@ export const pt = {
     numberAsc: "Número (Menor-Maior)",
     numberDesc: "Número (Maior-Menor)",
     songNumberAsc: "Mais Músicas",
-    songNumberDesc: "Menos Musicas",
+    songNumberDesc: "Menos Musicas"
   },
-
   commandPalette: {
     sections: {
       navigation: "Navegação",
@@ -125,7 +120,7 @@ export const pt = {
       visualization: "Visualização",
       currentSong: "Cântico Atual",
       currentService: "Culto Atual",
-      ai: "Logos AI",
+      ai: "Logos AI"
     },
     navDrive: "Ir para Drive (Início)",
     navSongs: "Ir para Biblioteca de Cânticos",
@@ -144,7 +139,7 @@ export const pt = {
     focusAi: "Focar Logos AI",
     closeAi: "Fechar Logos AI",
     newAiChat: "Nova conversa com Logos",
-    askAi: 'Perguntar ao Logos: "{query}"',
+    askAi: "Perguntar ao Logos: \"{query}\"",
     askAiSubtitle: "Abrir o chat e enviar esta mensagem",
     toggleTheme: "Alternar Tema Claro / Escuro",
     toggleSidebarCollapse: "Recolher Barra Lateral",
@@ -153,12 +148,11 @@ export const pt = {
     viewGrid: "Alternar Vista para Grelha",
     viewList: "Alternar Vista para Lista",
     openFilters: "Abrir Painel de Filtros Avançados",
-    printSong: 'Imprimir Cântico: "{title}"',
-    moveSong: 'Mover Cântico: "{title}"',
-    deleteSong: 'Eliminar Cântico: "{title}"',
-    deleteService: 'Eliminar Culto: "{name}"',
+    printSong: "Imprimir Cântico: \"{title}\"",
+    moveSong: "Mover Cântico: \"{title}\"",
+    deleteSong: "Eliminar Cântico: \"{title}\"",
+    deleteService: "Eliminar Culto: \"{name}\""
   },
-
   palette: {
     submenu: "Sub-menu",
     searchSubmenu: "Pesquisar no sub-menu...",
@@ -166,12 +160,11 @@ export const pt = {
     recents: "Recentes",
     defaultSection: "Ações",
     noResults: "Nenhum resultado encontrado",
-    noResultsDesc: 'Não encontramos nada para "{query}".',
+    noResultsDesc: "Não encontramos nada para \"{query}\".",
     navigate: "Navegar",
     select: "Selecionar",
-    title: "Command Palette",
+    title: "Command Palette"
   },
-
   settings: {
     pageDesc: "Aparência, impressão, durações, responsabilidades e funcionalidades do Studio.",
     tabs: {
@@ -188,88 +181,35 @@ export const pt = {
       services: "Cultos",
       printing: "Impressão",
       durations: "Durações",
-      responsibilities: "Responsabilidades",
+      responsibilities: "Responsabilidades"
     },
     services: {
-      pageDesc: "Hora habitual de início e comportamento ao editar cultos.",
+      pageDesc: "Hora habitual de início e comportamento ao editar cultos."
     },
     printing: {
-      pageDesc: "Disposição e opções predefinidas para impressão de músicas e cultos.",
+      pageDesc: "Disposição e opções predefinidas para impressão de músicas e cultos."
     },
     durations: {
-      pageDesc: "Duração predefinida de músicas e sermões ao montar um culto.",
+      pageDesc: "Duração predefinida de músicas e sermões ao montar um culto."
     },
     responsibilities: {
-      pageDesc: "Funções da agenda que pode atribuir ao planear cultos.",
+      pageDesc: "Funções da agenda que pode atribuir ao planear cultos."
     },
     notifications: {
-      title: "Notificações",
-      pageDesc: "Enviar uma mensagem à equipa.",
-      loading: "A carregar…",
-      noAccessTitle: "Sem permissão",
-      noAccessDesc: "Precisa de acesso às notificações de um proprietário da organização.",
-      send: "Enviar",
-      sending: "A enviar…",
-      sentToast: "Notificação enviada.",
-      sentPushToast: "Notificação enviada ({count} dispositivos).",
-      genericError: "Erro inesperado.",
-      errorToast: "Não foi possível enviar a notificação: {error}",
-      summaryOrg: "Todos os membros recebem isto na caixa de entrada.",
-      summaryOrgRoles: "Enviado a {roles} na caixa de entrada.",
-      summaryUser: "{name} vai receber esta notificação.",
       recipient: {
-        title: "Destinatários",
-        desc: "Escolha quem recebe esta notificação.",
-        user: "Membro",
         userDesc: "Um membro",
-        organization: "Organização",
         organizationDesc: "Todos os membros",
-        searchPlaceholder: "Procurar por nome ou email…",
-        searching: "A carregar membros…",
-        noResults: "Nenhum membro encontrado.",
-        clear: "Limpar",
         lockedBadge: "Organização atual",
         lockedHint: "Usa a organização atual.",
-        rolesFilter: "Filtrar por função",
-        rolesFilterHint: "Deixe vazio para incluir todos.",
-        everyone: "Todas as funções",
-        inboxOnly: "Enviado para a caixa de entrada da aplicação.",
-        loadError: "Não foi possível carregar os membros.",
+        rolesFilterHint: "Deixe vazio para incluir todos."
       },
       content: {
-        title: "Mensagem",
-        desc: "Título e corpo mostrados aos destinatários.",
-        typeLabel: "Tipo",
         types: {
-          info: "Info",
-          organization: "Organização",
-          team: "Equipa",
-          security: "Segurança",
-          billing: "Faturação",
-          custom: "Personalizado",
+          custom: "Personalizado"
         },
-        customTypePlaceholder: "ex.: anúncio",
-        titleLabel: "Título",
-        titlePlaceholder: "Ex.: Ensaio adiado para as 20:00",
-        descriptionLabel: "Descrição",
-        descriptionPlaceholder: "Detalhes opcionais",
-        linkLabel: "Ligação",
-        linkPlaceholder: "/services",
-        linkHint: "Ligação opcional aberta ao tocar na notificação.",
-        preview: "Pré-visualização",
-        previewEmpty: "Pré-visualização do título",
-        now: "agora",
-        appName: "Hosanna Studio",
+        customTypePlaceholder: "ex.: anúncio"
       },
       delivery: {
-        title: "Entrega",
-        desc: "Caixa de entrada, push, ou ambos.",
-        inbox: "Caixa de entrada",
-        inboxDesc: "Na aplicação",
-        push: "Push",
-        pushDesc: "No dispositivo",
-        both: "Ambos",
-        bothDesc: "Caixa de entrada e push",
         pushTitle: "Conteúdo do push",
         pushHint: "Usa o mesmo título e descrição de cima.",
         dataLabel: "Dados extra",
@@ -277,8 +217,8 @@ export const pt = {
         keyPlaceholder: "chave",
         valuePlaceholder: "valor",
         removeRow: "Remover",
-        dataHint: "Pares chave/valor opcionais enviados com o push.",
-      },
+        dataHint: "Pares chave/valor opcionais enviados com o push."
+      }
     },
     billing: {
       title: "Faturação",
@@ -290,15 +230,12 @@ export const pt = {
       noAccessDesc: "Só o proprietário da organização pode ver a faturação.",
       status: {
         trialing: "Em período gratuito",
-        active: "Ativo",
+        active: "Ativo"
       },
       planName: "Hosanna Cloud",
-      planDesc:
-        "Sincronização na nuvem, cópias de segurança automáticas e suporte prioritário para a sua organização.",
+      planDesc: "Sincronização na nuvem, cópias de segurança automáticas e suporte prioritário para a sua organização.",
       monthly: "Mensal",
       annual: "Anual",
-      // Shown next to the price when the annual option is selected. Based on
-      // the display prices in PLAN_PRICING (12×€12 − €120 = 2 months free).
       annualSavings: "Poupe 2 meses face ao plano mensal",
       plan: {
         features: {
@@ -306,8 +243,8 @@ export const pt = {
           unlimited: "Músicas e cultos ilimitados",
           print: "Exportação e impressão de cifras",
           backups: "Cópias de segurança automáticas",
-          support: "Suporte prioritário",
-        },
+          support: "Suporte prioritário"
+        }
       },
       trialUntil: "Até {date}",
       trialDaysLeft: "Faltam {days} dias do seu período gratuito",
@@ -322,17 +259,14 @@ export const pt = {
       manage: "Gerir faturação",
       manageDesc: "Atualize o método de pagamento, veja faturas ou cancele a subscrição.",
       startTrial: "Iniciar período gratuito de 14 dias",
-      trialNote:
-        "É necessário um cartão para começar. Não é cobrado nada durante os 14 dias de teste.",
-      // Used when the org already used its free trial (re-subscribing after
-      // cancel): Stripe does not grant a second trial, so don't promise one.
+      trialNote: "É necessário um cartão para começar. Não é cobrado nada durante os 14 dias de teste.",
       subscribe: "Subscrever agora",
       subscribeNote: "A subscrição começa de imediato. Pode cancelar quando quiser.",
       promoHint: "Tem um código promocional? Pode aplicá-lo no checkout.",
       askOwner: "Peça ao proprietário da organização para ativar a subscrição.",
       checkoutError: "Não foi possível iniciar o processo de pagamento.",
       portalError: "Não foi possível abrir o portal de faturação.",
-      subscribedToast: "Subscrição ativada com sucesso!",
+      subscribedToast: "Subscrição ativada com sucesso!"
     },
     features: {
       earlyAccess: {
@@ -344,7 +278,7 @@ export const pt = {
         docs: "Saber mais",
         comingSoon: "Brevemente",
         interested: "Interessado",
-        loadError: "Não foi possível carregar as funcionalidades.",
+        loadError: "Não foi possível carregar as funcionalidades."
       },
       support: {
         title: "Suporte & Feedback",
@@ -361,8 +295,7 @@ export const pt = {
         chatEmpty: "Ainda sem mensagens. Envie uma abaixo.",
         placeholder: "Escreva uma mensagem… (Enter para enviar)",
         restore: "Restaurar conversas",
-        restoreDesc:
-          "Introduza o seu e-mail para receber um link que restaura as suas conversas anteriores neste browser.",
+        restoreDesc: "Introduza o seu e-mail para receber um link que restaura as suas conversas anteriores neste browser.",
         restoreSent: "Link de recuperação enviado — verifique o seu e-mail!",
         emailPlaceholder: "o.seu@email.com",
         sendLink: "Enviar link",
@@ -375,14 +308,12 @@ export const pt = {
         loadMore: "Carregar mais",
         ai: "Assistente de IA",
         team: "Suporte",
-        readOnlyTicket:
-          "Esta não é a sua conversa mais recente, por isso as respostas não podem ser enviadas a partir daqui.",
-        startNewInstead: "Inicie uma nova mensagem",
-      },
+        readOnlyTicket: "Esta não é a sua conversa mais recente, por isso as respostas não podem ser enviadas a partir daqui.",
+        startNewInstead: "Inicie uma nova mensagem"
+      }
     },
     offlineTitle: "Modo Offline",
-    offlineDesc:
-      "As definições de conta, organização e membros requerem ligação à internet e estão desativadas.",
+    offlineDesc: "As definições de conta, organização e membros requerem ligação à internet e estão desativadas.",
     appearance: {
       themeTitle: "Tema & Aparência da Aplicação",
       themeDesc: "Personalize o esquema de cores e a luminosidade da interface no seu ecrã.",
@@ -397,27 +328,23 @@ export const pt = {
       darkDesc: "Confortável para a noite e púlpito.",
       darkBadge: "Noturno",
       languageTitle: "Idioma",
-      languageDesc:
-        "Escolha o idioma da interface. Por predefinição segue a organização ou o navegador.",
+      languageDesc: "Escolha o idioma da interface. Por predefinição segue a organização ou o navegador.",
       languageAuto: "Automático",
       languageAutoDesc: "Seguir a organização ou o navegador",
       navigationTitle: "Navegação & Estrutura",
       navigationDesc: "Ajuste como os repertórios e pastas são dispostos na sua área de trabalho.",
       showFolderTree: "Mostrar Árvore Hierárquica de Pastas",
-      showFolderTreeDesc:
-        "Apresenta a estrutura completa de pastas e subpastas de músicas na barra lateral esquerda.",
+      showFolderTreeDesc: "Apresenta a estrutura completa de pastas e subpastas de músicas na barra lateral esquerda.",
       studioTitle: "Preferências do Studio Musical",
       studioDesc: "Opções padrão de visualização de cifras e letra para este navegador.",
       onDevice: "Neste Dispositivo",
       showChords: "Exibir Acordes por Predefinição",
-      showChordsDesc:
-        "Ativa automaticamente a linha de acordes (ChordPro) ao abrir o visualizador de cânticos, ensaio e modo de projeção para músicos.",
+      showChordsDesc: "Ativa automaticamente a linha de acordes (ChordPro) ao abrir o visualizador de cânticos, ensaio e modo de projeção para músicos.",
       songScoreTitle: "Pontuação dos Cânticos",
       songScoreDesc: "Mostra um indicador de qualidade em cada cartão de cântico no explorador.",
       songScoreBadge: "Explorador",
       showSongScore: "Mostrar pontuação do cântico",
-      showSongScoreDesc:
-        "Apresenta uma pontuação de completude em cada cartão de cântico no explorador.",
+      showSongScoreDesc: "Apresenta uma pontuação de completude em cada cartão de cântico no explorador.",
       songScoreStyle: "Estilo de visualização",
       scoreLayout: {
         ring: "Anel",
@@ -427,8 +354,8 @@ export const pt = {
         dots: "Pontos",
         dotsDesc: "Fila de cinco indicadores",
         badge: "Distintivo",
-        badgeDesc: "Pílula colorida com a pontuação",
-      },
+        badgeDesc: "Pílula colorida com a pontuação"
+      }
     },
     toast: {
       themeChanged: "Tema alterado para {theme}.",
@@ -438,7 +365,7 @@ export const pt = {
       chordsHidden: "Apenas letra visível por predefinição.",
       languageChanged: "Idioma alterado para {language}.",
       orgSaved: "Definições da organização guardadas com sucesso!",
-      orgSaveError: "Erro ao guardar definições: {error}",
+      orgSaveError: "Erro ao guardar definições: {error}"
     },
     general: {
       title: "Preferências Regionais & Calendário",
@@ -452,24 +379,19 @@ export const pt = {
       sunday: "Domingo",
       sundayDesc: "Tradicional",
       durationsTitle: "Durações Padrão dos Momentos (MM:SS)",
-      durationsDesc:
-        "Introduza os tempos médios em minutos e segundos para estimar a duração dos cultos.",
+      durationsDesc: "Introduza os tempos médios em minutos e segundos para estimar a duração dos cultos.",
       songLabel: "Cântico / Música",
       sermonLabel: "Pregação / Sermão",
       usualStartTime: "Hora habitual de início do culto",
-      usualStartTimeDesc:
-        "Hora proposta para eventos do tipo Culto Dominical e usada na impressão quando não há evento de agenda ligado.",
+      usualStartTimeDesc: "Hora proposta para eventos do tipo Culto Dominical e usada na impressão quando não há evento de agenda ligado.",
       suggestions: "Sugestões:",
       behaviorTitle: "Comportamento do Alinhamento e Culto",
       showDuration: "Apresentar Duração Total Estimada",
-      showDurationDesc:
-        "Soma os minutos das músicas e momentos de palavra para calcular o tempo total do culto.",
+      showDurationDesc: "Soma os minutos das músicas e momentos de palavra para calcular o tempo total do culto.",
       showNotes: "Ativar Notas e Indicações Técnicas",
-      showNotesDesc:
-        "Permite que os líderes e a equipa adicionem notas de dinâmica, tom e observações em cada item.",
+      showNotesDesc: "Permite que os líderes e a equipa adicionem notas de dinâmica, tom e observações em cada item.",
       autoSave: "Guardar Rascunhos Automaticamente (Autosave)",
-      autoSaveDesc:
-        "Guarda alterações contínuas enquanto prepara e reorganiza o alinhamento musical.",
+      autoSaveDesc: "Guarda alterações contínuas enquanto prepara e reorganiza o alinhamento musical.",
       reset: "Repor Valores",
       saving: "A guardar preferências...",
       save: "Guardar Preferências",
@@ -482,7 +404,7 @@ export const pt = {
         ptPT: "Português (Portugal)",
         ptBR: "Português (Brasil)",
         enUS: "English (US)",
-        esES: "Español",
+        esES: "Español"
       },
       timezones: {
         portugalGroup: "Portugal & Ilhas",
@@ -494,14 +416,14 @@ export const pt = {
         otherRegionsGroup: "Outras Regiões",
         london: "Londres (GMT+0)",
         newYork: "Nova Iorque (EST / GMT-5)",
-        utc: "UTC (Tempo Universal)",
+        utc: "UTC (Tempo Universal)"
       },
       responsibilities: {
         title: "Responsabilidades da Agenda",
         desc: "Gestão da lista de responsabilidades que pode atribuir aos cultos na página Agenda.",
         count: {
           one: "{count} responsabilidade",
-          other: "{count} responsabilidades",
+          other: "{count} responsabilidades"
         },
         empty: "Nenhuma responsabilidade criada ainda.",
         hint: "As alterações são aplicadas ao guardar as definições.",
@@ -511,30 +433,20 @@ export const pt = {
         iconLabel: "Ícone",
         colorLabel: "Cor",
         add: "Adicionar",
-        remove: "Remover responsabilidade",
-      },
+        remove: "Remover responsabilidade"
+      }
     },
     restore: {
       confirmTitle: "Confirmar Restauração da Base de Dados",
       attention: "Atenção ao Restaurar:",
-      attentionDesc:
-        "Esta ação irá substituir a totalidade dos dados existentes pelos dados contidos no ficheiro de cópia de segurança selecionado.",
+      attentionDesc: "Esta ação irá substituir a totalidade dos dados existentes pelos dados contidos no ficheiro de cópia de segurança selecionado.",
       summary: "Resumo do Conteúdo a Restaurar:",
       songs: "Cânticos",
       folders: "Pastas",
       services: "Cultos",
       restoreNow: "Restaurar Base de Dados Agora",
       success: "Base de dados restaurada com sucesso! A recarregar...",
-      error: "Falha ao restaurar base de dados.",
-    },
-    roles: {
-      owner: "Proprietário",
-      admin: "Administrador",
-      teamLeader: "Líder de Equipa",
-      editor: "Editor",
-      musician: "Músico",
-      guest: "Convidado",
-      member: "Membro",
+      error: "Falha ao restaurar base de dados."
     },
     account: {
       user: "Utilizador",
@@ -553,11 +465,10 @@ export const pt = {
         discordDesc: "Utilize a sua conta Discord para iniciar sessão.",
         providerDesc: "Utilize a sua conta {name} para iniciar sessão.",
         unlinkConfirmTitle: "Desassociar Conta Social",
-        unlinkConfirmMessage:
-          "Tem a certeza que pretende desassociar a sua conta {provider}? Não poderá iniciar sessão com ela a menos que volte a associar.",
+        unlinkConfirmMessage: "Tem a certeza que pretende desassociar a sua conta {provider}? Não poderá iniciar sessão com ela a menos que volte a associar.",
         unlinkSuccess: "Conta desassociada com sucesso.",
         unlinkError: "Erro ao desassociar conta: {error}",
-        linkError: "Erro ao associar conta: {error}",
+        linkError: "Erro ao associar conta: {error}"
       },
       activeSessions: {
         title: "Sessões Ativas",
@@ -571,7 +482,7 @@ export const pt = {
         terminate: "Encerrar",
         currentSessionOnly: "Apenas a sessão atual está ativa.",
         revokeSuccess: "Sessão revogada com sucesso.",
-        revokeError: "Erro ao revogar sessão.",
+        revokeError: "Erro ao revogar sessão."
       },
       profile: {
         invalidImage: "Por favor selecione um ficheiro de imagem válido.",
@@ -609,8 +520,8 @@ export const pt = {
         userId: "ID do Utilizador",
         role: "Função",
         accountStatus: "Estado da Conta",
-        active: "Ativo",
-      },
+        active: "Ativo"
+      }
     },
     twoFactor: {
       title: "Autenticação em 2 Etapas (2FA)",
@@ -619,19 +530,16 @@ export const pt = {
       disableBtn: "Desativar 2FA",
       setupModalTitle: "Configurar 2FA",
       disableModalTitle: "Desativar 2FA",
-      passwordStepDesc:
-        "Para ativar a verificação em duas etapas, confirme a sua palavra-passe atual:",
+      passwordStepDesc: "Para ativar a verificação em duas etapas, confirme a sua palavra-passe atual:",
       passwordLabel: "Palavra-passe",
       continue: "Continuar",
-      setupStep1:
-        "1. Digitalize o código QR com a sua aplicação de autenticação (como Google Authenticator, Authy ou Microsoft Authenticator).",
+      setupStep1: "1. Digitalize o código QR com a sua aplicação de autenticação (como Google Authenticator, Authy ou Microsoft Authenticator).",
       setupStep2: "2. Introduza o código de 6 dígitos gerado pela aplicação:",
       verificationCodeLabel: "Código de Verificação",
       verificationCodePlaceholder: "123456",
       verify: "Verificar",
       backupSuccessTitle: "Aplicação associada com sucesso!",
-      backupWarning:
-        "Guarde estes códigos de recuperação num local seguro (como num gestor de palavras-passe). Eles são a única forma de aceder à sua conta caso perca acesso ao seu telemóvel.",
+      backupWarning: "Guarde estes códigos de recuperação num local seguro (como num gestor de palavras-passe). Eles são a única forma de aceder à sua conta caso perca acesso ao seu telemóvel.",
       backupSavedBtn: "Guardei os códigos de forma segura",
       disableStepDesc: "Para desativar a verificação em duas etapas, confirme a sua palavra-passe:",
       passwordRequired: "Por favor insira a palavra-passe.",
@@ -642,7 +550,7 @@ export const pt = {
       verifyError: "Erro ao verificar código: {error}",
       setupSuccess: "Autenticação em 2 Etapas configurada com sucesso!",
       disableSuccess: "Autenticação em 2 Etapas desativada.",
-      disableError: "Erro ao desativar 2FA: {error}",
+      disableError: "Erro ao desativar 2FA: {error}"
     },
     members: {
       activeMembers: "Membros Ativos ({count})",
@@ -681,10 +589,9 @@ export const pt = {
       inviteSuccess: "Convite enviado com sucesso para {email}!",
       inviteError: "Erro convidando {email}!",
       cancelModalTitle: "Cancelar Convite",
-      cancelModalConfirm:
-        "Tem a certeza que quer cancelar o convite para {email}? A pessoa deixará de conseguir aceitar este convite.",
+      cancelModalConfirm: "Tem a certeza que quer cancelar o convite para {email}? A pessoa deixará de conseguir aceitar este convite.",
       cancelling: "A Cancelar...",
-      confirmCancel: "Cancelar Convite",
+      confirmCancel: "Cancelar Convite"
     },
     memberProfile: {
       backToList: "Voltar à lista de membros",
@@ -693,26 +600,22 @@ export const pt = {
       removeMember: "Remover Membro",
       rbacTitle: "Gestão de Permissões RBAC",
       changeRole: "Alterar Função",
-      promoteOwnerWarning:
-        "Está prestes a tornar {name} proprietário da organização. Esta ação é sensível e deve ser confirmada com cuidado.",
+      promoteOwnerWarning: "Está prestes a tornar {name} proprietário da organização. Esta ação é sensível e deve ser confirmada com cuidado.",
       saveRole: "Guardar Função",
       currentRole: "Função Atual:",
       removeConfirmTitle: "Remover Membro",
-      removeConfirmText:
-        "Tem a certeza que quer remover {name} da organização? Esta pessoa perderá o acesso imediatamente.",
+      removeConfirmText: "Tem a certeza que quer remover {name} da organização? Esta pessoa perderá o acesso imediatamente.",
       leaveConfirmTitle: "Sair da Organização",
-      leaveConfirmText:
-        "Tem a certeza que quer sair desta organização? Vai perder o acesso imediatamente e terá de ser convidado novamente para voltar a entrar.",
+      leaveConfirmText: "Tem a certeza que quer sair desta organização? Vai perder o acesso imediatamente e terá de ser convidado novamente para voltar a entrar.",
       leaving: "A Sair...",
       leaveSuccess: "Saiu da organização com sucesso.",
-      leaveError: "Falha ao sair da organização: {error}",
+      leaveError: "Falha ao sair da organização: {error}"
     },
     workspace: {
       title: "Perfil da Organização",
       desc: "Gira a identidade institucional, logótipo e cores do seu ministério.",
       switchOrgTitle: "As Suas Organizações",
-      switchOrgDesc:
-        "Pertence a mais do que uma organização. Mude para gerir outro espaço de trabalho.",
+      switchOrgDesc: "Pertence a mais do que uma organização. Mude para gerir outro espaço de trabalho.",
       currentOrg: "Atual",
       switchOrg: "Mudar",
       switchingOrg: "A mudar…",
@@ -731,13 +634,11 @@ export const pt = {
       defaultOrgName: "Minha Organização",
       noDescription: "Nenhuma descrição configurada.",
       visualIdentityTitle: "Identidade Visual & Cores",
-      visualIdentityDesc:
-        "Personalize a cor de destaque e visibilidade de marca em apresentações e partilhas.",
+      visualIdentityDesc: "Personalize a cor de destaque e visibilidade de marca em apresentações e partilhas.",
       accentColorLabel: "Cor de Destaque (Accent)",
       quickColors: "Cores Rápidas:",
       showBrandingLabel: "Exibir Logótipo em Ecrãs Públicos",
-      showBrandingDesc:
-        "Apresenta o cabeçalho e marca da igreja em projeções e relatórios partilhados.",
+      showBrandingDesc: "Apresenta o cabeçalho e marca da igreja em projeções e relatórios partilhados.",
       preview: "Pré-visualização:",
       activeButton: "Botão Ativo",
       churchFallback: "Igreja",
@@ -756,8 +657,7 @@ export const pt = {
       backupTitle: "Cópia de Segurança & Dados",
       backupDesc: "Exporte ou restaure todos os repertórios e cultos num ficheiro HOSANNA seguro.",
       exportData: "Exportar Dados",
-      exportDesc:
-        "Transfira um backup completo em HOSANNA contendo músicas, alinhamentos e pastas.",
+      exportDesc: "Transfira um backup completo em HOSANNA contendo músicas, alinhamentos e pastas.",
       exportProcessing: "A processar backup...",
       exportDownloadBtn: "Descarregar Cópia (.hosanna)",
       exportSuccess: "Cópia de segurança descarregada com sucesso!",
@@ -765,87 +665,78 @@ export const pt = {
       restoreData: "Restaurar Dados",
       restoreWarning: "Pode atualizar ou substituir dados existentes.",
       restoreUploadBtn: "Carregar Ficheiro HOSANNA",
-      invalidJson: "Ficheiro HOSANNA de cópia de segurança inválido.",
+      invalidJson: "Ficheiro HOSANNA de cópia de segurança inválido."
     },
     about: {
       title: "Sobre o Hosanna Studio",
       controlPanel: "Painel de Controlo",
       copyright: "© {year} Embrace & Tiago Inês. Código sob licença Apache 2.0.",
       studioVersion: "Versão do Studio",
-      openSourceBanner:
-        "Este projeto é <strong>open-source</strong>! Acreditamos no software livre para equipar e apoiar comunidades.",
+      openSourceBanner: "Este projeto é <strong>open-source</strong>! Acreditamos no software livre para equipar e apoiar comunidades.",
       viewRepo: "Ver Repositório",
       supportedFormats: "Formatos de Importação Suportados",
       thirdPartyLicenses: "Licenças de Bibliotecas de Terceiros ({count})",
       productTourTitle: "Tour do produto",
       productTourDesc: "Reveja os essenciais da interface adaptados ao seu papel na organização.",
       productTourRelaunch: "Iniciar tour",
-      interactiveTourRelaunch: "Tour interativo",
-    },
+      interactiveTourRelaunch: "Tour interativo"
+    }
   },
-
   tour: {
     product: {
       missedTitle: "Tour do produto disponível",
       missedDesc: "Há um tour guiado das funcionalidades essenciais. Quer vê-lo agora?",
       missedAction: "Iniciar tour",
       unavailableTitle: "Tour indisponível",
-      unavailableDesc:
-        "Não foi possível iniciar o tour neste ecrã. Volte à Drive e tente novamente.",
+      unavailableDesc: "Não foi possível iniciar o tour neste ecrã. Volte à Drive e tente novamente.",
       controls: {
         next: "Seguinte",
         previous: "Anterior",
         done: "Concluir",
         close: "Fechar",
         progress: "{{current}} de {{total}}",
-        tryInteractive: "Tour interativo",
+        tryInteractive: "Tour interativo"
       },
       welcome: {
         title: "Bem-vindo ao Hosanna Studio",
-        description:
-          "Este tour rápido destaca o essencial para o seu papel. Pode saltar a qualquer momento e relançar em Definições → Sobre.",
+        description: "Este tour rápido destaca o essencial para o seu papel. Pode saltar a qualquer momento e relançar em Definições → Sobre."
       },
       drive: {
         title: "Drive",
-        description:
-          "Aqui vive a biblioteca da organização — pastas e cânticos, como um explorador de ficheiros.",
+        description: "Aqui vive a biblioteca da organização — pastas e cânticos, como um explorador de ficheiros."
       },
       library: {
         title: "Biblioteca",
-        description: "Veja todos os cânticos num só sítio, independentemente da pasta.",
+        description: "Veja todos os cânticos num só sítio, independentemente da pasta."
       },
       collections: {
         title: "Coleções",
-        description: "Agrupe cânticos em listas reutilizáveis para ensaios ou temas.",
+        description: "Agrupe cânticos em listas reutilizáveis para ensaios ou temas."
       },
       services: {
         title: "Cultos / Serviços",
-        description: "Monte a ordem de louvor com cânticos, notas e momentos do culto.",
+        description: "Monte a ordem de louvor com cânticos, notas e momentos do culto."
       },
       agenda: {
         title: "Agenda",
-        description: "Planeie eventos e ligue-os a serviços quando precisar.",
+        description: "Planeie eventos e ligue-os a serviços quando precisar."
       },
       search: {
         title: "Pesquisa",
-        description:
-          "Encontre rapidamente pastas, cânticos e serviços. Há sintaxe avançada no ícone de ajuda.",
+        description: "Encontre rapidamente pastas, cânticos e serviços. Há sintaxe avançada no ícone de ajuda."
       },
       create: {
         title: "Criar",
-        description:
-          "Use o botão + para criar cânticos, pastas, serviços e mais — conforme as suas permissões.",
+        description: "Use o botão + para criar cânticos, pastas, serviços e mais — conforme as suas permissões."
       },
       settings: {
         title: "Conta e definições",
-        description:
-          "Aceda às preferências pessoais, organização e outras opções a partir do seu perfil.",
+        description: "Aceda às preferências pessoais, organização e outras opções a partir do seu perfil."
       },
       finish: {
         title: "Pronto para começar",
-        description:
-          "Pode relançar este tour em Definições → Sobre. Para praticar com dados de demonstração, experimente o tour interativo.",
-      },
+        description: "Pode relançar este tour em Definições → Sobre. Para praticar com dados de demonstração, experimente o tour interativo."
+      }
     },
     interactive: {
       controls: {
@@ -854,151 +745,134 @@ export const pt = {
         skipTour: "Sair do tour",
         waiting: "Faça a ação indicada (ou salte este passo).",
         done: "Concluir",
-        progress: "{{current}} de {{total}}",
+        progress: "{{current}} de {{total}}"
       },
       intro: {
         welcome: {
           title: "Tour interativo",
-          description:
-            "Este é um ambiente de demonstração isolado. Em alguns passos o tour espera que faça uma ação; nos outros basta clicar em Seguinte. Clique em Seguinte para começar.",
+          description: "Este é um ambiente de demonstração isolado. Em alguns passos o tour espera que faça uma ação; nos outros basta clicar em Seguinte. Clique em Seguinte para começar."
         },
         sandbox: {
           title: "Dados seguros",
-          description:
-            "Nada aqui é sincronizado com a sua organização real. Explore à vontade. Clique em Seguinte para continuar.",
-        },
+          description: "Nada aqui é sincronizado com a sua organização real. Explore à vontade. Clique em Seguinte para continuar."
+        }
       },
       folders: {
         createBtn: {
           title: "Abrir o menu Criar",
-          description: "Clique no botão + para ver o que pode criar.",
+          description: "Clique no botão + para ver o que pode criar."
         },
         create: {
           title: "Criar uma pasta",
-          description:
-            "Crie uma pasta nova — escolha “Nova Pasta” no menu (ex.: “Ensaios”). O tour avança quando a pasta existir.",
+          description: "Crie uma pasta nova — escolha “Nova Pasta” no menu (ex.: “Ensaios”). O tour avança quando a pasta existir."
         },
         drive: {
           title: "A Drive",
-          description:
-            "As pastas organizam a biblioteca. Pode arrastar cânticos entre pastas mais tarde.",
-        },
+          description: "As pastas organizam a biblioteca. Pode arrastar cânticos entre pastas mais tarde."
+        }
       },
       songs: {
         create: {
           title: "Criar um cântico",
-          description: "Use + → Novo cântico. Depois o tour pede-lhe para o abrir no editor.",
+          description: "Use + → Novo cântico. Depois o tour pede-lhe para o abrir no editor."
         },
         open: {
           title: "Abrir um cântico",
-          description:
-            "Vá à Biblioteca e abra o cântico que criou (duplo clique numa linha). Também pode fazer duplo clique na Drive.",
-        },
+          description: "Vá à Biblioteca e abra o cântico que criou (duplo clique numa linha). Também pode fazer duplo clique na Drive."
+        }
       },
       chordpro: {
         editor: {
           title: "Editor ChordPro",
-          description:
-            "Este é o editor. Em linhas vazias pode usar atalhos que o editor completa por si — como num snippet inteligente.",
+          description: "Este é o editor. Em linhas vazias pode usar atalhos que o editor completa por si — como num snippet inteligente."
         },
         snippets: {
           title: "TAB completa diretivas",
-          description:
-            "Numa linha vazia escreva a (ou artist) e prima TAB — o editor preenche {artist: …}. O texto fica selecionado: escreva por cima e prima TAB outra vez para o campo seguinte. Experimente também t (title) ou ! para um molde completo.",
+          description: "Numa linha vazia escreva a (ou artist) e prima TAB — o editor preenche {artist: …}. O texto fica selecionado: escreva por cima e prima TAB outra vez para o campo seguinte. Experimente também t (title) ou ! para um molde completo."
         },
         chords: {
           title: "Acordes com [ ]",
-          description:
-            "Escreva acordes entre parênteses retos, por exemplo [G] ou [Am], mesmo por cima da letra. A pré-visualização mostra-os formatados.",
+          description: "Escreva acordes entre parênteses retos, por exemplo [G] ou [Am], mesmo por cima da letra. A pré-visualização mostra-os formatados."
         },
         preview: {
           title: "Pré-visualização",
-          description: "Veja o resultado à direita enquanto edita — ideal para ensaiar e imprimir.",
+          description: "Veja o resultado à direita enquanto edita — ideal para ensaiar e imprimir."
         },
         save: {
           title: "Guardar alterações",
-          description:
-            "Pratique um snippet ou um acorde, depois guarde (Ctrl+S ou o botão) para continuar.",
-        },
+          description: "Pratique um snippet ou um acorde, depois guarde (Ctrl+S ou o botão) para continuar."
+        }
       },
       collections: {
         nav: {
           title: "Coleções",
-          description: "Abra Coleções na barra lateral.",
+          description: "Abra Coleções na barra lateral."
         },
         create: {
           title: "Criar uma coleção",
-          description: "Crie uma coleção (ex.: “Natal”) para agrupar cânticos reutilizáveis.",
+          description: "Crie uma coleção (ex.: “Natal”) para agrupar cânticos reutilizáveis."
         },
         backToDrive: {
           title: "Voltar à Drive",
-          description:
-            "Agora volte à Drive — vamos usar os mesmos atalhos de um explorador de ficheiros.",
+          description: "Agora volte à Drive — vamos usar os mesmos atalhos de um explorador de ficheiros."
         },
         selection: {
           title: "Selecionar como no explorador",
-          description:
-            "Clique num item para o selecionar. Ctrl+clique (⌘ no Mac) adiciona mais; Shift+clique seleciona um intervalo. Também pode arrastar na área vazia da Drive para desenhar uma seleção (marquee) sobre vários itens. Experimente selecionar algo.",
+          description: "Clique num item para o selecionar. Ctrl+clique (⌘ no Mac) adiciona mais; Shift+clique seleciona um intervalo. Também pode arrastar na área vazia da Drive para desenhar uma seleção (marquee) sobre vários itens. Experimente selecionar algo."
         },
         openFolder: {
           title: "Abrir uma pasta",
-          description: "Faça duplo clique numa pasta (ou selecione e Enter) para entrar nela.",
+          description: "Faça duplo clique numa pasta (ou selecione e Enter) para entrar nela."
         },
         selectAll: {
           title: "Selecionar tudo",
-          description: "Dentro da pasta, prima Ctrl+A (⌘+A no Mac) para selecionar todos os itens.",
+          description: "Dentro da pasta, prima Ctrl+A (⌘+A no Mac) para selecionar todos os itens."
         },
         contextMenu: {
           title: "Menu de contexto",
-          description:
-            "Com a seleção ativa, clique com o botão direito num dos itens selecionados.",
+          description: "Com a seleção ativa, clique com o botão direito num dos itens selecionados."
         },
         addSongs: {
           title: "Adicionar à coleção",
-          description: "No menu, escolha “Adicionar à coleção” e confirme a coleção que criou.",
-        },
+          description: "No menu, escolha “Adicionar à coleção” e confirme a coleção que criou."
+        }
       },
       services: {
         nav: {
           title: "Cultos / Serviços",
-          description: "Abra Serviços na barra lateral.",
+          description: "Abra Serviços na barra lateral."
         },
         create: {
           title: "Criar um serviço",
-          description:
-            "Crie um serviço novo. Depois o tour pede-lhe para o abrir e montar a ordem de louvor.",
+          description: "Crie um serviço novo. Depois o tour pede-lhe para o abrir e montar a ordem de louvor."
         },
         builder: {
           title: "Construtor do culto",
-          description:
-            "Abra o serviço (duplo clique) para ver o construtor — canções, anúncios, escrituras e mais.",
+          description: "Abra o serviço (duplo clique) para ver o construtor — canções, anúncios, escrituras e mais."
         },
         elements: {
           title: "Elementos do culto",
-          description:
-            "Adicione cânticos e reordene elementos. Esta é a ferramenta principal para a equipa de louvor.",
-        },
+          description: "Adicione cânticos e reordene elementos. Esta é a ferramenta principal para a equipa de louvor."
+        }
       },
       agenda: {
         nav: {
           title: "Agenda",
-          description: "Abra a Agenda na barra lateral.",
+          description: "Abra a Agenda na barra lateral."
         },
         create: {
           title: "Criar um evento",
-          description: "Crie um evento e, se quiser, ligue-o a um serviço.",
-        },
+          description: "Crie um evento e, se quiser, ligue-o a um serviço."
+        }
       },
       finish: {
         done: {
           title: "Tour concluído",
-          description:
-            "Excelente! Pode fechar este separador e voltar à sua organização — ou continuar a explorar a demo.",
-        },
-      },
-    },
+          description: "Excelente! Pode fechar este separador e voltar à sua organização — ou continuar a explorar a demo."
+        }
+      }
+    }
   },
-
   layout: {
     newVersionTitle: "Nova versão disponível",
     newVersionDesc: "Uma nova versão do Hosanna Studio está disponível.",
@@ -1016,33 +890,29 @@ export const pt = {
     songCreated: "Cântico criado com sucesso!",
     songImported: "Cântico importado com sucesso!",
     folderNameMismatch: "O nome da pasta inserido não é igual ao nome da pasta.",
-    uploadSuccess: '{count} ficheiro(s) {type} carregado(s) com sucesso para "{folder}"!',
+    uploadSuccess: "{count} ficheiro(s) {type} carregado(s) com sucesso para \"{folder}\"!",
     uploadError: "Erro ao carregar {count} ficheiro(s) {type}",
-    uploadIgnored: "Ignorado {count} ficheiro(s) {type}",
+    uploadIgnored: "Ignorado {count} ficheiro(s) {type}"
   },
-
   foldersPage: {
     dropHere: "Solte os ficheiros aqui",
-    dropHereDesc: 'Os ficheiros serão importados para "{folder}"',
+    dropHereDesc: "Os ficheiros serão importados para \"{folder}\"",
     loading: "A carregar explorador de ficheiros...",
     noResults: "Nenhum ficheiro ou pasta correspondente",
     emptyTitle: "Esta Pasta está Vazia",
-    noResultsDesc: 'Nenhum item em "{folder}" corresponde a "{query}".',
+    noResultsDesc: "Nenhum item em \"{folder}\" corresponde a \"{query}\".",
     emptyRootDesc: "Ainda não existem pastas nem cânticos na raiz.",
-    emptyFolderDesc: 'Ainda não foram adicionados cânticos à pasta "{folder}".',
-    dragOrClick: "Arraste e solte ficheiros aqui ou clique para carregar",
+    emptyFolderDesc: "Ainda não foram adicionados cânticos à pasta \"{folder}\".",
+    dragOrClick: "Arraste e solte ficheiros aqui ou clique para carregar"
   },
-
   trashPage: {
     loading: "A carregar lixo...",
     emptyTitle: "O lixo está vazio",
-    emptyDesc:
-      "Os itens apagados aparecem aqui durante 30 dias antes de serem removidos definitivamente.",
+    emptyDesc: "Os itens apagados aparecem aqui durante 30 dias antes de serem removidos definitivamente.",
     deletedAt: "Apagado em",
     permanentDeletion: "Remoção definitiva",
-    restore: "Restaurar",
+    restore: "Restaurar"
   },
-
   songEditor: {
     loading: "A carregar a pauta...",
     notFoundTitle: "Cântico Não Encontrado",
@@ -1059,9 +929,8 @@ export const pt = {
     preview: "Prévia Visual",
     readingSettings: "Ajustes de Leitura",
     variant: "Variante da música",
-    defaultVariant: "Padrão",
+    defaultVariant: "Padrão"
   },
-
   servicesPage: {
     loading: "A carregar agenda...",
     createFirstService: "Criar Primeiro Culto",
@@ -1087,29 +956,25 @@ export const pt = {
     archiveService: "Arquivar Culto",
     activateService: "Ativar Culto",
     deleteService: "Apagar Culto",
-    deleteServiceMessage: 'Tem a certeza de que deseja apagar o culto "{name}"?',
-    archiveServiceMessage: 'Tem a certeza de que deseja {action} o culto "{name}"?',
+    deleteServiceMessage: "Tem a certeza de que deseja apagar o culto \"{name}\"?",
+    archiveServiceMessage: "Tem a certeza de que deseja {action} o culto \"{name}\"?",
     deleteAllTitle: "Apagar {count} Cultos",
-    deleteAllMessage:
-      "Tem a certeza de que deseja apagar permanentemente {count} cultos selecionados?",
+    deleteAllMessage: "Tem a certeza de que deseja apagar permanentemente {count} cultos selecionados?",
     deleteAll: "Apagar Todos",
     archiveAllTitle: "Arquivar {count} Cultos",
     archiveAllMessage: "Tem a certeza de que deseja arquivar {count} cultos selecionados?",
-    archiveAll: "Arquivar Todos",
+    archiveAll: "Arquivar Todos"
   },
-
   collectionsPage: {
     edit: "Editar",
     delete: "Excluir",
     songCount: {
       one: "{count} música",
-      other: "{count} músicas",
+      other: "{count} músicas"
     },
     deleteTitle: "Excluir Coleção",
-    deleteMessage:
-      'Tem certeza que deseja enviar a coleção "{name}" para a lixeira? As músicas continuarão salvas na biblioteca.',
-    deletePermanentMessage:
-      'Tem certeza que deseja excluir a coleção "{name}"? As músicas permanecerão disponíveis na biblioteca.',
+    deleteMessage: "Tem certeza que deseja enviar a coleção \"{name}\" para a lixeira? As músicas continuarão salvas na biblioteca.",
+    deletePermanentMessage: "Tem certeza que deseja excluir a coleção \"{name}\"? As músicas permanecerão disponíveis na biblioteca.",
     notFoundTitle: "Coleção não encontrada",
     notFoundDesc: "A coleção que você procura pode ter sido removida.",
     backToCollections: "Voltar para Coleções",
@@ -1117,12 +982,11 @@ export const pt = {
     viewSong: "Ver Música",
     removeFromCollection: "Remover da Coleção",
     removeSongTitle: "Remover da Coleção",
-    removeSongMessage:
-      'Deseja remover "{title}" desta coleção? A música continuará salva na biblioteca.',
+    removeSongMessage: "Deseja remover \"{title}\" desta coleção? A música continuará salva na biblioteca.",
     emptyTitle: "Esta coleção ainda não possui músicas",
     emptyDesc: "Adicione músicas da sua biblioteca a esta coleção para organizá-las.",
     noSearchResultsTitle: "Nenhuma música correspondente encontrada",
-    noSearchResultsDesc: 'Nenhuma música encontrada para "{query}".',
+    noSearchResultsDesc: "Nenhuma música encontrada para \"{query}\".",
     paginationInfo: "{from} a {to} de {total} músicas",
     newCollection: "Nova Coleção",
     editCollection: "Editar Coleção",
@@ -1139,7 +1003,7 @@ export const pt = {
     createBtn: "Criar Coleção",
     previewTitle: "Título da Coleção",
     previewDesc: "Descrição da coleção...",
-    addSongsModalTitle: 'Adicionar Músicas a "{name}"',
+    addSongsModalTitle: "Adicionar Músicas a \"{name}\"",
     searchSongPlaceholder: "Pesquisar por título ou artista...",
     selectedSongsCount: "{count} selecionada(s)",
     selectAll: "Selecionar todas",
@@ -1150,11 +1014,9 @@ export const pt = {
     selectCollectionPrompt: "Selecione a coleção de destino:",
     noCollectionsAvailable: "Nenhuma coleção encontrada.",
     deleteManyTitle: "Excluir coleções",
-    deleteManyMessage:
-      "Enviar {count} coleções para a lixeira? As músicas continuam na biblioteca.",
-    createCollectionFirst: "Crie uma coleção primeiro para poder adicionar músicas.",
+    deleteManyMessage: "Enviar {count} coleções para a lixeira? As músicas continuam na biblioteca.",
+    createCollectionFirst: "Crie uma coleção primeiro para poder adicionar músicas."
   },
-
   agenda: {
     subtitle: "Planeie e atribua responsabilidades para cada dia.",
     newEvent: "Novo Evento",
@@ -1175,7 +1037,7 @@ export const pt = {
       september: "Setembro",
       october: "Outubro",
       november: "Novembro",
-      december: "Dezembro",
+      december: "Dezembro"
     },
     weekdays: {
       mon: "Seg",
@@ -1184,7 +1046,7 @@ export const pt = {
       thu: "Qui",
       fri: "Sex",
       sat: "Sáb",
-      sun: "Dom",
+      sun: "Dom"
     },
     weekdaysFull: {
       sunday: "Domingo",
@@ -1193,7 +1055,7 @@ export const pt = {
       wednesday: "Quarta-feira",
       thursday: "Quinta-feira",
       friday: "Sexta-feira",
-      saturday: "Sábado",
+      saturday: "Sábado"
     },
     dateLong: "{weekday}, {day} de {month} de {year}",
     dateShort: "{day}/{month}/{year}",
@@ -1210,8 +1072,7 @@ export const pt = {
     addResponsibility: "Adicionar Responsabilidade",
     removeResponsibility: "Remover responsabilidade",
     noResponsibilities: "Ainda não há responsabilidades para este evento.",
-    assigneesGetNotified:
-      "Use «Notificar atribuições» nos detalhes do evento para avisar quem ainda não foi notificado.",
+    assigneesGetNotified: "Use «Notificar atribuições» nos detalhes do evento para avisar quem ainda não foi notificado.",
     type: "Tipo",
     location: "Local",
     linkedService: "Serviço ligado",
@@ -1226,7 +1087,7 @@ export const pt = {
       assignHint: "Só envia a quem ainda não foi notificado.",
       pending: {
         one: "1 utilizador por notificar",
-        other: "{count} utilizadores por notificar",
+        other: "{count} utilizadores por notificar"
       },
       allNotified: "Sem atribuições por notificar.",
       updateSection: "Alterações do evento",
@@ -1239,7 +1100,7 @@ export const pt = {
       bothHint: "Data e local serão enviados numa única notificação.",
       sentCount: {
         one: "1 notificação enviada",
-        other: "{count} notificações enviadas",
+        other: "{count} notificações enviadas"
       },
       sentPartial: "{sent} notificações enviadas, {failed} falharam.",
       noRecipients: "Não há utilizadores contactáveis para notificar.",
@@ -1249,10 +1110,9 @@ export const pt = {
       assignmentTitle: "Foi atribuído a {event}",
       assignmentBody: "Data: {date}\n\nResponsabilidades:\n{list}",
       removalTitle: "Responsabilidades de {event} atualizadas",
-      removalBody:
-        "As suas responsabilidades em {event} foram atualizadas.\n\nData: {date}\n\nRemovido:\n{list}",
+      removalBody: "As suas responsabilidades em {event} foram atualizadas.\n\nData: {date}\n\nRemovido:\n{list}",
       eventCancelledTitle: "{event} foi cancelado",
-      eventCancelledBody: 'O evento "{event}" agendado para {date} foi cancelado.',
+      eventCancelledBody: "O evento \"{event}\" agendado para {date} foi cancelado.",
       dateTitle: "A data de {event} mudou",
       dateBody: "Nova data:\n{date}",
       locationTitle: "O local de {event} mudou",
@@ -1262,7 +1122,7 @@ export const pt = {
       removeAssigneesTitle: "Remover atribuições",
       removeAffected: {
         one: "{count} atribuição vai ser removida.",
-        other: "{count} atribuições vão ser removidas.",
+        other: "{count} atribuições vão ser removidas."
       },
       removeSummary: "A remover",
       notifyRemovalLabel: "Notificar o utilizador sobre o cancelamento",
@@ -1270,8 +1130,8 @@ export const pt = {
       notifyDeleteLabel: "Notificar todos os utilizadores atribuídos",
       notifyDeleteHint: {
         one: "1 utilizador atribuído será notificado de que o evento foi cancelado.",
-        other: "{count} utilizadores atribuídos serão notificados de que o evento foi cancelado.",
-      },
+        other: "{count} utilizadores atribuídos serão notificados de que o evento foi cancelado."
+      }
     },
     editAssignments: "Editar atribuições",
     comment: "Comentar",
@@ -1290,7 +1150,7 @@ export const pt = {
     noServicesToLink: "Ainda não há serviços. Crie um em Serviços para o poder ligar.",
     elementsCount: {
       one: "{count} elemento",
-      other: "{count} elementos",
+      other: "{count} elementos"
     },
     information: "Informações",
     eventTitle: "Título",
@@ -1303,8 +1163,7 @@ export const pt = {
     locationPlaceholder: "Ex: Templo Principal",
     notesPlaceholder: "Notas de planeamento…",
     deleteEventConfirm: "Eliminar este evento?",
-    deleteEventConfirmBody:
-      "Isto remove permanentemente o evento e todas as suas responsabilidades.",
+    deleteEventConfirmBody: "Isto remove permanentemente o evento e todas as suas responsabilidades.",
     deleteEvent: "Eliminar",
     printDayAgenda: "Agenda — {date}",
     decreaseDuration: "Diminuir duração",
@@ -1315,7 +1174,7 @@ export const pt = {
       worshipRehearsal: "Ensaio de Louvor",
       bibleStudy: "Estudo Bíblico",
       teamMeeting: "Reunião de Equipa",
-      specialEvent: "Evento Especial",
+      specialEvent: "Evento Especial"
     },
     allResponsibilitiesAdded: "Já foram adicionadas todas as responsabilidades",
     createCategoriesInSettings: "Pode criar novas categorias em Definições → Servidor.",
@@ -1324,24 +1183,23 @@ export const pt = {
     assignTo: "Atribuir a",
     selectedAssignees: {
       one: "{count} pessoa selecionada",
-      other: "{count} pessoas selecionadas",
+      other: "{count} pessoas selecionadas"
     },
     assignOptional: "Opcional — pode atribuir mais tarde.",
     assigneesTitle: "Atribuídos — {category}",
     assignedAssignees: {
       one: "{count} pessoa atribuída",
-      other: "{count} pessoas atribuídas",
+      other: "{count} pessoas atribuídas"
     },
-    noAssigneesYet: "Ainda sem ninguém atribuído.",
+    noAssigneesYet: "Ainda sem ninguém atribuído."
   },
-
   songsPage: {
     createSong: "Criar Novo Cântico",
     newSong: "Novo Cântico",
     title: "Biblioteca de Cânticos",
     subtitle: {
       one: "Gerencie a sua coleção de cifras e pautas ({count} cântico)",
-      other: "Gerencie a sua coleção de cifras e pautas ({count} cânticos)",
+      other: "Gerencie a sua coleção de cifras e pautas ({count} cânticos)"
     },
     explorer: "Explorador",
     searchPlaceholder: "Pesquisar por título, artista, letra...",
@@ -1384,15 +1242,13 @@ export const pt = {
     deleteSong: "Apagar Cântico",
     createModalTitle: "Criar Novo Cântico",
     deleteTitle: "Apagar Cântico",
-    deleteMessage:
-      'Tem a certeza de que deseja apagar permanentemente "{name}"? Esta ação não pode ser desfeita.',
+    deleteMessage: "Tem a certeza de que deseja apagar permanentemente \"{name}\"? Esta ação não pode ser desfeita.",
     deleteConfirm: "Apagar Cântico",
     movedToast: "{count} cântico(s) movido(s) com sucesso!",
     deletedToast: "{count} cântico(s) apagado(s) com sucesso!",
     zeroSongs: "0 cânticos",
-    songsWord: "cânticos",
+    songsWord: "cânticos"
   },
-
   forms: {
     folderNameRequired: "O nome da pasta é obrigatório",
     folderNameMin: "O nome deve ter pelo menos 2 caracteres",
@@ -1419,11 +1275,10 @@ export const pt = {
     planningNotesPlaceholder: "Ex: Tema: Graça e Esperança. Ensaio da banda às 8:15.",
     saveService: "Guardar Plano de Culto",
     unknownArtist: "Artista Desconhecido",
-    untitled: "Sem Título",
+    untitled: "Sem Título"
   },
-
   modals: {
-    moveSongTitle: 'Mover Cântico "{title}"',
+    moveSongTitle: "Mover Cântico \"{title}\"",
     moveSongToFolder: "Mover Cântico para Pasta",
     chooseDestination: "Escolha a pasta de destino para",
     rootLevel: "Nível Raiz (Sem pasta)",
@@ -1439,18 +1294,16 @@ export const pt = {
     aboutToDelete: "Está prestes a apagar",
     whatToDo: "O que fazer com os cânticos dentro das pastas selecionadas?",
     preserveSongs: "Preservar cânticos (Mover para o Nível Raiz)",
-    preserveSongsDesc:
-      "Apaga apenas as pastas e move os seus cânticos para a raiz sem perder dados.",
+    preserveSongsDesc: "Apaga apenas as pastas e move os seus cânticos para a raiz sem perder dados.",
     deletePermanently: "Apagar permanentemente as pastas e todos os seus cânticos",
     deletePermanentlyDesc: "Ação destrutiva. Apaga as pastas e todos os cânticos nelas contidos.",
     safetyConfirmation: "Confirmação de Segurança",
     confirmDeleteIntro: "Para confirmar a eliminação de",
     writeNameBelow: ", escreva exatamente o nome abaixo:",
-    writeToConfirm: 'Escreva "{name}" para confirmar',
+    writeToConfirm: "Escreva \"{name}\" para confirmar",
     deleteItems: "Apagar {count} Item(ns)",
     batchTagTitle: "Etiquetar {count} Cântico(s) em Lote",
-    selectCategories:
-      "Selecione categorias predefinidas ou introduza etiquetas personalizadas para atribuir a",
+    selectCategories: "Selecione categorias predefinidas ou introduza etiquetas personalizadas para atribuir a",
     selectedSongs: "{count} cântico(s) selecionado(s)",
     applyMode: "Modo de Aplicação",
     add: "Adicionar",
@@ -1472,7 +1325,7 @@ export const pt = {
     highlightColor: "Cor do Destaque",
     iconCount: "Ícone ({count})",
     searchIcons: "Pesquisar...",
-    noIconFound: 'Nenhum ícone encontrado para "{query}"',
+    noIconFound: "Nenhum ícone encontrado para \"{query}\"",
     saving: "A guardar...",
     importCifraTitle: "Importar Cifra (Provedores de Terceiros)",
     thirdPartyProvidersTitle: "Importar Cifra & Provedores de Terceiros",
@@ -1495,8 +1348,7 @@ export const pt = {
     copyChordPro: "Copiar ChordPro",
     copied: "Copiado!",
     copyFailed: "Não foi possível copiar para a área de transferência",
-    rawTextDesc:
-      "Cole o texto com as cifras sobre a letra. O texto será convertido para o formato ChordPro.",
+    rawTextDesc: "Cole o texto com as cifras sobre a letra. O texto será convertido para o formato ChordPro.",
     rawTextLabel: "Texto da Cifra (Acordes e Letra)",
     rawTextPlaceholder: "Cole a cifra e a letra aqui (acordes na linha acima da letra)...",
     songTitle: "Nome da Música",
@@ -1507,9 +1359,8 @@ export const pt = {
     pleaseEnterSongTitle: "Por favor, insira o nome da música.",
     supportedProviders: "Provedores Suportados",
     detectedProvider: "Detetado: {provider}",
-    backToEdit: "Voltar para Edição",
+    backToEdit: "Voltar para Edição"
   },
-
   explorer: {
     moreOptions: "Mais opções",
     songNumber: "Nº {number}",
@@ -1548,41 +1399,38 @@ export const pt = {
       addToCollection: "Adicionar à Coleção",
       addToCollectionCount: "Adicionar {count} à Coleção",
       printSong: "Imprimir Cântico",
-      deleteSong: "Apagar Cântico",
+      deleteSong: "Apagar Cântico"
     },
     modals: {
-      createSongInFolder: 'Criar Novo Cântico em "{folder}"',
+      createSongInFolder: "Criar Novo Cântico em \"{folder}\"",
       createSongInRoot: "Criar Novo Cântico na Raiz",
       createServiceTitle: "Criar Plano de Culto",
-      createFolderInFolder: 'Criar Pasta dentro de "{folder}"',
+      createFolderInFolder: "Criar Pasta dentro de \"{folder}\"",
       createFolderInRoot: "Criar Nova Pasta na Raiz",
-      renameFolderTitle: 'Mudar Nome da Pasta "{folder}"',
+      renameFolderTitle: "Mudar Nome da Pasta \"{folder}\"",
       updateFolderName: "Atualizar Nome da Pasta",
-      moveFolderTitle: 'Mover Pasta "{folder}"',
+      moveFolderTitle: "Mover Pasta \"{folder}\"",
       selectDestFolder: "Selecione uma nova pasta de destino para",
       rootTopLevel: "Diretório Raiz (Top Level)",
       moveFolderBtn: "Mover Pasta",
-      deleteFolderTitle: 'Apagar Pasta "{folder}"',
+      deleteFolderTitle: "Apagar Pasta \"{folder}\"",
       selectDeleteFolderOption: "Selecione como tratar os conteúdos dentro desta pasta:",
       moveContentsToRoot: "Mover Conteúdos para a Raiz (Recomendado)",
       moveContentsToRootDesc: "Mantém as cifras dos cânticos na biblioteca sem categoria de pasta.",
       deleteFolderAndContents: "Apagar pasta e todos os conteúdos nela contidos",
-      deleteFolderAndContentsDesc:
-        "Apaga permanentemente a pasta E todos os ficheiros de cânticos e pastas e os conteúdos das mesmas, dentro dela.",
+      deleteFolderAndContentsDesc: "Apaga permanentemente a pasta E todos os ficheiros de cânticos e pastas e os conteúdos das mesmas, dentro dela.",
       additionalSecurity: "Confirmação Adicional de Segurança",
-      deleteFolderIrreversible:
-        "Esta ação é irreversível. Para confirmar a eliminação permanente da pasta e de todos os seus cânticos, escreva o nome da pasta",
-      writeToConfirm: 'Escreva "{name}" para confirmar',
+      deleteFolderIrreversible: "Esta ação é irreversível. Para confirmar a eliminação permanente da pasta e de todos os seus cânticos, escreva o nome da pasta",
+      writeToConfirm: "Escreva \"{name}\" para confirmar",
       confirmDelete: "Confirmar Eliminação",
       emptyFolderDelete: "Apagar pasta",
       emptyFolderDeleteDesc: "A pasta está vazia e será eliminada",
-      deleteSongTitle: 'Apagar Cântico "{title}"',
-      deleteSongWarning:
-        'Tem a certeza que deseja apagar permanentemente "{title}"? Isto também irá removê-lo de quaisquer cultos agendados.',
+      deleteSongTitle: "Apagar Cântico \"{title}\"",
+      deleteSongWarning: "Tem a certeza que deseja apagar permanentemente \"{title}\"? Isto também irá removê-lo de quaisquer cultos agendados.",
       deleteSongBtn: "Apagar Cântico",
       filterTitle: "Filtros Avançados de Pesquisa",
       searchScope: "Âmbito de pesquisa:",
-      scopeFolder: 'Pasta "{folder}" e Subpastas',
+      scopeFolder: "Pasta \"{folder}\" e Subpastas",
       scopeRoot: "Todo o Explorador (Diretório Raiz)",
       categoryTag: "Categoria / Etiqueta",
       allCategories: "Todas as Categorias",
@@ -1592,10 +1440,9 @@ export const pt = {
       fieldContent: "Letra / Conteúdo",
       fieldTags: "Etiquetas / Tags",
       clearFilters: "Limpar Filtros",
-      applyFilters: "Aplicar Filtros",
-    },
+      applyFilters: "Aplicar Filtros"
+    }
   },
-
   misc: {
     chordproSettings: {
       title: "Ajustes Visuais",
@@ -1612,7 +1459,7 @@ export const pt = {
       capo: "Capotraste",
       guitar: "Guitarra",
       piano: "Piano",
-      size: "Tamanho",
+      size: "Tamanho"
     },
     editorSettings: {
       title: "Definições do Editor",
@@ -1631,8 +1478,8 @@ export const pt = {
         monokai: "Monokai (escuro)",
         dracula: "Dracula (escuro)",
         tomorrow_night: "Tomorrow Night (escuro)",
-        solarized_dark: "Solarized Dark (escuro)",
-      },
+        solarized_dark: "Solarized Dark (escuro)"
+      }
     },
     inbox: {
       title: "Notificações",
@@ -1644,7 +1491,7 @@ export const pt = {
       loading: "A carregar notificações...",
       empty: "Nenhuma notificação encontrada",
       loadMore: "Carregar mais",
-      buttonTitle: "Inbox de Notificações",
+      buttonTitle: "Inbox de Notificações"
     },
     syncStatus: {
       syncing: "A sincronizar...",
@@ -1656,21 +1503,18 @@ export const pt = {
       synced: "Sincronizado",
       syncedTooltip: "Sincronizado ({time}). Clique para forçar sincronização.",
       syncedTooltipNoTime: "Sincronizado. Clique para forçar sincronização.",
-      local_only: "Apenas local",
+      local_only: "Apenas local"
     },
     help: {
       title: "Guia Rápido do Editor",
       smartSnippets: "Snippets Inteligentes",
-      snippetsDesc:
-        "Escreva uma das siglas abaixo numa linha vazia e prima <key>TAB</key> para o editor preencher automaticamente.",
+      snippetsDesc: "Escreva uma das siglas abaixo numa linha vazia e prima <key>TAB</key> para o editor preencher automaticamente.",
       tipTitle: "Dica de preenchimento:",
-      tipDesc:
-        "Ao inserir um snippet, o texto temporário fica selecionado. Basta escrever por cima. Prima <key>TAB</key> novamente para saltar para o campo seguinte!",
+      tipDesc: "Ao inserir um snippet, o texto temporário fica selecionado. Basta escrever por cima. Prima <key>TAB</key> novamente para saltar para o campo seguinte!",
       shortcutsTitle: "Atalhos de Teclado",
-      shortcutsDesc: "Acelere a edição e navegação sem precisar de tirar as mãos do teclado.",
-    },
+      shortcutsDesc: "Acelere a edição e navegação sem precisar de tirar as mãos do teclado."
+    }
   },
-
   teamsPage: {
     title: "Equipas da Organização",
     desc: "Gerencie equipas, atribua líderes e configure permissões de acesso.",
@@ -1696,8 +1540,7 @@ export const pt = {
     memberRemoved: "Membro removido da equipa.",
     leaderAssigned: "{name} é agora o Líder da equipa!",
     teamPermissionsTitle: "Permissões da Equipa",
-    teamPermissionsDesc:
-      "As permissões da equipa estão limitadas pelas políticas gerais da organização.",
+    teamPermissionsDesc: "As permissões da equipa estão limitadas pelas políticas gerais da organização.",
     manageSongs: "Gerir Músicas",
     manageSongsDesc: "Criar e editar repertório",
     manageServices: "Gerir Cultos",
@@ -1718,9 +1561,8 @@ export const pt = {
     memberEmailPlaceholder: "e.g. maria@example.com",
     teamRoleLabel: "Função na Equipa",
     addMemberBtn: "Adicionar",
-    memberAdded: "Membro adicionado à equipa!",
+    memberAdded: "Membro adicionado à equipa!"
   },
-
   serviceDetailPage: {
     backToServices: "Voltar aos Cultos",
     serviceDetails: "Detalhes do Culto",
@@ -1803,9 +1645,8 @@ export const pt = {
     songDeletedHint: "Este cântico foi eliminado da biblioteca.",
     restoreSong: "Restaurar cântico",
     removeFromPlan: "Remover do plano",
-    readingKeys: "Setas para avançar",
+    readingKeys: "Setas para avançar"
   },
-
   serviceModals: {
     announcement: {
       modalTitle: "Avisos da Igreja",
@@ -1814,10 +1655,9 @@ export const pt = {
       titleLabel: "Título",
       titlePlaceholder: "Ex: Avisos da Semana",
       listLabel: "Lista de Avisos",
-      listPlaceholder:
-        "Ex:\n• Ensaio do coral: sábado às 15h\n• Retiro da juventude: 15-17 de Setembro\n• Culto especial: próximo domingo",
+      listPlaceholder: "Ex:\n• Ensaio do coral: sábado às 15h\n• Retiro da juventude: 15-17 de Setembro\n• Culto especial: próximo domingo",
       notesLabel: "Notas",
-      notesPlaceholder: "Ex: Responsável: Diácono Pedro",
+      notesPlaceholder: "Ex: Responsável: Diácono Pedro"
     },
     bible: {
       modalTitle: "Leitura Bíblica",
@@ -1836,13 +1676,12 @@ export const pt = {
       acceptedBadge: "Aceite",
       notesLabel: "Notas",
       notesPlaceholder: "Ex: Lida pelo diácono Carlos, congregação de pé...",
-      invalidFormatError:
-        "Livro ou formato inválido. Tente: Livro Capítulo:Versículo (ex: Salmos 23:1-6, 1 João 3:16)",
+      invalidFormatError: "Livro ou formato inválido. Tente: Livro Capítulo:Versículo (ex: Salmos 23:1-6, 1 João 3:16)",
       notFoundError: "Passagem não encontrada.",
       chapterNotFoundError: "Capítulo não encontrado nesta tradução.",
       noVersesError: "Nenhum versículo encontrado no intervalo especificado.",
       timeoutError: "A busca demorou muito tempo. Tente novamente.",
-      genericError: "Erro ao buscar a passagem. Verifique a sua ligação à internet.",
+      genericError: "Erro ao buscar a passagem. Verifique a sua ligação à internet."
     },
     custom: {
       modalTitle: "Elemento Personalizado",
@@ -1853,7 +1692,7 @@ export const pt = {
       contentLabel: "Detalhes / Conteúdo",
       contentPlaceholder: "Descreva o conteúdo deste momento...",
       notesLabel: "Notas",
-      notesPlaceholder: "Notas adicionais...",
+      notesPlaceholder: "Notas adicionais..."
     },
     message: {
       modalTitle: "Mensagem / Sermão",
@@ -1864,7 +1703,7 @@ export const pt = {
       summaryLabel: "Resumo / Pontos Principais",
       summaryPlaceholder: "Ex: Introdução sobre fé, 3 pontos sobre confiança em Deus...",
       notesLabel: "Notas",
-      notesPlaceholder: "Ex: Pregador: Pastor João. Duração: ~30min.",
+      notesPlaceholder: "Ex: Pregador: Pastor João. Duração: ~30min."
     },
     welcome: {
       modalTitle: "Boas-vindas & Oração",
@@ -1876,14 +1715,13 @@ export const pt = {
       contentLabel: "Detalhes / Conteúdo",
       contentPlaceholder: "Ex: Saudação pelo pastor, oração de abertura...",
       notesLabel: "Notas",
-      notesPlaceholder: "Ex: O pastor João faz a saudação...",
+      notesPlaceholder: "Ex: O pastor João faz a saudação..."
     },
     duration: {
       label: "Duração (MM:SS)",
-      placeholder: "05:00",
-    },
+      placeholder: "05:00"
+    }
   },
-
   onboarding: {
     welcomeTitle: "Bem-vindo ao Hosanna Studio!",
     welcomeSubtitle: "Vamos configurar o seu espaço de louvor e adoração.",
@@ -1912,25 +1750,24 @@ export const pt = {
         sync: "Sincronização automática entre dispositivos",
         unlimited: "Músicas e cultos ilimitados",
         print: "Exportação e impressão de cifras",
-        backups: "Cópias de segurança automáticas",
+        backups: "Cópias de segurança automáticas"
       },
       startBtn: "Iniciar período gratuito de 14 dias",
       note: "É necessário um cartão para começar. Não é cobrado nada durante os 14 dias de teste.",
-      skipBtn: "Agora não, continuar sem subscrever",
-    },
+      skipBtn: "Agora não, continuar sem subscrever"
+    }
   },
-
   auth: {
     captcha: {
       pending: "A aguardar a verificação de segurança. Tente novamente dentro de instantes.",
-      failed: "A verificação de segurança falhou. Recarregue a página e tente novamente.",
+      failed: "A verificação de segurança falhou. Recarregue a página e tente novamente."
     },
     error: {
       title: "Autenticação interrompida",
       subtitle: "Não foi possível concluir o início de sessão",
       generic: "Ocorreu um erro durante o início de sessão. Tente novamente.",
       hint: "Se fechou a janela do fornecedor ou negou o acesso, pode tentar novamente com segurança.",
-      backToLogin: "Voltar ao início de sessão",
+      backToLogin: "Voltar ao início de sessão"
     },
     login: {
       title: "Iniciar Sessão",
@@ -1949,7 +1786,7 @@ export const pt = {
       errorGeneric: "Ocorreu um erro ao iniciar sessão.",
       orContinueWith: "Ou continue com",
       continueWith: "Continuar com",
-      continueWithGoogle: "Continuar com Google",
+      continueWithGoogle: "Continuar com Google"
     },
     register: {
       title: "Criar Conta",
@@ -1967,7 +1804,7 @@ export const pt = {
       loginLink: "Iniciar sessão",
       successTitle: "Conta criada com sucesso!",
       successDesc: "Enviámos um e-mail de confirmação para o seu endereço.",
-      passwordMismatch: "As palavras-passe não coincidem.",
+      passwordMismatch: "As palavras-passe não coincidem."
     },
     forgotPassword: {
       title: "Recuperar Palavra-passe",
@@ -1977,8 +1814,7 @@ export const pt = {
       sendingBtn: "A enviar...",
       backToLogin: "Voltar ao login",
       emailSentTitle: "Link enviado!",
-      emailSentDesc:
-        "Se existir uma conta associada a este e-mail, receberá as instruções em breve.",
+      emailSentDesc: "Se existir uma conta associada a este e-mail, receberá as instruções em breve."
     },
     resetPassword: {
       title: "Definir Nova Palavra-passe",
@@ -1989,7 +1825,7 @@ export const pt = {
       resettingBtn: "A atualizar...",
       successTitle: "Palavra-passe atualizada!",
       successDesc: "A sua palavra-passe foi alterada com sucesso.",
-      goToLoginBtn: "Ir para o Login",
+      goToLoginBtn: "Ir para o Login"
     },
     verifyEmail: {
       title: "Verificação de E-mail",
@@ -1999,13 +1835,13 @@ export const pt = {
       continueBtn: "Continuar para a Aplicação",
       errorTitle: "Erro na verificação",
       errorDesc: "O link de verificação é inválido ou expirou.",
-      resendBtn: "Reenviar e-mail de verificação",
+      resendBtn: "Reenviar e-mail de verificação"
     },
     tenant: {
       title: "Criar Organização",
       subtitle: "Crie a organização em que deseja trabalhar",
       createOrgBtn: "Criar Nova Organização",
-      beta: "Aguarde o Beta Release no dia 1 de Setembro para criar sua organização e fazer login.",
+      beta: "Aguarde o Beta Release no dia 1 de Setembro para criar sua organização e fazer login."
     },
     acceptInvitation: {
       title: "Convite para Organização",
@@ -2018,7 +1854,7 @@ export const pt = {
       successDesc: "Agora tem acesso à organização.",
       goToDashboardBtn: "Ir para o Painel",
       invalidTitle: "Convite Inválido",
-      invalidDesc: "Este convite já não é válido ou expirou.",
+      invalidDesc: "Este convite já não é válido ou expirou."
     },
     twoFactor: {
       title: "Verificação em 2 Etapas",
@@ -2029,29 +1865,27 @@ export const pt = {
       useBackupCode: "Usar código de recuperação",
       useTotpCode: "Usar aplicação autenticadora",
       backupCodeLabel: "Código de Recuperação",
-      backupCodePlaceholder: "XXXX-XXXX",
-    },
+      backupCodePlaceholder: "XXXX-XXXX"
+    }
   },
-
   routes: {
     errorBoundary: {
       title: "Ocorreu um erro inesperado",
       desc: "Lamentamos o incómodo. Ocorreu um problema ao carregar esta secção.",
       reloadBtn: "Recarregar Aplicação",
-      goHomeBtn: "Voltar ao Início",
+      goHomeBtn: "Voltar ao Início"
     },
     notFound: {
       title: "Página Não Encontrada",
       desc: "A página que procura não existe ou foi movida.",
-      goHomeBtn: "Voltar ao Início",
+      goHomeBtn: "Voltar ao Início"
     },
     unauthorized: {
       title: "Acesso Não Autorizado",
       desc: "Não tem permissões suficientes para aceder a esta página.",
-      goHomeBtn: "Voltar ao Início",
-    },
+      goHomeBtn: "Voltar ao Início"
+    }
   },
-
   hooks: {
     songs: {
       created: "Cântico criado com sucesso!",
@@ -2060,7 +1894,7 @@ export const pt = {
       deleted: "Cântico apagado com sucesso!",
       updated: "Cântico atualizado com sucesso!",
       deleteError: "Erro ao apagar cântico: {error}",
-      saveError: "Erro ao guardar cântico: {error}",
+      saveError: "Erro ao guardar cântico: {error}"
     },
     services: {
       created: "Plano de culto criado com sucesso!",
@@ -2069,7 +1903,7 @@ export const pt = {
       archived: "Plano de culto arquivado com sucesso!",
       activated: "Plano de culto ativado com sucesso!",
       deleteError: "Erro ao apagar culto: {error}",
-      saveError: "Erro ao guardar culto: {error}",
+      saveError: "Erro ao guardar culto: {error}"
     },
     agenda: {
       created: "Evento criado com sucesso!",
@@ -2077,22 +1911,27 @@ export const pt = {
       deleted: "Evento movido para o lixo!",
       restored: "Evento restaurado com sucesso!",
       deleteError: "Erro ao apagar evento: {error}",
-      saveError: "Erro ao guardar evento: {error}",
+      saveError: "Erro ao guardar evento: {error}"
     },
     search: {
       searching: "A pesquisar...",
-      noResults: "Nenhum resultado encontrado.",
-    },
+      noResults: "Nenhum resultado encontrado."
+    }
   },
-
   print: {
     documentDefaultTitle: "Documento Hosana",
     modal: {
       print: "Imprimir / PDF",
       printShortcut: "Imprimir ou guardar como PDF (Ctrl+P)",
       options: "Opções de impressão",
-      itemCount: { one: "{count} item", other: "{count} itens" },
-      pageEstimate: { one: "≈ {count} página", other: "≈ {count} páginas" },
+      itemCount: {
+        one: "{count} item",
+        other: "{count} itens"
+      },
+      pageEstimate: {
+        one: "≈ {count} página",
+        other: "≈ {count} páginas"
+      },
       pageN: "Página {page}",
       zoomIn: "Aumentar zoom",
       zoomOut: "Diminuir zoom",
@@ -2103,14 +1942,14 @@ export const pt = {
       saveDefault: "Guardar como padrão",
       savedDefault: "Predefinições de impressão da organização atualizadas.",
       saveDefaultError: "Não foi possível guardar as predefinições.",
-      pdfHint: "Para obter um PDF, escolha «Guardar como PDF» como destino na janela de impressão.",
+      pdfHint: "Para obter um PDF, escolha «Guardar como PDF» como destino na janela de impressão."
     },
     options: {
       groups: {
         template: "Modelo",
         content: "Conteúdo",
         layout: "Disposição",
-        page: "Página",
+        page: "Página"
       },
       chords: "Cifras",
       chordsHint: "Desative para imprimir apenas a letra.",
@@ -2136,8 +1975,7 @@ export const pt = {
       twoColumns: "2 colunas",
       pageBreak: "Um cântico por página",
       pageBreakHint: "Desative para encadear itens e poupar papel.",
-      pageBreakSongsHint:
-        "Desative para caber quantos cânticos a página aguentar. O índice/plano fica na própria página.",
+      pageBreakSongsHint: "Desative para caber quantos cânticos a página aguentar. O índice/plano fica na própria página.",
       paper: "Papel",
       letter: "Carta",
       margins: "Margens",
@@ -2149,63 +1987,55 @@ export const pt = {
       accentColor: "Cor da marca",
       accentColorHint: "Azul Hosana nos cabeçalhos e cifras. Desative para preto e branco.",
       footer: "Nota de rodapé",
-      footerPlaceholder: "Ex.: Licença CCLI #12345",
+      footerPlaceholder: "Ex.: Licença CCLI #12345"
     },
     settingsCard: {
       title: "Modelos & Impressão",
-      description:
-        "Predefinições da organização para imprimir cânticos, pastas, planos de culto e escalas.",
+      description: "Predefinições da organização para imprimir cânticos, pastas, planos de culto e escalas.",
       testModel: "Pré-visualizar",
-      editHint: "Clique em «Editar» para alterar as predefinições.",
+      editHint: "Clique em «Editar» para alterar as predefinições."
     },
     templates: {
       modern: {
         name: "Moderno",
         tagline: "Limpo e equilibrado",
-        description:
-          "Tipografia sans-serif limpa, etiquetas discretas e cor da igreja nas cifras. Serve para tudo.",
+        description: "Tipografia sans-serif limpa, etiquetas discretas e cor da igreja nas cifras. Serve para tudo."
       },
       classic: {
         name: "Clássico",
         tagline: "Serifa litúrgica",
-        description: "Cabeçalho centrado, linhas duplas e serifa tradicional. Solene e intemporal.",
+        description: "Cabeçalho centrado, linhas duplas e serifa tradicional. Solene e intemporal."
       },
       contemporary: {
         name: "Palco",
         tagline: "Alto contraste",
-        description:
-          "Títulos grandes, cifras a negrito e caixas de tom e andamento bem visíveis na estante.",
+        description: "Títulos grandes, cifras a negrito e caixas de tom e andamento bem visíveis na estante."
       },
       compact: {
         name: "Compacto",
         tagline: "Poupa papel",
-        description:
-          "Cabeçalho numa linha, espaçamento mínimo e duas colunas para caber o máximo numa folha.",
+        description: "Cabeçalho numa linha, espaçamento mínimo e duas colunas para caber o máximo numa folha."
       },
       elegant: {
         name: "Elegante",
         tagline: "Editorial",
-        description:
-          "Títulos em serifa, versaletes na cor da igreja e coro em itálico. Ideal para programas e eventos.",
+        description: "Títulos em serifa, versaletes na cor da igreja e coro em itálico. Ideal para programas e eventos."
       },
       bulletin: {
         name: "Boletim",
         tagline: "Faixa de cor",
-        description:
-          "Cabeçalho em faixa com a cor da igreja e tabelas sombreadas. Ótimo para planos de culto e escalas.",
+        description: "Cabeçalho em faixa com a cor da igreja e tabelas sombreadas. Ótimo para planos de culto e escalas."
       },
       leadsheet: {
         name: "Partitura",
         tagline: "Para músicos",
-        description:
-          "Secções numa margem lateral, cifras monoespaçadas e grelha de tom/andamento. Feito para a banda.",
+        description: "Secções numa margem lateral, cifras monoespaçadas e grelha de tom/andamento. Feito para a banda."
       },
       hymnal: {
         name: "Hinário",
         tagline: "Estrofes numeradas",
-        description:
-          "Como um hinário: título centrado, estrofes numeradas automaticamente e coro recuado em itálico.",
-      },
+        description: "Como um hinário: título centrado, estrofes numeradas automaticamente e coro recuado em itálico."
+      }
     },
     song: {
       number: "Nº {number}",
@@ -2218,16 +2048,19 @@ export const pt = {
       instrumental: "Instrumental",
       tab: "Tablatura",
       repeat: "(repetir)",
-      empty: "Este cântico ainda não tem letra.",
+      empty: "Este cântico ainda não tem letra."
     },
     songbook: {
-      songCount: { one: "{count} cântico", other: "{count} cânticos" },
+      songCount: {
+        one: "{count} cântico",
+        other: "{count} cânticos"
+      },
       index: "Índice",
       titleCol: "Título",
       artistCol: "Artista / Autor",
       emptyFolder: "Esta pasta não contém cânticos.",
       emptyCollection: "Esta coleção não contém cânticos.",
-      emptySelection: "Nenhum cântico selecionado.",
+      emptySelection: "Nenhum cântico selecionado."
     },
     service: {
       badge: "Ordem de Culto",
@@ -2246,8 +2079,8 @@ export const pt = {
         song: "Louvor",
         message: "Mensagem",
         announcement: "Avisos",
-        moment: "Momento",
-      },
+        moment: "Momento"
+      }
     },
     event: {
       badge: "Agenda",
@@ -2261,10 +2094,13 @@ export const pt = {
       roleCol: "Função",
       membersCol: "Responsáveis",
       noAssignee: "Por atribuir",
-      notes: "Notas",
+      notes: "Notas"
     },
     batch: {
-      itemCount: { one: "{count} item", other: "{count} itens" },
+      itemCount: {
+        one: "{count} item",
+        other: "{count} itens"
+      },
       badge: "Lote",
       content: "Conteúdo",
       types: {
@@ -2272,8 +2108,8 @@ export const pt = {
         folder: "Pasta",
         collection: "Coleção",
         service: "Culto",
-        event: "Evento",
-      },
+        event: "Evento"
+      }
     },
     buttons: {
       print: "Imprimir",
@@ -2285,17 +2121,16 @@ export const pt = {
       printDay: "Imprimir Dia ({count})",
       printDayTitle: "Imprimir Agenda do Dia",
       printCount: "Imprimir ({count})",
-      printServiceShort: "Imprimir Culto",
-    },
+      printServiceShort: "Imprimir Culto"
+    }
   },
-
   analytics: {
     title: "Análises",
     desc: "Uso, setlist e saúde da biblioteca.",
     tabs: {
       usage: "Uso",
       setlist: "Setlist",
-      libraryHealth: "Saúde da Biblioteca",
+      libraryHealth: "Saúde da Biblioteca"
     },
     usage: {
       title: "Uso",
@@ -2306,7 +2141,7 @@ export const pt = {
       planStatus: {
         active: "Ativo",
         trialing: "Em período gratuito",
-        none: "Sem subscrição ativa",
+        none: "Sem subscrição ativa"
       },
       resources: {
         songs: "Cânticos",
@@ -2315,13 +2150,13 @@ export const pt = {
         events: "Eventos",
         collections: "Coleções",
         folders: "Pastas",
-        storage: "Armazenamento local",
+        storage: "Armazenamento local"
       },
       sections: {
         library: "Biblioteca",
         workspace: "Espaço de trabalho",
         services: "Cultos",
-        agenda: "Agenda e lixeira",
+        agenda: "Agenda e lixeira"
       },
       details: {
         songs: "Cânticos na biblioteca",
@@ -2339,8 +2174,8 @@ export const pt = {
         eventsTotal: "Eventos totais",
         eventsUpcoming: "Próximos",
         eventsPast: "Passados",
-        trash: "Itens na lixeira",
-      },
+        trash: "Itens na lixeira"
+      }
     },
     setlist: {
       title: "Setlist",
@@ -2366,7 +2201,7 @@ export const pt = {
       sort: {
         frequency: "Frequência",
         lastPlayed: "Última vez",
-        title: "Título",
+        title: "Título"
       },
       sections: {
         mostPlayed: "Mais tocados",
@@ -2378,8 +2213,8 @@ export const pt = {
         never: "Nunca tocados",
         neverDesc: "Cânticos ainda não usados num culto.",
         rarely: "Menos tocados",
-        rarelyDesc: "Cânticos com menos usos.",
-      },
+        rarelyDesc: "Cânticos com menos usos."
+      }
     },
     libraryHealth: {
       title: "Saúde da Biblioteca",
@@ -2409,37 +2244,14 @@ export const pt = {
         tempo: "Andamento em falta",
         songNumber: "Número do cântico em falta",
         youtube: "Ligação YouTube em falta",
-        duration: "Duração em falta",
-      },
-    },
+        duration: "Duração em falta"
+      }
+    }
   },
-
-  loginHistory: {
-    title: "Histórico de início de sessão",
-    personalDesc:
-      "Inícios de sessão recentes na sua conta, com dispositivo e localização quando disponíveis.",
-    orgDesc: "Atividade de início de sessão de todos os membros desta organização.",
-    loading: "A carregar histórico...",
-    loadError: "Não foi possível carregar o histórico de início de sessão.",
-    empty: "Ainda não há registos de início de sessão.",
-    loadMore: "Carregar mais",
-    unknownLocation: "Localização desconhecida",
-    meta: "IP: {ip} · {location}",
-    events: {
-      signedIn: "Início de sessão",
-      signedOut: "Terminar sessão",
-      sessionCreated: "Sessão criada",
-      sessionRevoked: "Sessão revogada",
-      sessionsRevokedAll: "Todas as sessões revogadas",
-      other: "Evento de autenticação",
-    },
-  },
-
   organization: {
     offlineTitle: "Está offline",
     offlineDesc: "As definições da organização precisam de ligação à internet.",
-    studioDesc:
-      "Predefinições de impressão, durações dos momentos e responsabilidades da agenda deste espaço.",
+    studioDesc: "Predefinições de impressão, durações dos momentos e responsabilidades da agenda deste espaço.",
     tabs: {
       workspace: "Espaço de trabalho",
       members: "Membros",
@@ -2447,126 +2259,19 @@ export const pt = {
       billing: "Faturação",
       general: "Servidor",
       ai: "Logos IA",
-      loginActivity: "Atividade de login",
-    },
-    loginActivity: {
-      title: "Atividade de login",
-      desc: "Histórico de inícios de sessão em toda a organização (apenas proprietários e administradores).",
-      listTitle: "Inícios de sessão da organização",
-      listDesc: "Eventos recentes de autenticação dos membros deste espaço de trabalho.",
-      noAccessTitle: "Sem acesso",
-      noAccessDesc:
-        "Apenas proprietários e administradores podem ver a atividade de login da organização.",
-    },
+      loginActivity: "Atividade de login"
+    }
   },
-
   oauth: {
     consent: {
       title: "Autorizar acesso MCP",
       desc: "{client} quer aceder à sua biblioteca Hosanna via MCP.",
-      scopes: "Âmbitos pedidos",
-      allow: "Permitir",
-      deny: "Negar",
-      genericError: "Não foi possível concluir a autorização.",
-    },
+      genericError: "Não foi possível concluir a autorização."
+    }
   },
-
   ai: {
-    settings: {
-      title: "Logos IA",
-      desc: "Chave de API do assistente da organização.",
-      loading: "A carregar…",
-      loadError: "Não foi possível carregar as definições de IA.",
-      saveError: "Não foi possível guardar as definições de IA.",
-      saved: "Definições de IA guardadas.",
-      keyCleared: "Chave de API removida.",
-      noAccessTitle: "Sem acesso",
-      noAccessDesc: "Apenas proprietários e administradores podem gerir a IA.",
-      statusOn: "Ativado",
-      statusPaused: "Configurado · desativado",
-      statusSetup: "Não configurado",
-      connectionTitle: "Ligação",
-      connectionDesc: "Fornecedor, modelo e chave de API.",
-      encryptionMissing:
-        "Falta AI_SETTINGS_ENCRYPTION_KEY no servidor. Configure-a antes de guardar chaves.",
-      provider: "Fornecedor",
-      providerHint: "Escolha quem serve os modelos.",
-      defaultEndpoint: "API predefinida",
-      customEndpoint: "URL personalizado",
-      nativeWebOn: "Suporta pesquisa web e leitura de páginas.",
-      nativeWebOff: "A pesquisa web usa DuckDuckGo neste fornecedor.",
-      baseUrl: "URL base da API",
-      baseUrlPlaceholder: "Deixe em branco para o predefinido",
-      baseUrlRequiredPlaceholder: "https://api.example.com/v1",
-      baseUrlHint: "Endpoint Chat Completions compatível com OpenAI.",
-      model: "Modelo",
-      customModel: "Modelo personalizado",
-      usePresets: "Usar presets",
-      modelPlaceholder: "ex. gpt-4o-mini",
-      apiKey: "Chave de API",
-      apiKeyPlaceholder: "Cole a sua chave de API",
-      apiKeyConfiguredPlaceholder: "Foque para substituir a chave atual",
-      apiKeyReplaceHint: "Chave guardada. Clique no campo para a substituir.",
-      keyStatusConfigured: "Guardada",
-      keyStatusMissing: "Não definida.",
-      keyNeverReturned: "A chave nunca é devolvida ao browser.",
-      enabled: "Ativar assistente",
-      enabledDesc: "Membros com acesso a IA podem abrir o chat.",
-      advanced: "Avançado",
-      advancedDesc: "Limite de ferramentas, temperatura e tamanho da resposta.",
-      behaviorTitle: "Comportamento",
-      behaviorDesc: "Instruções e memória em cada resposta.",
-      maxToolCalls: "Máximo de ferramentas por resposta",
-      maxToolCallsHint: "Entre {min} e {max}.",
-      temperature: "Temperatura",
-      temperatureHint: "Mais baixo = mais previsível; mais alto = mais variado.",
-      temperatureDefault: "Predefinido",
-      maxOutputTokens: "Tamanho máximo da resposta (tokens)",
-      maxOutputTokensHint: "Deixe vazio para o predefinido do modelo.",
-      instructions: "Instruções da organização",
-      instructionsHint: "Incluídas em todas as conversas.",
-      instructionsPlaceholder: "ex.: Preferimos tonalidades de G a D. Títulos em Title Case.",
-      memoryTitle: "Memória",
-      memoryDesc: "Notas lembradas nas conversas.",
-      memoryOrgTitle: "Memória da organização",
-      memoryOrgDesc: "Notas partilhadas por toda a organização.",
-      memoryOrgPlaceholder: "ex.: A equipa de louvor prefere Sol maior.",
-      memoryPersonalTitle: "Memória individual",
-      memoryPersonalDesc: "Notas da sua conta — só para si, não partilhadas com a organização.",
-      memoryPersonalPlaceholder: "ex.: Prefiro setlists mais curtos.",
-      memoryEnabled: "Ativar memória",
-      memoryEnabledDesc: "Inclui as notas no contexto e permite atualizações.",
-      memoryEmpty: "Ainda sem notas.",
-      memoryPlaceholder: "ex.: A equipa de louvor prefere Sol maior.",
-      memoryAdd: "Adicionar",
-      memoryDelete: "Eliminar",
-      memoryClear: "Limpar tudo",
-      memorySourceAi: "Guardado pelo Logos",
-      memorySourceAdmin: "Adicionado por um administrador",
-      memorySourceUser: "Adicionado por si",
-      memoryCount: "{count}/{max} notas",
-      memoryError: "Não foi possível atualizar a memória.",
-      clearKey: "Remover chave",
-      billing: {
-        title: "Saldo DeepSeek",
-        desc: "Saldo em tempo real da sua chave de API DeepSeek.",
-        loading: "A obter o saldo…",
-        loadError: "Não foi possível carregar o saldo DeepSeek.",
-        refresh: "Atualizar saldo",
-        total: "Total disponível",
-        granted: "Oferecido",
-        toppedUp: "Carregado",
-        available: "Suficiente para chamadas à API",
-        unavailable: "O saldo pode ser insuficiente",
-        refreshedAt: "Atualizado {time}",
-        notConfigured: "Guarde uma chave de API para ver o saldo.",
-        cryptoMissing:
-          "A encriptação do servidor não está configurada; não é possível obter o saldo.",
-        unsupported: "O saldo só está disponível para o DeepSeek.",
-      },
-    },
     chat: {
-      contextGeneral: "Hosanna Studio",
-    },
-  },
+      contextGeneral: "Hosanna Studio"
+    }
+  }
 };

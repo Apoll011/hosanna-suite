@@ -3,20 +3,20 @@ import type { pt } from "./pt";
 
 export const es: typeof pt = {
   common: {
-    goHome: "Ir al inicio",
+    goHome: "Ir al inicio"
   },
   errors: {
     notFound: {
       code: "404",
       title: "Página no encontrada",
       subtitle: "Este enlace no existe o se ha movido.",
-      login: "Ir a iniciar sesión",
+      login: "Ir a iniciar sesión"
     },
     unexpected: {
       title: "Algo salió mal",
       subtitle: "Ocurrió un error inesperado al cargar esta página.",
-      retry: "Intentar de nuevo",
-    },
+      retry: "Intentar de nuevo"
+    }
   },
   auth: {
     login: {
@@ -32,7 +32,7 @@ export const es: typeof pt = {
       errorGeneric: "Algo salió mal. Inténtalo de nuevo.",
       orContinueWith: "o continúa con",
       continueWithGoogle: "Continuar con Google",
-      continueWith: "Continuar con",
+      continueWith: "Continuar con"
     },
     register: {
       title: "Crear cuenta",
@@ -46,7 +46,7 @@ export const es: typeof pt = {
       loginLink: "¿Ya tienes cuenta? Inicia sesión",
       successTitle: "Revisa tu correo",
       successDesc: "Enviamos un enlace de verificación para activar tu cuenta.",
-      showPassword: "Mostrar contraseña",
+      showPassword: "Mostrar contraseña"
     },
     forgotPassword: {
       title: "Restablecer contraseña",
@@ -55,7 +55,7 @@ export const es: typeof pt = {
       sendLinkBtn: "Enviar enlace",
       backToLogin: "Volver al inicio de sesión",
       emailSentTitle: "Correo enviado",
-      emailSentDesc: "Revisa tu bandeja de entrada para el enlace de recuperación.",
+      emailSentDesc: "Revisa tu bandeja de entrada para el enlace de recuperación."
     },
     resetPassword: {
       title: "Elige una nueva contraseña",
@@ -65,7 +65,7 @@ export const es: typeof pt = {
       resetBtn: "Restablecer",
       successTitle: "Contraseña actualizada",
       successDesc: "Ya puedes iniciar sesión con tu nueva contraseña.",
-      goToLoginBtn: "Ir a iniciar sesión",
+      goToLoginBtn: "Ir a iniciar sesión"
     },
     verifyEmail: {
       title: "Verificar correo",
@@ -73,7 +73,7 @@ export const es: typeof pt = {
       successTitle: "Correo verificado",
       successDesc: "Tu cuenta está lista. Ya puedes iniciar sesión.",
       errorTitle: "Error de verificación",
-      errorDesc: "Este enlace no es válido o ya se ha usado.",
+      errorDesc: "Este enlace no es válido o ya se ha usado."
     },
     twoFactor: {
       title: "Autenticación en dos pasos",
@@ -81,18 +81,18 @@ export const es: typeof pt = {
       useBackupCode: "Introduce un código de recuperación",
       backupCodeLabel: "Código de recuperación",
       backupCodePlaceholder: "xxxx-xxxx",
-      verifyBtn: "Verificar",
+      verifyBtn: "Verificar"
     },
     captcha: {
       pending: "Completa el captcha para continuar.",
-      failed: "El captcha falló. Inténtalo de nuevo.",
+      failed: "El captcha falló. Inténtalo de nuevo."
     },
     error: {
       title: "Error de autenticación",
       subtitle: "No pudimos completar el inicio de sesión",
       generic: "Ocurrió un error inesperado.",
       hint: "Intenta iniciar sesión de nuevo. Si el problema continúa, contacta con soporte.",
-      backToLogin: "Volver al inicio de sesión",
+      backToLogin: "Volver al inicio de sesión"
     },
     acceptInvitation: {
       title: "Invitación al espacio",
@@ -101,14 +101,14 @@ export const es: typeof pt = {
       rejectBtn: "Rechazar",
       successDesc: "Invitación aceptada. Redirigiendo…",
       invalidTitle: "Enlace no válido o caducado",
-      invalidDesc: "Esta invitación ya no es válida.",
+      invalidDesc: "Esta invitación ya no es válida."
     },
     password: {
-      minLength: "La contraseña debe tener al menos 6 caracteres.",
+      minLength: "La contraseña debe tener al menos 6 caracteres."
     },
     email: {
-      invalid: "Introduce un correo válido.",
-    },
+      invalid: "Introduce un correo válido."
+    }
   },
   onboarding: {
     createOrgTab: "Crear espacio",
@@ -128,20 +128,20 @@ export const es: typeof pt = {
         sync: "Sincronización en la nube entre dispositivos",
         unlimited: "Canciones y cultos ilimitados",
         print: "Partituras listas para imprimir",
-        backups: "Copias de seguridad automáticas",
-      },
+        backups: "Copias de seguridad automáticas"
+      }
     },
     logout: "Cerrar sesión",
     otherOptions: "Otras opciones",
     activeWorkspace: "Espacio actual",
     continueToStudio: "Continuar a Studio",
     switchWorkspace: "Cambiar de espacio",
-    switchingWorkspace: "Cambiando…",
+    switchingWorkspace: "Cambiando…"
   },
   settings: {
     toast: {
       orgSaved: "Preferencias de la organización guardadas.",
-      orgSaveError: "Error al guardar preferencias: {error}",
+      orgSaveError: "Error al guardar preferencias: {error}"
     },
     billing: {
       title: "Facturación",
@@ -153,7 +153,7 @@ export const es: typeof pt = {
       noAccessDesc: "Solo el propietario puede ver la facturación.",
       status: {
         trialing: "Prueba",
-        active: "Activa",
+        active: "Activa"
       },
       planName: "Hosanna Cloud",
       planDesc: "Sincronización, copias de seguridad y soporte prioritario.",
@@ -168,8 +168,8 @@ export const es: typeof pt = {
           unlimited: "Canciones y cultos ilimitados",
           print: "Exportar e imprimir partituras",
           backups: "Copias de seguridad automáticas",
-          support: "Soporte prioritario",
-        },
+          support: "Soporte prioritario"
+        }
       },
       trialUntil: "Hasta {date}",
       trialDaysLeft: "Quedan {days} días de la prueba gratuita",
@@ -191,7 +191,7 @@ export const es: typeof pt = {
       askOwner: "Pide al propietario que configure la facturación.",
       checkoutError: "No se pudo iniciar el checkout.",
       portalError: "No se pudo abrir el portal de facturación.",
-      subscribedToast: "¡Suscripción activada!",
+      subscribedToast: "¡Suscripción activada!"
     },
     workspace: {
       title: "Perfil de la organización",
@@ -238,7 +238,7 @@ export const es: typeof pt = {
       restoreData: "Restaurar datos",
       restoreWarning: "Puede actualizar o reemplazar datos existentes.",
       restoreUploadBtn: "Subir archivo HOSANNA",
-      invalidJson: "Archivo de copia no válido.",
+      invalidJson: "Archivo de copia no válido."
     },
     general: {
       title: "Preferencias regionales y calendario",
@@ -261,7 +261,7 @@ export const es: typeof pt = {
         ptPT: "Português (Portugal)",
         ptBR: "Português (Brasil)",
         enUS: "English (US)",
-        esES: "Español",
+        esES: "Español"
       },
       timezones: {
         portugalGroup: "Portugal e islas",
@@ -273,8 +273,8 @@ export const es: typeof pt = {
         otherRegionsGroup: "Otras regiones",
         london: "Londres (GMT+0)",
         newYork: "Nueva York (EST / GMT-5)",
-        utc: "UTC",
-      },
+        utc: "UTC"
+      }
     },
     restore: {
       confirmTitle: "Confirmar restauración",
@@ -286,82 +286,10 @@ export const es: typeof pt = {
       services: "Cultos",
       restoreNow: "Restaurar ahora",
       success: "Base de datos restaurada. Recargando…",
-      error: "Error al restaurar la base de datos.",
-    },
-    roles: {
-      owner: "Propietario",
-      admin: "Administrador",
-      teamLeader: "Líder de equipo",
-      editor: "Editor",
-      musician: "Músico",
-      guest: "Invitado",
-      member: "Miembro",
-    },
-    notifications: {
-      title: "Notificaciones",
-      pageDesc: "Enviar un mensaje al equipo.",
-      loading: "Cargando…",
-      noAccessTitle: "Sin permiso",
-      noAccessDesc: "Necesitas acceso a notificaciones de un propietario de la organización.",
-      send: "Enviar",
-      sending: "Enviando…",
-      sentToast: "Notificación enviada.",
-      sentPushToast: "Notificación enviada ({count} dispositivos).",
-      genericError: "Error inesperado.",
-      errorToast: "No se pudo enviar la notificación: {error}",
-      summaryOrg: "Todos los miembros la recibirán en el buzón.",
-      summaryOrgRoles: "Enviado a {roles} en el buzón.",
-      summaryUser: "{name} recibirá esta notificación.",
-      recipient: {
-        title: "Destinatarios",
-        desc: "Elige quién recibe esta notificación.",
-        user: "Miembro",
-        organization: "Organización",
-        searchPlaceholder: "Buscar por nombre o email…",
-        searching: "Cargando miembros…",
-        noResults: "No se encontraron miembros.",
-        clear: "Limpiar",
-        rolesFilter: "Filtrar por rol",
-        everyone: "Todos los roles",
-        inboxOnly: "Se envía al buzón de la aplicación.",
-        loadError: "No se pudieron cargar los miembros.",
-      },
-      content: {
-        title: "Mensaje",
-        desc: "Título y cuerpo mostrados a los destinatarios.",
-        typeLabel: "Tipo",
-        types: {
-          info: "Info",
-          organization: "Organización",
-          team: "Equipo",
-          security: "Seguridad",
-          billing: "Facturación",
-        },
-        titleLabel: "Título",
-        titlePlaceholder: "ej.: Ensayo movido a las 20:00",
-        descriptionLabel: "Descripción",
-        descriptionPlaceholder: "Detalles opcionales",
-        linkLabel: "Enlace",
-        linkPlaceholder: "/services",
-        linkHint: "Enlace opcional al tocar la notificación.",
-        preview: "Vista previa",
-        previewEmpty: "Vista previa del título",
-        now: "ahora",
-        appName: "Hosanna Studio",
-      },
-      delivery: {
-        title: "Entrega",
-        desc: "Buzón, push, o ambos.",
-        inbox: "Buzón",
-        inboxDesc: "En la app",
-        push: "Push",
-        pushDesc: "En el dispositivo",
-        both: "Ambos",
-        bothDesc: "Buzón y push",
-      },
+      error: "Error al restaurar la base de datos."
     },
     tabs: {
-      account: "Cuenta",
+      account: "Cuenta"
     },
     twoFactor: {
       continue: "Continuar",
@@ -383,15 +311,14 @@ export const es: typeof pt = {
       verify: "Verificar",
       codeVerified: "Código verificado.",
       backupSuccessTitle: "Guarda tus códigos de recuperación",
-      backupWarning:
-        "Guarda estos códigos en un lugar seguro. Cada uno se puede usar una vez si pierdes el dispositivo.",
+      backupWarning: "Guarda estos códigos en un lugar seguro. Cada uno se puede usar una vez si pierdes el dispositivo.",
       backupSavedBtn: "Ya los guardé",
       setupSuccess: "Autenticación en dos pasos activada.",
       disableStepDesc: "Introduce tu contraseña para desactivar el 2FA.",
       disableSuccess: "Autenticación en dos pasos desactivada.",
       enableError: "No se pudo activar 2FA: {error}",
       disableError: "No se pudo desactivar 2FA: {error}",
-      verifyError: "No se pudo verificar: {error}",
+      verifyError: "No se pudo verificar: {error}"
     },
     account: {
       user: "Usuario",
@@ -429,7 +356,7 @@ export const es: typeof pt = {
         accountInfo: "Información de la cuenta",
         userId: "ID de usuario",
         accountStatus: "Estado",
-        active: "Activa",
+        active: "Activa"
       },
       socialAccounts: {
         title: "Cuentas conectadas",
@@ -445,7 +372,7 @@ export const es: typeof pt = {
         unlinkError: "No se pudo desvincular: {error}",
         unlinkSuccess: "Cuenta desconectada.",
         unlinkConfirmTitle: "¿Desconectar cuenta?",
-        unlinkConfirmMessage: "¿Quitar {provider} de tu cuenta Hosanna?",
+        unlinkConfirmMessage: "¿Quitar {provider} de tu cuenta Hosanna?"
       },
       activeSessions: {
         title: "Sesiones activas",
@@ -459,8 +386,8 @@ export const es: typeof pt = {
         browserSession: "Sesión del navegador",
         nativeApp: "App {name}",
         ip: "IP {ip} · {date}",
-        currentIp: "actual",
-      },
+        currentIp: "actual"
+      }
     },
     members: {
       activeMembers: "Miembros activos ({count})",
@@ -501,7 +428,7 @@ export const es: typeof pt = {
       cancelModalConfirm: "¿Cancelar la invitación de {email}? Ya no podrá aceptarla.",
       cancelling: "Cancelando…",
       confirmCancel: "Cancelar invitación",
-      noInviteAccess: "No tienes permiso para gestionar invitaciones.",
+      noInviteAccess: "No tienes permiso para gestionar invitaciones."
     },
     memberProfile: {
       backToList: "Volver a la lista",
@@ -520,21 +447,20 @@ export const es: typeof pt = {
       removeConfirmTitle: "Eliminar miembro",
       removeConfirmText: "¿Eliminar a {name} de la organización? Perderá el acceso de inmediato.",
       leaveConfirmTitle: "Salir de la organización",
-      leaveConfirmText:
-        "¿Salir de esta organización? Perderás el acceso y necesitarás una nueva invitación.",
+      leaveConfirmText: "¿Salir de esta organización? Perderás el acceso y necesitarás una nueva invitación.",
       leaving: "Saliendo…",
       leaveSuccess: "Has salido de la organización.",
-      leaveError: "No se pudo salir: {error}",
-    },
+      leaveError: "No se pudo salir: {error}"
+    }
   },
   org: {
     noOrganization: "Ninguna organización activa. Crea o selecciona un espacio.",
     members: {
       title: "Miembros",
-      desc: "Invitaciones, roles y permisos del equipo.",
+      desc: "Invitaciones, roles y permisos del equipo."
     },
     data: {
-      noBackupAccess: "No tienes permiso para exportar o restaurar copias.",
+      noBackupAccess: "No tienes permiso para exportar o restaurar copias."
     },
     danger: {
       title: "Zona de peligro",
@@ -544,180 +470,61 @@ export const es: typeof pt = {
       deleteDesc: "Elimina permanentemente el espacio y todos los datos asociados.",
       deleteBtn: "Eliminar organización",
       deleteConfirmTitle: "¿Eliminar organización?",
-      deleteConfirmText: 'Escribe "{name}" para confirmar la eliminación.',
+      deleteConfirmText: "Escribe \"{name}\" para confirmar la eliminación.",
       deleteSuccess: "Organización eliminada.",
-      deleteError: "No se pudo eliminar: {error}",
-    },
-  },
-  organization: {
-    loginActivity: {
-      title: "Actividad de acceso",
-      desc: "Historial de inicios de sesión de la organización (propietarios y admins).",
-      listTitle: "Accesos de la organización",
-      listDesc: "Eventos recientes de autenticación de los miembros de este espacio.",
-      noAccessTitle: "Sin acceso",
-      noAccessDesc: "Solo propietarios y admins pueden ver esta actividad.",
-    },
-  },
-  loginHistory: {
-    title: "Historial de accesos",
-    personalDesc: "Actividad reciente de inicio de sesión.",
-    orgDesc: "Actividad de inicio de sesión de todos los miembros de esta organización.",
-    loading: "Cargando historial…",
-    loadError: "No se pudo cargar el historial.",
-    empty: "Aún no hay eventos de acceso.",
-    loadMore: "Cargar más",
-    unknownLocation: "Ubicación desconocida",
-    meta: "IP {ip} · {location}",
-    events: {
-      signedIn: "Inicio de sesión",
-      signedOut: "Cierre de sesión",
-      sessionCreated: "Sesión creada",
-      sessionRevoked: "Sesión revocada",
-      sessionsRevokedAll: "Todas las sesiones revocadas",
-      other: "Evento de seguridad",
-    },
+      deleteError: "No se pudo eliminar: {error}"
+    }
   },
   oauth: {
     consent: {
       title: "Autorizar acceso",
       desc: "{client} quiere acceder a tu cuenta Hosanna.",
-      scopes: "Ámbitos solicitados",
-      allow: "Permitir",
-      deny: "Denegar",
-      genericError: "No se pudo completar el consentimiento.",
-    },
+      genericError: "No se pudo completar el consentimiento."
+    }
   },
   footer: {
     help: "Ayuda",
     privacy: "Privacidad",
-    terms: "Términos",
+    terms: "Términos"
   },
   ai: {
     settings: {
-      title: "Logos IA",
-      desc: "Clave de API del asistente de la organización.",
-      loading: "Cargando…",
-      loadError: "No se pudo cargar la configuración de IA.",
-      saveError: "No se pudo guardar la configuración de IA.",
-      saved: "Configuración de IA guardada.",
-      keyCleared: "Clave de API eliminada.",
-      noAccessTitle: "Sin acceso",
-      noAccessDesc: "Solo propietarios y administradores pueden gestionar la IA.",
       memberTitle: "Logos IA",
       memberDesc: "Memoria de la organización (solo lectura) y tu memoria personal.",
       memberOrgReadonly: "Las notas de la organización las gestionan los admins — aquí solo puedes verlas.",
       memberNotConfiguredTitle: "La IA aún no está configurada",
       memberNotConfiguredDesc: "Pide a un propietario o administrador que conecte un proveedor.",
-      statusOn: "Activado",
-      statusPaused: "Configurado · desactivado",
-      statusSetup: "No configurado",
-      connectionTitle: "Conexión",
-      connectionDesc: "Proveedor, modelo y clave de API.",
-      encryptionMissing:
-        "Falta AI_SETTINGS_ENCRYPTION_KEY en el servidor. Configúrala antes de guardar claves.",
-      provider: "Proveedor",
-      providerHint: "Elige quién sirve los modelos.",
-      defaultEndpoint: "API predeterminada",
-      customEndpoint: "URL personalizada",
-      nativeWebOn: "Admite búsqueda web y lectura de páginas.",
-      nativeWebOff: "La búsqueda web usa DuckDuckGo con este proveedor.",
-      baseUrl: "URL base de la API",
-      baseUrlRequiredPlaceholder: "https://api.example.com/v1",
-      baseUrlHint: "Endpoint Chat Completions compatible con OpenAI.",
-      model: "Modelo",
-      customModel: "Modelo personalizado",
-      usePresets: "Usar presets",
-      modelPlaceholder: "p. ej. gpt-4o-mini",
-      apiKey: "Clave de API",
-      apiKeyPlaceholder: "Pega tu clave de API",
-      apiKeyConfiguredPlaceholder: "Enfoca para reemplazar la clave actual",
-      apiKeyReplaceHint: "Clave guardada. Haz clic en el campo para reemplazarla.",
-      keyStatusConfigured: "Guardada",
-      keyStatusMissing: "No definida.",
-      keyNeverReturned: "La clave nunca se devuelve al navegador.",
-      enabled: "Activar asistente",
-      advanced: "Avanzado",
-      advancedDesc: "Límite de herramientas, temperatura y longitud de respuesta.",
-      behaviorTitle: "Comportamiento",
-      behaviorDesc: "Instrucciones y memoria en cada respuesta.",
-      maxToolCalls: "Máximo de herramientas por respuesta",
-      maxToolCallsHint: "Entre {min} y {max}.",
-      temperature: "Temperatura",
-      temperatureHint: "Más bajo = más predecible; más alto = más variado.",
-      temperatureDefault: "Predeterminado",
-      maxOutputTokens: "Longitud máxima de respuesta (tokens)",
-      maxOutputTokensHint: "Déjalo vacío para el predeterminado del modelo.",
-      instructions: "Instrucciones de la organización",
-      instructionsHint: "Se incluyen en cada conversación.",
-      instructionsPlaceholder: "p. ej. Preferimos tonalidades de G a D. Títulos en Title Case.",
-      memoryOrgTitle: "Memoria de la organización",
-      memoryOrgDesc: "Notas compartidas por toda la organización.",
-      memoryOrgPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
-      memoryPersonalTitle: "Memoria individual",
-      memoryPersonalDesc: "Notas de tu cuenta — solo para ti, no se comparten con la organización.",
-      memoryPersonalPlaceholder: "p. ej. Prefiero setlists más cortos.",
-      memoryEnabled: "Activar memoria",
-      memoryEnabledDesc: "Incluye las notas en el contexto y permite actualizarlas.",
-      memoryEmpty: "Aún no hay notas.",
-      memoryAdd: "Añadir",
-      memoryDelete: "Eliminar",
-      memoryClear: "Borrar todo",
-      memorySourceAi: "Guardado por Logos",
-      memorySourceAdmin: "Añadido por un administrador",
-      memorySourceUser: "Añadido por ti",
-      memoryCount: "{count}/{max} notas",
-      memoryError: "No se pudo actualizar la memoria.",
-      clearKey: "Quitar clave",
       setup: {
         eyebrow: "Logos IA",
         title: "Trae un asistente a la planificación del culto",
-        subtitle:
-          "Conecta un proveedor una vez. Tu equipo obtiene ayuda con canciones, ChordPro y cultos — dentro de Studio.",
+        subtitle: "Conecta un proveedor una vez. Tu equipo obtiene ayuda con canciones, ChordPro y cultos — dentro de Studio.",
         cta: "Configurar Logos IA",
         ctaHint: "A continuación eliges proveedor, modelo y clave de API.",
         features: {
           chordpro: {
             title: "Ediciones ChordPro",
-            desc: "Corrige formato, completa acordes y limpia cifras sin salir del editor.",
+            desc: "Corrige formato, completa acordes y limpia cifras sin salir del editor."
           },
           songs: {
             title: "Ideas de canciones",
-            desc: "Sugiere canciones, completa metadatos y transpón tonalidades para tu equipo.",
+            desc: "Sugiere canciones, completa metadatos y transpón tonalidades para tu equipo."
           },
           services: {
             title: "Planificación de cultos",
-            desc: "Revisa setlists, propone estructura y mantén coherente el orden del culto.",
+            desc: "Revisa setlists, propone estructura y mantén coherente el orden del culto."
           },
           memory: {
             title: "Memoria de la organización",
-            desc: "Recuerda preferencias — tonalidades, estilo, idioma — en todo el espacio.",
-          },
+            desc: "Recuerda preferencias — tonalidades, estilo, idioma — en todo el espacio."
+          }
         },
-        providersNote:
-          "Funciona con ChatGPT, Anthropic, Gemini, DeepSeek o un endpoint compatible con OpenAI.",
-        privacyNote: "Las claves de API se cifran en el servidor y nunca vuelven al navegador.",
-      },
-      billing: {
-        title: "Saldo DeepSeek",
-        desc: "Saldo en vivo de tu clave de API de DeepSeek.",
-        loading: "Obteniendo saldo…",
-        loadError: "No se pudo cargar el saldo de DeepSeek.",
-        refresh: "Actualizar saldo",
-        total: "Total disponible",
-        granted: "Concedido",
-        toppedUp: "Recargado",
-        available: "Suficiente para llamadas a la API",
-        unavailable: "El saldo puede ser insuficiente",
-        refreshedAt: "Actualizado {time}",
-        notConfigured: "Guarda una clave de API para ver el saldo.",
-        cryptoMissing: "El cifrado del servidor no está configurado; no se puede obtener el saldo.",
-        unsupported: "El saldo solo está disponible para DeepSeek.",
-      },
+        providersNote: "Funciona con ChatGPT, Anthropic, Gemini, DeepSeek o un endpoint compatible con OpenAI.",
+        privacyNote: "Las claves de API se cifran en el servidor y nunca vuelven al navegador."
+      }
     },
     chat: {
-      contextGeneral: "Cuenta de Hosanna",
-    },
+      contextGeneral: "Cuenta de Hosanna"
+    }
   },
   account: {
     title: "Cuenta",
@@ -737,8 +544,8 @@ export const es: typeof pt = {
       ai: "IA",
       regional: "Regional",
       activity: "Actividad",
-      data: "Datos",
-    },
+      data: "Datos"
+    }
   },
   accountOrg: {
     loading: "Cargando organización…",
@@ -748,51 +555,51 @@ export const es: typeof pt = {
       switch: "Cambiar de espacio",
       switching: "Cambiando…",
       noOrgs: "Sin espacios",
-      createOrg: "Crear espacio",
+      createOrg: "Crear espacio"
     },
     empty: {
       title: "Ningún espacio seleccionado",
       description: "Crea o únete a un espacio para gestionar los ajustes de la organización.",
-      cta: "Ir al onboarding",
+      cta: "Ir al onboarding"
     },
     overview: {
       title: "Organización",
       description: "Resumen del espacio activo y accesos directos a los ajustes.",
       currentOrg: "Espacio actual",
       openStudio: "Abrir Studio",
-      quickLinks: "Accesos directos",
+      quickLinks: "Accesos directos"
     },
     profile: {
       title: "Perfil de la organización",
-      description: "Nombre, logotipo e identidad del espacio.",
+      description: "Nombre, logotipo e identidad del espacio."
     },
     members: {
       title: "Miembros",
-      description: "Invitaciones, roles y permisos del equipo.",
+      description: "Invitaciones, roles y permisos del equipo."
     },
     billing: {
       title: "Facturación",
-      description: "Plan, facturas y métodos de pago.",
+      description: "Plan, facturas y métodos de pago."
     },
     notifications: {
       title: "Notificaciones",
-      description: "Enviar mensajes al equipo por buzón o push.",
+      description: "Enviar mensajes al equipo por buzón o push."
     },
     ai: {
       title: "IA",
-      description: "Proveedor, clave de API y comportamiento del asistente.",
+      description: "Proveedor, clave de API y comportamiento del asistente."
     },
     regional: {
       title: "Regional",
-      description: "Zona horaria, idioma y preferencias regionales del espacio.",
+      description: "Zona horaria, idioma y preferencias regionales del espacio."
     },
     activity: {
       title: "Actividad",
-      description: "Eventos recientes y auditoría de la organización.",
+      description: "Eventos recientes y auditoría de la organización."
     },
     data: {
       title: "Datos",
-      description: "Copia de seguridad, restauración y zona de peligro.",
-    },
-  },
+      description: "Copia de seguridad, restauración y zona de peligro."
+    }
+  }
 };

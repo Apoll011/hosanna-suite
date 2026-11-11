@@ -45,9 +45,8 @@ export const en: typeof pt = {
     date: "Date",
     copySuffix: " (Copy)",
     you: "You",
-    items: "{count} Items",
+    items: "{count} Items"
   },
-
   table: {
     showing: "Showing",
     to: "to",
@@ -55,9 +54,8 @@ export const en: typeof pt = {
     display: "Display:",
     all: "All ({count})",
     prevPage: "Previous Page",
-    nextPage: "Next Page",
+    nextPage: "Next Page"
   },
-
   sidebar: {
     mainMenu: "Main Menu",
     drive: "{name} Drive",
@@ -71,9 +69,8 @@ export const en: typeof pt = {
     openOrganization: "Printing defaults",
     openAnalytics: "Analytics",
     switchWorkspace: "Switch workspace",
-    manageOrganization: "Manage organization",
+    manageOrganization: "Manage organization"
   },
-
   addressBar: {
     atRootLevel: "At Root Level",
     upOneLevel: "Go up one level",
@@ -90,9 +87,8 @@ export const en: typeof pt = {
     importSongs: "Import Songs from another Provider",
     newService: "New Service Plan",
     newFolder: "New Folder",
-    newCollection: "New Collection",
+    newCollection: "New Collection"
   },
-
   toolbar: {
     filters: "Filters",
     openFilters: "Open Advanced Filters",
@@ -116,9 +112,8 @@ export const en: typeof pt = {
     numberAsc: "Number (Lowest-Biggest)",
     numberDesc: "Number (Biggest-Lowest)",
     songNumberAsc: "Biggest songs number",
-    songNumberDesc: "Lowest songs number",
+    songNumberDesc: "Lowest songs number"
   },
-
   commandPalette: {
     sections: {
       navigation: "Navigation",
@@ -127,7 +122,7 @@ export const en: typeof pt = {
       visualization: "Visualization",
       currentSong: "Current Song",
       currentService: "Current Service",
-      ai: "Logos AI",
+      ai: "Logos AI"
     },
     navDrive: "Go to Drive (Home)",
     navSongs: "Go to Song Library",
@@ -146,7 +141,7 @@ export const en: typeof pt = {
     focusAi: "Focus Logos AI",
     closeAi: "Close Logos AI",
     newAiChat: "New Logos conversation",
-    askAi: 'Ask Logos: "{query}"',
+    askAi: "Ask Logos: \"{query}\"",
     askAiSubtitle: "Open chat and send this message",
     toggleTheme: "Toggle Light / Dark Theme",
     toggleSidebarCollapse: "Collapse Sidebar",
@@ -155,12 +150,11 @@ export const en: typeof pt = {
     viewGrid: "Switch View to Grid",
     viewList: "Switch View to List",
     openFilters: "Open Advanced Filters Panel",
-    printSong: 'Print Song: "{title}"',
-    moveSong: 'Move Song: "{title}"',
-    deleteSong: 'Delete Song: "{title}"',
-    deleteService: 'Delete Service: "{name}"',
+    printSong: "Print Song: \"{title}\"",
+    moveSong: "Move Song: \"{title}\"",
+    deleteSong: "Delete Song: \"{title}\"",
+    deleteService: "Delete Service: \"{name}\""
   },
-
   palette: {
     submenu: "Submenu",
     searchSubmenu: "Search submenu...",
@@ -168,12 +162,11 @@ export const en: typeof pt = {
     recents: "Recents",
     defaultSection: "Actions",
     noResults: "No results found",
-    noResultsDesc: 'Nothing found for "{query}".',
+    noResultsDesc: "Nothing found for \"{query}\".",
     navigate: "Navigate",
     select: "Select",
-    title: "Command Palette",
+    title: "Command Palette"
   },
-
   settings: {
     pageDesc: "Appearance, printing, durations, responsibilities, and studio features.",
     tabs: {
@@ -190,88 +183,35 @@ export const en: typeof pt = {
       services: "Services",
       printing: "Printing",
       durations: "Durations",
-      responsibilities: "Responsibilities",
+      responsibilities: "Responsibilities"
     },
     services: {
-      pageDesc: "Usual start time and how services behave while editing.",
+      pageDesc: "Usual start time and how services behave while editing."
     },
     printing: {
-      pageDesc: "Default layout and options for printed songs and services.",
+      pageDesc: "Default layout and options for printed songs and services."
     },
     durations: {
-      pageDesc: "Default song and sermon lengths when building a service.",
+      pageDesc: "Default song and sermon lengths when building a service."
     },
     responsibilities: {
-      pageDesc: "Agenda roles you can assign when planning services.",
+      pageDesc: "Agenda roles you can assign when planning services."
     },
     notifications: {
-      title: "Notifications",
-      pageDesc: "Send a message to your team.",
-      loading: "Loading…",
-      noAccessTitle: "No permission",
-      noAccessDesc: "You need notification access from an organization owner.",
-      send: "Send",
-      sending: "Sending…",
-      sentToast: "Notification sent.",
-      sentPushToast: "Notification sent ({count} devices).",
-      genericError: "Unexpected error.",
-      errorToast: "Couldn't send the notification: {error}",
-      summaryOrg: "All members will receive this in the inbox.",
-      summaryOrgRoles: "Sent to {roles} in the inbox.",
-      summaryUser: "{name} will receive this notification.",
       recipient: {
-        title: "Recipients",
-        desc: "Choose who receives this notification.",
-        user: "Member",
         userDesc: "One member",
-        organization: "Organization",
         organizationDesc: "All members",
-        searchPlaceholder: "Search by name or email…",
-        searching: "Loading members…",
-        noResults: "No members found.",
-        clear: "Clear",
         lockedBadge: "Current organization",
         lockedHint: "Uses your current organization.",
-        rolesFilter: "Filter by role",
-        rolesFilterHint: "Leave empty to include everyone.",
-        everyone: "All roles",
-        inboxOnly: "Sent to the in-app inbox.",
-        loadError: "Couldn't load members.",
+        rolesFilterHint: "Leave empty to include everyone."
       },
       content: {
-        title: "Message",
-        desc: "Title and body shown to recipients.",
-        typeLabel: "Type",
         types: {
-          info: "Info",
-          organization: "Organization",
-          team: "Team",
-          security: "Security",
-          billing: "Billing",
-          custom: "Custom",
+          custom: "Custom"
         },
-        customTypePlaceholder: "e.g. announcement",
-        titleLabel: "Title",
-        titlePlaceholder: "e.g. Rehearsal moved to 8 PM",
-        descriptionLabel: "Description",
-        descriptionPlaceholder: "Optional details",
-        linkLabel: "Link",
-        linkPlaceholder: "/services",
-        linkHint: "Optional link opened when the notification is tapped.",
-        preview: "Preview",
-        previewEmpty: "Title preview",
-        now: "now",
-        appName: "Hosanna Studio",
+        customTypePlaceholder: "e.g. announcement"
       },
       delivery: {
-        title: "Delivery",
-        desc: "Inbox, push, or both.",
-        inbox: "Inbox",
-        inboxDesc: "In the app",
-        push: "Push",
-        pushDesc: "On the device",
-        both: "Both",
-        bothDesc: "Inbox and push",
         pushTitle: "Push content",
         pushHint: "Uses the same title and description as above.",
         dataLabel: "Extra data",
@@ -279,8 +219,8 @@ export const en: typeof pt = {
         keyPlaceholder: "key",
         valuePlaceholder: "value",
         removeRow: "Remove",
-        dataHint: "Optional key/value pairs sent with the push.",
-      },
+        dataHint: "Optional key/value pairs sent with the push."
+      }
     },
     billing: {
       title: "Billing",
@@ -292,14 +232,12 @@ export const en: typeof pt = {
       noAccessDesc: "Only the organization owner can view billing.",
       status: {
         trialing: "Trial",
-        active: "Active",
+        active: "Active"
       },
       planName: "Hosanna Cloud",
       planDesc: "Cloud sync, automatic backups, and priority support for your organization.",
       monthly: "Monthly",
       annual: "Annual",
-      // Shown next to the price when the annual option is selected. Based on
-      // the display prices in PLAN_PRICING (12×€12 − €120 = 2 months free).
       annualSavings: "Save 2 months vs the monthly plan",
       plan: {
         features: {
@@ -307,8 +245,8 @@ export const en: typeof pt = {
           unlimited: "Unlimited songs and services",
           print: "Export and print chord sheets",
           backups: "Automatic backups",
-          support: "Priority support",
-        },
+          support: "Priority support"
+        }
       },
       trialUntil: "Until {date}",
       trialDaysLeft: "{days} days left in your free trial",
@@ -324,15 +262,13 @@ export const en: typeof pt = {
       manageDesc: "Update your payment method, view invoices, or cancel.",
       startTrial: "Start 14-day free trial",
       trialNote: "A card is required to start. You won't be charged during the 14-day trial.",
-      // Used when the org already used its free trial (re-subscribing after
-      // cancel): Stripe does not grant a second trial, so don't promise one.
       subscribe: "Subscribe now",
       subscribeNote: "Your subscription starts right away. Cancel anytime.",
       promoHint: "Have a discount code? You can apply it at checkout.",
       askOwner: "Ask the organization owner to set up billing.",
       checkoutError: "Couldn't start checkout.",
       portalError: "Couldn't open the billing portal.",
-      subscribedToast: "Subscription activated!",
+      subscribedToast: "Subscription activated!"
     },
     features: {
       earlyAccess: {
@@ -344,7 +280,7 @@ export const en: typeof pt = {
         docs: "Learn more",
         comingSoon: "Coming soon",
         interested: "Interested",
-        loadError: "Couldn't load features.",
+        loadError: "Couldn't load features."
       },
       support: {
         title: "Support & Feedback",
@@ -361,8 +297,7 @@ export const en: typeof pt = {
         chatEmpty: "No messages yet. Send one below.",
         placeholder: "Write a message… (Enter to send)",
         restore: "Restore conversations",
-        restoreDesc:
-          "Enter your email to receive a link that restores your previous conversations on this browser.",
+        restoreDesc: "Enter your email to receive a link that restores your previous conversations on this browser.",
         restoreSent: "Recovery link sent — check your email!",
         emailPlaceholder: "your@email.com",
         sendLink: "Send link",
@@ -375,14 +310,12 @@ export const en: typeof pt = {
         loadMore: "Load more",
         ai: "AI assistant",
         team: "Support",
-        readOnlyTicket:
-          "This isn't your most recent conversation, so replies can't be sent from here.",
-        startNewInstead: "Start a new message instead",
-      },
+        readOnlyTicket: "This isn't your most recent conversation, so replies can't be sent from here.",
+        startNewInstead: "Start a new message instead"
+      }
     },
     offlineTitle: "Offline Mode",
-    offlineDesc:
-      "Account, organization, and member settings require an internet connection and are disabled.",
+    offlineDesc: "Account, organization, and member settings require an internet connection and are disabled.",
     appearance: {
       themeTitle: "Theme & Application Appearance",
       themeDesc: "Customize the color scheme and brightness of the interface on your screen.",
@@ -397,21 +330,18 @@ export const en: typeof pt = {
       darkDesc: "Comfortable for night and pulpit.",
       darkBadge: "Night",
       languageTitle: "Language",
-      languageDesc:
-        "Choose the interface language. Defaults to following the organization or browser.",
+      languageDesc: "Choose the interface language. Defaults to following the organization or browser.",
       languageAuto: "Automatic",
       languageAutoDesc: "Follow organization or browser",
       navigationTitle: "Navigation & Structure",
       navigationDesc: "Adjust how repertoires and folders are arranged in your workspace.",
       showFolderTree: "Show Hierarchical Folder Tree",
-      showFolderTreeDesc:
-        "Displays the complete structure of folders and subfolders in the left sidebar.",
+      showFolderTreeDesc: "Displays the complete structure of folders and subfolders in the left sidebar.",
       studioTitle: "Music Studio Preferences",
       studioDesc: "Default chord and lyrics display settings for this browser.",
       onDevice: "On This Device",
       showChords: "Show Chords by Default",
-      showChordsDesc:
-        "Automatically enables the chord line (ChordPro) when opening song viewer, rehearsal, and projection mode for musicians.",
+      showChordsDesc: "Automatically enables the chord line (ChordPro) when opening song viewer, rehearsal, and projection mode for musicians.",
       songScoreTitle: "Song Score",
       songScoreDesc: "Show a quality score indicator on each song card in the explorer.",
       songScoreBadge: "Explorer",
@@ -426,8 +356,8 @@ export const en: typeof pt = {
         dots: "Dots",
         dotsDesc: "Row of five pip indicators",
         badge: "Badge",
-        badgeDesc: "Coloured pill chip with the score",
-      },
+        badgeDesc: "Coloured pill chip with the score"
+      }
     },
     toast: {
       themeChanged: "Theme changed to {theme}.",
@@ -437,7 +367,7 @@ export const en: typeof pt = {
       chordsHidden: "Lyrics only visible by default.",
       languageChanged: "Language changed to {language}.",
       orgSaved: "Organization settings saved successfully!",
-      orgSaveError: "Error saving settings: {error}",
+      orgSaveError: "Error saving settings: {error}"
     },
     general: {
       title: "Regional Preferences & Calendar",
@@ -455,16 +385,13 @@ export const en: typeof pt = {
       songLabel: "Song / Music",
       sermonLabel: "Preaching / Sermon",
       usualStartTime: "Usual service start time",
-      usualStartTimeDesc:
-        "Proposed start for Sunday Service events, and used when printing a service with no linked agenda event.",
+      usualStartTimeDesc: "Proposed start for Sunday Service events, and used when printing a service with no linked agenda event.",
       suggestions: "Suggestions:",
       behaviorTitle: "Service & Order of Service Behavior",
       showDuration: "Show Estimated Total Duration",
-      showDurationDesc:
-        "Sums up minutes of songs and speaking moments to calculate total service time.",
+      showDurationDesc: "Sums up minutes of songs and speaking moments to calculate total service time.",
       showNotes: "Enable Technical & Dynamic Notes",
-      showNotesDesc:
-        "Allows leaders and team to add key, dynamic, and observation notes to each item.",
+      showNotesDesc: "Allows leaders and team to add key, dynamic, and observation notes to each item.",
       autoSave: "Save Drafts Automatically (Autosave)",
       autoSaveDesc: "Continuously saves changes while preparing and reordering the musical lineup.",
       reset: "Reset Values",
@@ -479,7 +406,7 @@ export const en: typeof pt = {
         ptPT: "Português (Portugal)",
         ptBR: "Português (Brasil)",
         enUS: "English (US)",
-        esES: "Español",
+        esES: "Español"
       },
       timezones: {
         portugalGroup: "Portugal & Islands",
@@ -491,14 +418,14 @@ export const en: typeof pt = {
         otherRegionsGroup: "Other Regions",
         london: "London (GMT+0)",
         newYork: "New York (EST / GMT-5)",
-        utc: "UTC (Coordinated Universal Time)",
+        utc: "UTC (Coordinated Universal Time)"
       },
       responsibilities: {
         title: "Agenda Responsibilities",
         desc: "Manage the list of responsibilities you can assign to services on the Agenda page.",
         count: {
           one: "{count} responsibility",
-          other: "{count} responsibilities",
+          other: "{count} responsibilities"
         },
         empty: "No responsibilities created yet.",
         hint: "Changes are applied when you save the settings.",
@@ -508,30 +435,20 @@ export const en: typeof pt = {
         iconLabel: "Icon",
         colorLabel: "Color",
         add: "Add",
-        remove: "Remove responsibility",
-      },
+        remove: "Remove responsibility"
+      }
     },
     restore: {
       confirmTitle: "Confirm Database Restore",
       attention: "Attention when Restoring:",
-      attentionDesc:
-        "This action will replace all existing data with the data contained in the selected backup file.",
+      attentionDesc: "This action will replace all existing data with the data contained in the selected backup file.",
       summary: "Summary of Content to Restore:",
       songs: "Songs",
       folders: "Folders",
       services: "Services",
       restoreNow: "Restore Database Now",
       success: "Database restored successfully! Reloading...",
-      error: "Failed to restore database.",
-    },
-    roles: {
-      owner: "Owner",
-      admin: "Admin",
-      teamLeader: "Team Leader",
-      editor: "Editor",
-      musician: "Musician",
-      guest: "Guest",
-      member: "Member",
+      error: "Failed to restore database."
     },
     account: {
       user: "User",
@@ -550,11 +467,10 @@ export const en: typeof pt = {
         discordDesc: "Use your Discord account to sign in.",
         providerDesc: "Use your {name} account to sign in.",
         unlinkConfirmTitle: "Disconnect Social Account",
-        unlinkConfirmMessage:
-          "Are you sure you want to disconnect your {provider} account? You will not be able to sign in with it unless you reconnect it.",
+        unlinkConfirmMessage: "Are you sure you want to disconnect your {provider} account? You will not be able to sign in with it unless you reconnect it.",
         unlinkSuccess: "Account disconnected successfully.",
         unlinkError: "Error disconnecting account: {error}",
-        linkError: "Error connecting account: {error}",
+        linkError: "Error connecting account: {error}"
       },
       activeSessions: {
         title: "Active Sessions",
@@ -568,7 +484,7 @@ export const en: typeof pt = {
         terminate: "Sign out",
         currentSessionOnly: "Only the current session is active.",
         revokeSuccess: "Session revoked successfully.",
-        revokeError: "Error revoking session.",
+        revokeError: "Error revoking session."
       },
       profile: {
         invalidImage: "Please select a valid image file.",
@@ -606,8 +522,8 @@ export const en: typeof pt = {
         userId: "User ID",
         role: "Role",
         accountStatus: "Account Status",
-        active: "Active",
-      },
+        active: "Active"
+      }
     },
     twoFactor: {
       title: "Two-Factor Authentication (2FA)",
@@ -619,15 +535,13 @@ export const en: typeof pt = {
       passwordStepDesc: "To enable two-factor authentication, confirm your current password:",
       passwordLabel: "Password",
       continue: "Continue",
-      setupStep1:
-        "1. Scan the QR code with your authenticator app (such as Google Authenticator, Authy, or Microsoft Authenticator).",
+      setupStep1: "1. Scan the QR code with your authenticator app (such as Google Authenticator, Authy, or Microsoft Authenticator).",
       setupStep2: "2. Enter the 6-digit code generated by the app:",
       verificationCodeLabel: "Verification Code",
       verificationCodePlaceholder: "123456",
       verify: "Verify",
       backupSuccessTitle: "App linked successfully!",
-      backupWarning:
-        "Store these recovery codes in a safe place (such as a password manager). They are the only way to access your account if you lose your phone.",
+      backupWarning: "Store these recovery codes in a safe place (such as a password manager). They are the only way to access your account if you lose your phone.",
       backupSavedBtn: "I have stored the codes safely",
       disableStepDesc: "To disable two-factor authentication, confirm your password:",
       passwordRequired: "Please enter your password.",
@@ -638,7 +552,7 @@ export const en: typeof pt = {
       verifyError: "Error verifying code: {error}",
       setupSuccess: "Two-Factor Authentication configured successfully!",
       disableSuccess: "Two-Factor Authentication disabled.",
-      disableError: "Error disabling 2FA: {error}",
+      disableError: "Error disabling 2FA: {error}"
     },
     members: {
       activeMembers: "Active Members ({count})",
@@ -677,10 +591,9 @@ export const en: typeof pt = {
       inviteSuccess: "Invitation sent successfully to {email}!",
       inviteError: "Error inviting {email}!",
       cancelModalTitle: "Cancel Invitation",
-      cancelModalConfirm:
-        "Are you sure you want to cancel the invitation for {email}? The person will no longer be able to accept this invitation.",
+      cancelModalConfirm: "Are you sure you want to cancel the invitation for {email}? The person will no longer be able to accept this invitation.",
       cancelling: "Cancelling...",
-      confirmCancel: "Cancel Invitation",
+      confirmCancel: "Cancel Invitation"
     },
     memberProfile: {
       backToList: "Back to members list",
@@ -689,26 +602,22 @@ export const en: typeof pt = {
       removeMember: "Remove Member",
       rbacTitle: "RBAC Permissions Management",
       changeRole: "Change Role",
-      promoteOwnerWarning:
-        "You are about to make {name} an owner of the organization. This action is sensitive and should be confirmed carefully.",
+      promoteOwnerWarning: "You are about to make {name} an owner of the organization. This action is sensitive and should be confirmed carefully.",
       saveRole: "Save Role",
       currentRole: "Current Role:",
       removeConfirmTitle: "Remove Member",
-      removeConfirmText:
-        "Are you sure you want to remove {name} from the organization? This person will lose access immediately.",
+      removeConfirmText: "Are you sure you want to remove {name} from the organization? This person will lose access immediately.",
       leaveConfirmTitle: "Leave Organization",
-      leaveConfirmText:
-        "Are you sure you want to leave this organization? You will lose access immediately and will need to be invited again to re-enter.",
+      leaveConfirmText: "Are you sure you want to leave this organization? You will lose access immediately and will need to be invited again to re-enter.",
       leaving: "Leaving...",
       leaveSuccess: "Left the organization successfully.",
-      leaveError: "Failed to leave organization: {error}",
+      leaveError: "Failed to leave organization: {error}"
     },
     workspace: {
       title: "Organization Profile",
       desc: "Manage the institutional identity, logo, and colors of your ministry.",
       switchOrgTitle: "Your Organizations",
-      switchOrgDesc:
-        "You belong to more than one organization. Switch to manage another workspace.",
+      switchOrgDesc: "You belong to more than one organization. Switch to manage another workspace.",
       currentOrg: "Current",
       switchOrg: "Switch",
       switchingOrg: "Switching…",
@@ -727,13 +636,11 @@ export const en: typeof pt = {
       defaultOrgName: "My Organization",
       noDescription: "No description configured.",
       visualIdentityTitle: "Visual Identity & Colors",
-      visualIdentityDesc:
-        "Customize accent color and branding visibility on presentations and shares.",
+      visualIdentityDesc: "Customize accent color and branding visibility on presentations and shares.",
       accentColorLabel: "Accent Color",
       quickColors: "Quick Colors:",
       showBrandingLabel: "Show Logo on Public Screens",
-      showBrandingDesc:
-        "Displays the header and church branding on projections and shared reports.",
+      showBrandingDesc: "Displays the header and church branding on projections and shared reports.",
       preview: "Preview:",
       activeButton: "Active Button",
       churchFallback: "Church",
@@ -760,26 +667,23 @@ export const en: typeof pt = {
       restoreData: "Restore Data",
       restoreWarning: "May update or replace existing data.",
       restoreUploadBtn: "Upload HOSANNA File",
-      invalidJson: "Invalid backup HOSANNA file.",
+      invalidJson: "Invalid backup HOSANNA file."
     },
     about: {
       title: "About Hosanna Studio",
       controlPanel: "Control Panel",
       copyright: "© {year} Embrace & Tiago Inês. Code under Apache 2.0 license.",
       studioVersion: "Studio Version",
-      openSourceBanner:
-        "This project is <strong>open-source</strong>! We believe in free software to equip and support communities.",
+      openSourceBanner: "This project is <strong>open-source</strong>! We believe in free software to equip and support communities.",
       viewRepo: "View Repository",
       supportedFormats: "Supported Import Formats",
       thirdPartyLicenses: "Third-Party Library Licenses ({count})",
       productTourTitle: "Product tour",
-      productTourDesc:
-        "Review the essentials of the interface tailored to your role in the organization.",
+      productTourDesc: "Review the essentials of the interface tailored to your role in the organization.",
       productTourRelaunch: "Start tour",
-      interactiveTourRelaunch: "Interactive tour",
-    },
+      interactiveTourRelaunch: "Interactive tour"
+    }
   },
-
   tour: {
     product: {
       missedTitle: "Product tour available",
@@ -793,54 +697,48 @@ export const en: typeof pt = {
         done: "Done",
         close: "Close",
         progress: "{{current}} of {{total}}",
-        tryInteractive: "Interactive tour",
+        tryInteractive: "Interactive tour"
       },
       welcome: {
         title: "Welcome to Hosanna Studio",
-        description:
-          "This short tour highlights what’s essential for your role. You can skip anytime and relaunch from Settings → About.",
+        description: "This short tour highlights what’s essential for your role. You can skip anytime and relaunch from Settings → About."
       },
       drive: {
         title: "Drive",
-        description:
-          "This is your organization’s library — folders and songs, like a file explorer.",
+        description: "This is your organization’s library — folders and songs, like a file explorer."
       },
       library: {
         title: "Library",
-        description: "See every song in one place, regardless of which folder it’s in.",
+        description: "See every song in one place, regardless of which folder it’s in."
       },
       collections: {
         title: "Collections",
-        description: "Group songs into reusable lists for rehearsals or themes.",
+        description: "Group songs into reusable lists for rehearsals or themes."
       },
       services: {
         title: "Services",
-        description: "Build your order of worship with songs, notes, and service moments.",
+        description: "Build your order of worship with songs, notes, and service moments."
       },
       agenda: {
         title: "Agenda",
-        description: "Plan events and link them to services when you need to.",
+        description: "Plan events and link them to services when you need to."
       },
       search: {
         title: "Search",
-        description:
-          "Quickly find folders, songs, and services. Advanced syntax is in the help icon.",
+        description: "Quickly find folders, songs, and services. Advanced syntax is in the help icon."
       },
       create: {
         title: "Create",
-        description:
-          "Use the + button to create songs, folders, services, and more — based on your permissions.",
+        description: "Use the + button to create songs, folders, services, and more — based on your permissions."
       },
       settings: {
         title: "Account & settings",
-        description:
-          "Open personal preferences, organization settings, and more from your profile.",
+        description: "Open personal preferences, organization settings, and more from your profile."
       },
       finish: {
         title: "You’re ready to go",
-        description:
-          "Relaunch this tour anytime from Settings → About. To practice with demo data, try the interactive tour.",
-      },
+        description: "Relaunch this tour anytime from Settings → About. To practice with demo data, try the interactive tour."
+      }
     },
     interactive: {
       controls: {
@@ -849,149 +747,134 @@ export const en: typeof pt = {
         skipTour: "Exit tour",
         waiting: "Do the action described (or skip this step).",
         done: "Done",
-        progress: "{{current}} of {{total}}",
+        progress: "{{current}} of {{total}}"
       },
       intro: {
         welcome: {
           title: "Interactive tour",
-          description:
-            "This is an isolated demo environment. Some steps wait for you to act; others just need Next. Click Next to begin.",
+          description: "This is an isolated demo environment. Some steps wait for you to act; others just need Next. Click Next to begin."
         },
         sandbox: {
           title: "Safe sandbox data",
-          description:
-            "Nothing here syncs to your real organization. Explore freely. Click Next to continue.",
-        },
+          description: "Nothing here syncs to your real organization. Explore freely. Click Next to continue."
+        }
       },
       folders: {
         createBtn: {
           title: "Open the Create menu",
-          description: "Click the + button to see what you can create.",
+          description: "Click the + button to see what you can create."
         },
         create: {
           title: "Create a folder",
-          description:
-            "Create a new folder — pick “New Folder” in the menu (e.g. “Rehearsals”). The tour continues once it exists.",
+          description: "Create a new folder — pick “New Folder” in the menu (e.g. “Rehearsals”). The tour continues once it exists."
         },
         drive: {
           title: "Drive",
-          description: "Folders organize your library. You can drag songs between folders later.",
-        },
+          description: "Folders organize your library. You can drag songs between folders later."
+        }
       },
       songs: {
         create: {
           title: "Create a song",
-          description: "Use + → New song. Next the tour will ask you to open it in the editor.",
+          description: "Use + → New song. Next the tour will ask you to open it in the editor."
         },
         open: {
           title: "Open a song",
-          description:
-            "Go to Library, then open the song you created (double-click a row). You can also double-click it in Drive.",
-        },
+          description: "Go to Library, then open the song you created (double-click a row). You can also double-click it in Drive."
+        }
       },
       chordpro: {
         editor: {
           title: "ChordPro editor",
-          description:
-            "This is the editor. On empty lines you can use shortcuts the editor expands for you — like smart snippets.",
+          description: "This is the editor. On empty lines you can use shortcuts the editor expands for you — like smart snippets."
         },
         snippets: {
           title: "TAB completes directives",
-          description:
-            "On an empty line type a (or artist) and press TAB — the editor fills {artist: …}. The placeholder is selected: type over it, then TAB again for the next field. Also try t (title) or ! for a full template.",
+          description: "On an empty line type a (or artist) and press TAB — the editor fills {artist: …}. The placeholder is selected: type over it, then TAB again for the next field. Also try t (title) or ! for a full template."
         },
         chords: {
           title: "Chords with [ ]",
-          description:
-            "Write chords in square brackets, e.g. [G] or [Am], right above the lyrics. The preview formats them for you.",
+          description: "Write chords in square brackets, e.g. [G] or [Am], right above the lyrics. The preview formats them for you."
         },
         preview: {
           title: "Preview",
-          description:
-            "Watch the result on the right as you edit — great for rehearsal and printing.",
+          description: "Watch the result on the right as you edit — great for rehearsal and printing."
         },
         save: {
           title: "Save your changes",
-          description: "Try a snippet or a chord, then save (Ctrl+S or the button) to continue.",
-        },
+          description: "Try a snippet or a chord, then save (Ctrl+S or the button) to continue."
+        }
       },
       collections: {
         nav: {
           title: "Collections",
-          description: "Open Collections in the sidebar.",
+          description: "Open Collections in the sidebar."
         },
         create: {
           title: "Create a collection",
-          description: "Create a collection (e.g. “Christmas”) to group reusable songs.",
+          description: "Create a collection (e.g. “Christmas”) to group reusable songs."
         },
         backToDrive: {
           title: "Back to Drive",
-          description: "Now go back to Drive — we’ll use the same shortcuts as a file explorer.",
+          description: "Now go back to Drive — we’ll use the same shortcuts as a file explorer."
         },
         selection: {
           title: "Select like a file explorer",
-          description:
-            "Click an item to select it. Ctrl+click (⌘ on Mac) adds more; Shift+click selects a range. You can also drag on empty space in Drive to draw a marquee over multiple items. Try selecting something.",
+          description: "Click an item to select it. Ctrl+click (⌘ on Mac) adds more; Shift+click selects a range. You can also drag on empty space in Drive to draw a marquee over multiple items. Try selecting something."
         },
         openFolder: {
           title: "Open a folder",
-          description: "Double-click a folder (or select it and press Enter) to open it.",
+          description: "Double-click a folder (or select it and press Enter) to open it."
         },
         selectAll: {
           title: "Select all",
-          description: "Inside the folder, press Ctrl+A (⌘+A on Mac) to select every item.",
+          description: "Inside the folder, press Ctrl+A (⌘+A on Mac) to select every item."
         },
         contextMenu: {
           title: "Context menu",
-          description: "With the selection active, right-click one of the selected items.",
+          description: "With the selection active, right-click one of the selected items."
         },
         addSongs: {
           title: "Add to collection",
-          description:
-            "In the menu, choose “Add to Collection” and pick the collection you created.",
-        },
+          description: "In the menu, choose “Add to Collection” and pick the collection you created."
+        }
       },
       services: {
         nav: {
           title: "Services",
-          description: "Open Services in the sidebar.",
+          description: "Open Services in the sidebar."
         },
         create: {
           title: "Create a service",
-          description:
-            "Create a new service. Next the tour will ask you to open it and build the order of worship.",
+          description: "Create a new service. Next the tour will ask you to open it and build the order of worship."
         },
         builder: {
           title: "Service builder",
-          description:
-            "Open the service (double-click) to see the builder — songs, announcements, scripture, and more.",
+          description: "Open the service (double-click) to see the builder — songs, announcements, scripture, and more."
         },
         elements: {
           title: "Service elements",
-          description:
-            "Add songs and reorder elements. This is the main tool for the worship team.",
-        },
+          description: "Add songs and reorder elements. This is the main tool for the worship team."
+        }
       },
       agenda: {
         nav: {
           title: "Agenda",
-          description: "Open Agenda in the sidebar.",
+          description: "Open Agenda in the sidebar."
         },
         create: {
           title: "Create an event",
-          description: "Create an event and optionally link it to a service.",
-        },
+          description: "Create an event and optionally link it to a service."
+        }
       },
       finish: {
         done: {
           title: "Tour complete",
-          description:
-            "Great work! You can close this tab and return to your organization — or keep exploring the demo.",
-        },
-      },
-    },
+          description: "Great work! You can close this tab and return to your organization — or keep exploring the demo."
+        }
+      }
+    }
   },
-
   layout: {
     newVersionTitle: "New version available",
     newVersionDesc: "A new version of Hosanna Studio is available.",
@@ -1009,32 +892,29 @@ export const en: typeof pt = {
     songCreated: "Song created successfully!",
     songImported: "Song imported successfully!",
     folderNameMismatch: "The entered folder name does not match the folder name.",
-    uploadSuccess: '{count} {type} file(s) uploaded successfully to "{folder}"!',
+    uploadSuccess: "{count} {type} file(s) uploaded successfully to \"{folder}\"!",
     uploadError: "Error uploading {count} {type} file(s)",
-    uploadIgnored: "Ignored {count} {type} file(s)",
+    uploadIgnored: "Ignored {count} {type} file(s)"
   },
-
   foldersPage: {
     dropHere: "Drop files here",
-    dropHereDesc: 'Files will be imported to "{folder}"',
+    dropHereDesc: "Files will be imported to \"{folder}\"",
     loading: "Loading file explorer...",
     noResults: "No matching files or folders",
     emptyTitle: "This Folder is Empty",
-    noResultsDesc: 'No items in "{folder}" match "{query}".',
+    noResultsDesc: "No items in \"{folder}\" match \"{query}\".",
     emptyRootDesc: "There are no folders or songs at the root level yet.",
-    emptyFolderDesc: 'No songs have been added to "{folder}" yet.',
-    dragOrClick: "Drag and drop files here or click to upload",
+    emptyFolderDesc: "No songs have been added to \"{folder}\" yet.",
+    dragOrClick: "Drag and drop files here or click to upload"
   },
-
   trashPage: {
     loading: "Loading trash...",
     emptyTitle: "Trash is empty",
     emptyDesc: "Deleted items appear here for 30 days before being permanently removed.",
     deletedAt: "Deleted on",
     permanentDeletion: "Permanent deletion",
-    restore: "Restore",
+    restore: "Restore"
   },
-
   songEditor: {
     loading: "Loading score...",
     notFoundTitle: "Song Not Found",
@@ -1051,9 +931,8 @@ export const en: typeof pt = {
     preview: "Visual Preview",
     readingSettings: "Reading Settings",
     variant: "Song variant",
-    defaultVariant: "Default",
+    defaultVariant: "Default"
   },
-
   servicesPage: {
     loading: "Loading schedule...",
     createFirstService: "Create First Service",
@@ -1079,28 +958,25 @@ export const en: typeof pt = {
     archiveService: "Archive Service",
     activateService: "Activate Service",
     deleteService: "Delete Service",
-    deleteServiceMessage: 'Are you sure you want to delete the service "{name}"?',
-    archiveServiceMessage: 'Are you sure you want to {action} the service "{name}"?',
+    deleteServiceMessage: "Are you sure you want to delete the service \"{name}\"?",
+    archiveServiceMessage: "Are you sure you want to {action} the service \"{name}\"?",
     deleteAllTitle: "Delete {count} Services",
     deleteAllMessage: "Are you sure you want to permanently delete {count} selected services?",
     deleteAll: "Delete All",
     archiveAllTitle: "Archive {count} Services",
     archiveAllMessage: "Are you sure you want to archive {count} selected services?",
-    archiveAll: "Archive All",
+    archiveAll: "Archive All"
   },
-
   collectionsPage: {
     edit: "Edit",
     delete: "Delete",
     songCount: {
       one: "{count} song",
-      other: "{count} songs",
+      other: "{count} songs"
     },
     deleteTitle: "Delete Collection",
-    deleteMessage:
-      'Are you sure you want to move the collection "{name}" to trash? Songs will remain in your library.',
-    deletePermanentMessage:
-      'Are you sure you want to delete "{name}"? Songs will remain in your library.',
+    deleteMessage: "Are you sure you want to move the collection \"{name}\" to trash? Songs will remain in your library.",
+    deletePermanentMessage: "Are you sure you want to delete \"{name}\"? Songs will remain in your library.",
     notFoundTitle: "Collection not found",
     notFoundDesc: "The collection you are looking for may have been removed.",
     backToCollections: "Back to Collections",
@@ -1108,12 +984,11 @@ export const en: typeof pt = {
     viewSong: "View Song",
     removeFromCollection: "Remove from Collection",
     removeSongTitle: "Remove from Collection",
-    removeSongMessage:
-      'Do you want to remove "{title}" from this collection? The song will remain in the library.',
+    removeSongMessage: "Do you want to remove \"{title}\" from this collection? The song will remain in the library.",
     emptyTitle: "This collection does not have songs yet",
     emptyDesc: "Add songs from your library to organize them in this collection.",
     noSearchResultsTitle: "No matching songs found",
-    noSearchResultsDesc: 'No songs found for "{query}".',
+    noSearchResultsDesc: "No songs found for \"{query}\".",
     paginationInfo: "{from} to {to} of {total} songs",
     newCollection: "New Collection",
     editCollection: "Edit Collection",
@@ -1130,7 +1005,7 @@ export const en: typeof pt = {
     createBtn: "Create Collection",
     previewTitle: "Collection Title",
     previewDesc: "Collection description...",
-    addSongsModalTitle: 'Add Songs to "{name}"',
+    addSongsModalTitle: "Add Songs to \"{name}\"",
     searchSongPlaceholder: "Search by title or artist...",
     selectedSongsCount: "{count} selected",
     selectAll: "Select all",
@@ -1142,9 +1017,8 @@ export const en: typeof pt = {
     noCollectionsAvailable: "No collections found.",
     deleteManyTitle: "Delete collections",
     deleteManyMessage: "Move {count} collections to the trash? The songs stay in the library.",
-    createCollectionFirst: "Create a collection first to add songs.",
+    createCollectionFirst: "Create a collection first to add songs."
   },
-
   agenda: {
     subtitle: "Plan and assign responsibilities for each day.",
     newEvent: "New Event",
@@ -1165,7 +1039,7 @@ export const en: typeof pt = {
       september: "September",
       october: "October",
       november: "November",
-      december: "December",
+      december: "December"
     },
     weekdays: {
       mon: "Mon",
@@ -1174,7 +1048,7 @@ export const en: typeof pt = {
       thu: "Thu",
       fri: "Fri",
       sat: "Sat",
-      sun: "Sun",
+      sun: "Sun"
     },
     weekdaysFull: {
       sunday: "Sunday",
@@ -1183,7 +1057,7 @@ export const en: typeof pt = {
       wednesday: "Wednesday",
       thursday: "Thursday",
       friday: "Friday",
-      saturday: "Saturday",
+      saturday: "Saturday"
     },
     dateLong: "{weekday}, {month} {day}, {year}",
     dateShort: "{month}/{day}/{year}",
@@ -1200,8 +1074,7 @@ export const en: typeof pt = {
     addResponsibility: "Add Responsibility",
     removeResponsibility: "Remove responsibility",
     noResponsibilities: "There are no responsibilities for this event yet.",
-    assigneesGetNotified:
-      'Use "Notify assignments" in the event details to alert anyone not yet notified.',
+    assigneesGetNotified: "Use \"Notify assignments\" in the event details to alert anyone not yet notified.",
     type: "Type",
     location: "Location",
     linkedService: "Linked service",
@@ -1216,7 +1089,7 @@ export const en: typeof pt = {
       assignHint: "Only sends to people not notified yet.",
       pending: {
         one: "1 user to notify",
-        other: "{count} users to notify",
+        other: "{count} users to notify"
       },
       allNotified: "No assignments to notify about.",
       updateSection: "Event changes",
@@ -1229,7 +1102,7 @@ export const en: typeof pt = {
       bothHint: "Date and location are sent in a single notification.",
       sentCount: {
         one: "1 notification sent",
-        other: "{count} notifications sent",
+        other: "{count} notifications sent"
       },
       sentPartial: "{sent} notifications sent, {failed} failed.",
       noRecipients: "There are no reachable users to notify.",
@@ -1239,10 +1112,9 @@ export const en: typeof pt = {
       assignmentTitle: "Assigned to {event}",
       assignmentBody: "Date: {date}\n\nResponsibilities:\n{list}",
       removalTitle: "Responsibilities for {event} updated",
-      removalBody:
-        "Your responsibilities for {event} have been updated.\n\nDate: {date}\n\nRemoved:\n{list}",
+      removalBody: "Your responsibilities for {event} have been updated.\n\nDate: {date}\n\nRemoved:\n{list}",
       eventCancelledTitle: "{event} has been cancelled",
-      eventCancelledBody: 'The event "{event}" scheduled for {date} has been cancelled.',
+      eventCancelledBody: "The event \"{event}\" scheduled for {date} has been cancelled.",
       dateTitle: "The date of {event} has changed",
       dateBody: "New date:\n{date}",
       locationTitle: "The location of {event} has changed",
@@ -1252,7 +1124,7 @@ export const en: typeof pt = {
       removeAssigneesTitle: "Remove assignments",
       removeAffected: {
         one: "{count} assignment will be removed.",
-        other: "{count} assignments will be removed.",
+        other: "{count} assignments will be removed."
       },
       removeSummary: "Removing",
       notifyRemovalLabel: "Notify the user about the cancellation",
@@ -1260,8 +1132,8 @@ export const en: typeof pt = {
       notifyDeleteLabel: "Notify all assigned users",
       notifyDeleteHint: {
         one: "1 assigned user will be notified that the event was cancelled.",
-        other: "{count} assigned users will be notified that the event was cancelled.",
-      },
+        other: "{count} assigned users will be notified that the event was cancelled."
+      }
     },
     editAssignments: "Edit assignments",
     comment: "Comment",
@@ -1275,13 +1147,12 @@ export const en: typeof pt = {
     loadingServices: "Loading services…",
     changeLinkedService: "Change linked service…",
     searchServiceToLink: "Search a service to link…",
-    linkedServiceMissing:
-      "The linked service no longer exists — choose another one or remove the link.",
+    linkedServiceMissing: "The linked service no longer exists — choose another one or remove the link.",
     removeLink: "Remove link",
     noServicesToLink: "There are no services yet. Create one in Services to link it.",
     elementsCount: {
       one: "{count} element",
-      other: "{count} elements",
+      other: "{count} elements"
     },
     information: "Information",
     eventTitle: "Title",
@@ -1294,8 +1165,7 @@ export const en: typeof pt = {
     locationPlaceholder: "e.g. Main Temple",
     notesPlaceholder: "Planning notes…",
     deleteEventConfirm: "Delete this event?",
-    deleteEventConfirmBody:
-      "This will permanently remove the event and all of its responsibilities.",
+    deleteEventConfirmBody: "This will permanently remove the event and all of its responsibilities.",
     deleteEvent: "Delete",
     printDayAgenda: "Agenda — {date}",
     decreaseDuration: "Decrease duration",
@@ -1306,7 +1176,7 @@ export const en: typeof pt = {
       worshipRehearsal: "Worship Rehearsal",
       bibleStudy: "Bible Study",
       teamMeeting: "Team Meeting",
-      specialEvent: "Special Event",
+      specialEvent: "Special Event"
     },
     allResponsibilitiesAdded: "All responsibilities have already been added",
     createCategoriesInSettings: "You can create new categories in Settings → Server.",
@@ -1315,24 +1185,23 @@ export const en: typeof pt = {
     assignTo: "Assign to",
     selectedAssignees: {
       one: "{count} person selected",
-      other: "{count} people selected",
+      other: "{count} people selected"
     },
     assignOptional: "Optional — you can assign later.",
     assigneesTitle: "Assignees — {category}",
     assignedAssignees: {
       one: "{count} person assigned",
-      other: "{count} people assigned",
+      other: "{count} people assigned"
     },
-    noAssigneesYet: "No one assigned yet.",
+    noAssigneesYet: "No one assigned yet."
   },
-
   songsPage: {
     createSong: "Create New Song",
     newSong: "New Song",
     title: "Song Library",
     subtitle: {
       one: "Manage your chord sheet collection ({count} song)",
-      other: "Manage your chord sheet collection ({count} songs)",
+      other: "Manage your chord sheet collection ({count} songs)"
     },
     explorer: "Explorer",
     searchPlaceholder: "Search by title, artist, lyrics...",
@@ -1375,15 +1244,13 @@ export const en: typeof pt = {
     deleteSong: "Delete Song",
     createModalTitle: "Create New Song",
     deleteTitle: "Delete Song",
-    deleteMessage:
-      'Are you sure you want to permanently delete "{name}"? This action cannot be undone.',
+    deleteMessage: "Are you sure you want to permanently delete \"{name}\"? This action cannot be undone.",
     deleteConfirm: "Delete Song",
     movedToast: "{count} song(s) moved successfully!",
     deletedToast: "{count} song(s) deleted successfully!",
     zeroSongs: "0 songs",
-    songsWord: "songs",
+    songsWord: "songs"
   },
-
   forms: {
     folderNameRequired: "Folder name is required",
     folderNameMin: "Name must be at least 2 characters",
@@ -1410,11 +1277,10 @@ export const en: typeof pt = {
     planningNotesPlaceholder: "e.g. Theme: Grace and Hope. Band rehearsal at 8:15.",
     saveService: "Save Service Plan",
     unknownArtist: "Unknown Artist",
-    untitled: "Untitled",
+    untitled: "Untitled"
   },
-
   modals: {
-    moveSongTitle: 'Move Song "{title}"',
+    moveSongTitle: "Move Song \"{title}\"",
     moveSongToFolder: "Move Song to Folder",
     chooseDestination: "Choose destination folder for",
     rootLevel: "Root Level (No folder)",
@@ -1430,15 +1296,13 @@ export const en: typeof pt = {
     aboutToDelete: "You are about to delete",
     whatToDo: "What to do with songs inside the selected folders?",
     preserveSongs: "Preserve songs (Move to Root Level)",
-    preserveSongsDesc:
-      "Deletes only folders and moves their songs to the root without losing data.",
+    preserveSongsDesc: "Deletes only folders and moves their songs to the root without losing data.",
     deletePermanently: "Permanently delete folders and all their songs",
-    deletePermanentlyDesc:
-      "Destructive action. Deletes folders and all songs contained within them.",
+    deletePermanentlyDesc: "Destructive action. Deletes folders and all songs contained within them.",
     safetyConfirmation: "Safety Confirmation",
     confirmDeleteIntro: "To confirm deletion of",
     writeNameBelow: ", type the exact name below:",
-    writeToConfirm: 'Type "{name}" to confirm',
+    writeToConfirm: "Type \"{name}\" to confirm",
     deleteItems: "Delete {count} Item(s)",
     batchTagTitle: "Batch Tag {count} Song(s)",
     selectCategories: "Select predefined categories or enter custom tags to assign to",
@@ -1463,7 +1327,7 @@ export const en: typeof pt = {
     highlightColor: "Highlight Color",
     iconCount: "Icon ({count})",
     searchIcons: "Search...",
-    noIconFound: 'No icon found for "{query}"',
+    noIconFound: "No icon found for \"{query}\"",
     saving: "Saving...",
     importCifraTitle: "Import Chords (3rd-Party Providers)",
     thirdPartyProvidersTitle: "Import Chords & 3rd-Party Providers",
@@ -1486,8 +1350,7 @@ export const en: typeof pt = {
     copyChordPro: "Copy ChordPro",
     copied: "Copied!",
     copyFailed: "Couldn't copy to clipboard",
-    rawTextDesc:
-      "Paste plain text with chords placed directly over lyrics. It will be converted into ChordPro format.",
+    rawTextDesc: "Paste plain text with chords placed directly over lyrics. It will be converted into ChordPro format.",
     rawTextLabel: "Cifra Text (Chords & Lyrics)",
     rawTextPlaceholder: "Paste chords and lyrics here (chords on line above lyrics)...",
     songTitle: "Song Title",
@@ -1498,9 +1361,8 @@ export const en: typeof pt = {
     pleaseEnterSongTitle: "Please enter the song title.",
     supportedProviders: "Supported Providers",
     detectedProvider: "Detected: {provider}",
-    backToEdit: "Back to Edit",
+    backToEdit: "Back to Edit"
   },
-
   explorer: {
     moreOptions: "More options",
     songNumber: "No. {number}",
@@ -1539,41 +1401,38 @@ export const en: typeof pt = {
       addToCollection: "Add to Collection",
       addToCollectionCount: "Add {count} to Collection",
       printSong: "Print Song",
-      deleteSong: "Delete Song",
+      deleteSong: "Delete Song"
     },
     modals: {
-      createSongInFolder: 'Create New Song in "{folder}"',
+      createSongInFolder: "Create New Song in \"{folder}\"",
       createSongInRoot: "Create New Song at Root",
       createServiceTitle: "Create Service Plan",
-      createFolderInFolder: 'Create Folder inside "{folder}"',
+      createFolderInFolder: "Create Folder inside \"{folder}\"",
       createFolderInRoot: "Create New Folder at Root",
-      renameFolderTitle: 'Rename Folder "{folder}"',
+      renameFolderTitle: "Rename Folder \"{folder}\"",
       updateFolderName: "Update Folder Name",
-      moveFolderTitle: 'Move Folder "{folder}"',
+      moveFolderTitle: "Move Folder \"{folder}\"",
       selectDestFolder: "Select a new destination folder for",
       rootTopLevel: "Root Directory (Top Level)",
       moveFolderBtn: "Move Folder",
-      deleteFolderTitle: 'Delete Folder "{folder}"',
+      deleteFolderTitle: "Delete Folder \"{folder}\"",
       selectDeleteFolderOption: "Select how to handle contents inside this folder:",
       moveContentsToRoot: "Move Contents to Root (Recommended)",
       moveContentsToRootDesc: "Keeps the song sheets in the library without folder category.",
       deleteFolderAndContents: "Delete folder and all contents inside",
-      deleteFolderAndContentsDesc:
-        "Permanently deletes the folder AND all song files and subfolders and their contents.",
+      deleteFolderAndContentsDesc: "Permanently deletes the folder AND all song files and subfolders and their contents.",
       additionalSecurity: "Additional Security Confirmation",
-      deleteFolderIrreversible:
-        "This action is irreversible. To confirm permanent deletion of the folder and all its songs, type the folder name",
-      writeToConfirm: 'Type "{name}" to confirm',
+      deleteFolderIrreversible: "This action is irreversible. To confirm permanent deletion of the folder and all its songs, type the folder name",
+      writeToConfirm: "Type \"{name}\" to confirm",
       confirmDelete: "Confirm Deletion",
       emptyFolderDelete: "Delete folder",
       emptyFolderDeleteDesc: "The folder is empty and will be deleted",
-      deleteSongTitle: 'Delete Song "{title}"',
-      deleteSongWarning:
-        'Are you sure you want to permanently delete "{title}"? This will also remove it from any scheduled services.',
+      deleteSongTitle: "Delete Song \"{title}\"",
+      deleteSongWarning: "Are you sure you want to permanently delete \"{title}\"? This will also remove it from any scheduled services.",
       deleteSongBtn: "Delete Song",
       filterTitle: "Advanced Search Filters",
       searchScope: "Search scope:",
-      scopeFolder: 'Folder "{folder}" and Subfolders',
+      scopeFolder: "Folder \"{folder}\" and Subfolders",
       scopeRoot: "Entire Explorer (Root Directory)",
       categoryTag: "Category / Tag",
       allCategories: "All Categories",
@@ -1583,10 +1442,9 @@ export const en: typeof pt = {
       fieldContent: "Lyrics / Content",
       fieldTags: "Tags / Labels",
       clearFilters: "Clear Filters",
-      applyFilters: "Apply Filters",
-    },
+      applyFilters: "Apply Filters"
+    }
   },
-
   misc: {
     chordproSettings: {
       title: "Visual Settings",
@@ -1603,7 +1461,7 @@ export const en: typeof pt = {
       capo: "Capo",
       guitar: "Guitar",
       piano: "Piano",
-      size: "Size",
+      size: "Size"
     },
     editorSettings: {
       title: "Editor Settings",
@@ -1622,8 +1480,8 @@ export const en: typeof pt = {
         monokai: "Monokai (dark)",
         dracula: "Dracula (dark)",
         tomorrow_night: "Tomorrow Night (dark)",
-        solarized_dark: "Solarized Dark (dark)",
-      },
+        solarized_dark: "Solarized Dark (dark)"
+      }
     },
     inbox: {
       title: "Notifications",
@@ -1635,7 +1493,7 @@ export const en: typeof pt = {
       loading: "Loading notifications...",
       empty: "No notifications found",
       loadMore: "Load more",
-      buttonTitle: "Notification Inbox",
+      buttonTitle: "Notification Inbox"
     },
     syncStatus: {
       syncing: "Syncing...",
@@ -1647,21 +1505,18 @@ export const en: typeof pt = {
       synced: "Synced",
       syncedTooltip: "Synced ({time}). Click to force sync.",
       syncedTooltipNoTime: "Synced. Click to force sync.",
-      local_only: "Only local",
+      local_only: "Only local"
     },
     help: {
       title: "Editor Quick Guide",
       smartSnippets: "Smart Snippets",
-      snippetsDesc:
-        "Type one of the abbreviations below on an empty line and press <key>TAB</key> for the editor to autofill.",
+      snippetsDesc: "Type one of the abbreviations below on an empty line and press <key>TAB</key> for the editor to autofill.",
       tipTitle: "Autofill tip:",
-      tipDesc:
-        "When inserting a snippet, placeholder text is selected. Simply type over it. Press <key>TAB</key> again to jump to the next field!",
+      tipDesc: "When inserting a snippet, placeholder text is selected. Simply type over it. Press <key>TAB</key> again to jump to the next field!",
       shortcutsTitle: "Keyboard Shortcuts",
-      shortcutsDesc: "Speed up editing and navigation without taking your hands off the keyboard.",
-    },
+      shortcutsDesc: "Speed up editing and navigation without taking your hands off the keyboard."
+    }
   },
-
   teamsPage: {
     title: "Organization Teams",
     desc: "Manage teams, assign leaders, and configure access permissions.",
@@ -1708,9 +1563,8 @@ export const en: typeof pt = {
     memberEmailPlaceholder: "e.g. mary@example.com",
     teamRoleLabel: "Role in Team",
     addMemberBtn: "Add",
-    memberAdded: "Member added to team!",
+    memberAdded: "Member added to team!"
   },
-
   serviceDetailPage: {
     backToServices: "Back to Services",
     serviceDetails: "Service Details",
@@ -1793,9 +1647,8 @@ export const en: typeof pt = {
     songDeletedHint: "This song was deleted from the library.",
     restoreSong: "Restore song",
     removeFromPlan: "Remove from plan",
-    readingKeys: "Arrow keys to move",
+    readingKeys: "Arrow keys to move"
   },
-
   serviceModals: {
     announcement: {
       modalTitle: "Church Announcements",
@@ -1804,10 +1657,9 @@ export const en: typeof pt = {
       titleLabel: "Title",
       titlePlaceholder: "e.g. Weekly Announcements",
       listLabel: "Announcements List",
-      listPlaceholder:
-        "e.g.:\n• Choir rehearsal: Saturday at 3pm\n• Youth retreat: Sept 15-17\n• Special service: next Sunday",
+      listPlaceholder: "e.g.:\n• Choir rehearsal: Saturday at 3pm\n• Youth retreat: Sept 15-17\n• Special service: next Sunday",
       notesLabel: "Notes",
-      notesPlaceholder: "e.g. Responsible: Deacon Peter",
+      notesPlaceholder: "e.g. Responsible: Deacon Peter"
     },
     bible: {
       modalTitle: "Scripture Reading",
@@ -1826,13 +1678,12 @@ export const en: typeof pt = {
       acceptedBadge: "Accepted",
       notesLabel: "Notes",
       notesPlaceholder: "e.g. Read by Deacon Charles, congregation standing...",
-      invalidFormatError:
-        "Invalid book or format. Try: Book Chapter:Verse (e.g. Psalm 23:1-6, 1 John 3:16)",
+      invalidFormatError: "Invalid book or format. Try: Book Chapter:Verse (e.g. Psalm 23:1-6, 1 John 3:16)",
       notFoundError: "Passage not found.",
       chapterNotFoundError: "Chapter not found in this translation.",
       noVersesError: "No verses found in the specified range.",
       timeoutError: "Search timed out. Please try again.",
-      genericError: "Error fetching passage. Please check your internet connection.",
+      genericError: "Error fetching passage. Please check your internet connection."
     },
     custom: {
       modalTitle: "Custom Element",
@@ -1843,7 +1694,7 @@ export const en: typeof pt = {
       contentLabel: "Details / Content",
       contentPlaceholder: "Describe the content of this moment...",
       notesLabel: "Notes",
-      notesPlaceholder: "Additional notes...",
+      notesPlaceholder: "Additional notes..."
     },
     message: {
       modalTitle: "Message / Sermon",
@@ -1854,7 +1705,7 @@ export const en: typeof pt = {
       summaryLabel: "Summary / Main Points",
       summaryPlaceholder: "e.g. Introduction on faith, 3 points on trusting God...",
       notesLabel: "Notes",
-      notesPlaceholder: "e.g. Preacher: Pastor John. Duration: ~30min.",
+      notesPlaceholder: "e.g. Preacher: Pastor John. Duration: ~30min."
     },
     welcome: {
       modalTitle: "Welcome & Prayer",
@@ -1866,14 +1717,13 @@ export const en: typeof pt = {
       contentLabel: "Details / Content",
       contentPlaceholder: "e.g. Greeting by the pastor, opening prayer...",
       notesLabel: "Notes",
-      notesPlaceholder: "e.g. Pastor John greets the congregation...",
+      notesPlaceholder: "e.g. Pastor John greets the congregation..."
     },
     duration: {
       label: "Duration (MM:SS)",
-      placeholder: "05:00",
-    },
+      placeholder: "05:00"
+    }
   },
-
   onboarding: {
     welcomeTitle: "Welcome to Hosanna Studio!",
     welcomeSubtitle: "Let's set up your worship and praise workspace.",
@@ -1902,25 +1752,24 @@ export const en: typeof pt = {
         sync: "Automatic sync across devices",
         unlimited: "Unlimited songs and services",
         print: "Export and print chord sheets",
-        backups: "Automatic backups",
+        backups: "Automatic backups"
       },
       startBtn: "Start 14-day free trial",
       note: "A card is required to start. You won't be charged during the 14-day trial.",
-      skipBtn: "Not now, continue without subscribing",
-    },
+      skipBtn: "Not now, continue without subscribing"
+    }
   },
-
   auth: {
     captcha: {
       pending: "Waiting for security verification. Please try again in a moment.",
-      failed: "Security verification failed. Please reload the page and try again.",
+      failed: "Security verification failed. Please reload the page and try again."
     },
     error: {
       title: "Sign-in interrupted",
       subtitle: "We could not complete authentication",
       generic: "Something went wrong during sign-in. Please try again.",
       hint: "If you closed the provider window or denied access, you can safely try again.",
-      backToLogin: "Back to sign in",
+      backToLogin: "Back to sign in"
     },
     login: {
       title: "Sign In",
@@ -1939,7 +1788,7 @@ export const en: typeof pt = {
       errorGeneric: "An error occurred while signing in.",
       orContinueWith: "Or continue with",
       continueWith: "Continue with",
-      continueWithGoogle: "Continue with Google",
+      continueWithGoogle: "Continue with Google"
     },
     register: {
       title: "Create Account",
@@ -1957,7 +1806,7 @@ export const en: typeof pt = {
       loginLink: "Sign in",
       successTitle: "Account created successfully!",
       successDesc: "We have sent a confirmation email to your address.",
-      passwordMismatch: "Passwords do not match.",
+      passwordMismatch: "Passwords do not match."
     },
     forgotPassword: {
       title: "Recover Password",
@@ -1967,7 +1816,7 @@ export const en: typeof pt = {
       sendingBtn: "Sending...",
       backToLogin: "Back to login",
       emailSentTitle: "Link sent!",
-      emailSentDesc: "If an account exists with this email, you will receive instructions shortly.",
+      emailSentDesc: "If an account exists with this email, you will receive instructions shortly."
     },
     resetPassword: {
       title: "Set New Password",
@@ -1978,7 +1827,7 @@ export const en: typeof pt = {
       resettingBtn: "Updating...",
       successTitle: "Password updated!",
       successDesc: "Your password has been changed successfully.",
-      goToLoginBtn: "Go to Login",
+      goToLoginBtn: "Go to Login"
     },
     verifyEmail: {
       title: "Email Verification",
@@ -1988,13 +1837,13 @@ export const en: typeof pt = {
       continueBtn: "Continue to Application",
       errorTitle: "Verification Error",
       errorDesc: "The verification link is invalid or has expired.",
-      resendBtn: "Resend verification email",
+      resendBtn: "Resend verification email"
     },
     tenant: {
       title: "Select Organization",
       subtitle: "Choose the organization you want to work in",
       createOrgBtn: "Create New Organization",
-      beta: "Wait for the Beta Release on September 1st to create your organization and log in.",
+      beta: "Wait for the Beta Release on September 1st to create your organization and log in."
     },
     acceptInvitation: {
       title: "Organization Invitation",
@@ -2007,7 +1856,7 @@ export const en: typeof pt = {
       successDesc: "You now have access to the organization.",
       goToDashboardBtn: "Go to Dashboard",
       invalidTitle: "Invalid Invitation",
-      invalidDesc: "This invitation is no longer valid or has expired.",
+      invalidDesc: "This invitation is no longer valid or has expired."
     },
     twoFactor: {
       title: "Two-Factor Verification",
@@ -2018,29 +1867,27 @@ export const en: typeof pt = {
       useBackupCode: "Use recovery code",
       useTotpCode: "Use authenticator app",
       backupCodeLabel: "Recovery Code",
-      backupCodePlaceholder: "XXXX-XXXX",
-    },
+      backupCodePlaceholder: "XXXX-XXXX"
+    }
   },
-
   routes: {
     errorBoundary: {
       title: "An unexpected error occurred",
       desc: "We apologize for the inconvenience. A problem occurred while loading this section.",
       reloadBtn: "Reload Application",
-      goHomeBtn: "Back to Home",
+      goHomeBtn: "Back to Home"
     },
     notFound: {
       title: "Page Not Found",
       desc: "The page you are looking for does not exist or has been moved.",
-      goHomeBtn: "Back to Home",
+      goHomeBtn: "Back to Home"
     },
     unauthorized: {
       title: "Unauthorized Access",
       desc: "You do not have sufficient permissions to access this page.",
-      goHomeBtn: "Back to Home",
-    },
+      goHomeBtn: "Back to Home"
+    }
   },
-
   hooks: {
     songs: {
       created: "Song created successfully!",
@@ -2049,7 +1896,7 @@ export const en: typeof pt = {
       deleted: "Song deleted successfully!",
       updated: "Song updated successfully!",
       deleteError: "Error deleting song: {error}",
-      saveError: "Error saving song: {error}",
+      saveError: "Error saving song: {error}"
     },
     services: {
       created: "Service plan created successfully!",
@@ -2058,7 +1905,7 @@ export const en: typeof pt = {
       archived: "Service plan archived successfully!",
       activated: "Service plan activated successfully!",
       deleteError: "Error deleting service: {error}",
-      saveError: "Error saving service: {error}",
+      saveError: "Error saving service: {error}"
     },
     agenda: {
       created: "Event created successfully!",
@@ -2066,22 +1913,27 @@ export const en: typeof pt = {
       deleted: "Event moved to trash!",
       restored: "Event restored successfully!",
       deleteError: "Error deleting event: {error}",
-      saveError: "Error saving event: {error}",
+      saveError: "Error saving event: {error}"
     },
     search: {
       searching: "Searching...",
-      noResults: "No results found.",
-    },
+      noResults: "No results found."
+    }
   },
-
   print: {
     documentDefaultTitle: "Hosana Document",
     modal: {
       print: "Print / PDF",
       printShortcut: "Print or save as PDF (Ctrl+P)",
       options: "Print options",
-      itemCount: { one: "{count} item", other: "{count} items" },
-      pageEstimate: { one: "≈ {count} page", other: "≈ {count} pages" },
+      itemCount: {
+        one: "{count} item",
+        other: "{count} items"
+      },
+      pageEstimate: {
+        one: "≈ {count} page",
+        other: "≈ {count} pages"
+      },
       pageN: "Page {page}",
       zoomIn: "Zoom in",
       zoomOut: "Zoom out",
@@ -2092,14 +1944,14 @@ export const en: typeof pt = {
       saveDefault: "Save as default",
       savedDefault: "Organization print defaults updated.",
       saveDefaultError: "Couldn't save the print defaults.",
-      pdfHint: "To get a PDF, choose “Save as PDF” as the destination in the print dialog.",
+      pdfHint: "To get a PDF, choose “Save as PDF” as the destination in the print dialog."
     },
     options: {
       groups: {
         template: "Template",
         content: "Content",
         layout: "Layout",
-        page: "Page",
+        page: "Page"
       },
       chords: "Chords",
       chordsHint: "Turn off to print lyrics only.",
@@ -2125,8 +1977,7 @@ export const en: typeof pt = {
       twoColumns: "2 columns",
       pageBreak: "One song per page",
       pageBreakHint: "Turn off to run items together and save paper.",
-      pageBreakSongsHint:
-        "Turn off to fit as many songs as each page holds. Index/rundown stay on their own page.",
+      pageBreakSongsHint: "Turn off to fit as many songs as each page holds. Index/rundown stay on their own page.",
       paper: "Paper",
       letter: "Letter",
       margins: "Margins",
@@ -2138,61 +1989,55 @@ export const en: typeof pt = {
       accentColor: "Brand colour",
       accentColorHint: "Hosana sky on headers and chords. Turn off for black & white.",
       footer: "Footer note",
-      footerPlaceholder: "e.g. CCLI License #12345",
+      footerPlaceholder: "e.g. CCLI License #12345"
     },
     settingsCard: {
       title: "Templates & Printing",
       description: "Organization defaults for printing songs, folders, service plans and rosters.",
       testModel: "Preview",
-      editHint: "Click “Edit” to change the defaults.",
+      editHint: "Click “Edit” to change the defaults."
     },
     templates: {
       modern: {
         name: "Modern",
         tagline: "Clean and balanced",
-        description:
-          "Clean sans-serif type, quiet labels and the church colour on chords. Works for everything.",
+        description: "Clean sans-serif type, quiet labels and the church colour on chords. Works for everything."
       },
       classic: {
         name: "Classic",
         tagline: "Liturgical serif",
-        description:
-          "Centred masthead, double rules and traditional serif type. Solemn and timeless.",
+        description: "Centred masthead, double rules and traditional serif type. Solemn and timeless."
       },
       contemporary: {
         name: "Stage",
         tagline: "High contrast",
-        description: "Big titles, bold chords and key/tempo boxes you can read from a music stand.",
+        description: "Big titles, bold chords and key/tempo boxes you can read from a music stand."
       },
       compact: {
         name: "Compact",
         tagline: "Saves paper",
-        description: "One-line header, minimal spacing and two columns to fit the most on a sheet.",
+        description: "One-line header, minimal spacing and two columns to fit the most on a sheet."
       },
       elegant: {
         name: "Elegant",
         tagline: "Editorial",
-        description:
-          "Serif display titles, small caps in the church colour and an italic chorus. Great for programmes and events.",
+        description: "Serif display titles, small caps in the church colour and an italic chorus. Great for programmes and events."
       },
       bulletin: {
         name: "Bulletin",
         tagline: "Colour band",
-        description:
-          "A banded header in the church colour and shaded tables. Great for service plans and rosters.",
+        description: "A banded header in the church colour and shaded tables. Great for service plans and rosters."
       },
       leadsheet: {
         name: "Lead sheet",
         tagline: "For musicians",
-        description:
-          "Section names in a side gutter, monospaced chords and a key/tempo grid. Made for the band.",
+        description: "Section names in a side gutter, monospaced chords and a key/tempo grid. Made for the band."
       },
       hymnal: {
         name: "Hymnal",
         tagline: "Numbered stanzas",
-        description:
-          "Like a hymn book: centred title, automatically numbered stanzas and an indented italic chorus.",
-      },
+        description: "Like a hymn book: centred title, automatically numbered stanzas and an indented italic chorus."
+      }
     },
     song: {
       number: "No. {number}",
@@ -2205,16 +2050,19 @@ export const en: typeof pt = {
       instrumental: "Instrumental",
       tab: "Tab",
       repeat: "(repeat)",
-      empty: "This song has no lyrics yet.",
+      empty: "This song has no lyrics yet."
     },
     songbook: {
-      songCount: { one: "{count} song", other: "{count} songs" },
+      songCount: {
+        one: "{count} song",
+        other: "{count} songs"
+      },
       index: "Index",
       titleCol: "Title",
       artistCol: "Artist / Author",
       emptyFolder: "This folder has no songs.",
       emptyCollection: "This collection has no songs.",
-      emptySelection: "No songs selected.",
+      emptySelection: "No songs selected."
     },
     service: {
       badge: "Order of Service",
@@ -2233,8 +2081,8 @@ export const en: typeof pt = {
         song: "Worship",
         message: "Message",
         announcement: "Announcements",
-        moment: "Moment",
-      },
+        moment: "Moment"
+      }
     },
     event: {
       badge: "Agenda",
@@ -2248,10 +2096,13 @@ export const en: typeof pt = {
       roleCol: "Role",
       membersCol: "Assigned",
       noAssignee: "Unassigned",
-      notes: "Notes",
+      notes: "Notes"
     },
     batch: {
-      itemCount: { one: "{count} item", other: "{count} items" },
+      itemCount: {
+        one: "{count} item",
+        other: "{count} items"
+      },
       badge: "Batch",
       content: "Contents",
       types: {
@@ -2259,8 +2110,8 @@ export const en: typeof pt = {
         folder: "Folder",
         collection: "Collection",
         service: "Service",
-        event: "Event",
-      },
+        event: "Event"
+      }
     },
     buttons: {
       print: "Print",
@@ -2272,17 +2123,16 @@ export const en: typeof pt = {
       printDay: "Print Day ({count})",
       printDayTitle: "Print Day Agenda",
       printCount: "Print ({count})",
-      printServiceShort: "Print Service",
-    },
+      printServiceShort: "Print Service"
+    }
   },
-
   analytics: {
     title: "Analytics",
     desc: "Usage, setlist, and library health.",
     tabs: {
       usage: "Usage",
       setlist: "Setlist",
-      libraryHealth: "Library Health",
+      libraryHealth: "Library Health"
     },
     usage: {
       title: "Usage",
@@ -2293,7 +2143,7 @@ export const en: typeof pt = {
       planStatus: {
         active: "Active",
         trialing: "Trial",
-        none: "No active subscription",
+        none: "No active subscription"
       },
       resources: {
         songs: "Songs",
@@ -2302,13 +2152,13 @@ export const en: typeof pt = {
         events: "Events",
         collections: "Collections",
         folders: "Folders",
-        storage: "Local storage",
+        storage: "Local storage"
       },
       sections: {
         library: "Library",
         workspace: "Workspace",
         services: "Services",
-        agenda: "Agenda & trash",
+        agenda: "Agenda & trash"
       },
       details: {
         songs: "Songs in library",
@@ -2326,8 +2176,8 @@ export const en: typeof pt = {
         eventsTotal: "Total events",
         eventsUpcoming: "Upcoming",
         eventsPast: "Past",
-        trash: "Items in trash",
-      },
+        trash: "Items in trash"
+      }
     },
     setlist: {
       title: "Setlist",
@@ -2353,7 +2203,7 @@ export const en: typeof pt = {
       sort: {
         frequency: "Frequency",
         lastPlayed: "Last played",
-        title: "Title",
+        title: "Title"
       },
       sections: {
         mostPlayed: "Most played",
@@ -2365,8 +2215,8 @@ export const en: typeof pt = {
         never: "Never played",
         neverDesc: "Songs not yet used in a service.",
         rarely: "Least played",
-        rarelyDesc: "Songs with the fewest plays.",
-      },
+        rarelyDesc: "Songs with the fewest plays."
+      }
     },
     libraryHealth: {
       title: "Library Health",
@@ -2396,36 +2246,14 @@ export const en: typeof pt = {
         tempo: "Missing tempo",
         songNumber: "Missing song number",
         youtube: "Missing YouTube link",
-        duration: "Missing duration",
-      },
-    },
+        duration: "Missing duration"
+      }
+    }
   },
-
-  loginHistory: {
-    title: "Login history",
-    personalDesc: "Recent sign-ins on your account, with device and location when available.",
-    orgDesc: "Sign-in activity for every member of this organization.",
-    loading: "Loading history...",
-    loadError: "Couldn't load login history.",
-    empty: "No login events yet.",
-    loadMore: "Load more",
-    unknownLocation: "Unknown location",
-    meta: "IP: {ip} · {location}",
-    events: {
-      signedIn: "Signed in",
-      signedOut: "Signed out",
-      sessionCreated: "Session created",
-      sessionRevoked: "Session revoked",
-      sessionsRevokedAll: "All sessions revoked",
-      other: "Auth event",
-    },
-  },
-
   organization: {
     offlineTitle: "You're offline",
     offlineDesc: "Organization settings need an internet connection.",
-    studioDesc:
-      "Printing defaults, moment durations, and agenda responsibilities for this workspace.",
+    studioDesc: "Printing defaults, moment durations, and agenda responsibilities for this workspace.",
     tabs: {
       workspace: "Workspace",
       members: "Members",
@@ -2433,124 +2261,19 @@ export const en: typeof pt = {
       billing: "Billing",
       general: "Server",
       ai: "Logos AI",
-      loginActivity: "Login activity",
-    },
-    loginActivity: {
-      title: "Login activity",
-      desc: "Organization-wide sign-in history (owners and admins only).",
-      listTitle: "Organization sign-ins",
-      listDesc: "Recent authentication events from members of this workspace.",
-      noAccessTitle: "No access",
-      noAccessDesc: "Only owners and admins can view organization login activity.",
-    },
+      loginActivity: "Login activity"
+    }
   },
-
   oauth: {
     consent: {
       title: "Authorize MCP access",
       desc: "{client} wants to access your Hosanna library via MCP.",
-      scopes: "Requested scopes",
-      allow: "Allow",
-      deny: "Deny",
-      genericError: "Could not complete authorization.",
-    },
+      genericError: "Could not complete authorization."
+    }
   },
-
   ai: {
-    settings: {
-      title: "Logos AI",
-      desc: "API key for the organization assistant.",
-      loading: "Loading…",
-      loadError: "Could not load AI settings.",
-      saveError: "Could not save AI settings.",
-      saved: "AI settings saved.",
-      keyCleared: "API key removed.",
-      noAccessTitle: "No access",
-      noAccessDesc: "Only owners and admins can manage AI settings.",
-      statusOn: "Enabled",
-      statusPaused: "Configured · disabled",
-      statusSetup: "Not configured",
-      connectionTitle: "Connection",
-      connectionDesc: "Provider, model, and API key.",
-      encryptionMissing:
-        "Server is missing AI_SETTINGS_ENCRYPTION_KEY. Configure it before saving keys.",
-      provider: "Provider",
-      providerHint: "Pick who serves the models.",
-      defaultEndpoint: "Default API",
-      customEndpoint: "Custom URL",
-      nativeWebOn: "Supports web search and page fetch.",
-      nativeWebOff: "Web search uses DuckDuckGo for this provider.",
-      baseUrl: "API base URL",
-      baseUrlPlaceholder: "Leave blank for the default",
-      baseUrlRequiredPlaceholder: "https://api.example.com/v1",
-      baseUrlHint: "OpenAI-compatible Chat Completions endpoint.",
-      model: "Model",
-      customModel: "Custom model",
-      usePresets: "Use presets",
-      modelPlaceholder: "e.g. gpt-4o-mini",
-      apiKey: "API key",
-      apiKeyPlaceholder: "Paste your API key",
-      apiKeyConfiguredPlaceholder: "Focus to replace the current key",
-      apiKeyReplaceHint: "Key is saved. Click the field to replace it.",
-      keyStatusConfigured: "Saved",
-      keyStatusMissing: "Not set.",
-      keyNeverReturned: "The key is never returned to the browser.",
-      enabled: "Enable assistant",
-      enabledDesc: "Members with AI access can open the chat.",
-      advanced: "Advanced",
-      advancedDesc: "Tool-call limit, temperature, and max reply length.",
-      behaviorTitle: "Behavior",
-      behaviorDesc: "Instructions and memory for every reply.",
-      maxToolCalls: "Max tool calls per reply",
-      maxToolCallsHint: "Between {min} and {max}.",
-      temperature: "Temperature",
-      temperatureHint: "Lower is more predictable; higher is more varied.",
-      temperatureDefault: "Default",
-      maxOutputTokens: "Max reply length (tokens)",
-      maxOutputTokensHint: "Leave empty for the model default.",
-      instructions: "Organization instructions",
-      instructionsHint: "Included in every conversation.",
-      instructionsPlaceholder: "e.g. Prefer keys from G to D. Write titles in Title Case.",
-      memoryTitle: "Memory",
-      memoryDesc: "Notes remembered across chats.",
-      memoryOrgTitle: "Organization memory",
-      memoryOrgDesc: "Shared notes for everyone in this organization.",
-      memoryOrgPlaceholder: "e.g. Worship team prefers G major.",
-      memoryPersonalTitle: "Individual memory",
-      memoryPersonalDesc: "Account-scoped notes for you only — not shared with the org.",
-      memoryPersonalPlaceholder: "e.g. I prefer shorter setlists.",
-      memoryEnabled: "Enable memory",
-      memoryEnabledDesc: "Include notes in context and allow updates.",
-      memoryEmpty: "No notes yet.",
-      memoryPlaceholder: "e.g. Worship team prefers G major.",
-      memoryAdd: "Add",
-      memoryDelete: "Delete",
-      memoryClear: "Clear all",
-      memorySourceAi: "Saved by Logos",
-      memorySourceAdmin: "Added by an admin",
-      memorySourceUser: "Added by you",
-      memoryCount: "{count}/{max} notes",
-      memoryError: "Could not update memory.",
-      clearKey: "Remove key",
-      billing: {
-        title: "DeepSeek balance",
-        desc: "Live balance from your DeepSeek API key.",
-        loading: "Fetching balance…",
-        loadError: "Could not load DeepSeek balance.",
-        refresh: "Refresh balance",
-        total: "Total available",
-        granted: "Granted",
-        toppedUp: "Topped up",
-        available: "Sufficient for API calls",
-        unavailable: "Balance may be insufficient",
-        refreshedAt: "Updated {time}",
-        notConfigured: "Save an API key to see your balance.",
-        cryptoMissing: "Server encryption is not configured, so balance cannot be fetched.",
-        unsupported: "Balance is only available for DeepSeek.",
-      },
-    },
     chat: {
-      contextGeneral: "Hosanna Studio",
-    },
-  },
+      contextGeneral: "Hosanna Studio"
+    }
+  }
 };

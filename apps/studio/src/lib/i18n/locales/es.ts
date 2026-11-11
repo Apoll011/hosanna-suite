@@ -45,9 +45,8 @@ export const es: typeof pt = {
     date: "Fecha",
     copySuffix: " (Copia)",
     you: "Tú",
-    items: "{count} Elementos",
+    items: "{count} Elementos"
   },
-
   table: {
     showing: "Mostrando",
     to: "a",
@@ -55,9 +54,8 @@ export const es: typeof pt = {
     display: "Mostrar:",
     all: "Todos ({count})",
     prevPage: "Página Anterior",
-    nextPage: "Página Siguiente",
+    nextPage: "Página Siguiente"
   },
-
   sidebar: {
     mainMenu: "Menú Principal",
     drive: "Drive de {name}",
@@ -71,9 +69,8 @@ export const es: typeof pt = {
     openOrganization: "Valores de impresión",
     openAnalytics: "Analíticas",
     switchWorkspace: "Cambiar de organización",
-    manageOrganization: "Gestionar organización",
+    manageOrganization: "Gestionar organización"
   },
-
   addressBar: {
     atRootLevel: "En el Nivel Raíz",
     upOneLevel: "Subir un nivel",
@@ -90,9 +87,8 @@ export const es: typeof pt = {
     importSongs: "Importar Canciones de otro Proveedor",
     newService: "Nuevo Plan de Culto",
     newFolder: "Nueva Carpeta",
-    newCollection: "Nueva Colección",
+    newCollection: "Nueva Colección"
   },
-
   toolbar: {
     filters: "Filtros",
     openFilters: "Abrir Filtros Avanzados",
@@ -116,9 +112,8 @@ export const es: typeof pt = {
     numberAsc: "Números (Menor-Mayor)",
     numberDesc: "Números (Mayor-Menor)",
     songNumberAsc: "Más canciones",
-    songNumberDesc: "Menos canciones",
+    songNumberDesc: "Menos canciones"
   },
-
   commandPalette: {
     sections: {
       navigation: "Navegación",
@@ -127,7 +122,7 @@ export const es: typeof pt = {
       visualization: "Visualización",
       currentSong: "Canción Actual",
       currentService: "Culto Actual",
-      ai: "Logos AI",
+      ai: "Logos AI"
     },
     navDrive: "Ir a Drive (Inicio)",
     navSongs: "Ir a Biblioteca de Canciones",
@@ -146,7 +141,7 @@ export const es: typeof pt = {
     focusAi: "Enfocar Logos AI",
     closeAi: "Cerrar Logos AI",
     newAiChat: "Nueva conversación con Logos",
-    askAi: 'Preguntar a Logos: "{query}"',
+    askAi: "Preguntar a Logos: \"{query}\"",
     askAiSubtitle: "Abrir el chat y enviar este mensaje",
     toggleTheme: "Alternar Tema Claro / Oscuro",
     toggleSidebarCollapse: "Contraer Barra Lateral",
@@ -155,12 +150,11 @@ export const es: typeof pt = {
     viewGrid: "Cambiar Vista a Cuadrícula",
     viewList: "Cambiar Vista a Lista",
     openFilters: "Abrir Panel de Filtros Avanzados",
-    printSong: 'Imprimir Canción: "{title}"',
-    moveSong: 'Mover Canción: "{title}"',
-    deleteSong: 'Eliminar Canción: "{title}"',
-    deleteService: 'Eliminar Culto: "{name}"',
+    printSong: "Imprimir Canción: \"{title}\"",
+    moveSong: "Mover Canción: \"{title}\"",
+    deleteSong: "Eliminar Canción: \"{title}\"",
+    deleteService: "Eliminar Culto: \"{name}\""
   },
-
   palette: {
     submenu: "Submenú",
     searchSubmenu: "Buscar en el submenú...",
@@ -168,12 +162,11 @@ export const es: typeof pt = {
     recents: "Recientes",
     defaultSection: "Acciones",
     noResults: "No se encontraron resultados",
-    noResultsDesc: 'No encontramos nada para "{query}".',
+    noResultsDesc: "No encontramos nada para \"{query}\".",
     navigate: "Navegar",
     select: "Seleccionar",
-    title: "Command Palette",
+    title: "Command Palette"
   },
-
   settings: {
     pageDesc: "Apariencia, impresión, duraciones, responsabilidades y funciones de Studio.",
     tabs: {
@@ -190,88 +183,35 @@ export const es: typeof pt = {
       services: "Cultos",
       printing: "Impresión",
       durations: "Duraciones",
-      responsibilities: "Responsabilidades",
+      responsibilities: "Responsabilidades"
     },
     services: {
-      pageDesc: "Hora habitual de inicio y comportamiento al editar cultos.",
+      pageDesc: "Hora habitual de inicio y comportamiento al editar cultos."
     },
     printing: {
-      pageDesc: "Disposición y opciones predeterminadas para imprimir canciones y cultos.",
+      pageDesc: "Disposición y opciones predeterminadas para imprimir canciones y cultos."
     },
     durations: {
-      pageDesc: "Duración predeterminada de canciones y sermones al armar un culto.",
+      pageDesc: "Duración predeterminada de canciones y sermones al armar un culto."
     },
     responsibilities: {
-      pageDesc: "Roles de la agenda que puedes asignar al planificar cultos.",
+      pageDesc: "Roles de la agenda que puedes asignar al planificar cultos."
     },
     notifications: {
-      title: "Notificaciones",
-      pageDesc: "Enviar un mensaje al equipo.",
-      loading: "Cargando…",
-      noAccessTitle: "Sin permiso",
-      noAccessDesc: "Necesitas acceso a notificaciones de un propietario de la organización.",
-      send: "Enviar",
-      sending: "Enviando…",
-      sentToast: "Notificación enviada.",
-      sentPushToast: "Notificación enviada ({count} dispositivos).",
-      genericError: "Error inesperado.",
-      errorToast: "No se pudo enviar la notificación: {error}",
-      summaryOrg: "Todos los miembros la recibirán en el buzón.",
-      summaryOrgRoles: "Enviado a {roles} en el buzón.",
-      summaryUser: "{name} recibirá esta notificación.",
       recipient: {
-        title: "Destinatarios",
-        desc: "Elige quién recibe esta notificación.",
-        user: "Miembro",
         userDesc: "Un miembro",
-        organization: "Organización",
         organizationDesc: "Todos los miembros",
-        searchPlaceholder: "Buscar por nombre o email…",
-        searching: "Cargando miembros…",
-        noResults: "No se encontraron miembros.",
-        clear: "Limpiar",
         lockedBadge: "Organización actual",
         lockedHint: "Usa tu organización actual.",
-        rolesFilter: "Filtrar por rol",
-        rolesFilterHint: "Déjalo vacío para incluir a todos.",
-        everyone: "Todos los roles",
-        inboxOnly: "Se envía al buzón de la aplicación.",
-        loadError: "No se pudieron cargar los miembros.",
+        rolesFilterHint: "Déjalo vacío para incluir a todos."
       },
       content: {
-        title: "Mensaje",
-        desc: "Título y cuerpo mostrados a los destinatarios.",
-        typeLabel: "Tipo",
         types: {
-          info: "Info",
-          organization: "Organización",
-          team: "Equipo",
-          security: "Seguridad",
-          billing: "Facturación",
-          custom: "Personalizado",
+          custom: "Personalizado"
         },
-        customTypePlaceholder: "ej.: anuncio",
-        titleLabel: "Título",
-        titlePlaceholder: "ej.: Ensayo movido a las 20:00",
-        descriptionLabel: "Descripción",
-        descriptionPlaceholder: "Detalles opcionales",
-        linkLabel: "Enlace",
-        linkPlaceholder: "/services",
-        linkHint: "Enlace opcional al tocar la notificación.",
-        preview: "Vista previa",
-        previewEmpty: "Vista previa del título",
-        now: "ahora",
-        appName: "Hosanna Studio",
+        customTypePlaceholder: "ej.: anuncio"
       },
       delivery: {
-        title: "Entrega",
-        desc: "Buzón, push, o ambos.",
-        inbox: "Buzón",
-        inboxDesc: "En la app",
-        push: "Push",
-        pushDesc: "En el dispositivo",
-        both: "Ambos",
-        bothDesc: "Buzón y push",
         pushTitle: "Contenido del push",
         pushHint: "Usa el mismo título y descripción de arriba.",
         dataLabel: "Datos extra",
@@ -279,8 +219,8 @@ export const es: typeof pt = {
         keyPlaceholder: "clave",
         valuePlaceholder: "valor",
         removeRow: "Quitar",
-        dataHint: "Pares clave/valor opcionales enviados con el push.",
-      },
+        dataHint: "Pares clave/valor opcionales enviados con el push."
+      }
     },
     billing: {
       title: "Facturación",
@@ -292,15 +232,12 @@ export const es: typeof pt = {
       noAccessDesc: "Solo el propietario de la organización puede ver la facturación.",
       status: {
         trialing: "Periodo de prueba",
-        active: "Activo",
+        active: "Activo"
       },
       planName: "Hosanna Cloud",
-      planDesc:
-        "Sincronización en la nube, copias de seguridad automáticas y soporte prioritario para su organización.",
+      planDesc: "Sincronización en la nube, copias de seguridad automáticas y soporte prioritario para su organización.",
       monthly: "Mensual",
       annual: "Anual",
-      // Shown next to the price when the annual option is selected. Based on
-      // the display prices in PLAN_PRICING (12×€12 − €120 = 2 months free).
       annualSavings: "Ahorra 2 meses frente al plan mensual",
       plan: {
         features: {
@@ -308,8 +245,8 @@ export const es: typeof pt = {
           unlimited: "Canciones y cultos ilimitados",
           print: "Exportación e impresión de acordes",
           backups: "Copias de seguridad automáticas",
-          support: "Soporte prioritario",
-        },
+          support: "Soporte prioritario"
+        }
       },
       trialUntil: "Hasta {date}",
       trialDaysLeft: "Quedan {days} días de su periodo de prueba",
@@ -324,17 +261,14 @@ export const es: typeof pt = {
       manage: "Gestionar facturación",
       manageDesc: "Actualice el método de pago, vea facturas o cancele la suscripción.",
       startTrial: "Iniciar periodo de prueba de 14 días",
-      trialNote:
-        "Se requiere una tarjeta para comenzar. No se le cobrará nada durante los 14 días de prueba.",
-      // Used when the org already used its free trial (re-subscribing after
-      // cancel): Stripe does not grant a second trial, so don't promise one.
+      trialNote: "Se requiere una tarjeta para comenzar. No se le cobrará nada durante los 14 días de prueba.",
       subscribe: "Suscribirse ahora",
       subscribeNote: "La suscripción comienza de inmediato. Puede cancelarla cuando quiera.",
       promoHint: "¿Tiene un código promocional? Puede aplicarlo al pagar.",
       askOwner: "Pida al propietario de la organización que active la suscripción.",
       checkoutError: "No se pudo iniciar el proceso de pago.",
       portalError: "No se pudo abrir el portal de facturación.",
-      subscribedToast: "¡Suscripción activada!",
+      subscribedToast: "¡Suscripción activada!"
     },
     features: {
       earlyAccess: {
@@ -346,7 +280,7 @@ export const es: typeof pt = {
         docs: "Saber más",
         comingSoon: "Próximamente",
         interested: "Interesado",
-        loadError: "No se pudieron cargar las funciones.",
+        loadError: "No se pudieron cargar las funciones."
       },
       support: {
         title: "Soporte y comentarios",
@@ -363,8 +297,7 @@ export const es: typeof pt = {
         chatEmpty: "Aún sin mensajes. Envía uno abajo.",
         placeholder: "Escribe un mensaje… (Enter para enviar)",
         restore: "Restaurar conversaciones",
-        restoreDesc:
-          "Introduce tu correo para recibir un enlace que restaura tus conversaciones anteriores en este navegador.",
+        restoreDesc: "Introduce tu correo para recibir un enlace que restaura tus conversaciones anteriores en este navegador.",
         restoreSent: "Enlace de recuperación enviado — ¡revisa tu correo!",
         emailPlaceholder: "tu@correo.com",
         sendLink: "Enviar enlace",
@@ -377,18 +310,15 @@ export const es: typeof pt = {
         loadMore: "Cargar más",
         ai: "Asistente de IA",
         team: "Soporte",
-        readOnlyTicket:
-          "Esta no es tu conversación más reciente, así que no se pueden enviar respuestas desde aquí.",
-        startNewInstead: "Inicia un nuevo mensaje en su lugar",
-      },
+        readOnlyTicket: "Esta no es tu conversación más reciente, así que no se pueden enviar respuestas desde aquí.",
+        startNewInstead: "Inicia un nuevo mensaje en su lugar"
+      }
     },
     offlineTitle: "Modo Sin Conexión",
-    offlineDesc:
-      "La configuración de cuenta, organización y miembros requiere conexión a internet y está desactivada.",
+    offlineDesc: "La configuración de cuenta, organización y miembros requiere conexión a internet y está desactivada.",
     appearance: {
       themeTitle: "Tema y Apariencia de la Aplicación",
-      themeDesc:
-        "Personalice el esquema de colores y la luminosidad de la interfaz en su pantalla.",
+      themeDesc: "Personalice el esquema de colores y la luminosidad de la interfaz en su pantalla.",
       personalPreference: "Preferencia Personal",
       light: "Modo Claro",
       lightDesc: "Ambientes iluminados e impresión.",
@@ -400,28 +330,23 @@ export const es: typeof pt = {
       darkDesc: "Cómodo para la noche y el púlpito.",
       darkBadge: "Nocturno",
       languageTitle: "Idioma",
-      languageDesc:
-        "Elija el idioma de la interfaz. Por defecto sigue la organización o el navegador.",
+      languageDesc: "Elija el idioma de la interfaz. Por defecto sigue la organización o el navegador.",
       languageAuto: "Automático",
       languageAutoDesc: "Seguir la organización o el navegador",
       navigationTitle: "Navegación y Estructura",
       navigationDesc: "Ajuste cómo se disponen los repertorios y carpetas en su área de trabajo.",
       showFolderTree: "Mostrar Árbol Jerárquico de Carpetas",
-      showFolderTreeDesc:
-        "Muestra la estructura completa de carpetas y subcarpetas en la barra lateral izquierda.",
+      showFolderTreeDesc: "Muestra la estructura completa de carpetas y subcarpetas en la barra lateral izquierda.",
       studioTitle: "Preferencias del Studio Musical",
-      studioDesc:
-        "Opciones predeterminadas de visualización de acordes y letras para este navegador.",
+      studioDesc: "Opciones predeterminadas de visualización de acordes y letras para este navegador.",
       onDevice: "En este Dispositivo",
       showChords: "Mostrar Acordes por Defecto",
-      showChordsDesc:
-        "Activa automáticamente la línea de acordes (ChordPro) al abrir el visor de canciones, ensayo y modo de proyección para músicos.",
+      showChordsDesc: "Activa automáticamente la línea de acordes (ChordPro) al abrir el visor de canciones, ensayo y modo de proyección para músicos.",
       songScoreTitle: "Puntuación de Canciones",
       songScoreDesc: "Muestra un indicador de calidad en cada tarjeta de canción del explorador.",
       songScoreBadge: "Explorador",
       showSongScore: "Mostrar puntuación de la canción",
-      showSongScoreDesc:
-        "Muestra una puntuación de completitud en cada tarjeta de canción del explorador.",
+      showSongScoreDesc: "Muestra una puntuación de completitud en cada tarjeta de canción del explorador.",
       songScoreStyle: "Estilo de visualización",
       scoreLayout: {
         ring: "Anillo",
@@ -431,8 +356,8 @@ export const es: typeof pt = {
         dots: "Puntos",
         dotsDesc: "Fila de cinco indicadores",
         badge: "Insignia",
-        badgeDesc: "Píldora de color con la puntuación",
-      },
+        badgeDesc: "Píldora de color con la puntuación"
+      }
     },
     toast: {
       themeChanged: "Tema cambiado a {theme}.",
@@ -442,7 +367,7 @@ export const es: typeof pt = {
       chordsHidden: "Solo letra visible por defecto.",
       languageChanged: "Idioma cambiado a {language}.",
       orgSaved: "¡Configuración de la organización guardada con éxito!",
-      orgSaveError: "Error al guardar la configuración: {error}",
+      orgSaveError: "Error al guardar la configuración: {error}"
     },
     general: {
       title: "Preferencias Regionales y Calendario",
@@ -456,21 +381,17 @@ export const es: typeof pt = {
       sunday: "Domingo",
       sundayDesc: "Tradicional",
       durationsTitle: "Duraciones Predeterminadas de Momentos (MM:SS)",
-      durationsDesc:
-        "Introduzca los tiempos promedio en minutos y segundos para estimar la duración de los cultos.",
+      durationsDesc: "Introduzca los tiempos promedio en minutos y segundos para estimar la duración de los cultos.",
       songLabel: "Canción / Música",
       sermonLabel: "Predicación / Sermón",
       usualStartTime: "Hora habitual de inicio del culto",
-      usualStartTimeDesc:
-        "Hora propuesta para eventos de tipo Culto Dominical y usada al imprimir cuando no hay evento de agenda vinculado.",
+      usualStartTimeDesc: "Hora propuesta para eventos de tipo Culto Dominical y usada al imprimir cuando no hay evento de agenda vinculado.",
       suggestions: "Sugerencias:",
       behaviorTitle: "Comportamiento del Orden del Culto",
       showDuration: "Mostrar Duración Total Estimada",
-      showDurationDesc:
-        "Suma los minutos de canciones y momentos de palabra para calcular el tiempo total del culto.",
+      showDurationDesc: "Suma los minutos de canciones y momentos de palabra para calcular el tiempo total del culto.",
       showNotes: "Activar Notas e Indicaciones Técnicas",
-      showNotesDesc:
-        "Permite a los líderes y al equipo añadir notas de dinámica, tono y observaciones en cada elemento.",
+      showNotesDesc: "Permite a los líderes y al equipo añadir notas de dinámica, tono y observaciones en cada elemento.",
       autoSave: "Guardar Borradores Automáticamente (Autoguardado)",
       autoSaveDesc: "Guarda cambios continuos mientras prepara y reorganiza el orden musical.",
       reset: "Restablecer Valores",
@@ -485,7 +406,7 @@ export const es: typeof pt = {
         ptPT: "Português (Portugal)",
         ptBR: "Português (Brasil)",
         enUS: "English (US)",
-        esES: "Español",
+        esES: "Español"
       },
       timezones: {
         portugalGroup: "Portugal e Islas",
@@ -497,14 +418,14 @@ export const es: typeof pt = {
         otherRegionsGroup: "Otras Regiones",
         london: "Londres (GMT+0)",
         newYork: "Nueva York (EST / GMT-5)",
-        utc: "UTC (Tiempo Universal Coordinado)",
+        utc: "UTC (Tiempo Universal Coordinado)"
       },
       responsibilities: {
         title: "Responsabilidades de la Agenda",
         desc: "Gestione la lista de responsabilidades que puede asignar a los cultos en la página Agenda.",
         count: {
           one: "{count} responsabilidad",
-          other: "{count} responsabilidades",
+          other: "{count} responsabilidades"
         },
         empty: "Aún no se ha creado ninguna responsabilidad.",
         hint: "Los cambios se aplican al guardar los ajustes.",
@@ -514,30 +435,20 @@ export const es: typeof pt = {
         iconLabel: "Icono",
         colorLabel: "Color",
         add: "Añadir",
-        remove: "Eliminar responsabilidad",
-      },
+        remove: "Eliminar responsabilidad"
+      }
     },
     restore: {
       confirmTitle: "Confirmar Restauración de Base de Datos",
       attention: "Atención al Restaurar:",
-      attentionDesc:
-        "Esta acción reemplazará la totalidad de los datos existentes por los datos contenidos en el archivo de copia de seguridad seleccionado.",
+      attentionDesc: "Esta acción reemplazará la totalidad de los datos existentes por los datos contenidos en el archivo de copia de seguridad seleccionado.",
       summary: "Resumen del Contenido a Restaurar:",
       songs: "Canciones",
       folders: "Carpetas",
       services: "Cultos",
       restoreNow: "Restaurar Base de Datos Ahora",
       success: "¡Base de datos restaurada con éxito! Recargando...",
-      error: "Error al restaurar la base de datos.",
-    },
-    roles: {
-      owner: "Propietario",
-      admin: "Administrador",
-      teamLeader: "Líder de Equipo",
-      editor: "Editor",
-      musician: "Músico",
-      guest: "Invitado",
-      member: "Miembro",
+      error: "Error al restaurar la base de datos."
     },
     account: {
       user: "Usuario",
@@ -556,11 +467,10 @@ export const es: typeof pt = {
         discordDesc: "Utilice su cuenta de Discord para iniciar sesión.",
         providerDesc: "Utilice su cuenta de {name} para iniciar sesión.",
         unlinkConfirmTitle: "Desconectar Cuenta Social",
-        unlinkConfirmMessage:
-          "¿Está seguro de que desea desconectar su cuenta de {provider}? No podrá iniciar sesión con ella a menos que vuelva a vincularla.",
+        unlinkConfirmMessage: "¿Está seguro de que desea desconectar su cuenta de {provider}? No podrá iniciar sesión con ella a menos que vuelva a vincularla.",
         unlinkSuccess: "Cuenta desconectada con éxito.",
         unlinkError: "Error al desconectar la cuenta: {error}",
-        linkError: "Error al conectar la cuenta: {error}",
+        linkError: "Error al conectar la cuenta: {error}"
       },
       activeSessions: {
         title: "Sesiones Activas",
@@ -574,7 +484,7 @@ export const es: typeof pt = {
         terminate: "Cerrar",
         currentSessionOnly: "Solo la sesión actual está activa.",
         revokeSuccess: "Sesión revocada con éxito.",
-        revokeError: "Error al revocar la sesión.",
+        revokeError: "Error al revocar la sesión."
       },
       profile: {
         invalidImage: "Por favor, seleccione un archivo de imagen válido.",
@@ -612,8 +522,8 @@ export const es: typeof pt = {
         userId: "ID de Usuario",
         role: "Rol",
         accountStatus: "Estado de la Cuenta",
-        active: "Activo",
-      },
+        active: "Activo"
+      }
     },
     twoFactor: {
       title: "Autenticación en 2 Pasos (2FA)",
@@ -625,15 +535,13 @@ export const es: typeof pt = {
       passwordStepDesc: "Para activar la verificación en dos pasos, confirme su contraseña actual:",
       passwordLabel: "Contraseña",
       continue: "Continuar",
-      setupStep1:
-        "1. Escanee el código QR con su aplicación de autenticación (como Google Authenticator, Authy o Microsoft Authenticator).",
+      setupStep1: "1. Escanee el código QR con su aplicación de autenticación (como Google Authenticator, Authy o Microsoft Authenticator).",
       setupStep2: "2. Introduzca el código de 6 dígitos generado por la aplicación:",
       verificationCodeLabel: "Código de Verificación",
       verificationCodePlaceholder: "123456",
       verify: "Verificar",
       backupSuccessTitle: "¡Aplicación vinculada con éxito!",
-      backupWarning:
-        "Guarde estos códigos de recuperación en un lugar seguro (como un gestor de contraseñas). Son la única forma de acceder a su cuenta si pierde su teléfono.",
+      backupWarning: "Guarde estos códigos de recuperación en un lugar seguro (como un gestor de contraseñas). Son la única forma de acceder a su cuenta si pierde su teléfono.",
       backupSavedBtn: "He guardado los códigos de forma segura",
       disableStepDesc: "Para desactivar la verificación en dos pasos, confirme su contraseña:",
       passwordRequired: "Por favor, introduzca su contraseña.",
@@ -644,7 +552,7 @@ export const es: typeof pt = {
       verifyError: "Error al verificar el código: {error}",
       setupSuccess: "¡Autenticación en 2 Pasos configurada con éxito!",
       disableSuccess: "Autenticación en 2 Pasos desactivada.",
-      disableError: "Error al desactivar 2FA: {error}",
+      disableError: "Error al desactivar 2FA: {error}"
     },
     members: {
       activeMembers: "Miembros Activos ({count})",
@@ -683,10 +591,9 @@ export const es: typeof pt = {
       inviteSuccess: "¡Invitación enviada con éxito a {email}!",
       inviteError: "¡Error al invitar a {email}!",
       cancelModalTitle: "Cancelar Invitación",
-      cancelModalConfirm:
-        "¿Está seguro de que desea cancelar la invitación para {email}? La persona ya no podrá aceptar esta invitación.",
+      cancelModalConfirm: "¿Está seguro de que desea cancelar la invitación para {email}? La persona ya no podrá aceptar esta invitación.",
       cancelling: "Cancelando...",
-      confirmCancel: "Cancelar Invitación",
+      confirmCancel: "Cancelar Invitación"
     },
     memberProfile: {
       backToList: "Volver a la lista de miembros",
@@ -695,26 +602,22 @@ export const es: typeof pt = {
       removeMember: "Eliminar Miembro",
       rbacTitle: "Gestión de Permisos RBAC",
       changeRole: "Cambiar Rol",
-      promoteOwnerWarning:
-        "Está a punto de nombrar a {name} propietario de la organización. Esta acción es delicada y debe confirmarse con cuidado.",
+      promoteOwnerWarning: "Está a punto de nombrar a {name} propietario de la organización. Esta acción es delicada y debe confirmarse con cuidado.",
       saveRole: "Guardar Rol",
       currentRole: "Rol Actual:",
       removeConfirmTitle: "Eliminar Miembro",
-      removeConfirmText:
-        "¿Está seguro de que desea eliminar a {name} de la organización? Esta persona perderá el acceso de inmediato.",
+      removeConfirmText: "¿Está seguro de que desea eliminar a {name} de la organización? Esta persona perderá el acceso de inmediato.",
       leaveConfirmTitle: "Salir de la Organización",
-      leaveConfirmText:
-        "¿Está seguro de que desea salir de esta organización? Perderá el acceso de inmediato y deberá ser invitado de nuevo para volver a entrar.",
+      leaveConfirmText: "¿Está seguro de que desea salir de esta organización? Perderá el acceso de inmediato y deberá ser invitado de nuevo para volver a entrar.",
       leaving: "Saliendo...",
       leaveSuccess: "Ha salido de la organización con éxito.",
-      leaveError: "Fallo al salir de la organización: {error}",
+      leaveError: "Fallo al salir de la organización: {error}"
     },
     workspace: {
       title: "Perfil de la Organización",
       desc: "Gestione la identidad institucional, logotipo y colores de su ministerio.",
       switchOrgTitle: "Tus Organizaciones",
-      switchOrgDesc:
-        "Perteneces a más de una organización. Cambia para gestionar otro espacio de trabajo.",
+      switchOrgDesc: "Perteneces a más de una organización. Cambia para gestionar otro espacio de trabajo.",
       currentOrg: "Actual",
       switchOrg: "Cambiar",
       switchingOrg: "Cambiando…",
@@ -733,13 +636,11 @@ export const es: typeof pt = {
       defaultOrgName: "Mi Organización",
       noDescription: "Ninguna descripción configurada.",
       visualIdentityTitle: "Identidad Visual y Colores",
-      visualIdentityDesc:
-        "Personalice el color de acento y la visibilidad de marca en presentaciones y compartidos.",
+      visualIdentityDesc: "Personalice el color de acento y la visibilidad de marca en presentaciones y compartidos.",
       accentColorLabel: "Color de Acento",
       quickColors: "Colores Rápidos:",
       showBrandingLabel: "Mostrar Logotipo en Pantallas Públicas",
-      showBrandingDesc:
-        "Muestra el encabezado y la marca de la iglesia en proyecciones e informes compartidos.",
+      showBrandingDesc: "Muestra el encabezado y la marca de la iglesia en proyecciones e informes compartidos.",
       preview: "Vista previa:",
       activeButton: "Botón Activo",
       churchFallback: "Iglesia",
@@ -758,8 +659,7 @@ export const es: typeof pt = {
       backupTitle: "Copia de Seguridad y Datos",
       backupDesc: "Exporte o restaure todos los repertorios y cultos en un archivo HOSANNA seguro.",
       exportData: "Exportar Datos",
-      exportDesc:
-        "Descargue una copia de seguridad completa en HOSANNA con canciones, planes y carpetas.",
+      exportDesc: "Descargue una copia de seguridad completa en HOSANNA con canciones, planes y carpetas.",
       exportProcessing: "Procesando copia...",
       exportDownloadBtn: "Descargar Copia (.hosanna)",
       exportSuccess: "¡Copia de seguridad descargada con éxito!",
@@ -767,86 +667,78 @@ export const es: typeof pt = {
       restoreData: "Restaurar Datos",
       restoreWarning: "Puede actualizar o reemplazar datos existentes.",
       restoreUploadBtn: "Cargar Archivo HOSANNA",
-      invalidJson: "Archivo HOSANNA de copia de seguridad no válido.",
+      invalidJson: "Archivo HOSANNA de copia de seguridad no válido."
     },
     about: {
       title: "Acerca de Hosanna Studio",
       controlPanel: "Panel de Control",
       copyright: "© {year} Embrace & Tiago Inês. Código bajo licencia Apache 2.0.",
       studioVersion: "Versión de Studio",
-      openSourceBanner:
-        "¡Este proyecto es <strong>open-source</strong>! Creemos en el software libre para equipar y apoyar comunidades.",
+      openSourceBanner: "¡Este proyecto es <strong>open-source</strong>! Creemos en el software libre para equipar y apoyar comunidades.",
       viewRepo: "Ver Repositorio",
       supportedFormats: "Formatos de Importación Compatibles",
       thirdPartyLicenses: "Licencias de Bibliotecas de Terceros ({count})",
       productTourTitle: "Tour del producto",
       productTourDesc: "Repasa lo esencial de la interfaz adaptado a tu rol en la organización.",
       productTourRelaunch: "Iniciar tour",
-      interactiveTourRelaunch: "Tour interactivo",
-    },
+      interactiveTourRelaunch: "Tour interactivo"
+    }
   },
-
   tour: {
     product: {
       missedTitle: "Tour del producto disponible",
       missedDesc: "Hay un tour guiado de las funciones esenciales. ¿Quieres verlo ahora?",
       missedAction: "Iniciar tour",
       unavailableTitle: "Tour no disponible",
-      unavailableDesc:
-        "No se pudo iniciar el tour en esta pantalla. Vuelve a Drive e inténtalo de nuevo.",
+      unavailableDesc: "No se pudo iniciar el tour en esta pantalla. Vuelve a Drive e inténtalo de nuevo.",
       controls: {
         next: "Siguiente",
         previous: "Anterior",
         done: "Listo",
         close: "Cerrar",
         progress: "{{current}} de {{total}}",
-        tryInteractive: "Tour interactivo",
+        tryInteractive: "Tour interactivo"
       },
       welcome: {
         title: "Bienvenido a Hosanna Studio",
-        description:
-          "Este tour rápido destaca lo esencial para tu rol. Puedes saltarlo cuando quieras y relanzarlo en Ajustes → Acerca de.",
+        description: "Este tour rápido destaca lo esencial para tu rol. Puedes saltarlo cuando quieras y relanzarlo en Ajustes → Acerca de."
       },
       drive: {
         title: "Drive",
-        description:
-          "Aquí vive la biblioteca de la organización: carpetas y canciones, como un explorador de archivos.",
+        description: "Aquí vive la biblioteca de la organización: carpetas y canciones, como un explorador de archivos."
       },
       library: {
         title: "Biblioteca",
-        description: "Ve todas las canciones en un solo lugar, sin importar la carpeta.",
+        description: "Ve todas las canciones en un solo lugar, sin importar la carpeta."
       },
       collections: {
         title: "Colecciones",
-        description: "Agrupa canciones en listas reutilizables para ensayos o temas.",
+        description: "Agrupa canciones en listas reutilizables para ensayos o temas."
       },
       services: {
         title: "Servicios",
-        description: "Arma el orden de alabanza con canciones, notas y momentos del servicio.",
+        description: "Arma el orden de alabanza con canciones, notas y momentos del servicio."
       },
       agenda: {
         title: "Agenda",
-        description: "Planifica eventos y vincúlalos a servicios cuando lo necesites.",
+        description: "Planifica eventos y vincúlalos a servicios cuando lo necesites."
       },
       search: {
         title: "Búsqueda",
-        description:
-          "Encuentra rápido carpetas, canciones y servicios. Hay sintaxis avanzada en el icono de ayuda.",
+        description: "Encuentra rápido carpetas, canciones y servicios. Hay sintaxis avanzada en el icono de ayuda."
       },
       create: {
         title: "Crear",
-        description:
-          "Usa el botón + para crear canciones, carpetas, servicios y más, según tus permisos.",
+        description: "Usa el botón + para crear canciones, carpetas, servicios y más, según tus permisos."
       },
       settings: {
         title: "Cuenta y ajustes",
-        description: "Accede a preferencias personales, organización y más desde tu perfil.",
+        description: "Accede a preferencias personales, organización y más desde tu perfil."
       },
       finish: {
         title: "Listo para empezar",
-        description:
-          "Puedes relanzar este tour en Ajustes → Acerca de. Para practicar con datos de demostración, prueba el tour interactivo.",
-      },
+        description: "Puedes relanzar este tour en Ajustes → Acerca de. Para practicar con datos de demostración, prueba el tour interactivo."
+      }
     },
     interactive: {
       controls: {
@@ -855,155 +747,134 @@ export const es: typeof pt = {
         skipTour: "Salir del tour",
         waiting: "Haz la acción indicada (o salta este paso).",
         done: "Listo",
-        progress: "{{current}} de {{total}}",
+        progress: "{{current}} de {{total}}"
       },
       intro: {
         welcome: {
           title: "Tour interactivo",
-          description:
-            "Este es un entorno de demostración aislado. En algunos pasos el tour espera una acción; en otros solo hay que pulsar Siguiente. Pulsa Siguiente para empezar.",
+          description: "Este es un entorno de demostración aislado. En algunos pasos el tour espera una acción; en otros solo hay que pulsar Siguiente. Pulsa Siguiente para empezar."
         },
         sandbox: {
           title: "Datos seguros",
-          description:
-            "Nada de aquí se sincroniza con tu organización real. Explora con libertad. Pulsa Siguiente para continuar.",
-        },
+          description: "Nada de aquí se sincroniza con tu organización real. Explora con libertad. Pulsa Siguiente para continuar."
+        }
       },
       folders: {
         createBtn: {
           title: "Abrir el menú Crear",
-          description: "Haz clic en el botón + para ver qué puedes crear.",
+          description: "Haz clic en el botón + para ver qué puedes crear."
         },
         create: {
           title: "Crear una carpeta",
-          description:
-            "Crea una carpeta nueva — elige “Nueva carpeta” en el menú (p. ej. “Ensayos”). El tour avanza cuando exista.",
+          description: "Crea una carpeta nueva — elige “Nueva carpeta” en el menú (p. ej. “Ensayos”). El tour avanza cuando exista."
         },
         drive: {
           title: "Drive",
-          description:
-            "Las carpetas organizan la biblioteca. Luego puedes arrastrar canciones entre ellas.",
-        },
+          description: "Las carpetas organizan la biblioteca. Luego puedes arrastrar canciones entre ellas."
+        }
       },
       songs: {
         create: {
           title: "Crear una canción",
-          description: "Usa + → Nueva canción. Luego el tour te pedirá abrirla en el editor.",
+          description: "Usa + → Nueva canción. Luego el tour te pedirá abrirla en el editor."
         },
         open: {
           title: "Abrir una canción",
-          description:
-            "Ve a Biblioteca y abre la canción que creaste (doble clic en una fila). También puedes hacerlo con doble clic en Drive.",
-        },
+          description: "Ve a Biblioteca y abre la canción que creaste (doble clic en una fila). También puedes hacerlo con doble clic en Drive."
+        }
       },
       chordpro: {
         editor: {
           title: "Editor ChordPro",
-          description:
-            "Este es el editor. En líneas vacías puedes usar atajos que el editor completa solo — como snippets inteligentes.",
+          description: "Este es el editor. En líneas vacías puedes usar atajos que el editor completa solo — como snippets inteligentes."
         },
         snippets: {
           title: "TAB completa directivas",
-          description:
-            "En una línea vacía escribe a (o artist) y pulsa TAB: el editor rellena {artist: …}. El texto queda seleccionado: escribe encima y pulsa TAB otra vez para el siguiente campo. Prueba también t (title) o ! para una plantilla completa.",
+          description: "En una línea vacía escribe a (o artist) y pulsa TAB: el editor rellena {artist: …}. El texto queda seleccionado: escribe encima y pulsa TAB otra vez para el siguiente campo. Prueba también t (title) o ! para una plantilla completa."
         },
         chords: {
           title: "Acordes con [ ]",
-          description:
-            "Escribe acordes entre corchetes, p. ej. [G] o [Am], encima de la letra. La vista previa los formatea.",
+          description: "Escribe acordes entre corchetes, p. ej. [G] o [Am], encima de la letra. La vista previa los formatea."
         },
         preview: {
           title: "Vista previa",
-          description:
-            "Mira el resultado a la derecha mientras editas: ideal para ensayar e imprimir.",
+          description: "Mira el resultado a la derecha mientras editas: ideal para ensayar e imprimir."
         },
         save: {
           title: "Guardar cambios",
-          description:
-            "Practica un snippet o un acorde y guarda (Ctrl+S o el botón) para continuar.",
-        },
+          description: "Practica un snippet o un acorde y guarda (Ctrl+S o el botón) para continuar."
+        }
       },
       collections: {
         nav: {
           title: "Colecciones",
-          description: "Abre Colecciones en la barra lateral.",
+          description: "Abre Colecciones en la barra lateral."
         },
         create: {
           title: "Crear una colección",
-          description:
-            "Crea una colección (p. ej. “Navidad”) para agrupar canciones reutilizables.",
+          description: "Crea una colección (p. ej. “Navidad”) para agrupar canciones reutilizables."
         },
         backToDrive: {
           title: "Volver a Drive",
-          description:
-            "Ahora vuelve a Drive: usaremos los mismos atajos que un explorador de archivos.",
+          description: "Ahora vuelve a Drive: usaremos los mismos atajos que un explorador de archivos."
         },
         selection: {
           title: "Seleccionar como en el explorador",
-          description:
-            "Haz clic en un elemento para seleccionarlo. Ctrl+clic (⌘ en Mac) añade más; Shift+clic selecciona un rango. También puedes arrastrar en el espacio vacío de Drive para dibujar una selección (marquee) sobre varios elementos. Prueba a seleccionar algo.",
+          description: "Haz clic en un elemento para seleccionarlo. Ctrl+clic (⌘ en Mac) añade más; Shift+clic selecciona un rango. También puedes arrastrar en el espacio vacío de Drive para dibujar una selección (marquee) sobre varios elementos. Prueba a seleccionar algo."
         },
         openFolder: {
           title: "Abrir una carpeta",
-          description: "Haz doble clic en una carpeta (o selecciónala y pulsa Enter) para entrar.",
+          description: "Haz doble clic en una carpeta (o selecciónala y pulsa Enter) para entrar."
         },
         selectAll: {
           title: "Seleccionar todo",
-          description:
-            "Dentro de la carpeta, pulsa Ctrl+A (⌘+A en Mac) para seleccionar todos los elementos.",
+          description: "Dentro de la carpeta, pulsa Ctrl+A (⌘+A en Mac) para seleccionar todos los elementos."
         },
         contextMenu: {
           title: "Menú contextual",
-          description:
-            "Con la selección activa, haz clic derecho en uno de los elementos seleccionados.",
+          description: "Con la selección activa, haz clic derecho en uno de los elementos seleccionados."
         },
         addSongs: {
           title: "Añadir a la colección",
-          description:
-            "En el menú, elige “Añadir a la Colección” y confirma la colección que creaste.",
-        },
+          description: "En el menú, elige “Añadir a la Colección” y confirma la colección que creaste."
+        }
       },
       services: {
         nav: {
           title: "Servicios",
-          description: "Abre Servicios en la barra lateral.",
+          description: "Abre Servicios en la barra lateral."
         },
         create: {
           title: "Crear un servicio",
-          description:
-            "Crea un servicio nuevo. Luego el tour te pedirá abrirlo y armar el orden de alabanza.",
+          description: "Crea un servicio nuevo. Luego el tour te pedirá abrirlo y armar el orden de alabanza."
         },
         builder: {
           title: "Constructor del culto",
-          description:
-            "Abre el servicio (doble clic) para ver el constructor: canciones, anuncios, escritura y más.",
+          description: "Abre el servicio (doble clic) para ver el constructor: canciones, anuncios, escritura y más."
         },
         elements: {
           title: "Elementos del culto",
-          description:
-            "Añade canciones y reordena elementos. Esta es la herramienta principal del equipo de alabanza.",
-        },
+          description: "Añade canciones y reordena elementos. Esta es la herramienta principal del equipo de alabanza."
+        }
       },
       agenda: {
         nav: {
           title: "Agenda",
-          description: "Abre la Agenda en la barra lateral.",
+          description: "Abre la Agenda en la barra lateral."
         },
         create: {
           title: "Crear un evento",
-          description: "Crea un evento y, si quieres, vincúlalo a un servicio.",
-        },
+          description: "Crea un evento y, si quieres, vincúlalo a un servicio."
+        }
       },
       finish: {
         done: {
           title: "Tour completado",
-          description:
-            "¡Excelente! Puedes cerrar esta pestaña y volver a tu organización, o seguir explorando la demo.",
-        },
-      },
-    },
+          description: "¡Excelente! Puedes cerrar esta pestaña y volver a tu organización, o seguir explorando la demo."
+        }
+      }
+    }
   },
-
   layout: {
     newVersionTitle: "Nueva versión disponible",
     newVersionDesc: "Una nueva versión de Hosanna Studio está disponible.",
@@ -1021,33 +892,29 @@ export const es: typeof pt = {
     songCreated: "¡Canción creada con éxito!",
     songImported: "¡Canción importada con éxito!",
     folderNameMismatch: "El nombre de carpeta introducido no coincide.",
-    uploadSuccess: '¡{count} archivo(s) {type} subido(s) con éxito a "{folder}"!',
+    uploadSuccess: "¡{count} archivo(s) {type} subido(s) con éxito a \"{folder}\"!",
     uploadError: "Error al subir {count} archivo(s) {type}",
-    uploadIgnored: "Ignorado(s) {count} archivo(s) {type}",
+    uploadIgnored: "Ignorado(s) {count} archivo(s) {type}"
   },
-
   foldersPage: {
     dropHere: "Suelte los archivos aquí",
-    dropHereDesc: 'Los archivos se importarán a "{folder}"',
+    dropHereDesc: "Los archivos se importarán a \"{folder}\"",
     loading: "Cargando explorador de archivos...",
     noResults: "Ningún archivo o carpeta correspondiente",
     emptyTitle: "Esta Carpeta está Vacía",
-    noResultsDesc: 'Ningún elemento en "{folder}" coincide con "{query}".',
+    noResultsDesc: "Ningún elemento en \"{folder}\" coincide con \"{query}\".",
     emptyRootDesc: "Aún no existen carpetas ni canciones en la raíz.",
-    emptyFolderDesc: 'Aún no se han añadido canciones a la carpeta "{folder}".',
-    dragOrClick: "Arrastre y suelte archivos aquí o haga clic para subir",
+    emptyFolderDesc: "Aún no se han añadido canciones a la carpeta \"{folder}\".",
+    dragOrClick: "Arrastre y suelte archivos aquí o haga clic para subir"
   },
-
   trashPage: {
     loading: "Cargando papelera...",
     emptyTitle: "La papelera está vacía",
-    emptyDesc:
-      "Los elementos eliminados aparecen aquí durante 30 días antes de ser removidos definitivamente.",
+    emptyDesc: "Los elementos eliminados aparecen aquí durante 30 días antes de ser removidos definitivamente.",
     deletedAt: "Eliminado el",
     permanentDeletion: "Eliminación definitiva",
-    restore: "Restaurar",
+    restore: "Restaurar"
   },
-
   songEditor: {
     loading: "Cargando partitura...",
     notFoundTitle: "Canción No Encontrada",
@@ -1064,9 +931,8 @@ export const es: typeof pt = {
     preview: "Vista Previa",
     readingSettings: "Ajustes de Lectura",
     variant: "Variante de la canción",
-    defaultVariant: "Predeterminada",
+    defaultVariant: "Predeterminada"
   },
-
   servicesPage: {
     loading: "Cargando agenda...",
     createFirstService: "Crear Primer Culto",
@@ -1092,29 +958,25 @@ export const es: typeof pt = {
     archiveService: "Archivar Culto",
     activateService: "Activar Culto",
     deleteService: "Eliminar Culto",
-    deleteServiceMessage: '¿Está seguro de que desea eliminar el culto "{name}"?',
-    archiveServiceMessage: '¿Está seguro de que desea {action} el culto "{name}"?',
+    deleteServiceMessage: "¿Está seguro de que desea eliminar el culto \"{name}\"?",
+    archiveServiceMessage: "¿Está seguro de que desea {action} el culto \"{name}\"?",
     deleteAllTitle: "Eliminar {count} Cultos",
-    deleteAllMessage:
-      "¿Está seguro de que desea eliminar permanentemente {count} cultos seleccionados?",
+    deleteAllMessage: "¿Está seguro de que desea eliminar permanentemente {count} cultos seleccionados?",
     deleteAll: "Eliminar Todos",
     archiveAllTitle: "Archivar {count} Cultos",
     archiveAllMessage: "¿Está seguro de que desea archivar {count} cultos seleccionados?",
-    archiveAll: "Archivar Todos",
+    archiveAll: "Archivar Todos"
   },
-
   collectionsPage: {
     edit: "Editar",
     delete: "Eliminar",
     songCount: {
       one: "{count} canción",
-      other: "{count} canciones",
+      other: "{count} canciones"
     },
     deleteTitle: "Eliminar Colección",
-    deleteMessage:
-      '¿Está seguro de que desea mover la colección "{name}" a la papelera? Las canciones permanecerán guardadas en la biblioteca.',
-    deletePermanentMessage:
-      '¿Está seguro de que desea eliminar la colección "{name}"? Las canciones permanecerán disponibles en la biblioteca.',
+    deleteMessage: "¿Está seguro de que desea mover la colección \"{name}\" a la papelera? Las canciones permanecerán guardadas en la biblioteca.",
+    deletePermanentMessage: "¿Está seguro de que desea eliminar la colección \"{name}\"? Las canciones permanecerán disponibles en la biblioteca.",
     notFoundTitle: "Colección no encontrada",
     notFoundDesc: "La colección que buscas puede haber sido eliminada.",
     backToCollections: "Volver a Colecciones",
@@ -1122,12 +984,11 @@ export const es: typeof pt = {
     viewSong: "Ver Canción",
     removeFromCollection: "Quitar de la Colección",
     removeSongTitle: "Quitar de la Colección",
-    removeSongMessage:
-      '¿Desea quitar "{title}" de esta colección? La canción continuará guardada en la biblioteca.',
+    removeSongMessage: "¿Desea quitar \"{title}\" de esta colección? La canción continuará guardada en la biblioteca.",
     emptyTitle: "Esta colección aún no tiene canciones",
     emptyDesc: "Añade canciones de tu biblioteca a esta colección para organizarlas.",
     noSearchResultsTitle: "No se encontraron canciones coincidentes",
-    noSearchResultsDesc: 'No se encontraron canciones para "{query}".',
+    noSearchResultsDesc: "No se encontraron canciones para \"{query}\".",
     paginationInfo: "{from} a {to} de {total} canciones",
     newCollection: "Nueva Colección",
     editCollection: "Editar Colección",
@@ -1144,7 +1005,7 @@ export const es: typeof pt = {
     createBtn: "Crear Colección",
     previewTitle: "Título de la Colección",
     previewDesc: "Descripción de la colección...",
-    addSongsModalTitle: 'Añadir Canciones a "{name}"',
+    addSongsModalTitle: "Añadir Canciones a \"{name}\"",
     searchSongPlaceholder: "Buscar por título o artista...",
     selectedSongsCount: "{count} seleccionada(s)",
     selectAll: "Seleccionar todas",
@@ -1155,11 +1016,9 @@ export const es: typeof pt = {
     selectCollectionPrompt: "Seleccione la colección de destino:",
     noCollectionsAvailable: "No se encontraron colecciones.",
     deleteManyTitle: "Eliminar colecciones",
-    deleteManyMessage:
-      "¿Enviar {count} colecciones a la papelera? Las canciones siguen en la biblioteca.",
-    createCollectionFirst: "Cree una colección primero para poder añadir canciones.",
+    deleteManyMessage: "¿Enviar {count} colecciones a la papelera? Las canciones siguen en la biblioteca.",
+    createCollectionFirst: "Cree una colección primero para poder añadir canciones."
   },
-
   agenda: {
     subtitle: "Planifica y asigna responsabilidades para cada día.",
     newEvent: "Nuevo Evento",
@@ -1180,7 +1039,7 @@ export const es: typeof pt = {
       september: "septiembre",
       october: "octubre",
       november: "noviembre",
-      december: "diciembre",
+      december: "diciembre"
     },
     weekdays: {
       mon: "Lun",
@@ -1189,7 +1048,7 @@ export const es: typeof pt = {
       thu: "Jue",
       fri: "Vie",
       sat: "Sáb",
-      sun: "Dom",
+      sun: "Dom"
     },
     weekdaysFull: {
       sunday: "Domingo",
@@ -1198,7 +1057,7 @@ export const es: typeof pt = {
       wednesday: "Miércoles",
       thursday: "Jueves",
       friday: "Viernes",
-      saturday: "Sábado",
+      saturday: "Sábado"
     },
     dateLong: "{weekday}, {day} de {month} de {year}",
     dateShort: "{day}/{month}/{year}",
@@ -1215,8 +1074,7 @@ export const es: typeof pt = {
     addResponsibility: "Añadir Responsabilidad",
     removeResponsibility: "Eliminar responsabilidad",
     noResponsibilities: "Aún no hay responsabilidades para este evento.",
-    assigneesGetNotified:
-      "Use «Notificar asignaciones» en los detalles del evento para avisar a quien aún no fue notificado.",
+    assigneesGetNotified: "Use «Notificar asignaciones» en los detalles del evento para avisar a quien aún no fue notificado.",
     type: "Tipo",
     location: "Ubicación",
     linkedService: "Servicio vinculado",
@@ -1231,7 +1089,7 @@ export const es: typeof pt = {
       assignHint: "Solo envía a quien aún no fue notificado.",
       pending: {
         one: "1 usuario por notificar",
-        other: "{count} usuarios por notificar",
+        other: "{count} usuarios por notificar"
       },
       allNotified: "Sin asignaciones por notificar.",
       updateSection: "Cambios del evento",
@@ -1244,7 +1102,7 @@ export const es: typeof pt = {
       bothHint: "Fecha y ubicación se envían en una sola notificación.",
       sentCount: {
         one: "1 notificación enviada",
-        other: "{count} notificaciones enviadas",
+        other: "{count} notificaciones enviadas"
       },
       sentPartial: "{sent} notificaciones enviadas, {failed} fallaron.",
       noRecipients: "No hay usuarios contactables para notificar.",
@@ -1254,10 +1112,9 @@ export const es: typeof pt = {
       assignmentTitle: "Se le ha asignado {event}",
       assignmentBody: "Fecha: {date}\n\nResponsabilidades:\n{list}",
       removalTitle: "Responsabilidades de {event} actualizadas",
-      removalBody:
-        "Sus responsabilidades en {event} han sido actualizadas.\n\nFecha: {date}\n\nEliminado:\n{list}",
+      removalBody: "Sus responsabilidades en {event} han sido actualizadas.\n\nFecha: {date}\n\nEliminado:\n{list}",
       eventCancelledTitle: "{event} ha sido cancelado",
-      eventCancelledBody: 'El evento "{event}" programado para {date} ha sido cancelado.',
+      eventCancelledBody: "El evento \"{event}\" programado para {date} ha sido cancelado.",
       dateTitle: "La fecha de {event} ha cambiado",
       dateBody: "Nueva fecha:\n{date}",
       locationTitle: "La ubicación de {event} ha cambiado",
@@ -1267,7 +1124,7 @@ export const es: typeof pt = {
       removeAssigneesTitle: "Eliminar asignaciones",
       removeAffected: {
         one: "Se eliminará {count} asignación.",
-        other: "Se eliminarán {count} asignaciones.",
+        other: "Se eliminarán {count} asignaciones."
       },
       removeSummary: "A eliminar",
       notifyRemovalLabel: "Notificar al usuario sobre la cancelación",
@@ -1275,8 +1132,8 @@ export const es: typeof pt = {
       notifyDeleteLabel: "Notificar a todos los usuarios asignados",
       notifyDeleteHint: {
         one: "Se notificará a 1 usuario asignado de que el evento fue cancelado.",
-        other: "Se notificará a {count} usuarios asignados de que el evento fue cancelado.",
-      },
+        other: "Se notificará a {count} usuarios asignados de que el evento fue cancelado."
+      }
     },
     editAssignments: "Editar asignaciones",
     comment: "Comentar",
@@ -1290,13 +1147,12 @@ export const es: typeof pt = {
     loadingServices: "Cargando servicios…",
     changeLinkedService: "Cambiar servicio vinculado…",
     searchServiceToLink: "Buscar un servicio para vincular…",
-    linkedServiceMissing:
-      "El servicio vinculado ya no existe: elige otro o elimina la vinculación.",
+    linkedServiceMissing: "El servicio vinculado ya no existe: elige otro o elimina la vinculación.",
     removeLink: "Eliminar vinculación",
     noServicesToLink: "Aún no hay servicios. Crea uno en Servicios para poder vincularlo.",
     elementsCount: {
       one: "{count} elemento",
-      other: "{count} elementos",
+      other: "{count} elementos"
     },
     information: "Información",
     eventTitle: "Título",
@@ -1309,8 +1165,7 @@ export const es: typeof pt = {
     locationPlaceholder: "Ej: Templo Principal",
     notesPlaceholder: "Notas de planificación…",
     deleteEventConfirm: "¿Eliminar este evento?",
-    deleteEventConfirmBody:
-      "Esto eliminará permanentemente el evento y todas sus responsabilidades.",
+    deleteEventConfirmBody: "Esto eliminará permanentemente el evento y todas sus responsabilidades.",
     deleteEvent: "Eliminar",
     printDayAgenda: "Agenda — {date}",
     decreaseDuration: "Disminuir duración",
@@ -1321,7 +1176,7 @@ export const es: typeof pt = {
       worshipRehearsal: "Ensayo de Alabanza",
       bibleStudy: "Estudio Bíblico",
       teamMeeting: "Reunión de Equipo",
-      specialEvent: "Evento Especial",
+      specialEvent: "Evento Especial"
     },
     allResponsibilitiesAdded: "Ya se han añadido todas las responsabilidades",
     createCategoriesInSettings: "Puedes crear nuevas categorías en Configuración → Servidor.",
@@ -1330,24 +1185,23 @@ export const es: typeof pt = {
     assignTo: "Asignar a",
     selectedAssignees: {
       one: "{count} persona seleccionada",
-      other: "{count} personas seleccionadas",
+      other: "{count} personas seleccionadas"
     },
     assignOptional: "Opcional: puedes asignar más tarde.",
     assigneesTitle: "Asignados — {category}",
     assignedAssignees: {
       one: "{count} persona asignada",
-      other: "{count} personas asignadas",
+      other: "{count} personas asignadas"
     },
-    noAssigneesYet: "Aún sin nadie asignado.",
+    noAssigneesYet: "Aún sin nadie asignado."
   },
-
   songsPage: {
     createSong: "Crear Nueva Canción",
     newSong: "Nueva Canción",
     title: "Biblioteca de Canciones",
     subtitle: {
       one: "Gestione su colección de cifras y partituras ({count} canción)",
-      other: "Gestione su colección de cifras y partituras ({count} canciones)",
+      other: "Gestione su colección de cifras y partituras ({count} canciones)"
     },
     explorer: "Explorador",
     searchPlaceholder: "Buscar por título, artista, letra...",
@@ -1390,15 +1244,13 @@ export const es: typeof pt = {
     deleteSong: "Eliminar Canción",
     createModalTitle: "Crear Nueva Canción",
     deleteTitle: "Eliminar Canción",
-    deleteMessage:
-      '¿Está seguro de que desea eliminar permanentemente "{name}"? Esta acción no se puede deshacer.',
+    deleteMessage: "¿Está seguro de que desea eliminar permanentemente \"{name}\"? Esta acción no se puede deshacer.",
     deleteConfirm: "Eliminar Canción",
     movedToast: "¡{count} canción(es) movida(s) con éxito!",
     deletedToast: "¡{count} canción(es) eliminada(s) con éxito!",
     zeroSongs: "0 canciones",
-    songsWord: "canciones",
+    songsWord: "canciones"
   },
-
   forms: {
     folderNameRequired: "El nombre de la carpeta es obligatorio",
     folderNameMin: "El nombre debe tener al menos 2 caracteres",
@@ -1425,11 +1277,10 @@ export const es: typeof pt = {
     planningNotesPlaceholder: "Ej: Tema: Gracia y Esperanza. Ensayo de la banda a las 8:15.",
     saveService: "Guardar Plan de Culto",
     unknownArtist: "Artista Desconocido",
-    untitled: "Sin Título",
+    untitled: "Sin Título"
   },
-
   modals: {
-    moveSongTitle: 'Mover Canción "{title}"',
+    moveSongTitle: "Mover Canción \"{title}\"",
     moveSongToFolder: "Mover Canción a Carpeta",
     chooseDestination: "Elija la carpeta de destino para",
     rootLevel: "Nivel Raíz (Sin carpeta)",
@@ -1445,27 +1296,23 @@ export const es: typeof pt = {
     aboutToDelete: "Está a punto de eliminar",
     whatToDo: "¿Qué hacer con las canciones dentro de las carpetas seleccionadas?",
     preserveSongs: "Preservar canciones (Mover al Nivel Raíz)",
-    preserveSongsDesc:
-      "Elimina solo las carpetas y mueve sus canciones a la raíz sin perder datos.",
+    preserveSongsDesc: "Elimina solo las carpetas y mueve sus canciones a la raíz sin perder datos.",
     deletePermanently: "Eliminar permanentemente las carpetas y todas sus canciones",
-    deletePermanentlyDesc:
-      "Acción destructiva. Elimina las carpetas y todas las canciones contenidas en ellas.",
+    deletePermanentlyDesc: "Acción destructiva. Elimina las carpetas y todas las canciones contenidas en ellas.",
     safetyConfirmation: "Confirmación de Seguridad",
     confirmDeleteIntro: "Para confirmar la eliminación de",
     writeNameBelow: ", escriba exactamente el nombre abajo:",
-    writeToConfirm: 'Escriba "{name}" para confirmar',
+    writeToConfirm: "Escriba \"{name}\" para confirmar",
     deleteItems: "Eliminar {count} Elemento(s)",
     batchTagTitle: "Etiquetar {count} Canción(es) en Lote",
-    selectCategories:
-      "Seleccione categorías predefinidas o introduzca etiquetas personalizadas para asignar a",
+    selectCategories: "Seleccione categorías predefinidas o introduzca etiquetas personalizadas para asignar a",
     selectedSongs: "{count} canción(es) seleccionada(s)",
     applyMode: "Modo de Aplicación",
     add: "Añadir",
     replace: "Reemplazar",
     remove: "Eliminar",
     appendDesc: "• Añade estas etiquetas manteniendo las existentes en las canciones.",
-    replaceDesc:
-      "• Reemplaza todas las etiquetas existentes por las etiquetas seleccionadas abajo.",
+    replaceDesc: "• Reemplaza todas las etiquetas existentes por las etiquetas seleccionadas abajo.",
     removeDesc: "• Elimina estas etiquetas específicas de todas las canciones seleccionadas.",
     suggestedCategories: "Categorías y Temas Sugeridos",
     newCustomTag: "Nueva Etiqueta Personalizada",
@@ -1480,7 +1327,7 @@ export const es: typeof pt = {
     highlightColor: "Color de Resalte",
     iconCount: "Icono ({count})",
     searchIcons: "Buscar...",
-    noIconFound: 'Ningún icono encontrado para "{query}"',
+    noIconFound: "Ningún icono encontrado para \"{query}\"",
     saving: "Guardando...",
     importCifraTitle: "Importar Acordes (Proveedores de Terceros)",
     thirdPartyProvidersTitle: "Importar Acordes & Proveedores de Terceros",
@@ -1489,8 +1336,7 @@ export const es: typeof pt = {
     pasteLink: "Pegue el enlace directo de la página de acordes de un proveedor compatible.",
     songLink: "Enlace de la Canción / Acordes",
     pleaseEnterLink: "Por favor, introduzca un enlace de acordes válido.",
-    pleaseEnterValidLink:
-      "Por favor, introduzca un enlace de un proveedor compatible ({providers}).",
+    pleaseEnterValidLink: "Por favor, introduzca un enlace de un proveedor compatible ({providers}).",
     errorGetCifra: "Error al obtener los acordes: {error}",
     cifraNotFound: "Acordes no encontrados.",
     unexpectedError: "Ocurrió un error inesperado al importar los acordes.",
@@ -1515,9 +1361,8 @@ export const es: typeof pt = {
     pleaseEnterSongTitle: "Por favor, introduzca el título de la canción.",
     supportedProviders: "Proveedores Compatibles",
     detectedProvider: "Detectado: {provider}",
-    backToEdit: "Volver a Edición",
+    backToEdit: "Volver a Edición"
   },
-
   explorer: {
     moreOptions: "Más opciones",
     songNumber: "Nº {number}",
@@ -1556,42 +1401,38 @@ export const es: typeof pt = {
       addToCollection: "Añadir a la Colección",
       addToCollectionCount: "Añadir {count} a la Colección",
       printSong: "Imprimir Canción",
-      deleteSong: "Eliminar Canción",
+      deleteSong: "Eliminar Canción"
     },
     modals: {
-      createSongInFolder: 'Crear Nueva Canción en "{folder}"',
+      createSongInFolder: "Crear Nueva Canción en \"{folder}\"",
       createSongInRoot: "Crear Nueva Canción en la Raíz",
       createServiceTitle: "Crear Plan de Culto",
-      createFolderInFolder: 'Crear Carpeta dentro de "{folder}"',
+      createFolderInFolder: "Crear Carpeta dentro de \"{folder}\"",
       createFolderInRoot: "Crear Nueva Carpeta en la Raíz",
-      renameFolderTitle: 'Renombrar Carpeta "{folder}"',
+      renameFolderTitle: "Renombrar Carpeta \"{folder}\"",
       updateFolderName: "Actualizar Nombre de Carpeta",
-      moveFolderTitle: 'Mover Carpeta "{folder}"',
+      moveFolderTitle: "Mover Carpeta \"{folder}\"",
       selectDestFolder: "Seleccione una nueva carpeta de destino para",
       rootTopLevel: "Directorio Raíz (Nivel Superior)",
       moveFolderBtn: "Mover Carpeta",
-      deleteFolderTitle: 'Eliminar Carpeta "{folder}"',
+      deleteFolderTitle: "Eliminar Carpeta \"{folder}\"",
       selectDeleteFolderOption: "Seleccione cómo manejar el contenido dentro de esta carpeta:",
       moveContentsToRoot: "Mover Contenidos a la Raíz (Recomendado)",
-      moveContentsToRootDesc:
-        "Mantiene las cifras de canciones en la biblioteca sin categoría de carpeta.",
+      moveContentsToRootDesc: "Mantiene las cifras de canciones en la biblioteca sin categoría de carpeta.",
       deleteFolderAndContents: "Eliminar carpeta y todo el contenido dentro",
-      deleteFolderAndContentsDesc:
-        "Elimina permanentemente la carpeta Y todos los archivos de canciones y subcarpetas y su contenido.",
+      deleteFolderAndContentsDesc: "Elimina permanentemente la carpeta Y todos los archivos de canciones y subcarpetas y su contenido.",
       additionalSecurity: "Confirmación Adicional de Seguridad",
-      deleteFolderIrreversible:
-        "Esta acción es irreversible. Para confirmar la eliminación permanente de la carpeta y todas sus canciones, escriba el nombre de la carpeta",
-      writeToConfirm: 'Escriba "{name}" para confirmar',
+      deleteFolderIrreversible: "Esta acción es irreversible. Para confirmar la eliminación permanente de la carpeta y todas sus canciones, escriba el nombre de la carpeta",
+      writeToConfirm: "Escriba \"{name}\" para confirmar",
       confirmDelete: "Confirmar Eliminación",
       emptyFolderDelete: "Eliminar carpeta",
       emptyFolderDeleteDesc: "La carpeta está vacía y será eliminada",
-      deleteSongTitle: 'Eliminar Canción "{title}"',
-      deleteSongWarning:
-        '¿Está seguro de que desea eliminar permanentemente "{title}"? Esto también lo eliminará de cualquier culto programado.',
+      deleteSongTitle: "Eliminar Canción \"{title}\"",
+      deleteSongWarning: "¿Está seguro de que desea eliminar permanentemente \"{title}\"? Esto también lo eliminará de cualquier culto programado.",
       deleteSongBtn: "Eliminar Canción",
       filterTitle: "Filtros Avanzados de Búsqueda",
       searchScope: "Ámbito de búsqueda:",
-      scopeFolder: 'Carpeta "{folder}" y Subcarpetas',
+      scopeFolder: "Carpeta \"{folder}\" y Subcarpetas",
       scopeRoot: "Todo el Explorador (Directorio Raíz)",
       categoryTag: "Categoría / Etiqueta",
       allCategories: "Todas las Categorías",
@@ -1601,10 +1442,9 @@ export const es: typeof pt = {
       fieldContent: "Letra / Contenido",
       fieldTags: "Etiquetas / Tags",
       clearFilters: "Limpiar Filtros",
-      applyFilters: "Aplicar Filtros",
-    },
+      applyFilters: "Aplicar Filtros"
+    }
   },
-
   misc: {
     chordproSettings: {
       title: "Ajustes Visuales",
@@ -1621,7 +1461,7 @@ export const es: typeof pt = {
       capo: "Capo",
       guitar: "Guitarra",
       piano: "Piano",
-      size: "Tamaño",
+      size: "Tamaño"
     },
     editorSettings: {
       title: "Configuración del Editor",
@@ -1640,8 +1480,8 @@ export const es: typeof pt = {
         monokai: "Monokai (oscuro)",
         dracula: "Dracula (oscuro)",
         tomorrow_night: "Tomorrow Night (oscuro)",
-        solarized_dark: "Solarized Dark (oscuro)",
-      },
+        solarized_dark: "Solarized Dark (oscuro)"
+      }
     },
     inbox: {
       title: "Notificaciones",
@@ -1653,7 +1493,7 @@ export const es: typeof pt = {
       loading: "Cargando notificaciones...",
       empty: "No se encontraron notificaciones",
       loadMore: "Cargar más",
-      buttonTitle: "Buzón de Notificaciones",
+      buttonTitle: "Buzón de Notificaciones"
     },
     syncStatus: {
       syncing: "Sincronizando...",
@@ -1665,21 +1505,18 @@ export const es: typeof pt = {
       synced: "Sincronizado",
       syncedTooltip: "Sincronizado ({time}). Haga clic para forzar sincronización.",
       syncedTooltipNoTime: "Sincronizado. Haga clic para forzar sincronización.",
-      local_only: "Solo local",
+      local_only: "Solo local"
     },
     help: {
       title: "Guía Rápida del Editor",
       smartSnippets: "Snippets Inteligentes",
-      snippetsDesc:
-        "Escriba una de las siglas abajo en una línea vacía y presione <key>TAB</key> para que el editor complete automáticamente.",
+      snippetsDesc: "Escriba una de las siglas abajo en una línea vacía y presione <key>TAB</key> para que el editor complete automáticamente.",
       tipTitle: "Consejo de autocompletado:",
-      tipDesc:
-        "Al insertar un snippet, el texto temporal queda seleccionado. Simplemente escriba encima. ¡Presione <key>TAB</key> nuevamente para saltar al siguiente campo!",
+      tipDesc: "Al insertar un snippet, el texto temporal queda seleccionado. Simplemente escriba encima. ¡Presione <key>TAB</key> nuevamente para saltar al siguiente campo!",
       shortcutsTitle: "Atajos de Teclado",
-      shortcutsDesc: "Acelere la edición y navegación sin quitar las manos del teclado.",
-    },
+      shortcutsDesc: "Acelere la edición y navegación sin quitar las manos del teclado."
+    }
   },
-
   teamsPage: {
     title: "Equipos de la Organización",
     desc: "Gestione equipos, asigne líderes y configure permisos de acceso.",
@@ -1705,8 +1542,7 @@ export const es: typeof pt = {
     memberRemoved: "Miembro eliminado del equipo.",
     leaderAssigned: "¡{name} es ahora el Líder del equipo!",
     teamPermissionsTitle: "Permisos del Equipo",
-    teamPermissionsDesc:
-      "Los permisos del equipo están limitados por las políticas generales de la organización.",
+    teamPermissionsDesc: "Los permisos del equipo están limitados por las políticas generales de la organización.",
     manageSongs: "Gestionar Canciones",
     manageSongsDesc: "Crear y editar repertorio",
     manageServices: "Gestionar Cultos",
@@ -1727,9 +1563,8 @@ export const es: typeof pt = {
     memberEmailPlaceholder: "e.g. maria@ejemplo.com",
     teamRoleLabel: "Rol en el Equipo",
     addMemberBtn: "Añadir",
-    memberAdded: "¡Miembro añadido al equipo!",
+    memberAdded: "¡Miembro añadido al equipo!"
   },
-
   serviceDetailPage: {
     backToServices: "Volver a los Cultos",
     serviceDetails: "Detalles del Culto",
@@ -1812,9 +1647,8 @@ export const es: typeof pt = {
     songDeletedHint: "Esta canción fue eliminada de la biblioteca.",
     restoreSong: "Restaurar canción",
     removeFromPlan: "Quitar del plan",
-    readingKeys: "Flechas para avanzar",
+    readingKeys: "Flechas para avanzar"
   },
-
   serviceModals: {
     announcement: {
       modalTitle: "Avisos de la Iglesia",
@@ -1823,10 +1657,9 @@ export const es: typeof pt = {
       titleLabel: "Título",
       titlePlaceholder: "Ej: Avisos de la Semana",
       listLabel: "Lista de Avisos",
-      listPlaceholder:
-        "Ej:\n• Ensayo del coro: sábado a las 15h\n• Retiro de jóvenes: 15-17 de Septiembre\n• Culto especial: próximo domingo",
+      listPlaceholder: "Ej:\n• Ensayo del coro: sábado a las 15h\n• Retiro de jóvenes: 15-17 de Septiembre\n• Culto especial: próximo domingo",
       notesLabel: "Notas",
-      notesPlaceholder: "Ej: Responsable: Diácono Pedro",
+      notesPlaceholder: "Ej: Responsable: Diácono Pedro"
     },
     bible: {
       modalTitle: "Lectura Bíblica",
@@ -1845,13 +1678,12 @@ export const es: typeof pt = {
       acceptedBadge: "Aceptado",
       notesLabel: "Notas",
       notesPlaceholder: "Ej: Leído por el diácono Carlos, congregación de pie...",
-      invalidFormatError:
-        "Libro o formato no válido. Pruebe: Libro Capítulo:Versículo (ej: Salmos 23:1-6, 1 Juan 3:16)",
+      invalidFormatError: "Libro o formato no válido. Pruebe: Libro Capítulo:Versículo (ej: Salmos 23:1-6, 1 Juan 3:16)",
       notFoundError: "Pasaje no encontrado.",
       chapterNotFoundError: "Capítulo no encontrado en esta traducción.",
       noVersesError: "Ningún versículo encontrado en el rango especificado.",
       timeoutError: "La búsqueda tardó demasiado tiempo. Inténtelo de nuevo.",
-      genericError: "Error al buscar el pasaje. Compruebe su conexión a internet.",
+      genericError: "Error al buscar el pasaje. Compruebe su conexión a internet."
     },
     custom: {
       modalTitle: "Elemento Personalizado",
@@ -1862,7 +1694,7 @@ export const es: typeof pt = {
       contentLabel: "Detalles / Contenido",
       contentPlaceholder: "Describa el contenido de este momento...",
       notesLabel: "Notas",
-      notesPlaceholder: "Notas adicionales...",
+      notesPlaceholder: "Notas adicionales..."
     },
     message: {
       modalTitle: "Mensaje / Sermón",
@@ -1873,7 +1705,7 @@ export const es: typeof pt = {
       summaryLabel: "Resumen / Puntos Principales",
       summaryPlaceholder: "Ej: Introducción sobre la fe, 3 puntos sobre confiar en Dios...",
       notesLabel: "Notas",
-      notesPlaceholder: "Ej: Predicador: Pastor Juan. Duración: ~30min.",
+      notesPlaceholder: "Ej: Predicador: Pastor Juan. Duración: ~30min."
     },
     welcome: {
       modalTitle: "Bienvenida y Oración",
@@ -1885,14 +1717,13 @@ export const es: typeof pt = {
       contentLabel: "Detalles / Contenido",
       contentPlaceholder: "Ej: Saludo por el pastor, oración de apertura...",
       notesLabel: "Notas",
-      notesPlaceholder: "Ej: El pastor Juan hace el saludo...",
+      notesPlaceholder: "Ej: El pastor Juan hace el saludo..."
     },
     duration: {
       label: "Duración (MM:SS)",
-      placeholder: "05:00",
-    },
+      placeholder: "05:00"
+    }
   },
-
   onboarding: {
     welcomeTitle: "¡Bienvenido a Hosanna Studio!",
     welcomeSubtitle: "Vamos a configurar su espacio de alabanza y adoración.",
@@ -1921,25 +1752,24 @@ export const es: typeof pt = {
         sync: "Sincronización automática entre dispositivos",
         unlimited: "Canciones y cultos ilimitados",
         print: "Exportación e impresión de acordes",
-        backups: "Copias de seguridad automáticas",
+        backups: "Copias de seguridad automáticas"
       },
       startBtn: "Iniciar periodo de prueba de 14 días",
       note: "Se requiere una tarjeta para comenzar. No se le cobrará nada durante los 14 días de prueba.",
-      skipBtn: "Ahora no, continuar sin suscribirse",
-    },
+      skipBtn: "Ahora no, continuar sin suscribirse"
+    }
   },
-
   auth: {
     captcha: {
       pending: "Esperando la verificación de seguridad. Inténtalo de nuevo en un momento.",
-      failed: "La verificación de seguridad falló. Recarga la página e inténtalo de nuevo.",
+      failed: "La verificación de seguridad falló. Recarga la página e inténtalo de nuevo."
     },
     error: {
       title: "Inicio de sesión interrumpido",
       subtitle: "No se pudo completar la autenticación",
       generic: "Ocurrió un error durante el inicio de sesión. Inténtelo de nuevo.",
       hint: "Si cerró la ventana del proveedor o denegó el acceso, puede intentarlo de nuevo sin problema.",
-      backToLogin: "Volver al inicio de sesión",
+      backToLogin: "Volver al inicio de sesión"
     },
     login: {
       title: "Iniciar Sesión",
@@ -1958,7 +1788,7 @@ export const es: typeof pt = {
       errorGeneric: "Ocurrió un error al iniciar sesión.",
       orContinueWith: "O continuar con",
       continueWith: "Continuar con",
-      continueWithGoogle: "Continuar con Google",
+      continueWithGoogle: "Continuar con Google"
     },
     register: {
       title: "Crear Cuenta",
@@ -1976,7 +1806,7 @@ export const es: typeof pt = {
       loginLink: "Iniciar sesión",
       successTitle: "¡Cuenta creada con éxito!",
       successDesc: "Hemos enviado un correo de confirmación a su dirección.",
-      passwordMismatch: "Las contraseñas no coinciden.",
+      passwordMismatch: "Las contraseñas no coinciden."
     },
     forgotPassword: {
       title: "Recuperar Contraseña",
@@ -1986,7 +1816,7 @@ export const es: typeof pt = {
       sendingBtn: "Enviando...",
       backToLogin: "Volver al inicio de sesión",
       emailSentTitle: "¡Enlace enviado!",
-      emailSentDesc: "Si existe una cuenta asociada a este correo, recibirá instrucciones pronto.",
+      emailSentDesc: "Si existe una cuenta asociada a este correo, recibirá instrucciones pronto."
     },
     resetPassword: {
       title: "Establecer Nueva Contraseña",
@@ -1997,7 +1827,7 @@ export const es: typeof pt = {
       resettingBtn: "Actualizando...",
       successTitle: "¡Contraseña actualizada!",
       successDesc: "Su contraseña ha sido cambiada con éxito.",
-      goToLoginBtn: "Ir al Inicio de Sesión",
+      goToLoginBtn: "Ir al Inicio de Sesión"
     },
     verifyEmail: {
       title: "Verificación de Correo",
@@ -2007,13 +1837,13 @@ export const es: typeof pt = {
       continueBtn: "Continuar a la Aplicación",
       errorTitle: "Error en la verificación",
       errorDesc: "El enlace de verificación no es válido o ha expirado.",
-      resendBtn: "Reenviar correo de verificación",
+      resendBtn: "Reenviar correo de verificación"
     },
     tenant: {
       title: "Seleccionar Organización",
       subtitle: "Elija la organización en la que desea trabajar",
       createOrgBtn: "Crear Nueva Organización",
-      beta: "Espere al lanzamiento de la Beta el 1 de septiembre para crear su organización e iniciar sesión.",
+      beta: "Espere al lanzamiento de la Beta el 1 de septiembre para crear su organización e iniciar sesión."
     },
     acceptInvitation: {
       title: "Invitación a la Organización",
@@ -2026,7 +1856,7 @@ export const es: typeof pt = {
       successDesc: "Ahora tiene acceso a la organización.",
       goToDashboardBtn: "Ir al Panel",
       invalidTitle: "Invitación No Válida",
-      invalidDesc: "Esta invitación ya no es válida o ha expirado.",
+      invalidDesc: "Esta invitación ya no es válida o ha expirado."
     },
     twoFactor: {
       title: "Verificación en 2 Pasos",
@@ -2037,29 +1867,27 @@ export const es: typeof pt = {
       useBackupCode: "Usar código de recuperación",
       useTotpCode: "Usar aplicación autenticadora",
       backupCodeLabel: "Código de Recuperación",
-      backupCodePlaceholder: "XXXX-XXXX",
-    },
+      backupCodePlaceholder: "XXXX-XXXX"
+    }
   },
-
   routes: {
     errorBoundary: {
       title: "Ocurrió un error inesperado",
       desc: "Lamentamos las molestias. Ocurrió un problema al cargar esta sección.",
       reloadBtn: "Recargar Aplicación",
-      goHomeBtn: "Volver al Inicio",
+      goHomeBtn: "Volver al Inicio"
     },
     notFound: {
       title: "Página No Encontrada",
       desc: "La página que busca no existe o ha sido movida.",
-      goHomeBtn: "Volver al Inicio",
+      goHomeBtn: "Volver al Inicio"
     },
     unauthorized: {
       title: "Acceso No Autorizado",
       desc: "No tiene permisos suficientes para acceder a esta página.",
-      goHomeBtn: "Volver al Inicio",
-    },
+      goHomeBtn: "Volver al Inicio"
+    }
   },
-
   hooks: {
     songs: {
       created: "¡Canción creada con éxito!",
@@ -2068,7 +1896,7 @@ export const es: typeof pt = {
       deleted: "¡Canción eliminada con éxito!",
       updated: "¡Canción actualizada con éxito!",
       deleteError: "Error al eliminar canción: {error}",
-      saveError: "Error al guardar canción: {error}",
+      saveError: "Error al guardar canción: {error}"
     },
     services: {
       created: "¡Plan de culto creado con éxito!",
@@ -2077,7 +1905,7 @@ export const es: typeof pt = {
       archived: "¡Plan de culto archivado con éxito!",
       activated: "¡Plan de culto activado con éxito!",
       deleteError: "Error al eliminar culto: {error}",
-      saveError: "Error al guardar culto: {error}",
+      saveError: "Error al guardar culto: {error}"
     },
     agenda: {
       created: "¡Evento creado con éxito!",
@@ -2085,22 +1913,27 @@ export const es: typeof pt = {
       deleted: "¡Evento movido a la papelera!",
       restored: "¡Evento restaurado con éxito!",
       deleteError: "Error al eliminar evento: {error}",
-      saveError: "Error al guardar evento: {error}",
+      saveError: "Error al guardar evento: {error}"
     },
     search: {
       searching: "Buscando...",
-      noResults: "No se encontraron resultados.",
-    },
+      noResults: "No se encontraron resultados."
+    }
   },
-
   print: {
     documentDefaultTitle: "Documento Hosana",
     modal: {
       print: "Imprimir / PDF",
       printShortcut: "Imprimir o guardar como PDF (Ctrl+P)",
       options: "Opciones de impresión",
-      itemCount: { one: "{count} elemento", other: "{count} elementos" },
-      pageEstimate: { one: "≈ {count} página", other: "≈ {count} páginas" },
+      itemCount: {
+        one: "{count} elemento",
+        other: "{count} elementos"
+      },
+      pageEstimate: {
+        one: "≈ {count} página",
+        other: "≈ {count} páginas"
+      },
       pageN: "Página {page}",
       zoomIn: "Acercar",
       zoomOut: "Alejar",
@@ -2111,15 +1944,14 @@ export const es: typeof pt = {
       saveDefault: "Guardar como predeterminado",
       savedDefault: "Preferencias de impresión de la organización actualizadas.",
       saveDefaultError: "No se pudieron guardar las preferencias.",
-      pdfHint:
-        "Para obtener un PDF, elija «Guardar como PDF» como destino en el cuadro de impresión.",
+      pdfHint: "Para obtener un PDF, elija «Guardar como PDF» como destino en el cuadro de impresión."
     },
     options: {
       groups: {
         template: "Plantilla",
         content: "Contenido",
         layout: "Disposición",
-        page: "Página",
+        page: "Página"
       },
       chords: "Acordes",
       chordsHint: "Desactívelo para imprimir solo la letra.",
@@ -2145,8 +1977,7 @@ export const es: typeof pt = {
       twoColumns: "2 columnas",
       pageBreak: "Un cántico por página",
       pageBreakHint: "Desactívelo para encadenar elementos y ahorrar papel.",
-      pageBreakSongsHint:
-        "Desactívelo para que quepan tantos cánticos como permita cada página. El índice/plan sigue en su propia página.",
+      pageBreakSongsHint: "Desactívelo para que quepan tantos cánticos como permita cada página. El índice/plan sigue en su propia página.",
       paper: "Papel",
       letter: "Carta",
       margins: "Márgenes",
@@ -2158,64 +1989,55 @@ export const es: typeof pt = {
       accentColor: "Color de marca",
       accentColorHint: "Azul Hosana en encabezados y acordes. Desactívelo para blanco y negro.",
       footer: "Nota al pie",
-      footerPlaceholder: "Ej.: Licencia CCLI #12345",
+      footerPlaceholder: "Ej.: Licencia CCLI #12345"
     },
     settingsCard: {
       title: "Plantillas e Impresión",
-      description:
-        "Preferencias de la organización para imprimir cánticos, carpetas, órdenes de culto y escalas.",
+      description: "Preferencias de la organización para imprimir cánticos, carpetas, órdenes de culto y escalas.",
       testModel: "Vista previa",
-      editHint: "Haga clic en «Editar» para cambiar las preferencias.",
+      editHint: "Haga clic en «Editar» para cambiar las preferencias."
     },
     templates: {
       modern: {
         name: "Moderno",
         tagline: "Limpio y equilibrado",
-        description:
-          "Tipografía sans-serif limpia, etiquetas discretas y el color de la iglesia en los acordes. Sirve para todo.",
+        description: "Tipografía sans-serif limpia, etiquetas discretas y el color de la iglesia en los acordes. Sirve para todo."
       },
       classic: {
         name: "Clásico",
         tagline: "Serifa litúrgica",
-        description:
-          "Encabezado centrado, líneas dobles y serifa tradicional. Solemne y atemporal.",
+        description: "Encabezado centrado, líneas dobles y serifa tradicional. Solemne y atemporal."
       },
       contemporary: {
         name: "Escenario",
         tagline: "Alto contraste",
-        description:
-          "Títulos grandes, acordes en negrita y cajas de tono y tempo legibles desde el atril.",
+        description: "Títulos grandes, acordes en negrita y cajas de tono y tempo legibles desde el atril."
       },
       compact: {
         name: "Compacto",
         tagline: "Ahorra papel",
-        description:
-          "Encabezado en una línea, espaciado mínimo y dos columnas para que quepa lo máximo en una hoja.",
+        description: "Encabezado en una línea, espaciado mínimo y dos columnas para que quepa lo máximo en una hoja."
       },
       elegant: {
         name: "Elegante",
         tagline: "Editorial",
-        description:
-          "Títulos con serifa, versalitas en el color de la iglesia y coro en cursiva. Ideal para programas y eventos.",
+        description: "Títulos con serifa, versalitas en el color de la iglesia y coro en cursiva. Ideal para programas y eventos."
       },
       bulletin: {
         name: "Boletín",
         tagline: "Franja de color",
-        description:
-          "Encabezado en franja con el color de la iglesia y tablas sombreadas. Ideal para órdenes de culto y escalas.",
+        description: "Encabezado en franja con el color de la iglesia y tablas sombreadas. Ideal para órdenes de culto y escalas."
       },
       leadsheet: {
         name: "Partitura",
         tagline: "Para músicos",
-        description:
-          "Secciones en un margen lateral, acordes monoespaciados y cuadrícula de tono/tempo. Hecho para la banda.",
+        description: "Secciones en un margen lateral, acordes monoespaciados y cuadrícula de tono/tempo. Hecho para la banda."
       },
       hymnal: {
         name: "Himnario",
         tagline: "Estrofas numeradas",
-        description:
-          "Como un himnario: título centrado, estrofas numeradas automáticamente y coro sangrado en cursiva.",
-      },
+        description: "Como un himnario: título centrado, estrofas numeradas automáticamente y coro sangrado en cursiva."
+      }
     },
     song: {
       number: "Nº {number}",
@@ -2228,16 +2050,19 @@ export const es: typeof pt = {
       instrumental: "Instrumental",
       tab: "Tablatura",
       repeat: "(repetir)",
-      empty: "Este cántico aún no tiene letra.",
+      empty: "Este cántico aún no tiene letra."
     },
     songbook: {
-      songCount: { one: "{count} cántico", other: "{count} cánticos" },
+      songCount: {
+        one: "{count} cántico",
+        other: "{count} cánticos"
+      },
       index: "Índice",
       titleCol: "Título",
       artistCol: "Artista / Autor",
       emptyFolder: "Esta carpeta no contiene cánticos.",
       emptyCollection: "Esta colección no contiene cánticos.",
-      emptySelection: "No hay cánticos seleccionados.",
+      emptySelection: "No hay cánticos seleccionados."
     },
     service: {
       badge: "Orden de Culto",
@@ -2256,8 +2081,8 @@ export const es: typeof pt = {
         song: "Alabanza",
         message: "Mensaje",
         announcement: "Anuncios",
-        moment: "Momento",
-      },
+        moment: "Momento"
+      }
     },
     event: {
       badge: "Agenda",
@@ -2271,10 +2096,13 @@ export const es: typeof pt = {
       roleCol: "Función",
       membersCol: "Responsables",
       noAssignee: "Sin asignar",
-      notes: "Notas",
+      notes: "Notas"
     },
     batch: {
-      itemCount: { one: "{count} elemento", other: "{count} elementos" },
+      itemCount: {
+        one: "{count} elemento",
+        other: "{count} elementos"
+      },
       badge: "Lote",
       content: "Contenido",
       types: {
@@ -2282,8 +2110,8 @@ export const es: typeof pt = {
         folder: "Carpeta",
         collection: "Colección",
         service: "Culto",
-        event: "Evento",
-      },
+        event: "Evento"
+      }
     },
     buttons: {
       print: "Imprimir",
@@ -2295,17 +2123,16 @@ export const es: typeof pt = {
       printDay: "Imprimir Día ({count})",
       printDayTitle: "Imprimir Agenda del Día",
       printCount: "Imprimir ({count})",
-      printServiceShort: "Imprimir Culto",
-    },
+      printServiceShort: "Imprimir Culto"
+    }
   },
-
   analytics: {
     title: "Analíticas",
     desc: "Uso, setlist y salud de la biblioteca.",
     tabs: {
       usage: "Uso",
       setlist: "Setlist",
-      libraryHealth: "Salud de la Biblioteca",
+      libraryHealth: "Salud de la Biblioteca"
     },
     usage: {
       title: "Uso",
@@ -2316,7 +2143,7 @@ export const es: typeof pt = {
       planStatus: {
         active: "Activo",
         trialing: "Periodo de Prueba",
-        none: "Sin suscripción activa",
+        none: "Sin suscripción activa"
       },
       resources: {
         songs: "Canciones",
@@ -2325,13 +2152,13 @@ export const es: typeof pt = {
         events: "Eventos",
         collections: "Colecciones",
         folders: "Carpetas",
-        storage: "Almacenamiento local",
+        storage: "Almacenamiento local"
       },
       sections: {
         library: "Biblioteca",
         workspace: "Espacio de trabajo",
         services: "Cultos",
-        agenda: "Agenda y papelera",
+        agenda: "Agenda y papelera"
       },
       details: {
         songs: "Canciones en la biblioteca",
@@ -2349,8 +2176,8 @@ export const es: typeof pt = {
         eventsTotal: "Eventos totales",
         eventsUpcoming: "Próximos",
         eventsPast: "Pasados",
-        trash: "Elementos en la papelera",
-      },
+        trash: "Elementos en la papelera"
+      }
     },
     setlist: {
       title: "Setlist",
@@ -2376,7 +2203,7 @@ export const es: typeof pt = {
       sort: {
         frequency: "Frecuencia",
         lastPlayed: "Última vez",
-        title: "Título",
+        title: "Título"
       },
       sections: {
         mostPlayed: "Más tocadas",
@@ -2388,8 +2215,8 @@ export const es: typeof pt = {
         never: "Nunca tocadas",
         neverDesc: "Canciones aún no usadas en un culto.",
         rarely: "Menos tocadas",
-        rarelyDesc: "Canciones con menos usos.",
-      },
+        rarelyDesc: "Canciones con menos usos."
+      }
     },
     libraryHealth: {
       title: "Salud de la Biblioteca",
@@ -2419,37 +2246,14 @@ export const es: typeof pt = {
         tempo: "Tempo faltante",
         songNumber: "Número de canción faltante",
         youtube: "Enlace de YouTube faltante",
-        duration: "Duración faltante",
-      },
-    },
+        duration: "Duración faltante"
+      }
+    }
   },
-
-  loginHistory: {
-    title: "Historial de inicio de sesión",
-    personalDesc:
-      "Inicios de sesión recientes en tu cuenta, con dispositivo y ubicación cuando estén disponibles.",
-    orgDesc: "Actividad de inicio de sesión de todos los miembros de esta organización.",
-    loading: "Cargando historial...",
-    loadError: "No se pudo cargar el historial de inicio de sesión.",
-    empty: "Aún no hay registros de inicio de sesión.",
-    loadMore: "Cargar más",
-    unknownLocation: "Ubicación desconocida",
-    meta: "IP: {ip} · {location}",
-    events: {
-      signedIn: "Inicio de sesión",
-      signedOut: "Cierre de sesión",
-      sessionCreated: "Sesión creada",
-      sessionRevoked: "Sesión revocada",
-      sessionsRevokedAll: "Todas las sesiones revocadas",
-      other: "Evento de autenticación",
-    },
-  },
-
   organization: {
     offlineTitle: "Sin conexión",
     offlineDesc: "La configuración de la organización necesita conexión a internet.",
-    studioDesc:
-      "Valores de impresión, duraciones de momentos y responsabilidades de la agenda de este espacio.",
+    studioDesc: "Valores de impresión, duraciones de momentos y responsabilidades de la agenda de este espacio.",
     tabs: {
       workspace: "Espacio de trabajo",
       members: "Miembros",
@@ -2457,125 +2261,19 @@ export const es: typeof pt = {
       billing: "Facturación",
       general: "Servidor",
       ai: "Logos IA",
-      loginActivity: "Actividad de login",
-    },
-    loginActivity: {
-      title: "Actividad de login",
-      desc: "Historial de inicios de sesión de toda la organización (solo propietarios y administradores).",
-      listTitle: "Inicios de sesión de la organización",
-      listDesc: "Eventos recientes de autenticación de los miembros de este espacio de trabajo.",
-      noAccessTitle: "Sin acceso",
-      noAccessDesc:
-        "Solo los propietarios y administradores pueden ver la actividad de login de la organización.",
-    },
+      loginActivity: "Actividad de login"
+    }
   },
-
   oauth: {
     consent: {
       title: "Autorizar acceso MCP",
       desc: "{client} quiere acceder a tu biblioteca Hosanna vía MCP.",
-      scopes: "Ámbitos solicitados",
-      allow: "Permitir",
-      deny: "Denegar",
-      genericError: "No se pudo completar la autorización.",
-    },
+      genericError: "No se pudo completar la autorización."
+    }
   },
-
   ai: {
-    settings: {
-      title: "Logos IA",
-      desc: "Clave de API del asistente de la organización.",
-      loading: "Cargando…",
-      loadError: "No se pudo cargar la configuración de IA.",
-      saveError: "No se pudo guardar la configuración de IA.",
-      saved: "Configuración de IA guardada.",
-      keyCleared: "Clave de API eliminada.",
-      noAccessTitle: "Sin acceso",
-      noAccessDesc: "Solo propietarios y administradores pueden gestionar la IA.",
-      statusOn: "Activado",
-      statusPaused: "Configurado · desactivado",
-      statusSetup: "No configurado",
-      connectionTitle: "Conexión",
-      connectionDesc: "Proveedor, modelo y clave de API.",
-      encryptionMissing:
-        "Falta AI_SETTINGS_ENCRYPTION_KEY en el servidor. Configúrala antes de guardar claves.",
-      provider: "Proveedor",
-      providerHint: "Elige quién sirve los modelos.",
-      defaultEndpoint: "API predeterminada",
-      customEndpoint: "URL personalizada",
-      nativeWebOn: "Admite búsqueda web y lectura de páginas.",
-      nativeWebOff: "La búsqueda web usa DuckDuckGo con este proveedor.",
-      baseUrl: "URL base de la API",
-      baseUrlPlaceholder: "Déjalo vacío para el predeterminado",
-      baseUrlRequiredPlaceholder: "https://api.example.com/v1",
-      baseUrlHint: "Endpoint Chat Completions compatible con OpenAI.",
-      model: "Modelo",
-      customModel: "Modelo personalizado",
-      usePresets: "Usar presets",
-      modelPlaceholder: "p. ej. gpt-4o-mini",
-      apiKey: "Clave de API",
-      apiKeyPlaceholder: "Pega tu clave de API",
-      apiKeyConfiguredPlaceholder: "Enfoca para reemplazar la clave actual",
-      apiKeyReplaceHint: "Clave guardada. Haz clic en el campo para reemplazarla.",
-      keyStatusConfigured: "Guardada",
-      keyStatusMissing: "No definida.",
-      keyNeverReturned: "La clave nunca se devuelve al navegador.",
-      enabled: "Activar asistente",
-      enabledDesc: "Los miembros con acceso a IA pueden abrir el chat.",
-      advanced: "Avanzado",
-      advancedDesc: "Límite de herramientas, temperatura y longitud de respuesta.",
-      behaviorTitle: "Comportamiento",
-      behaviorDesc: "Instrucciones y memoria en cada respuesta.",
-      maxToolCalls: "Máximo de herramientas por respuesta",
-      maxToolCallsHint: "Entre {min} y {max}.",
-      temperature: "Temperatura",
-      temperatureHint: "Más bajo = más predecible; más alto = más variado.",
-      temperatureDefault: "Predeterminado",
-      maxOutputTokens: "Longitud máxima de respuesta (tokens)",
-      maxOutputTokensHint: "Déjalo vacío para el predeterminado del modelo.",
-      instructions: "Instrucciones de la organización",
-      instructionsHint: "Se incluyen en cada conversación.",
-      instructionsPlaceholder: "p. ej. Preferimos tonalidades de G a D. Títulos en Title Case.",
-      memoryTitle: "Memoria",
-      memoryDesc: "Notas recordadas en los chats.",
-      memoryOrgTitle: "Memoria de la organización",
-      memoryOrgDesc: "Notas compartidas por toda la organización.",
-      memoryOrgPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
-      memoryPersonalTitle: "Memoria individual",
-      memoryPersonalDesc: "Notas de tu cuenta — solo para ti, no se comparten con la organización.",
-      memoryPersonalPlaceholder: "p. ej. Prefiero setlists más cortos.",
-      memoryEnabled: "Activar memoria",
-      memoryEnabledDesc: "Incluye las notas en el contexto y permite actualizarlas.",
-      memoryEmpty: "Aún no hay notas.",
-      memoryPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
-      memoryAdd: "Añadir",
-      memoryDelete: "Eliminar",
-      memoryClear: "Borrar todo",
-      memorySourceAi: "Guardado por Logos",
-      memorySourceAdmin: "Añadido por un administrador",
-      memorySourceUser: "Añadido por ti",
-      memoryCount: "{count}/{max} notas",
-      memoryError: "No se pudo actualizar la memoria.",
-      clearKey: "Quitar clave",
-      billing: {
-        title: "Saldo DeepSeek",
-        desc: "Saldo en vivo de tu clave de API de DeepSeek.",
-        loading: "Obteniendo saldo…",
-        loadError: "No se pudo cargar el saldo de DeepSeek.",
-        refresh: "Actualizar saldo",
-        total: "Total disponible",
-        granted: "Concedido",
-        toppedUp: "Recargado",
-        available: "Suficiente para llamadas a la API",
-        unavailable: "El saldo puede ser insuficiente",
-        refreshedAt: "Actualizado {time}",
-        notConfigured: "Guarda una clave de API para ver el saldo.",
-        cryptoMissing: "El cifrado del servidor no está configurado; no se puede obtener el saldo.",
-        unsupported: "El saldo solo está disponible para DeepSeek.",
-      },
-    },
     chat: {
-      contextGeneral: "Hosanna Studio",
-    },
-  },
+      contextGeneral: "Hosanna Studio"
+    }
+  }
 };
