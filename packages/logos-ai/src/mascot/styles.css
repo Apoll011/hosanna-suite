@@ -1,6 +1,4 @@
-/* ============================================================
-   Logos AI — mascot (blue songbird with golden headphones)
-   ============================================================ */
+/* Logos AI — mascot (blue songbird with golden headphones) */
 
 .logos {
   --lx: 0px;
@@ -439,9 +437,7 @@
   transform: rotate(12deg);
 }
 
-/* ============================================================
-   Expressions — blush, eyebrows, equalizer
-   ============================================================ */
+/* Expressions — blush, eyebrows, equalizer */
 .logos[data-mood="happy"] .logos-blush,
 .logos[data-mood="excited"] .logos-blush,
 .logos[data-mood="celebrating"] .logos-blush,
@@ -523,9 +519,7 @@
   animation-delay: -0.1s;
 }
 
-/* ============================================================
-   Interaction — poke, pet, hover
-   ============================================================ */
+/* Interaction — poke, pet, hover */
 .logos-interactive {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -553,9 +547,7 @@
   animation-duration: 0.9s;
 }
 
-/* ============================================================
-   Reaction moods — surprised, love, wink, dizzy
-   ============================================================ */
+/* Reaction moods — surprised, love, wink, dizzy */
 
 /* surprised: eyes wide, beak round, "!" pops, wings out */
 .logos[data-mood="surprised"] {
@@ -677,9 +669,7 @@
   transform: rotate(-16deg);
 }
 
-/* ============================================================
-   Idle antics — little unprompted behaviours (data-act)
-   ============================================================ */
+/* Idle antics — little unprompted behaviours (data-act) */
 
 /* eyes shut for a happy / sleepy moment */
 .logos[data-act="hop"] .logos-eyes,
@@ -1237,9 +1227,7 @@
   }
 }
 
-/* ============================================================
-   State transitions — settle squash, blink and a mood-coloured aura
-   ============================================================ */
+/* State transitions — settle squash, blink and a mood-coloured aura */
 
 /* The aura cross-fades between moods (it reads `color`). */
 .logos {
@@ -1310,9 +1298,7 @@
     logos-blink 5.6s 0.3s infinite;
 }
 
-/* ============================================================
-   More reactions — giggle, shy, grumpy, cool, dance
-   ============================================================ */
+/* More reactions — giggle, shy, grumpy, cool, dance */
 
 /* giggle: ticklish — squeezed-shut eyes and a happy wiggle */
 .logos[data-mood="giggle"] {
@@ -1465,9 +1451,7 @@
   animation: logos-orbit 4s linear infinite;
 }
 
-/* ============================================================
-   More idle antics — peck, sneeze, boogie, cheeky wink
-   ============================================================ */
+/* More idle antics — peck, sneeze, boogie, cheeky wink */
 
 /* peck at the ground */
 .logos[data-act="peck"] .logos-body {
@@ -1697,9 +1681,7 @@
   }
 }
 
-/* ============================================================
-   Chat motion (messages, streaming caret, dots, collapse)
-   ============================================================ */
+/* Chat motion (messages, streaming caret, dots, collapse) */
 
 @keyframes logos-msg-in {
   from {

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { isTrustedCorsOrigin, withAuthCors } from "../src/cors.js";
+import { isTrustedCorsOrigin, withAuthCors } from "../src/http/cors.js";
 
 describe("isTrustedCorsOrigin", () => {
   it("allows studio and auth hosts", () => {

@@ -6,12 +6,14 @@
 import {
   AiChatProvider,
   LogosHostProvider,
+  LogosRouteProvider,
   LogosSongAdapterProvider,
   type LogosHost,
   type LogosSong,
   type LogosSongAdapter,
 } from "@hosanna/logos-ai";
 import React, { useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { aiApi } from "../api/ai";
 import { useAuth } from "../contexts/AuthContext";
 import { useSong, useSongMutations } from "../hooks/useSongs";
@@ -28,6 +30,16 @@ function useUpdateSongFromMutations() {
   return async (args: { id: string; data: Partial<LogosSong> }) => {
     await updateSong({ id: args.id, data: args.data });
   };
+}
+
+function StudioLogosRoute({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const params = useParams();
+  return (
+    <LogosRouteProvider pathname={location.pathname} params={params}>
+      {children}
+    </LogosRouteProvider>
+  );
 }
 
 /**
@@ -82,7 +94,9 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
   return (
     <LogosHostProvider value={host}>
       <LogosSongAdapterProvider value={songs}>
-        <AiChatProvider>{children}</AiChatProvider>
+        <StudioLogosRoute>
+          <AiChatProvider>{children}</AiChatProvider>
+        </StudioLogosRoute>
       </LogosSongAdapterProvider>
     </LogosHostProvider>
   );

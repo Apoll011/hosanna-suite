@@ -44,9 +44,6 @@ function songHasChords(song: SongAST): boolean {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
 export interface ChordProPreviewProps {
   song: SongAST;
   twoColumnLayout?: boolean;
@@ -56,9 +53,6 @@ export interface ChordProPreviewProps {
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-// ---------------------------------------------------------------------------
-// Main renderer
-// ---------------------------------------------------------------------------
 const ChordProRenderer = React.memo(
   ({
     song,
@@ -557,10 +551,6 @@ const ChordProRenderer = React.memo(
     );
   },
 );
-
-// ---------------------------------------------------------------------------
-// Render Dispatchers & Sub-components
-// ---------------------------------------------------------------------------
 
 interface LineRendererProps {
   line: LineAST;

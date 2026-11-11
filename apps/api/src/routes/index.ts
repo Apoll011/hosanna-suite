@@ -16,8 +16,8 @@ import { PLAN_PRICING } from "../config/pricing.js";
 import { authenticate } from "../middleware/auth.js";
 import { apiLimiter, backupLimiter, healthLimiter, syncLimiter } from "../middleware/rateLimit.js";
 import { requireSubscription } from "../middleware/subscription.js";
-import { cifraRouter } from "./cifra.route.js";
-import anotationRouter from "./serviceSongAnnotation.routes.js";
+import { cifraRouter } from "./cifra.routes.js";
+import { annotationRouter } from "./serviceSongAnnotation.routes.js";
 import { aiRouter } from "./ai.routes.js";
 import { youtubeRouter } from "./youtube.routes.js";
 import { rateLimit } from "express-rate-limit";
@@ -67,4 +67,4 @@ apiRouter.use("/ai", requireSubscription, aiChatLimiter, aiRouter);
 
 apiRouter.use("/notifications", apiLimiter, notificationsRouter);
 apiRouter.use("/trash", apiLimiter, trashRouter);
-apiRouter.use("/annotation", apiLimiter, anotationRouter);
+apiRouter.use("/annotation", apiLimiter, annotationRouter);

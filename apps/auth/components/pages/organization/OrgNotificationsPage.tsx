@@ -2,13 +2,13 @@
 
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
 import {
   notificationsApi,
   type CreateNotificationInput,
   type NotificationChannel,
-} from "@/lib/notifications-api";
+} from "@/lib/services/notifications-api";
 import type { AppRole } from "@hosanna/auth";
 import { Button, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {

@@ -5,16 +5,12 @@
  * It does NOT contain any formatting logic itself; all formatting is delegated
  * to the core `formatChordPro` function.
  *
- * The Ace editor instance is typed as `any` to avoid a hard dependency on
- * ace-builds in this file.
+ * Ace is typed via local `AceEditorLike` shims so this file stays free of an
+ * ace-builds hard dependency.
  */
 
 import { formatChordPro } from "../format";
 import type { FormatOptions, FormatResult } from "../types";
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
 
 /** A minimal subset of the Ace editor interface used by the integration. */
 export interface AceEditorLike {
@@ -61,17 +57,13 @@ export interface AceAnchorLike {
 export interface AceCommand {
   name: string;
   bindKey: { win: string; mac: string };
-  exec(editor: any): void;
+  exec(editor: AceEditorLike): void;
 }
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 /**
  * Safely read the full document content from an Ace editor.
  */
-function getDocumentContent(editor: any): string | null {
+function getDocumentContent(editor: AceEditorLike | null | undefined): string | null {
   if (!editor || typeof editor.getValue !== "function") return null;
   return editor.getValue();
 }
@@ -80,7 +72,7 @@ function getDocumentContent(editor: any): string | null {
  * Apply formatted content to the Ace editor as a single atomic (undoable) operation.
  * Preserves the cursor position as closely as possible.
  */
-function applyFormattedDocument(editor: any, result: FormatResult): void {
+function applyFormattedDocument(editor: AceEditorLike, result: FormatResult): void {
   if (!result.changed) return;
 
   // Record cursor position before the change
@@ -118,7 +110,11 @@ function applyFormattedDocument(editor: any, result: FormatResult): void {
  * Apply formatted content for a selection-based format operation.
  * Replaces only the selected range and tries to restore the selection.
  */
-function applyFormattedSelection(editor: any, range: AceRangeLike, result: FormatResult): void {
+function applyFormattedSelection(
+  editor: AceEditorLike,
+  range: AceRangeLike,
+  result: FormatResult,
+): void {
   if (!result.changed) return;
 
   const session = editor.session;
@@ -135,8 +131,8 @@ function applyFormattedSelection(editor: any, range: AceRangeLike, result: Forma
       const endRow = range.start.row + newLines.length - 1;
       const endCol =
         newLines.length === 1
-          ? range.start.column + newLines[0].length
-          : newLines[newLines.length - 1].length;
+          ? range.start.column + newLines[0]!.length
+          : newLines[newLines.length - 1]!.length;
       selection.setRange({
         start: range.start,
         end: { row: endRow, column: endCol },
@@ -147,10 +143,6 @@ function applyFormattedSelection(editor: any, range: AceRangeLike, result: Forma
   }
 }
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
-
 /**
  * Format the entire document in the given Ace editor.
  *
@@ -160,9 +152,12 @@ function applyFormattedSelection(editor: any, range: AceRangeLike, result: Forma
  *
  * @returns The FormatResult from the core formatter, useful for UI feedback.
  */
-export function formatAceDocument(editor: any, options?: FormatOptions): FormatResult | null {
+export function formatAceDocument(
+  editor: AceEditorLike | null | undefined,
+  options?: FormatOptions,
+): FormatResult | null {
   const content = getDocumentContent(editor);
-  if (content === null) return null;
+  if (content === null || !editor) return null;
 
   const result = formatChordPro(content, options);
   applyFormattedDocument(editor, result);
@@ -178,7 +173,10 @@ export function formatAceDocument(editor: any, options?: FormatOptions): FormatR
  *
  * @returns The FormatResult from the core formatter.
  */
-export function formatAceSelection(editor: any, options?: FormatOptions): FormatResult | null {
+export function formatAceSelection(
+  editor: AceEditorLike | null | undefined,
+  options?: FormatOptions,
+): FormatResult | null {
   if (!editor) return null;
 
   const selection = typeof editor.getSelection === "function" ? editor.getSelection() : null;
@@ -216,7 +214,7 @@ export function formatAceSelection(editor: any, options?: FormatOptions): Format
  * @param options - Optional formatting options.
  */
 export function registerFormatShortcut(
-  editor: any,
+  editor: AceEditorLike | null | undefined,
   onResult?: (result: FormatResult) => void,
   options?: FormatOptions,
 ): void {
@@ -227,7 +225,7 @@ export function registerFormatShortcut(
   editor.commands.addCommand({
     name: "formatChordPro",
     bindKey: { win: "Ctrl-Shift-F", mac: "Cmd-Shift-F" },
-    exec: (ed: any) => {
+    exec: (ed) => {
       const result = formatAceSelection(ed, options);
       if (result && onResult) {
         onResult(result);

@@ -10,14 +10,14 @@ import {
   type AiMemoryItem,
   type AiProvider,
   type AiSettingsPublic,
-} from "@/lib/ai-api";
+} from "@/lib/services/ai-api";
 import {
   readCachedAiBilling,
   readCachedAiSettings,
   writeCachedAiBilling,
   writeCachedAiSettings,
-} from "@/lib/ai-settings-cache";
-import { useI18n } from "@/lib/i18n";
+} from "@/lib/services/ai-settings-cache";
+import { useI18n } from "@/lib/ui/i18n";
 import { Button, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import {
   ArrowRight,
@@ -354,11 +354,14 @@ function AiMemoryPanel({
   scope,
   limits,
   showToast,
+  readOnly = false,
 }: {
   organizationId: string;
   scope: "organization" | "personal";
   limits: AiLimits;
   showToast: (msg: string, type: "success" | "error") => void;
+  /** When true, list only — no add/remove/clear (org memory for non-managers). */
+  readOnly?: boolean;
 }) {
   const { t } = useI18n();
   const [items, setItems] = useState<AiMemoryItem[] | null>(null);
@@ -461,7 +464,11 @@ function AiMemoryPanel({
             {isOrg ? t("ai.settings.memoryOrgTitle") : t("ai.settings.memoryPersonalTitle")}
           </h3>
           <p className="text-xs text-m3-secondary mt-0.5">
-            {isOrg ? t("ai.settings.memoryOrgDesc") : t("ai.settings.memoryPersonalDesc")}
+            {readOnly && isOrg
+              ? t("ai.settings.memberOrgReadonly")
+              : isOrg
+                ? t("ai.settings.memoryOrgDesc")
+                : t("ai.settings.memoryPersonalDesc")}
           </p>
         </div>
         <span className="text-xs text-m3-secondary tabular-nums shrink-0">
@@ -469,36 +476,38 @@ function AiMemoryPanel({
         </span>
       </div>
 
-      <form
-        className="flex items-center gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void add();
-        }}
-      >
-        <input
-          className={`${inputClass} flex-1 min-w-0`}
-          value={draft}
-          maxLength={limits.memoryEntryMaxChars}
-          disabled={busy || full}
-          onChange={(e) => setDraft(e.currentTarget.value)}
-          placeholder={
-            isOrg
-              ? t("ai.settings.memoryOrgPlaceholder")
-              : t("ai.settings.memoryPersonalPlaceholder")
-          }
-        />
-        <Button
-          type="submit"
-          variant="primary"
-          size="sm"
-          className="shrink-0"
-          icon={<Plus className="w-4 h-4" />}
-          disabled={busy || full || !draft.trim()}
+      {!readOnly ? (
+        <form
+          className="flex items-center gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void add();
+          }}
         >
-          {t("ai.settings.memoryAdd")}
-        </Button>
-      </form>
+          <input
+            className={`${inputClass} flex-1 min-w-0`}
+            value={draft}
+            maxLength={limits.memoryEntryMaxChars}
+            disabled={busy || full}
+            onChange={(e) => setDraft(e.currentTarget.value)}
+            placeholder={
+              isOrg
+                ? t("ai.settings.memoryOrgPlaceholder")
+                : t("ai.settings.memoryPersonalPlaceholder")
+            }
+          />
+          <Button
+            type="submit"
+            variant="primary"
+            size="sm"
+            className="shrink-0"
+            icon={<Plus className="w-4 h-4" />}
+            disabled={busy || full || !draft.trim()}
+          >
+            {t("ai.settings.memoryAdd")}
+          </Button>
+        </form>
+      ) : null}
 
       {items === null ? (
         <div className="flex justify-center py-6">
@@ -540,29 +549,33 @@ function AiMemoryPanel({
                 <span className="flex-1 min-w-0 text-sm text-m3-text wrap-break-word">
                   {item.content}
                 </span>
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => void remove(item.id)}
-                  title={t("ai.settings.memoryDelete")}
-                  aria-label={t("ai.settings.memoryDelete")}
-                  className="shrink-0 p-1.5 rounded-sm text-m3-secondary opacity-60 group-hover:opacity-100 hover:text-red-600 hover:bg-red-500/10 disabled:opacity-40 transition cursor-pointer"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                {!readOnly ? (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => void remove(item.id)}
+                    title={t("ai.settings.memoryDelete")}
+                    aria-label={t("ai.settings.memoryDelete")}
+                    className="shrink-0 p-1.5 rounded-sm text-m3-secondary opacity-60 group-hover:opacity-100 hover:text-red-600 hover:bg-red-500/10 disabled:opacity-40 transition cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                ) : null}
               </li>
             ))}
           </ul>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void clear()}
-              className="text-xs text-m3-secondary hover:text-red-600 hover:underline disabled:opacity-50 cursor-pointer"
-            >
-              {t("ai.settings.memoryClear")}
-            </button>
-          </div>
+          {!readOnly ? (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void clear()}
+                className="text-xs text-m3-secondary hover:text-red-600 hover:underline disabled:opacity-50 cursor-pointer"
+              >
+                {t("ai.settings.memoryClear")}
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
     </Surface>
@@ -628,7 +641,9 @@ export function OrgAiPage() {
   const [billingRefreshKey, setBillingRefreshKey] = useState(0);
   const [setupDismissed, setSetupDismissed] = useState(false);
 
-  const { granted: canManage, loading: canLoading } = useCan("ai.manage");
+  const { granted: canManage, loading: manageLoading } = useCan("ai.manage");
+  const { granted: canUse, loading: useLoading } = useCan("ai.use");
+  const canLoading = manageLoading || useLoading;
 
   const showToast = useCallback((msg: string, type: "success" | "error") => {
     setToast({ msg, type });
@@ -662,7 +677,8 @@ export function OrgAiPage() {
   }, [organization?.id, formSetters]);
 
   useEffect(() => {
-    if (!canManage || !organization) return;
+    // ai.use can read public settings; managers and members both need this for the page.
+    if (!canUse || !organization) return;
     let cancelled = false;
     void aiApi
       .getSettings({ organizationId: organization.id })
@@ -681,7 +697,7 @@ export function OrgAiPage() {
     return () => {
       cancelled = true;
     };
-  }, [canManage, organization, showToast, t, formSetters]);
+  }, [canUse, organization, showToast, t, formSetters]);
 
   const presets = useMemo(() => settings?.modelPresets[provider] ?? [], [settings, provider]);
 
@@ -705,7 +721,7 @@ export function OrgAiPage() {
     );
   }
 
-  if (!canManage) {
+  if (!canUse) {
     return (
       <AccountCenter>
         <PageHeader title={t("accountOrg.ai.title")} description={t("accountOrg.ai.description")} />
@@ -714,6 +730,80 @@ export function OrgAiPage() {
           <h3 className="text-sm font-semibold text-m3-text">{t("ai.settings.noAccessTitle")}</h3>
           <p className="text-sm text-m3-secondary mt-1">{t("ai.settings.noAccessDesc")}</p>
         </Surface>
+      </AccountCenter>
+    );
+  }
+
+  // Member view: org has AI access but this user cannot manage provider/settings.
+  if (!canManage) {
+    const ready = Boolean(settings?.configured && settings.enabled);
+    return (
+      <AccountCenter toast={toast}>
+        <div className="space-y-6 pb-8">
+          <PageHeader
+            title={t("ai.settings.memberTitle")}
+            description={t("ai.settings.memberDesc")}
+          />
+
+          {!settings ? (
+            <div className="flex justify-center py-16">
+              <Spinner size="md" label={t("ai.settings.loading")} />
+            </div>
+          ) : !settings.configured ? (
+            <Surface className="text-center py-10 space-y-2">
+              <KeyRound className="w-5 h-5 text-m3-secondary mx-auto" />
+              <h3 className="text-sm font-semibold text-m3-text">
+                {t("ai.settings.memberNotConfiguredTitle")}
+              </h3>
+              <p className="text-sm text-m3-secondary">
+                {t("ai.settings.memberNotConfiguredDesc")}
+              </p>
+            </Surface>
+          ) : (
+            <>
+              <div className="flex flex-wrap items-center gap-2">
+                {ready ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    {t("ai.settings.statusOn")}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
+                    <CircleOff className="w-3.5 h-3.5" />
+                    {t("ai.settings.statusPaused")}
+                  </span>
+                )}
+                <span className="text-xs text-m3-secondary">
+                  {PROVIDER_META[settings.provider]?.label ?? settings.provider} · {settings.model}
+                </span>
+              </div>
+
+              {settings.memoryEnabled ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  <AiMemoryPanel
+                    organizationId={organization.id}
+                    scope="organization"
+                    limits={settings.limits}
+                    showToast={showToast}
+                    readOnly
+                  />
+                  <AiMemoryPanel
+                    organizationId={organization.id}
+                    scope="personal"
+                    limits={settings.limits}
+                    showToast={showToast}
+                  />
+                </div>
+              ) : (
+                <Surface className="text-center py-8">
+                  <p className="text-sm text-m3-secondary m-0">
+                    {t("ai.settings.memoryEnabledDesc")}
+                  </p>
+                </Surface>
+              )}
+            </>
+          )}
+        </div>
       </AccountCenter>
     );
   }

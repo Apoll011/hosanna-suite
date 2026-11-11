@@ -178,7 +178,7 @@ export function ChordProDiffEditor({
 
   useEffect(() => {
     const el = rootRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
+    if (!el || typeof ResizeObserver === "undefined") return undefined;
     const ro = new ResizeObserver(([entry]) => {
       setNarrow(entry.contentRect.width < 720);
     });

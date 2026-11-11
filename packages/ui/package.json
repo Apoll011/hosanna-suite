@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/ui",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "Apache-2.0",
   "description": "Hosanna shared UI primitives for Studio, Auth, and SaaS",
@@ -10,6 +10,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./permissions": {
+      "types": "./src/permissions/index.ts",
+      "default": "./src/permissions/index.ts"
     }
   },
   "scripts": {

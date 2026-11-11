@@ -3,10 +3,10 @@
 import { AuthLayout } from "@/components/AuthLayout";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
-import { authClient } from "@/lib/auth-client";
-import { captchaFetchOptions, captchaRequired } from "@/lib/captcha";
-import { useI18n } from "@/lib/i18n";
-import { redirectAfterSuccessfulAuth } from "@/lib/redirect";
+import { authClient } from "@/lib/auth/client";
+import { captchaFetchOptions, captchaRequired } from "@/lib/auth/captcha";
+import { useI18n } from "@/lib/ui/i18n";
+import { redirectAfterSuccessfulAuth } from "@/lib/auth/redirect";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

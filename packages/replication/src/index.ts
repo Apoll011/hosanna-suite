@@ -3,6 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * `@hosanna/replication` — IndexedDB engine + configurable HTTP replication.
+ *
+ * Prefer subpaths when you only need one layer:
+ * - `@hosanna/replication/engine` — IndexedDB helpers + `HosanaCollection`
+ * - `@hosanna/replication/replication` — sync manager + wire utilities
+ *
+ * The root export remains the convenience barrel (backward compatible).
  */
 
 export {

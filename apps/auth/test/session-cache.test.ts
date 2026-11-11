@@ -58,7 +58,7 @@ describe("session-cache", () => {
       writeCachedLoginHistory,
       writeCachedSessions,
       writeCachedUser,
-    } = await import("../lib/session-cache");
+    } = await import("../lib/session/cache");
 
     const user = toCachedUser({
       id: "u1",
@@ -117,7 +117,7 @@ describe("session-cache", () => {
     // @ts-expect-error remove doubles
     delete globalThis.localStorage;
 
-    const { readCachedUser, writeCachedUser } = await import("../lib/session-cache");
+    const { readCachedUser, writeCachedUser } = await import("../lib/session/cache");
     writeCachedUser({ id: "u2" });
     assert.equal(readCachedUser(), null);
   });

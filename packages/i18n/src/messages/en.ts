@@ -1,0 +1,131 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import type { sharedPt } from "./pt";
+
+/** Cross-app UI strings shared by Studio and Auth. */
+export const sharedEn: typeof sharedPt = {
+  brand: {
+    name: "Hosanna",
+  },
+  common: {
+    save: "Save",
+    cancel: "Cancel",
+    back: "Back",
+    retry: "Retry",
+    refresh: "Refresh",
+    loading: "Loading…",
+  },
+  organization: {
+    loginActivity: {
+      title: "Login activity",
+      desc: "Organization-wide sign-in history (owners and admins only).",
+      listTitle: "Organization sign-ins",
+      listDesc: "Recent authentication events from members of this workspace.",
+      noAccessTitle: "No access",
+      noAccessDesc: "Only owners and admins can view organization login activity.",
+    },
+  },
+  loginHistory: {
+    title: "Login history",
+    personalDesc: "Recent sign-ins on your account, with device and location when available.",
+    orgDesc: "Sign-in activity for every member of this organization.",
+    loading: "Loading history…",
+    loadError: "Couldn't load login history.",
+    empty: "No login events yet.",
+    loadMore: "Load more",
+    unknownLocation: "Unknown location",
+    meta: "IP: {ip} · {location}",
+    events: {
+      signedIn: "Signed in",
+      signedOut: "Signed out",
+      sessionCreated: "Session created",
+      sessionRevoked: "Session revoked",
+      sessionsRevokedAll: "All sessions revoked",
+      other: "Security event",
+    },
+  },
+  oauth: {
+    consent: {
+      scopes: "Requested scopes",
+      allow: "Allow",
+      deny: "Deny",
+    },
+  },
+  settings: {
+    roles: {
+      owner: "Owner",
+      admin: "Admin",
+      teamLeader: "Team Leader",
+      editor: "Editor",
+      musician: "Musician",
+      guest: "Guest",
+      member: "Member",
+    },
+    notifications: {
+      title: "Notifications",
+      pageDesc: "Send a message to your team.",
+      loading: "Loading…",
+      noAccessTitle: "No permission",
+      noAccessDesc: "You need notification access from an organization owner.",
+      send: "Send",
+      sending: "Sending…",
+      sentToast: "Notification sent.",
+      sentPushToast: "Notification sent ({count} devices).",
+      genericError: "Unexpected error.",
+      errorToast: "Couldn't send the notification: {error}",
+      summaryOrg: "All members will receive this in the inbox.",
+      summaryOrgRoles: "Sent to {roles} in the inbox.",
+      summaryUser: "{name} will receive this notification.",
+      recipient: {
+        title: "Recipients",
+        desc: "Choose who receives this notification.",
+        user: "Member",
+        organization: "Organization",
+        searchPlaceholder: "Search by name or email…",
+        searching: "Loading members…",
+        noResults: "No members found.",
+        clear: "Clear",
+        rolesFilter: "Filter by role",
+        everyone: "All roles",
+        inboxOnly: "Sent to the in-app inbox.",
+        loadError: "Couldn't load members.",
+      },
+      content: {
+        title: "Message",
+        desc: "Title and body shown to recipients.",
+        typeLabel: "Type",
+        types: {
+          info: "Info",
+          organization: "Organization",
+          team: "Team",
+          security: "Security",
+          billing: "Billing",
+        },
+        titleLabel: "Title",
+        titlePlaceholder: "e.g. Rehearsal moved to 8 PM",
+        descriptionLabel: "Description",
+        descriptionPlaceholder: "Optional details",
+        linkLabel: "Link",
+        linkPlaceholder: "/services",
+        linkHint: "Optional link opened when the notification is tapped.",
+        preview: "Preview",
+        previewEmpty: "Title preview",
+        now: "now",
+        appName: "Hosanna Studio",
+      },
+      delivery: {
+        title: "Delivery",
+        desc: "Inbox, push, or both.",
+        inbox: "Inbox",
+        inboxDesc: "In the app",
+        push: "Push",
+        pushDesc: "On the device",
+        both: "Both",
+        bothDesc: "Inbox and push",
+      },
+    },
+  },
+};

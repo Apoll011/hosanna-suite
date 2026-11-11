@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   check:
-    name: Install · typecheck · build · test
+    name: Install · typecheck · lint · build · test
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -30,13 +30,34 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Workspace health
+        run: pnpm test:workspace
+
       - name: Typecheck
+        env:
+          TURBO_TELEMETRY_DISABLED: "1"
         run: pnpm turbo run typecheck
 
+      - name: Lint
+        env:
+          TURBO_TELEMETRY_DISABLED: "1"
+        run: pnpm turbo run lint
+
       - name: Build
+        env:
+          TURBO_TELEMETRY_DISABLED: "1"
         run: pnpm turbo run build
 
       - name: Test
@@ -44,10 +65,5 @@ jobs:
         # keep NODE_ENV=test so rate limits / prod MCP URL checks stay off.
         env:
           NODE_ENV: test
+          TURBO_TELEMETRY_DISABLED: "1"
         run: pnpm turbo run test
-
-      - name: Lint (report only)
-        # Existing apps still have baseline prettier / hook warnings.
-        # Keep CI green while those are cleaned up app-by-app.
-        continue-on-error: true
-        run: pnpm turbo run lint --continue

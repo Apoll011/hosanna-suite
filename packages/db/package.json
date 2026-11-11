@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/db",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "Apache-2.0",
   "description": "Hosanna Prisma schema, migrations, and generated client",

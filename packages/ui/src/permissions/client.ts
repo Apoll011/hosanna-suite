@@ -66,6 +66,46 @@ function getCacheKey(permissions: PermissionString[]): string {
 }
 
 /**
+ * Persist an AND-batch permission result. A grant also marks each individual
+ * permission as granted; a denial only records the batch key (individuals may
+ * still be granted — see `lookupCachedAny`).
+ */
+export function rememberAndResult(permissions: PermissionString[], granted: boolean): void {
+  permCache.set(getCacheKey(permissions), granted);
+  if (granted) {
+    for (const p of permissions) {
+      permCache.set(getCacheKey([p]), true);
+    }
+  }
+}
+
+/**
+ * Resolve an OR ("any") grant from the shared permission cache.
+ *
+ * The multi-permission cache key is written by AND checks (`useCanAll` /
+ * `fetchPermissionsBatch`). A cached AND **true** implies ANY true, but a
+ * cached AND **false** must not imply ANY false — one of the permissions may
+ * still be granted. Returns `null` when the cache is not decisive.
+ */
+export function lookupCachedAny(permissions: PermissionString[]): boolean | null {
+  if (permissions.length === 0) return true;
+
+  for (const p of permissions) {
+    if (permCache.get(getCacheKey([p])) === true) return true;
+  }
+
+  const batchKey = getCacheKey(permissions);
+  if (permCache.get(batchKey) === true) return true;
+
+  // Only treat as denied when every permission is individually known-false.
+  if (permissions.every((p) => permCache.get(getCacheKey([p])) === false)) {
+    return false;
+  }
+
+  return null;
+}
+
+/**
  * Core fetcher. Batches permissions, deduplicates requests, and pre-populates cache.
  */
 function fetchPermissionsBatch(
@@ -82,13 +122,7 @@ function fetchPermissionsBatch(
 
   const promise = checkPermissions(permissions)
     .then((granted) => {
-      permCache.set(cacheKey, granted);
-
-      // If the batch was GRANTED, every individual permission inside it is also granted.
-      if (granted) {
-        permissions.forEach((p) => permCache.set(getCacheKey([p]), true));
-      }
-
+      rememberAndResult(permissions, granted);
       return granted;
     })
     .finally(() => {
@@ -184,7 +218,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
     if (roleLoading) return DEFAULT_RESULT;
     const local = checkPermissionsLocally(permissions, role);
     if (local !== null) {
-      permCache.set(cacheKey, local);
+      rememberAndResult(permissions, local);
       return {
         granted: local,
         loading: false,
@@ -218,7 +252,7 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
 
     const local = checkPermissionsLocally(permissions, role);
     if (local !== null) {
-      permCache.set(cacheKey, local);
+      rememberAndResult(permissions, local);
       setResult({ granted: local, loading: false, error: null });
       return;
     }
@@ -253,17 +287,9 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
   const cacheKey = useMemo(() => getCacheKey(permissions), [permissions]);
 
   const [result, setResult] = useState<PermResult>(() => {
-    for (const p of permissions) {
-      if (permCache.get(getCacheKey([p])) === true) {
-        return { granted: true, loading: false, error: null };
-      }
-    }
-    if (permCache.has(cacheKey)) {
-      return {
-        granted: permCache.get(cacheKey)!,
-        loading: false,
-        error: null,
-      };
+    const cached = lookupCachedAny(permissions);
+    if (cached !== null) {
+      return { granted: cached, loading: false, error: null };
     }
     if (roleLoading) return DEFAULT_RESULT;
     const local = checkPermissionAnyLocally(permissions, role);
@@ -278,21 +304,8 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
     mounted.current = true;
 
     const checkAny = async () => {
-      for (const p of permissions) {
-        if (permCache.get(getCacheKey([p])) === true) {
-          if (mounted.current) {
-            setResult((prev) =>
-              !prev.loading && prev.granted && prev.error === null
-                ? prev
-                : { granted: true, loading: false, error: null },
-            );
-          }
-          return;
-        }
-      }
-
-      if (permCache.has(cacheKey)) {
-        const cached = permCache.get(cacheKey)!;
+      const cached = lookupCachedAny(permissions);
+      if (cached !== null) {
         if (mounted.current) {
           setResult((prev) =>
             !prev.loading && prev.granted === cached && prev.error === null

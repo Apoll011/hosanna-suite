@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/ui/i18n";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";

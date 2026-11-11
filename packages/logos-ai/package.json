@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/logos-ai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "Apache-2.0",
   "description": "Logos AI chat UI for Hosanna",
@@ -29,6 +29,10 @@
       "types": "./src/mascot/index.ts",
       "default": "./src/mascot/index.ts"
     },
+    "./i18n": {
+      "types": "./src/i18n/index.ts",
+      "default": "./src/i18n/index.ts"
+    },
     "./styles.css": "./src/mascot/styles.css"
   },
   "scripts": {
@@ -37,14 +41,14 @@
   },
   "dependencies": {
     "@hosanna/chordpro": "workspace:*",
+    "@hosanna/i18n": "workspace:*",
     "@hosanna/ui": "workspace:*",
     "@tanstack/markdown": "^0.0.13"
   },
   "peerDependencies": {
     "lucide-react": ">=0.400.0",
     "react": "^19.0.0 || ^18.0.0",
-    "react-dom": "^19.0.0 || ^18.0.0",
-    "react-router-dom": "^7.0.0"
+    "react-dom": "^19.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@hosanna/config": "workspace:*",
@@ -54,7 +58,6 @@
     "lucide-react": "^0.546.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.11.0",
     "tsx": "^4.23.15",
     "typescript": "catalog:"
   }

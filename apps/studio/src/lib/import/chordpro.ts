@@ -1,6 +1,6 @@
 import { songsApi } from "@/src/api";
 import { Song } from "@/src/types";
-import { ProviderImportResult, SongImportProvider } from "@/src/utils/import";
+import { ProviderImportResult, SongImportProvider } from "./types";
 
 export class ChordProImportProvider implements SongImportProvider {
   readonly id = "chordpro";

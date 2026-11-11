@@ -1,0 +1,37 @@
+{
+  "apps": [
+    {
+      "id": "studio",
+      "package": "@hosanna/studio",
+      "dir": "apps/studio",
+      "buildEnv": [
+        "VITE_API_URL",
+        "VITE_AUTH_URL",
+        "VITE_TURNSTILE_SITE_KEY",
+        "VITE_PUBLIC_POSTHOG_KEY",
+        "VITE_PUBLIC_POSTHOG_HOST"
+      ],
+      "targets": {
+        "dev": {
+          "url": "https://dev-studio.hosanna.live",
+          "wranglerEnv": "preview"
+        },
+        "prod": {
+          "url": "https://studio.hosanna.live",
+          "wranglerEnv": "production"
+        }
+      }
+    },
+    {
+      "id": "saas",
+      "package": "@hosanna/saas",
+      "dir": "apps/saas",
+      "buildEnv": ["VITE_AUTH_URL", "VITE_API_URL", "VITE_DASHBOARD_URL"],
+      "targets": {
+        "prod": {
+          "url": "https://hosanna.live"
+        }
+      }
+    }
+  ]
+}

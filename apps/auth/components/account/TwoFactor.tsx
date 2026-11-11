@@ -1,7 +1,7 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
 import { AlertTriangle, CheckCircle2, Shield } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";

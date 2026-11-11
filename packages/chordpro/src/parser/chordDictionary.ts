@@ -24,10 +24,6 @@
  *           than silently returning something wrong or nothing at all.
  */
 
-// ============================================================================
-// Public types
-// ============================================================================
-
 export interface ChordFingering {
   chord: string;
   /** Canonical quality id resolved for this chord, e.g. "m7", "maj7", "9". */
@@ -73,9 +69,7 @@ interface GuitarShape {
   barre?: number;
 }
 
-// ============================================================================
 // Note naming (English + Portuguese solfège), semitone 0 = C
-// ============================================================================
 
 const NOTE_ALIASES: Record<string, number> = {
   C: 0,
@@ -141,11 +135,9 @@ export function pitchClassName(semitone: number): string {
   return SEMITONE_NAMES[((semitone % 12) + 12) % 12];
 }
 
-// ============================================================================
 // Chord quality registry — the "math". Every quality is just a list of
 // semitone offsets from the root. This is the single source of truth used
 // by piano voicing generation, and used to pick a guitar template/fallback.
-// ============================================================================
 
 interface ChordQuality {
   id: string;
@@ -384,10 +376,6 @@ const QUALITY_SIMPLIFICATION: Record<string, string> = {
   maj7flat5: "maj7",
 };
 
-// ============================================================================
-// Chord symbol parsing
-// ============================================================================
-
 interface ParsedChord {
   raw: string;
   rootSemitone: number;
@@ -455,9 +443,7 @@ function parseChordSymbol(chord: string): ParsedChord | null {
   };
 }
 
-// ============================================================================
 // Piano — pure computation from intervals, no lookup table at all.
-// ============================================================================
 
 function computePianoVoicing(rootSemitone: number, intervals: number[], bassSemitone?: number) {
   const rootPc = ((rootSemitone % 12) + 12) % 12;
@@ -484,9 +470,7 @@ function computePianoVoicing(rootSemitone: number, intervals: number[], bassSemi
   return { notes, highlightKeys };
 }
 
-// ============================================================================
 // Guitar — curated open shapes + movable CAGED barre templates + power-chord formula.
-// ============================================================================
 
 // -- Curated exact open-position shapes (kept from hand-verified fingerings). --
 const OPEN_CHORD_SHAPES: Record<string, GuitarShape> = {
@@ -855,10 +839,8 @@ function getGuitarFingering(
   return null;
 }
 
-// ============================================================================
 // Chord symbol analysis — used by the editor's validation/lint layer to flag
 // unknown roots/qualities without needing to compute a full fingering.
-// ============================================================================
 
 export interface ChordSymbolAnalysis {
   raw: string;
@@ -902,11 +884,9 @@ export function analyzeChordSymbol(chord: string): ChordSymbolAnalysis {
   return { raw: chord, hasValidRoot: true, qualityRecognized: recognized };
 }
 
-// ============================================================================
 // Raw chord theory (root + interval set) — exposed so instrument profiles
 // other than the hand-curated guitar/piano ones (see `src/instruments`) can
 // derive their own fingerings generically instead of needing a lookup table.
-// ============================================================================
 
 export interface ChordTheory {
   rootSemitone: number;
@@ -929,10 +909,6 @@ export function getChordTheory(chord: string): ChordTheory | null {
     bassSemitone: parsed.bassSemitone,
   };
 }
-
-// ============================================================================
-// Public dictionary
-// ============================================================================
 
 export class DefaultChordDictionary implements IChordDictionary {
   parse(chord: string): ParsedChordSymbol | null {

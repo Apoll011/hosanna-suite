@@ -1,32 +1,50 @@
 import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
-import { useI18n } from "@/lib/i18n";
+import { useReveal } from "@/hooks/useReveal";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
+import { Link } from "@tanstack/react-router";
 import { Mail, MessageSquare, Send } from "lucide-react";
-import { useEffect } from "react";
+import { useState, type FormEvent } from "react";
 import { StaffLines } from "./HosannaLanding";
 
-function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>(".reveal");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add("in-view");
-            io.unobserve(e.target);
-          }
-        }
-      },
-      { rootMargin: "-40px" },
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
-}
+const CONTACT_EMAIL = "hosanna.songbook@gmail.com";
+
+const SUBJECT_OPTIONS: { value: string; labelKey: TranslationKey }[] = [
+  { value: "technical", labelKey: "contact.subjectTechnical" },
+  { value: "feature", labelKey: "contact.subjectFeature" },
+  { value: "pricing", labelKey: "contact.subjectPricing" },
+  { value: "partnership", labelKey: "contact.subjectPartnership" },
+  { value: "other", labelKey: "contact.subjectOther" },
+];
 
 export function ContactForm() {
   useReveal();
   const { t } = useI18n();
+  const [name, setName] = useState("");
+  const [church, setChurch] = useState("");
+  const [email, setEmail] = useState("");
+  const [subjectValue, setSubjectValue] = useState(SUBJECT_OPTIONS[0].value);
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const subjectOption =
+      SUBJECT_OPTIONS.find((option) => option.value === subjectValue) ?? SUBJECT_OPTIONS[0];
+    const subjectLabel = t(subjectOption.labelKey);
+    const body = [
+      `Name: ${name.trim() || "(not provided)"}`,
+      `Church: ${church.trim() || "(not provided)"}`,
+      `Reply-to: ${email.trim() || "(not provided)"}`,
+      "",
+      message.trim(),
+    ].join("\n");
+
+    const mailto = new URL(`mailto:${CONTACT_EMAIL}`);
+    mailto.searchParams.set("subject", `[Hosanna] ${subjectLabel}`);
+    mailto.searchParams.set("body", body);
+    window.location.href = mailto.toString();
+  };
 
   return (
     <div className="bg-[#f8fafc] min-h-screen selection:bg-primary/10 font-sans">
@@ -76,7 +94,9 @@ export function ContactForm() {
                       {t("contact.emailTitle")}
                     </h3>
                     <p className="text-muted-foreground text-lg break-all">
-                      hosanna.songbook@gmail.com
+                      <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
+                        {CONTACT_EMAIL}
+                      </a>
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       {t("contact.emailResponseTime")}
@@ -94,8 +114,22 @@ export function ContactForm() {
                     </h3>
                     <p className="text-muted-foreground text-lg">@hosanna.studio</p>
                     <div className="flex gap-6 mt-3 text-base font-semibold text-primary">
-                      <span className="cursor-pointer hover:underline">Instagram</span>
-                      <span className="cursor-pointer hover:underline">YouTube</span>
+                      <a
+                        href="https://www.instagram.com/hosanna.studio"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:underline"
+                      >
+                        Instagram
+                      </a>
+                      <a
+                        href="https://www.youtube.com/@hosanna.studio"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:underline"
+                      >
+                        YouTube
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -109,24 +143,38 @@ export function ContactForm() {
               </div>
             </div>
             <div className="bg-white p-8 md:p-10 lg:p-12 rounded-3xl shadow-soft border border-blue-50 reveal">
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-3">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">
+                    <label
+                      htmlFor="contact-name"
+                      className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                    >
                       {t("contact.nameLabel")}
                     </label>
                     <input
+                      id="contact-name"
+                      name="name"
                       type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       placeholder={t("contact.namePlaceholder")}
                       className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none text-lg"
                     />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">
+                    <label
+                      htmlFor="contact-church"
+                      className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                    >
                       {t("contact.churchLabel")}
                     </label>
                     <input
+                      id="contact-church"
+                      name="church"
                       type="text"
+                      value={church}
+                      onChange={(e) => setChurch(e.target.value)}
                       placeholder={t("contact.churchPlaceholder")}
                       className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none text-lg"
                     />
@@ -134,27 +182,44 @@ export function ContactForm() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">
+                  <label
+                    htmlFor="contact-email"
+                    className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                  >
                     {t("contact.emailLabel")}
                   </label>
                   <input
+                    id="contact-email"
+                    name="email"
                     type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder={t("contact.emailPlaceholder")}
                     className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none text-lg"
                   />
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">
+                  <label
+                    htmlFor="contact-subject"
+                    className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                  >
                     {t("contact.subjectLabel")}
                   </label>
                   <div className="relative">
-                    <select className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none appearance-none text-lg">
-                      <option>{t("contact.subjectTechnical")}</option>
-                      <option>{t("contact.subjectFeature")}</option>
-                      <option>{t("contact.subjectPricing")}</option>
-                      <option>{t("contact.subjectPartnership")}</option>
-                      <option>{t("contact.subjectOther")}</option>
+                    <select
+                      id="contact-subject"
+                      name="subject"
+                      value={subjectValue}
+                      onChange={(e) => setSubjectValue(e.target.value)}
+                      className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none appearance-none text-lg"
+                    >
+                      {SUBJECT_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {t(option.labelKey)}
+                        </option>
+                      ))}
                     </select>
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
                       <Send className="w-4 h-4 rotate-90" />
@@ -163,24 +228,38 @@ export function ContactForm() {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground">
+                  <label
+                    htmlFor="contact-message"
+                    className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                  >
                     {t("contact.messageLabel")}
                   </label>
                   <textarea
+                    id="contact-message"
+                    name="message"
                     rows={5}
+                    required
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                     placeholder={t("contact.messagePlaceholder")}
                     className="w-full px-6 py-5 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none resize-none text-lg"
-                  ></textarea>
+                  />
                 </div>
 
-                <Button className="w-full py-6 rounded-2xl bg-primary text-white font-bold text-xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group">
+                <Button
+                  type="submit"
+                  className="w-full py-6 rounded-2xl bg-primary text-white font-bold text-xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
+                >
                   {t("contact.sendButton")}
                   <Send className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
                 <p className="text-center text-xs text-muted-foreground mt-2 leading-relaxed">
                   {t("contact.termsConsent")}{" "}
-                  <span className="underline cursor-pointer">{t("common.privacyPolicy")}</span>.
+                  <Link to="/privacy" className="underline hover:text-foreground">
+                    {t("common.privacyPolicy")}
+                  </Link>
+                  .
                 </p>
               </form>
             </div>

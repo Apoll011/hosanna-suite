@@ -3,7 +3,7 @@ import { before, describe, it } from "node:test";
 
 process.env.SKIP_ENV_VALIDATION ??= "true";
 
-const { isBase64Image, isExternalImageUrl } = await import("../lib/supabase");
+const { isBase64Image, isExternalImageUrl } = await import("../lib/db/supabase");
 
 describe("isBase64Image", () => {
   it("detects data:image URIs", () => {

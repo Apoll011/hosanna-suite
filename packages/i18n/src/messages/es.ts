@@ -1,0 +1,132 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import type { sharedPt } from "./pt";
+
+/** Cross-app UI strings shared by Studio and Auth. */
+export const sharedEs: typeof sharedPt = {
+  brand: {
+    name: "Hosanna",
+  },
+  common: {
+    save: "Guardar",
+    cancel: "Cancelar",
+    back: "Volver",
+    retry: "Reintentar",
+    refresh: "Actualizar",
+    loading: "Cargando…",
+  },
+  organization: {
+    loginActivity: {
+      title: "Actividad de acceso",
+      desc: "Historial de inicios de sesión de la organización (propietarios y admins).",
+      listTitle: "Accesos de la organización",
+      listDesc: "Eventos recientes de autenticación de los miembros de este espacio.",
+      noAccessTitle: "Sin acceso",
+      noAccessDesc: "Solo propietarios y admins pueden ver esta actividad.",
+    },
+  },
+  loginHistory: {
+    title: "Historial de accesos",
+    personalDesc:
+      "Inicios de sesión recientes en tu cuenta, con dispositivo y ubicación cuando estén disponibles.",
+    orgDesc: "Actividad de inicio de sesión de todos los miembros de esta organización.",
+    loading: "Cargando historial…",
+    loadError: "No se pudo cargar el historial de inicio de sesión.",
+    empty: "Aún no hay eventos de acceso.",
+    loadMore: "Cargar más",
+    unknownLocation: "Ubicación desconocida",
+    meta: "IP: {ip} · {location}",
+    events: {
+      signedIn: "Inicio de sesión",
+      signedOut: "Cierre de sesión",
+      sessionCreated: "Sesión creada",
+      sessionRevoked: "Sesión revocada",
+      sessionsRevokedAll: "Todas las sesiones revocadas",
+      other: "Evento de seguridad",
+    },
+  },
+  oauth: {
+    consent: {
+      scopes: "Ámbitos solicitados",
+      allow: "Permitir",
+      deny: "Denegar",
+    },
+  },
+  settings: {
+    roles: {
+      owner: "Propietario",
+      admin: "Administrador",
+      teamLeader: "Líder de Equipo",
+      editor: "Editor",
+      musician: "Músico",
+      guest: "Invitado",
+      member: "Miembro",
+    },
+    notifications: {
+      title: "Notificaciones",
+      pageDesc: "Enviar un mensaje al equipo.",
+      loading: "Cargando…",
+      noAccessTitle: "Sin permiso",
+      noAccessDesc: "Necesitas acceso a notificaciones de un propietario de la organización.",
+      send: "Enviar",
+      sending: "Enviando…",
+      sentToast: "Notificación enviada.",
+      sentPushToast: "Notificación enviada ({count} dispositivos).",
+      genericError: "Error inesperado.",
+      errorToast: "No se pudo enviar la notificación: {error}",
+      summaryOrg: "Todos los miembros la recibirán en el buzón.",
+      summaryOrgRoles: "Enviado a {roles} en el buzón.",
+      summaryUser: "{name} recibirá esta notificación.",
+      recipient: {
+        title: "Destinatarios",
+        desc: "Elige quién recibe esta notificación.",
+        user: "Miembro",
+        organization: "Organización",
+        searchPlaceholder: "Buscar por nombre o email…",
+        searching: "Cargando miembros…",
+        noResults: "No se encontraron miembros.",
+        clear: "Limpiar",
+        rolesFilter: "Filtrar por rol",
+        everyone: "Todos los roles",
+        inboxOnly: "Se envía al buzón de la aplicación.",
+        loadError: "No se pudieron cargar los miembros.",
+      },
+      content: {
+        title: "Mensaje",
+        desc: "Título y cuerpo mostrados a los destinatarios.",
+        typeLabel: "Tipo",
+        types: {
+          info: "Info",
+          organization: "Organización",
+          team: "Equipo",
+          security: "Seguridad",
+          billing: "Facturación",
+        },
+        titleLabel: "Título",
+        titlePlaceholder: "ej.: Ensayo movido a las 20:00",
+        descriptionLabel: "Descripción",
+        descriptionPlaceholder: "Detalles opcionales",
+        linkLabel: "Enlace",
+        linkPlaceholder: "/services",
+        linkHint: "Enlace opcional al tocar la notificación.",
+        preview: "Vista previa",
+        previewEmpty: "Vista previa del título",
+        now: "ahora",
+        appName: "Hosanna Studio",
+      },
+      delivery: {
+        title: "Entrega",
+        desc: "Buzón, push, o ambos.",
+        inbox: "Buzón",
+        inboxDesc: "En la app",
+        push: "Push",
+        pushDesc: "En el dispositivo",
+        both: "Ambos",
+        bothDesc: "Buzón y push",
+      },
+    },
+  },
+};

@@ -3,11 +3,7 @@
 @source "../../../packages";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ============================================================
-   Hosanna Studio Design Tokens
-   Three layers: primitive → semantic (m3-*) → component utilities
-   Brand: calm worship-planning workspace — sky accent, quiet chrome
-   ============================================================ */
+/* Hosanna Studio Design Tokens — Three layers: primitive → semantic (m3-*) → component utilities */
 
 :root {
   /* --- Primitive: brand --- */
@@ -135,9 +131,7 @@
   --shadow-lg: var(--shadow-lg);
 }
 
-/* ============================================================
-   Base
-   ============================================================ */
+/* Base */
 
 html {
   color-scheme: light;
@@ -171,9 +165,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ============================================================
-   Typography utilities — prefer these over ad-hoc sizes
-   ============================================================ */
+/* Typography utilities — prefer these over ad-hoc sizes */
 
 .text-display {
   font-family: var(--font-display);
@@ -239,9 +231,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* ============================================================
-   Surface / elevation utilities
-   ============================================================ */
+/* Surface / elevation utilities */
 
 .surface {
   background-color: var(--m3-card);
@@ -268,9 +258,7 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
-/* ============================================================
-   Focus ring — visible keyboard focus without click rings
-   ============================================================ */
+/* Focus ring — visible keyboard focus without click rings */
 
 .focus-ring {
   outline: none;
@@ -296,9 +284,7 @@ textarea:focus-visible,
   outline-offset: 2px;
 }
 
-/* ============================================================
-   Motion — respect reduced motion
-   ============================================================ */
+/* Motion — respect reduced motion */
 
 @keyframes hosanna-enter {
   from {
@@ -326,9 +312,7 @@ textarea:focus-visible,
   }
 }
 
-/* ============================================================
-   Scrollbars
-   ============================================================ */
+/* Scrollbars */
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
@@ -373,17 +357,13 @@ textarea:focus-visible,
   scrollbar-color: var(--m3-border) transparent;
 }
 
-/* ============================================================
-   ChordPro editor highlight
-   ============================================================ */
+/* ChordPro editor highlight */
 
 .chordpro-highlight mark {
   background: transparent;
 }
 
-/* ============================================================
-   Loading bar
-   ============================================================ */
+/* Loading bar */
 
 @keyframes loading-bar {
   0% {
@@ -397,9 +377,7 @@ textarea:focus-visible,
   }
 }
 
-/* ============================================================
-   Dark Mode — Tonal Badge Utilities
-   ============================================================ */
+/* Dark Mode — Tonal Badge Utilities */
 
 .dark .badge-orange {
   background-color: rgba(234, 88, 12, 0.13);
@@ -426,9 +404,7 @@ textarea:focus-visible,
   color: #f87171;
 }
 
-/* ============================================================
-   Print
-   ============================================================ */
+/* Print */
 
 @media print {
   body {

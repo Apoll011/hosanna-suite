@@ -2,9 +2,9 @@
 
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { useActiveOrganization, type OrgMember } from "@/hooks/useActiveOrganization";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
-import { orgInitials, roleLabel, selectClass } from "@/lib/org-ui";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
+import { orgInitials, roleLabel, selectClass } from "@/lib/organization/ui";
 import type { AppRole } from "@hosanna/auth";
 import {
   Badge,

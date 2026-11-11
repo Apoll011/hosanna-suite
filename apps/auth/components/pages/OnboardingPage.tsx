@@ -1,9 +1,9 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
-import { getStudioUrl } from "@/lib/redirect";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
+import { getStudioUrl, navigateAfterOrgReady } from "@/lib/auth/redirect";
 import { Button, GoogleTextField, Spinner } from "@hosanna/ui";
 import {
   ArrowLeft,
@@ -165,8 +165,10 @@ export function OnboardingPage() {
   }, [orgSlug]);
 
   const goToStudio = (slug: string) => {
-    localStorage.setItem("active_org_slug", slug);
-    window.location.assign(`${getStudioUrl()}/${slug}`);
+    const params =
+      typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    // Prefer the page that sent the user here (returnUrl); else Studio /{slug}.
+    navigateAfterOrgReady(slug, params);
   };
 
   const switchOrganization = async (org: OrgSummary) => {

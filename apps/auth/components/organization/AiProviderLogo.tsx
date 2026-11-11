@@ -1,6 +1,6 @@
 "use client";
 
-import type { AiProvider } from "@/lib/ai-api";
+import type { AiProvider } from "@/lib/services/ai-api";
 import { useId, type FC } from "react";
 
 type LogoProps = {

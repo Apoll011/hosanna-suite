@@ -18,9 +18,7 @@ import {
   type TranslationKeyOf,
   type TranslationPluralKeyOf,
 } from "@hosanna/i18n";
-import { en } from "./locales/en";
-import { es } from "./locales/es";
-import { pt } from "./locales/pt";
+import { en, es, pt } from "./locales";
 
 const MESSAGES: Record<Language, typeof pt> = { pt, en, es };
 

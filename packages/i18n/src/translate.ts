@@ -7,6 +7,7 @@ export type Interpolation = Record<string, string | number>;
 
 /** Walk a nested dictionary by dot-path; `undefined` when any segment is missing. */
 export function lookup(dict: unknown, key: string): unknown {
+  if (dict == null || typeof dict !== "object") return undefined;
   const parts = key.split(".");
   let node: unknown = dict;
   for (const part of parts) {

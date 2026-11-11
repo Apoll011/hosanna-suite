@@ -2,8 +2,9 @@
 
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/ui/i18n";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -31,11 +32,13 @@ export function AuthLayout({
   return (
     <div className="min-h-dvh w-full flex flex-col justify-between relative overflow-x-hidden font-sans text-m3-text antialiased selection:bg-m3-primary/20">
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <img
+        <Image
           src="/background.webp"
           alt=""
-          className="w-full h-full object-cover scale-105 opacity-35 dark:opacity-25 transition-opacity duration-700 blur-[2px]"
-          referrerPolicy="no-referrer"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover scale-105 opacity-35 dark:opacity-25 transition-opacity duration-700 blur-[2px]"
         />
         <div className="absolute inset-0 bg-linear-to-b from-m3-bg/75 via-m3-bg/88 to-m3-sidebar/95 dark:from-m3-bg/88 dark:via-m3-bg/94 dark:to-m3-bg/98" />
       </div>

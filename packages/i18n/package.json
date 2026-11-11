@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/i18n",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "Apache-2.0",
   "description": "Hosanna UI language model: supported languages, locale resolution, and typed dictionary helpers",
@@ -10,6 +10,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./messages": {
+      "types": "./src/messages/index.ts",
+      "default": "./src/messages/index.ts"
     }
   },
   "scripts": {

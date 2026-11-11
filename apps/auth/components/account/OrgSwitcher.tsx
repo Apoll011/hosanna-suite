@@ -1,7 +1,7 @@
 "use client";
 
 import { useActiveOrganization, type OrgSummary } from "@/hooks/useActiveOrganization";
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/ui/i18n";
 import { Spinner } from "@hosanna/ui";
 import { Building2, Check, ChevronDown } from "lucide-react";
 import Link from "next/link";

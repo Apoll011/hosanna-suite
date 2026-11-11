@@ -2,6 +2,7 @@
 
 import { AccountLayoutChrome } from "@/components/account/AccountLayoutChrome";
 import { AccountPermissionsProvider } from "@/components/account/AccountPermissionsProvider";
+import { AuthLogosProvider } from "@/components/logos/AuthLogosProvider";
 import { ActiveOrganizationProvider } from "@/hooks/useActiveOrganization";
 import type { ReactNode } from "react";
 
@@ -10,7 +11,9 @@ export function AccountProviders({ children }: { children: ReactNode }) {
   return (
     <ActiveOrganizationProvider>
       <AccountPermissionsProvider>
-        <AccountLayoutChrome>{children}</AccountLayoutChrome>
+        <AuthLogosProvider>
+          <AccountLayoutChrome>{children}</AccountLayoutChrome>
+        </AuthLogosProvider>
       </AccountPermissionsProvider>
     </ActiveOrganizationProvider>
   );

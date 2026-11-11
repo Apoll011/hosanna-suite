@@ -1,8 +1,8 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { useI18n } from "@/lib/i18n";
-import { resolveSocialCallbackURL } from "@/lib/redirect";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/ui/i18n";
+import { resolveSocialCallbackURL } from "@/lib/auth/redirect";
 import { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "@hosanna/ui";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";

@@ -4,6 +4,7 @@
  */
 
 export { LogosHostProvider, useLogosHost, useLogosI18n } from "./context";
+export { LogosRouteProvider, useLogosRoute, type LogosRouteState } from "./route";
 export {
   LogosSongAdapterProvider,
   useHostSong,

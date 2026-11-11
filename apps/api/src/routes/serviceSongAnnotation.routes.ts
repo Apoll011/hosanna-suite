@@ -1,22 +1,26 @@
 import { Router } from "express";
 import { assertUser } from "../middleware/auth.js";
 import { ServiceSongAnnotationService } from "../services/serviceSongAnnotation.service.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/errors.js";
 
-const anotationRouter = Router({ mergeParams: true });
+export const annotationRouter = Router({ mergeParams: true });
 
-anotationRouter.get(
+annotationRouter.get(
   "/services/:serviceId/songs/:songId/annotation",
   assertUser,
-  async (req, res) => {
+  asyncHandler(async (req, res) => {
     const { serviceId, songId } = req.params;
     const serviceSongAnnotationService = new ServiceSongAnnotationService(
       req.db!,
       req.orgId!,
-      req.user?.id!,
+      req.user!.id,
     );
 
     const row = await serviceSongAnnotationService.get(serviceId, songId);
-    if (!row) return res.status(404).json({ error: "Not found" });
+    if (!row) {
+      throw AppError.notFound("ELEMENT_NOT_FOUND", "Annotation not found.");
+    }
 
     res.json({
       canvasDataBase64: row.canvasData.toString("base64"),
@@ -24,23 +28,23 @@ anotationRouter.get(
       updatedById: row.updatedById,
       revision: row.updatedAt.getTime(),
     });
-  },
+  }),
 );
 
-anotationRouter.put(
+annotationRouter.put(
   "/services/:serviceId/songs/:songId/annotation",
   assertUser,
-  async (req, res) => {
+  asyncHandler(async (req, res) => {
     const serviceSongAnnotationService = new ServiceSongAnnotationService(
       req.db!,
       req.orgId!,
-      req.user?.id!,
+      req.user!.id,
     );
     const { serviceId, songId } = req.params;
-    const { canvasDataBase64 } = req.body;
+    const { canvasDataBase64 } = req.body as { canvasDataBase64?: unknown };
 
     if (typeof canvasDataBase64 !== "string") {
-      return res.status(400).json({ error: "canvasDataBase64 is required" });
+      throw AppError.badRequest("canvasDataBase64 is required");
     }
 
     const row = await serviceSongAnnotationService.upsert({
@@ -54,7 +58,5 @@ anotationRouter.put(
       updatedById: row.updatedById,
       revision: row.updatedAt.getTime(),
     });
-  },
+  }),
 );
-
-export default anotationRouter;

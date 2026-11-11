@@ -1,12 +1,3 @@
-/**
- * ChordPro Formatter — Chord recognition & normalization
- * No UI dependencies.
- */
-
-// ---------------------------------------------------------------------------
-// Chord root recognition
-// ---------------------------------------------------------------------------
-
 /** Unicode music symbols that map to their ASCII equivalents. */
 const UNICODE_ACCIDENTALS: [string, string][] = [
   ["\u266F", "#"], // ♯ → #

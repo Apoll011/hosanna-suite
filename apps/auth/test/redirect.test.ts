@@ -5,8 +5,9 @@ import {
   getStudioUrl,
   isSafeRedirectTarget,
   readRedirectParam,
+  resolvePostOrgDestination,
   resolveSocialCallbackURL,
-} from "../lib/redirect";
+} from "../lib/auth/redirect";
 
 function memoryStorage() {
   const map = new Map<string, string>();
@@ -88,6 +89,55 @@ describe("getStudioUrl", () => {
   it("uses NEXT_PUBLIC_STUDIO_URL and strips trailing slashes", () => {
     process.env.NEXT_PUBLIC_STUDIO_URL = "https://dev-studio.hosanna.live///";
     assert.equal(getStudioUrl(), "https://dev-studio.hosanna.live");
+  });
+});
+
+describe("resolvePostOrgDestination", () => {
+  const originalWindow = globalThis.window;
+  const originalStudio = process.env.NEXT_PUBLIC_STUDIO_URL;
+
+  afterEach(() => {
+    if (originalWindow === undefined) {
+      // @ts-expect-error cleanup test double
+      delete globalThis.window;
+    } else {
+      globalThis.window = originalWindow;
+    }
+    if (originalStudio === undefined) {
+      delete process.env.NEXT_PUBLIC_STUDIO_URL;
+    } else {
+      process.env.NEXT_PUBLIC_STUDIO_URL = originalStudio;
+    }
+  });
+
+  it("defaults to studio /{slug}", () => {
+    delete process.env.NEXT_PUBLIC_STUDIO_URL;
+    // @ts-expect-error minimal window
+    globalThis.window = { location: { origin: "https://auth.hosanna.live" } };
+    assert.equal(resolvePostOrgDestination("grace"), "https://studio.hosanna.live/grace");
+  });
+
+  it("upgrades studio root returnUrl to /{slug}", () => {
+    delete process.env.NEXT_PUBLIC_STUDIO_URL;
+    // @ts-expect-error minimal window
+    globalThis.window = { location: { origin: "https://auth.hosanna.live" } };
+    assert.equal(
+      resolvePostOrgDestination(
+        "grace",
+        new URLSearchParams("returnUrl=https%3A%2F%2Fstudio.hosanna.live%2F"),
+      ),
+      "https://studio.hosanna.live/grace",
+    );
+  });
+
+  it("keeps non-studio returnUrl (e.g. account)", () => {
+    delete process.env.NEXT_PUBLIC_STUDIO_URL;
+    // @ts-expect-error minimal window
+    globalThis.window = { location: { origin: "https://auth.hosanna.live" } };
+    assert.equal(
+      resolvePostOrgDestination("grace", new URLSearchParams("returnUrl=%2Faccount")),
+      "/account",
+    );
   });
 });
 

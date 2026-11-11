@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/replication",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "Apache-2.0",
   "description": "Local-first IndexedDB engine and configurable HTTP replication for Hosanna",
@@ -10,6 +10,14 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./engine": {
+      "types": "./src/engine/index.ts",
+      "default": "./src/engine/index.ts"
+    },
+    "./replication": {
+      "types": "./src/replication/index.ts",
+      "default": "./src/replication/index.ts"
     }
   },
   "scripts": {

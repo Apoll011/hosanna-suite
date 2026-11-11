@@ -19,19 +19,14 @@ export const pt = {
     files: "Ficheiros",
     total: "Total",
     root: "Raiz",
-    save: "Guardar",
-    cancel: "Cancelar",
     close: "Fechar",
     print: "Imprimir",
     archive: "Arquivar",
     delete: "Apagar",
     edit: "Editar",
     search: "Pesquisar",
-    loading: "A carregar...",
     offline: "Offline",
-    back: "Voltar",
     new: "Novo",
-    retry: "Tentar novamente",
     confirm: "Confirmar",
     song: "Cântico",
     songs: "Cânticos",
@@ -49,9 +44,7 @@ export const pt = {
     copySuffix: " (Cópia)",
     you: "Você",
     items: "{count} Itens",
-    refresh: "Atualizar",
   },
-
   table: {
     showing: "A mostrar",
     to: "a",
@@ -61,7 +54,6 @@ export const pt = {
     prevPage: "Página Anterior",
     nextPage: "Página Seguinte",
   },
-
   sidebar: {
     mainMenu: "Menu Principal",
     drive: "Drive da {name}",
@@ -77,7 +69,6 @@ export const pt = {
     switchWorkspace: "Mudar de organização",
     manageOrganization: "Gerir organização",
   },
-
   addressBar: {
     atRootLevel: "No Nível Raiz",
     upOneLevel: "Subir um nível",
@@ -96,7 +87,6 @@ export const pt = {
     newFolder: "Nova Pasta",
     newCollection: "Nova Coleção",
   },
-
   toolbar: {
     filters: "Filtros",
     openFilters: "Abrir Filtros Avançados",
@@ -122,7 +112,6 @@ export const pt = {
     songNumberAsc: "Mais Músicas",
     songNumberDesc: "Menos Musicas",
   },
-
   commandPalette: {
     sections: {
       navigation: "Navegação",
@@ -164,7 +153,6 @@ export const pt = {
     deleteSong: 'Eliminar Cântico: "{title}"',
     deleteService: 'Eliminar Culto: "{name}"',
   },
-
   palette: {
     submenu: "Sub-menu",
     searchSubmenu: "Pesquisar no sub-menu...",
@@ -177,7 +165,6 @@ export const pt = {
     select: "Selecionar",
     title: "Command Palette",
   },
-
   settings: {
     pageDesc: "Aparência, impressão, durações, responsabilidades e funcionalidades do Studio.",
     tabs: {
@@ -209,73 +196,20 @@ export const pt = {
       pageDesc: "Funções da agenda que pode atribuir ao planear cultos.",
     },
     notifications: {
-      title: "Notificações",
-      pageDesc: "Enviar uma mensagem à equipa.",
-      loading: "A carregar…",
-      noAccessTitle: "Sem permissão",
-      noAccessDesc: "Precisa de acesso às notificações de um proprietário da organização.",
-      send: "Enviar",
-      sending: "A enviar…",
-      sentToast: "Notificação enviada.",
-      sentPushToast: "Notificação enviada ({count} dispositivos).",
-      genericError: "Erro inesperado.",
-      errorToast: "Não foi possível enviar a notificação: {error}",
-      summaryOrg: "Todos os membros recebem isto na caixa de entrada.",
-      summaryOrgRoles: "Enviado a {roles} na caixa de entrada.",
-      summaryUser: "{name} vai receber esta notificação.",
       recipient: {
-        title: "Destinatários",
-        desc: "Escolha quem recebe esta notificação.",
-        user: "Membro",
         userDesc: "Um membro",
-        organization: "Organização",
         organizationDesc: "Todos os membros",
-        searchPlaceholder: "Procurar por nome ou email…",
-        searching: "A carregar membros…",
-        noResults: "Nenhum membro encontrado.",
-        clear: "Limpar",
         lockedBadge: "Organização atual",
         lockedHint: "Usa a organização atual.",
-        rolesFilter: "Filtrar por função",
         rolesFilterHint: "Deixe vazio para incluir todos.",
-        everyone: "Todas as funções",
-        inboxOnly: "Enviado para a caixa de entrada da aplicação.",
-        loadError: "Não foi possível carregar os membros.",
       },
       content: {
-        title: "Mensagem",
-        desc: "Título e corpo mostrados aos destinatários.",
-        typeLabel: "Tipo",
         types: {
-          info: "Info",
-          organization: "Organização",
-          team: "Equipa",
-          security: "Segurança",
-          billing: "Faturação",
           custom: "Personalizado",
         },
         customTypePlaceholder: "ex.: anúncio",
-        titleLabel: "Título",
-        titlePlaceholder: "Ex.: Ensaio adiado para as 20:00",
-        descriptionLabel: "Descrição",
-        descriptionPlaceholder: "Detalhes opcionais",
-        linkLabel: "Ligação",
-        linkPlaceholder: "/services",
-        linkHint: "Ligação opcional aberta ao tocar na notificação.",
-        preview: "Pré-visualização",
-        previewEmpty: "Pré-visualização do título",
-        now: "agora",
-        appName: "Hosanna Studio",
       },
       delivery: {
-        title: "Entrega",
-        desc: "Caixa de entrada, push, ou ambos.",
-        inbox: "Caixa de entrada",
-        inboxDesc: "Na aplicação",
-        push: "Push",
-        pushDesc: "No dispositivo",
-        both: "Ambos",
-        bothDesc: "Caixa de entrada e push",
         pushTitle: "Conteúdo do push",
         pushHint: "Usa o mesmo título e descrição de cima.",
         dataLabel: "Dados extra",
@@ -303,8 +237,6 @@ export const pt = {
         "Sincronização na nuvem, cópias de segurança automáticas e suporte prioritário para a sua organização.",
       monthly: "Mensal",
       annual: "Anual",
-      // Shown next to the price when the annual option is selected. Based on
-      // the display prices in PLAN_PRICING (12×€12 − €120 = 2 months free).
       annualSavings: "Poupe 2 meses face ao plano mensal",
       plan: {
         features: {
@@ -330,8 +262,6 @@ export const pt = {
       startTrial: "Iniciar período gratuito de 14 dias",
       trialNote:
         "É necessário um cartão para começar. Não é cobrado nada durante os 14 dias de teste.",
-      // Used when the org already used its free trial (re-subscribing after
-      // cancel): Stripe does not grant a second trial, so don't promise one.
       subscribe: "Subscrever agora",
       subscribeNote: "A subscrição começa de imediato. Pode cancelar quando quiser.",
       promoHint: "Tem um código promocional? Pode aplicá-lo no checkout.",
@@ -532,15 +462,6 @@ export const pt = {
       restoreNow: "Restaurar Base de Dados Agora",
       success: "Base de dados restaurada com sucesso! A recarregar...",
       error: "Falha ao restaurar base de dados.",
-    },
-    roles: {
-      owner: "Proprietário",
-      admin: "Administrador",
-      teamLeader: "Líder de Equipa",
-      editor: "Editor",
-      musician: "Músico",
-      guest: "Convidado",
-      member: "Membro",
     },
     account: {
       user: "Utilizador",
@@ -789,7 +710,6 @@ export const pt = {
       interactiveTourRelaunch: "Tour interativo",
     },
   },
-
   tour: {
     product: {
       missedTitle: "Tour do produto disponível",
@@ -1004,7 +924,6 @@ export const pt = {
       },
     },
   },
-
   layout: {
     newVersionTitle: "Nova versão disponível",
     newVersionDesc: "Uma nova versão do Hosanna Studio está disponível.",
@@ -1026,7 +945,6 @@ export const pt = {
     uploadError: "Erro ao carregar {count} ficheiro(s) {type}",
     uploadIgnored: "Ignorado {count} ficheiro(s) {type}",
   },
-
   foldersPage: {
     dropHere: "Solte os ficheiros aqui",
     dropHereDesc: 'Os ficheiros serão importados para "{folder}"',
@@ -1038,7 +956,6 @@ export const pt = {
     emptyFolderDesc: 'Ainda não foram adicionados cânticos à pasta "{folder}".',
     dragOrClick: "Arraste e solte ficheiros aqui ou clique para carregar",
   },
-
   trashPage: {
     loading: "A carregar lixo...",
     emptyTitle: "O lixo está vazio",
@@ -1048,7 +965,6 @@ export const pt = {
     permanentDeletion: "Remoção definitiva",
     restore: "Restaurar",
   },
-
   songEditor: {
     loading: "A carregar a pauta...",
     notFoundTitle: "Cântico Não Encontrado",
@@ -1067,7 +983,6 @@ export const pt = {
     variant: "Variante da música",
     defaultVariant: "Padrão",
   },
-
   servicesPage: {
     loading: "A carregar agenda...",
     createFirstService: "Criar Primeiro Culto",
@@ -1103,7 +1018,6 @@ export const pt = {
     archiveAllMessage: "Tem a certeza de que deseja arquivar {count} cultos selecionados?",
     archiveAll: "Arquivar Todos",
   },
-
   collectionsPage: {
     edit: "Editar",
     delete: "Excluir",
@@ -1160,7 +1074,6 @@ export const pt = {
       "Enviar {count} coleções para a lixeira? As músicas continuam na biblioteca.",
     createCollectionFirst: "Crie uma coleção primeiro para poder adicionar músicas.",
   },
-
   agenda: {
     subtitle: "Planeie e atribua responsabilidades para cada dia.",
     newEvent: "Novo Evento",
@@ -1340,7 +1253,6 @@ export const pt = {
     },
     noAssigneesYet: "Ainda sem ninguém atribuído.",
   },
-
   songsPage: {
     createSong: "Criar Novo Cântico",
     newSong: "Novo Cântico",
@@ -1398,7 +1310,6 @@ export const pt = {
     zeroSongs: "0 cânticos",
     songsWord: "cânticos",
   },
-
   forms: {
     folderNameRequired: "O nome da pasta é obrigatório",
     folderNameMin: "O nome deve ter pelo menos 2 caracteres",
@@ -1427,7 +1338,6 @@ export const pt = {
     unknownArtist: "Artista Desconhecido",
     untitled: "Sem Título",
   },
-
   modals: {
     moveSongTitle: 'Mover Cântico "{title}"',
     moveSongToFolder: "Mover Cântico para Pasta",
@@ -1515,7 +1425,6 @@ export const pt = {
     detectedProvider: "Detetado: {provider}",
     backToEdit: "Voltar para Edição",
   },
-
   explorer: {
     moreOptions: "Mais opções",
     songNumber: "Nº {number}",
@@ -1601,7 +1510,6 @@ export const pt = {
       applyFilters: "Aplicar Filtros",
     },
   },
-
   misc: {
     chordproSettings: {
       title: "Ajustes Visuais",
@@ -1676,7 +1584,6 @@ export const pt = {
       shortcutsDesc: "Acelere a edição e navegação sem precisar de tirar as mãos do teclado.",
     },
   },
-
   teamsPage: {
     title: "Equipas da Organização",
     desc: "Gerencie equipas, atribua líderes e configure permissões de acesso.",
@@ -1726,7 +1633,6 @@ export const pt = {
     addMemberBtn: "Adicionar",
     memberAdded: "Membro adicionado à equipa!",
   },
-
   serviceDetailPage: {
     backToServices: "Voltar aos Cultos",
     serviceDetails: "Detalhes do Culto",
@@ -1811,7 +1717,6 @@ export const pt = {
     removeFromPlan: "Remover do plano",
     readingKeys: "Setas para avançar",
   },
-
   serviceModals: {
     announcement: {
       modalTitle: "Avisos da Igreja",
@@ -1889,7 +1794,6 @@ export const pt = {
       placeholder: "05:00",
     },
   },
-
   onboarding: {
     welcomeTitle: "Bem-vindo ao Hosanna Studio!",
     welcomeSubtitle: "Vamos configurar o seu espaço de louvor e adoração.",
@@ -1925,7 +1829,6 @@ export const pt = {
       skipBtn: "Agora não, continuar sem subscrever",
     },
   },
-
   auth: {
     captcha: {
       pending: "A aguardar a verificação de segurança. Tente novamente dentro de instantes.",
@@ -2038,7 +1941,6 @@ export const pt = {
       backupCodePlaceholder: "XXXX-XXXX",
     },
   },
-
   routes: {
     errorBoundary: {
       title: "Ocorreu um erro inesperado",
@@ -2057,7 +1959,6 @@ export const pt = {
       goHomeBtn: "Voltar ao Início",
     },
   },
-
   hooks: {
     songs: {
       created: "Cântico criado com sucesso!",
@@ -2090,15 +1991,20 @@ export const pt = {
       noResults: "Nenhum resultado encontrado.",
     },
   },
-
   print: {
     documentDefaultTitle: "Documento Hosana",
     modal: {
       print: "Imprimir / PDF",
       printShortcut: "Imprimir ou guardar como PDF (Ctrl+P)",
       options: "Opções de impressão",
-      itemCount: { one: "{count} item", other: "{count} itens" },
-      pageEstimate: { one: "≈ {count} página", other: "≈ {count} páginas" },
+      itemCount: {
+        one: "{count} item",
+        other: "{count} itens",
+      },
+      pageEstimate: {
+        one: "≈ {count} página",
+        other: "≈ {count} páginas",
+      },
       pageN: "Página {page}",
       zoomIn: "Aumentar zoom",
       zoomOut: "Diminuir zoom",
@@ -2227,7 +2133,10 @@ export const pt = {
       empty: "Este cântico ainda não tem letra.",
     },
     songbook: {
-      songCount: { one: "{count} cântico", other: "{count} cânticos" },
+      songCount: {
+        one: "{count} cântico",
+        other: "{count} cânticos",
+      },
       index: "Índice",
       titleCol: "Título",
       artistCol: "Artista / Autor",
@@ -2270,7 +2179,10 @@ export const pt = {
       notes: "Notas",
     },
     batch: {
-      itemCount: { one: "{count} item", other: "{count} itens" },
+      itemCount: {
+        one: "{count} item",
+        other: "{count} itens",
+      },
       badge: "Lote",
       content: "Conteúdo",
       types: {
@@ -2294,7 +2206,6 @@ export const pt = {
       printServiceShort: "Imprimir Culto",
     },
   },
-
   analytics: {
     title: "Análises",
     desc: "Uso, setlist e saúde da biblioteca.",
@@ -2419,28 +2330,6 @@ export const pt = {
       },
     },
   },
-
-  loginHistory: {
-    title: "Histórico de início de sessão",
-    personalDesc:
-      "Inícios de sessão recentes na sua conta, com dispositivo e localização quando disponíveis.",
-    orgDesc: "Atividade de início de sessão de todos os membros desta organização.",
-    loading: "A carregar histórico...",
-    loadError: "Não foi possível carregar o histórico de início de sessão.",
-    empty: "Ainda não há registos de início de sessão.",
-    loadMore: "Carregar mais",
-    unknownLocation: "Localização desconhecida",
-    meta: "IP: {ip} · {location}",
-    events: {
-      signedIn: "Início de sessão",
-      signedOut: "Terminar sessão",
-      sessionCreated: "Sessão criada",
-      sessionRevoked: "Sessão revogada",
-      sessionsRevokedAll: "Todas as sessões revogadas",
-      other: "Evento de autenticação",
-    },
-  },
-
   organization: {
     offlineTitle: "Está offline",
     offlineDesc: "As definições da organização precisam de ligação à internet.",
@@ -2455,418 +2344,17 @@ export const pt = {
       ai: "Logos IA",
       loginActivity: "Atividade de login",
     },
-    loginActivity: {
-      title: "Atividade de login",
-      desc: "Histórico de inícios de sessão em toda a organização (apenas proprietários e administradores).",
-      listTitle: "Inícios de sessão da organização",
-      listDesc: "Eventos recentes de autenticação dos membros deste espaço de trabalho.",
-      noAccessTitle: "Sem acesso",
-      noAccessDesc:
-        "Apenas proprietários e administradores podem ver a atividade de login da organização.",
-    },
   },
-
   oauth: {
     consent: {
       title: "Autorizar acesso MCP",
       desc: "{client} quer aceder à sua biblioteca Hosanna via MCP.",
-      scopes: "Âmbitos pedidos",
-      allow: "Permitir",
-      deny: "Negar",
       genericError: "Não foi possível concluir a autorização.",
     },
   },
-
   ai: {
-    settings: {
-      title: "Logos IA",
-      desc: "Chave de API do assistente da organização.",
-      loading: "A carregar…",
-      loadError: "Não foi possível carregar as definições de IA.",
-      saveError: "Não foi possível guardar as definições de IA.",
-      saved: "Definições de IA guardadas.",
-      keyCleared: "Chave de API removida.",
-      noAccessTitle: "Sem acesso",
-      noAccessDesc: "Apenas proprietários e administradores podem gerir a IA.",
-      statusOn: "Ativado",
-      statusPaused: "Configurado · desativado",
-      statusSetup: "Não configurado",
-      connectionTitle: "Ligação",
-      connectionDesc: "Fornecedor, modelo e chave de API.",
-      encryptionMissing:
-        "Falta AI_SETTINGS_ENCRYPTION_KEY no servidor. Configure-a antes de guardar chaves.",
-      provider: "Fornecedor",
-      providerHint: "Escolha quem serve os modelos.",
-      defaultEndpoint: "API predefinida",
-      customEndpoint: "URL personalizado",
-      nativeWebOn: "Suporta pesquisa web e leitura de páginas.",
-      nativeWebOff: "A pesquisa web usa DuckDuckGo neste fornecedor.",
-      baseUrl: "URL base da API",
-      baseUrlPlaceholder: "Deixe em branco para o predefinido",
-      baseUrlRequiredPlaceholder: "https://api.example.com/v1",
-      baseUrlHint: "Endpoint Chat Completions compatível com OpenAI.",
-      model: "Modelo",
-      customModel: "Modelo personalizado",
-      usePresets: "Usar presets",
-      modelPlaceholder: "ex. gpt-4o-mini",
-      apiKey: "Chave de API",
-      apiKeyPlaceholder: "Cole a sua chave de API",
-      apiKeyConfiguredPlaceholder: "Foque para substituir a chave atual",
-      apiKeyReplaceHint: "Chave guardada. Clique no campo para a substituir.",
-      keyStatusConfigured: "Guardada",
-      keyStatusMissing: "Não definida.",
-      keyNeverReturned: "A chave nunca é devolvida ao browser.",
-      enabled: "Ativar assistente",
-      enabledDesc: "Membros com acesso a IA podem abrir o chat.",
-      advanced: "Avançado",
-      advancedDesc: "Limite de ferramentas, temperatura e tamanho da resposta.",
-      behaviorTitle: "Comportamento",
-      behaviorDesc: "Instruções e memória em cada resposta.",
-      maxToolCalls: "Máximo de ferramentas por resposta",
-      maxToolCallsHint: "Entre {min} e {max}.",
-      temperature: "Temperatura",
-      temperatureHint: "Mais baixo = mais previsível; mais alto = mais variado.",
-      temperatureDefault: "Predefinido",
-      maxOutputTokens: "Tamanho máximo da resposta (tokens)",
-      maxOutputTokensHint: "Deixe vazio para o predefinido do modelo.",
-      instructions: "Instruções da organização",
-      instructionsHint: "Incluídas em todas as conversas.",
-      instructionsPlaceholder: "ex.: Preferimos tonalidades de G a D. Títulos em Title Case.",
-      memoryTitle: "Memória",
-      memoryDesc: "Notas lembradas nas conversas.",
-      memoryOrgTitle: "Memória da organização",
-      memoryOrgDesc: "Notas partilhadas por toda a organização.",
-      memoryOrgPlaceholder: "ex.: A equipa de louvor prefere Sol maior.",
-      memoryPersonalTitle: "Memória individual",
-      memoryPersonalDesc: "Notas da sua conta — só para si, não partilhadas com a organização.",
-      memoryPersonalPlaceholder: "ex.: Prefiro setlists mais curtos.",
-      memoryEnabled: "Ativar memória",
-      memoryEnabledDesc: "Inclui as notas no contexto e permite atualizações.",
-      memoryEmpty: "Ainda sem notas.",
-      memoryPlaceholder: "ex.: A equipa de louvor prefere Sol maior.",
-      memoryAdd: "Adicionar",
-      memoryDelete: "Eliminar",
-      memoryClear: "Limpar tudo",
-      memorySourceAi: "Guardado pelo Logos",
-      memorySourceAdmin: "Adicionado por um administrador",
-      memorySourceUser: "Adicionado por si",
-      memoryCount: "{count}/{max} notas",
-      memoryError: "Não foi possível atualizar a memória.",
-      clearKey: "Remover chave",
-      billing: {
-        title: "Saldo DeepSeek",
-        desc: "Saldo em tempo real da sua chave de API DeepSeek.",
-        loading: "A obter o saldo…",
-        loadError: "Não foi possível carregar o saldo DeepSeek.",
-        refresh: "Atualizar saldo",
-        total: "Total disponível",
-        granted: "Oferecido",
-        toppedUp: "Carregado",
-        available: "Suficiente para chamadas à API",
-        unavailable: "O saldo pode ser insuficiente",
-        refreshedAt: "Atualizado {time}",
-        notConfigured: "Guarde uma chave de API para ver o saldo.",
-        cryptoMissing:
-          "A encriptação do servidor não está configurada; não é possível obter o saldo.",
-        unsupported: "O saldo só está disponível para o DeepSeek.",
-      },
-    },
     chat: {
-      title: "Logos AI",
-      subtitle: "Canções, serviços, ChordPro",
-      open: "Abrir Logos AI",
-      close: "Fechar Logos AI",
-      clear: "Limpar conversa",
-      new: "Nova conversa",
-      history: "Conversas",
-      historyEmpty: "Ainda sem conversas.",
-      historyDelete: "Eliminar conversa",
-      historyUntitled: "Nova conversa",
-      expand: "Alargar chat",
-      collapse: "Estreitar chat",
-      resize: "Redimensionar chat",
-      empty: "Pergunte sobre canções, serviços ou ChordPro.",
-      emptyTitle: "Logos",
-      emptySubtitle: "Ajuda com canções, serviços e ChordPro.",
-      greeting: {
-        morning: "Bom dia",
-        afternoon: "Boa tarde",
-        evening: "Boa noite",
-      },
-      suggestions: "Sugestões",
-      quickActions: "Ações rápidas",
-      slashHint: "Escreva / para ações rápidas",
-      composerHint: "Enter para enviar · Shift+Enter para nova linha",
-      slashEmpty: "Nenhuma ação encontrada",
-      mascotLabel: "Logos AI",
-      status: {
-        thinking: "A pensar…",
-        working: "A trabalhar…",
-        singing: "A escrever…",
-        happy: "Pronto",
-        celebrating: "Concluído",
-        oops: "Algo correu mal",
-      },
-      contextSong: "Canção: {title}",
-      contextService: "Serviço: {title}",
-      contextSongs: "Canções",
-      contextServices: "Serviços",
-      contextExplorer: "Biblioteca",
-      contextCollection: "Coleção",
-      contextAgenda: "Agenda",
-      contextTrash: "Lixo",
       contextGeneral: "Hosanna Studio",
-      contextHint: "Contexto da página disponível",
-      includeContext: "Incluir contexto da página",
-      placeholder: "Pergunte ao Logos AI…",
-      send: "Enviar",
-      stop: "Parar",
-      thinking: "A pensar…",
-      reasoning: "A pensar",
-      toolRunning: "A executar",
-      toolDone: "Concluído",
-      toolError: "Erro",
-      toolNeedsConfirm: "Confirmar",
-      toolInput: "Entrada",
-      toolOutput: "Resultado",
-      toolErrorDetail: "Erro",
-      toolsUsed: {
-        one: "Usou {count} ferramenta",
-        other: "Usou {count} ferramentas",
-      },
-      toolsWorking: "A trabalhar… {done}/{total}",
-      toolsFailed: "{count} com falha",
-      toolsFailedShort: "Falhou",
-      toolsToggle: "Mostrar chamadas de ferramentas",
-      copy: "Copiar",
-      copied: "Copiado",
-      regenerate: "Regenerar",
-      retry: "Tentar de novo",
-      continue: "Continuar",
-      editMessage: "Editar e reenviar",
-      stopped: "Parado",
-      truncatedNotice: "O Logos atingiu o limite de passos nesta resposta.",
-      toolLimitNotice: "O Logos usou as {limit} chamadas de ferramentas permitidas nesta resposta.",
-      jumpToLatest: "Ir para o fim",
-      errorGeneric: "Algo correu mal. Tente novamente.",
-      youLabel: "Você",
-      assistantLabel: "Logos",
-      tookTime: "{time}",
-      followups: "Seguimentos",
-      applyToEditor: "Aplicar ao editor",
-      appliedToEditor: "Proposta aplicada ao editor (por guardar).",
-      proposalTitle: "Edição proposta pela IA",
-      proposalHint: "Reveja o diff e aceite ou recuse.",
-      accept: "Aceitar",
-      decline: "Recusar",
-      diff: {
-        original: "Atual",
-        modified: "Proposta",
-        noChanges: "Sem diferenças",
-        changeCounter: "{current} de {total}",
-        unchangedLines: "{n} linhas inalteradas",
-        previous: "Alteração anterior (Shift+F7)",
-        next: "Próxima alteração (F7)",
-        inline: "Em linha",
-        split: "Lado a lado",
-        collapseUnchanged: "Ocultar linhas inalteradas",
-        showAll: "Mostrar linhas inalteradas",
-        keep: "Manter",
-        undo: "Anular",
-        keepAll: "Manter tudo",
-        undoAll: "Anular tudo",
-        apply: "Aplicar alterações",
-        applyPartial: "Aplicar {kept} de {total}",
-        discard: "Recusar",
-        jumpToChange: "Ir para a alteração {n}",
-      },
-      proposals: {
-        pending: {
-          one: "{count} proposta pendente",
-          other: "{count} propostas pendentes",
-        },
-        review: "Rever",
-        reviewTitle: "Rever proposta: {title}",
-        openEditor: "Abrir no editor",
-        inEditor: "Aberto no editor",
-        acceptAll: "Aceitar tudo",
-        declineAll: "Recusar tudo",
-        expand: "Mostrar propostas",
-        collapse: "Ocultar propostas",
-        songKind: "Canção",
-        serviceKind: "Serviço",
-        applied: "“{title}” guardada.",
-        appliedMany: {
-          one: "{count} proposta aplicada",
-          other: "{count} propostas aplicadas",
-        },
-        applyFailed: "Não foi possível aplicar a proposta.",
-        songGone: "Esta canção já não existe.",
-        loadingSong: "A carregar a canção…",
-        untitled: "Sem título",
-        statusApplied: "Aplicada",
-        statusDeclined: "Recusada",
-        statusStale: "Substituída",
-        inEditorNote: "Está aberta no editor — reveja o diff lá.",
-        fullReview: "Rever tudo",
-      },
-      confirm: "Confirmar",
-      confirming: "A eliminar…",
-      confirmDone: "Enviado para o lixo",
-      confirmDeclined: "Cancelado",
-      confirmError: "Não foi possível eliminar.",
-      confirmTrashHint: "Vai para o lixo — pode restaurar depois.",
-      confirmDeleteSong: "Eliminar canção?",
-      confirmDeleteService: "Eliminar serviço?",
-      confirmDeleteFolder: "Eliminar pasta?",
-      confirmDeleteCollection: "Eliminar coleção?",
-      confirmDeleteAgenda: "Eliminar evento da agenda?",
-      chips: {
-        fixChordPro: "Corrigir ChordPro",
-        reviewSong: "Rever",
-        transpose: "Transpor…",
-        completeChords: "Completar acordes",
-        completeMeta: "Completar metadados",
-        explainSelection: "Explicar",
-        reviewPlan: "Rever plano",
-        suggestSongs: "Sugerir canções",
-        fixSongRefs: "Corrigir refs",
-        completeStructure: "Completar estrutura",
-        createSong: "Criar canção",
-        searchHelp: "Ajuda de pesquisa",
-        planService: "Planear um serviço",
-        organizeFolders: "Organizar pastas",
-        upcomingAgenda: "Próxima agenda",
-        reviewTrash: "Rever lixo",
-        general: "O que podes fazer?",
-      },
-      chipDesc: {
-        fixChordPro: "Limpar formatação e diretivas",
-        reviewSong: "Qualidade, metadados e tocabilidade",
-        transpose: "Passar esta canção para outro tom",
-        completeChords: "Copiar acordes para as outras estrofes",
-        completeMeta: "Preencher título, artista, tom e etiquetas",
-        explainSelection: "Perceber a estrutura e as diretivas",
-        reviewPlan: "Verificar fluxo e canções em falta",
-        suggestSongs: "Encontrar canções da biblioteca",
-        fixSongRefs: "Reparar referências de canções",
-        completeStructure: "Montar um serviço equilibrado",
-        createSong: "Rascunhar uma nova canção ChordPro",
-        searchHelp: "Encontrar e organizar as canções",
-        planService: "Rascunhar um alinhamento da biblioteca",
-        organizeFolders: "Cores e ícones por tipo de pasta",
-        upcomingAgenda: "Ver o que aí vem e o que falta",
-        reviewTrash: "Ver o que é seguro restaurar",
-        general: "Ver tudo em que posso ajudar",
-      },
-      chipPrompt: {
-        fixChordPro:
-          "Revê e corrige o ChordPro da canção atual (formatação, diretivas, metadados). Propõe as edições; não guardes ainda.",
-        reviewSong:
-          "Revê esta canção quanto à qualidade do ChordPro, metadados em falta e tocabilidade. Resume os problemas e propõe correções.",
-        transpose:
-          "Ajuda-me a transpor esta canção. Pergunta o tom de destino se não for claro e depois propõe o ChordPro transposto.",
-        completeChords:
-          "Completar acordes: usa chordpro_propagate_chords na canção atual. Copia os marcadores de acordes da primeira estrofe com acordes para as restantes estrofes nos mesmos pontos da letra — NÃO inventes acordes novos. A ferramenta devolve um rascunho: verifica cada linha marcada `check`, corrige tu próprio a posição dos acordes e depois propõe o resultado corrigido no editor com songs_propose_edit; não guardes ainda.",
-        completeMeta:
-          "Completa os metadados em falta da canção (título, artista, tom, tempo, etiquetas) com base no conteúdo ChordPro. Apenas propõe edições.",
-        explainSelection:
-          "Explica a estrutura ChordPro e quaisquer diretivas invulgares no excerto da canção atual.",
-        reviewPlan:
-          "Revê este plano de serviço quanto à estrutura, referências de canções em falta e fluxo. Sugere melhorias sem guardar.",
-        suggestSongs:
-          "Sugere canções da biblioteca que se adequem a este contexto. Propõe um rascunho; não guardes ainda.",
-        fixSongRefs:
-          "Verifica as referências de canções neste serviço e corrige elementos de canção quebrados ou incompletos. Apenas propõe.",
-        completeStructure:
-          "Completa uma estrutura de serviço equilibrada (boas-vindas, canções, mensagem, etc.) para este plano. Propõe os elementos; não guardes.",
-        createSong:
-          "Ajuda-me a criar uma nova canção em ChordPro. Pergunta título/artista se necessário e depois propõe o conteúdo (não guardes até eu confirmar).",
-        searchHelp: "Ajuda-me a pesquisar e organizar as canções da biblioteca.",
-        planService:
-          "Ajuda-me a planear um novo serviço de culto. Pergunta data/tema se necessário e depois propõe um alinhamento da biblioteca.",
-        organizeFolders:
-          "Revê as minhas pastas e dá a cada uma uma cor e um ícone adequados para distinguir bem cada tipo. Aplica tudo de uma vez.",
-        upcomingAgenda:
-          "Mostra os próximos eventos da minha agenda e aponta o que falta (responsabilidades, canções, notas).",
-        reviewTrash: "Lista o que está no lixo e diz-me o que é seguro restaurar ou deixar.",
-        general:
-          "Em que me podes ajudar no Hosanna Studio (canções, serviços, ChordPro, biblioteca)?",
-      },
-      tools: {
-        hosanna_capabilities: "Verificar capacidades",
-        hosanna_permissions: "Verificar permissões",
-        hosanna_skills_list: "Listar skills",
-        hosanna_skill_read: "Ler skill",
-        hosanna_resources_list: "Listar recursos",
-        hosanna_resource_read: "Ler recurso",
-        me: "Identificar utilizador",
-        members_list: "Listar membros",
-        members_get: "Obter membro",
-        members_resolve: "Associar membros",
-        org_get: "Ler organização",
-        folders_list: "Listar pastas",
-        folders_create: "Criar pasta",
-        folders_update: "Atualizar pasta",
-        folders_delete: "Eliminar pasta",
-        folders_restore: "Restaurar pasta",
-        trash_list: "Listar lixo",
-        collections_list: "Listar coleções",
-        collections_get: "Ler coleção",
-        collections_create: "Criar coleção",
-        collections_update: "Atualizar coleção",
-        collections_delete: "Eliminar coleção",
-        collections_add_songs: "Adicionar canções à coleção",
-        collections_remove_songs: "Remover canções da coleção",
-        agenda_list: "Listar agenda",
-        agenda_get: "Ler evento",
-        agenda_create: "Criar evento",
-        agenda_update: "Atualizar evento",
-        agenda_delete: "Eliminar evento",
-        studio_sync: "Atualizar biblioteca",
-        studio_navigate: "Abrir página",
-        studio_generate_pdf: "Preparar PDF",
-        studio_search: "Pesquisar na biblioteca",
-        metadata_musicbrainz_search: "Pesquisar no MusicBrainz",
-        metadata_youtube_search: "Pesquisar no YouTube",
-        metadata_web_search: "Pesquisar na web",
-        metadata_web_fetch: "Ler página web",
-        chordpro_validate: "Validar ChordPro",
-        chordpro_propagate_chords: "Copiar acordes para estrofes",
-        chordpro_parse_summary: "Analisar ChordPro",
-        chordpro_format: "Formatar ChordPro",
-        chordpro_transpose: "Transpor",
-        chordpro_convert: "Converter para ChordPro",
-        chordpro_directives: "Consultar diretivas",
-        songs_search: "Pesquisar canções",
-        songs_list_in_folder: "Listar canções da pasta",
-        memory_list: "Ler memória",
-        memory_save: "Guardar na memória",
-        memory_forget: "Esquecer da memória",
-        songs_search_lyrics: "Pesquisar letras",
-        songs_get: "Ler canção",
-        songs_get_many: "Ler canções",
-        songs_create_draft: "Rascunhar canção",
-        songs_propose_edit: "Propor edição",
-        songs_propose_fix: "Propor correção",
-        songs_propose_transpose: "Propor transposição",
-        songs_draft_propagate_chords: "Rascunho de cópia de acordes",
-        songs_save: "Guardar canção",
-        songs_move: "Mover canção",
-        songs_delete: "Eliminar canção",
-        songs_restore: "Restaurar canção",
-        services_search: "Pesquisar serviços",
-        services_get: "Ler serviço",
-        services_validate: "Validar serviço",
-        services_plan_suggest: "Sugerir plano",
-        services_propose_edit: "Propor edição do serviço",
-        services_save: "Guardar serviço",
-        services_delete: "Eliminar serviço",
-        services_restore: "Restaurar serviço",
-        folders_update_many: "Atualizar pastas",
-        folders_create_many: "Criar pastas",
-        collections_update_many: "Atualizar coleções",
-      },
     },
   },
 };

@@ -10,13 +10,16 @@ export { LogosMascot } from "./mascot";
 export { AiProposalBanner } from "./proposals/components/Banner";
 export {
   LogosHostProvider,
+  LogosRouteProvider,
   LogosSongAdapterProvider,
   useHostSong,
   useHostUpdateSong,
   useLogosHost,
   useLogosI18n,
+  useLogosRoute,
   type LogosApi,
   type LogosHost,
+  type LogosRouteState,
   type LogosServiceElement,
   type LogosSong,
   type LogosSongAdapter,
@@ -27,16 +30,25 @@ export type { AiChatContext, AiConfirmAction, AiSettingsPublic, AiUiMessage } fr
 export {
   AI_LIBRARY_CHANGED_EVENT,
   AI_NAVIGATE_EVENT,
+  AI_OPEN_APP_EVENT,
   AI_PRINT_EVENT,
   AI_SETTINGS_CHANGED_EVENT,
   aiContextBridge,
   dispatchAiNavigate,
+  dispatchAiOpenApp,
   dispatchAiPrint,
   dispatchAiSettingsChanged,
   dispatchLibraryChanged,
+  performOpenApp,
+  resolveHosannaAppOrigin,
+  warmHosannaAppOrigin,
   type AiNavigateDetail,
+  type AiOpenAppDetail,
   type AiPrintDetail,
+  type OpenAppNavigateContext,
+  type PerformOpenAppOptions,
 } from "./core/bridge";
+export { logosAiMessages, type LogosAiMessages } from "./i18n";
 export {
   aiProposals,
   useAiProposals,

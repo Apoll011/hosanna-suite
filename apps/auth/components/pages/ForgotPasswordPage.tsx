@@ -2,9 +2,9 @@
 
 import { AuthLayout } from "@/components/AuthLayout";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
-import { authClient } from "@/lib/auth-client";
-import { captchaFetchOptions } from "@/lib/captcha";
-import { useI18n } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
+import { captchaFetchOptions } from "@/lib/auth/captcha";
+import { useI18n } from "@/lib/ui/i18n";
 import { CheckCircle2, Mail, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
