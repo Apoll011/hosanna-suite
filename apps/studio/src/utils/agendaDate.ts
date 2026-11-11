@@ -32,7 +32,9 @@ const MONTH_KEYS: TranslationKey[] = [
 
 /** "domingo, 4 de outubro de 2026" — localized weekday + day + month + year. */
 export function formatLongDate(iso: string, t: TranslateFn): string {
-  const [y, m, d] = iso.split("-").map(Number);
+  // Accept date-only or full ISO datetime (same as formatShortDate).
+  const [y, m, d] = (iso || "").split("T")[0].split("-").map(Number);
+  if (!y || !m || !d) return iso || "";
   const date = new Date(y, m - 1, d);
   return t("agenda.dateLong", {
     weekday: t(WEEKDAY_KEYS[date.getDay()]),

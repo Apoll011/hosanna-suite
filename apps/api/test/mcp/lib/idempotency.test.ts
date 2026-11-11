@@ -72,4 +72,72 @@ describe("idempotency", () => {
   it("hashes nullish payloads the same way", () => {
     assert.equal(payloadHash(undefined), payloadHash(null));
   });
+
+  it("coalesces concurrent same-id runs into a single execution", async () => {
+    const org = `org-${Math.random()}`;
+    const id = "req-concurrent";
+    let runs = 0;
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let started!: () => void;
+    const startedP = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+
+    const run = () =>
+      withClientRequestId(
+        org,
+        id,
+        async () => {
+          runs += 1;
+          started();
+          await gate;
+          return { runs };
+        },
+        { name: "Folder" },
+      );
+
+    const p1 = run();
+    await startedP;
+    const p2 = run();
+    // Second caller joins the in-flight promise — `run` must not execute twice.
+    assert.equal(runs, 1);
+    release();
+    const [a, b] = await Promise.all([p1, p2]);
+    assert.deepEqual(a, b);
+    assert.equal(runs, 1);
+  });
+
+  it("conflicts when a concurrent call reuses the id with a different payload", async () => {
+    const org = `org-${Math.random()}`;
+    const id = "req-conflict-concurrent";
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let started!: () => void;
+    const startedP = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+
+    const first = withClientRequestId(
+      org,
+      id,
+      async () => {
+        started();
+        await gate;
+        return { ok: true };
+      },
+      { name: "A" },
+    );
+    await startedP;
+    await assert.rejects(
+      () => withClientRequestId(org, id, async () => ({ ok: true }), { name: "B" }),
+      (err: unknown) => err instanceof IdempotencyConflictError,
+    );
+    release();
+    await first;
+  });
 });

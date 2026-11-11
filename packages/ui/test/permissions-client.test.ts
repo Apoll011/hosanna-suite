@@ -6,7 +6,9 @@ import {
   checkPermissionsLocally,
   clearPermissionCache,
   groupPermissions,
+  lookupCachedAny,
   preloadPermissionsForRole,
+  rememberAndResult,
 } from "../src/permissions/client.js";
 
 describe("groupPermissions", () => {
@@ -46,5 +48,35 @@ describe("preloadPermissionsForRole", () => {
   it("is a no-op for null and does not throw for a real role", () => {
     preloadPermissionsForRole(null);
     preloadPermissionsForRole("musician");
+  });
+});
+
+describe("lookupCachedAny vs AND-batch cache", () => {
+  beforeEach(() => clearPermissionCache());
+
+  it("does not treat a cached AND denial as an OR denial", () => {
+    // Guest: song.access granted, song.create denied → AND is false.
+    rememberAndResult(["song.create", "song.access"], false);
+    // Without this fix, useCanAny would return false from the AND cache key.
+    assert.equal(lookupCachedAny(["song.create", "song.access"]), null);
+
+    // Individual grant still wins for OR.
+    rememberAndResult(["song.access"], true);
+    assert.equal(lookupCachedAny(["song.create", "song.access"]), true);
+  });
+
+  it("treats a cached AND grant as an OR grant", () => {
+    rememberAndResult(["song.access", "export.pdf"], true);
+    assert.equal(lookupCachedAny(["song.access", "export.pdf"]), true);
+  });
+
+  it("returns false only when every permission is individually denied", () => {
+    rememberAndResult(["song.create"], false);
+    rememberAndResult(["ai.use"], false);
+    // rememberAndResult(false) does not set individual keys — seed them via preload.
+    clearPermissionCache();
+    preloadPermissionsForRole("guest");
+    assert.equal(lookupCachedAny(["song.create", "ai.use"]), false);
+    assert.equal(lookupCachedAny(["song.create", "song.access"]), true);
   });
 });
