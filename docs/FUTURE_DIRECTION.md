@@ -15,7 +15,7 @@ flowchart TD
     end
 
     PlatformCore --> Music["Hosanna Music\n(Songbook & Stage)"]
-    PlatformCore --> Presenter["Hosanna Presenter\n(Projection & Media Desktop)"]
+        PlatformCore --> Presenter["Hosanna Presenter\n(Hybrid: Desktop Operator + Web Outputs)"]
     PlatformCore --> Planning["Hosanna Planning\n(Services, Events, Volunteers, Resources)"]
     PlatformCore --> Community["Hosanna Community\n(People, Groups, Posts, Wiki, Sermons)"]
     PlatformCore --> Finance["Hosanna Finance\n(Giving, Budgets, Statements)"]
@@ -37,7 +37,7 @@ The services, agendas, and scheduling will be extracted out of Hosanna Studio an
 | App                                 | Primary Audience                                                        | Core Mission                                                                                                            |
 | :---------------------------------- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
 | **Hosanna Music** _(Basic Hosanna)_ | Worship leaders, vocalists, band musicians                              | Song repository, ChordPro charts, audio attachments, stage tools.                                                       |
-| **Hosanna Presenter**               | Media & tech teams, projectionists                                      | Dual-screen/multi-output live presentation (lyrics, media, confidence stage monitors) as a native desktop app.          |
+| **Hosanna Presenter**               | Media & tech teams, projectionists                                      | Hybrid live presentation: offline-capable desktop Operator + web Audience / Confidence / Preacher notes; ChordPro-native lyrics and Music hitch-sync. |
 | **Hosanna Planning**                | Service leaders, event coordinators, ministry directors, facility leads | Liturgy/order of service, volunteer scheduling, rehearsal & event planning, **rooms, vehicles, and equipment booking**. |
 | **Hosanna Community**               | Pastors, small group leaders, members, families                         | Member directory, families, check-in, groups, church news (Posts), knowledge base (Wiki), sermons/live video, chat.     |
 | **Hosanna Finance**                 | Treasurers, finance committees, donors                                  | Tithes & offerings, donor statements, budget tracking, fund allocation.                                                 |
@@ -62,26 +62,95 @@ _The dedicated music and repertoire engine for worship teams._
 
 ---
 
-### 3.2. Hosanna Presenter (Projection & Media - Native Desktop App)
+### 3.2. Hosanna Presenter (Projection & Media — Hybrid)
 
-_Modern church presentation software (inspired by OpenLP, ProPresenter, and Faithlife Presenter)._
+_Modern church presentation software. Product inspirations: [Church Presenter](https://www.churchpresenter.org/), [TheOpenPresenter](https://theopenpresenter.com), OpenLP, ProPresenter — with Hosanna’s wedge being **ChordPro-native lyrics** and **live hitch-sync with Hosanna Music**._
 
-- **Architecture**: **Native Desktop Application** (built with Tauri / Electron / Flutter Desktop) for zero-latency video rendering, offline-first reliability during live church services, and hardware-accelerated multi-display management.
-- **Scope & Focus**:
-  - **Multi-Screen Outputs**:
-    - _Audience Display_: Clean lyrics, motion video backgrounds, Scripture verses, sermon slides, announcements, lower thirds.
-    - _Stage Display (Confidence Monitor)_: High-contrast lyrics, current slide + next slide preview, stage clocks, countdown timers, private cues/messages from the sound booth to the band/speaker.
-    - _Live Stream / NDI Output_: Transparent background or lower-third overlay for OBS/vMix integration.
-  - **Offline-First & Local Cache**:
-    - Runs completely offline once synced with local SQLite/cache — immune to church WiFi/internet drops on Sunday mornings.
-  - **Deep Hosanna Sync**:
-    - Automatically pulls songs and arrangements directly from Hosanna Music (no manual retyping of lyrics).
-    - Automatically syncs with the live service order running in Hosanna Planning.
-  - **Media Engine**:
-    - Support for video loops, still backgrounds, Bible translations, and slide templates.
-    - Remote control via local network / mobile app (allowing the speaker or worship leader to advance slides if needed).
+Presenter is a **separate product** (never a Studio tab that drives projectors). Studio / Planning **prepare** the service; Presenter **runs** it on Sunday.
+
+#### Architecture (hybrid)
+
+| Surface | Form factor | Role |
+| :------ | :---------- | :--- |
+| **Operator** | Native desktop (Tauri / Electron), offline-first | Booth control: service run, go-live, outputs, media, authority |
+| **Audience** | Web renderer (browser / TV stick / Chromecast-class) or desktop-owned window | What the congregation sees |
+| **Confidence** | Web renderer (one shared layout for band + pulpit) | Current + next, clocks, cues |
+| **Preacher notes** | Web surface (tablet/laptop URL; OpenPresenter-style remote, hosted by Presenter’s local/cloud server) | Speaker notes + optional live annotate controls — **not** a fourth native app |
+| **Remote assist** | Phone/tablet web | Advance only if Operator grants; **Operator always wins** conflicts |
+
+```mermaid
+flowchart LR
+  Planning["Hosanna Planning\n(service order)"] --> Operator
+  Music["Hosanna Music\n(ChordPro library)"] --> Operator
+  Operator["Presenter Operator\n(Desktop, offline-capable)"]
+  Operator --> Audience["Audience output"]
+  Operator --> Confidence["Confidence monitor"]
+  Operator --> Preacher["Preacher notes web"]
+  Operator --> Hitch["Live hitch bus"]
+  Hitch --> Musician["Hosanna Musician app\nfollow mode"]
+  Operator -.->|"NDI / virtual cam / program feed"| OBS["Church OBS / vMix\n(their YouTube)"]
+```
+
+- **Offline Sunday is a hard requirement** for the Operator: after sync, the booth machine must run the service if church Wi‑Fi dies.
+- **Live authority**: Presenter Operator is source of truth during the service. Remotes and hitch followers are slaves unless the Operator releases control.
+- **Code strategy**: Prefer reusing battle-tested open presentation patterns (notably TheOpenPresenter’s remote/renderer/plugin ideas and Church Presenter’s Sunday-practical feature set) plus AI-assisted ports — **not** casually merging AGPL code into the commercial SaaS monorepo without a deliberate license isolation plan (TheOpenPresenter is AGPL-3.0). Treat upstream as inspiration / carefully bounded dependency, not a silent copy-paste into proprietary apps.
+
+#### Content types (service item plugins)
+
+A live service is an ordered list of items (from Planning) that the Operator can expand into slides/cues:
+
+| Item type | Behavior |
+| :-------- | :------- |
+| **Songs** | Lyrics derived from **ChordPro** (Hosanna Music) — verse/chorus slides, not retyped plaintext |
+| **Bible** | Church **downloads** the translations they want; Presenter caches them for offline use |
+| **Images** | Folder/library slideshow with simple transitions |
+| **Video / audio** | Local media + loops; preview before go-live |
+| **Slides** | Prefer **Hosanna Canvas** (web-authored scenes with simple built-in animations) as the primary sermon/announce path; **PPTX/PDF import** as a conversion/import path into Canvas or a slide grid — not a full Office engine in-process |
+| **Website** | Show a URL (announcements, giving page, livestream backstage) on Audience |
+| **Screen share** | Operator or guest share into Audience (LAN-first) |
+| **Alerts** | Lower-third / lower popups (names, emergency, “welcome guests”) — non-blocking overlays |
+| **Timer** | Countdown/count-up on Confidence (and optionally Audience); optional **background worship pad / bed music** under the Operator’s control |
+
+#### Outputs
+
+- **Audience**: lyrics, Scripture, canvas/slides, media, website, screen share, alerts.
+- **Confidence (single layout)**: high-contrast current + next, stage clock, service timer, private booth→stage cues. One layout for band and preacher (avoid layout sprawl in v1).
+- **Program / stream helper (not Hosanna Live)**: NDI, virtual camera, or clean program window for churches that already run OBS → YouTube. Presenter does **not** host the livestream in early phases.
+
+#### Live annotate (Audience)
+
+Preacher (or Operator) can draw/highlight **on the live Audience projection** (circle a verse, underline a lyric). Annotations are ephemeral session overlays unless explicitly saved. This is distinct from Musician song annotations in Hosanna Music.
+
+#### Musician hitch-sync (Hosanna’s unfair wedge)
+
+While Presenter advances the service:
+
+1. Musician app can **jump to the active song**.
+2. Within a song, advance can **jump to the matching section/verse** (ChordPro structure ↔ Presenter lyric slides).
+3. **Follow mode** is optional — musician may **unlock** to navigate independently without fighting the booth.
+
+Presenter remains source of truth; unlock is local to the musician device.
+
+#### Presenter roadmap layers (build order)
+
+1. **Operator core**: service run from Planning, ChordPro lyrics, Bible (downloadable packs), images, go-live Audience + Confidence, offline cache, Operator authority.
+2. **Media & overlays**: video/audio, alerts, timers (+ optional worship pad), website item, screen share.
+3. **Canvas & import**: web Canvas authoring + simple animations; PPTX/PDF import into that model.
+4. **Hitch-sync + preacher web**: Musician follow/unlock; preacher notes URL; Audience annotate.
+5. **Program out**: NDI / virtual cam for existing church streaming setups.
 
 ---
+
+### 3.2.1. Live video — near-term vs vision _(not Presenter MVP)_
+
+**Near-term (keep it simple):** do **not** build Mux ingest yet. The person organizing the stream publishes a **YouTube Live** (or VOD) link into **Hosanna Community**; Member app / Community shows “Watch Live” and the sermon archive. Presenter only supplies a clean **program feed** into the church’s OBS if they want overlays/lyrics on that stream.
+
+**Vision only — optional future “Hosanna Live”:** a separate product (or Community module) that could ingest camera + presentation program + house audio, encode via something like Mux, and distribute to YouTube + Member app. Treat as post–Presenter-stability vision: cost, bandwidth, support, and liability are real. Prefer a **separate Live app/module** if it ever ships, so Presenter’s Sunday reliability is never coupled to cloud encode.
+
+Decision rule: if Live distracts from a booth that always works offline, defer Live.
+
+---
+
 
 ### 3.3. Hosanna Planning (Services, Events, Volunteers & Resources)
 
@@ -169,7 +238,7 @@ To make multiple apps feel like **one unified product**, the underlying architec
 graph TD
     User([User / Church Member]) --> AppSwitcher[App Switcher Hub]
     AppSwitcher --> App1[Hosanna Music]
-    AppSwitcher --> App2["Hosanna Presenter (Desktop App)"]
+    AppSwitcher --> App2["Hosanna Presenter (Hybrid Operator)"]
     AppSwitcher --> App3[Hosanna Planning]
     AppSwitcher --> App4[Hosanna Community]
     AppSwitcher --> App5[Hosanna Finance]
@@ -200,8 +269,9 @@ hosanna/
 │   ├── web-planning/          # Hosanna Planning (Services, calendars, volunteer matrix, resources)
 │   ├── web-community/         # Hosanna Community (People, check-in, posts, wiki, media)
 │   ├── web-finance/           # Hosanna Finance (Giving, donor statements, budgets)
-│   ├── desktop-presenter/     # Hosanna Presenter (Native desktop app: Tauri/Electron)
-│   ├── mobile-musician/       # Hosanna Musician App (Stage tool, ChordPro, offline)
+│   ├── desktop-presenter/     # Presenter Operator (Tauri/Electron shell, offline booth)
+│   ├── web-presenter/         # Audience / Confidence / Preacher notes / remote renderers
+│   ├── mobile-musician/       # Hosanna Musician App (Stage tool, ChordPro, hitch-sync)
 │   ├── mobile-member/         # Hosanna Member App (News, check-in QR, giving, RSVP)
 │   └── api/                   # Unified backend API server
 ├── packages/
@@ -210,6 +280,7 @@ hosanna/
 │   ├── db/                    # Prisma schema, migrations, PostgreSQL client
 │   ├── notifications/         # Push (FCM/APNS), Email (Resend/SES), WhatsApp/SMS router
 │   ├── chordpro/              # ChordPro parser, transposition, formatting engine
+│   ├── presenter-core/        # Service-run model, slide plugins, hitch protocol, canvas
 │   └── types/                 # Shared TypeScript models and API contracts
 ├── package.json
 └── turbo.json
@@ -282,10 +353,12 @@ flowchart LR
 ```mermaid
 flowchart LR
     Phase1["Phase 1: Monorepo & Planning Split\n- Migrate to Monorepo\n- Split Planning from Music\n- Launch App Switcher UI\n- Resources & Rooms in Planning"]
-    Phase2["Phase 2: Desktop Presenter & Community\n- Desktop Presenter (Tauri/Electron)\n- Community (People, Wiki, Posts, Media)\n- Member Mobile App v1"]
+    Phase2["Phase 2: Presenter Hybrid & Community\n- Operator desktop + web outputs\n- ChordPro lyrics, Bible packs, hitch-sync\n- Community + Member app (YouTube Live links)"]
     Phase3["Phase 3: Finance & Advanced Channels\n- Hosanna Finance (Giving & Tax)\n- WhatsApp / SMS integration\n- Child Check-in hardware"]
+    PhaseX["Vision: Hosanna Live\n- Optional Mux-class ingest\n- YouTube + Member distribution\n- Only after Presenter is solid"]
 
     Phase1 --> Phase2 --> Phase3
+    Phase2 -.-> PhaseX
 ```
 
 ### Phase 1: Monorepo Setup & Planning Split
@@ -295,16 +368,18 @@ flowchart LR
 - **Launch Global App Switcher**: Header component across apps for instant navigation.
 - **Implement Resources inside Planning**: Allow reserving sanctuary, rooms, vans, and AV equipment during event/service scheduling with conflict prevention.
 
-### Phase 2: Native Desktop Presenter & Community App
+### Phase 2: Presenter Hybrid & Community App
 
-- **Build Hosanna Presenter (Desktop App)**:
-  - Develop offline-first native desktop client (Tauri / Electron).
-  - Multi-window output: Audience display + Stage confidence monitor (with countdown timer and next-slide preview).
-  - Sync lyrics directly from Hosanna Music and run-of-show from Hosanna Planning.
+- **Build Hosanna Presenter (Hybrid)**:
+  - Offline-first **Operator** desktop shell (Tauri / Electron) + local/cloud server for web surfaces.
+  - Web **Audience** + single-layout **Confidence** + **Preacher notes** URL.
+  - Service run from Planning; **ChordPro → lyric slides** from Music; downloadable Bible packs; images.
+  - Operator authority; hitch-sync to Musician (song + section follow, unlock).
+  - Then: media, alerts, timers/pads, website, screen share, Canvas (+ PPTX import), program/NDI out.
 - **Build Hosanna Community**:
   - Member directory, families, and groups.
   - **Posts**: Digital bulletin and church newsfeed.
-  - **Sermons & Media**: In-app YouTube live stream and sermon archive.
+  - **Sermons & Media**: organizers publish **YouTube Live / VOD links**; Member app shows Watch Live + archive (no Mux ingest yet).
   - **Wiki**: Searchable volunteer SOPs and ministry training library.
 - **Launch Hosanna Member Mobile App**:
   - Volunteer scheduling responses (Accept / Decline).
@@ -328,8 +403,13 @@ flowchart LR
 
 | Decision Area             | Chosen Strategy                                      | Rationale                                                                                                                                                                                                        |
 | :------------------------ | :--------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Presenter Delivery**    | **Native Desktop Application**                       | Eliminates risk of browser crashes or internet dropouts during live church services; provides native hardware video acceleration and reliable multi-monitor control.                                             |
+| **Presenter Delivery**    | **Hybrid: Desktop Operator + Web outputs**           | Booth needs offline multi-monitor reliability; Audience / Confidence / Preacher notes / remotes work best as browsers (TV sticks, tablets) like OpenPresenter — without making Studio the live engine.           |
+| **Presenter Authority**   | **Tech Operator wins**                               | One booth source of truth during service; remotes and hitch followers are optional and subordinate.                                                                                                              |
+| **Presenter Wedge**       | **ChordPro lyrics + Music hitch-sync**               | Differentiates from Church Presenter / OpenPresenter / ProPresenter: lyrics aren’t a second library; musicians can follow verse/section live.                                                                    |
+| **Slide Authoring**       | **Canvas primary; PPTX import secondary**            | Avoid shipping a full PowerPoint engine; import into Hosanna Canvas with simple animations.                                                                                                                      |
+| **Live Streaming**        | **Near-term: YouTube link in Community; vision: optional Hosanna Live** | Don’t couple Sunday Presenter to Mux. Churches stream with OBS; Community/Member embed YouTube. Mux-class ingest is vision-only, preferably a separate Live module later.                                      |
+| **OpenPresenter reuse**   | **Patterns / careful isolation; respect AGPL**       | Useful remote/renderer/plugin ideas; AGPL-3.0 means no silent merge into proprietary SaaS — license strategy required before heavy code reuse.                                                                   |
 | **Codebase Architecture** | **Monorepo (Turborepo / pnpm)**                      | Unifies shared UI tokens, Better Auth SSO, database models, and API clients across all apps while allowing independent deployments.                                                                              |
-| **Mobile App Strategy**   | **Two Dedicated Mobile Apps**                        | Separates the stage performance tool (_Hosanna Musician_) from general congregation life, check-in, and church updates (_Hosanna Member_).                                                                       |
+| **Mobile App Strategy**   | **Two Dedicated Mobile Apps**                        | Separates the stage performance tool (_Hosanna Musician_) from general congregation life, check-in, and church updates (_Hosanna Member_). Preacher notes stay a web surface, not a third mobile app.              |
 | **Resource Placement**    | **Permanently Merged into Planning**                 | Keeps all operational scheduling (services, events, volunteers, rooms, vehicles, and equipment) in one cohesive planner with unified conflict prevention, keeping the suite strictly focused on 5 distinct apps. |
 | **Notification Pipeline** | **Push (Current) + Email + WhatsApp/SMS (Upcoming)** | Maximizes deliverability and read rates for volunteer scheduling while optimizing messaging costs.                                                                                                               |
