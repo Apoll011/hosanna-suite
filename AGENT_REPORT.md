@@ -70,4 +70,4 @@ pnpm --filter @hosanna/studio exec tsx --test test/utils/agendaDate.test.ts → 
 
 ## Commits
 
-See git log on `overhaul/bugs` (SHAs filled after commit).
+- `6bd5d77956d09995a9eaea7300a2f8fe7f3be573` — fix: correct OR permission cache, chorded search, and idempotency races
