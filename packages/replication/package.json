@@ -10,6 +10,14 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./engine": {
+      "types": "./src/engine/index.ts",
+      "default": "./src/engine/index.ts"
+    },
+    "./replication": {
+      "types": "./src/replication/index.ts",
+      "default": "./src/replication/index.ts"
     }
   },
   "scripts": {

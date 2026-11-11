@@ -81,7 +81,6 @@ async function sharedRedis(url: string): Promise<RedisClient> {
 
 async function openStore(opts: CreateCacheOptions): Promise<KeyvLike> {
   const backend = resolveBackend(opts);
-  const ttl = opts.ttlMs;
 
   if (backend === "redis") {
     const url = resolveRedisUrl(opts);
@@ -98,7 +97,7 @@ async function openStore(opts: CreateCacheOptions): Promise<KeyvLike> {
 
   return new Keyv({
     namespace: opts.namespace,
-    ...(ttl ? { ttl } : {}),
+    ...(opts.ttlMs ? { ttl: opts.ttlMs } : {}),
   }) as unknown as KeyvLike;
 }
 

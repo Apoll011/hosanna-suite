@@ -60,15 +60,18 @@
     "@types/node": "catalog:",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "@types/youtube-player": "^5.5.11",
     "ace-builds": "^1.44.0",
+    "lucide-react": "^0.546.0",
+    "react": "^19.2.0",
     "react-ace": "^15.0.0",
+    "react-dom": "^19.2.0",
     "tsup": "^8.5.1",
     "tsx": "^4.23.15",
     "typescript": "catalog:"
   },
   "peerDependencies": {
     "ace-builds": "^1.44.0",
+    "lucide-react": ">=0.400.0",
     "react": "^19.0.0",
     "react-ace": "^15.0.0",
     "react-dom": "^19.0.0"
@@ -80,11 +83,6 @@
     "react-ace": {
       "optional": true
     }
-  },
-  "dependencies": {
-    "lucide-react": "^1.28.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
   },
   "publishConfig": {
     "access": "public"

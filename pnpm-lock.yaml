@@ -716,16 +716,6 @@ importers:
         version: 5.1.6(keyv@5.6.0)
 
   packages/chordpro:
-    dependencies:
-      lucide-react:
-        specifier: ^1.28.0
-        version: 1.70.0(@types/react@19.3.0)(react@19.3.1)
-      react:
-        specifier: ^19.0.0
-        version: 19.3.1
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.3.1(react@19.3.1)
     devDependencies:
       '@hosanna/config':
         specifier: workspace:*
@@ -739,15 +729,21 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.4
         version: 19.3.0(@types/react@19.3.0)
-      '@types/youtube-player':
-        specifier: ^5.5.11
-        version: 5.5.11
       ace-builds:
         specifier: ^1.44.0
         version: 1.45.2
+      lucide-react:
+        specifier: ^0.546.0
+        version: 0.546.0(react@19.3.1)
+      react:
+        specifier: ^19.2.0
+        version: 19.3.1
       react-ace:
         specifier: ^15.0.0
         version: 15.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.3.1(react@19.3.1)
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.32)(supports-color@10.2.2)(tsx@4.23.15)(typescript@5.9.3)(yaml@2.9.1)
@@ -4013,9 +4009,6 @@ packages:
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
 
-  '@types/youtube-player@5.5.11':
-    resolution: {integrity: sha512-pM41CDBqJqBmTeJWnF7NOGz82IQoYOhqzMYXv5vKCXBqGiYSLldxMtpCk6KAEtADTy49S45AriYaCaZyeUX38Q==}
-
   '@typescript-eslint/eslint-plugin@8.72.1':
     resolution: {integrity: sha512-5CokTWXpmbylfFabsbvHC0CAw3XLaGnoa+nFJX5FR592h/LoZsENUE6p/rg5xvkKrFEXz6pYmgI29AgXc2N3BQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -5831,15 +5824,6 @@ packages:
     resolution: {integrity: sha512-VuXgKZrk0uiDlWjGGXmKV6MSk9Yy4l10qgVvzGn2AWBx1Ylt0iBexKOAoA6I7JO3m+M9oeovJd3yYENfkUbOeg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  lucide-react@1.70.0:
-    resolution: {integrity: sha512-gCTPPN1MlQUBtUgdsUv+0CAUj+X8hifRUiRBw4E5v7lvDIOIpx0EZezdGQMSimS8pKA6esvullJub4GYr0mCHA==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -10513,8 +10497,6 @@ snapshots:
 
   '@types/uuid@9.0.8': {}
 
-  '@types/youtube-player@5.5.11': {}
-
   '@typescript-eslint/eslint-plugin@8.72.1(@typescript-eslint/parser@8.72.1(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
@@ -12569,12 +12551,6 @@ snapshots:
   lucide-react@0.575.0(react@19.3.1):
     dependencies:
       react: 19.3.1
-
-  lucide-react@1.70.0(@types/react@19.3.0)(react@19.3.1):
-    dependencies:
-      react: 19.3.1
-    optionalDependencies:
-      '@types/react': 19.3.0
 
   magic-string@0.30.21:
     dependencies:

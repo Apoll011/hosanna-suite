@@ -1,8 +1,7 @@
 {
   "extends": "@hosanna/config/tsconfig/vite.json",
   "compilerOptions": {
-    "isolatedModules": true,
-    "strict": true
+    "isolatedModules": true
   },
   "include": ["src", "test"]
 }
