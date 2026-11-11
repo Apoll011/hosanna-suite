@@ -8,11 +8,7 @@
 import type { ResourceKind, StagedProposal } from "../resources/types";
 
 export type ConfirmActionKind =
-  | "delete_song"
-  | "delete_service"
-  | "delete_folder"
-  | "delete_collection"
-  | "delete_agenda";
+  "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
 
 export type LogosConfirmAction = {
   action: ConfirmActionKind;
@@ -53,8 +49,7 @@ export type LogosAction =
   | { type: "sync"; reason?: string };
 
 export type DeferredHostOffer =
-  | { type: "navigate"; navigate: LogosNavigateAction }
-  | { type: "print"; print: LogosPrintAction };
+  { type: "navigate"; navigate: LogosNavigateAction } | { type: "print"; print: LogosPrintAction };
 
 /** Page ids used to fill missing proposal entity ids. */
 export type ActionPageContext = {

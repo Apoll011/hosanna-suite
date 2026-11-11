@@ -13,11 +13,7 @@ import { useLogosHost, useLogosI18n } from "../../host";
 import { useCatalogService } from "../../host/catalog";
 import { hasCapability, planningAppId } from "../../host/capabilities";
 import { useProposalActions } from "../actions";
-import {
-  useServiceProposal,
-  useServiceProposalStatus,
-  type ServiceProposal,
-} from "../store";
+import { useServiceProposal, useServiceProposalStatus, type ServiceProposal } from "../store";
 import { useOpenEditorKey } from "../hooks/useOpenEditorKey";
 import type { LogosServiceElement } from "../../host/types";
 
@@ -101,9 +97,7 @@ export const AiServiceProposalCard: React.FC<{ proposal: AiServiceProposalPayloa
             <p className="m-0 text-xs font-semibold text-m3-text truncate">{title}</p>
             <p className="m-0 text-[10.5px] text-m3-secondary truncate">
               {tc("ai.chat.proposals.serviceElements", summary.count)}
-              {summary.songs > 0
-                ? ` · ${tc("ai.chat.proposals.serviceSongs", summary.songs)}`
-                : ""}
+              {summary.songs > 0 ? ` · ${tc("ai.chat.proposals.serviceSongs", summary.songs)}` : ""}
             </p>
           </div>
           {status !== "pending" && (

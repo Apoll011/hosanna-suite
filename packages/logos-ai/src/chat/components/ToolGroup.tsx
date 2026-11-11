@@ -189,9 +189,7 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
   const serviceProposals = useMemo(
     () =>
       parsedActions.map((actions) => {
-        const propose = actions.find(
-          (a) => a.type === "propose" && a.proposal.kind === "service",
-        );
+        const propose = actions.find((a) => a.type === "propose" && a.proposal.kind === "service");
         if (!propose || propose.type !== "propose") return null;
         const payload = propose.proposal.payload as {
           elements: CatalogServiceElement[];

@@ -10,11 +10,11 @@ This is the guide for adding a new product surface to Hosanna AI (MCP + Logos): 
 
 A **domain** is one product surface. It is registered in three places that share the same id:
 
-| Layer | What it owns | Example |
-| ----- | ------------ | ------- |
-| **Auth domain** (`@hosanna/auth`) | `DomainId`, permission resource (`song`), suite app owner | `music.song` → `song.*` |
-| **MCP Domain Pack** (`apps/api/src/mcp/domains/`) | Tools, permission gates, resources, prompts, skills | `music.song` pack → `songs_*` tools |
-| **Logos Resource** (`@hosanna/logos-ai`) | Proposal/edit kind in chat (`song` / `service`) | `domainId: "music.song"` |
+| Layer                                             | What it owns                                              | Example                             |
+| ------------------------------------------------- | --------------------------------------------------------- | ----------------------------------- |
+| **Auth domain** (`@hosanna/auth`)                 | `DomainId`, permission resource (`song`), suite app owner | `music.song` → `song.*`             |
+| **MCP Domain Pack** (`apps/api/src/mcp/domains/`) | Tools, permission gates, resources, prompts, skills       | `music.song` pack → `songs_*` tools |
+| **Logos Resource** (`@hosanna/logos-ai`)          | Proposal/edit kind in chat (`song` / `service`)           | `domainId: "music.song"`            |
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -100,18 +100,18 @@ What `songs_propose_*` / `services_propose_*` actually do on MCP:
 
 So the “Accept” UX for external AI is **conversational approval + `*_save`**, not a Logos card.
 
-| Surface | Propose | Persist |
-| ------- | ------- | ------- |
-| **Logos** (Studio / Auth) | Tray / Accept–Decline in chat; optional Open | Catalog patch (or Studio editor Save) — usually **not** `songs_save` |
-| **External MCP** | Model shows proposal text/JSON in ChatGPT/Claude | Model calls `songs_save` / `services_save` after user OK |
+| Surface                   | Propose                                          | Persist                                                              |
+| ------------------------- | ------------------------------------------------ | -------------------------------------------------------------------- |
+| **Logos** (Studio / Auth) | Tray / Accept–Decline in chat; optional Open     | Catalog patch (or Studio editor Save) — usually **not** `songs_save` |
+| **External MCP**          | Model shows proposal text/JSON in ChatGPT/Claude | Model calls `songs_save` / `services_save` after user OK             |
 
 There is no automatic “install Logos into ChatGPT.” If you ever want Hosanna-native Accept UI for an external session, that would be a separate product (e.g. deep-link into Auth/Studio with a staged proposal) — not how MCP works today.
 
 ### Permission gate (both paths)
 
 ```ts
-requirePermission(ctx, "song.update");  // throws if role lacks it
-requireWriteEntitlement(ctx);         // paid plan for writes
+requirePermission(ctx, "song.update"); // throws if role lacks it
+requireWriteEntitlement(ctx); // paid plan for writes
 ```
 
 Discovery tools advertise what the **current role** can actually call:
@@ -129,15 +129,15 @@ Previously: add a tools file, manually call `registerX` in `server.ts`, hardcode
 
 Now:
 
-| Piece | Role |
-| ----- | ---- |
-| `packages/auth/.../domains.ts` | Canonical `DomainId` + Logos kind mapping |
-| `packages/auth/.../appRoles.ts` | Per-app role scaffold (`finance.treasurer` → permissions) — empty until products ship |
-| `apps/api/src/mcp/domains/packs.ts` | Pack metadata: tools + permission gates + resources/prompts/skills |
-| `apps/api/src/mcp/domains/wire.ts` | Mounts tool/prompt/resource modules onto the MCP server |
-| `apps/api/src/mcp/domains/discovery.ts` | Permission-aware views for capabilities/permissions |
-| `apps/api/src/mcp/server.ts` | Only calls `wireHosannaDomainPacks` |
-| Logos `ResourceDefinition.domainId` | Aligns chat resources with pack ids (`music.song`) |
+| Piece                                   | Role                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------- |
+| `packages/auth/.../domains.ts`          | Canonical `DomainId` + Logos kind mapping                                             |
+| `packages/auth/.../appRoles.ts`         | Per-app role scaffold (`finance.treasurer` → permissions) — empty until products ship |
+| `apps/api/src/mcp/domains/packs.ts`     | Pack metadata: tools + permission gates + resources/prompts/skills                    |
+| `apps/api/src/mcp/domains/wire.ts`      | Mounts tool/prompt/resource modules onto the MCP server                               |
+| `apps/api/src/mcp/domains/discovery.ts` | Permission-aware views for capabilities/permissions                                   |
+| `apps/api/src/mcp/server.ts`            | Only calls `wireHosannaDomainPacks`                                                   |
+| Logos `ResourceDefinition.domainId`     | Aligns chat resources with pack ids (`music.song`)                                    |
 
 **Unchanged on purpose:** Better Auth permission strings stay `{resource}.{action}` (`song.update`). `DomainId` is the **product grouping**, not a rename of every permission string.
 
@@ -256,7 +256,7 @@ The Studio/Auth assistant tool map lives in `aiChat.service.ts` and is **paralle
 ```ts
 type McpToolGate = {
   name: string;
-  permission?: PermissionString;   // omit = always “allowed” in discovery
+  permission?: PermissionString; // omit = always “allowed” in discovery
   requiresEntitlement?: boolean; // documentation / future filtering
 };
 
@@ -275,13 +275,13 @@ type DomainPack = {
 
 Helpers:
 
-| Function | Use |
-| -------- | --- |
-| `ensureDomainPacksRegistered()` | Publish metadata into the registry |
-| `wireHosannaDomainPacks(server, auth)` | Mount all tools/prompts/resources |
-| `summarizeDomainsForUser(user)` | Capabilities `domains` payload |
-| `permissionsReportForUser({ orgRole, appRoles })` | Permissions + tool allow/deny |
-| `assertPackToolsCoverCatalog(names)` | Test: packs ⊇ catalog |
+| Function                                          | Use                                |
+| ------------------------------------------------- | ---------------------------------- |
+| `ensureDomainPacksRegistered()`                   | Publish metadata into the registry |
+| `wireHosannaDomainPacks(server, auth)`            | Mount all tools/prompts/resources  |
+| `summarizeDomainsForUser(user)`                   | Capabilities `domains` payload     |
+| `permissionsReportForUser({ orgRole, appRoles })` | Permissions + tool allow/deny      |
+| `assertPackToolsCoverCatalog(names)`              | Test: packs ⊇ catalog              |
 
 ---
 
@@ -298,12 +298,12 @@ Treasurer-only fund tools = `fund.*` on `finance.treasurer` (+ owner/admin as yo
 
 ## 8. Logos ↔ MCP alignment
 
-| Logos | MCP / Auth |
-| ----- | ---------- |
-| `ResourceDefinition.kind` | Proposal JSON / catalog kind (`song`) |
-| `ResourceDefinition.domainId` | Pack id / `DomainId` (`music.song`) |
-| `getResourceByDomainId("music.song")` | Resolve Logos resource from pack id |
-| `registerResource(def)` | Add kinds without forking Auth/Studio providers |
+| Logos                                 | MCP / Auth                                      |
+| ------------------------------------- | ----------------------------------------------- |
+| `ResourceDefinition.kind`             | Proposal JSON / catalog kind (`song`)           |
+| `ResourceDefinition.domainId`         | Pack id / `DomainId` (`music.song`)             |
+| `getResourceByDomainId("music.song")` | Resolve Logos resource from pack id             |
+| `registerResource(def)`               | Add kinds without forking Auth/Studio providers |
 
 Proposal convention: tools return a `proposal` object; Logos `extractProposal` pulls it into the tray. Keep that contract when adding kinds.
 

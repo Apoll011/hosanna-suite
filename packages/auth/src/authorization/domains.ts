@@ -27,13 +27,7 @@ export type DomainId =
 
 /** Suite app ids from FUTURE_DIRECTION (auth is the account hub). */
 export type SuiteAppId =
-  | "auth"
-  | "music"
-  | "planning"
-  | "finance"
-  | "presenter"
-  | "community"
-  | "platform";
+  "auth" | "music" | "planning" | "finance" | "presenter" | "community" | "platform";
 
 export type DomainDefinition = {
   id: DomainId;
@@ -129,9 +123,7 @@ export const DOMAINS: readonly DomainDefinition[] = [
 
 const byId = new Map(DOMAINS.map((d) => [d.id, d]));
 const byResource = new Map(DOMAINS.map((d) => [d.permissionResource, d]));
-const byLogosKind = new Map(
-  DOMAINS.filter((d) => d.logosKind).map((d) => [d.logosKind!, d]),
-);
+const byLogosKind = new Map(DOMAINS.filter((d) => d.logosKind).map((d) => [d.logosKind!, d]));
 
 export function getDomain(id: DomainId): DomainDefinition | undefined {
   return byId.get(id);

@@ -7,12 +7,7 @@
  */
 
 import { createCatalog } from "./create";
-import type {
-  CatalogService,
-  CatalogServiceElement,
-  CatalogSong,
-  LogosCatalog,
-} from "./types";
+import type { CatalogService, CatalogServiceElement, CatalogSong, LogosCatalog } from "./types";
 
 export type CatalogRequest = <T>(
   path: string,

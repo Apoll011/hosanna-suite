@@ -68,10 +68,7 @@ export type CatalogHandlers = {
 };
 
 export type LogosCatalog = {
-  get<K extends CatalogResourceKind>(
-    kind: K,
-    id: string,
-  ): Promise<CatalogResourceMap[K] | null>;
+  get<K extends CatalogResourceKind>(kind: K, id: string): Promise<CatalogResourceMap[K] | null>;
   update<K extends CatalogResourceKind>(
     kind: K,
     id: string,

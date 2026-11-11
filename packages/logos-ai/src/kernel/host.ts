@@ -71,9 +71,10 @@ export type LogosSongAdapter = {
     data: import("../catalog/types").CatalogSong | null | undefined;
     isLoading: boolean;
   };
-  useUpdateSong: () => (
-    args: { id: string; data: import("../catalog/types").CatalogSongPatch },
-  ) => Promise<void>;
+  useUpdateSong: () => (args: {
+    id: string;
+    data: import("../catalog/types").CatalogSongPatch;
+  }) => Promise<void>;
 };
 
 export type CreateLogosHostInput = {

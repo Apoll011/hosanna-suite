@@ -242,10 +242,7 @@ export function useSongProposalStatus(songId: string, content: string): Proposal
 }
 
 /** Pending / accepted / declined / stale for one service proposal in the chat. */
-export function useServiceProposalStatus(
-  serviceId: string,
-  elements: unknown[],
-): ProposalStatus {
+export function useServiceProposalStatus(serviceId: string, elements: unknown[]): ProposalStatus {
   const content = JSON.stringify(elements);
   const getSnapshot = useCallback(
     () => aiProposals.statusOf(serviceKey(serviceId), content),

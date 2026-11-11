@@ -62,9 +62,7 @@ function extractConfirm(body: Record<string, unknown>): LogosConfirmAction | nul
     action: action as LogosConfirmAction["action"],
     id,
     title:
-      typeof confirmation.title === "string" && confirmation.title.trim()
-        ? confirmation.title
-        : id,
+      typeof confirmation.title === "string" && confirmation.title.trim() ? confirmation.title : id,
     detail: typeof confirmation.detail === "string" ? confirmation.detail : undefined,
     folderAction:
       confirmation.folderAction === "delete_songs" || confirmation.folderAction === "move_to_root"

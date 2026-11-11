@@ -25,7 +25,9 @@ export function extractSongProposal(output: unknown): {
   artist?: string;
   diffPreview?: string;
 } | null {
-  const body = unwrapToolJson(output) ?? (typeof output === "object" ? (output as Record<string, unknown>) : null);
+  const body =
+    unwrapToolJson(output) ??
+    (typeof output === "object" ? (output as Record<string, unknown>) : null);
   if (!body) return null;
   const extracted = songResource.extractProposal(body);
   if (!extracted) return null;
@@ -46,7 +48,9 @@ export function extractServiceProposal(output: unknown): {
   notes?: string;
   elements: unknown[];
 } | null {
-  const body = unwrapToolJson(output) ?? (typeof output === "object" ? (output as Record<string, unknown>) : null);
+  const body =
+    unwrapToolJson(output) ??
+    (typeof output === "object" ? (output as Record<string, unknown>) : null);
   if (!body) return null;
   const extracted = serviceResource.extractProposal(body);
   if (!extracted) return null;

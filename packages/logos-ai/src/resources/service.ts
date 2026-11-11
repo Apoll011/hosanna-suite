@@ -55,8 +55,7 @@ export const serviceResource: ResourceDefinition<"service"> = {
       ...(payload.notes != null ? { notes: payload.notes } : {}),
     };
   },
-  fingerprint: (proposal) =>
-    JSON.stringify((proposal.payload as ServiceProposalPayload).elements),
+  fingerprint: (proposal) => JSON.stringify((proposal.payload as ServiceProposalPayload).elements),
   label: (entity, proposal) =>
     proposal.title || (entity as CatalogService | null | undefined)?.name || "Untitled",
 };

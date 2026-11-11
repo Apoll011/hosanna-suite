@@ -12,12 +12,7 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
   // Huge brand SVGs must not enter the precache; keep SW lean for auth.
-  exclude: [
-    /bimi\.svg$/,
-    /hosanna_favicon\.svg$/,
-    /favicon\.svg$/,
-    /\/api\//,
-  ],
+  exclude: [/bimi\.svg$/, /hosanna_favicon\.svg$/, /favicon\.svg$/, /\/api\//],
   maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
 });
 

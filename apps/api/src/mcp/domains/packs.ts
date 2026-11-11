@@ -204,10 +204,7 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
       "services_review",
       "services_plan",
     ],
-    skills: [
-      "hosanna://skills/services-create-edit",
-      "hosanna://skills/services-plan-complete",
-    ],
+    skills: ["hosanna://skills/services-create-edit", "hosanna://skills/services-plan-complete"],
   },
   {
     id: "library",

@@ -108,16 +108,13 @@ describe("extractServiceProposal", () => {
 
 describe("extractHostUiOffer", () => {
   it("extracts navigate and print offers for thin-host cards", () => {
-    assert.deepEqual(
-      extractHostUiOffer({ studioNavigate: true, kind: "song", id: "s1" }),
-      {
-        type: "navigate",
-        kind: "song",
-        id: "s1",
-        route: undefined,
-        reason: undefined,
-      },
-    );
+    assert.deepEqual(extractHostUiOffer({ studioNavigate: true, kind: "song", id: "s1" }), {
+      type: "navigate",
+      kind: "song",
+      id: "s1",
+      route: undefined,
+      reason: undefined,
+    });
     assert.deepEqual(
       extractHostUiOffer({ studioPrint: true, kind: "song", ids: ["a", "b"], title: "Set" }),
       {

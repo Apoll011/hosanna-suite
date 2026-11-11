@@ -89,7 +89,8 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
                   name: service.name,
                   date: service.date,
                   notes: service.notes,
-                  elements: (service.elements ?? []) as import("@hosanna/logos-ai").CatalogServiceElement[],
+                  elements: (service.elements ??
+                    []) as import("@hosanna/logos-ai").CatalogServiceElement[],
                   updatedAt: service.updatedAt,
                 };
               } catch {

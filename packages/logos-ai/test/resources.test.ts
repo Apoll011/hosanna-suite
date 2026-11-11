@@ -5,11 +5,7 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import {
-  getResource,
-  getResourceByDomainId,
-  listResources,
-} from "../src/resources/index.js";
+import { getResource, getResourceByDomainId, listResources } from "../src/resources/index.js";
 
 describe("Logos resources ↔ domain ids", () => {
   it("maps song/service to music.* domain ids", () => {

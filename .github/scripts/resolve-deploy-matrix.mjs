@@ -15,12 +15,7 @@
  * Writes GITHUB_OUTPUT keys: matrix (JSON array), deploy ("true"|"false"), stage
  */
 import { execSync } from "node:child_process";
-import {
-  appendFileSync,
-  existsSync,
-  readdirSync,
-  readFileSync,
-} from "node:fs";
+import { appendFileSync, existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const ROOT = resolve(process.cwd());
@@ -136,9 +131,7 @@ function appendOutput(key, value) {
   appendFileSync(out, `${key}<<${delim}\n${value}\n${delim}\n`);
 }
 
-const configPath = resolve(
-  process.env.CONFIG_PATH || ".github/deploy-apps.json",
-);
+const configPath = resolve(process.env.CONFIG_PATH || ".github/deploy-apps.json");
 const config = readJson(configPath);
 const branch = process.env.GITHUB_REF_NAME || "";
 const event = process.env.GITHUB_EVENT_NAME || "";

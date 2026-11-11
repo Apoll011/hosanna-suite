@@ -151,7 +151,6 @@ export const chat: typeof chatPt = {
     opened: "Opening…",
   },
 
-
   confirm: "Confirm",
   confirming: "Deleting…",
   confirmDone: "Moved to trash",

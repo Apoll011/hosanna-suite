@@ -7,11 +7,7 @@
  * (UI shows optional open cards). Explicit openApp always runs.
  */
 
-import {
-  dispatchAiNavigate,
-  dispatchAiOpenApp,
-  dispatchAiPrint,
-} from "../core/bridge";
+import { dispatchAiNavigate, dispatchAiOpenApp, dispatchAiPrint } from "../core/bridge";
 import { hasCapability, musicAppId, planningAppId } from "../kernel/capabilities";
 import type { LogosHost } from "../kernel/host";
 import { libraryPathForNavigate, libraryPathForPrint } from "../resources/paths";
@@ -39,7 +35,9 @@ function runPrintLocal(print: LogosPrintAction) {
 
 /** User-clicked deferred navigate/print from a thin-host chat card. */
 export function runDeferredOffer(
-  offer: { type: "navigate"; navigate: LogosNavigateAction } | { type: "print"; print: LogosPrintAction },
+  offer:
+    | { type: "navigate"; navigate: LogosNavigateAction }
+    | { type: "print"; print: LogosPrintAction },
   host: LogosHost,
 ) {
   if (offer.type === "navigate") {

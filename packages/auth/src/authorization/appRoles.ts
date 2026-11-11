@@ -23,11 +23,12 @@ export type AppRoleId = `${SuiteAppId}.${string}`;
  * Reserved app-role → permission grants.
  * Empty until product domains ship (Finance, etc.). Shape is stable for packs.
  */
-export const APP_ROLE_PERMISSIONS: Readonly<Partial<Record<AppRoleId, readonly PermissionString[]>>> =
-  {
-    // Reserved — enable when Finance domain permissions exist:
-    // "finance.treasurer": ["fund.access", "fund.create", "fund.update", "fund.delete"],
-  };
+export const APP_ROLE_PERMISSIONS: Readonly<
+  Partial<Record<AppRoleId, readonly PermissionString[]>>
+> = {
+  // Reserved — enable when Finance domain permissions exist:
+  // "finance.treasurer": ["fund.access", "fund.create", "fund.update", "fund.delete"],
+};
 
 export function permissionsForAppRole(appRole: AppRoleId): PermissionString[] {
   return [...(APP_ROLE_PERMISSIONS[appRole] ?? [])];
@@ -54,8 +55,7 @@ export function resolveEffectivePermissions(opts: {
   orgRole: string | null;
   appRoles: AppRoleId[];
 } {
-  const orgRole =
-    opts.orgRole && opts.orgRole in roles ? (opts.orgRole as AppRole) : null;
+  const orgRole = opts.orgRole && opts.orgRole in roles ? (opts.orgRole as AppRole) : null;
   const appRoles = [...(opts.appRoles ?? [])];
 
   const allowedSet = new Set<PermissionString>();

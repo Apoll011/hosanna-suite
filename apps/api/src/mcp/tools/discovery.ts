@@ -26,10 +26,7 @@ import {
   serviceElementSchema,
   serviceElementTypeSchema,
 } from "../../validators/serviceElement.validators.js";
-import {
-  permissionsReportForUser,
-  summarizeDomainsForUser,
-} from "../domains/discovery.js";
+import { permissionsReportForUser, summarizeDomainsForUser } from "../domains/discovery.js";
 import { ensureDomainPacksRegistered } from "../domains/packs.js";
 
 function zToRoughJson(schema: { description?: string; _def?: unknown }) {
@@ -89,9 +86,7 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
             recent: recentToolTimings(10),
           },
           prompts: Object.fromEntries(
-            domains
-              .filter((d) => d.prompts.length > 0)
-              .map((d) => [d.id, [...d.prompts]]),
+            domains.filter((d) => d.prompts.length > 0).map((d) => [d.id, [...d.prompts]]),
           ),
           skills: domains.flatMap((d) => [...d.skills]),
           chordproFeatures: chordpro.features,

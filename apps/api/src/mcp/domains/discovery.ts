@@ -133,9 +133,7 @@ export function toolGroupsFromPacks(opts?: {
   const user = opts?.user ?? null;
   const groups: Record<string, string[]> = {};
   for (const pack of listDomainPacks()) {
-    groups[pack.id] = pack.tools
-      .filter((g) => !filter || isAllowed(user, g))
-      .map((g) => g.name);
+    groups[pack.id] = pack.tools.filter((g) => !filter || isAllowed(user, g)).map((g) => g.name);
   }
   return groups;
 }

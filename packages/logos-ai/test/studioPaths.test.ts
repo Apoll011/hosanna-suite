@@ -9,10 +9,7 @@ import { libraryPathForNavigate, libraryPathForPrint } from "../src/resources/pa
 
 describe("libraryPathForNavigate", () => {
   it("prefixes org slug for entity routes", () => {
-    assert.equal(
-      libraryPathForNavigate({ kind: "song", id: "s1" }, "/acme"),
-      "/acme/songs/s1",
-    );
+    assert.equal(libraryPathForNavigate({ kind: "song", id: "s1" }, "/acme"), "/acme/songs/s1");
     assert.equal(
       libraryPathForNavigate({ kind: "service", id: "svc" }, "/acme"),
       "/acme/services/svc",

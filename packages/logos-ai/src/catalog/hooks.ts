@@ -69,9 +69,7 @@ export function useCatalogResource<K extends ResourceKind>(
   }, [kind, id, catalog, localSong.data, localSong.isLoading]);
 
   const data =
-    kind === "song" && localSong.data
-      ? (localSong.data as CatalogResourceMap[K])
-      : remote;
+    kind === "song" && localSong.data ? (localSong.data as CatalogResourceMap[K]) : remote;
   const isLoading =
     Boolean(id) &&
     (kind === "song"
