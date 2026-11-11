@@ -4,6 +4,7 @@
  */
 
 import { useLogosHost, useLogosI18n } from "../../host";
+import { hasCapability, musicAppId } from "../../host/capabilities";
 import {
   CalendarDays,
   Check,
@@ -30,13 +31,17 @@ const iconBtn =
  */
 export const AiProposalTray: React.FC = () => {
   const { t, tc } = useLogosI18n();
+  const host = useLogosHost();
   const proposals = useAiProposals();
   const openKey = useOpenEditorKey();
-  const { canUpdateSong } = useLogosHost();
+  const { canUpdateSong } = host;
   const { applySong, decline, openInEditor } = useProposalActions();
   const [expanded, setExpanded] = useState(true);
   const [reviewing, setReviewing] = useState<SongProposal | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const openEditorLabel = hasCapability(host.profile, "editor.songs")
+    ? t("ai.chat.proposals.openEditor")
+    : t("ai.chat.proposals.openInMusic", { app: musicAppId(host.profile) });
 
   const accept = useCallback(
     async (p: SongProposal) => {
@@ -161,12 +166,12 @@ export const AiProposalTray: React.FC = () => {
                     </button>
                   </>
                 )}
-                {(p.kind === "service" || inEditor) && (
+                {(p.kind === "service" || inEditor || !hasCapability(host.profile, "editor.songs")) && (
                   <button
                     type="button"
                     className={iconBtn}
-                    title={t("ai.chat.proposals.openEditor")}
-                    aria-label={t("ai.chat.proposals.openEditor")}
+                    title={openEditorLabel}
+                    aria-label={openEditorLabel}
                     onClick={() => openInEditor(p)}
                   >
                     <ExternalLink className="w-3.5 h-3.5" />

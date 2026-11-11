@@ -11,6 +11,20 @@ export {
   useHostUpdateSong,
   useLogosSongAdapter,
 } from "./songAdapter";
+export {
+  AUTH_HOST_PROFILE,
+  DEFAULT_MUSIC_APP,
+  DEFAULT_PLANNING_APP,
+  STUDIO_HOST_PROFILE,
+  hasCapability,
+  musicAppId,
+  planningAppId,
+  thinHostProfile,
+  type LogosAppId,
+  type LogosCapability,
+  type LogosHostProfile,
+} from "./capabilities";
+export { useCatalogSong, useCatalogUpdateSong, type CatalogSongState } from "./catalog";
 export type {
   LogosApi,
   LogosHost,

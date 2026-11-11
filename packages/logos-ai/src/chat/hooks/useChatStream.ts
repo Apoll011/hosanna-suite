@@ -33,7 +33,8 @@ export function useChatStream(opts: {
   includeContext: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { api, language } = useLogosHost();
+  const host = useLogosHost();
+  const { api, language, profile } = host;
   const { routeRef, deriveViewRef, includeContext, setOpen } = opts;
 
   const [messages, setMessages] = useState<AiChatMessage[]>([]);
@@ -49,6 +50,10 @@ export function useChatStream(opts: {
   includeContextRef.current = includeContext;
   const apiRef = useRef(api);
   apiRef.current = api;
+  const hostRef = useRef(host);
+  hostRef.current = host;
+  const profileRef = useRef(profile);
+  profileRef.current = profile;
 
   useEffect(() => {
     messagesRef.current = messages;
@@ -111,11 +116,16 @@ export function useChatStream(opts: {
 
       try {
         const r = routeRef.current;
+        const page = includeContextRef.current
+          ? buildPageContext(r.pathname, r.slugPrefix, r.params, deriveViewRef.current)
+          : { kind: "general" as const, route: r.pathname };
+        const hostMeta = {
+          hostApp: profileRef.current.appId,
+          hostCapabilities: [...profileRef.current.capabilities],
+        };
         const response = await apiRef.current.streamChat({
           messages: toUiMessages(history),
-          context: includeContextRef.current
-            ? buildPageContext(r.pathname, r.slugPrefix, r.params, deriveViewRef.current)
-            : { kind: "general", route: r.pathname },
+          context: { ...page, ...hostMeta },
           locale: localeRef.current,
           signal: controller.signal,
         });
@@ -152,7 +162,7 @@ export function useChatStream(opts: {
               buildPageContext(rr.pathname, rr.slugPrefix, rr.params, deriveViewRef.current),
             );
             maybeSyncLibrary(name, event.output);
-            maybeDispatchHostActions(name, event.output);
+            maybeDispatchHostActions(name, event.output, hostRef.current);
           } else if (event.type === "error") {
             setError(typeof event.errorText === "string" ? event.errorText : "AI stream error");
           }

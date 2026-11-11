@@ -9,16 +9,30 @@ export { AiChatToggle } from "./chat/components/Toggle";
 export { LogosMascot } from "./mascot";
 export { AiProposalBanner } from "./proposals/components/Banner";
 export {
+  AUTH_HOST_PROFILE,
+  DEFAULT_MUSIC_APP,
+  DEFAULT_PLANNING_APP,
   LogosHostProvider,
   LogosRouteProvider,
   LogosSongAdapterProvider,
+  STUDIO_HOST_PROFILE,
+  hasCapability,
+  musicAppId,
+  planningAppId,
+  thinHostProfile,
+  useCatalogSong,
+  useCatalogUpdateSong,
   useHostSong,
   useHostUpdateSong,
   useLogosHost,
   useLogosI18n,
   useLogosRoute,
+  type CatalogSongState,
   type LogosApi,
+  type LogosAppId,
+  type LogosCapability,
   type LogosHost,
+  type LogosHostProfile,
   type LogosRouteState,
   type LogosServiceElement,
   type LogosSong,
@@ -26,6 +40,7 @@ export {
   type LogosTc,
   type LogosTranslate,
 } from "./host";
+
 export type { AiChatContext, AiConfirmAction, AiSettingsPublic, AiUiMessage } from "./types";
 export {
   AI_LIBRARY_CHANGED_EVENT,

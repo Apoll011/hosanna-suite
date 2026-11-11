@@ -4,7 +4,9 @@
  */
 
 import { Button } from "@hosanna/ui";
-import { useHostSong, useLogosHost, useLogosI18n } from "../../host";
+import { useLogosHost, useLogosI18n } from "../../host";
+import { useCatalogSong } from "../../host/catalog";
+import { hasCapability, musicAppId } from "../../host/capabilities";
 import { buildItems, computeDiff, segmentLine, type DiffLine } from "@hosanna/chordpro/diff";
 import {
   Check,
@@ -117,18 +119,28 @@ const MiniDiff: React.FC<{ original: string; modified: string }> = ({ original, 
 export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = memo(
   function AiProposalCard({ proposal }) {
     const { t } = useLogosI18n();
-    const { canUpdateSong: canUpdate } = useLogosHost();
+    const host = useLogosHost();
+    const canUpdate = host.canUpdateSong;
+    const hasLocalEditor = hasCapability(host.profile, "editor.songs");
     const status = useSongProposalStatus(proposal.id, proposal.content);
     const stored = useSongProposal(proposal.id);
     const openKey = useOpenEditorKey();
-    const { data: song, isLoading } = useHostSong(status === "pending" ? proposal.id : null);
+    const {
+      data: song,
+      isLoading,
+      notFound,
+    } = useCatalogSong(status === "pending" ? proposal.id : null);
     const { applySong, decline, openInEditor } = useProposalActions();
     const [busy, setBusy] = useState(false);
+    const [applyError, setApplyError] = useState<string | null>(null);
     const [review, setReview] = useState<SongProposal | null>(null);
 
     const inEditor = openKey === `song:${proposal.id}`;
     const title = proposal.title || song?.title || t("ai.chat.proposals.untitled");
     const live: SongProposal | null = stored && stored.content === proposal.content ? stored : null;
+    const openEditorLabel = hasLocalEditor
+      ? t("ai.chat.proposals.openEditor")
+      : t("ai.chat.proposals.openInMusic", { app: musicAppId(host.profile) });
 
     const stats = useMemo(() => {
       if (!song) return null;
@@ -139,8 +151,10 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = mem
     const accept = async () => {
       if (!live) return;
       setBusy(true);
+      setApplyError(null);
       try {
-        await applySong(live);
+        const ok = await applySong(live);
+        if (!ok) setApplyError(t("ai.chat.proposals.applyFailed"));
       } finally {
         setBusy(false);
       }
@@ -197,13 +211,21 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = mem
               <p className="m-0 px-3 py-2 text-[11.5px] text-m3-secondary">
                 {t("ai.chat.proposals.inEditorNote")}
               </p>
-            ) : isLoading || !song ? (
+            ) : isLoading ? (
               <p className="m-0 px-3 py-2 text-[11.5px] text-m3-secondary">
-                {isLoading ? t("ai.chat.proposals.loadingSong") : t("ai.chat.proposals.songGone")}
+                {t("ai.chat.proposals.loadingSong")}
+              </p>
+            ) : notFound || !song ? (
+              <p className="m-0 px-3 py-2 text-[11.5px] text-m3-secondary">
+                {t("ai.chat.proposals.songGone")}
               </p>
             ) : (
               <MiniDiff original={song.content} modified={proposal.content} />
             )}
+
+            {applyError ? (
+              <p className="m-0 px-3 pb-1 text-[11px] text-m3-danger">{applyError}</p>
+            ) : null}
 
             <div className="flex items-center gap-1.5 px-2 py-1.5 border-t border-m3-border/70 bg-m3-sidebar/40">
               {live && !inEditor && song && (
@@ -222,10 +244,10 @@ export const AiProposalCard: React.FC<{ proposal: AiSongProposalPayload }> = mem
                   type="button"
                   className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-1.5 py-1 rounded-sm hover:bg-m3-hover"
                   onClick={() => openInEditor(live)}
-                  title={t("ai.chat.proposals.openEditor")}
+                  title={openEditorLabel}
                 >
                   <ExternalLink className="w-3 h-3" />
-                  {t("ai.chat.proposals.openEditor")}
+                  {openEditorLabel}
                 </button>
               )}
               <span className="flex-1" />

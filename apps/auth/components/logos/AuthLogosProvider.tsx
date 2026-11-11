@@ -2,6 +2,7 @@
 
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { aiApi } from "@/lib/services/ai-api";
+import { songsApi } from "@/lib/services/songs-api";
 import { useI18n } from "@/lib/ui/i18n";
 import { getStudioUrl } from "@/lib/auth/redirect";
 import { navigateToStudioApp, prefetchStudioApp } from "@/lib/auth/studio-handoff";
@@ -11,6 +12,7 @@ import {
   AiChatProvider,
   AiChatToggle,
   AI_OPEN_APP_EVENT,
+  AUTH_HOST_PROFILE,
   LogosHostProvider,
   LogosRouteProvider,
   LogosSongAdapterProvider,
@@ -18,12 +20,14 @@ import {
   resolveHosannaAppOrigin,
   type AiOpenAppDetail,
   type LogosHost,
+  type LogosSong,
   type LogosSongAdapter,
 } from "@hosanna/logos-ai";
 import { useCan } from "@hosanna/ui";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, type ReactNode } from "react";
 
+/** Thin host: no in-app song cache — Logos loads songs via LogosApi catalog. */
 const NOOP_SONGS: LogosSongAdapter = {
   useSong: () => ({ data: null, isLoading: false }),
   useUpdateSong: () => async () => undefined,
@@ -51,7 +55,8 @@ function AuthOpenAppListener() {
       if (!detail?.app) return;
 
       const app = detail.app.trim().toLowerCase();
-      if ((detail.openIn ?? "same") !== "new" && app === "studio") {
+      // Music is still served by Studio until the Music split lands.
+      if ((detail.openIn ?? "same") !== "new" && (app === "studio" || app === "music")) {
         navigateToStudioApp({ path: detail.path || "/" });
         return;
       }
@@ -62,6 +67,7 @@ function AuthOpenAppListener() {
             overrides: {
               auth: typeof window !== "undefined" ? window.location.origin : undefined,
               studio: getStudioUrl(),
+              music: getStudioUrl(),
               saas: "https://hosanna.live",
             },
           }),
@@ -85,27 +91,73 @@ function AuthOpenAppListener() {
 
 /**
  * Wires account-center auth/i18n/permissions into Logos AI and mounts the dock.
+ * Catalog proposals work via API; navigate/print hand off to Music (Studio).
  */
 export function AuthLogosProvider({ children }: { children: ReactNode }) {
   const { t, tc, language, locale } = useI18n();
   const { user, organization } = useActiveOrganization();
   const { granted: canUseAi } = useCan("ai.use");
+  const { granted: canUpdateSong } = useCan("song.update");
   const pathname = usePathname() || "/account";
+  const orgId = organization?.id;
+  const orgSlug = organization?.slug;
 
-  const host = useMemo<LogosHost>(
-    () => ({
+  const host = useMemo<LogosHost>(() => {
+    const toLogosSong = (song: {
+      id: string;
+      title: string;
+      artist?: string | null;
+      content: string;
+      song_number?: number | null;
+      updatedAt: string;
+    }): LogosSong => ({
+      id: song.id,
+      title: song.title,
+      artist: song.artist ?? undefined,
+      content: song.content,
+      song_number: song.song_number,
+      updatedAt: song.updatedAt,
+    });
+
+    return {
       api: {
         getSettings: () => {
-          if (!organization?.id) return Promise.reject(new Error("No organization"));
-          return aiApi.getSettings({ organizationId: organization.id });
+          if (!orgId) return Promise.reject(new Error("No organization"));
+          return aiApi.getSettings({ organizationId: orgId });
         },
         streamChat: (body) => {
-          if (!organization?.id) return Promise.reject(new Error("No organization"));
-          return aiApi.streamChat(body, { organizationId: organization.id });
+          if (!orgId) return Promise.reject(new Error("No organization"));
+          return aiApi.streamChat(body, { organizationId: orgId });
         },
         confirmAction: (body) => {
-          if (!organization?.id) return Promise.reject(new Error("No organization"));
-          return aiApi.confirmAction(body, { organizationId: organization.id });
+          if (!orgId) return Promise.reject(new Error("No organization"));
+          return aiApi.confirmAction(body, { organizationId: orgId });
+        },
+        getSong: async (id) => {
+          if (!orgId) return null;
+          const song = await songsApi.getById(id, { organizationId: orgId });
+          return song ? toLogosSong(song) : null;
+        },
+        updateSong: async (id, data) => {
+          if (!orgId) throw new Error("No organization");
+          let updatedAt = data.updatedAt;
+          if (!updatedAt) {
+            const current = await songsApi.getById(id, { organizationId: orgId });
+            if (!current) throw new Error("Song not found");
+            updatedAt = current.updatedAt;
+          }
+          const updated = await songsApi.update(
+            id,
+            {
+              updatedAt,
+              ...(data.title !== undefined ? { title: data.title } : {}),
+              ...(data.artist !== undefined ? { artist: data.artist } : {}),
+              ...(data.content !== undefined ? { content: data.content } : {}),
+              ...(data.song_number !== undefined ? { song_number: data.song_number } : {}),
+            },
+            { organizationId: orgId },
+          );
+          return toLogosSong(updated);
         },
       },
       t: t as LogosHost["t"],
@@ -113,14 +165,26 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
       language,
       locale,
       userName: user?.name,
-      scope: organization?.id && user?.id ? `${organization.id}:${user.id}` : null,
-      slugPrefix: "",
+      scope: orgId && user?.id ? `${orgId}:${user.id}` : null,
+      // Used when handing off to Music via open_app (Studio paths are slug-scoped).
+      slugPrefix: orgSlug ? `/${orgSlug}` : "",
       canUseAi,
-      canUpdateSong: false,
+      canUpdateSong,
       deriveView: deriveAccountView,
-    }),
-    [t, tc, language, locale, user?.name, user?.id, organization?.id, canUseAi],
-  );
+      profile: AUTH_HOST_PROFILE,
+    };
+  }, [
+    t,
+    tc,
+    language,
+    locale,
+    user?.name,
+    user?.id,
+    orgId,
+    orgSlug,
+    canUseAi,
+    canUpdateSong,
+  ]);
 
   return (
     <LogosHostProvider value={host}>

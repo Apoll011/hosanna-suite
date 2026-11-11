@@ -6,6 +6,7 @@
 import { DEFAULT_LANGUAGE, resolveString, type Language } from "@hosanna/i18n";
 import React, { createContext, useContext, useMemo } from "react";
 import { logosAiMessages } from "../i18n";
+import { thinHostProfile } from "./capabilities";
 import type { LogosHost, LogosTc, LogosTranslate } from "./types";
 
 const LogosHostCtx = createContext<LogosHost | null>(null);
@@ -47,6 +48,14 @@ function withPackageChatFallback(host: LogosHost): LogosHost {
   return { ...host, t, tc };
 }
 
+function withDefaultProfile(host: LogosHost): LogosHost {
+  if (host.profile?.appId) return host;
+  return {
+    ...host,
+    profile: thinHostProfile(host.profile?.appId || "unknown"),
+  };
+}
+
 export function LogosHostProvider({
   value,
   children,
@@ -54,7 +63,10 @@ export function LogosHostProvider({
   value: LogosHost;
   children: React.ReactNode;
 }) {
-  const enhanced = useMemo(() => withPackageChatFallback(value), [value]);
+  const enhanced = useMemo(
+    () => withPackageChatFallback(withDefaultProfile(value)),
+    [value],
+  );
   return <LogosHostCtx.Provider value={enhanced}>{children}</LogosHostCtx.Provider>;
 }
 

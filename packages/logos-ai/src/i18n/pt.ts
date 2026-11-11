@@ -108,6 +108,7 @@ export const chat = {
     review: "Rever",
     reviewTitle: "Rever proposta: {title}",
     openEditor: "Abrir no editor",
+    openInMusic: "Abrir em {app}",
     inEditor: "Aberto no editor",
     acceptAll: "Aceitar tudo",
     declineAll: "Recusar tudo",
@@ -123,7 +124,9 @@ export const chat = {
     statusStale: "Substituída",
     inEditorNote: "Está aberta no editor — reveja o diff lá.",
     fullReview: "Rever tudo",
+    applyFailed: "Não foi possível aplicar esta proposta. Tente de novo ou abra-a em Music.",
   },
+
   confirm: "Confirmar",
   confirming: "A eliminar…",
   confirmDone: "Enviado para o lixo",

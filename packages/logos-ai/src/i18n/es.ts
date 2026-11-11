@@ -110,6 +110,7 @@ export const chat: typeof chatPt = {
     review: "Revisar",
     reviewTitle: "Revisar propuesta: {title}",
     openEditor: "Abrir en el editor",
+    openInMusic: "Abrir en {app}",
     inEditor: "Abierta en el editor",
     acceptAll: "Aceptar todo",
     declineAll: "Rechazar todo",
@@ -125,7 +126,9 @@ export const chat: typeof chatPt = {
     statusStale: "Reemplazada",
     inEditorNote: "La canción está abierta — revisa el diff en el editor.",
     fullReview: "Revisión completa",
+    applyFailed: "No se pudo aplicar esta propuesta. Inténtalo de nuevo o ábrela en Music.",
   },
+
   confirm: "Confirmar",
   confirming: "Eliminando…",
   confirmDone: "Enviado a la papelera",

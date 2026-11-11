@@ -8,6 +8,7 @@ import {
   LogosHostProvider,
   LogosRouteProvider,
   LogosSongAdapterProvider,
+  STUDIO_HOST_PROFILE,
   type LogosHost,
   type LogosSong,
   type LogosSongAdapter,
@@ -15,6 +16,7 @@ import {
 import React, { useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { aiApi } from "../api/ai";
+import { songsApi } from "../api/songs";
 import { useAuth } from "../contexts/AuthContext";
 import { useSong, useSongMutations } from "../hooks/useSongs";
 import { deriveView } from "../layouts/view";
@@ -57,6 +59,23 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
         getSettings: () => aiApi.getSettings(),
         streamChat: (body) => aiApi.streamChat(body),
         confirmAction: (body) => aiApi.confirmAction(body),
+        // Load fallback when the RxDB adapter has not hydrated the song yet.
+        // Accepts still go through LogosSongAdapter so Studio stays offline-first.
+        getSong: async (id) => {
+          try {
+            const song = await songsApi.getSongById(id);
+            return {
+              id: song.id,
+              title: song.title,
+              artist: song.artist,
+              content: song.content,
+              song_number: song.song_number,
+              updatedAt: song.updatedAt,
+            };
+          } catch {
+            return null;
+          }
+        },
       },
       t: t as LogosHost["t"],
       tc: tc as LogosHost["tc"],
@@ -68,6 +87,7 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
       canUseAi,
       canUpdateSong,
       deriveView,
+      profile: STUDIO_HOST_PROFILE,
     }),
     [
       t,
