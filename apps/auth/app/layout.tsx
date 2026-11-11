@@ -1,25 +1,10 @@
 import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
-import { Figtree, JetBrains_Mono } from "next/font/google";
 
 import { AppProviders } from "@/components/providers";
 import { AUTH_THEME_BOOT_SCRIPT, THEME_BG } from "@/lib/ui/theme-boot";
 
 import "./globals.css";
-
-const figtree = Figtree({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-figtree",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-jetbrains",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   applicationName: "Hosanna Auth",
@@ -64,9 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{ __html: AUTH_THEME_BOOT_SCRIPT }}
         />
       </head>
-      <body
-        className={`${figtree.variable} ${jetbrainsMono.variable} min-h-dvh antialiased font-sans`}
-      >
+      <body className="min-h-dvh antialiased font-sans">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

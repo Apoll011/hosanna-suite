@@ -23,6 +23,8 @@
     "@better-auth/infra": "^0.4.27",
     "@better-auth/mcp": "^1.7.18",
     "@better-auth/stripe": "^1.7.18",
+    "@fontsource/figtree": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@hosanna/auth": "workspace:*",
     "@hosanna/brand": "workspace:*",
     "@hosanna/db": "workspace:*",
