@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ChordProPreviewSettings } from "@/src/components/ChorproSettings";
+import { ChordProPreviewSettings } from "@/src/components/ChordProSettings";
 import { Button, Spinner, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useFolders } from "@/src/hooks/useFolders";
@@ -65,7 +65,7 @@ import {
 import { useOrgSettings } from "../../hooks/useOrgSettings";
 import { useService, useServices } from "../../hooks/useServices";
 import { useSearchableSongs, useSong, useSongs } from "../../hooks/useSongs";
-import { AnnouncementModal } from "./modals/Anouncement";
+import { AnnouncementModal } from "./modals/Announcement";
 import { ScriptureModal } from "./modals/Bible";
 import { CustomModal } from "./modals/Custom";
 import { MessageModal } from "./modals/Message";

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ChordProPreviewSettings } from "@/src/components/ChorproSettings";
+import { ChordProPreviewSettings } from "@/src/components/ChordProSettings";
 import { Button, Spinner, useCan, Can } from "@hosanna/ui";
 import { EditorSettingsPanel } from "@/src/components/EditorSettingsPanel";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";

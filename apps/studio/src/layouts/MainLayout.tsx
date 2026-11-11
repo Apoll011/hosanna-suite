@@ -58,10 +58,9 @@ import { usePersonalSettings } from "../hooks/usePersonalSettings";
 import { useServices } from "../hooks/useServices";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
-import { songImportRegistry } from "../lib/import";
+import { songImportRegistry, type ProviderImportResult } from "../lib/import";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
 import { filterSearchableSongsWithLiqe } from "../utils";
-import { ProviderImportResult } from "../utils/import";
 import { deriveView } from "./view";
 
 export const MainLayout: React.FC = () => {

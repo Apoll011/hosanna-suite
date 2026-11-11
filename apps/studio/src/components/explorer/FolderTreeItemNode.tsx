@@ -191,10 +191,20 @@ export const MoveFolderTreeItem: React.FC<{
   selectedFolderId: string | null;
   onSelect: (id: string) => void;
   disabledFolderIds?: Set<string>;
+  /** Optional suffix shown next to disabled folder names (e.g. "invalid"). */
+  disabledLabel?: string;
   expandedFolderIds: Set<string>;
   toggleExpand: (id: string) => void;
 }> = React.memo(
-  ({ node, selectedFolderId, onSelect, disabledFolderIds, expandedFolderIds, toggleExpand }) => {
+  ({
+    node,
+    selectedFolderId,
+    onSelect,
+    disabledFolderIds,
+    disabledLabel,
+    expandedFolderIds,
+    toggleExpand,
+  }) => {
     const isDisabled = disabledFolderIds?.has(node.folder.id);
     const isSelected = selectedFolderId === node.folder.id;
     const hasChildren = node.children.length > 0;
@@ -242,7 +252,14 @@ export const MoveFolderTreeItem: React.FC<{
           )}
 
           <FolderIcon className="w-4 h-4 text-amber-500 shrink-0" />
-          <span className="text-xs font-bold text-m3-text truncate">{node.folder.name}</span>
+          <span className="text-xs font-bold text-m3-text truncate">
+            {node.folder.name}
+            {isDisabled && disabledLabel ? (
+              <span className="text-[10px] font-normal text-m3-secondary ml-1.5">
+                {disabledLabel}
+              </span>
+            ) : null}
+          </span>
         </label>
 
         {hasChildren && isExpanded && (
@@ -254,6 +271,7 @@ export const MoveFolderTreeItem: React.FC<{
                 selectedFolderId={selectedFolderId}
                 onSelect={onSelect}
                 disabledFolderIds={disabledFolderIds}
+                disabledLabel={disabledLabel}
                 expandedFolderIds={expandedFolderIds}
                 toggleExpand={toggleExpand}
               />

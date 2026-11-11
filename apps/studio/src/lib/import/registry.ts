@@ -1,5 +1,5 @@
 import { Song } from "@/src/types";
-import { ImportResult, ProviderImportResult, SongImportProvider } from "@/src/utils/import";
+import { ImportResult, ProviderImportResult, SongImportProvider } from "./types";
 
 export class SongImportRegistry {
   private readonly providers = new Map<string, SongImportProvider>();
