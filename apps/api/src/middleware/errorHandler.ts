@@ -1,7 +1,10 @@
 import { Prisma } from "@hosanna/db";
 import { NextFunction, Request, Response } from "express";
+import { env } from "../config/env.js";
 import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
 import { AppError } from "../utils/errors.js";
+
+const isProd = env.nodeEnv === "production" || Boolean(process.env.VERCEL);
 
 export function notFoundHandler(req: Request, res: Response) {
   const locale = req.locale ?? DEFAULT_LOCALE;
@@ -37,7 +40,6 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
         error: {
           code: "NOT_FOUND",
           message: t(locale, "error.resource_not_found"),
-          data: err.cause,
         },
       });
       return;
@@ -47,7 +49,6 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
         error: {
           code: "DUPLICATE",
           message: t(locale, "error.duplicate_resource"),
-          data: err.cause,
         },
       });
       return;
@@ -59,7 +60,8 @@ export function errorHandler(err: unknown, req: Request, res: Response, _next: N
     error: {
       code: "INTERNAL_ERROR",
       message: t(locale, "error.internal_error"),
-      data: err,
+      // Never serialize the raw Error object to clients (stack / internals).
+      ...(!isProd && err instanceof Error ? { details: err.message } : {}),
     },
   });
 }
