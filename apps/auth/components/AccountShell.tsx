@@ -72,7 +72,7 @@ export function AccountShell({
   );
 
   return (
-    <div className="min-h-dvh w-full flex flex-col bg-m3-bg text-m3-text font-sans antialiased">
+    <div className="min-h-full w-full flex flex-col bg-m3-bg text-m3-text font-sans antialiased">
       <Suspense fallback={null}>
         <NavigationProgress />
       </Suspense>

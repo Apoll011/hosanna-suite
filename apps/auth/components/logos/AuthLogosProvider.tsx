@@ -128,8 +128,18 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
         <LogosRouteProvider pathname={pathname} params={{}}>
           <AiChatProvider>
             <AuthOpenAppListener />
-            {children}
-            <AiChatDock />
+            {/*
+              Same shell as Studio MainLayout: dock is a flex sibling of the page.
+              Without this, AiChatDock's sm:static mode drops below the full-page
+              AccountShell — viewport jumps to the chat and the fixed AccountNav
+              overlays it while account content scrolls away.
+            */}
+            <div className="h-dvh max-h-dvh w-full flex flex-row overflow-hidden bg-m3-bg">
+              <div className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain">
+                {children}
+              </div>
+              <AiChatDock />
+            </div>
           </AiChatProvider>
         </LogosRouteProvider>
       </LogosSongAdapterProvider>
