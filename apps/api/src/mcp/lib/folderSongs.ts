@@ -94,10 +94,10 @@ export function sortSongs<T extends SortableSong>(
         cmp = a.updatedAt.getTime() - b.updatedAt.getTime();
         break;
       case "song_number": {
-        // Songs without a number always sink to the bottom.
+        // Songs without a number always sink to the bottom (even when desc).
         if (a.song_number == null && b.song_number == null) {
-          cmp = text(a.title, b.title);
-          return cmp;
+          // Still honor sort direction for the title tie-break.
+          return text(a.title, b.title) * dir;
         }
         if (a.song_number == null) return 1;
         if (b.song_number == null) return -1;

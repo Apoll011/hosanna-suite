@@ -34,7 +34,8 @@ export function rankSongsByRelevance<
     const titleScore = scoreField(song.title, q, 100);
     const artistScore = scoreField(song.artist ?? "", q, 60);
     const tagScore = song.tags.some((t) => t.toLowerCase().includes(q.toLowerCase())) ? 40 : 0;
-    const lyricsScore = song.content.toLowerCase().includes(q.toLowerCase()) ? 20 : 0;
+    // ChordPro markers break raw substring match — strip before scoring lyrics.
+    const lyricsScore = lyricsMatchQuery(song.content, q) ? 20 : 0;
 
     const scores: Array<{ field: SongMatchField; score: number }> = [
       { field: "title", score: titleScore },

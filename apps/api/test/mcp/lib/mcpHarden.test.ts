@@ -123,6 +123,29 @@ describe("MCP harden — P4 relevance + P5 key + P6 duplicates + P8 transpose", 
     assert.ok(ranked[0]!.score >= ranked[ranked.length - 1]!.score);
   });
 
+  it("P4b: lyric relevance matches through ChordPro chord markers", () => {
+    const ranked = rankSongsByRelevance(
+      [
+        {
+          title: "Chorded",
+          artist: "",
+          content: "Pois [D9]só Tu és o [C#m]Deus eterno",
+          tags: [] as string[],
+        },
+        {
+          title: "Unrelated",
+          artist: "",
+          content: "[G]Hello world",
+          tags: [],
+        },
+      ],
+      "Pois só Tu és o Deus eterno",
+    );
+    assert.equal(ranked.length, 1);
+    assert.equal(ranked[0]!.song.title, "Chorded");
+    assert.equal(ranked[0]!.matchedField, "lyrics");
+  });
+
   it("P5: Bb-C emits key_not_canonical warning without blocking", () => {
     const w = keyCanonicalWarning(FIXTURE.nonCanonicalKey);
     assert.ok(w);

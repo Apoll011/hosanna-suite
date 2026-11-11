@@ -24,6 +24,18 @@ test("formatLongDate localizes weekday, day, month, and year", () => {
   );
 });
 
+test("formatLongDate accepts ISO datetime strings", () => {
+  assert.equal(
+    formatLongDate("2026-10-04T10:00:00.000Z", t as never),
+    "agenda.weekdaysFull.sunday, 4 de agenda.months.october de 2026",
+  );
+});
+
+test("formatLongDate returns empty or raw input when invalid", () => {
+  assert.equal(formatLongDate("", t as never), "");
+  assert.equal(formatLongDate("not-a-date", t as never), "not-a-date");
+});
+
 test("formatShortDate pads day and month", () => {
   assert.equal(formatShortDate("2026-10-04", t as never), "04/10/2026");
   assert.equal(formatShortDate("2026-01-09", t as never), "09/01/2026");

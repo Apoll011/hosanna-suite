@@ -88,6 +88,12 @@ describe("folderSongs helpers", () => {
       sortSongs(songs, "song_number", "asc").map((s) => s.song_number),
       [1, 2, null, null],
     );
+    // Unnumbered songs stay at the bottom even when sorting desc by number,
+    // but their title tie-break still follows the requested direction.
+    assert.deepEqual(
+      sortSongs(songs, "song_number", "desc").map((s) => s.title),
+      ["Alpha", "alpha 10", "beta", "Alpha 2"],
+    );
     assert.equal(sortSongs(songs, "updatedAt", "desc")[0].title, "Alpha 2");
     assert.equal(sortSongs(songs, "artist", "asc")[0].artist, "X");
   });

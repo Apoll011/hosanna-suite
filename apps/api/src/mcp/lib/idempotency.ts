@@ -2,9 +2,12 @@ import { createHash } from "node:crypto";
 import { createCache } from "@hosanna/cache";
 
 type Entry = { result: unknown; hash: string };
+type Inflight = { hash: string; promise: Promise<unknown> };
 
 const TTL_MS = 10 * 60 * 1000;
 const store = createCache({ namespace: "mcp:idem", ttlMs: TTL_MS });
+/** Coalesce concurrent same-id runs so two callers don't both execute `run`. */
+const inflight = new Map<string, Inflight>();
 
 export class IdempotencyConflictError extends Error {
   readonly code = "IDEMPOTENCY_CONFLICT" as const;
@@ -48,7 +51,37 @@ export async function withClientRequestId<T>(
     return hit.result as T;
   }
 
-  const result = await run();
-  await store.set(key, { result, hash });
-  return result;
+  const pending = inflight.get(key);
+  if (pending) {
+    if (pending.hash !== hash) {
+      throw new IdempotencyConflictError(
+        `clientRequestId "${id}" was already used with a different payload`,
+      );
+    }
+    return pending.promise as Promise<T>;
+  }
+
+  const promise = (async () => {
+    try {
+      // Another waiter may have populated the store while we were scheduling.
+      const again = await store.get<Entry>(key);
+      if (again) {
+        if (again.hash !== hash) {
+          throw new IdempotencyConflictError(
+            `clientRequestId "${id}" was already used with a different payload`,
+          );
+        }
+        return again.result as T;
+      }
+
+      const result = await run();
+      await store.set(key, { result, hash });
+      return result;
+    } finally {
+      inflight.delete(key);
+    }
+  })();
+
+  inflight.set(key, { hash, promise });
+  return promise as Promise<T>;
 }
