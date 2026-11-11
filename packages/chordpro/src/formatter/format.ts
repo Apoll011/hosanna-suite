@@ -1,14 +1,5 @@
-/**
- * ChordPro Formatter — Main public API
- * No UI dependencies.
- */
-
 import type { FormatChange, FormatOptions, FormatResult, FormatWarning } from "./types";
 import { normalizeLine } from "./normalize";
-
-// ---------------------------------------------------------------------------
-// Default options
-// ---------------------------------------------------------------------------
 
 const DEFAULT_OPTIONS: Required<FormatOptions> = {
   maxBlankLines: 1,
@@ -17,13 +8,6 @@ const DEFAULT_OPTIONS: Required<FormatOptions> = {
   normalizeChordLyricSpacing: true,
 };
 
-// ---------------------------------------------------------------------------
-// Document-level normalization
-// ---------------------------------------------------------------------------
-
-/**
- * Normalize line endings to LF (\n).
- */
 function normalizeLineEndings(content: string, changes: FormatChange[]): string {
   const original = content;
   // CRLF -> LF, then CR -> LF
@@ -38,9 +22,6 @@ function normalizeLineEndings(content: string, changes: FormatChange[]): string 
   return normalized;
 }
 
-/**
- * Remove leading blank lines from the document.
- */
 function trimLeadingBlankLines(lines: string[], changes: FormatChange[]): string[] {
   let start = 0;
   while (start < lines.length && lines[start].trim() === "") {
@@ -57,9 +38,6 @@ function trimLeadingBlankLines(lines: string[], changes: FormatChange[]): string
   return lines;
 }
 
-/**
- * Remove trailing blank lines from the document.
- */
 function trimTrailingBlankLines(lines: string[], changes: FormatChange[]): string[] {
   let end = lines.length;
   while (end > 0 && lines[end - 1].trim() === "") {
@@ -76,9 +54,6 @@ function trimTrailingBlankLines(lines: string[], changes: FormatChange[]): strin
   return lines;
 }
 
-/**
- * Collapse runs of blank lines that exceed maxBlankLines.
- */
 function collapseExcessiveBlankLines(
   lines: string[],
   maxBlankLines: number,
@@ -113,10 +88,6 @@ function collapseExcessiveBlankLines(
   return result;
 }
 
-// ---------------------------------------------------------------------------
-// Main formatter
-// ---------------------------------------------------------------------------
-
 /**
  * Format a ChordPro document.
  *
@@ -136,20 +107,15 @@ export function formatChordPro(content: string, options?: FormatOptions): Format
   const allChanges: FormatChange[] = [];
   const allWarnings: FormatWarning[] = [];
 
-  // --- Step 1: Normalize line endings ---
   const normalized = normalizeLineEndings(content, allChanges);
 
-  // --- Step 2: Split into lines ---
   let lines = normalized.split("\n");
 
-  // --- Step 3: Remove leading/trailing blank lines ---
   lines = trimLeadingBlankLines(lines, allChanges);
   lines = trimTrailingBlankLines(lines, allChanges);
 
-  // --- Step 4: Collapse excessive blank lines ---
   lines = collapseExcessiveBlankLines(lines, opts.maxBlankLines, allChanges);
 
-  // --- Step 5: Normalize each line ---
   const normalizedLines: string[] = [];
   for (let i = 0; i < lines.length; i++) {
     const { content: normalizedLine, changes, warnings } = normalizeLine(lines[i], i + 1, opts);
@@ -158,7 +124,6 @@ export function formatChordPro(content: string, options?: FormatOptions): Format
     allWarnings.push(...warnings);
   }
 
-  // --- Step 6: Reassemble ---
   const result = normalizedLines.join("\n");
   const changed = result !== content;
 

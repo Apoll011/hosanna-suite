@@ -1,15 +1,6 @@
-/**
- * ChordPro Formatter — Per-line normalization rules
- * No UI dependencies.
- */
-
 import type { FormatChange, FormatOptions, FormatWarning } from "./types";
 import { isValidChord, normalizeChordContent } from "./chords";
 import { buildDirectiveLine, detectMalformedDirective, parseDirectiveContent } from "./directives";
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 /** Remove zero-width and other invisible problematic Unicode characters. */
 function stripInvisibleChars(text: string): string {
@@ -29,10 +20,6 @@ function isChordOnlyLine(line: string): boolean {
   return /^[\s|:.%-]*$/.test(withoutChords);
 }
 
-// ---------------------------------------------------------------------------
-// Chord bracket normalization
-// ---------------------------------------------------------------------------
-
 /**
  * Normalize a single [chord] token in a line.
  */
@@ -44,7 +31,6 @@ function normalizeChordBracket(
 ): string {
   const trimmedContent = raw.trim();
 
-  // Check for inline annotation [* ...]
   if (trimmedContent.startsWith("*")) {
     const normalized = "[" + trimmedContent + "]";
     if (normalized !== "[" + raw + "]") {
@@ -211,10 +197,6 @@ function normalizeDirectiveLine(
 
   return normalized;
 }
-
-// ---------------------------------------------------------------------------
-// Public: normalize a single line
-// ---------------------------------------------------------------------------
 
 export interface NormalizedLine {
   content: string;

@@ -256,7 +256,6 @@ export function parseChordProDocument(content: string): ChordProDocument {
       const lowerName = rawName.toLowerCase();
       const name = aliasMap[lowerName] || lowerName;
 
-      // Handle version directives
       if (name === "start_of_version") {
         if (activeVariantContext) {
           errors.push(
@@ -567,7 +566,6 @@ export function parseChordProDocument(content: string): ChordProDocument {
     ctx.currentSection.lines.push(parsedLine);
   }
 
-  // Check if file ended while a variant is still open
   if (activeVariantContext) {
     errors.push(
       `File ended while variant "${activeVariantContext.name}" (started at line ${activeVariantContext.startLineNumber}) was still open. Missing "{end_of_version}".`,

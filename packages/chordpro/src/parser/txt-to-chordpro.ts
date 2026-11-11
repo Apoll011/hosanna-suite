@@ -28,10 +28,6 @@
  * ------------------------------------------------------------------------
  */
 
-// ---------------------------------------------------------------------------
-// Public types
-// ---------------------------------------------------------------------------
-
 export type SourceFormat = "ultimate-guitar" | "cifraclub" | "plain";
 export type SourceOption = SourceFormat | "auto";
 
@@ -73,10 +69,6 @@ export interface ConversionResult {
   warnings: string[];
 }
 
-// ---------------------------------------------------------------------------
-// Defaults
-// ---------------------------------------------------------------------------
-
 const DEFAULT_OPTIONS: Required<ConversionOptions> = {
   source: "auto",
   detectSections: true,
@@ -85,10 +77,6 @@ const DEFAULT_OPTIONS: Required<ConversionOptions> = {
   keepRepeatMarkers: true,
   partTagNames: { start: "start_of_part", end: "end_of_part" },
 };
-
-// ---------------------------------------------------------------------------
-// Chord grammar
-// ---------------------------------------------------------------------------
 
 // Root note: standard letter names, plus Portuguese/Brazilian solfège
 // (Dó/Ré/Mi/Fá/Sol/Lá/Si), with or without accents.
@@ -169,10 +157,7 @@ function isAlreadyInlineChordPro(line: string): boolean {
   return matches.every((m) => isValidChordToken(m[1]));
 }
 
-// ---------------------------------------------------------------------------
-// Metadata (bilingual EN/PT)
-// ---------------------------------------------------------------------------
-
+// Metadata keys accepted in English and Portuguese.
 const METADATA_MAP: Record<string, string> = {
   title: "title",
   t: "title",
@@ -219,10 +204,7 @@ function stripAccents(s: string): string {
   return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-// ---------------------------------------------------------------------------
-// Sections (bilingual EN/PT)
-// ---------------------------------------------------------------------------
-
+// Section headers accepted in English and Portuguese.
 type SectionKind = "verse" | "chorus" | "bridge" | "part";
 
 const SECTION_KEYWORDS: Record<SectionKind, string[]> = {
@@ -270,9 +252,7 @@ function classifySectionLabel(rawLabel: string): { kind: SectionKind; label: str
   return null;
 }
 
-// ---------------------------------------------------------------------------
 // Repeat notation ("... let it be x2", "(2x)")
-// ---------------------------------------------------------------------------
 
 const REPEAT_NOTATION_REGEX = /\s*\(?\b(\d+)\s*[xX]\b\)?\s*$|\s+[xX](\d+)\s*$/;
 
@@ -290,10 +270,7 @@ function extractRepeatNotation(line: string): {
   return { cleanLine: line, marker: null };
 }
 
-// ---------------------------------------------------------------------------
-// Hyphenated-syllable detection (CifraClub-style alignment aid)
-// ---------------------------------------------------------------------------
-
+// CifraClub-style syllable hyphens are alignment aids, not lyric content.
 function countSyllableHyphens(line: string): number {
   const matches = line.match(/[^\s-]-[^\s-]/g);
   return matches ? matches.length : 0;
@@ -306,10 +283,6 @@ function countSyllableHyphens(line: string): number {
 function dehyphenate(line: string): string {
   return line.replace(/([^\s-])-([^\s-])/g, "$1 $2");
 }
-
-// ---------------------------------------------------------------------------
-// Source detection
-// ---------------------------------------------------------------------------
 
 export function detectSourceFormat(input: string): SourceFormat {
   const lines = input.split("\n");
@@ -344,10 +317,6 @@ export function detectSourceFormat(input: string): SourceFormat {
   if (ugScore > 0) return "ultimate-guitar";
   return "plain";
 }
-
-// ---------------------------------------------------------------------------
-// Line classification
-// ---------------------------------------------------------------------------
 
 interface ParsedLine {
   kind:
@@ -506,10 +475,6 @@ function classify(
   return result;
 }
 
-// ---------------------------------------------------------------------------
-// Render
-// ---------------------------------------------------------------------------
-
 function render(lines: ParsedLine[], opts: Required<ConversionOptions>): string {
   const out: string[] = [];
   let openSection: { kind: SectionKind; label: string } | null = null;
@@ -568,10 +533,6 @@ export function slugifyTitle(title: string | null): string {
       .replace(/[^a-zA-Z0-9_]/g, "") || "cifra"
   );
 }
-
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
 
 export function convertToChordProDetailed(
   input: string,

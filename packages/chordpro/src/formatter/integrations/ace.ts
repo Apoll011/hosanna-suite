@@ -12,10 +12,6 @@
 import { formatChordPro } from "../format";
 import type { FormatOptions, FormatResult } from "../types";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
 /** A minimal subset of the Ace editor interface used by the integration. */
 export interface AceEditorLike {
   getValue(): string;
@@ -63,10 +59,6 @@ export interface AceCommand {
   bindKey: { win: string; mac: string };
   exec(editor: AceEditorLike): void;
 }
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 /**
  * Safely read the full document content from an Ace editor.
@@ -150,10 +142,6 @@ function applyFormattedSelection(
     // If selection restoration fails, leave cursor where it is
   }
 }
-
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
 
 /**
  * Format the entire document in the given Ace editor.

@@ -113,9 +113,6 @@ const LazyAce = React.lazy<React.ComponentType<IAceEditorProps>>(async () => {
   return { default: Component };
 });
 
-// ---------------------------------------------------------------------------
-// Wrap-in-section helper
-// ---------------------------------------------------------------------------
 type SectionType = "verse" | "chorus" | "bridge";
 
 const SECTION_LABELS: Record<SectionType, { start: string; end: string; defaultLabel: string }> = {
@@ -174,9 +171,6 @@ function wrapSelectionInSection(editor: any, sectionType: SectionType) {
   editor.session.replace(range, wrapped);
 }
 
-// ---------------------------------------------------------------------------
-// Transpose helpers
-// ---------------------------------------------------------------------------
 const ALL_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 const NOTE_MAP: Record<string, number> = {
@@ -244,9 +238,6 @@ function getSemitones(fromNote: string, toNote: string): number {
   return (to - from + 12) % 12;
 }
 
-// ---------------------------------------------------------------------------
-// Transpose Modal
-// ---------------------------------------------------------------------------
 interface TransposeModalProps {
   visible: boolean;
   currentText: string;
@@ -368,9 +359,6 @@ function TransposeModal({ visible, currentText, onConfirm, onClose }: TransposeM
   );
 }
 
-// ---------------------------------------------------------------------------
-// Context menu component
-// ---------------------------------------------------------------------------
 interface ContextMenuState {
   x: number;
   y: number;
@@ -459,9 +447,6 @@ function EditorContextMenu({
   );
 }
 
-// ---------------------------------------------------------------------------
-// Main Editor component
-// ---------------------------------------------------------------------------
 export interface EditorSettings {
   theme?: string;
   fontSize?: number;
@@ -567,7 +552,6 @@ function TextEditor({
     injectChordProLintStyles();
 
     return () => {
-      // Clean up linter markers when component unmounts
       if (linterRef.current) {
         linterRef.current.dispose();
       }
@@ -621,11 +605,9 @@ function TextEditor({
       const aceInstance = (window as any).ace;
       if (aceInstance && mode === "chordpro") {
         linterRef.current = attachChordProLinter(aceInstance, editor, onDiagnostics);
-        // Do an initial lint pass
         linterRef.current.lint(editor.getValue());
       }
 
-      // Add custom save command if commands API exists
       if (editor.commands && typeof editor.commands.addCommand === "function") {
         editor.commands.addCommand({
           name: "save",
