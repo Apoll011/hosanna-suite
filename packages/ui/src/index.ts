@@ -1,3 +1,10 @@
+/**
+ * `@hosanna/ui` — shared primitives + RBAC helpers.
+ *
+ * Prefer `@hosanna/ui/permissions` when you only need RBAC (gates, hooks, provider).
+ * Root remains a convenience barrel for existing app imports.
+ */
+
 export { cn, type ClassValue } from "./cn";
 export { Badge, type BadgeProps } from "./Badge";
 export { Button, type ButtonProps } from "./Button";

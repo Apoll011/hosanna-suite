@@ -10,6 +10,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./permissions": {
+      "types": "./src/permissions/index.ts",
+      "default": "./src/permissions/index.ts"
     }
   },
   "scripts": {
