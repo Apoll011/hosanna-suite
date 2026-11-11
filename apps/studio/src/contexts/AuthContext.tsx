@@ -271,8 +271,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         // ignore corrupt cache
       }
 
-      const userSwitched =
-        Boolean(previousCachedUserId) && previousCachedUserId !== sessionUser.id;
+      const userSwitched = Boolean(previousCachedUserId) && previousCachedUserId !== sessionUser.id;
       if (userSwitched) {
         setOrganization(null);
         setOrganizations([]);
@@ -336,7 +335,10 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             const db = await getDatabase();
             await ensureOrgScopedData(db, activeOrg.slug);
           } catch (err) {
-            console.warn("[AuthContext] Failed to clear local data on external org/user switch:", err);
+            console.warn(
+              "[AuthContext] Failed to clear local data on external org/user switch:",
+              err,
+            );
           }
         }
 
