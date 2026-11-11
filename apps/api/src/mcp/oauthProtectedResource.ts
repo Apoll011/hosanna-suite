@@ -7,7 +7,7 @@ import { env } from "../config/env.js";
  * (API), even though OAuth endpoints live on the auth app.
  */
 export function buildOauthProtectedResourceMetadata() {
-  const issuer = new URL("/api/auth", env.authUrl).toString().replace(/\/$/, "");
+  const issuer = new URL("/api/auth", "https://auth.hosanna.live").toString().replace(/\/$/, "");
   return {
     resource: env.mcpResourceUrl,
     authorization_servers: [issuer],
