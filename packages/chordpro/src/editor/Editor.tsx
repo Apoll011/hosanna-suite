@@ -6,6 +6,10 @@ import { ChordProDiffEditor } from "../diff/DiffEditor";
 import { registerFormatShortcut } from "../formatter/integrations/ace";
 import type { FormatResult } from "../formatter/types";
 import { ChordFinder } from "./ChordFinder";
+import {
+  createDirectiveCompleter,
+  createFilteredTextCompleter,
+} from "./directiveCompletions";
 import type { ChordProDiagnostic, LintController } from "./lint";
 import { attachChordProLinter, injectChordProLintStyles } from "./lint";
 import { registerChordproMode } from "./mode-chordpro";
@@ -55,7 +59,7 @@ export function preloadEditor(): Promise<React.ComponentType<IAceEditorProps>> {
               const langTools = ace.require("ace/ext/language_tools");
               if (
                 langTools &&
-                typeof langTools.addCompleter === "function" &&
+                typeof langTools.setCompleters === "function" &&
                 typeof window !== "undefined" &&
                 !(window as any)._chordproCompleterRegistered
               ) {
@@ -77,7 +81,15 @@ export function preloadEditor(): Promise<React.ComponentType<IAceEditorProps>> {
                   },
                 };
 
-                langTools.addCompleter(chordCompleter);
+                // Drop directive names from Ace "local" word completion so they
+                // only appear via snippets / the dedicated directive completer.
+                langTools.setCompleters([
+                  langTools.snippetCompleter,
+                  createDirectiveCompleter(),
+                  createFilteredTextCompleter(langTools.textCompleter),
+                  langTools.keyWordCompleter,
+                  chordCompleter,
+                ]);
                 (window as any)._chordproCompleterRegistered = true;
               }
             } catch {
