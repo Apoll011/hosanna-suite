@@ -4,17 +4,6 @@
       "id": "studio",
       "package": "@hosanna/studio",
       "dir": "apps/studio",
-      "paths": [
-        "apps/studio/**",
-        "packages/auth/**",
-        "packages/brand/**",
-        "packages/chordpro/**",
-        "packages/config/**",
-        "packages/i18n/**",
-        "packages/types/**",
-        "packages/ui/**",
-        "pnpm-lock.yaml"
-      ],
       "buildEnv": [
         "VITE_API_URL",
         "VITE_AUTH_URL",
@@ -37,14 +26,6 @@
       "id": "saas",
       "package": "@hosanna/saas",
       "dir": "apps/saas",
-      "paths": [
-        "apps/saas/**",
-        "packages/brand/**",
-        "packages/config/**",
-        "packages/i18n/**",
-        "packages/ui/**",
-        "pnpm-lock.yaml"
-      ],
       "buildEnv": ["VITE_AUTH_URL", "VITE_API_URL", "VITE_DASHBOARD_URL"],
       "targets": {
         "prod": {

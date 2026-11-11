@@ -2,6 +2,11 @@
 /**
  * Resolve which Cloudflare apps to deploy for the current branch/stage.
  *
+ * Change detection (no hand-maintained path lists):
+ *   - app dir (apps/<id>/**)
+ *   - transitive @hosanna/* workspace deps from that app's package.json
+ *   - fixed root files: pnpm-lock.yaml, pnpm-workspace.yaml
+ *
  * Env:
  *   GITHUB_REF_NAME, GITHUB_EVENT_NAME, GITHUB_EVENT_BEFORE, GITHUB_SHA
  *   INPUT_APP (optional workflow_dispatch filter)
@@ -10,8 +15,15 @@
  * Writes GITHUB_OUTPUT keys: matrix (JSON array), deploy ("true"|"false"), stage
  */
 import { execSync } from "node:child_process";
-import { appendFileSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import {
+  appendFileSync,
+  existsSync,
+  readdirSync,
+  readFileSync,
+} from "node:fs";
+import { join, resolve } from "node:path";
+
+const ROOT = resolve(process.cwd());
 
 const STAGE_BY_BRANCH = {
   develop: "dev",
@@ -23,6 +35,65 @@ const GITHUB_ENVIRONMENT_BY_STAGE = {
   dev: "Preview",
   prod: "Production",
 };
+
+/** Always invalidate every deployable app when these change. */
+const FIXED_PATHS = ["pnpm-lock.yaml", "pnpm-workspace.yaml"];
+
+function readJson(path) {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
+
+function workspacePackageMap() {
+  const map = new Map();
+  for (const group of ["apps", "packages"]) {
+    const base = join(ROOT, group);
+    if (!existsSync(base)) continue;
+    for (const entry of readdirSync(base, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const pkgPath = join(base, entry.name, "package.json");
+      if (!existsSync(pkgPath)) continue;
+      const { name } = readJson(pkgPath);
+      if (name) map.set(name, `${group}/${entry.name}`);
+    }
+  }
+  return map;
+}
+
+function workspaceDepsOf(dir, packageMap) {
+  const pkgPath = join(ROOT, dir, "package.json");
+  if (!existsSync(pkgPath)) return [];
+  const pkg = readJson(pkgPath);
+  const names = new Set([
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.devDependencies || {}),
+    ...Object.keys(pkg.optionalDependencies || {}),
+  ]);
+  return [...names].filter((n) => packageMap.has(n));
+}
+
+/** Transitive closure of workspace packages reachable from appDir. */
+function resolveWatchDirs(appDir, packageMap) {
+  const dirs = new Set([appDir]);
+  const queue = [...workspaceDepsOf(appDir, packageMap)];
+  const seenPkgs = new Set();
+
+  while (queue.length) {
+    const name = queue.shift();
+    if (seenPkgs.has(name)) continue;
+    seenPkgs.add(name);
+    const dir = packageMap.get(name);
+    if (!dir) continue;
+    dirs.add(dir);
+    queue.push(...workspaceDepsOf(dir, packageMap));
+  }
+
+  return [...dirs];
+}
+
+function watchPatternsFor(appDir, packageMap) {
+  const dirs = resolveWatchDirs(appDir, packageMap);
+  return [...dirs.map((d) => `${d}/**`), ...FIXED_PATHS];
+}
 
 function matchGlob(file, pattern) {
   const re = new RegExp(
@@ -68,7 +139,7 @@ function appendOutput(key, value) {
 const configPath = resolve(
   process.env.CONFIG_PATH || ".github/deploy-apps.json",
 );
-const config = JSON.parse(readFileSync(configPath, "utf8"));
+const config = readJson(configPath);
 const branch = process.env.GITHUB_REF_NAME || "";
 const event = process.env.GITHUB_EVENT_NAME || "";
 const appFilter = (process.env.INPUT_APP || "").trim();
@@ -82,6 +153,7 @@ if (!stage) {
   process.exit(0);
 }
 
+const packageMap = workspacePackageMap();
 const files = event === "workflow_dispatch" ? null : changedFiles();
 const githubEnvironment = GITHUB_ENVIRONMENT_BY_STAGE[stage];
 const matrix = [];
@@ -91,12 +163,15 @@ for (const app of config.apps) {
   const target = app.targets?.[stage];
   if (!target) continue;
 
-  const changed = files === null || files.some((f) => pathMatched(f, app.paths));
+  const patterns = watchPatternsFor(app.dir, packageMap);
+  const changed = files === null || files.some((f) => pathMatched(f, patterns));
   if (!changed) {
     console.log(`skip ${app.id}: no matching path changes`);
+    console.log(`  watched: ${patterns.join(", ")}`);
     continue;
   }
 
+  console.log(`${app.id}: deploy (watched ${patterns.length} paths)`);
   matrix.push({
     id: app.id,
     package: app.package,
