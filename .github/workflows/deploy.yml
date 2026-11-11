@@ -82,12 +82,24 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      # pnpm cache ≠ turbo cache. Persist .turbo so unchanged packages hit locally.
+      # (Remote cache stays off unless TURBO_TOKEN + TURBO_TEAM are set.)
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            turbo-${{ runner.os }}-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build ${{ matrix.id }} (+ workspace deps)
         run: pnpm turbo run build --filter=${{ matrix.package }}
         env:
+          TURBO_TELEMETRY_DISABLED: "1"
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_AUTH_URL: ${{ vars.VITE_AUTH_URL }}
           VITE_DASHBOARD_URL: ${{ vars.VITE_DASHBOARD_URL }}
