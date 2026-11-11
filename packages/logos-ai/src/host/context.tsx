@@ -6,7 +6,8 @@
 import { DEFAULT_LANGUAGE, resolveString, type Language } from "@hosanna/i18n";
 import React, { createContext, useContext, useMemo } from "react";
 import { logosAiMessages } from "../i18n";
-import type { LogosHost, LogosTc, LogosTranslate } from "./types";
+import { thinHostProfile } from "../kernel/capabilities";
+import type { LogosHost, LogosTc, LogosTranslate } from "../kernel/host";
 
 const LogosHostCtx = createContext<LogosHost | null>(null);
 
@@ -15,10 +16,6 @@ function asLanguage(value: string): Language {
   return DEFAULT_LANGUAGE;
 }
 
-/**
- * Prefer host translations (app overlays like contextGeneral), then package chat
- * dictionaries so hosts no longer need to ship the full `ai.chat` tree.
- */
 function withPackageChatFallback(host: LogosHost): LogosHost {
   const language = asLanguage(host.language);
   const dict = logosAiMessages[language] ?? logosAiMessages[DEFAULT_LANGUAGE];
@@ -47,6 +44,15 @@ function withPackageChatFallback(host: LogosHost): LogosHost {
   return { ...host, t, tc };
 }
 
+function withDefaults(host: LogosHost): LogosHost {
+  return {
+    ...host,
+    canUpdateSong: host.canUpdateSong ?? host.catalog.canUpdate("song"),
+    canUpdateService: host.canUpdateService ?? host.catalog.canUpdate("service"),
+    profile: host.profile?.appId ? host.profile : thinHostProfile("unknown"),
+  };
+}
+
 export function LogosHostProvider({
   value,
   children,
@@ -54,7 +60,7 @@ export function LogosHostProvider({
   value: LogosHost;
   children: React.ReactNode;
 }) {
-  const enhanced = useMemo(() => withPackageChatFallback(value), [value]);
+  const enhanced = useMemo(() => withPackageChatFallback(withDefaults(value)), [value]);
   return <LogosHostCtx.Provider value={enhanced}>{children}</LogosHostCtx.Provider>;
 }
 

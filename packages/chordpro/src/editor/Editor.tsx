@@ -6,10 +6,7 @@ import { ChordProDiffEditor } from "../diff/DiffEditor";
 import { registerFormatShortcut } from "../formatter/integrations/ace";
 import type { FormatResult } from "../formatter/types";
 import { ChordFinder } from "./ChordFinder";
-import {
-  createDirectiveCompleter,
-  createFilteredTextCompleter,
-} from "./directiveCompletions";
+import { createDirectiveCompleter, createFilteredTextCompleter } from "./directiveCompletions";
 import type { ChordProDiagnostic, LintController } from "./lint";
 import { attachChordProLinter, injectChordProLintStyles } from "./lint";
 import { registerChordproMode } from "./mode-chordpro";

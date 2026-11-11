@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/api",
-  "version": "2.24.6",
+  "version": "2.24.7",
   "license": "Apache-2.0",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",

@@ -135,6 +135,10 @@ export type ChatPageContext = {
     title?: string;
     songId?: string;
   }>;
+  /** Mounting app (`studio`, `auth`, future suite apps). */
+  hostApp?: string;
+  /** Local Logos capabilities reported by the client. */
+  hostCapabilities?: string[];
 };
 
 /**
@@ -339,11 +343,16 @@ function buildHosannaTools(
   return {
     ...memoryTools,
     hosanna_capabilities: tool({
-      description: "Summarize Hosanna tools and ChordPro feature support.",
+      description:
+        "Summarize Hosanna tools, domain packs (with allowed/denied for current role), and ChordPro feature support.",
       inputSchema: z.object({}),
-      execute: async () =>
-        textResult({
+      execute: async () => {
+        const { summarizeDomainsForUser } = await import("../mcp/domains/discovery.js");
+        const ctx = getMcpContext(authInfo);
+        const domains = summarizeDomainsForUser(ctx?.user ?? null);
+        return textResult({
           features: getChordProCapabilities().features,
+          domains,
           skills: SKILL_NAMES.map((n) => `hosanna://skills/${n}`),
           howToReadSkills:
             "Call hosanna_skills_list then hosanna_skill_read({name}). Skill bodies are NOT auto-injected — you must read them.",
@@ -393,14 +402,14 @@ function buildHosannaTools(
               "restore",
             ],
             org: ["me", "members_list", "members_get", "members_resolve", "org_get"],
-            studioOnly: [
-              "studio_sync",
-              "studio_navigate",
-              "studio_generate_pdf",
+            hostUi: [
+              "studio_sync (Studio library refresh)",
+              "studio_navigate (in-tab on Studio; open_app handoff elsewhere)",
+              "studio_generate_pdf (print modal on Studio; open entity in Music elsewhere)",
               "studio_search",
               "open_app",
+              "suggest_followups",
             ],
-            hostUi: ["open_app"],
             library: [
               "folders CRUD+restore",
               "folders_create_many / folders_update_many / collections_update_many (batch)",
@@ -430,15 +439,22 @@ function buildHosannaTools(
               "directives",
             ],
           },
-          note: "Studio: propose tools stage Accept/Decline in the editor; user Save there. *_delete tools only STAGE a Confirm button (do not mutate). songs_save/services_save only after explicit persist request (MCP hosts).",
-        }),
+          note: "Prefer domains[].tools where allowed=true. Studio: propose tools stage Accept/Decline in the editor; user Save there. *_delete tools only STAGE a Confirm button (do not mutate). songs_save/services_save only after explicit persist request (MCP hosts).",
+        });
+      },
     }),
     hosanna_permissions: tool({
-      description: "Current user role and org entitlement. Prefer `me` for name/email/memberId.",
+      description:
+        "Current user role, effective domain permissions (allowed/denied), and which tools those unlock. Prefer `me` for name/email/memberId.",
       inputSchema: z.object({}),
       execute: async () => {
         const ctx = getMcpContext(authInfo);
         if (!ctx) return textResult({ authenticated: false });
+        const { permissionsReportForUser } = await import("../mcp/domains/discovery.js");
+        const report = permissionsReportForUser({
+          orgRole: ctx.user.role,
+          entitled: ctx.entitled,
+        });
         try {
           const identity = await getMe(ctx);
           return textResult({
@@ -450,8 +466,13 @@ function buildHosannaTools(
             orgId: identity.organization.id,
             orgName: identity.organization.name,
             role: identity.member.role,
+            orgRole: report.orgRole,
+            appRoles: report.appRoles,
             entitled: identity.entitled,
             locale: identity.organization.locale,
+            permissions: report.allowed,
+            denied: report.denied,
+            tools: report.tools,
           });
         } catch {
           return textResult({
@@ -459,7 +480,12 @@ function buildHosannaTools(
             userId: ctx.user.id,
             orgId: ctx.orgId,
             role: ctx.user.role,
+            orgRole: report.orgRole,
+            appRoles: report.appRoles,
             entitled: ctx.entitled,
+            permissions: report.allowed,
+            denied: report.denied,
+            tools: report.tools,
           });
         }
       },
@@ -727,7 +753,7 @@ function buildHosannaTools(
     }),
     studio_navigate: tool({
       description:
-        "Studio-only: navigate the open Studio tab to a page (song/service/folder/collection/agenda/list/settings). Prefer kind+id over inventing routes. For other Hosanna apps (auth, marketing, future) use open_app instead.",
+        "Open a library page (song/service/folder/collection/agenda/list/settings). Prefer kind+id over inventing routes. On Studio this navigates in-tab; on auth and other Hosanna apps the client opens Music/Studio via open_app automatically — you can still call studio_navigate.",
       inputSchema: z.object({
         kind: z.enum(STUDIO_NAVIGATE_KINDS),
         id: z
@@ -752,7 +778,7 @@ function buildHosannaTools(
     }),
     open_app: tool({
       description:
-        'Open a Hosanna web app by subdomain id (modular for new apps). app="saas" → hosanna.live; app="studio" → studio.hosanna.live; app="auth" → auth.hosanna.live; any future slug follows {app}.hosanna.live. Pass path (e.g. /account/organization/ai or /{orgSlug}/songs) and openIn same|new.',
+        'Open a Hosanna web app by subdomain id (modular for new apps). app="saas" → hosanna.live; app="studio"|"music" → studio.hosanna.live (Music); app="auth" → auth.hosanna.live; any future slug follows {app}.hosanna.live. Pass path (e.g. /account/organization/ai or /{orgSlug}/songs) and openIn same|new.',
       inputSchema: z.object({
         app: z
           .string()
@@ -780,7 +806,7 @@ function buildHosannaTools(
     }),
     studio_generate_pdf: tool({
       description:
-        "Studio-only: open the print/PDF modal for song(s), service(s), folder, collection, or agenda event. Resolves ids in the open Studio tab.",
+        "Open the print/PDF flow for song(s), service(s), folder, collection, or agenda event. On Studio this opens the print modal; on other apps the client opens the entity in Music so the user can print there.",
       inputSchema: z.object({
         kind: z.enum(STUDIO_PRINT_KINDS),
         ids: z.array(z.string().min(1)).min(1).describe("One or more entity ids to print"),
@@ -2239,30 +2265,36 @@ function buildHosannaTools(
 }
 
 /**
- * Studio chat system — intentionally shorter than MCP host instructions.
- * Avoids mandatory skill/resource loading that burns tokens on trivial edits.
+ * Logos chat system — shared across Studio, Auth, and future suite apps.
+ * Host-specific UX is driven by pageContext.hostApp / hostCapabilities.
  */
-const STUDIO_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosanna Studio chat, for church song libraries and service planning. Stay warm, concise and practical.
+const LOGOS_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosanna, for church song libraries and service planning. Stay warm, concise and practical.
 
 ## Style (strict)
 - Be brief. Prefer doing over asking. One short sentence + tools beats essays.
-- Do NOT paste full ChordPro bodies into chat. Call propose/edit tools; the Studio editor shows accept/decline.
+- Do NOT paste full ChordPro bodies into chat. Call propose/edit tools; the host UI shows Accept/Decline (or opens Music when the current app has no editor).
 - Prefer pageContext ids + updatedAt. Do NOT call list/search just to discover the open song/service/folder.
 - Skills/docs are NOT in your context until you read them: hosanna_skills_list → hosanna_skill_read, or hosanna_resource_read. Never invent skill contents — quote what the tool returns.
 - For clear requests (transpose to D, repeat a section 2×, duplicate last verse, fix chords, complete metadata, create folder/event), act immediately with a sensible default. Ask at most ONE question only when blocked.
 - Do not offer multiple options when the user already chose (e.g. "transpose into D").
-- ChordPro/song content edits: use propose tools (prefer songs_propose_transpose / songs_propose_edit). Studio stages Accept/Decline in the editor. After Accept, the user saves in the editor — only call songs_save / services_save if they explicitly ask to persist via chat/MCP.
-- Library structural edits (folders, collections, agenda create/update, move song, add songs to collection): do them with tools when the request is clear. Studio refreshes the explorer automatically after mutations — do NOT call \`studio_sync\`.
+- ChordPro/song content edits: use propose tools (prefer songs_propose_transpose / songs_propose_edit). The UI stages Accept/Decline. After Accept, the user may still save in an editor — only call songs_save / services_save if they explicitly ask to persist via chat/MCP.
+- Library structural edits (folders, collections, agenda create/update, move song, add songs to collection): do them with tools when the request is clear. Studio refreshes the explorer automatically after mutations — do NOT call \`studio_sync\` unless the user asks to refresh.
 - Changing several folders/collections at once: use \`folders_update_many\` / \`folders_create_many\` / \`collections_update_many\` in ONE call instead of many single calls. Items fail independently — report any failed index honestly.
 - At the end of a turn, when natural next steps exist, you MAY call \`suggest_followups\` once (last tool call) with 2-3 short clickable prompts. Never use it for questions you need answered; do not repeat them in the text.
-- Folder/collection \`icon\` and \`color\` must be Studio ids only (see hosanna_capabilities.studioUi or hosanna://domain/library). Never invent Lucide names. Use \`icon=default\` / \`color=default\` to reset.
-- Deletes (songs/services/folders/collections/agenda): call the matching \`*_delete\` tool immediately when the user asks to delete — it only STAGES a Confirm button in Studio and does not delete. Do NOT ask for chat confirmation ("are you sure?") and do NOT claim the item is deleted until the user clicks Confirm. If they already confirmed in chat, still only stage the button.
+- Folder/collection \`icon\` and \`color\` must be Studio/Music ids only (see hosanna_capabilities.studioUi or hosanna://domain/library). Never invent Lucide names. Use \`icon=default\` / \`color=default\` to reset.
+- Deletes (songs/services/folders/collections/agenda): call the matching \`*_delete\` tool immediately when the user asks to delete — it only STAGES a Confirm button in the chat UI and does not delete. Do NOT ask for chat confirmation ("are you sure?") and do NOT claim the item is deleted until the user clicks Confirm. If they already confirmed in chat, still only stage the button.
 - When the user says "repeat" / "2x" a verse or chorus: duplicate that section's body in the ChordPro (or add \`{c: 2x}\` if they ask for a note only). Prefer physical duplication when they ask to "write a copy".
 - On stale/concurrency errors, use the returned \`current\` object (do not re-fetch blindly).
 - \`{chorus}\` (alias \`{ch}\`, optional label \`{chorus: Refrão final}\`) recalls the previous \`start_of_chorus\` block without copying it. When a chorus repeats UNCHANGED, write \`{chorus}\` instead of duplicating the lines (unless the user asks for a physical copy or the repeat has different chords/words). Never put \`{chorus}\` before any chorus exists.
 - \`{key_note: text}\` is a free-text note about key changes (e.g. \`{key_note: Verso 4 e final modulam para D (meio tom acima)}\`); the renderer shows it under the song header. Use it for modulations — not \`{c:}\`, not \`{key:}\` (which is the main key).
 - \`{tag: label}\` is an editor-only label (not rendered). Repeat the directive for several tags. Do not add tags the user did not ask for.
 - Propagating/completing chords: \`songs_draft_propagate_chords\` / \`chordpro_propagate_chords\` return a DRAFT that is NOT staged. Read \`review\` and \`skipped\`: re-place every chord marked \`check\` on the right word/syllable yourself (use the source line as reference), fill \`skipped\` lines when the chords are obvious, make sure no chord lands mid-word by accident, then call \`songs_propose_edit\` ONCE with the corrected full content. Never propose the raw draft unchecked and never invent chords the song does not already use.
+
+## Host awareness
+- pageContext.hostApp / hostCapabilities tell you which app mounted Logos (studio, auth, …).
+- Chat is the universal approval surface. On thin hosts (auth, apps without editor.songs / navigate.local): use propose tools and delete confirms — the user Accepts/Declines in chat via API. Do NOT refuse song/service edits just because the user is in Auth.
+- Do NOT call studio_navigate or studio_generate_pdf after a propose just to "show" the edit — the proposal card is enough. Only navigate/print when the user explicitly asks to open or print something.
+- On thin hosts, navigate/print tools become an optional "Open in Music" chat card (no auto tab switch). Use open_app only when the user clearly wants to leave for another product (account settings, marketing, a future app).
 
 ## Capabilities (use them)
 - Songs: search, search_lyrics (plain lyrics ignoring chords), get/get_many, draft, propose_edit/fix/transpose, save, move, delete, restore; trash_list
@@ -2273,11 +2305,11 @@ const STUDIO_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosa
 - Collections: list/get/create/update/delete, add_songs/remove_songs (same icon/color ids)
 - Agenda: list/get/create/update/delete — set responsibilities with real memberIds (not only notes on service elements)
 - Services: services_search supports archived / includeArchived (rows include archived flag)
-- Studio-only UX: studio_navigate (open pages inside Studio), studio_generate_pdf (print modal), studio_search (global find across library), suggest_followups (clickable chips)
-- Cross-app: open_app({ app, path?, openIn? }) — app="saas" → hosanna.live; app="studio"|"auth"|future slug → {app}.hosanna.live. Use for leaving Studio or opening Auth/account settings.
+- Host UX: studio_navigate, studio_generate_pdf, studio_search, suggest_followups — work across apps via client routing
+- Cross-app: open_app({ app, path?, openIn? }) — app="saas" → hosanna.live; app="studio"|"music"|"auth"|future slug → {app}.hosanna.live (music currently maps to Studio)
 - Metadata: MusicBrainz, YouTube (for \`{youtube:}\`), DuckDuckGo web search; ChordPro validate/format/transpose/convert/propagate
 - When completing metadata: MusicBrainz for title/artist/release; YouTube search for \`{youtube: URL}\` (use hits[].directive); web search for extra confirmation. If \`metadata_web_fetch\` is available (DeepSeek org AI), use it to read CCLI/artist pages or Cifra URLs blocked by Akamai. Call metadata tools one at a time (MusicBrainz rate-limits parallel bursts with 503). If a tool returns 403/503, report the structured error — do not claim success. Propose the ChordPro edit — do not invent lyrics.
-- Unknown Studio UI constants (icons, colors, etc.): call hosanna_capabilities or hosanna_resource_read on hosanna://domain/library — do not guess.
+- Unknown Studio/Music UI constants (icons, colors, etc.): call hosanna_capabilities or hosanna_resource_read on hosanna://domain/library — do not guess.
 
 ## Hard rules
 - Never invent lyrics, chords, or library songs. Ask when content is missing.
@@ -2289,12 +2321,15 @@ const STUDIO_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosa
 function contextBlock(page?: ChatPageContext): string {
   if (!page) return "";
   const excerpt = page.contentExcerpt ? page.contentExcerpt.slice(0, 12_000) : "";
+  const hostApp = page.hostApp?.trim() || "unknown";
   return `
 
-## Current Studio page context
-Prefer these ids/updatedAt over discovery tools.
+## Current page context (host: ${hostApp})
+Prefer these ids/updatedAt over discovery tools. Honor hostCapabilities when choosing UX tools.
 ${JSON.stringify(
   {
+    hostApp,
+    hostCapabilities: page.hostCapabilities ?? [],
     kind: page.kind ?? "general",
     route: page.route,
     songId: page.songId,
@@ -2337,7 +2372,7 @@ export function localePromptBlock(locale?: string): string {
   return `
 
 ## Language
-The user's Studio language is ${name}. Reply in that language unless the user writes in another one. Keep ChordPro directives, ids and tool arguments in their canonical form.
+The user's UI language is ${name}. Reply in that language unless the user writes in another one. Keep ChordPro directives, ids and tool arguments in their canonical form.
 `;
 }
 
@@ -2392,7 +2427,7 @@ export class AiChatService {
       memory: runtime.memoryEnabled ? this.memory : undefined,
     });
     const system =
-      STUDIO_CHAT_SYSTEM +
+      LOGOS_CHAT_SYSTEM +
       (runtime.memoryEnabled ? MEMORY_USAGE_PROMPT : "") +
       customInstructionsPromptBlock(runtime.instructions) +
       memoryPromptBlock(memoryEntries) +

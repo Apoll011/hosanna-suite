@@ -240,3 +240,13 @@ export function useSongProposalStatus(songId: string, content: string): Proposal
   );
   return useSyncExternalStore(aiProposals.subscribe, getSnapshot, getSnapshot);
 }
+
+/** Pending / accepted / declined / stale for one service proposal in the chat. */
+export function useServiceProposalStatus(serviceId: string, elements: unknown[]): ProposalStatus {
+  const content = JSON.stringify(elements);
+  const getSnapshot = useCallback(
+    () => aiProposals.statusOf(serviceKey(serviceId), content),
+    [serviceId, content],
+  );
+  return useSyncExternalStore(aiProposals.subscribe, getSnapshot, getSnapshot);
+}

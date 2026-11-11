@@ -3,14 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useLogosI18n } from "../../host";
+import { asDeferredOffer, parseToolActions } from "../../actions";
+import { useLogosHost, useLogosI18n } from "../../host";
+import { hasCapability } from "../../host/capabilities";
 import { AlertCircle, Check, ChevronDown, ChevronRight, Loader2, X } from "lucide-react";
 import React, { memo, useMemo, useState } from "react";
 import { AiConfirmCard } from "./ConfirmCard";
+import { AiHostActionCard } from "./HostActionCard";
 import { AiProposalCard } from "../../proposals/components/Card";
+import { AiServiceProposalCard } from "../../proposals/components/ServiceCard";
 import { CopyButton } from "./CopyButton";
 import { countByName, toolRunStatus } from "../../core/stream";
-import { extractDestructiveConfirmation, extractSongProposal } from "../../proposals/parse";
 import {
   formatDuration,
   parseToolOutput,
@@ -20,6 +23,7 @@ import {
   toolResultHint,
   toolSummary,
 } from "../../core/tools";
+import type { CatalogServiceElement } from "../../catalog/types";
 import type { AiToolCallState } from "../../types";
 
 const PAYLOAD_MAX = 12_000;
@@ -142,27 +146,79 @@ const MAX_NAMES = 3;
  */
 export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolCallState[] }) {
   const { t, tc } = useLogosI18n();
+  const host = useLogosHost();
   const [open, setOpen] = useState(false);
   const [everOpened, setEverOpened] = useState(false);
+  const thinNavigate = !hasCapability(host.profile, "navigate.local");
+  const thinPrint = !hasCapability(host.profile, "print");
 
   const run = useMemo(() => toolRunStatus(tools), [tools]);
   const names = useMemo(() => countByName(tools), [tools]);
-  const confirmations = useMemo(
+  const parsedActions = useMemo(
     () =>
       tools.map((tool) =>
-        tool.status === "done" ? extractDestructiveConfirmation(tool.output) : null,
+        tool.status === "done" ? parseToolActions(tool.toolName, tool.output) : [],
       ),
     [tools],
   );
 
+  const confirmations = useMemo(
+    () =>
+      parsedActions.map(
+        (actions) => actions.find((a) => a.type === "confirm")?.confirmation ?? null,
+      ),
+    [parsedActions],
+  );
+
   const songProposals = useMemo(
     () =>
-      tools.map((tool) => {
-        if (tool.status !== "done") return null;
-        const p = extractSongProposal(parseToolOutput(tool.output));
-        return p?.id ? { ...p, id: p.id } : null;
+      parsedActions.map((actions) => {
+        const propose = actions.find((a) => a.type === "propose" && a.proposal.kind === "song");
+        if (!propose || propose.type !== "propose") return null;
+        const payload = propose.proposal.payload as { content: string; artist?: string };
+        return {
+          id: propose.proposal.entityId,
+          content: payload.content,
+          title: propose.proposal.title,
+          artist: payload.artist ?? propose.proposal.subtitle,
+        };
       }),
-    [tools],
+    [parsedActions],
+  );
+
+  const serviceProposals = useMemo(
+    () =>
+      parsedActions.map((actions) => {
+        const propose = actions.find((a) => a.type === "propose" && a.proposal.kind === "service");
+        if (!propose || propose.type !== "propose") return null;
+        const payload = propose.proposal.payload as {
+          elements: CatalogServiceElement[];
+          name?: string;
+          notes?: string;
+        };
+        return {
+          id: propose.proposal.entityId,
+          name: payload.name ?? propose.proposal.title,
+          notes: payload.notes,
+          elements: payload.elements,
+        };
+      }),
+    [parsedActions],
+  );
+
+  const hostOffers = useMemo(
+    () =>
+      parsedActions.map((actions) => {
+        for (const action of actions) {
+          const offer = asDeferredOffer(action);
+          if (!offer) continue;
+          if (offer.type === "navigate" && !thinNavigate) continue;
+          if (offer.type === "print" && !thinPrint) continue;
+          return offer;
+        }
+        return null;
+      }),
+    [parsedActions, thinNavigate, thinPrint],
   );
 
   const current = useMemo(() => {
@@ -237,6 +293,14 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
 
       {songProposals.map((p, i) =>
         p ? <AiProposalCard key={`p-${tools[i].toolCallId}`} proposal={p} /> : null,
+      )}
+
+      {serviceProposals.map((p, i) =>
+        p ? <AiServiceProposalCard key={`s-${tools[i].toolCallId}`} proposal={p} /> : null,
+      )}
+
+      {hostOffers.map((offer, i) =>
+        offer ? <AiHostActionCard key={`h-${tools[i].toolCallId}`} offer={offer} /> : null,
       )}
 
       {confirmations.map((c, i) =>

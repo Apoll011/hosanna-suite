@@ -81,6 +81,10 @@ export type AiChatContext = {
     title?: string;
     songId?: string;
   }>;
+  /** Mounting app id (`studio`, `auth`, future suite apps). */
+  hostApp?: string;
+  /** Local Logos capabilities of the mounting app. */
+  hostCapabilities?: string[];
 };
 
 export type AiUiMessage = {

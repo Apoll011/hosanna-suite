@@ -1,58 +1,23 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Compatibility wrappers around the action/resource parsers.
  */
 
-export type AiDestructiveConfirmation = {
-  action:
-    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
-  id: string;
-  title: string;
-  detail?: string;
-  folderAction?: "move_to_root" | "delete_songs";
-};
+import { parseToolActions, unwrapToolJson } from "../actions/parse";
+import type { LogosConfirmAction } from "../actions/types";
+import { songResource } from "../resources/song";
+import { serviceResource } from "../resources/service";
 
-/** Extract a destructive Confirm-card payload from a tool result. */
+export type AiDestructiveConfirmation = LogosConfirmAction;
+
 export function extractDestructiveConfirmation(output: unknown): AiDestructiveConfirmation | null {
-  let parsed: unknown = output;
-  if (typeof output === "string") {
-    try {
-      parsed = JSON.parse(output);
-    } catch {
-      return null;
-    }
-  }
-  if (!parsed || typeof parsed !== "object") return null;
-  const confirmation = (parsed as { confirmation?: Record<string, unknown> }).confirmation;
-  if (!confirmation || typeof confirmation !== "object") return null;
-  const action = confirmation.action;
-  const id = confirmation.id;
-  const title = confirmation.title;
-  if (typeof action !== "string" || typeof id !== "string") return null;
-  if (
-    ![
-      "delete_song",
-      "delete_service",
-      "delete_folder",
-      "delete_collection",
-      "delete_agenda",
-    ].includes(action)
-  ) {
-    return null;
-  }
-  return {
-    action: action as AiDestructiveConfirmation["action"],
-    id,
-    title: typeof title === "string" && title.trim() ? title : id,
-    detail: typeof confirmation.detail === "string" ? confirmation.detail : undefined,
-    folderAction:
-      confirmation.folderAction === "delete_songs" || confirmation.folderAction === "move_to_root"
-        ? confirmation.folderAction
-        : undefined,
-  };
+  const actions = parseToolActions("tool", output);
+  const confirm = actions.find((a) => a.type === "confirm");
+  return confirm && confirm.type === "confirm" ? confirm.confirmation : null;
 }
 
-/** Extract a ChordPro/song proposal payload from a tool result. */
 export function extractSongProposal(output: unknown): {
   id?: string;
   content: string;
@@ -60,33 +25,19 @@ export function extractSongProposal(output: unknown): {
   artist?: string;
   diffPreview?: string;
 } | null {
-  let parsed: unknown = output;
-  if (typeof output === "string") {
-    try {
-      parsed = JSON.parse(output);
-    } catch {
-      return null;
-    }
-  }
-  if (!parsed || typeof parsed !== "object") return null;
-  const obj = parsed as {
-    proposal?: {
-      id?: string;
-      content?: string;
-      title?: string;
-      artist?: string;
-    };
-    content?: string;
-    diff?: { preview?: string };
-  };
-  // Only stage intentional proposals (not raw songs.get / parse payloads).
-  const content = obj.proposal?.content;
-  if (!content || typeof content !== "string") return null;
+  const body =
+    unwrapToolJson(output) ??
+    (typeof output === "object" ? (output as Record<string, unknown>) : null);
+  if (!body) return null;
+  const extracted = songResource.extractProposal(body);
+  if (!extracted) return null;
+  const payload = extracted.payload as { content: string; artist?: string };
+  const obj = body as { diff?: { preview?: string } };
   return {
-    id: obj.proposal?.id,
-    content,
-    title: obj.proposal?.title,
-    artist: obj.proposal?.artist,
+    id: extracted.entityId || undefined,
+    content: payload.content,
+    title: extracted.title,
+    artist: typeof payload.artist === "string" ? payload.artist : extracted.subtitle,
     diffPreview: typeof obj.diff?.preview === "string" ? obj.diff.preview : undefined,
   };
 }
@@ -97,21 +48,57 @@ export function extractServiceProposal(output: unknown): {
   notes?: string;
   elements: unknown[];
 } | null {
-  let parsed: unknown = output;
-  if (typeof output === "string") {
-    try {
-      parsed = JSON.parse(output);
-    } catch {
-      return null;
+  const body =
+    unwrapToolJson(output) ??
+    (typeof output === "object" ? (output as Record<string, unknown>) : null);
+  if (!body) return null;
+  const extracted = serviceResource.extractProposal(body);
+  if (!extracted) return null;
+  const payload = extracted.payload as {
+    elements: unknown[];
+    name?: string;
+    notes?: string;
+  };
+  return {
+    serviceId: extracted.entityId || undefined,
+    name: payload.name,
+    notes: payload.notes,
+    elements: payload.elements,
+  };
+}
+
+/** @deprecated Prefer DeferredHostOffer from actions. */
+export type AiHostUiOffer = {
+  type: "navigate" | "print";
+  kind: string;
+  id?: string | null;
+  ids?: string[];
+  route?: string;
+  title?: string;
+  reason?: string;
+};
+
+export function extractHostUiOffer(output: unknown): AiHostUiOffer | null {
+  const actions = parseToolActions("tool", output);
+  for (const action of actions) {
+    if (action.type === "navigate") {
+      return {
+        type: "navigate",
+        kind: action.navigate.kind,
+        id: action.navigate.id,
+        route: action.navigate.route,
+        reason: action.navigate.reason,
+      };
+    }
+    if (action.type === "print") {
+      return {
+        type: "print",
+        kind: action.print.kind,
+        ids: action.print.ids,
+        title: action.print.title,
+        reason: action.print.reason,
+      };
     }
   }
-  if (!parsed || typeof parsed !== "object") return null;
-  const proposal = (parsed as { proposal?: Record<string, unknown> }).proposal;
-  if (!proposal?.elements || !Array.isArray(proposal.elements)) return null;
-  return {
-    serviceId: typeof proposal.id === "string" ? proposal.id : undefined,
-    name: typeof proposal.name === "string" ? proposal.name : undefined,
-    notes: typeof proposal.notes === "string" ? proposal.notes : undefined,
-    elements: proposal.elements,
-  };
+  return null;
 }

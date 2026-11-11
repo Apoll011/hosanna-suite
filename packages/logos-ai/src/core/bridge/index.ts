@@ -32,3 +32,4 @@ export {
 export { maybeDispatchHostActions } from "./hostActions";
 export { maybeSyncLibrary, shouldSyncLibraryAfterTool } from "./librarySync";
 export { buildPageContext, contextKey, EXCERPT_MAX } from "./pageContext";
+export { studioPathForNavigate, studioPathForPrint } from "./studioPaths";

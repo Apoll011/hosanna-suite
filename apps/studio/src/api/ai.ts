@@ -91,6 +91,8 @@ export type AiChatContext = {
     title?: string;
     songId?: string;
   }>;
+  hostApp?: string;
+  hostCapabilities?: string[];
 };
 
 export type AiUiMessage = {

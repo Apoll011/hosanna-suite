@@ -4,7 +4,9 @@
  */
 
 import { Button, Spinner } from "@hosanna/ui";
-import { useHostSong, useLogosI18n } from "../../host";
+import { useLogosHost, useLogosI18n } from "../../host";
+import { useCatalogSong } from "../../host/catalog";
+import { hasCapability, musicAppId } from "../../host/capabilities";
 import { ChordProDiffEditor } from "@hosanna/chordpro/diff";
 import { ExternalLink, X } from "lucide-react";
 import React, { useEffect } from "react";
@@ -24,9 +26,13 @@ type Props = {
  */
 export const AiProposalReview: React.FC<Props> = ({ proposal, onClose }) => {
   const { t } = useLogosI18n();
+  const host = useLogosHost();
   const labels = useDiffLabels();
-  const { data: song, isLoading } = useHostSong(proposal.entityId);
+  const { data: song, isLoading } = useCatalogSong(proposal.entityId);
   const { applySong, decline, openInEditor } = useProposalActions();
+  const openEditorLabel = hasCapability(host.profile, "editor.songs")
+    ? t("ai.chat.proposals.openEditor")
+    : t("ai.chat.proposals.openInMusic", { app: musicAppId(host.profile) });
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -72,7 +78,7 @@ export const AiProposalReview: React.FC<Props> = ({ proposal, onClose }) => {
               openInEditor(proposal);
             }}
           >
-            {t("ai.chat.proposals.openEditor")}
+            {openEditorLabel}
           </Button>
           <button
             type="button"
