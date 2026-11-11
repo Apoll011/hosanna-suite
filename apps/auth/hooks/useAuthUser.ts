@@ -1,6 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { clearCachedOrg } from "@/lib/org-cache";
 import {
   clearCachedUser,
   readCachedUser,
@@ -79,11 +80,23 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
 
       if (!next) {
         clearCachedUser();
+        clearCachedOrg();
         setUser(null);
         if (requireAuthRef.current && typeof window !== "undefined") {
           window.location.replace(loginRedirectRef.current);
         }
         return null;
+      }
+
+      const previous = readCachedUser();
+      if (previous?.id && previous.id !== next.id) {
+        // Different account in the same browser — drop the prior org snapshot.
+        clearCachedOrg();
+        try {
+          localStorage.removeItem("active_org_slug");
+        } catch {
+          /* ignore */
+        }
       }
 
       writeCachedUser(next);

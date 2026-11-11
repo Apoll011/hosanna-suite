@@ -20,24 +20,22 @@ export const ProtectedRoute: React.FC = () => {
   useEffect(() => {
     if (demo || isLoading) return;
 
+    const returnUrl = `${window.location.origin}${location.pathname}${location.search}`;
+
     if (!isAuthenticated) {
-      redirectToAuthApp("/login", {
-        returnUrl: `${window.location.origin}${location.pathname}${location.search}`,
-      });
+      redirectToAuthApp("/login", { returnUrl });
       return;
     }
 
+    // Only redirect after AuthContext finished a network (or offline) resolve —
+    // cached "no org" must not bounce to onboarding before invite/org sync lands.
     if (!organization) {
-      redirectToAuthApp("/onboarding", {
-        returnUrl: `${window.location.origin}/`,
-      });
+      redirectToAuthApp("/onboarding", { returnUrl });
       return;
     }
 
     if (hasAcceptedTrial === false) {
-      redirectToAuthApp("/onboarding", {
-        returnUrl: `${window.location.origin}/`,
-      });
+      redirectToAuthApp("/onboarding", { returnUrl });
     }
   }, [
     demo,

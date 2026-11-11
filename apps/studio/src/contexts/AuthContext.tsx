@@ -10,10 +10,20 @@ import { getDemoOrganization, getDemoUser } from "../demo/demoAuth";
 import { clearDemoData, isDemoMode } from "../demo/index";
 import { getPersistedSettingsJson, syncSettingsFromMetadata } from "../hooks/usePersonalSettings";
 import { authClient } from "../lib/authClient";
+import {
+  CACHED_ORG_KEY,
+  CACHED_ORGS_KEY,
+  CACHED_TRIAL_KEY,
+  CACHED_USER_KEY,
+  canTrustCachedSessionForPaint,
+  readCachedUserId,
+} from "../lib/authSessionCache";
 import { clearPermissionCache } from "@hosanna/ui";
 import { posthog } from "../lib/posthog";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
 import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";
+
+export { CACHED_USER_KEY } from "../lib/authSessionCache";
 
 export interface SessionUser {
   id: string;
@@ -120,11 +130,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const CACHED_USER_KEY = "cached_auth_user";
-const CACHED_ORG_KEY = "cached_auth_org";
-const CACHED_ORGS_KEY = "cached_auth_orgs";
-const CACHED_TRIAL_KEY = "cached_auth_trial";
-
 const DemoAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const demoLogout = useCallback(async () => {
@@ -154,15 +159,10 @@ const DemoAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children })
 };
 
 const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Stale-While-Revalidate: If we have a cached user, start with isLoading = false immediately!
-  const [isLoading, setIsLoading] = useState<boolean>(() => {
-    try {
-      const stored = localStorage.getItem(CACHED_USER_KEY);
-      return !stored;
-    } catch {
-      return true;
-    }
-  });
+  // Stale-While-Revalidate only for positive snapshots (user + org). Cached
+  // "no org" / "trial not accepted" must not unlock routing — they redirect to
+  // onboarding and race with invite accept / auth-app org switches.
+  const [isLoading, setIsLoading] = useState<boolean>(() => !canTrustCachedSessionForPaint());
 
   const [user, setUser] = useState<SessionUser | null>(() => {
     try {
@@ -213,8 +213,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const fetchSession = useCallback(async () => {
-    const hasCachedUser = Boolean(localStorage.getItem(CACHED_USER_KEY));
-    if (!hasCachedUser) {
+    if (!canTrustCachedSessionForPaint()) {
       setIsLoading(true);
     }
 
@@ -245,6 +244,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     try {
+      const previousCachedUserId = readCachedUserId();
       const { data: sessionData, error: sessionError } = await authClient.getSession({ query: {} });
       const sessionUser = sessionData?.user;
 
@@ -254,6 +254,40 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return;
         }
         return handleClearSession();
+      }
+
+      // Snapshot prior org cache before any user-switch wipe so external
+      // org/user transitions can still remap URL-scoped routes.
+      let previousCachedOrgId: string | null = null;
+      let previousCachedOrgSlug: string | null = localStorage.getItem("active_org_slug");
+      try {
+        const cachedOrgStr = localStorage.getItem(CACHED_ORG_KEY);
+        if (cachedOrgStr) {
+          const cached = JSON.parse(cachedOrgStr) as { id?: string; slug?: string };
+          previousCachedOrgId = cached.id ?? null;
+          if (!previousCachedOrgSlug && cached.slug) previousCachedOrgSlug = cached.slug;
+        }
+      } catch {
+        // ignore corrupt cache
+      }
+
+      const userSwitched =
+        Boolean(previousCachedUserId) && previousCachedUserId !== sessionUser.id;
+      if (userSwitched) {
+        setOrganization(null);
+        setOrganizations([]);
+        setHasAcceptedTrial(null);
+        localStorage.removeItem(CACHED_ORG_KEY);
+        localStorage.removeItem(CACHED_ORGS_KEY);
+        localStorage.removeItem(CACHED_TRIAL_KEY);
+        localStorage.removeItem("active_org_slug");
+        clearPermissionCache();
+        try {
+          resetReplication();
+          resetDatabase();
+        } catch (err) {
+          console.warn("[AuthContext] Failed to reset local data on user switch:", err);
+        }
       }
 
       let activeOrg: Organization | null = null;
@@ -283,39 +317,26 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         activeOrg = normalizeOrganization(newlyActiveOrg);
       }
 
-      // Detect external org switch (e.g. user changed active org in the auth app).
-      let previousCachedOrgId: string | null = null;
-      let previousCachedOrgSlug: string | null = localStorage.getItem("active_org_slug");
-      try {
-        const cachedOrgStr = localStorage.getItem(CACHED_ORG_KEY);
-        if (cachedOrgStr) {
-          const cached = JSON.parse(cachedOrgStr) as { id?: string; slug?: string };
-          previousCachedOrgId = cached.id ?? null;
-          if (!previousCachedOrgSlug && cached.slug) previousCachedOrgSlug = cached.slug;
-        }
-      } catch {
-        // ignore corrupt cache
-      }
-
       const orgSwitchedExternally = Boolean(
         activeOrg && previousCachedOrgId && previousCachedOrgId !== activeOrg.id,
       );
+      const orgScopeNeedsReset = orgSwitchedExternally || (userSwitched && Boolean(activeOrg));
 
       if (activeOrg) {
         const previousSlug = previousCachedOrgSlug;
 
-        if (previousSlug !== activeOrg.slug || orgSwitchedExternally) {
+        if (previousSlug !== activeOrg.slug || orgScopeNeedsReset) {
           localStorage.setItem("active_org_slug", activeOrg.slug);
           clearPermissionCache();
         }
 
-        if (orgSwitchedExternally) {
+        if (orgScopeNeedsReset) {
           try {
             resetReplication();
             const db = await getDatabase();
             await ensureOrgScopedData(db, activeOrg.slug);
           } catch (err) {
-            console.warn("[AuthContext] Failed to clear local data on external org switch:", err);
+            console.warn("[AuthContext] Failed to clear local data on external org/user switch:", err);
           }
         }
 
@@ -392,7 +413,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // Hard-navigate onto the new slug so URL-scoped routes stay coherent.
-      if (orgSwitchedExternally && activeOrg && typeof window !== "undefined") {
+      if (orgScopeNeedsReset && activeOrg && typeof window !== "undefined") {
         const path = window.location.pathname;
         const oldPrefix = previousCachedOrgSlug ? `/${previousCachedOrgSlug}` : null;
         let suffix = "/folders";
@@ -444,7 +465,15 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "active_org_slug" || e.key === CACHED_USER_KEY) fetchSession();
+      if (
+        e.key === "active_org_slug" ||
+        e.key === CACHED_USER_KEY ||
+        e.key === CACHED_ORG_KEY ||
+        e.key === CACHED_ORGS_KEY ||
+        e.key === CACHED_TRIAL_KEY
+      ) {
+        fetchSession();
+      }
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);

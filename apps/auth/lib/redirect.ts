@@ -44,6 +44,44 @@ export function navigateToRedirectTarget(target: string): void {
 }
 
 /**
+ * After the user gains an org (create / accept invite): honor returnUrl/redirect
+ * when present, upgrading Studio root → `/{slug}`; otherwise open Studio on the org.
+ */
+export function resolvePostOrgDestination(
+  slug: string,
+  searchParams?: URLSearchParams | { get: (key: string) => string | null } | null,
+): string {
+  const studio = getStudioUrl();
+  const fallback = `${studio}/${slug}`;
+  const explicit = searchParams ? readRedirectParam(searchParams) : null;
+  if (!explicit) return fallback;
+
+  try {
+    const studioOrigin = new URL(studio).origin;
+    const url = new URL(explicit, typeof window !== "undefined" ? window.location.origin : studio);
+    if (url.origin === studioOrigin) {
+      const path = url.pathname.replace(/\/+$/, "") || "/";
+      if (path === "/") {
+        return `${studio}/${slug}${url.search}${url.hash}`;
+      }
+    }
+    return explicit.startsWith("http://") || explicit.startsWith("https://")
+      ? explicit
+      : url.pathname + url.search + url.hash;
+  } catch {
+    return explicit;
+  }
+}
+
+export function navigateAfterOrgReady(
+  slug: string,
+  searchParams?: URLSearchParams | { get: (key: string) => string | null } | null,
+): void {
+  if (slug) localStorage.setItem("active_org_slug", slug);
+  navigateToRedirectTarget(resolvePostOrgDestination(slug, searchParams));
+}
+
+/**
  * After successful auth: honor redirect/returnUrl, else org → Studio, else onboarding.
  */
 export async function redirectAfterSuccessfulAuth(

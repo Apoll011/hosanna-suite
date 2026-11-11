@@ -3,7 +3,7 @@
 import { AuthLayout } from "@/components/AuthLayout";
 import { authClient } from "@/lib/auth-client";
 import { useI18n } from "@/lib/i18n";
-import { getStudioUrl } from "@/lib/redirect";
+import { navigateAfterOrgReady } from "@/lib/redirect";
 import { Building2, ShieldAlert } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -109,11 +109,16 @@ export function AcceptInvitationPage() {
         localStorage.setItem("active_org_slug", orgSlug);
         await authClient.organization.setActive({ organizationSlug: orgSlug });
         setTimeout(() => {
-          window.location.assign(`${getStudioUrl()}/${orgSlug}`);
+          navigateAfterOrgReady(orgSlug, searchParams);
         }, 1000);
       } else {
         setTimeout(() => {
-          router.replace("/onboarding");
+          const returnUrl = searchParams.get("returnUrl") || searchParams.get("redirect");
+          if (returnUrl) {
+            router.replace(`/onboarding?returnUrl=${encodeURIComponent(returnUrl)}`);
+          } else {
+            router.replace("/onboarding");
+          }
         }, 1000);
       }
     } catch (err: unknown) {
