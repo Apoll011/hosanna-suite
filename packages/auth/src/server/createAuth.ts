@@ -455,12 +455,28 @@ function createFullAuth(options: CreateAuthFullOptions): any {
         resource: config.mcpResourceUrl,
         // Prisma String[] cannot store null allowedScopes — declare explicitly.
         scopes: ["openid", "profile", "email", "offline_access"],
+        // Primary + extras (e.g. prod auth issuing for both api + dev-api MCP).
+        // CIMD clients only auto-link to clientRegistrationDefaultResources;
+        // mcp() appends `resource`, so list extras here too.
         resources: [
           {
             identifier: config.mcpResourceUrl,
             name: "Hosanna MCP",
             allowedScopes: ["openid", "profile", "email", "offline_access"],
           },
+          ...(config.mcpExtraResourceUrls ?? [])
+            .filter((url) => url && url !== config.mcpResourceUrl)
+            .map((identifier) => ({
+              identifier,
+              name: "Hosanna MCP",
+              allowedScopes: ["openid", "profile", "email", "offline_access"],
+            })),
+        ],
+        clientRegistrationDefaultResources: [
+          config.mcpResourceUrl,
+          ...(config.mcpExtraResourceUrls ?? []).filter(
+            (url) => url && url !== config.mcpResourceUrl,
+          ),
         ],
         // Keep DCR for ChatGPT / older clients; Claude prefers CIMD (below).
         allowDynamicClientRegistration: true,

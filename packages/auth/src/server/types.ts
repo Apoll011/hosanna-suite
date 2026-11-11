@@ -162,7 +162,18 @@ export interface CreateAuthConfig extends CreateAuthSlimConfig {
   googleClientSecret: string;
   stripeWebhookSecret: string;
   turnstileSecretKey: string;
+  /**
+   * Primary MCP resource identifier (audience). Also used for auth-host
+   * protected-resource metadata when Better Auth serves it.
+   */
   mcpResourceUrl: string;
+  /**
+   * Extra MCP resource audiences this AS may issue tokens for
+   * (e.g. `https://dev-api.hosanna.live/mcp` when prod auth backs both APIs).
+   * Seeded into `resources` + `clientRegistrationDefaultResources` so CIMD
+   * clients like ChatGPT get linked on the next authorize.
+   */
+  mcpExtraResourceUrls?: string[];
   /**
    * UI origin for deep links (login, reset, invite, consent error pages).
    * After migration this is the auth app URL (same as publicAppUrl).

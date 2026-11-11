@@ -76,13 +76,24 @@ export const env = {
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
   /**
-   * MCP resource identifier (stays on the API host).
+   * Primary MCP resource identifier (stays on the API host).
    * Better Auth MCP requires https for non-loopback hosts.
    */
   mcpResourceUrl: normalizeMcpResourceUrl(
     optional("MCP_RESOURCE_URL") ??
       (process.env.NODE_ENV === "production"
         ? "https://api.hosanna.live/mcp"
-        : "http://localhost:3000/mcp"),
+        : "http://dev-api.hosanna.live/mcp"),
   ),
+
+  /**
+   * Extra MCP audiences this AS may mint tokens for (comma-separated).
+   * Needed when one auth host backs multiple API MCP URLs (prod + preview).
+   * Example: `https://dev-api.hosanna.live/mcp`
+   */
+  mcpExtraResourceUrls: (optional("MCP_EXTRA_RESOURCE_URLS") ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map(normalizeMcpResourceUrl),
 };

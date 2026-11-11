@@ -44,6 +44,7 @@ export const auth = createAuth({
     stripeWebhookSecret: env.stripeWebhookSecret,
     turnstileSecretKey: env.turnstileSecretKey,
     mcpResourceUrl: env.mcpResourceUrl,
+    mcpExtraResourceUrls: env.mcpExtraResourceUrls,
     appUrl: env.authUrl,
     studioUrl: env.studioUrl,
     redisUrl: env.redisUrl,
