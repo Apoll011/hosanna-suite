@@ -2,33 +2,34 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  *
- * Optional open/print offer for thin hosts. Chat stays put until the user clicks —
- * never auto-navigates away from Auth (or future suite apps).
+ * Optional open/print offer for thin hosts — chat stays put until the user clicks.
  */
 
 import { Button } from "@hosanna/ui";
 import { Compass, ExternalLink, Printer } from "lucide-react";
 import React, { useState } from "react";
+import type { DeferredHostOffer } from "../../actions/types";
 import { useLogosHost, useLogosI18n } from "../../host";
 import { musicAppId, planningAppId } from "../../host/capabilities";
-import type { AiHostUiOffer } from "../../proposals/parse";
 import { useProposalActions } from "../../proposals/actions";
 
-function targetAppLabel(offer: AiHostUiOffer, host: ReturnType<typeof useLogosHost>): string {
+function targetAppLabel(offer: DeferredHostOffer, host: ReturnType<typeof useLogosHost>): string {
   if (offer.type === "print") return musicAppId(host.profile);
-  if (offer.kind === "service" || offer.kind === "services" || offer.kind === "agenda") {
+  const kind = offer.navigate.kind;
+  if (kind === "service" || kind === "services" || kind === "agenda") {
     return planningAppId(host.profile);
   }
   return musicAppId(host.profile);
 }
 
-export const AiHostActionCard: React.FC<{ offer: AiHostUiOffer }> = ({ offer }) => {
+export const AiHostActionCard: React.FC<{ offer: DeferredHostOffer }> = ({ offer }) => {
   const { t } = useLogosI18n();
   const host = useLogosHost();
   const { runHostUiOffer } = useProposalActions();
   const [done, setDone] = useState(false);
   const app = targetAppLabel(offer, host);
 
+  const kind = offer.type === "print" ? offer.print.kind : offer.navigate.kind;
   const title =
     offer.type === "print"
       ? t("ai.chat.hostAction.printTitle", { app })
@@ -36,13 +37,13 @@ export const AiHostActionCard: React.FC<{ offer: AiHostUiOffer }> = ({ offer }) 
 
   const detail =
     offer.type === "print"
-      ? offer.title ||
+      ? offer.print.title ||
         t("ai.chat.hostAction.printDetail", {
-          kind: offer.kind,
-          count: offer.ids?.length ?? 0,
+          kind,
+          count: offer.print.ids.length,
         })
-      : [offer.kind, offer.id || offer.route].filter(Boolean).join(" · ") ||
-        t("ai.chat.hostAction.openDetail", { kind: offer.kind });
+      : [kind, offer.navigate.id || offer.navigate.route].filter(Boolean).join(" · ") ||
+        t("ai.chat.hostAction.openDetail", { kind });
 
   const Icon = offer.type === "print" ? Printer : Compass;
 

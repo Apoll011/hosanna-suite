@@ -8,6 +8,7 @@ export { AiChatProvider, useAiChat, useAiChatOptional } from "./chat/provider";
 export { AiChatToggle } from "./chat/components/Toggle";
 export { LogosMascot } from "./mascot";
 export { AiProposalBanner } from "./proposals/components/Banner";
+
 export {
   AUTH_HOST_PROFILE,
   DEFAULT_MUSIC_APP,
@@ -20,17 +21,13 @@ export {
   musicAppId,
   planningAppId,
   thinHostProfile,
-  useCatalogService,
   useCatalogSong,
-  useCatalogUpdateService,
-  useCatalogUpdateSong,
+  useCatalogService,
   useHostSong,
   useHostUpdateSong,
   useLogosHost,
   useLogosI18n,
   useLogosRoute,
-  type CatalogServiceState,
-  type CatalogSongState,
   type LogosApi,
   type LogosAppId,
   type LogosCapability,
@@ -45,7 +42,42 @@ export {
   type LogosTranslate,
 } from "./host";
 
+export {
+  createCatalog,
+  createHttpCatalog,
+  useApplyProposal,
+  useCatalogResource,
+  type CatalogHandlers,
+  type CatalogRequest,
+  type CatalogResourceKind,
+  type CatalogService,
+  type CatalogServiceElement,
+  type CatalogSong,
+  type LogosCatalog,
+} from "./catalog";
+
+export { createLogosHost, type CreateLogosHostInput, type LogosChatApi } from "./kernel";
+
+export {
+  getResource,
+  listResources,
+  registerResource,
+  libraryPathForNavigate,
+  libraryPathForPrint,
+  type ResourceDefinition,
+  type ResourceKind,
+  type StagedProposal,
+} from "./resources";
+
+export {
+  dispatchLogosActions,
+  parseToolActions,
+  runDeferredOffer,
+  type LogosAction,
+} from "./actions";
+
 export type { AiChatContext, AiConfirmAction, AiSettingsPublic, AiUiMessage } from "./types";
+
 export {
   AI_LIBRARY_CHANGED_EVENT,
   AI_NAVIGATE_EVENT,
@@ -67,7 +99,9 @@ export {
   type OpenAppNavigateContext,
   type PerformOpenAppOptions,
 } from "./core/bridge";
+
 export { logosAiMessages, type LogosAiMessages } from "./i18n";
+
 export {
   aiProposals,
   useAiProposals,
@@ -80,4 +114,5 @@ export {
   type ServiceProposal,
   type SongProposal,
 } from "./proposals/store";
+
 export { DIFF_THEME_STYLE, useDiffLabels } from "./proposals/diff";

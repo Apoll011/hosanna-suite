@@ -24,14 +24,7 @@ export {
   type LogosCapability,
   type LogosHostProfile,
 } from "./capabilities";
-export {
-  useCatalogService,
-  useCatalogSong,
-  useCatalogUpdateService,
-  useCatalogUpdateSong,
-  type CatalogServiceState,
-  type CatalogSongState,
-} from "./catalog";
+export { useCatalogSong, useCatalogService, useCatalogUpdateSong } from "./catalog";
 export type {
   LogosApi,
   LogosHost,

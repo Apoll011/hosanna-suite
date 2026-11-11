@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { asDeferredOffer, parseToolActions } from "../../actions";
 import { useLogosHost, useLogosI18n } from "../../host";
 import { hasCapability } from "../../host/capabilities";
 import { AlertCircle, Check, ChevronDown, ChevronRight, Loader2, X } from "lucide-react";
@@ -14,12 +15,6 @@ import { AiServiceProposalCard } from "../../proposals/components/ServiceCard";
 import { CopyButton } from "./CopyButton";
 import { countByName, toolRunStatus } from "../../core/stream";
 import {
-  extractDestructiveConfirmation,
-  extractHostUiOffer,
-  extractServiceProposal,
-  extractSongProposal,
-} from "../../proposals/parse";
-import {
   formatDuration,
   parseToolOutput,
   toolIcon,
@@ -28,7 +23,7 @@ import {
   toolResultHint,
   toolSummary,
 } from "../../core/tools";
-import type { LogosServiceElement } from "../../host/types";
+import type { CatalogServiceElement } from "../../catalog/types";
 import type { AiToolCallState } from "../../types";
 
 const PAYLOAD_MAX = 12_000;
@@ -159,51 +154,73 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
 
   const run = useMemo(() => toolRunStatus(tools), [tools]);
   const names = useMemo(() => countByName(tools), [tools]);
-  const confirmations = useMemo(
+  const parsedActions = useMemo(
     () =>
       tools.map((tool) =>
-        tool.status === "done" ? extractDestructiveConfirmation(tool.output) : null,
+        tool.status === "done" ? parseToolActions(tool.toolName, tool.output) : [],
       ),
     [tools],
   );
 
+  const confirmations = useMemo(
+    () =>
+      parsedActions.map(
+        (actions) => actions.find((a) => a.type === "confirm")?.confirmation ?? null,
+      ),
+    [parsedActions],
+  );
+
   const songProposals = useMemo(
     () =>
-      tools.map((tool) => {
-        if (tool.status !== "done") return null;
-        const p = extractSongProposal(parseToolOutput(tool.output));
-        return p?.id ? { ...p, id: p.id } : null;
+      parsedActions.map((actions) => {
+        const propose = actions.find((a) => a.type === "propose" && a.proposal.kind === "song");
+        if (!propose || propose.type !== "propose") return null;
+        const payload = propose.proposal.payload as { content: string; artist?: string };
+        return {
+          id: propose.proposal.entityId,
+          content: payload.content,
+          title: propose.proposal.title,
+          artist: payload.artist ?? propose.proposal.subtitle,
+        };
       }),
-    [tools],
+    [parsedActions],
   );
 
   const serviceProposals = useMemo(
     () =>
-      tools.map((tool) => {
-        if (tool.status !== "done") return null;
-        const p = extractServiceProposal(parseToolOutput(tool.output));
-        if (!p?.serviceId || !Array.isArray(p.elements)) return null;
+      parsedActions.map((actions) => {
+        const propose = actions.find(
+          (a) => a.type === "propose" && a.proposal.kind === "service",
+        );
+        if (!propose || propose.type !== "propose") return null;
+        const payload = propose.proposal.payload as {
+          elements: CatalogServiceElement[];
+          name?: string;
+          notes?: string;
+        };
         return {
-          id: p.serviceId,
-          name: p.name,
-          notes: p.notes,
-          elements: p.elements as LogosServiceElement[],
+          id: propose.proposal.entityId,
+          name: payload.name ?? propose.proposal.title,
+          notes: payload.notes,
+          elements: payload.elements,
         };
       }),
-    [tools],
+    [parsedActions],
   );
 
   const hostOffers = useMemo(
     () =>
-      tools.map((tool) => {
-        if (tool.status !== "done") return null;
-        const offer = extractHostUiOffer(parseToolOutput(tool.output));
-        if (!offer) return null;
-        if (offer.type === "navigate" && !thinNavigate) return null;
-        if (offer.type === "print" && !thinPrint) return null;
-        return offer;
+      parsedActions.map((actions) => {
+        for (const action of actions) {
+          const offer = asDeferredOffer(action);
+          if (!offer) continue;
+          if (offer.type === "navigate" && !thinNavigate) continue;
+          if (offer.type === "print" && !thinPrint) continue;
+          return offer;
+        }
+        return null;
       }),
-    [tools, thinNavigate, thinPrint],
+    [parsedActions, thinNavigate, thinPrint],
   );
 
   const current = useMemo(() => {

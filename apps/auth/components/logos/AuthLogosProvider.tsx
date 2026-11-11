@@ -1,35 +1,32 @@
 "use client";
 
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { aiApi } from "@/lib/services/ai-api";
-import { servicesApi } from "@/lib/services/services-api";
-import { songsApi } from "@/lib/services/songs-api";
-import { useI18n } from "@/lib/ui/i18n";
 import { getStudioUrl } from "@/lib/auth/redirect";
 import { navigateToStudioApp, prefetchStudioApp } from "@/lib/auth/studio-handoff";
+import { aiApi } from "@/lib/services/ai-api";
+import { apiFetch } from "@/lib/services/api";
 import { writeThemeCookie } from "@/lib/ui/theme-boot";
+import { useI18n } from "@/lib/ui/i18n";
 import {
   AiChatDock,
   AiChatProvider,
   AiChatToggle,
   AI_OPEN_APP_EVENT,
   AUTH_HOST_PROFILE,
+  createHttpCatalog,
+  createLogosHost,
   LogosHostProvider,
   LogosRouteProvider,
   LogosSongAdapterProvider,
   performOpenApp,
   resolveHosannaAppOrigin,
   type AiOpenAppDetail,
-  type LogosHost,
-  type LogosService,
-  type LogosSong,
   type LogosSongAdapter,
 } from "@hosanna/logos-ai";
 import { useCan } from "@hosanna/ui";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, type ReactNode } from "react";
 
-/** Thin host: no in-app song cache — Logos loads songs via LogosApi catalog. */
 const NOOP_SONGS: LogosSongAdapter = {
   useSong: () => ({ data: null, isLoading: false }),
   useUpdateSong: () => async () => undefined,
@@ -43,7 +40,6 @@ function AuthOpenAppListener() {
   const router = useRouter();
 
   useEffect(() => {
-    // Idle-warm Studio so open_app({ app: "studio", openIn: "same" }) feels instant.
     const ric =
       typeof window !== "undefined" && "requestIdleCallback" in window
         ? window.requestIdleCallback.bind(window)
@@ -55,14 +51,11 @@ function AuthOpenAppListener() {
     const onOpenApp = (ev: Event) => {
       const detail = (ev as CustomEvent<AiOpenAppDetail>).detail;
       if (!detail?.app) return;
-
       const app = detail.app.trim().toLowerCase();
-      // Music is still served by Studio until the Music split lands.
       if ((detail.openIn ?? "same") !== "new" && (app === "studio" || app === "music")) {
         navigateToStudioApp({ path: detail.path || "/" });
         return;
       }
-
       performOpenApp(detail, {
         resolveOrigin: (id) =>
           resolveHosannaAppOrigin(id, {
@@ -91,10 +84,7 @@ function AuthOpenAppListener() {
   return null;
 }
 
-/**
- * Wires account-center auth/i18n/permissions into Logos AI and mounts the dock.
- * Song/service proposals Accept in chat via API; Open in Music is optional.
- */
+/** Thin Auth mount: profile + HTTP catalog + chat. */
 export function AuthLogosProvider({ children }: { children: ReactNode }) {
   const { t, tc, language, locale } = useI18n();
   const { user, organization } = useActiveOrganization();
@@ -105,152 +95,47 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
   const orgId = organization?.id;
   const orgSlug = organization?.slug;
 
-  const host = useMemo<LogosHost>(() => {
-    const toLogosSong = (song: {
-      id: string;
-      title: string;
-      artist?: string | null;
-      content: string;
-      song_number?: number | null;
-      updatedAt: string;
-    }): LogosSong => ({
-      id: song.id,
-      title: song.title,
-      artist: song.artist ?? undefined,
-      content: song.content,
-      song_number: song.song_number,
-      updatedAt: song.updatedAt,
-    });
+  const catalog = useMemo(
+    () =>
+      createHttpCatalog({
+        request: apiFetch,
+        organizationId: orgId,
+        canUpdate: { song: canUpdateSong, service: canUpdateService },
+      }),
+    [orgId, canUpdateSong, canUpdateService],
+  );
 
-    const toLogosService = (service: {
-      id: string;
-      name: string;
-      date?: string;
-      notes?: string | null;
-      elements?: LogosService["elements"];
-      updatedAt: string;
-    }): LogosService => ({
-      id: service.id,
-      name: service.name,
-      date: service.date,
-      notes: service.notes,
-      elements: service.elements ?? [],
-      updatedAt: service.updatedAt,
-    });
-
-    return {
-      api: {
-        getSettings: () => {
-          if (!orgId) return Promise.reject(new Error("No organization"));
-          return aiApi.getSettings({ organizationId: orgId });
+  const host = useMemo(
+    () =>
+      createLogosHost({
+        profile: AUTH_HOST_PROFILE,
+        catalog,
+        chat: {
+          getSettings: () => {
+            if (!orgId) return Promise.reject(new Error("No organization"));
+            return aiApi.getSettings({ organizationId: orgId });
+          },
+          streamChat: (body) => {
+            if (!orgId) return Promise.reject(new Error("No organization"));
+            return aiApi.streamChat(body, { organizationId: orgId });
+          },
+          confirmAction: (body) => {
+            if (!orgId) return Promise.reject(new Error("No organization"));
+            return aiApi.confirmAction(body, { organizationId: orgId });
+          },
         },
-        streamChat: (body) => {
-          if (!orgId) return Promise.reject(new Error("No organization"));
-          return aiApi.streamChat(body, { organizationId: orgId });
-        },
-        confirmAction: (body) => {
-          if (!orgId) return Promise.reject(new Error("No organization"));
-          return aiApi.confirmAction(body, { organizationId: orgId });
-        },
-        getSong: async (id) => {
-          if (!orgId) return null;
-          const song = await songsApi.getById(id, { organizationId: orgId });
-          return song ? toLogosSong(song) : null;
-        },
-        updateSong: async (id, data) => {
-          if (!orgId) throw new Error("No organization");
-          let updatedAt = data.updatedAt;
-          if (!updatedAt) {
-            const current = await songsApi.getById(id, { organizationId: orgId });
-            if (!current) throw new Error("Song not found");
-            updatedAt = current.updatedAt;
-          }
-          const updated = await songsApi.update(
-            id,
-            {
-              updatedAt,
-              ...(data.title !== undefined ? { title: data.title } : {}),
-              ...(data.artist !== undefined ? { artist: data.artist } : {}),
-              ...(data.content !== undefined ? { content: data.content } : {}),
-              ...(data.song_number !== undefined ? { song_number: data.song_number } : {}),
-            },
-            { organizationId: orgId },
-          );
-          return toLogosSong(updated);
-        },
-        getService: async (id) => {
-          if (!orgId) return null;
-          const service = await servicesApi.getById(id, { organizationId: orgId });
-          return service ? toLogosService(service) : null;
-        },
-        updateService: async (id, data) => {
-          if (!orgId) throw new Error("No organization");
-          let updatedAt = data.updatedAt;
-          if (!updatedAt) {
-            const current = await servicesApi.getById(id, { organizationId: orgId });
-            if (!current) throw new Error("Service not found");
-            updatedAt = current.updatedAt;
-          }
-          if (data.elements) {
-            const updated = await servicesApi.updateElements(
-              id,
-              { updatedAt, elements: data.elements },
-              { organizationId: orgId },
-            );
-            // Name/notes may still need a follow-up PUT when provided.
-            if (data.name !== undefined || data.notes !== undefined) {
-              const again = await servicesApi.update(
-                id,
-                {
-                  updatedAt: updated.updatedAt,
-                  ...(data.name !== undefined ? { name: data.name } : {}),
-                  ...(data.notes !== undefined ? { notes: data.notes } : {}),
-                },
-                { organizationId: orgId },
-              );
-              return toLogosService({ ...again, elements: data.elements });
-            }
-            return toLogosService({ ...updated, elements: data.elements });
-          }
-          const updated = await servicesApi.update(
-            id,
-            {
-              updatedAt,
-              ...(data.name !== undefined ? { name: data.name } : {}),
-              ...(data.notes !== undefined ? { notes: data.notes } : {}),
-            },
-            { organizationId: orgId },
-          );
-          return toLogosService(updated);
-        },
-      },
-      t: t as LogosHost["t"],
-      tc: tc as LogosHost["tc"],
-      language,
-      locale,
-      userName: user?.name,
-      scope: orgId && user?.id ? `${orgId}:${user.id}` : null,
-      // Used when the user optionally opens Music via open_app.
-      slugPrefix: orgSlug ? `/${orgSlug}` : "",
-      canUseAi,
-      canUpdateSong,
-      canUpdateService,
-      deriveView: deriveAccountView,
-      profile: AUTH_HOST_PROFILE,
-    };
-  }, [
-    t,
-    tc,
-    language,
-    locale,
-    user?.name,
-    user?.id,
-    orgId,
-    orgSlug,
-    canUseAi,
-    canUpdateSong,
-    canUpdateService,
-  ]);
+        t: t as Parameters<typeof createLogosHost>[0]["t"],
+        tc: tc as Parameters<typeof createLogosHost>[0]["tc"],
+        language,
+        locale,
+        userName: user?.name,
+        scope: orgId && user?.id ? `${orgId}:${user.id}` : null,
+        slugPrefix: orgSlug ? `/${orgSlug}` : "",
+        canUseAi,
+        deriveView: deriveAccountView,
+      }),
+    [catalog, t, tc, language, locale, user?.name, user?.id, orgId, orgSlug, canUseAi],
+  );
 
   return (
     <LogosHostProvider value={host}>
@@ -258,12 +143,6 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
         <LogosRouteProvider pathname={pathname} params={{}}>
           <AiChatProvider>
             <AuthOpenAppListener />
-            {/*
-              Same shell as Studio MainLayout: dock is a flex sibling of the page.
-              Without this, AiChatDock's sm:static mode drops below the full-page
-              AccountShell — viewport jumps to the chat and the fixed AccountNav
-              overlays it while account content scrolls away.
-            */}
             <div className="h-dvh max-h-dvh w-full flex flex-row overflow-hidden bg-m3-bg">
               <div className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain">
                 {children}
@@ -277,7 +156,6 @@ export function AuthLogosProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Header sparkle control — only renders when Logos is available for this org. */
 export function AuthLogosToggle() {
   return <AiChatToggle />;
 }

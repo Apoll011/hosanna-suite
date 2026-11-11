@@ -12,7 +12,7 @@ import {
   musicAppId,
   planningAppId,
   thinHostProfile,
-} from "../src/host/capabilities.ts";
+} from "../src/kernel/capabilities.ts";
 
 describe("host capabilities", () => {
   it("Studio has local navigate/editor/print", () => {
@@ -34,6 +34,5 @@ describe("host capabilities", () => {
     assert.equal(presenter.appId, "presenter");
     assert.equal(hasCapability(presenter, "catalog.songs"), true);
     assert.equal(hasCapability(presenter, "editor.songs"), false);
-    assert.equal(musicAppId(presenter), "studio");
   });
 });

@@ -12,7 +12,8 @@ import {
   type MutableRefObject,
   type SetStateAction,
 } from "react";
-import { buildPageContext, maybeDispatchHostActions, maybeSyncLibrary } from "../../core/bridge";
+import { dispatchLogosActions, parseToolActions } from "../../actions";
+import { buildPageContext, maybeSyncLibrary } from "../../core/bridge";
 import {
   applyStreamEvent,
   readUiMessageStream,
@@ -20,7 +21,6 @@ import {
   type StreamEvent,
 } from "../../core/stream";
 import { useLogosHost } from "../../host";
-import { maybeStageProposal } from "../../proposals/stage";
 import { newId, toUiMessages, type AiChatMessage } from "../../types";
 
 export function useChatStream(opts: {
@@ -156,13 +156,19 @@ export function useChatStream(opts: {
           } else if (event.type === "tool-output-available") {
             const name = toolNames.get(String(event.toolCallId)) ?? "tool";
             const rr = routeRef.current;
-            maybeStageProposal(
-              name,
-              event.output,
-              buildPageContext(rr.pathname, rr.slugPrefix, rr.params, deriveViewRef.current),
+            const page = buildPageContext(
+              rr.pathname,
+              rr.slugPrefix,
+              rr.params,
+              deriveViewRef.current,
             );
+            const actions = parseToolActions(name, event.output, {
+              songId: page.songId,
+              serviceId: page.serviceId,
+              title: page.title,
+            });
+            dispatchLogosActions(actions, hostRef.current);
             maybeSyncLibrary(name, event.output);
-            maybeDispatchHostActions(name, event.output, hostRef.current);
           } else if (event.type === "error") {
             setError(typeof event.errorText === "string" ? event.errorText : "AI stream error");
           }
