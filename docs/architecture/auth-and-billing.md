@@ -71,21 +71,23 @@ Via `@better-auth/stripe`:
 
 ### Entitlement gate
 
-- `GET /api/billing/entitlement` → `{ entitled }`
-- `requireSubscription` middleware blocks **non-GET writes** on gated routes when the org is not active/trialing
+- `GET /api/billing/entitlement` → `{ entitled }` on **auth.hosanna.live** (Flutter already hit the auth host)
+- `GET /api/billing/pricing` → public plan display amounts on **auth**
+- API `requireSubscription` middleware still gates **domain** non-GET writes when the org is not active/trialing (reads shared `Subscription` rows)
 - Studio onboarding also checks trial/subscription before entering the main shell
 
-Studio client uses `authClient.subscription.*` (list, upgrade, portal); display prices live in Studio `lib/subscriptions.ts`.
+Studio client uses `authClient.subscription.*` (list, upgrade, portal); display prices fetch from auth `/api/billing/pricing`.
 
 ## Flutter / Studio session lifecycle (summary)
 
 1. Sign in → session cookie ± bearer token
-2. List / create org → `setActive`
-3. Check entitlement
-4. Start replication against org-scoped data
-5. On logout: clear session + wipe local DB (Studio `CacheHydrationProvider`; Flutter clear on org switch / sign-out paths)
-6. On org switch: reset local store + checkpoints, then sync again
+2. Register FCM via auth `/api/notifications/devices` (Flutter)
+3. List / create org → `setActive`
+4. Check entitlement on auth
+5. Start replication against org-scoped data on the API
+6. On logout: disable push device, clear session + wipe local DB
+7. On org switch: reset local store + checkpoints, then sync again
 
-## Email
+## Email & notifications
 
-Transactional mail goes through **Resend** + Handlebars templates (`email.service.ts`): auth, org invites, billing events.
+Transactional mail still goes through **Resend** + Handlebars on the auth app. Product and org fan-out (inbox / push / email) go through the unified dispatcher — see [notifications.md](./notifications.md).

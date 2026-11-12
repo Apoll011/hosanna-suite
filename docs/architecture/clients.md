@@ -44,7 +44,8 @@ Songs → Services → Metronome → Circle of fifths → Folders → Settings
 - Hand-rolled Better Auth client over Dio
 - Cookies (`PersistCookieJar`) **and** Bearer (`set-auth-token` → secure storage)
 - Email + Turnstile (WebView to Studio captcha page) or native Google ID token → `/api/auth/sign-in/social`
-- FCM token stored on the **session** (`update-session` with `fcm` / `notify`)
+- Push devices: `POST/DELETE /api/notifications/devices` on the **auth** host (canonical `PushDevice` registry); session still mirrors `fcm` / `notify` for compatibility
+- Entitlement: `GET /api/billing/entitlement` on the **auth** host
 
 **Sync**
 

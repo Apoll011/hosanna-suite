@@ -8,7 +8,7 @@ Everything outside the Hosanna repos that the product depends on.
 | ---------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | **Supabase Postgres**        | Primary DB via Prisma (`DATABASE_URL` pooler, `DIRECT_URL` migrations)                 | `.env`                                                                           |
 | **Supabase Storage**         | Avatar uploads (`avatars` bucket)                                                      | `SUPABASE_URL` + service client                                                  |
-| **Firebase Cloud Messaging** | Push to devices; session carries `fcm` + `notify`                                      | `FCM_*` service account                                                          |
+| **Firebase Cloud Messaging** | Push via auth-hosted dispatcher; tokens in `PushDevice` (session `fcm`/`notify` legacy) | `FCM_*` on **auth** Vercel                                                        |
 | **Cloud Firestore**          | Realtime signals: `services/{id}/realtime/notes`, `services/{id}/annotations/{songId}` | Same Firebase project; see [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) |
 
 Local Docker Compose can run Postgres without Supabase for development.
@@ -60,7 +60,7 @@ Some SDKs talk to vendors directly from the device/browser:
 - Studio → **PostHog**
 - Marketing → **Vercel Analytics**, GoFundMe iframe
 
-The API still owns: Stripe webhooks, Resend, FCM _send_, Firestore _writes_ for annotations/notes signals, LLM calls, YouTube server-side, scrapers.
+Auth owns: Stripe webhooks (via Better Auth), Resend, FCM _send_ (unified notifications). The API still owns: Firestore _writes_ for annotations/notes signals, LLM calls, YouTube server-side, scrapers. Domain code may still call `@hosanna/notifications` in-process for inbox/push when FCM env is present on the API.
 
 ## Shared library (internal package, external publish)
 
