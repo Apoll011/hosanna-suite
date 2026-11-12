@@ -5,9 +5,7 @@ export {
   type AiProvider,
   type AiSettingsPublic,
   type AiUiMessage,
-  type UpdateAiSettingsInput,
 } from "./ai";
-export { backupApi } from "./backup";
 export { foldersApi } from "./folders";
 export {
   notificationsApi,

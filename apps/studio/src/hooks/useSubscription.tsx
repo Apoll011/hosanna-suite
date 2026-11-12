@@ -5,8 +5,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { authAppHref } from "../lib/authUrl";
-import { authClient } from "../lib/authClient";
 import {
   currentSubscriptionStatus,
   fetchSubscriptionRows,
@@ -15,25 +13,6 @@ import {
 } from "../lib/subscriptions";
 
 export type { Subscription } from "../lib/subscriptions";
-export { PLAN_PRICING } from "../lib/subscriptions";
-
-export type SubscriptionAction = "checkout" | "portal" | "restore";
-
-/** Stripe Checkout locale codes we can drive from the UI language. */
-export type StripeCheckoutLocale = "pt" | "en" | "es";
-
-export interface StartCheckoutOptions {
-  /** Bill annually instead of monthly (whatever the server plan defines). */
-  annual?: boolean;
-  /** Stripe Checkout UI language, e.g. "pt". Falls back to the browser's locale. */
-  locale?: StripeCheckoutLocale;
-  successUrl?: string;
-  cancelUrl?: string;
-}
-
-export interface OpenBillingPortalOptions {
-  returnUrl?: string;
-}
 
 export interface SubscriptionApi {
   /**
@@ -62,29 +41,13 @@ export interface SubscriptionApi {
   /** End of the free trial on the active subscription, if trialing. */
   trialEndsAt: Date | null;
 
-  /** The action currently running, to drive button spinners. */
-  pendingAction: SubscriptionAction | null;
-
   /** Re-fetch subscription rows from the server. */
   refresh: () => Promise<void>;
-  /** Open Stripe Checkout to start the trial / subscribe. */
-  startCheckout: (options?: StartCheckoutOptions) => Promise<{ error?: string }>;
-  /** Open the Stripe billing portal (payment method, invoices, cancel). */
-  openBillingPortal: (options?: OpenBillingPortalOptions) => Promise<{ error?: string }>;
-  /** Restore / re-activate a subscription that was set to cancel. */
-  restore: () => Promise<{ error?: string }>;
 }
 
 /**
- * Single source of truth for reading and managing the active organization's
- * subscription: whether a trial/subscription was ever started, what the
- * current subscription status is, and the actions to start / manage it.
- *
- * Note: the "can this user enter the studio" gate intentionally lives in
- * `AuthContext` (`hasAcceptedTrial`), because the route guard needs that bit
- * atomically with the organization during a session refresh. This hook
- * reuses the same underlying API helper (`fetchSubscriptionRows`) so there is
- * a single source of truth for the request shape.
+ * Read-only subscription status for Studio (usage overview, banners).
+ * Checkout / portal / restore live on auth-app billing UI.
  */
 export function useSubscription(): SubscriptionApi {
   const { organization } = useAuth();
@@ -93,9 +56,7 @@ export function useSubscription(): SubscriptionApi {
   const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pendingAction, setPendingAction] = useState<SubscriptionAction | null>(null);
 
-  // Guards against out-of-order responses when the org changes mid-flight.
   const requestSeq = useRef(0);
 
   const refresh = useCallback(async () => {
@@ -110,7 +71,7 @@ export function useSubscription(): SubscriptionApi {
     setError(null);
     try {
       const rows = await fetchSubscriptionRows(orgId);
-      if (seq !== requestSeq.current) return; // stale response
+      if (seq !== requestSeq.current) return;
       setSubscriptions(rows);
     } catch (err) {
       if (seq !== requestSeq.current) return;
@@ -146,102 +107,6 @@ export function useSubscription(): SubscriptionApi {
     return end ? new Date(end) : null;
   }, [activeSubscription]);
 
-  const startCheckout = useCallback(
-    async (options: StartCheckoutOptions = {}) => {
-      if (!orgId) return { error: "No active organization." };
-      const slug = organization?.slug ?? "";
-      const { annual = false, successUrl, cancelUrl, locale } = options;
-      setPendingAction("checkout");
-      try {
-        const { error: apiError } = await authClient.subscription.upgrade({
-          plan: "cloud",
-          referenceId: orgId,
-          customerType: "organization",
-          annual,
-          locale,
-          successUrl:
-            successUrl ??
-            (() => {
-              const url = new URL(authAppHref("/account/organization/billing"));
-              url.searchParams.set("billing", "success");
-              url.searchParams.set("returnUrl", `${window.location.origin}/${slug}/folders`);
-              return url.toString();
-            })(),
-          cancelUrl: cancelUrl ?? `${window.location.origin}/${slug}/folders`,
-        });
-        if (apiError) {
-          setPendingAction(null);
-          return {
-            error: apiError.message || "Couldn't start the checkout.",
-          };
-        }
-        // On success the better-auth client redirects to Stripe Checkout.
-        setPendingAction(null);
-        return {};
-      } catch (err) {
-        setPendingAction(null);
-        return {
-          error: (err as Error)?.message || "Couldn't start the checkout.",
-        };
-      }
-    },
-    [orgId, organization?.slug],
-  );
-
-  const openBillingPortal = useCallback(
-    async (options: OpenBillingPortalOptions = {}) => {
-      if (!orgId) return { error: "No active organization." };
-      setPendingAction("portal");
-      try {
-        const { error: apiError } = await authClient.subscription.billingPortal({
-          referenceId: orgId,
-          customerType: "organization",
-          returnUrl: options.returnUrl ?? authAppHref("/account/organization/billing"),
-        });
-        if (apiError) {
-          setPendingAction(null);
-          return {
-            error: apiError.message || "Couldn't open the billing portal.",
-          };
-        }
-        setPendingAction(null);
-        return {};
-      } catch (err) {
-        setPendingAction(null);
-        return {
-          error: (err as Error)?.message || "Couldn't open the billing portal.",
-        };
-      }
-    },
-    [orgId],
-  );
-
-  const restore = useCallback(async () => {
-    if (!orgId) return { error: "No active organization." };
-    setPendingAction("restore");
-    try {
-      const { error: apiError } = await authClient.subscription.restore({
-        referenceId: orgId,
-        customerType: "organization",
-        subscriptionId: activeSubscription?.stripeSubscriptionId || undefined,
-      });
-      if (apiError) {
-        setPendingAction(null);
-        return {
-          error: apiError.message || "Couldn't restore the subscription.",
-        };
-      }
-      setPendingAction(null);
-      await refresh();
-      return {};
-    } catch (err) {
-      setPendingAction(null);
-      return {
-        error: (err as Error)?.message || "Couldn't restore the subscription.",
-      };
-    }
-  }, [orgId, activeSubscription, refresh]);
-
   return useMemo<SubscriptionApi>(
     () => ({
       subscriptions,
@@ -252,11 +117,7 @@ export function useSubscription(): SubscriptionApi {
       currentStatus,
       isTrialing,
       trialEndsAt,
-      pendingAction,
       refresh,
-      startCheckout,
-      openBillingPortal,
-      restore,
     }),
     [
       subscriptions,
@@ -267,11 +128,7 @@ export function useSubscription(): SubscriptionApi {
       currentStatus,
       isTrialing,
       trialEndsAt,
-      pendingAction,
       refresh,
-      startCheckout,
-      openBillingPortal,
-      restore,
     ],
   );
 }

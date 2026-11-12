@@ -1,34 +1,15 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Studio AI client surface used by Logos chat. Org AI admin (keys, memory,
+ * billing) lives on auth-app — those APIs are not called from Studio UI.
  */
 
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";
 
 export type AiProvider = "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
-
-export type NativeWebCapability = {
-  search: boolean;
-  fetch: boolean;
-  note: string;
-};
-
-export type AiLimits = {
-  maxToolCalls: { min: number; max: number; default: number };
-  temperature: { min: number; max: number };
-  maxOutputTokens: { min: number; max: number };
-  instructionsMaxChars: number;
-  memoryMaxEntries: number;
-  memoryEntryMaxChars: number;
-};
-
-export type AiMemoryItem = {
-  id: string;
-  content: string;
-  source: "admin" | "ai" | string;
-  createdAt: string;
-};
 
 export type AiSettingsPublic = {
   provider: AiProvider;
@@ -37,27 +18,22 @@ export type AiSettingsPublic = {
   configured: boolean;
   baseUrl: string | null;
   encryptionReady: boolean;
-  /** Max tool calls the assistant may make per reply. */
   maxToolCalls: number;
-  /** null = model default. */
   temperature: number | null;
-  /** null = model default. */
   maxOutputTokens: number | null;
   instructions: string;
   memoryEnabled: boolean;
-  limits: AiLimits;
+  limits: {
+    maxToolCalls: { min: number; max: number; default: number };
+    temperature: { min: number; max: number };
+    maxOutputTokens: { min: number; max: number };
+    instructionsMaxChars: number;
+    memoryMaxEntries: number;
+    memoryEntryMaxChars: number;
+  };
   providers: AiProvider[];
   modelPresets: Record<AiProvider, string[]>;
   defaultBaseUrls?: Partial<Record<AiProvider, string>>;
-  /** All providers → whether Hosanna can call REST Search/Fetch with BYOK. */
-  nativeWebCapabilities?: Record<AiProvider, NativeWebCapability>;
-  /** Capability for the currently selected provider. */
-  nativeWeb?: {
-    search: boolean;
-    fetch: boolean;
-    note: string;
-    active: boolean;
-  };
 };
 
 export type AiChatContext = {
@@ -77,14 +53,12 @@ export type AiChatContext = {
   folderId?: string | null;
   collectionId?: string | null;
   title?: string;
-  /** ISO updatedAt of the open song/service when known. */
   updatedAt?: string;
   artist?: string;
   contentExcerpt?: string;
   contentTruncated?: boolean;
   selectedSongIds?: string[];
   selectedFolderIds?: string[];
-  /** Compact service element summary (ids/types/titles/songIds). */
   serviceElementsSummary?: Array<{
     id: string;
     type: string;
@@ -101,44 +75,13 @@ export type AiUiMessage = {
   parts: Array<{ type: string; [key: string]: unknown }>;
 };
 
-export type UpdateAiSettingsInput = {
-  provider?: AiProvider;
-  model?: string;
-  enabled?: boolean;
-  apiKey?: string;
-  baseUrl?: string | null;
-  maxToolCalls?: number;
-  temperature?: number | null;
-  maxOutputTokens?: number | null;
-  instructions?: string | null;
-  memoryEnabled?: boolean;
-};
-
-export type AiBalanceInfo = {
-  currency: string;
-  totalBalance: string;
-  grantedBalance: string;
-  toppedUpBalance: string;
-};
-
-export type AiBillingResponse =
-  | {
-      supported: true;
-      provider: "deepseek";
-      kind: "balance";
-      isAvailable: boolean;
-      balances: AiBalanceInfo[];
-      fetchedAt: string;
-    }
-  | {
-      supported: false;
-      provider: AiProvider;
-      reason: "unsupported_provider" | "not_configured" | "disabled_crypto";
-    };
-
 export type AiConfirmAction = {
   action:
-    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
+    | "delete_song"
+    | "delete_service"
+    | "delete_folder"
+    | "delete_collection"
+    | "delete_agenda";
   id: string;
   folderAction?: "move_to_root" | "delete_songs";
 };
@@ -146,70 +89,6 @@ export type AiConfirmAction = {
 export const aiApi = {
   getSettings: async (): Promise<AiSettingsPublic> =>
     (await unwrapApiResult(await getApiClient().openapi.GET("/ai/settings"))) as AiSettingsPublic,
-
-  updateSettings: async (input: UpdateAiSettingsInput): Promise<AiSettingsPublic> =>
-    (await unwrapApiResult(
-      await getApiClient().openapi.PUT("/ai/settings", {
-        body: input as { [key: string]: unknown },
-      }),
-    )) as AiSettingsPublic,
-
-  clearKey: async (): Promise<AiSettingsPublic> =>
-    (await unwrapApiResult(
-      await getApiClient().openapi.DELETE("/ai/settings/key"),
-    )) as AiSettingsPublic,
-
-  getBilling: async (): Promise<AiBillingResponse> =>
-    (await unwrapApiResult(await getApiClient().openapi.GET("/ai/billing"))) as AiBillingResponse,
-
-  listMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
-    const data = await unwrapApiResult(await getApiClient().openapi.GET("/ai/memory"));
-    return { items: (data?.items ?? []) as AiMemoryItem[] };
-  },
-
-  addMemory: async (content: string): Promise<AiMemoryItem> =>
-    (await unwrapApiResult(
-      await getApiClient().openapi.POST("/ai/memory", {
-        body: { content },
-      }),
-    )) as AiMemoryItem,
-
-  removeMemory: async (id: string): Promise<void> => {
-    await unwrapApiResult(
-      await getApiClient().openapi.DELETE("/ai/memory/{id}", {
-        params: { path: { id } },
-      }),
-    );
-  },
-
-  clearMemory: async (): Promise<{ cleared: number }> => {
-    const data = await unwrapApiResult(await getApiClient().openapi.DELETE("/ai/memory"));
-    return { cleared: data?.cleared ?? 0 };
-  },
-
-  listPersonalMemory: async (): Promise<{ items: AiMemoryItem[] }> => {
-    const data = await getApiClient().request<{ items?: AiMemoryItem[] }>("/ai/memory/personal");
-    return { items: data?.items ?? [] };
-  },
-
-  addPersonalMemory: async (content: string): Promise<AiMemoryItem> =>
-    getApiClient().request<AiMemoryItem>("/ai/memory/personal", {
-      method: "POST",
-      body: JSON.stringify({ content }),
-    }),
-
-  removePersonalMemory: async (id: string): Promise<void> => {
-    await getApiClient().request(`/ai/memory/personal/${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    });
-  },
-
-  clearPersonalMemory: async (): Promise<{ cleared: number }> => {
-    const data = await getApiClient().request<{ cleared?: number }>("/ai/memory/personal", {
-      method: "DELETE",
-    });
-    return { cleared: data?.cleared ?? 0 };
-  },
 
   confirmAction: async (body: AiConfirmAction): Promise<{ confirmed: boolean }> => {
     const data = await unwrapApiResult(
@@ -225,7 +104,6 @@ export const aiApi = {
   streamChat: async (body: {
     messages: AiUiMessage[];
     context?: AiChatContext;
-    /** UI language so replies match ("pt" | "en" | "es"). */
     locale?: string;
     signal?: AbortSignal;
   }): Promise<Response> => {

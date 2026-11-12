@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { PlanPeriodId } from "@hosanna/i18n";
-import { getAuthAppUrl } from "./authUrl";
 import { authClient } from "./authClient";
 
 /**
@@ -58,50 +56,4 @@ export function findActiveSubscription(rows: Subscription[]): Subscription | nul
  */
 export function currentSubscriptionStatus(rows: Subscription[]): Subscription["status"] | null {
   return findActiveSubscription(rows)?.status ?? null;
-}
-
-/**
- * Fallback display prices — amounts from auth Global Config; `period` is a
- * stable id (`month` | `year`) localized via `billing.period.*` / `billingPeriodLabel`.
- */
-export const PLAN_PRICING = {
-  monthly: { amount: "€12", period: "month" as PlanPeriodId },
-  annual: { amount: "€120", period: "year" as PlanPeriodId },
-} as const;
-
-export type PlanPricing = {
-  monthly: { amount: string; period: PlanPeriodId };
-  annual: { amount: string; period: PlanPeriodId };
-};
-
-let cachedPricing: PlanPricing | null = null;
-
-function asPeriodId(value: unknown, fallback: PlanPeriodId): PlanPeriodId {
-  return value === "year" || value === "month" ? value : fallback;
-}
-
-/** Load display amounts from GET {auth}/api/billing/pricing (public). */
-export async function fetchPlanPricing(authBaseUrl?: string): Promise<PlanPricing> {
-  if (cachedPricing) return cachedPricing;
-  const base = authBaseUrl ?? `${getAuthAppUrl().replace(/\/$/, "")}/api`;
-  try {
-    const res = await fetch(`${base.replace(/\/$/, "")}/billing/pricing`, {
-      credentials: "omit",
-    });
-    if (!res.ok) return PLAN_PRICING;
-    const data = await res.json();
-    cachedPricing = {
-      monthly: {
-        amount: data.monthly?.amount ?? PLAN_PRICING.monthly.amount,
-        period: asPeriodId(data.monthly?.period, "month"),
-      },
-      annual: {
-        amount: data.annual?.amount ?? PLAN_PRICING.annual.amount,
-        period: asPeriodId(data.annual?.period, "year"),
-      },
-    };
-    return cachedPricing;
-  } catch {
-    return PLAN_PRICING;
-  }
 }
