@@ -623,8 +623,8 @@ export const es: typeof pt = {
       description: "Plan, facturas y métodos de pago.",
     },
     notifications: {
-      title: "Notificaciones",
-      description: "Enviar mensajes al equipo por buzón o push.",
+      title: "Enviar notificación",
+      description: "Redacta y envía un aviso a la organización, a un equipo o a un miembro.",
     },
     ai: {
       title: "IA",

@@ -63,6 +63,8 @@ export function resolveChannelsForUser(opts: {
     timezone?: string | null;
   } | null;
   bypassPreferences?: boolean;
+  /** Override clock for quiet-hours checks (tests). */
+  now?: Date;
 }): ResolvedChannels {
   const def = getTypeDefinition(opts.type);
   const base = channelsFromList(opts.requested?.length ? opts.requested : def.defaultChannels);
@@ -78,7 +80,7 @@ export function resolveChannelsForUser(opts: {
     if (typeof pref.push === "boolean") base.push = pref.push;
     if (typeof pref.email === "boolean") base.email = pref.email;
     // Quiet hours suppress push + email (inbox still created).
-    if (inQuietHours(pref)) {
+    if (inQuietHours(pref, opts.now)) {
       base.push = false;
       base.email = false;
     }

@@ -620,8 +620,8 @@ export const pt = {
       description: "Plano, faturação e métodos de pagamento.",
     },
     notifications: {
-      title: "Notificações",
-      description: "Enviar mensagens à equipa por caixa de entrada ou push.",
+      title: "Enviar notificação",
+      description: "Compose e envie um aviso à organização, a uma equipa ou a um membro.",
     },
     ai: {
       title: "IA",

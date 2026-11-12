@@ -82,8 +82,10 @@ export const sharedPt = {
       sentPushToast: "Notificação enviada ({count} dispositivos).",
       genericError: "Erro inesperado.",
       errorToast: "Não foi possível enviar a notificação: {error}",
-      summaryOrg: "Todos os membros recebem isto na caixa de entrada.",
-      summaryOrgRoles: "Enviado a {roles} na caixa de entrada.",
+      summaryOrg: "Todos os membros vão receber esta notificação.",
+      summaryOrgRoles: "Enviado a {roles} na organização.",
+      summaryTeam: "Os membros de {team} vão receber esta notificação.",
+      summaryTeamRoles: "Enviado a {roles} em {team}.",
       summaryUser: "{name} vai receber esta notificação.",
       recipient: {
         title: "Destinatários",

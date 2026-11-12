@@ -84,8 +84,10 @@ export const sharedEs: typeof sharedPt = {
       sentPushToast: "Notificación enviada ({count} dispositivos).",
       genericError: "Error inesperado.",
       errorToast: "No se pudo enviar la notificación: {error}",
-      summaryOrg: "Todos los miembros la recibirán en el buzón.",
-      summaryOrgRoles: "Enviado a {roles} en el buzón.",
+      summaryOrg: "Todos los miembros recibirán esta notificación.",
+      summaryOrgRoles: "Enviado a {roles} en la organización.",
+      summaryTeam: "Los miembros de {team} recibirán esta notificación.",
+      summaryTeamRoles: "Enviado a {roles} en {team}.",
       summaryUser: "{name} recibirá esta notificación.",
       recipient: {
         title: "Destinatarios",
