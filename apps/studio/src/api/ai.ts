@@ -77,11 +77,7 @@ export type AiUiMessage = {
 
 export type AiConfirmAction = {
   action:
-    | "delete_song"
-    | "delete_service"
-    | "delete_folder"
-    | "delete_collection"
-    | "delete_agenda";
+    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
   id: string;
   folderAction?: "move_to_root" | "delete_songs";
 };
