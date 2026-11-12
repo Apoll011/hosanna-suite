@@ -622,8 +622,8 @@ export const en: typeof pt = {
       description: "Plan, invoices, and payment methods.",
     },
     notifications: {
-      title: "Notifications",
-      description: "Send team messages via inbox or push.",
+      title: "Send notification",
+      description: "Compose and send an announcement to the organization, a team, or a member.",
     },
     ai: {
       title: "AI",
