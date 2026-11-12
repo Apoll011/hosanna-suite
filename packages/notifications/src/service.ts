@@ -10,9 +10,7 @@ import type {
   NotificationServiceDeps,
 } from "./types.js";
 
-function legacyChannelToList(
-  channel?: string,
-): NotificationChannel[] | undefined {
+function legacyChannelToList(channel?: string): NotificationChannel[] | undefined {
   if (!channel) return undefined;
   if (channel === "inbox") return ["inbox"];
   if (channel === "push") return ["push"];
@@ -53,10 +51,7 @@ export function createNotificationService(deps: NotificationServiceDeps) {
 
   async function dispatch(input: DispatchInput & { channel?: string }): Promise<DispatchResult> {
     const body = input.body ?? input.description;
-    const requested =
-      input.channels ??
-      legacyChannelToList(input.channel) ??
-      undefined;
+    const requested = input.channels ?? legacyChannelToList(input.channel) ?? undefined;
 
     const userIds = await resolveRecipients(deps.prisma, input);
     const result: DispatchResult = {
@@ -233,9 +228,7 @@ export function createNotificationService(deps: NotificationServiceDeps) {
               locale: user.locale,
             });
             result.email.sent++;
-            await logDelivery([
-              { userId, type: input.type, channel: "email", status: "sent" },
-            ]);
+            await logDelivery([{ userId, type: input.type, channel: "email", status: "sent" }]);
           } catch (err) {
             result.email.failed++;
             await logDelivery([
@@ -262,9 +255,11 @@ export function createNotificationService(deps: NotificationServiceDeps) {
     return dispatch(payload);
   }
 
-  async function notifyUser(payload: Omit<DispatchInput, "organizationId" | "teamId" | "roles"> & {
-    userId: string;
-  }) {
+  async function notifyUser(
+    payload: Omit<DispatchInput, "organizationId" | "teamId" | "roles"> & {
+      userId: string;
+    },
+  ) {
     return dispatch(payload);
   }
 

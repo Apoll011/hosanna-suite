@@ -2,13 +2,7 @@
 export type NotificationChannel = "inbox" | "push" | "email";
 
 export type NotificationCategory =
-  | "auth"
-  | "billing"
-  | "org"
-  | "agenda"
-  | "backup"
-  | "product"
-  | "security";
+  "auth" | "billing" | "org" | "agenda" | "backup" | "product" | "security";
 
 export type AppId = "musician" | "studio" | "auth" | "unknown";
 

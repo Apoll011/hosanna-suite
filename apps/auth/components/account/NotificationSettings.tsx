@@ -7,16 +7,7 @@ import {
 } from "@/lib/services/notifications-api";
 import { useI18n } from "@/lib/ui/i18n";
 import { Button, Spinner, Surface } from "@hosanna/ui";
-import {
-  Bell,
-  CalendarDays,
-  CreditCard,
-  Mail,
-  Moon,
-  Save,
-  Smartphone,
-  Users,
-} from "lucide-react";
+import { Bell, CalendarDays, CreditCard, Mail, Moon, Save, Smartphone, Users } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 type ChannelKey = NotificationChannel;

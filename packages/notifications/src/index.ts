@@ -20,11 +20,7 @@ export type {
   ResolvedChannels,
 } from "./types.js";
 
-export {
-  DEFAULT_TYPE_DEFINITION,
-  getTypeDefinition,
-  NOTIFICATION_TYPES,
-} from "./catalog/types.js";
+export { DEFAULT_TYPE_DEFINITION, getTypeDefinition, NOTIFICATION_TYPES } from "./catalog/types.js";
 
 export { createFcmClient, type FcmClient } from "./channels/fcm.js";
 

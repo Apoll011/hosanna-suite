@@ -5,10 +5,7 @@ export function authApiBaseUrl(): string {
   return `${getAuthAppUrl().replace(/\/$/, "")}/api`;
 }
 
-export async function authApiFetch<T>(
-  path: string,
-  init?: RequestInit,
-): Promise<T> {
+export async function authApiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = new Headers(init?.headers);
   if (!headers.has("Accept")) headers.set("Accept", "application/json");
   if (init?.body && !headers.has("Content-Type")) {
@@ -24,7 +21,10 @@ export async function authApiFetch<T>(
   if (!res.ok) {
     let message = `Request failed (${res.status})`;
     try {
-      const body = (await res.json()) as { error?: string | { message?: string }; message?: string };
+      const body = (await res.json()) as {
+        error?: string | { message?: string };
+        message?: string;
+      };
       if (typeof body.error === "string") message = body.error;
       else if (body.error && typeof body.error === "object" && body.error.message) {
         message = body.error.message;

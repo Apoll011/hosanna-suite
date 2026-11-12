@@ -10,8 +10,16 @@ const patchSchema = z.object({
   inbox: z.boolean().optional(),
   push: z.boolean().optional(),
   email: z.boolean().optional(),
-  quietHoursStart: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
-  quietHoursEnd: z.string().regex(/^\d{2}:\d{2}$/).nullable().optional(),
+  quietHoursStart: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/)
+    .nullable()
+    .optional(),
+  quietHoursEnd: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/)
+    .nullable()
+    .optional(),
   timezone: z.string().min(1).max(64).nullable().optional(),
 });
 

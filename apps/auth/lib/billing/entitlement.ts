@@ -4,10 +4,7 @@ import { prisma } from "@/lib/db/prisma";
 const SUB_CACHE_TTL_MS = 400_000;
 const subCache = createCache({ namespace: "sub:entitled", ttlMs: SUB_CACHE_TTL_MS });
 
-export function isEntitledSubscription(sub: {
-  status: string;
-  trialEnd?: Date | null;
-}): boolean {
+export function isEntitledSubscription(sub: { status: string; trialEnd?: Date | null }): boolean {
   if (sub.status === "active") return true;
   if (sub.status !== "trialing") return false;
   return !sub.trialEnd || sub.trialEnd.getTime() > Date.now();

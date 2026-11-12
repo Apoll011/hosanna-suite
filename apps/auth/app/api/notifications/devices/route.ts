@@ -1,7 +1,4 @@
-import {
-  disablePushDevice,
-  registerPushDevice,
-} from "@hosanna/notifications";
+import { disablePushDevice, registerPushDevice } from "@hosanna/notifications";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";

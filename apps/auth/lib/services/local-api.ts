@@ -42,10 +42,7 @@ export type LocalApiFetchOptions = RequestInit & {
   organizationId?: string | null;
 };
 
-export async function localApiFetch<T>(
-  path: string,
-  init?: LocalApiFetchOptions,
-): Promise<T> {
+export async function localApiFetch<T>(path: string, init?: LocalApiFetchOptions): Promise<T> {
   const { organizationId, ...requestInit } = init ?? {};
   await ensureActiveOrganizationSession(organizationId);
 

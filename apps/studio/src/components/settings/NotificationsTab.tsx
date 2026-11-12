@@ -517,58 +517,56 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
           </Surface>
 
           <Surface padding="none" className="overflow-hidden">
-              <div className="px-5 py-4 border-b border-m3-border">
-                <h3 className="text-sm font-semibold text-m3-text">
-                  {t("settings.notifications.delivery.title")}
-                </h3>
-                <p className="text-caption text-m3-secondary mt-0.5">
-                  {t("settings.notifications.delivery.desc")}
-                </p>
-              </div>
-              <div className="p-5">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {CHANNELS.map((opt) => {
-                    const activeCh = channels.includes(opt.value);
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => toggleChannel(opt.value)}
-                        className={`flex flex-col items-start gap-1.5 p-3 rounded-md border text-left transition-colors cursor-pointer ${
-                          activeCh
-                            ? "border-m3-primary bg-m3-primary/5"
-                            : "border-m3-border hover:border-m3-primary/40"
+            <div className="px-5 py-4 border-b border-m3-border">
+              <h3 className="text-sm font-semibold text-m3-text">
+                {t("settings.notifications.delivery.title")}
+              </h3>
+              <p className="text-caption text-m3-secondary mt-0.5">
+                {t("settings.notifications.delivery.desc")}
+              </p>
+            </div>
+            <div className="p-5">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {CHANNELS.map((opt) => {
+                  const activeCh = channels.includes(opt.value);
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => toggleChannel(opt.value)}
+                      className={`flex flex-col items-start gap-1.5 p-3 rounded-md border text-left transition-colors cursor-pointer ${
+                        activeCh
+                          ? "border-m3-primary bg-m3-primary/5"
+                          : "border-m3-border hover:border-m3-primary/40"
+                      }`}
+                    >
+                      <span
+                        className={`w-8 h-8 rounded-md flex items-center justify-center ${
+                          activeCh ? "bg-m3-primary text-white" : "bg-m3-sidebar text-m3-secondary"
                         }`}
                       >
-                        <span
-                          className={`w-8 h-8 rounded-md flex items-center justify-center ${
-                            activeCh
-                              ? "bg-m3-primary text-white"
-                              : "bg-m3-sidebar text-m3-secondary"
-                          }`}
-                        >
-                          {opt.icon}
-                        </span>
-                        <span
-                          className={`text-sm font-medium ${
-                            activeCh ? "text-m3-primary" : "text-m3-text"
-                          }`}
-                        >
-                          {t(
-                            `settings.notifications.delivery.${opt.value}` as "settings.notifications.delivery.inbox",
-                          )}
-                        </span>
-                        <span className="text-caption text-m3-secondary">
-                          {t(
-                            `settings.notifications.delivery.${opt.value}Desc` as "settings.notifications.delivery.inboxDesc",
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+                        {opt.icon}
+                      </span>
+                      <span
+                        className={`text-sm font-medium ${
+                          activeCh ? "text-m3-primary" : "text-m3-text"
+                        }`}
+                      >
+                        {t(
+                          `settings.notifications.delivery.${opt.value}` as "settings.notifications.delivery.inbox",
+                        )}
+                      </span>
+                      <span className="text-caption text-m3-secondary">
+                        {t(
+                          `settings.notifications.delivery.${opt.value}Desc` as "settings.notifications.delivery.inboxDesc",
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-            </Surface>
+            </div>
+          </Surface>
 
           <Surface padding="none" className="overflow-hidden">
             <div className="px-5 py-4 border-b border-m3-border">

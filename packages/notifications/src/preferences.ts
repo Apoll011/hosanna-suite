@@ -15,7 +15,11 @@ function channelsFromList(list: NotificationChannel[]): ResolvedChannels {
 }
 
 function inQuietHours(
-  pref: { quietHoursStart?: string | null; quietHoursEnd?: string | null; timezone?: string | null },
+  pref: {
+    quietHoursStart?: string | null;
+    quietHoursEnd?: string | null;
+    timezone?: string | null;
+  },
   now = new Date(),
 ): boolean {
   const start = pref.quietHoursStart;

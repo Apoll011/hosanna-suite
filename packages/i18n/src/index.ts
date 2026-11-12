@@ -3,11 +3,7 @@ export { deepMerge } from "./merge";
 export { sharedMessages, sharedEn, sharedEs, sharedPt } from "./messages";
 export { localeToLanguage, resolveLanguage } from "./resolve";
 export { interpolate, lookup, resolveString, type Interpolation } from "./translate";
-export {
-  billingPeriodLabel,
-  isPlanPeriodId,
-  type PlanPeriodId,
-} from "./billing";
+export { billingPeriodLabel, isPlanPeriodId, type PlanPeriodId } from "./billing";
 export {
   LANGUAGE_LOCALE,
   type Language,

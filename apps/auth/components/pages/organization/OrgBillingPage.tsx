@@ -417,9 +417,7 @@ export function OrgBillingPage() {
                         {price.amount}
                       </span>
                       <span className="text-sm text-white/70">
-                        {t(
-                          `billing.period.${price.period}` as "billing.period.month",
-                        )}
+                        {t(`billing.period.${price.period}` as "billing.period.month")}
                         {activeSub.billingInterval ? (
                           <>
                             {" "}

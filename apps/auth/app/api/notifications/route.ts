@@ -25,7 +25,10 @@ const createNotificationSchema = z
     userId: z.string().min(1).optional(),
     organizationId: z.string().min(1).optional(),
     teamId: z.string().min(1).optional(),
-    roles: z.array(z.enum(ORG_ROLES as [string, ...string[]])).min(1).optional(),
+    roles: z
+      .array(z.enum(ORG_ROLES as [string, ...string[]]))
+      .min(1)
+      .optional(),
     type: z.string().min(1).max(128),
     title: z.string().min(1).max(255),
     description: z.string().max(1000).optional(),
@@ -34,7 +37,10 @@ const createNotificationSchema = z
     data: z.record(z.string(), z.string().max(1000)).optional(),
     /** Legacy single-user channel enum. */
     channel: z.enum(["inbox", "push", "both"]).optional(),
-    channels: z.array(z.enum(["inbox", "push", "email"])).min(1).optional(),
+    channels: z
+      .array(z.enum(["inbox", "push", "email"]))
+      .min(1)
+      .optional(),
     fcm: fcmMessageSchema.optional(),
     push: fcmMessageSchema.optional(),
     email: z

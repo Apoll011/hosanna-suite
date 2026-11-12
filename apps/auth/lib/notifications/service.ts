@@ -11,9 +11,7 @@ let cached: NotificationService | null = null;
 let inboxNotifyRef: ((payload: any) => Promise<{ count?: number } | void>) | null = null;
 
 /** Wire better-inbox notify once auth is constructed (avoids circular init). */
-export function setInboxNotify(
-  fn: (payload: any) => Promise<{ count?: number } | void>,
-): void {
+export function setInboxNotify(fn: (payload: any) => Promise<{ count?: number } | void>): void {
   inboxNotifyRef = fn;
   cached = null;
 }
@@ -60,8 +58,7 @@ export function getNotificationService(): NotificationService {
       if (!user?.email) return null;
       let locale: string | undefined;
       try {
-        const meta =
-          typeof user.metadata === "string" ? JSON.parse(user.metadata) : user.metadata;
+        const meta = typeof user.metadata === "string" ? JSON.parse(user.metadata) : user.metadata;
         locale = meta?.locale ?? meta?.settings?.locale;
       } catch {
         /* ignore */
@@ -73,9 +70,6 @@ export function getNotificationService(): NotificationService {
   return cached;
 }
 
-export async function handleSessionRevoked(session: {
-  id: string;
-  userId: string;
-}): Promise<void> {
+export async function handleSessionRevoked(session: { id: string; userId: string }): Promise<void> {
   await revokeDevicesForSession(prisma, session.id);
 }

@@ -3,10 +3,7 @@ import type { DispatchTarget } from "./types.js";
 /**
  * Resolve dispatch targeting to a unique list of userIds.
  */
-export async function resolveRecipients(
-  prisma: any,
-  target: DispatchTarget,
-): Promise<string[]> {
+export async function resolveRecipients(prisma: any, target: DispatchTarget): Promise<string[]> {
   const { userId, organizationId, teamId, roles } = target;
   const roleFilter = roles && roles.length > 0 ? roles : null;
 

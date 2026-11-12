@@ -8,14 +8,14 @@ Package: [`packages/notifications`](../../packages/notifications) (`@hosanna/not
 
 Identity-adjacent concerns (sessions, devices, prefs, Resend, org membership) already live on auth. Notifications, billing probes, backup, and agenda reminders now sit there too. The API keeps the music data plane and **`/api/cron/purge-trash`** only.
 
-| Concern | Host |
-|---------|------|
-| `POST /api/notifications` (+ prefs, devices) | **auth** |
-| `GET /api/billing/pricing`, `/entitlement` | **auth** |
-| `GET/POST /api/backup*` | **auth** |
-| `GET\|POST /api/cron/agenda-reminders` | **auth** |
-| `GET\|POST /api/cron/purge-trash` | **api** |
-| Domain `notifyOrg` from API services | in-process via `@hosanna/notifications` + slim Better Auth inbox |
+| Concern                                      | Host                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------- |
+| `POST /api/notifications` (+ prefs, devices) | **auth**                                                         |
+| `GET /api/billing/pricing`, `/entitlement`   | **auth**                                                         |
+| `GET/POST /api/backup*`                      | **auth**                                                         |
+| `GET\|POST /api/cron/agenda-reminders`       | **auth**                                                         |
+| `GET\|POST /api/cron/purge-trash`            | **api**                                                          |
+| Domain `notifyOrg` from API services         | in-process via `@hosanna/notifications` + slim Better Auth inbox |
 
 ## Mental model
 
@@ -36,11 +36,11 @@ flowchart TB
 
 ## Channels
 
-| Channel | Mechanism | Notes |
-|---------|-----------|--------|
-| **inbox** | `better-inbox` via `auth.api.notify` | In-app bell; read/mark stay on Better Auth client plugins |
-| **push** | FCM HTTP v1 → **PushDevice** tokens | Deduped by token; invalid tokens deleted |
-| **email** | Resend + Handlebars (auth email service) | Injected into the package as `sendEmail` |
+| Channel   | Mechanism                                | Notes                                                     |
+| --------- | ---------------------------------------- | --------------------------------------------------------- |
+| **inbox** | `better-inbox` via `auth.api.notify`     | In-app bell; read/mark stay on Better Auth client plugins |
+| **push**  | FCM HTTP v1 → **PushDevice** tokens      | Deduped by token; invalid tokens deleted                  |
+| **email** | Resend + Handlebars (auth email service) | Injected into the package as `sendEmail`                  |
 
 Legacy request field `channel: "inbox" | "push" | "both"` is still accepted and mapped to the new `channels[]` array.
 
@@ -79,10 +79,10 @@ Previously FCM tokens lived on **`Session.fcm`**. Stale tokens survived logout, 
 
 Canonical model:
 
-| Table | Role |
-|-------|------|
-| `push_device` | Unique FCM `token` per device; `userId`, optional `sessionId`, `enabled`, `appId`, `platform` |
-| `session.fcm` / `session.notify` | Kept temporarily for compatibility; sends no longer key off sessions |
+| Table                            | Role                                                                                          |
+| -------------------------------- | --------------------------------------------------------------------------------------------- |
+| `push_device`                    | Unique FCM `token` per device; `userId`, optional `sessionId`, `enabled`, `appId`, `platform` |
+| `session.fcm` / `session.notify` | Kept temporarily for compatibility; sends no longer key off sessions                          |
 
 Lifecycle:
 
@@ -122,9 +122,9 @@ Omit `channels` to use type defaults + prefs.
 
 Yes — the musician app was updated:
 
-| File | Change |
-|------|--------|
-| `lib/features/auth/data/auth_repository.dart` | `registerPushDevice` / `disablePushDevice` → auth `/api/notifications/devices` |
+| File                                            | Change                                                                                              |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `lib/features/auth/data/auth_repository.dart`   | `registerPushDevice` / `disablePushDevice` → auth `/api/notifications/devices`                      |
 | `lib/features/auth/domain/auth_controller.dart` | Sync/register on login & token refresh; disable on logout; `setNotify` updates PushDevice + session |
 
 Entitlement already targeted the auth host (`GET /api/billing/entitlement`); that route now exists on auth.
@@ -133,13 +133,13 @@ Domain REST (songs, replication, etc.) still uses `HOSANNA_API_URL`.
 
 ## Producers cheat sheet
 
-| Producer | How it notifies |
-|----------|-----------------|
-| Studio / auth org UI | `POST {auth}/api/notifications` |
-| Stripe / org hooks in `createAuth` | `notifyOrg` → `NotificationService` |
-| Agenda cron | auth `/api/cron/agenda-reminders` → dispatch `agenda.reminder` |
-| API domain (e.g. folder delete) | `@hosanna/notifications` in-process + slim BA inbox |
-| Better Auth lifecycle emails | Still Resend templates; security types are forced email in the catalog |
+| Producer                           | How it notifies                                                        |
+| ---------------------------------- | ---------------------------------------------------------------------- |
+| Studio / auth org UI               | `POST {auth}/api/notifications`                                        |
+| Stripe / org hooks in `createAuth` | `notifyOrg` → `NotificationService`                                    |
+| Agenda cron                        | auth `/api/cron/agenda-reminders` → dispatch `agenda.reminder`         |
+| API domain (e.g. folder delete)    | `@hosanna/notifications` in-process + slim BA inbox                    |
+| Better Auth lifecycle emails       | Still Resend templates; security types are forced email in the catalog |
 
 ## Env (auth Vercel)
 

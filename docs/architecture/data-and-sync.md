@@ -71,13 +71,13 @@ Restore: `POST /api/trash/{songs|folders|services}/:id/restore` (then sync).
 
 ## What is _not_ replicated
 
-| Data                       | Why / how instead                                                        |
-| -------------------------- | ------------------------------------------------------------------------ |
-| Service notes              | Privacy (private notes); REST `/api/services/:id/notes` + Firestore ping |
-| Song annotations           | Large canvas + live presence; REST + Firestore + local `.fcv`            |
+| Data                       | Why / how instead                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Service notes              | Privacy (private notes); REST `/api/services/:id/notes` + Firestore ping                                     |
+| Song annotations           | Large canvas + live presence; REST + Firestore + local `.fcv`                                                |
 | Notifications              | Auth-hosted unified dispatcher (inbox + PushDevice/FCM + email) — see [notifications.md](./notifications.md) |
-| AI settings / memory       | Org-scoped REST                                                          |
-| Auth / membership / Stripe | Better Auth + Stripe plugins                                             |
+| AI settings / memory       | Org-scoped REST                                                                                              |
+| Auth / membership / Stripe | Better Auth + Stripe plugins                                                                                 |
 
 ## Conflict model
 

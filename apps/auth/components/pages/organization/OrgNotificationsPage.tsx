@@ -437,7 +437,9 @@ export function OrgNotificationsPage() {
                     onChange={(e) => setSelectedTeamId(e.target.value)}
                     className="w-full min-h-10 px-3 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
                   >
-                    <option value="">{t("settings.notifications.recipient.searchPlaceholder")}</option>
+                    <option value="">
+                      {t("settings.notifications.recipient.searchPlaceholder")}
+                    </option>
                     {teams.map((team) => (
                       <option key={team.id} value={team.id}>
                         {team.name}
@@ -639,9 +641,7 @@ export function OrgNotificationsPage() {
                     >
                       <span
                         className={`w-8 h-8 rounded-md flex items-center justify-center ${
-                          activeCh
-                            ? "bg-m3-primary text-white"
-                            : "bg-m3-sidebar text-m3-secondary"
+                          activeCh ? "bg-m3-primary text-white" : "bg-m3-sidebar text-m3-secondary"
                         }`}
                       >
                         {opt.icon}

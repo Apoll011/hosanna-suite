@@ -548,8 +548,7 @@ export const es: typeof pt = {
         "Los emails de seguridad (restablecer contraseña, verificación, 2FA) siempre permanecen activos.",
       channelsNone: "Todos los canales desactivados (los emails de seguridad siguen)",
       quietHoursTitle: "Horas de silencio",
-      quietHoursDesc:
-        "Pausa push y email en estas horas. Los mensajes del buzón siguen creándose.",
+      quietHoursDesc: "Pausa push y email en estas horas. Los mensajes del buzón siguen creándose.",
       quietStart: "Desde",
       quietEnd: "Hasta",
       timezone: "Zona horaria",
