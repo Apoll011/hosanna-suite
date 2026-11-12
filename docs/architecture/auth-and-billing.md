@@ -72,11 +72,23 @@ Via `@better-auth/stripe`:
 ### Entitlement gate
 
 - `GET /api/billing/entitlement` → `{ entitled }` on **auth.hosanna.live** (Flutter already hit the auth host)
-- `GET /api/billing/pricing` → public plan display amounts on **auth**
+- `GET /api/billing/pricing` → public plan display amounts on **auth**, read from Vercel Global Config key **`hosanna-cloud`** (`GLOBAL_CONFIG` connection string)
+- Period fields are stable ids (`month` | `year`); clients localize via shared `@hosanna/i18n` (`billing.period.*` / `billingPeriodLabel`)
 - API `requireSubscription` middleware still gates **domain** non-GET writes when the org is not active/trialing (reads shared `Subscription` rows)
 - Studio onboarding also checks trial/subscription before entering the main shell
 
 Studio client uses `authClient.subscription.*` (list, upgrade, portal); display prices fetch from auth `/api/billing/pricing`.
+
+Expected `hosanna-cloud` Global Config JSON:
+
+```json
+{
+  "plan": "cloud",
+  "currency": "eur",
+  "monthly": { "amountCents": 1200, "amountDisplay": "€12", "period": "month" },
+  "annual": { "amountCents": 12000, "amountDisplay": "€120", "period": "year" }
+}
+```
 
 ## Flutter / Studio session lifecycle (summary)
 

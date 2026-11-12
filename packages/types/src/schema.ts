@@ -949,12 +949,20 @@ export interface components {
       monthly?: {
         amount?: string;
         amountCents?: number;
-        period?: string;
+        /**
+         * @description Stable period id; clients localize via billing.period.*
+         * @enum {string}
+         */
+        period?: "month" | "year";
       };
       annual?: {
         amount?: string;
         amountCents?: number;
-        period?: string;
+        /**
+         * @description Stable period id; clients localize via billing.period.*
+         * @enum {string}
+         */
+        period?: "month" | "year";
       };
     };
     BackupDocument: {

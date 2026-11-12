@@ -36,6 +36,7 @@
     "@prisma/adapter-pg": "^7.9.1",
     "@serwist/next": "^9.5.13",
     "@supabase/supabase-js": "^2.49.0",
+    "@vercel/global-config": "^1.5.1",
     "better-auth": "^1.7.18",
     "better-inbox": "^0.1.2",
     "handlebars": "^4.7.9",

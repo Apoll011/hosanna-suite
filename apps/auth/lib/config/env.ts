@@ -83,13 +83,11 @@ export const env = {
   /** Vercel cron + manual agenda reminder runs. */
   cronSecret: optional("CRON_SECRET"),
 
-  planPriceMonthlyCents: parseInt(process.env.PLAN_PRICE_MONTHLY_CENTS ?? "1200", 10),
-  planPriceMonthlyDisplay: process.env.PLAN_PRICE_MONTHLY_DISPLAY ?? "€12",
-  planPriceMonthlyPeriod: process.env.PLAN_PRICE_MONTHLY_PERIOD ?? "/mês",
-  planPriceAnnualCents: parseInt(process.env.PLAN_PRICE_ANNUAL_CENTS ?? "12000", 10),
-  planPriceAnnualDisplay: process.env.PLAN_PRICE_ANNUAL_DISPLAY ?? "€120",
-  planPriceAnnualPeriod: process.env.PLAN_PRICE_ANNUAL_PERIOD ?? "/ano",
-  planPriceCurrency: process.env.PLAN_PRICE_CURRENCY ?? "eur",
+  /**
+   * Vercel Global Config connection string (reads `hosanna-cloud` pricing).
+   * Falls back to EDGE_CONFIG inside `@vercel/global-config` if unset.
+   */
+  globalConfig: optional("GLOBAL_CONFIG") ?? optional("EDGE_CONFIG"),
 
   /**
    * Primary MCP resource identifier (stays on the API host).

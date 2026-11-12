@@ -17,6 +17,12 @@ export const sharedPt = {
     refresh: "Atualizar",
     loading: "A carregar…",
   },
+  billing: {
+    period: {
+      month: "/mês",
+      year: "/ano",
+    },
+  },
   organization: {
     loginActivity: {
       title: "Atividade de acesso",

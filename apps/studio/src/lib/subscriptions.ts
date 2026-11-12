@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { PlanPeriodId } from "@hosanna/i18n";
 import { getAuthAppUrl } from "./authUrl";
 import { authClient } from "./authClient";
 
@@ -60,24 +61,29 @@ export function currentSubscriptionStatus(rows: Subscription[]): Subscription["s
 }
 
 /**
- * Fallback display prices — keep in sync with auth-app billing pricing defaults.
- * Prefer `fetchPlanPricing()` so env overrides on the auth host apply.
+ * Fallback display prices — amounts from auth Global Config; `period` is a
+ * stable id (`month` | `year`) localized via `billing.period.*` / `billingPeriodLabel`.
  */
 export const PLAN_PRICING = {
-  monthly: { amount: "€12", period: "/mês" },
-  annual: { amount: "€120", period: "/ano" },
+  monthly: { amount: "€12", period: "month" as PlanPeriodId },
+  annual: { amount: "€120", period: "year" as PlanPeriodId },
 } as const;
 
-export type PlanPricing = typeof PLAN_PRICING;
+export type PlanPricing = {
+  monthly: { amount: string; period: PlanPeriodId };
+  annual: { amount: string; period: PlanPeriodId };
+};
 
 let cachedPricing: PlanPricing | null = null;
+
+function asPeriodId(value: unknown, fallback: PlanPeriodId): PlanPeriodId {
+  return value === "year" || value === "month" ? value : fallback;
+}
 
 /** Load display amounts from GET {auth}/api/billing/pricing (public). */
 export async function fetchPlanPricing(authBaseUrl?: string): Promise<PlanPricing> {
   if (cachedPricing) return cachedPricing;
-  const base =
-    authBaseUrl ??
-    `${getAuthAppUrl().replace(/\/$/, "")}/api`;
+  const base = authBaseUrl ?? `${getAuthAppUrl().replace(/\/$/, "")}/api`;
   try {
     const res = await fetch(`${base.replace(/\/$/, "")}/billing/pricing`, {
       credentials: "omit",
@@ -87,11 +93,11 @@ export async function fetchPlanPricing(authBaseUrl?: string): Promise<PlanPricin
     cachedPricing = {
       monthly: {
         amount: data.monthly?.amount ?? PLAN_PRICING.monthly.amount,
-        period: data.monthly?.period ?? PLAN_PRICING.monthly.period,
+        period: asPeriodId(data.monthly?.period, "month"),
       },
       annual: {
         amount: data.annual?.amount ?? PLAN_PRICING.annual.amount,
-        period: data.annual?.period ?? PLAN_PRICING.annual.period,
+        period: asPeriodId(data.annual?.period, "year"),
       },
     };
     return cachedPricing;

@@ -19,6 +19,12 @@ export const sharedEn: typeof sharedPt = {
     refresh: "Refresh",
     loading: "Loading…",
   },
+  billing: {
+    period: {
+      month: "/mo",
+      year: "/yr",
+    },
+  },
   organization: {
     loginActivity: {
       title: "Login activity",

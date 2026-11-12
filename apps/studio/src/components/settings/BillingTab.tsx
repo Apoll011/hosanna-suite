@@ -290,7 +290,11 @@ export const BillingTab: React.FC<BillingTabProps> = ({ active, showToast }) => 
                   {annual ? planPricing.annual.amount : planPricing.monthly.amount}
                 </span>
                 <span className="text-sm text-m3-secondary">
-                  {annual ? planPricing.annual.period : planPricing.monthly.period}
+                  {t(
+                    `billing.period.${
+                      annual ? planPricing.annual.period : planPricing.monthly.period
+                    }` as "billing.period.month",
+                  )}
                 </span>
               </div>
               {annual && (

@@ -2140,6 +2140,10 @@ components:
               type: integer
             period:
               type: string
+              enum:
+                - month
+                - year
+              description: Stable period id; clients localize via billing.period.*
         annual:
           type: object
           properties:
@@ -2149,6 +2153,10 @@ components:
               type: integer
             period:
               type: string
+              enum:
+                - month
+                - year
+              description: Stable period id; clients localize via billing.period.*
     BackupDocument:
       type: object
       required:
