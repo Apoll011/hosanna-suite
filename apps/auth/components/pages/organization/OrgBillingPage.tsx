@@ -152,10 +152,7 @@ export function OrgBillingPage() {
   }, [organization?.id, refresh]);
 
   useEffect(() => {
-    const base =
-      (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) ||
-      "https://api.hosanna.live/api";
-    void fetch(`${base.replace(/\/+$/, "")}/billing/pricing`, { credentials: "omit" })
+    void fetch(`/api/billing/pricing`, { credentials: "omit" })
       .then(async (res) => {
         if (!res.ok) return;
         const data = await res.json();

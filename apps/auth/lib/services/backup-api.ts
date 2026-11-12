@@ -1,18 +1,12 @@
 /**
- * Hosanna API backup client for the auth app.
- *
- * Calls GET `/backup` and POST `/backup/restore` on `NEXT_PUBLIC_API_URL`
- * (must include the `/api` suffix, same as Studio's `VITE_API_URL`).
- * Uses cookie session (`credentials: "include"`) and syncs the active
- * organization on the Better Auth session before each call.
+ * Same-origin backup client (auth-app hosted).
  */
 
 import {
-  apiBaseUrl,
-  apiFetch,
   ensureActiveOrganizationSession,
-  readApiError,
-} from "@/lib/services/api";
+  localApiFetch,
+  readLocalApiError,
+} from "@/lib/services/local-api";
 
 export type BackupDocument = Record<string, unknown> & {
   songs?: unknown[];
@@ -23,16 +17,14 @@ export type BackupDocument = Record<string, unknown> & {
 type OrgScoped = { organizationId: string };
 
 export const backupApi = {
-  baseUrl: apiBaseUrl,
-
   downloadBackup: async ({ organizationId }: OrgScoped): Promise<void> => {
     await ensureActiveOrganizationSession(organizationId);
-    const res = await fetch(`${apiBaseUrl()}/backup`, {
+    const res = await fetch(`/api/backup`, {
       method: "GET",
       credentials: "include",
       headers: { Accept: "application/json" },
     });
-    if (!res.ok) throw new Error(await readApiError(res));
+    if (!res.ok) throw new Error(await readLocalApiError(res));
     const backup = await res.json();
 
     const blob = new Blob([JSON.stringify(backup, null, 2)], {
@@ -50,8 +42,7 @@ export const backupApi = {
     backupData: unknown,
     { organizationId }: OrgScoped,
   ): Promise<{ message: string; counts: Record<string, number> }> => {
-    await ensureActiveOrganizationSession(organizationId);
-    const data = await apiFetch<{
+    const data = await localApiFetch<{
       message?: string;
       counts?: Record<string, number>;
     }>("/backup/restore", {

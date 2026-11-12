@@ -210,6 +210,11 @@ export interface CreateAuthFullOptions {
   t: (locale: string, key: string, vars?: Record<string, string>) => string;
   defaultLocale?: string;
   /**
+   * Called after a session row is deleted (logout / revoke / expiry cleanup).
+   * Used to detach push devices bound to that session.
+   */
+  onSessionRevoked?: (session: { id: string; userId: string }) => Promise<void>;
+  /**
    * Optional Better Auth secondary storage. When omitted, created from
    * `config.redisUrl` / `REDIS_URL` via `@hosanna/cache`.
    */

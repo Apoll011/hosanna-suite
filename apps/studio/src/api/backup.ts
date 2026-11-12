@@ -1,12 +1,8 @@
-import type { components } from "@hosanna/types";
-import { unwrapApiResult } from "./client";
-import { getApiClient } from "./http";
-
-type BackupDocument = components["schemas"]["BackupDocument"];
+import { authApiFetch } from "./authApi";
 
 export const backupApi = {
   downloadBackup: async (): Promise<void> => {
-    const backup = await unwrapApiResult(await getApiClient().openapi.GET("/backup"));
+    const backup = await authApiFetch<unknown>("/backup");
 
     const blob = new Blob([JSON.stringify(backup, null, 2)], {
       type: "application/json",
@@ -25,11 +21,13 @@ export const backupApi = {
   restoreBackup: async (
     backupData: unknown,
   ): Promise<{ message: string; counts: Record<string, number> }> => {
-    const data = await unwrapApiResult(
-      await getApiClient().openapi.POST("/backup/restore", {
-        body: backupData as BackupDocument,
-      }),
-    );
+    const data = await authApiFetch<{
+      message?: string;
+      counts?: Record<string, number>;
+    }>("/backup/restore", {
+      method: "POST",
+      body: JSON.stringify(backupData),
+    });
 
     return {
       message: data?.message ?? "",

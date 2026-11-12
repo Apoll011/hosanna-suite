@@ -1,12 +1,12 @@
-import type { OrgScopedPrisma } from "../database/prisma.js";
-import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
-import { AppError } from "../utils/errors.js";
-import { notifyOrg } from "../utils/notify.js";
-import { isLiveRow, sortFoldersParentsFirst } from "./backup.helpers.js";
+import type { OrgScopedPrisma } from "@/lib/db/orgScope";
+import { getNotificationService } from "@/lib/notifications/service";
+import { AuthHttpError } from "@/lib/notifications/session";
+import { DEFAULT_LOCALE, t } from "@/locales/server";
+import { isLiveRow, sortFoldersParentsFirst } from "./helpers";
 
 const BACKUP_VERSION = "2.2";
 
-export { isLiveRow, sortFoldersParentsFirst } from "./backup.helpers.js";
+export { isLiveRow, sortFoldersParentsFirst } from "./helpers";
 
 export class BackupService {
   constructor(
@@ -54,18 +54,17 @@ export class BackupService {
    */
   async restore(backup: any) {
     if (!backup || typeof backup !== "object") {
-      throw new AppError(400, "INVALID_BACKUP_FILE", t(this.locale, "backup.invalid_file"));
+      throw new AuthHttpError(400, t(this.locale, "backup.invalid_file"), "INVALID_BACKUP_FILE");
     }
 
     const foldersIn = Array.isArray(backup.folders) ? backup.folders : null;
     const songsIn = Array.isArray(backup.songs) ? backup.songs : null;
     const servicesIn = Array.isArray(backup.services) ? backup.services : null;
-    // Older backups (v2.1) omit these — treat as empty arrays.
     const collectionsIn = Array.isArray(backup.collections) ? backup.collections : [];
     const agendaIn = Array.isArray(backup.agendaEvents) ? backup.agendaEvents : [];
 
     if (!foldersIn || !songsIn || !servicesIn) {
-      throw new AppError(400, "INVALID_BACKUP_FILE", t(this.locale, "backup.missing_arrays"));
+      throw new AuthHttpError(400, t(this.locale, "backup.missing_arrays"), "INVALID_BACKUP_FILE");
     }
 
     const folders = sortFoldersParentsFirst(foldersIn.filter(isLiveRow));
@@ -75,16 +74,12 @@ export class BackupService {
     const agendaEvents = agendaIn.filter(isLiveRow);
 
     await this.db.$transaction(async (tx) => {
-      // FK-safe wipe: agenda → services (cascades notes/annotations) →
-      // songs → collections → folders.
       await tx.agendaEvent.deleteMany();
       await tx.service.deleteMany();
       await tx.song.deleteMany();
       await tx.collection.deleteMany();
       await tx.folder.deleteMany();
 
-      // OrgScopedPrisma injects orgId at runtime; cast like the repositories
-      // so Exact<> create inputs typecheck without repeating orgId/org.
       if (folders.length > 0) {
         await tx.folder.createMany({
           data: folders.map((f: any) => ({
@@ -145,8 +140,6 @@ export class BackupService {
         });
       }
 
-      // Re-apply collection→song links from collection.songIds when present
-      // (covers backups that only store songIds on the collection side).
       for (const c of collections) {
         const songIds: string[] = Array.isArray(c.songIds) ? c.songIds : [];
         if (songIds.length === 0) continue;
@@ -198,12 +191,12 @@ export class BackupService {
       }
     });
 
-    void notifyOrg({
+    void getNotificationService().notifyOrg({
       organizationId: this.orgId,
       roles: ["owner", "admin"],
       type: "backup.restored",
       title: t(this.locale, "notification.backup_restored_title"),
-      description: t(this.locale, "notification.backup_restored_description", {
+      body: t(this.locale, "notification.backup_restored_description", {
         folders: folders.length,
         songs: songs.length,
         services: services.length,

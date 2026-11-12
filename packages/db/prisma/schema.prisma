@@ -250,6 +250,9 @@ model User {
   sessions               Session[]
   accounts               Account[]
   notifications          Notification[]
+  pushDevices            PushDevice[]
+  notificationPreferences NotificationPreference[]
+  notificationDeliveries NotificationDelivery[]
   twofactors             TwoFactor[]
   teammembers            TeamMember[]
   members                Member[]
@@ -350,6 +353,68 @@ model Notification {
   @@index([organizationId])
   @@index([userId, read])
   @@map("notification")
+}
+
+/// Canonical FCM registration — one row per device token (not per session).
+model PushDevice {
+  id         String   @id
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String
+  /// Soft link to the session that last registered this token.
+  sessionId  String?
+  platform   String   @default("unknown")
+  appId      String   @default("unknown")
+  enabled    Boolean  @default(true)
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([token])
+  @@index([userId, enabled])
+  @@index([sessionId])
+  @@map("push_device")
+}
+
+/// Per-user channel preferences by notification type or category.
+model NotificationPreference {
+  id              String   @id
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Specific type (e.g. agenda.reminder). Null = category/global.
+  type            String?
+  /// Category bucket (agenda, billing, …). Null with null type = global.
+  category        String?
+  inbox           Boolean  @default(true)
+  push            Boolean  @default(true)
+  email           Boolean  @default(false)
+  quietHoursStart String?
+  quietHoursEnd   String?
+  timezone        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, type])
+  @@index([userId, category])
+  @@map("notification_preference")
+}
+
+/// Delivery audit log for reliability debugging.
+model NotificationDelivery {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  channel   String
+  status    String
+  error     String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([type, channel, createdAt])
+  @@map("notification_delivery")
 }
 
 model TwoFactor {

@@ -1,20 +1,16 @@
 import { Router } from "express";
 
-import { backupRouter } from "./backup.routes.js";
-import { billingRouter } from "./billing.routes.js";
 import { cronRouter } from "./cron.routes.js";
 import { folderRouter } from "./folder.routes.js";
 import { healthRouter } from "./health.routes.js";
-import { notificationsRouter } from "./notifications.routes.js";
 import { replicationRouter } from "./replication.routes.js";
 import { serviceRouter } from "./service.routes.js";
 import { songRouter } from "./song.routes.js";
 import { songImportRouter } from "./songImport.routes.js";
 import { trashRouter } from "./trash.routes.js";
 
-import { PLAN_PRICING } from "../config/pricing.js";
 import { authenticate } from "../middleware/auth.js";
-import { apiLimiter, backupLimiter, healthLimiter, syncLimiter } from "../middleware/rateLimit.js";
+import { apiLimiter, healthLimiter, syncLimiter } from "../middleware/rateLimit.js";
 import { requireSubscription } from "../middleware/subscription.js";
 import { cifraRouter } from "./cifra.routes.js";
 import { annotationRouter } from "./serviceSongAnnotation.routes.js";
@@ -34,26 +30,7 @@ const aiChatLimiter = rateLimit({
 apiRouter.use("/health", healthLimiter, healthRouter);
 apiRouter.use("/cron", cronRouter);
 
-// Public plan display amounts (marketing + Studio checkout UI).
-apiRouter.get("/billing/pricing", apiLimiter, (_req, res) => {
-  res.json({
-    plan: PLAN_PRICING.plan,
-    currency: PLAN_PRICING.currency,
-    monthly: {
-      amount: PLAN_PRICING.monthly.amountDisplay,
-      amountCents: PLAN_PRICING.monthly.amountCents,
-      period: PLAN_PRICING.monthly.period,
-    },
-    annual: {
-      amount: PLAN_PRICING.annual.amountDisplay,
-      amountCents: PLAN_PRICING.annual.amountCents,
-      period: PLAN_PRICING.annual.period,
-    },
-  });
-});
-
 apiRouter.use(authenticate);
-apiRouter.use("/billing", apiLimiter, billingRouter);
 apiRouter.use("/replication", syncLimiter, replicationRouter);
 
 apiRouter.use("/songs/import", requireSubscription, apiLimiter, songImportRouter);
@@ -62,9 +39,7 @@ apiRouter.use("/folders", requireSubscription, apiLimiter, folderRouter);
 apiRouter.use("/services", requireSubscription, apiLimiter, serviceRouter);
 apiRouter.use("/cifra", requireSubscription, apiLimiter, cifraRouter);
 apiRouter.use("/youtube", requireSubscription, apiLimiter, youtubeRouter);
-apiRouter.use("/backup", requireSubscription, backupLimiter, backupRouter);
 apiRouter.use("/ai", requireSubscription, aiChatLimiter, aiRouter);
 
-apiRouter.use("/notifications", apiLimiter, notificationsRouter);
 apiRouter.use("/trash", apiLimiter, trashRouter);
 apiRouter.use("/annotation", apiLimiter, annotationRouter);

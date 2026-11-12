@@ -12,6 +12,7 @@ export const sharedEn: typeof sharedPt = {
   },
   common: {
     save: "Save",
+    saving: "Saving…",
     cancel: "Cancel",
     back: "Back",
     retry: "Retry",
@@ -118,11 +119,13 @@ export const sharedEn: typeof sharedPt = {
       },
       delivery: {
         title: "Delivery",
-        desc: "Inbox, push, or both.",
+        desc: "Choose one or more channels: inbox, push, and email.",
         inbox: "Inbox",
         inboxDesc: "In the app",
         push: "Push",
         pushDesc: "On the device",
+        email: "Email",
+        emailDesc: "To the member's inbox",
         both: "Both",
         bothDesc: "Inbox and push",
       },

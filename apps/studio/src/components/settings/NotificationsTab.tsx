@@ -78,7 +78,7 @@ const CHANNELS: {
 }[] = [
   { value: "inbox", icon: <Bell className="w-4 h-4" /> },
   { value: "push", icon: <Smartphone className="w-4 h-4" /> },
-  { value: "both", icon: <MessageSquare className="w-4 h-4" /> },
+  { value: "email", icon: <MessageSquare className="w-4 h-4" /> },
 ];
 
 export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, showToast }) => {
@@ -105,11 +105,16 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [href, setHref] = useState("");
-  const [channel, setChannel] = useState<NotificationChannel>("inbox");
+  const [channels, setChannels] = useState<NotificationChannel[]>(["inbox"]);
   const [isSending, setIsSending] = useState(false);
 
   const isOrgTarget = target === "org";
-  const showTypeField = isOrgTarget || channel !== "push";
+  const showTypeField = true;
+
+  const toggleChannel = (ch: NotificationChannel) =>
+    setChannels((prev) =>
+      prev.includes(ch) ? (prev.length === 1 ? prev : prev.filter((c) => c !== ch)) : [...prev, ch],
+    );
 
   const loadMembers = useCallback(async () => {
     if (!organization) return;
@@ -220,13 +225,13 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
 
       if (isOrgTarget) {
         payload.organizationId = organization.id;
-        payload.channel = "inbox";
+        payload.channels = channels;
         if (selectedRoles.length > 0) payload.roles = selectedRoles;
       } else if (recipient) {
         payload.userId = recipient.userId;
-        payload.channel = channel;
-        if (channel !== "inbox" && href.trim()) {
-          payload.fcm = { data: { link: href.trim() } };
+        payload.channels = channels;
+        if (channels.includes("push") && href.trim()) {
+          payload.push = { data: { link: href.trim() } };
         }
       }
 
@@ -337,7 +342,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
                       onClick={() => {
                         setTarget(opt.value);
                         if (opt.value === "org") {
-                          setChannel("inbox");
                           setRecipient(null);
                           setQuery("");
                         }
@@ -512,8 +516,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
             </div>
           </Surface>
 
-          {!isOrgTarget && (
-            <Surface padding="none" className="overflow-hidden">
+          <Surface padding="none" className="overflow-hidden">
               <div className="px-5 py-4 border-b border-m3-border">
                 <h3 className="text-sm font-semibold text-m3-text">
                   {t("settings.notifications.delivery.title")}
@@ -525,12 +528,12 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
               <div className="p-5">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {CHANNELS.map((opt) => {
-                    const activeCh = channel === opt.value;
+                    const activeCh = channels.includes(opt.value);
                     return (
                       <button
                         key={opt.value}
                         type="button"
-                        onClick={() => setChannel(opt.value)}
+                        onClick={() => toggleChannel(opt.value)}
                         className={`flex flex-col items-start gap-1.5 p-3 rounded-md border text-left transition-colors cursor-pointer ${
                           activeCh
                             ? "border-m3-primary bg-m3-primary/5"
@@ -566,7 +569,6 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
                 </div>
               </div>
             </Surface>
-          )}
 
           <Surface padding="none" className="overflow-hidden">
             <div className="px-5 py-4 border-b border-m3-border">
@@ -652,7 +654,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
               </h3>
             </div>
             <div className="p-5 space-y-4">
-              {(isOrgTarget || channel === "inbox" || channel === "both") && (
+              {channels.includes("inbox") && (
                 <div className="p-3.5 rounded-md border border-m3-border bg-m3-sidebar/40">
                   <div className="flex gap-3 items-start">
                     <div className="p-2 rounded-md bg-m3-card border border-m3-border text-m3-primary shrink-0">
@@ -675,7 +677,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({ active, show
                 </div>
               )}
 
-              {!isOrgTarget && channel !== "inbox" && (
+              {channels.includes("push") && (
                 <div className="rounded-md border border-m3-border bg-m3-text text-m3-card p-3.5">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-4 h-4 rounded bg-m3-primary flex items-center justify-center">

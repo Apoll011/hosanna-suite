@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { getAuthAppUrl } from "./authUrl";
 import { authClient } from "./authClient";
 
 /**
@@ -59,8 +60,8 @@ export function currentSubscriptionStatus(rows: Subscription[]): Subscription["s
 }
 
 /**
- * Fallback display prices — keep in sync with server `src/config/pricing.ts`
- * defaults. Prefer `fetchPlanPricing()` so env overrides on the API apply.
+ * Fallback display prices — keep in sync with auth-app billing pricing defaults.
+ * Prefer `fetchPlanPricing()` so env overrides on the auth host apply.
  */
 export const PLAN_PRICING = {
   monthly: { amount: "€12", period: "/mês" },
@@ -71,15 +72,12 @@ export type PlanPricing = typeof PLAN_PRICING;
 
 let cachedPricing: PlanPricing | null = null;
 
-/** Load display amounts from GET /api/billing/pricing (public). */
-export async function fetchPlanPricing(apiBaseUrl?: string): Promise<PlanPricing> {
+/** Load display amounts from GET {auth}/api/billing/pricing (public). */
+export async function fetchPlanPricing(authBaseUrl?: string): Promise<PlanPricing> {
   if (cachedPricing) return cachedPricing;
   const base =
-    apiBaseUrl ??
-    (typeof import.meta !== "undefined"
-      ? (import.meta.env.VITE_API_URL as string | undefined)
-      : undefined) ??
-    "/api";
+    authBaseUrl ??
+    `${getAuthAppUrl().replace(/\/$/, "")}/api`;
   try {
     const res = await fetch(`${base.replace(/\/$/, "")}/billing/pricing`, {
       credentials: "omit",

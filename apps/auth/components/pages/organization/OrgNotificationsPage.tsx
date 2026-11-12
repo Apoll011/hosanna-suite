@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 
-type Target = "user" | "org";
+type Target = "user" | "org" | "team";
 type TypePreset = "info" | "organization" | "team" | "security" | "billing";
 
 type Recipient = {
@@ -39,6 +39,8 @@ type Recipient = {
   role: string;
   image?: string | null;
 };
+
+type TeamOption = { id: string; name: string };
 
 const TYPE_PRESETS: { value: TypePreset; icon: ReactNode }[] = [
   { value: "info", icon: <Info className="w-3.5 h-3.5" /> },
@@ -61,7 +63,7 @@ const ORG_ROLES: AppRole[] = [
 const CHANNELS: { value: NotificationChannel; icon: ReactNode }[] = [
   { value: "inbox", icon: <Bell className="w-4 h-4" /> },
   { value: "push", icon: <Smartphone className="w-4 h-4" /> },
-  { value: "both", icon: <MessageSquare className="w-4 h-4" /> },
+  { value: "email", icon: <MessageSquare className="w-4 h-4" /> },
 ];
 
 const MAX_SEARCH_RESULTS = 40;
@@ -82,6 +84,8 @@ export function OrgNotificationsPage() {
   const [query, setQuery] = useState("");
   const [recipient, setRecipient] = useState<Recipient | null>(null);
   const [members, setMembers] = useState<Recipient[]>([]);
+  const [teams, setTeams] = useState<TeamOption[]>([]);
+  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
   const [isLoadingMembers, setIsLoadingMembers] = useState(false);
   const [membersError, setMembersError] = useState<string | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<AppRole[]>([]);
@@ -89,12 +93,19 @@ export function OrgNotificationsPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [href, setHref] = useState("");
-  const [channel, setChannel] = useState<NotificationChannel>("inbox");
+  const [channels, setChannels] = useState<NotificationChannel[]>(["inbox"]);
+  const [prefs, setPrefs] = useState<{
+    inbox: boolean;
+    push: boolean;
+    email: boolean;
+  }>({ inbox: true, push: true, email: false });
   const [isSending, setIsSending] = useState(false);
+  const [isSavingPrefs, setIsSavingPrefs] = useState(false);
 
   const { granted: canSend, loading: canLoading } = useCan("notification.sent");
   const isOrgTarget = target === "org";
-  const showTypeField = isOrgTarget || channel !== "push";
+  const isTeamTarget = target === "team";
+  const showTypeField = true;
 
   const showToast = useCallback((msg: string, type: "success" | "error") => {
     setToast({ msg, type });
@@ -180,11 +191,17 @@ export function OrgNotificationsPage() {
     Boolean(organization) &&
     title.trim().length > 0 &&
     title.trim().length <= 255 &&
-    (isOrgTarget || Boolean(recipient));
+    channels.length > 0 &&
+    (isOrgTarget || (isTeamTarget && Boolean(selectedTeamId)) || Boolean(recipient));
 
   const toggleRole = (role: AppRole) =>
     setSelectedRoles((prev) =>
       prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role],
+    );
+
+  const toggleChannel = (ch: NotificationChannel) =>
+    setChannels((prev) =>
+      prev.includes(ch) ? (prev.length === 1 ? prev : prev.filter((c) => c !== ch)) : [...prev, ch],
     );
 
   const resetMessageFields = () => {
@@ -192,6 +209,55 @@ export function OrgNotificationsPage() {
     setTitle("");
     setDescription("");
     setHref("");
+  };
+
+  useEffect(() => {
+    void notificationsApi
+      .getPreferences()
+      .then((data) => {
+        const global = data.preferences.find((p) => !p.type && !p.category);
+        if (global) {
+          setPrefs({ inbox: global.inbox, push: global.push, email: global.email });
+        }
+      })
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    const embedded = (organization as { teams?: TeamOption[] } | null)?.teams;
+    if (embedded && embedded.length > 0) {
+      setTeams(embedded.map((team) => ({ id: team.id, name: team.name })));
+      return;
+    }
+    void (authClient.organization as any)
+      .listTeams?.({})
+      .then((res: any) => {
+        const list = (res?.data ?? res ?? []) as TeamOption[];
+        if (Array.isArray(list)) {
+          setTeams(list.map((team) => ({ id: team.id, name: team.name })));
+        }
+      })
+      .catch(() => setTeams([]));
+  }, [organization]);
+
+  const handleSavePrefs = async () => {
+    setIsSavingPrefs(true);
+    try {
+      await notificationsApi.updatePreference({
+        type: null,
+        category: null,
+        ...prefs,
+      });
+      showToast(t("settings.notifications.sentToast"), "success");
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : t("settings.notifications.genericError");
+      showToast(t("settings.notifications.errorToast", { error: message }), "error");
+    } finally {
+      setIsSavingPrefs(false);
+    }
   };
 
   const handleSend = async (e: FormEvent) => {
@@ -203,19 +269,21 @@ export function OrgNotificationsPage() {
       const payload: CreateNotificationInput = {
         type: showTypeField ? typePreset : "info",
         title: title.trim(),
+        channels,
       };
       if (description.trim()) payload.description = description.trim();
       if (href.trim()) payload.href = href.trim();
 
       if (isOrgTarget) {
         payload.organizationId = organization.id;
-        payload.channel = "inbox";
+        if (selectedRoles.length > 0) payload.roles = selectedRoles;
+      } else if (isTeamTarget) {
+        payload.teamId = selectedTeamId;
         if (selectedRoles.length > 0) payload.roles = selectedRoles;
       } else if (recipient) {
         payload.userId = recipient.userId;
-        payload.channel = channel;
-        if (channel !== "inbox" && href.trim()) {
-          payload.fcm = { data: { link: href.trim() } };
+        if (channels.includes("push") && href.trim()) {
+          payload.push = { data: { link: href.trim() } };
         }
       }
 
@@ -315,13 +383,18 @@ export function OrgNotificationsPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-m3-sidebar">
+              <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-m3-sidebar">
                 {(
                   [
                     {
                       value: "org" as const,
                       label: t("settings.notifications.recipient.organization"),
                       icon: <Building2 className="w-4 h-4" />,
+                    },
+                    {
+                      value: "team" as const,
+                      label: t("settings.notifications.content.types.team"),
+                      icon: <Users className="w-4 h-4" />,
                     },
                     {
                       value: "user" as const,
@@ -337,11 +410,9 @@ export function OrgNotificationsPage() {
                       type="button"
                       onClick={() => {
                         setTarget(opt.value);
-                        if (opt.value === "org") {
-                          setChannel("inbox");
-                          setRecipient(null);
-                          setQuery("");
-                        }
+                        setRecipient(null);
+                        setQuery("");
+                        if (opt.value !== "team") setSelectedTeamId("");
                       }}
                       className={`flex items-center justify-center gap-2 min-h-9 px-3 rounded-md text-sm font-medium transition-colors cursor-pointer ${
                         activeOpt
@@ -356,7 +427,44 @@ export function OrgNotificationsPage() {
                 })}
               </div>
 
-              {isOrgTarget ? (
+              {isTeamTarget ? (
+                <div className="space-y-3">
+                  <label className="text-xs font-medium text-m3-text">
+                    {t("settings.notifications.content.types.team")}
+                  </label>
+                  <select
+                    value={selectedTeamId}
+                    onChange={(e) => setSelectedTeamId(e.target.value)}
+                    className="w-full min-h-10 px-3 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
+                  >
+                    <option value="">{t("settings.notifications.recipient.searchPlaceholder")}</option>
+                    {teams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ORG_ROLES.map((role) => {
+                      const isSelected = selectedRoles.includes(role);
+                      return (
+                        <button
+                          key={role}
+                          type="button"
+                          onClick={() => toggleRole(role)}
+                          className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                            isSelected
+                              ? "bg-m3-primary text-white border-m3-primary"
+                              : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
+                          }`}
+                        >
+                          {t(`settings.roles.${role}` as "settings.roles.owner")}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : isOrgTarget ? (
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 rounded-lg border border-m3-border bg-m3-sidebar/50">
                     <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
@@ -506,59 +614,95 @@ export function OrgNotificationsPage() {
               )}
             </Surface>
 
-            {!isOrgTarget ? (
-              <Surface className="space-y-4">
-                <div>
-                  <h3 className="text-sm font-semibold text-m3-text">
-                    {t("settings.notifications.delivery.title")}
-                  </h3>
-                  <p className="text-xs text-m3-secondary mt-0.5">
-                    {t("settings.notifications.delivery.desc")}
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {CHANNELS.map((opt) => {
-                    const activeCh = channel === opt.value;
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => setChannel(opt.value)}
-                        className={`flex flex-col items-start gap-1.5 p-3 rounded-lg border text-left transition-colors cursor-pointer ${
+            <Surface className="space-y-4">
+              <div>
+                <h3 className="text-sm font-semibold text-m3-text">
+                  {t("settings.notifications.delivery.title")}
+                </h3>
+                <p className="text-xs text-m3-secondary mt-0.5">
+                  {t("settings.notifications.delivery.desc")}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {CHANNELS.map((opt) => {
+                  const activeCh = channels.includes(opt.value);
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => toggleChannel(opt.value)}
+                      className={`flex flex-col items-start gap-1.5 p-3 rounded-lg border text-left transition-colors cursor-pointer ${
+                        activeCh
+                          ? "border-m3-primary bg-m3-primary/5"
+                          : "border-m3-border hover:border-m3-primary/40"
+                      }`}
+                    >
+                      <span
+                        className={`w-8 h-8 rounded-md flex items-center justify-center ${
                           activeCh
-                            ? "border-m3-primary bg-m3-primary/5"
-                            : "border-m3-border hover:border-m3-primary/40"
+                            ? "bg-m3-primary text-white"
+                            : "bg-m3-sidebar text-m3-secondary"
                         }`}
                       >
-                        <span
-                          className={`w-8 h-8 rounded-md flex items-center justify-center ${
-                            activeCh
-                              ? "bg-m3-primary text-white"
-                              : "bg-m3-sidebar text-m3-secondary"
-                          }`}
-                        >
-                          {opt.icon}
-                        </span>
-                        <span
-                          className={`text-sm font-medium ${
-                            activeCh ? "text-m3-primary" : "text-m3-text"
-                          }`}
-                        >
-                          {t(
-                            `settings.notifications.delivery.${opt.value}` as "settings.notifications.delivery.inbox",
-                          )}
-                        </span>
-                        <span className="text-xs text-m3-secondary">
-                          {t(
-                            `settings.notifications.delivery.${opt.value}Desc` as "settings.notifications.delivery.inboxDesc",
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </Surface>
-            ) : null}
+                        {opt.icon}
+                      </span>
+                      <span
+                        className={`text-sm font-medium ${
+                          activeCh ? "text-m3-primary" : "text-m3-text"
+                        }`}
+                      >
+                        {t(
+                          `settings.notifications.delivery.${opt.value}` as "settings.notifications.delivery.inbox",
+                        )}
+                      </span>
+                      <span className="text-xs text-m3-secondary">
+                        {t(
+                          `settings.notifications.delivery.${opt.value}Desc` as "settings.notifications.delivery.inboxDesc",
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Surface>
+
+            <Surface className="space-y-4">
+              <div>
+                <h3 className="text-sm font-semibold text-m3-text">
+                  {t("accountOrg.notifications.title")}
+                </h3>
+                <p className="text-xs text-m3-secondary mt-0.5">
+                  {t("accountOrg.notifications.description")}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(["inbox", "push", "email"] as const).map((ch) => (
+                  <button
+                    key={ch}
+                    type="button"
+                    onClick={() => setPrefs((p) => ({ ...p, [ch]: !p[ch] }))}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                      prefs[ch]
+                        ? "bg-m3-primary text-white border-m3-primary"
+                        : "bg-m3-card text-m3-secondary border-m3-border"
+                    }`}
+                  >
+                    {t(
+                      `settings.notifications.delivery.${ch}` as "settings.notifications.delivery.inbox",
+                    )}
+                  </button>
+                ))}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={isSavingPrefs}
+                onClick={() => void handleSavePrefs()}
+              >
+                {isSavingPrefs ? t("common.saving") : t("common.save")}
+              </Button>
+            </Surface>
 
             <Surface className="space-y-4">
               <div>
@@ -641,7 +785,7 @@ export function OrgNotificationsPage() {
                 {t("settings.notifications.content.preview")}
               </h3>
 
-              {(isOrgTarget || channel === "inbox" || channel === "both") && (
+              {channels.includes("inbox") && (
                 <div className="p-3.5 rounded-lg border border-m3-border bg-m3-sidebar/40">
                   <div className="flex gap-3 items-start">
                     <div className="p-2 rounded-md bg-m3-card border border-m3-border text-m3-primary shrink-0">
@@ -664,7 +808,7 @@ export function OrgNotificationsPage() {
                 </div>
               )}
 
-              {!isOrgTarget && channel !== "inbox" ? (
+              {channels.includes("push") ? (
                 <div className="rounded-lg border border-m3-border bg-m3-text text-m3-card p-3.5">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-4 h-4 rounded bg-m3-primary flex items-center justify-center">

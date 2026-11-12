@@ -3,8 +3,8 @@
  *
  * Runs once per day (Vercel cron). For every organization it finds agenda
  * events happening tomorrow ("in 1 day") or in 3 days ("in 3 days"), then
- * sends a push notification (FCM) to every session of every assigned member
- * that has `notify` enabled and an `fcm` token registered.
+ * sends a push (+ inbox) notification via the unified notification service to
+ * every assigned member with an enabled PushDevice registration.
  *
  * Event dates are stored as plain strings (e.g. "2026-09-27") and interpreted
  * in the organization's configured timezone (org metadata →
@@ -25,10 +25,10 @@
  * retry or a manual run cannot notify the same person twice.
  */
 
-import { prisma } from "../database/prisma.js";
-import { sendFcmToToken } from "../lib/fcm.js";
-import { DEFAULT_LOCALE, t, type TranslationKey } from "../lib/i18n.js";
 import { RESPONSIBILITIES } from "@hosanna/auth";
+import { prisma } from "@/lib/db/prisma";
+import { getNotificationService } from "@/lib/notifications/service";
+import { DEFAULT_LOCALE, t, type TranslationKey } from "@/locales/server";
 
 /** Lead times (in days) a reminder is sent for. Order matters: index 0 → 1 day. */
 const REMINDER_OFFSETS_DAYS = [1, 3] as const;
@@ -334,17 +334,7 @@ export async function runAgendaReminders(now: Date = new Date()): Promise<Agenda
   result.duplicatesSkipped = reminders.length - pending.length;
   if (pending.length === 0) return result;
 
-  // One session query for every recipient (instead of one per user).
-  const sessions = await prisma.session.findMany({
-    where: {
-      userId: { in: [...new Set(pending.map((r) => r.userId))] },
-      notify: true,
-      fcm: { not: null },
-    },
-    select: { id: true, userId: true, fcm: true },
-  });
-  const sessionsByUser = groupSessionsByUser(sessions);
-
+  const notifications = getNotificationService();
   const dispatched: Array<{
     eventId: string;
     userId: string;
@@ -354,38 +344,20 @@ export async function runAgendaReminders(now: Date = new Date()): Promise<Agenda
   await mapWithConcurrency(pending, FCM_CONCURRENCY, async (reminder) => {
     try {
       const payload = buildPayload(reminder);
-      const recipientSessions = sessionsByUser.get(reminder.userId) ?? [];
-      if (recipientSessions.length === 0) return;
+      const delivery = await notifications.dispatch({
+        userId: reminder.userId,
+        type: "agenda.reminder",
+        title: payload.title,
+        body: payload.body,
+        data: payload.data,
+        channels: ["push", "inbox"],
+        push: { title: payload.title, body: payload.body, data: payload.data },
+      });
 
-      let sent = 0;
-      const deadSessionIds: string[] = [];
+      result.notificationsSent += delivery.push.sent;
+      result.tokensPruned += delivery.push.invalidTokensPruned;
 
-      await Promise.all(
-        recipientSessions.map(async (session) => {
-          const outcome = await sendFcmToToken(session.fcm!, payload);
-          if (outcome.ok) {
-            sent++;
-          } else if (outcome.invalidToken) {
-            deadSessionIds.push(session.id);
-          }
-        }),
-      );
-
-      if (deadSessionIds.length > 0) {
-        // Tokens are dead — clear them so we stop retrying future notifications.
-        await prisma.session
-          .updateMany({
-            where: { id: { in: deadSessionIds } },
-            data: { fcm: null },
-          })
-          .catch(() => undefined);
-        result.tokensPruned += deadSessionIds.length;
-      }
-
-      result.notificationsSent += sent;
-      if (sent > 0) {
-        // Only ledger reminders we actually delivered something for, so a run
-        // where every token was dead can be retried on the next invocation.
+      if (delivery.push.sent > 0 || delivery.inbox.created > 0) {
         dispatched.push({
           eventId: reminder.eventId,
           userId: reminder.userId,
@@ -413,18 +385,6 @@ export async function runAgendaReminders(now: Date = new Date()): Promise<Agenda
 
 function dispatchKey(d: { eventId: string; userId: string; daysUntil: number }): string {
   return `${d.eventId}\u0000${d.userId}\u0000${d.daysUntil}`;
-}
-
-function groupSessionsByUser(
-  sessions: Array<{ id: string; userId: string; fcm: string | null }>,
-): Map<string, Array<{ id: string; fcm: string | null }>> {
-  const byUser = new Map<string, Array<{ id: string; fcm: string | null }>>();
-  for (const session of sessions) {
-    const list = byUser.get(session.userId);
-    if (list) list.push(session);
-    else byUser.set(session.userId, [session]);
-  }
-  return byUser;
 }
 
 function buildPayload(reminder: PendingReminder): FcmPayload {

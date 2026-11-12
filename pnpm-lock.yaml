@@ -65,6 +65,9 @@ importers:
       '@hosanna/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@hosanna/notifications':
+        specifier: workspace:*
+        version: link:../../packages/notifications
       '@modelcontextprotocol/node':
         specifier: ^2.1.2
         version: 2.1.2(@modelcontextprotocol/server@2.4.0)
@@ -180,6 +183,9 @@ importers:
       '@hosanna/brand':
         specifier: workspace:*
         version: link:../../packages/brand
+      '@hosanna/cache':
+        specifier: workspace:*
+        version: link:../../packages/cache
       '@hosanna/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -189,6 +195,9 @@ importers:
       '@hosanna/logos-ai':
         specifier: workspace:*
         version: link:../../packages/logos-ai
+      '@hosanna/notifications':
+        specifier: workspace:*
+        version: link:../../packages/notifications
       '@hosanna/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -841,6 +850,31 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.3.1(react@19.3.1)
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/notifications:
+    dependencies:
+      '@hosanna/db':
+        specifier: workspace:*
+        version: link:../db
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.3
+    devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
       tsx:
         specifier: ^4.23.15
         version: 4.23.15

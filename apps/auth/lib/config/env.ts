@@ -75,6 +75,22 @@ export const env = {
   resendApiKey: required("RESEND_API_KEY"),
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
+  /** Firebase Cloud Messaging (push) — same service account as the former API host. */
+  fcmProjectId: optional("FCM_PROJECT_ID"),
+  fcmClientEmail: optional("FCM_CLIENT_EMAIL"),
+  fcmPrivateKey: optional("FCM_PRIVATE_KEY"),
+
+  /** Vercel cron + manual agenda reminder runs. */
+  cronSecret: optional("CRON_SECRET"),
+
+  planPriceMonthlyCents: parseInt(process.env.PLAN_PRICE_MONTHLY_CENTS ?? "1200", 10),
+  planPriceMonthlyDisplay: process.env.PLAN_PRICE_MONTHLY_DISPLAY ?? "€12",
+  planPriceMonthlyPeriod: process.env.PLAN_PRICE_MONTHLY_PERIOD ?? "/mês",
+  planPriceAnnualCents: parseInt(process.env.PLAN_PRICE_ANNUAL_CENTS ?? "12000", 10),
+  planPriceAnnualDisplay: process.env.PLAN_PRICE_ANNUAL_DISPLAY ?? "€120",
+  planPriceAnnualPeriod: process.env.PLAN_PRICE_ANNUAL_PERIOD ?? "/ano",
+  planPriceCurrency: process.env.PLAN_PRICE_CURRENCY ?? "eur",
+
   /**
    * Primary MCP resource identifier (stays on the API host).
    * Better Auth MCP requires https for non-loopback hosts.
