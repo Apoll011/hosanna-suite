@@ -16,6 +16,8 @@ export const sharedPt = {
     retry: "Tentar novamente",
     refresh: "Atualizar",
     loading: "A carregar…",
+    expand: "Expandir",
+    collapse: "Fechar",
   },
   billing: {
     period: {

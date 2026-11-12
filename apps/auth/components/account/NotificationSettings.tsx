@@ -83,7 +83,7 @@ function Toggle({
       }`}
     >
       <span
-        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
+        className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform duration-200 ${
           checked ? "translate-x-[18px]" : "translate-x-1"
         }`}
       />
@@ -109,16 +109,22 @@ function ExpandableSection({
   children: ReactNode;
 }) {
   return (
-    <div className="border-b border-m3-border last:border-b-0">
+    <div className="rounded-xl border border-m3-border bg-m3-sidebar/20 overflow-hidden">
       <button
         type="button"
         id={`${id}-trigger`}
         aria-expanded={open}
         aria-controls={`${id}-panel`}
         onClick={onToggle}
-        className="w-full flex items-center gap-3 py-3.5 text-left cursor-pointer hover:bg-m3-hover/40 px-1 -mx-1 rounded-md transition-colors"
+        className="w-full flex items-center gap-3 px-3.5 py-3 text-left cursor-pointer hover:bg-m3-hover/35 transition-colors"
       >
-        <span className="w-8 h-8 rounded-lg bg-m3-sidebar border border-m3-border text-m3-secondary flex items-center justify-center shrink-0">
+        <span
+          className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+            open
+              ? "bg-m3-primary/10 border-m3-primary/20 text-m3-primary"
+              : "bg-m3-card border-m3-border text-m3-secondary"
+          }`}
+        >
           {icon}
         </span>
         <span className="min-w-0 flex-1">
@@ -128,24 +134,33 @@ function ExpandableSection({
           ) : null}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-m3-secondary shrink-0 transition-transform ${
-            open ? "rotate-180" : ""
+          className={`w-4 h-4 text-m3-secondary shrink-0 transition-transform duration-200 ease-out ${
+            open ? "rotate-180" : "rotate-0"
           }`}
         />
       </button>
-      {open ? (
-        <div id={`${id}-panel`} role="region" aria-labelledby={`${id}-trigger`} className="pb-4">
-          {children}
+      <div
+        id={`${id}-panel`}
+        role="region"
+        aria-labelledby={`${id}-trigger`}
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden min-h-0">
+          <div
+            className={`px-3.5 pb-3.5 transition-opacity duration-200 ${
+              open ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {children}
+          </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }
 
-function channelLabel(
-  t: ReturnType<typeof useI18n>["t"],
-  key: ChannelKey,
-): string {
+function channelLabel(t: ReturnType<typeof useI18n>["t"], key: ChannelKey): string {
   return t(`account.notifications.channels.${key}` as "account.notifications.channels.inbox");
 }
 
@@ -165,8 +180,17 @@ export function NotificationSettingsSection({
     () => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
   );
   const [dirty, setDirty] = useState(false);
-  const [openSection, setOpenSection] = useState<SectionId>("channels");
-  const [openCategory, setOpenCategory] = useState<CategoryKey | null>("agenda");
+  const [openSections, setOpenSections] = useState<Record<SectionId, boolean>>({
+    channels: true,
+    categories: false,
+    quiet: false,
+  });
+  const [openCategories, setOpenCategories] = useState<Record<CategoryKey, boolean>>({
+    agenda: true,
+    billing: false,
+    org: false,
+    product: false,
+  });
 
   const applyPreferences = useCallback((preferences: NotificationPreference[]) => {
     const nextGlobal = { ...DEFAULT_GLOBAL };
@@ -237,6 +261,8 @@ export function NotificationSettingsSection({
     return `${quietStart} – ${quietEnd} · ${timezone}`;
   }, [quietEnd, quietStart, t, timezone]);
 
+  const anyOpen = openSections.channels || openSections.categories || openSections.quiet;
+
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -274,28 +300,51 @@ export function NotificationSettingsSection({
   };
 
   const toggleSection = (id: SectionId) =>
-    setOpenSection((prev) => (prev === id ? prev : id));
+    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const collapseAll = () =>
+    setOpenSections({ channels: false, categories: false, quiet: false });
+
+  const expandAll = () =>
+    setOpenSections({ channels: true, categories: true, quiet: true });
 
   return (
     <Surface className="overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-2">
-        <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-m3-text">{t("account.notifications.title")}</h3>
-          <p className="text-xs text-m3-secondary mt-0.5 leading-relaxed">
-            {t("account.notifications.description")}
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div className="flex items-start gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+            <Bell className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-sm font-semibold text-m3-text">
+              {t("account.notifications.title")}
+            </h3>
+            <p className="text-xs text-m3-secondary mt-0.5 leading-relaxed">
+              {t("account.notifications.description")}
+            </p>
+          </div>
         </div>
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          disabled={isLoading || isSaving || !dirty}
-          onClick={() => void handleSave()}
-          icon={isSaving ? <Spinner size="sm" /> : <Save className="w-4 h-4" />}
-          className="self-start"
-        >
-          {isSaving ? t("common.saving") : t("common.save")}
-        </Button>
+        <div className="flex items-center gap-2 self-start">
+          {!isLoading ? (
+            <button
+              type="button"
+              onClick={() => (anyOpen ? collapseAll() : expandAll())}
+              className="text-xs font-medium text-m3-secondary hover:text-m3-text px-2 py-1.5 rounded-md hover:bg-m3-hover cursor-pointer transition-colors"
+            >
+              {anyOpen ? t("common.collapse") : t("common.expand")}
+            </button>
+          ) : null}
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            disabled={isLoading || isSaving || !dirty}
+            onClick={() => void handleSave()}
+            icon={isSaving ? <Spinner size="sm" /> : <Save className="w-4 h-4" />}
+          >
+            {isSaving ? t("common.saving") : t("common.save")}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -303,24 +352,26 @@ export function NotificationSettingsSection({
           <Spinner size="sm" label={t("account.notifications.loading")} />
         </div>
       ) : (
-        <div>
+        <div className="space-y-2.5">
           <ExpandableSection
             id="notif-channels"
             title={t("account.notifications.defaultsTitle")}
             summary={channelSummary}
             icon={<Bell className="w-4 h-4" />}
-            open={openSection === "channels"}
+            open={openSections.channels}
             onToggle={() => toggleSection("channels")}
           >
-            <div className="space-y-1.5 pl-1">
+            <div className="space-y-1">
               {CHANNELS.map(({ key, icon: Icon }) => {
                 const on = global[key];
                 return (
                   <div
                     key={key}
-                    className="flex items-center gap-3 px-2.5 py-2 rounded-lg hover:bg-m3-sidebar/60"
+                    className="flex items-center gap-3 px-2.5 py-2 rounded-lg hover:bg-m3-card/70 transition-colors"
                   >
-                    <Icon className={`w-4 h-4 shrink-0 ${on ? "text-m3-primary" : "text-m3-secondary"}`} />
+                    <Icon
+                      className={`w-4 h-4 shrink-0 ${on ? "text-m3-primary" : "text-m3-secondary"}`}
+                    />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-m3-text">{channelLabel(t, key)}</p>
                       <p className="text-[11px] text-m3-secondary">
@@ -355,12 +406,12 @@ export function NotificationSettingsSection({
               ),
             ).join(" · ")}
             icon={<Users className="w-4 h-4" />}
-            open={openSection === "categories"}
+            open={openSections.categories}
             onToggle={() => toggleSection("categories")}
           >
-            <div className="rounded-lg border border-m3-border overflow-hidden">
+            <div className="rounded-lg border border-m3-border overflow-hidden bg-m3-card/40">
               {CATEGORIES.map(({ key, icon: Icon }) => {
-                const open = openCategory === key;
+                const open = openCategories[key];
                 const enabled = CHANNELS.filter((ch) => categories[key][ch.key])
                   .map((ch) => channelLabel(t, ch.key))
                   .join(" · ");
@@ -369,8 +420,10 @@ export function NotificationSettingsSection({
                     <button
                       type="button"
                       aria-expanded={open}
-                      onClick={() => setOpenCategory((prev) => (prev === key ? null : key))}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left cursor-pointer hover:bg-m3-hover/50 transition-colors"
+                      onClick={() =>
+                        setOpenCategories((prev) => ({ ...prev, [key]: !prev[key] }))
+                      }
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left cursor-pointer hover:bg-m3-hover/40 transition-colors"
                     >
                       <Icon className="w-4 h-4 text-m3-secondary shrink-0" />
                       <span className="min-w-0 flex-1">
@@ -384,38 +437,43 @@ export function NotificationSettingsSection({
                         </span>
                       </span>
                       <ChevronDown
-                        className={`w-3.5 h-3.5 text-m3-secondary transition-transform ${
-                          open ? "rotate-180" : ""
+                        className={`w-3.5 h-3.5 text-m3-secondary transition-transform duration-200 ${
+                          open ? "rotate-180" : "rotate-0"
                         }`}
                       />
                     </button>
-                    {open ? (
-                      <div className="px-3 pb-3 grid grid-cols-3 gap-2">
-                        {CHANNELS.map((ch) => (
-                          <label
-                            key={ch.key}
-                            className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-md bg-m3-sidebar/50 border border-m3-border cursor-pointer"
-                          >
-                            <span className="text-xs font-medium text-m3-text">
-                              {channelLabel(t, ch.key)}
-                            </span>
-                            <Toggle
-                              checked={categories[key][ch.key]}
-                              label={`${t(
-                                `account.notifications.categories.${key}` as "account.notifications.categories.agenda",
-                              )} ${channelLabel(t, ch.key)}`}
-                              onChange={(next) => {
-                                setCategories((prev) => ({
-                                  ...prev,
-                                  [key]: { ...prev[key], [ch.key]: next },
-                                }));
-                                markDirty();
-                              }}
-                            />
-                          </label>
-                        ))}
+                    <div
+                      className="grid transition-[grid-template-rows] duration-200 ease-out"
+                      style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+                    >
+                      <div className="overflow-hidden min-h-0">
+                        <div className="px-3 pb-3 grid grid-cols-3 gap-2">
+                          {CHANNELS.map((ch) => (
+                            <label
+                              key={ch.key}
+                              className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-md bg-m3-sidebar/50 border border-m3-border cursor-pointer"
+                            >
+                              <span className="text-xs font-medium text-m3-text">
+                                {channelLabel(t, ch.key)}
+                              </span>
+                              <Toggle
+                                checked={categories[key][ch.key]}
+                                label={`${t(
+                                  `account.notifications.categories.${key}` as "account.notifications.categories.agenda",
+                                )} ${channelLabel(t, ch.key)}`}
+                                onChange={(next) => {
+                                  setCategories((prev) => ({
+                                    ...prev,
+                                    [key]: { ...prev[key], [ch.key]: next },
+                                  }));
+                                  markDirty();
+                                }}
+                              />
+                            </label>
+                          ))}
+                        </div>
                       </div>
-                    ) : null}
+                    </div>
                   </div>
                 );
               })}
@@ -427,10 +485,10 @@ export function NotificationSettingsSection({
             title={t("account.notifications.quietHoursTitle")}
             summary={quietSummary}
             icon={<Moon className="w-4 h-4" />}
-            open={openSection === "quiet"}
+            open={openSections.quiet}
             onToggle={() => toggleSection("quiet")}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pl-1">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <label className="flex flex-col gap-1.5">
                 <span className="text-xs font-medium text-m3-text">
                   {t("account.notifications.quietStart")}

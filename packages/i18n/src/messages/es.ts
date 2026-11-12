@@ -18,6 +18,8 @@ export const sharedEs: typeof sharedPt = {
     retry: "Reintentar",
     refresh: "Actualizar",
     loading: "Cargando…",
+    expand: "Expandir",
+    collapse: "Cerrar",
   },
   billing: {
     period: {
