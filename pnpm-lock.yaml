@@ -65,6 +65,9 @@ importers:
       '@hosanna/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@hosanna/notifications':
+        specifier: workspace:*
+        version: link:../../packages/notifications
       '@modelcontextprotocol/node':
         specifier: ^2.1.2
         version: 2.1.2(@modelcontextprotocol/server@2.4.0)
@@ -180,6 +183,9 @@ importers:
       '@hosanna/brand':
         specifier: workspace:*
         version: link:../../packages/brand
+      '@hosanna/cache':
+        specifier: workspace:*
+        version: link:../../packages/cache
       '@hosanna/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -189,6 +195,9 @@ importers:
       '@hosanna/logos-ai':
         specifier: workspace:*
         version: link:../../packages/logos-ai
+      '@hosanna/notifications':
+        specifier: workspace:*
+        version: link:../../packages/notifications
       '@hosanna/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -201,6 +210,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.49.0
         version: 2.119.0
+      '@vercel/global-config':
+        specifier: ^1.5.1
+        version: 1.5.1(next@15.5.29(@babel/core@7.29.13(supports-color@10.2.2))(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       better-auth:
         specifier: ^1.7.18
         version: 1.7.18(@prisma/client@7.10.1(prisma@7.10.1(@types/node@22.20.5)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3))(typescript@5.9.3))(mysql2@3.24.4(@types/node@22.20.5))(next@15.5.29(@babel/core@7.29.13(supports-color@10.2.2))(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(prisma@7.10.1(@types/node@22.20.5)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -841,6 +853,31 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.3.1(react@19.3.1)
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/notifications:
+    dependencies:
+      '@hosanna/db':
+        specifier: workspace:*
+        version: link:../db
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.3
+    devDependencies:
+      '@hosanna/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
@@ -4186,6 +4223,21 @@ packages:
       '@aws-sdk/credential-provider-web-identity':
         optional: true
       ws:
+        optional: true
+
+  '@vercel/global-config-fs@0.1.0':
+    resolution: {integrity: sha512-xxMUwf96H/qKTA4Az+uh3xlVWkwnN3z400P5gex0uUsU8pe99njopYVyKVoUTfu8gN9xbHqaigWaIBr1+lufMg==}
+
+  '@vercel/global-config@1.5.1':
+    resolution: {integrity: sha512-PUJaoyMGuSLdKnBgYIqeH1i6U3G+5noLvvJLqI8IPP5+P0b2Q5EcBBraFRh6ctNY/yTpb40klyLYyE3X0OPmKQ==}
+    engines: {node: '>=14.6'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.7.0
+      next: '>=1'
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      next:
         optional: true
 
   '@vercel/oidc@3.2.0':
@@ -10881,6 +10933,14 @@ snapshots:
       '@vercel/oidc': 4.0.7
     optionalDependencies:
       ws: 8.21.0
+
+  '@vercel/global-config-fs@0.1.0': {}
+
+  '@vercel/global-config@1.5.1(next@15.5.29(@babel/core@7.29.13(supports-color@10.2.2))(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+    dependencies:
+      '@vercel/global-config-fs': 0.1.0
+    optionalDependencies:
+      next: 15.5.29(@babel/core@7.29.13(supports-color@10.2.2))(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
   '@vercel/oidc@3.2.0': {}
 

@@ -75,6 +75,20 @@ export const env = {
   resendApiKey: required("RESEND_API_KEY"),
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 
+  /** Firebase Cloud Messaging (push) — same service account as the former API host. */
+  fcmProjectId: optional("FCM_PROJECT_ID"),
+  fcmClientEmail: optional("FCM_CLIENT_EMAIL"),
+  fcmPrivateKey: optional("FCM_PRIVATE_KEY"),
+
+  /** Vercel cron + manual agenda reminder runs. */
+  cronSecret: optional("CRON_SECRET"),
+
+  /**
+   * Vercel Global Config connection string (reads `hosanna-cloud` pricing).
+   * Falls back to EDGE_CONFIG inside `@vercel/global-config` if unset.
+   */
+  globalConfig: optional("GLOBAL_CONFIG") ?? optional("EDGE_CONFIG"),
+
   /**
    * Primary MCP resource identifier (stays on the API host).
    * Better Auth MCP requires https for non-loopback hosts.

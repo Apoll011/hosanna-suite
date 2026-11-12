@@ -32,9 +32,14 @@ interface UserInvitation {
 
 type OrgSummary = { id: string; name: string; slug: string; logo?: string | null };
 
-const PLAN_PRICING = {
-  monthly: { amount: "€12", period: "/mo" },
-  annual: { amount: "€120", period: "/yr" },
+type PlanPeriodId = "month" | "year";
+
+const DEFAULT_PLAN_PRICING: {
+  monthly: { amount: string; period: PlanPeriodId };
+  annual: { amount: string; period: PlanPeriodId };
+} = {
+  monthly: { amount: "€12", period: "month" },
+  annual: { amount: "€120", period: "year" },
 };
 
 export function OnboardingPage() {
@@ -49,6 +54,7 @@ export function OnboardingPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [newOrg, setNewOrg] = useState<{ id: string; slug: string } | null>(null);
   const [annual, setAnnual] = useState(false);
+  const [planPricing, setPlanPricing] = useState(DEFAULT_PLAN_PRICING);
   const [invitations, setInvitations] = useState<UserInvitation[]>([]);
   const [isFetchingInvitations, setIsFetchingInvitations] = useState(true);
   const [processingInvId, setProcessingInvId] = useState<string | null>(null);
@@ -57,6 +63,27 @@ export function OnboardingPage() {
   const [isLoadingOrgs, setIsLoadingOrgs] = useState(true);
   const [isOrgSwitcherOpen, setIsOrgSwitcherOpen] = useState(false);
   const [switchingOrgId, setSwitchingOrgId] = useState<string | null>(null);
+
+  useEffect(() => {
+    void fetch("/api/billing/pricing", { credentials: "omit" })
+      .then(async (res) => {
+        if (!res.ok) return;
+        const data = await res.json();
+        const asPeriod = (value: unknown, fallback: PlanPeriodId): PlanPeriodId =>
+          value === "month" || value === "year" ? value : fallback;
+        setPlanPricing({
+          monthly: {
+            amount: data.monthly?.amount ?? DEFAULT_PLAN_PRICING.monthly.amount,
+            period: asPeriod(data.monthly?.period, "month"),
+          },
+          annual: {
+            amount: data.annual?.amount ?? DEFAULT_PLAN_PRICING.annual.amount,
+            period: asPeriod(data.annual?.period, "year"),
+          },
+        });
+      })
+      .catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     const pendingInvitationId = localStorage.getItem("pending_invitation_id");
@@ -360,10 +387,14 @@ export function OnboardingPage() {
             </div>
             <div className="flex items-baseline justify-center gap-1">
               <span className="text-2xl font-semibold text-m3-text">
-                {annual ? PLAN_PRICING.annual.amount : PLAN_PRICING.monthly.amount}
+                {annual ? planPricing.annual.amount : planPricing.monthly.amount}
               </span>
               <span className="text-xs sm:text-sm text-m3-secondary">
-                {annual ? PLAN_PRICING.annual.period : PLAN_PRICING.monthly.period}
+                {t(
+                  `billing.period.${
+                    annual ? planPricing.annual.period : planPricing.monthly.period
+                  }` as "billing.period.month",
+                )}
               </span>
             </div>
             {annual && (

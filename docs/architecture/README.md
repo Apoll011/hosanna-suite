@@ -12,6 +12,7 @@ Hosanna is a **local-first worship planning platform**: churches organize songs 
 | [backend-internals.md](./backend-internals.md)         | Express routes, services, middleware, Prisma            |
 | [data-and-sync.md](./data-and-sync.md)                 | Local stores, RxDB-style replication, trash             |
 | [auth-and-billing.md](./auth-and-billing.md)           | Better Auth, RBAC, Stripe, entitlements                 |
+| [notifications.md](./notifications.md)                 | Unified inbox / push / email dispatcher (auth-hosted)   |
 | [external-integrations.md](./external-integrations.md) | Supabase, Firebase, AI, YouTube, email, …               |
 | [mcp-domain-packs.md](./mcp-domain-packs.md)           | MCP + Logos domains: how tool calls work, how to expand |
 | [improvements.md](./improvements.md)                   | Bugs, TODOs, tech debt, and suggested fixes             |

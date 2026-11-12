@@ -786,7 +786,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Send notification */
+    /**
+     * Send notification (hosted on auth.hosanna.live)
+     * @description Unified multi-channel dispatch (inbox, push, email) with user/org/team targeting.
+     */
     post: operations["sendNotification"];
     delete?: never;
     options?: never;
@@ -946,12 +949,20 @@ export interface components {
       monthly?: {
         amount?: string;
         amountCents?: number;
-        period?: string;
+        /**
+         * @description Stable period id; clients localize via billing.period.*
+         * @enum {string}
+         */
+        period?: "month" | "year";
       };
       annual?: {
         amount?: string;
         amountCents?: number;
-        period?: string;
+        /**
+         * @description Stable period id; clients localize via billing.period.*
+         * @enum {string}
+         */
+        period?: "month" | "year";
       };
     };
     BackupDocument: {
@@ -2735,17 +2746,26 @@ export interface operations {
         "application/json": {
           userId?: string;
           organizationId?: string;
+          teamId?: string;
           roles?: string[];
           type: string;
           title: string;
           description?: string;
+          body?: string;
           href?: string;
           /**
            * @default inbox
            * @enum {string}
            */
           channel?: "inbox" | "push" | "both";
+          channels?: ("inbox" | "push" | "email")[];
           fcm?: {
+            [key: string]: unknown;
+          };
+          push?: {
+            [key: string]: unknown;
+          };
+          email?: {
             [key: string]: unknown;
           };
         };

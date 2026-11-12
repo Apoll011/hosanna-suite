@@ -71,13 +71,13 @@ Restore: `POST /api/trash/{songs|folders|services}/:id/restore` (then sync).
 
 ## What is _not_ replicated
 
-| Data                       | Why / how instead                                                        |
-| -------------------------- | ------------------------------------------------------------------------ |
-| Service notes              | Privacy (private notes); REST `/api/services/:id/notes` + Firestore ping |
-| Song annotations           | Large canvas + live presence; REST + Firestore + local `.fcv`            |
-| Notifications              | Better Auth inbox + FCM                                                  |
-| AI settings / memory       | Org-scoped REST                                                          |
-| Auth / membership / Stripe | Better Auth + Stripe plugins                                             |
+| Data                       | Why / how instead                                                                                            |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Service notes              | Privacy (private notes); REST `/api/services/:id/notes` + Firestore ping                                     |
+| Song annotations           | Large canvas + live presence; REST + Firestore + local `.fcv`                                                |
+| Notifications              | Auth-hosted unified dispatcher (inbox + PushDevice/FCM + email) — see [notifications.md](./notifications.md) |
+| AI settings / memory       | Org-scoped REST                                                                                              |
+| Auth / membership / Stripe | Better Auth + Stripe plugins                                                                                 |
 
 ## Conflict model
 
@@ -87,7 +87,7 @@ Restore: `POST /api/trash/{songs|folders|services}/:id/restore` (then sync).
 
 ## Backup
 
-`GET /api/backup` / `POST /api/backup/restore` export or restore folders + songs + services (format v2.1). Complements replication for migrations and disaster recovery — not a substitute for continuous sync.
+`GET /api/backup` / `POST /api/backup/restore` on **auth.hosanna.live** export or restore folders + songs + services + collections + agenda (format v2.2). Complements replication for migrations and disaster recovery — not a substitute for continuous sync.
 
 ## Annotations + notes (live path)
 

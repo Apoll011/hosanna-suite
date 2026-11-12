@@ -38,7 +38,15 @@ Public: `/login`, `/register`, `/new`, `/forgot-password`, `/reset-password`, `/
 
 Authenticated: `/onboarding`, `/oauth/consent`, `/account`
 
-API: `/api/auth/*` + `/.well-known/*`
+API:
+
+- `/api/auth/*` + `/.well-known/*` — Better Auth + Stripe
+- `/api/notifications*` — unified inbox / push / email dispatch, prefs, devices
+- `/api/billing/pricing`, `/api/billing/entitlement`
+- `/api/backup`, `/api/backup/restore`
+- `/api/cron/agenda-reminders`
+
+See [docs/architecture/notifications.md](../../docs/architecture/notifications.md).
 
 ## Deploy
 

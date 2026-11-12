@@ -10,11 +10,18 @@ export const sharedPt = {
   },
   common: {
     save: "Guardar",
+    saving: "A guardar…",
     cancel: "Cancelar",
     back: "Voltar",
     retry: "Tentar novamente",
     refresh: "Atualizar",
     loading: "A carregar…",
+  },
+  billing: {
+    period: {
+      month: "/mês",
+      year: "/ano",
+    },
   },
   organization: {
     loginActivity: {
@@ -117,11 +124,13 @@ export const sharedPt = {
       },
       delivery: {
         title: "Entrega",
-        desc: "Caixa de entrada, push, ou ambos.",
+        desc: "Escolhe um ou mais canais: caixa de entrada, push e email.",
         inbox: "Caixa de entrada",
         inboxDesc: "Na aplicação",
         push: "Push",
         pushDesc: "No dispositivo",
+        email: "Email",
+        emailDesc: "Para o email do membro",
         both: "Ambos",
         bothDesc: "Caixa de entrada e push",
       },

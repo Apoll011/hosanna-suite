@@ -2,14 +2,23 @@ openapi: 3.1.0
 info:
   title: Hosanna API
   version: 2.22.2
-  description: Production REST API for Hosanna Studio and the Flutter musician app. Authentication is Better Auth (session cookie or Bearer). `/api/auth/*` is owned by Better Auth and is not expanded here. MCP lives at `/mcp` (outside this document).
+  description: >
+    Production REST API for Hosanna Studio and the Flutter musician app.
+    Authentication is Better Auth (session cookie or Bearer). `/api/auth/*` is owned by Better Auth
+    and is not expanded here. MCP lives at `/mcp` (outside this document).
+
+    Identity-adjacent routes moved to auth.hosanna.live: `/api/notifications*`, `/api/billing/*`,
+    `/api/backup*`, `/api/cron/agenda-reminders`. This API keeps domain music routes and
+    `/api/cron/purge-trash`.
   license:
     name: Apache-2.0
 servers:
   - url: https://api.hosanna.live/api
-    description: Production
+    description: Production API (domain data)
+  - url: https://auth.hosanna.live/api
+    description: Auth host (notifications, billing probes, backup, agenda cron)
   - url: http://localhost:3000/api
-    description: Local
+    description: Local API
 tags:
   - name: Health
   - name: Billing
@@ -1746,7 +1755,8 @@ paths:
             format: uri
   /notifications:
     post:
-      summary: Send notification
+      summary: Send notification (hosted on auth.hosanna.live)
+      description: Unified multi-channel dispatch (inbox, push, email) with user/org/team targeting.
       responses:
         "201":
           description: OK
@@ -1773,6 +1783,8 @@ paths:
                   type: string
                 organizationId:
                   type: string
+                teamId:
+                  type: string
                 roles:
                   type: array
                   items:
@@ -1783,6 +1795,8 @@ paths:
                   type: string
                 description:
                   type: string
+                body:
+                  type: string
                 href:
                   type: string
                 channel:
@@ -1792,7 +1806,21 @@ paths:
                     - push
                     - both
                   default: inbox
+                channels:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - inbox
+                      - push
+                      - email
                 fcm:
+                  type: object
+                  additionalProperties: true
+                push:
+                  type: object
+                  additionalProperties: true
+                email:
                   type: object
                   additionalProperties: true
 components:
@@ -2112,6 +2140,10 @@ components:
               type: integer
             period:
               type: string
+              enum:
+                - month
+                - year
+              description: Stable period id; clients localize via billing.period.*
         annual:
           type: object
           properties:
@@ -2121,6 +2153,10 @@ components:
               type: integer
             period:
               type: string
+              enum:
+                - month
+                - year
+              description: Stable period id; clients localize via billing.period.*
     BackupDocument:
       type: object
       required:

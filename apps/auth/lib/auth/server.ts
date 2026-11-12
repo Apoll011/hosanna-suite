@@ -3,6 +3,11 @@ import Stripe from "stripe";
 import { env } from "@/lib/config/env";
 import { prisma } from "@/lib/db/prisma";
 import {
+  handleSessionRevoked,
+  getNotificationService,
+  setInboxNotify,
+} from "@/lib/notifications/service";
+import {
   sendAccountDeletedEmail,
   sendCanceledEmail,
   sendChangeEmailVerificationEmail,
@@ -74,11 +79,20 @@ export const auth = createAuth({
   },
   notifyOrg: async (payload) => {
     try {
-      await auth.api.notify({ body: payload as any });
+      // Multi-channel fan-out via unified notification service (type defaults + prefs).
+      await getNotificationService().notifyOrg({
+        organizationId: payload.organizationId,
+        roles: payload.roles,
+        type: payload.type,
+        title: payload.title,
+        body: payload.description,
+        href: payload.href,
+      });
     } catch (err) {
       console.error("[auth-app] org notification failed:", err);
     }
   },
+  onSessionRevoked: handleSessionRevoked,
   avatars: {
     isBase64Image,
     isExternalImageUrl,
@@ -87,4 +101,10 @@ export const auth = createAuth({
   },
   t: (locale, key, vars) => t(locale, key as any, vars),
   defaultLocale: DEFAULT_LOCALE,
+});
+
+// Wire better-inbox after auth exists (breaks circular init with notifyOrg).
+setInboxNotify(async (payload) => {
+  const result = await auth.api.notify({ body: payload as any });
+  return { count: (result as { count?: number } | null)?.count };
 });

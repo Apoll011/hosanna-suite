@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/api",
-  "version": "2.24.7",
+  "version": "2.24.8",
   "license": "Apache-2.0",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",
@@ -29,6 +29,7 @@
     "@hosanna/cache": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/db": "workspace:*",
+    "@hosanna/notifications": "workspace:*",
     "@modelcontextprotocol/node": "^2.1.2",
     "@modelcontextprotocol/server": "^2.4.0",
     "@prisma/adapter-pg": "^7.9.1",

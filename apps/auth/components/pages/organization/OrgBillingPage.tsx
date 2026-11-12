@@ -21,10 +21,15 @@ type Subscription = {
   billingInterval?: string | null;
 };
 
-const PLAN_PRICING = {
-  monthly: { amount: "€12", period: "/mo" },
-  annual: { amount: "€120", period: "/yr" },
-} as const;
+type PlanPeriodId = "month" | "year";
+
+const PLAN_PRICING: {
+  monthly: { amount: string; period: PlanPeriodId };
+  annual: { amount: string; period: PlanPeriodId };
+} = {
+  monthly: { amount: "€12", period: "month" },
+  annual: { amount: "€120", period: "year" },
+};
 
 const PLAN_FEATURE_KEYS = [
   "settings.billing.plan.features.sync",
@@ -152,21 +157,20 @@ export function OrgBillingPage() {
   }, [organization?.id, refresh]);
 
   useEffect(() => {
-    const base =
-      (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) ||
-      "https://api.hosanna.live/api";
-    void fetch(`${base.replace(/\/+$/, "")}/billing/pricing`, { credentials: "omit" })
+    void fetch(`/api/billing/pricing`, { credentials: "omit" })
       .then(async (res) => {
         if (!res.ok) return;
         const data = await res.json();
+        const asPeriod = (value: unknown, fallback: PlanPeriodId): PlanPeriodId =>
+          value === "month" || value === "year" ? value : fallback;
         setPlanPricing({
           monthly: {
             amount: data.monthly?.amount ?? PLAN_PRICING.monthly.amount,
-            period: data.monthly?.period ?? PLAN_PRICING.monthly.period,
+            period: asPeriod(data.monthly?.period, "month"),
           },
           annual: {
             amount: data.annual?.amount ?? PLAN_PRICING.annual.amount,
-            period: data.annual?.period ?? PLAN_PRICING.annual.period,
+            period: asPeriod(data.annual?.period, "year"),
           },
         });
       })
@@ -413,7 +417,7 @@ export function OrgBillingPage() {
                         {price.amount}
                       </span>
                       <span className="text-sm text-white/70">
-                        {price.period}
+                        {t(`billing.period.${price.period}` as "billing.period.month")}
                         {activeSub.billingInterval ? (
                           <>
                             {" "}
@@ -544,7 +548,11 @@ export function OrgBillingPage() {
                           {annual ? planPricing.annual.amount : planPricing.monthly.amount}
                         </span>
                         <span className="text-base text-white/70">
-                          {annual ? planPricing.annual.period : planPricing.monthly.period}
+                          {t(
+                            `billing.period.${
+                              annual ? planPricing.annual.period : planPricing.monthly.period
+                            }` as "billing.period.month",
+                          )}
                         </span>
                       </div>
                       {annual ? (

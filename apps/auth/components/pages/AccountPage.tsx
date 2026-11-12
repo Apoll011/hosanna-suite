@@ -3,6 +3,7 @@
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { ActiveSessionsSection } from "@/components/account/ActiveSessions";
 import { LoginHistorySection } from "@/components/account/LoginHistory";
+import { NotificationSettingsSection } from "@/components/account/NotificationSettings";
 import { SocialAccountsSection } from "@/components/account/SocialAccounts";
 import { TwoFactorSection } from "@/components/account/TwoFactor";
 import { useAuthUser } from "@/hooks/useAuthUser";
@@ -470,6 +471,8 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
         </div>
 
         <SocialAccountsSection onToast={showToast} />
+
+        <NotificationSettingsSection onToast={showToast} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
           <ActiveSessionsSection onToast={showToast} />

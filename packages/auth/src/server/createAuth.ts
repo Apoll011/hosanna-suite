@@ -191,6 +191,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
     avatars,
     t,
     defaultLocale = "pt-PT",
+    onSessionRevoked,
     secondaryStorage: secondaryStorageOption,
   } = options;
 
@@ -406,6 +407,21 @@ function createFullAuth(options: CreateAuthFullOptions): any {
               });
             } catch (err) {
               console.error("[auth] Failed to send account deleted email:", err);
+            }
+          },
+        },
+      },
+      session: {
+        delete: {
+          after: async (session) => {
+            if (!onSessionRevoked) return;
+            try {
+              await onSessionRevoked({
+                id: session.id,
+                userId: session.userId,
+              });
+            } catch (err) {
+              console.error("[auth] onSessionRevoked failed:", err);
             }
           },
         },
