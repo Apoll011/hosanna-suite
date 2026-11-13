@@ -271,7 +271,7 @@ flowchart TD
 
 Post-login **home** lives on the auth site at `auth.hosanna.live/home` — not a separate suite app. It lists suite products from `GET /api/suite/apps` (live and coming soon) and supports switching org when the user belongs to more than one.
 
-A shared Google-style **App Switcher** (`@hosanna/ui`) — waffle button opening a popover with a greeting and the app grid — mounts on auth chrome and can be reused by every suite web app against the same catalog. Presenter’s Operator is the desktop booth app; Confidence is the web companion — both sit under the same suite identity.
+A shared Google-style **App Switcher** (`@hosanna/ui`) — waffle button opening a popover with a greeting and the app grid — mounts on auth chrome and can be reused by every suite web app against the same catalog. Switcher and product-label strings live in `@hosanna/i18n` (`suite.*`). Presenter’s Operator is the desktop booth app; Confidence is the web companion — both sit under the same suite identity.
 
 ### 4.2. Auth and roles
 

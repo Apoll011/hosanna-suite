@@ -14,13 +14,14 @@ export function AuthAppSwitcher({ currentAppId = "auth" }: { currentAppId?: stri
       displayName={user?.name || user?.email || ""}
       appsUrl="/api/suite/apps"
       currentAppId={currentAppId}
+      translate={(key) => t(key as Parameters<typeof t>[0])}
       labels={{
-        openMenu: t("home.switcher.open"),
-        greeting: t("home.switcher.greeting"),
-        comingSoon: t("home.comingSoon"),
-        loading: t("home.switcher.loading"),
-        empty: t("home.switcher.empty"),
-        error: t("home.switcher.error"),
+        openMenu: t("suite.switcher.open"),
+        greeting: t("suite.switcher.greeting"),
+        comingSoon: t("suite.comingSoon"),
+        loading: t("suite.switcher.loading"),
+        empty: t("suite.switcher.empty"),
+        error: t("suite.switcher.error"),
       }}
     />
   );

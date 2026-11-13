@@ -16,7 +16,6 @@ export const pt = {
     favoritesSubtitle: "Acesso rápido às suas aplicações favoritas.",
     favoritesEmpty: "Marque aplicações com a estrela para as ver aqui.",
     openBadge: "Aberta",
-    comingSoon: "Em breve",
     favorite: "Adicionar aos favoritos",
     unfavorite: "Remover dos favoritos",
     empty: "Nenhuma aplicação corresponde à pesquisa.",
@@ -24,13 +23,6 @@ export const pt = {
     nav: {
       account: "Conta",
       organization: "Organização",
-    },
-    switcher: {
-      open: "Abrir seletor de aplicações",
-      greeting: "Olá {name}",
-      loading: "A carregar aplicações…",
-      empty: "Sem aplicações disponíveis.",
-      error: "Não foi possível carregar as aplicações.",
     },
   },
   errors: {
@@ -635,6 +627,7 @@ export const pt = {
       description: "Resumo do espaço ativo e atalhos para as definições.",
       currentOrg: "Espaço atual",
       openStudio: "Abrir Studio",
+      openApps: "Abrir aplicações",
       quickLinks: "Atalhos",
     },
     profile: {

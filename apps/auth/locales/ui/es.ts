@@ -18,7 +18,6 @@ export const es: typeof pt = {
     favoritesSubtitle: "Acceso rápido a tus aplicaciones favoritas.",
     favoritesEmpty: "Marca aplicaciones con la estrella para verlas aquí.",
     openBadge: "Abierta",
-    comingSoon: "Próximamente",
     favorite: "Añadir a favoritos",
     unfavorite: "Quitar de favoritos",
     empty: "Ninguna aplicación coincide con la búsqueda.",
@@ -26,13 +25,6 @@ export const es: typeof pt = {
     nav: {
       account: "Cuenta",
       organization: "Organización",
-    },
-    switcher: {
-      open: "Abrir selector de aplicaciones",
-      greeting: "Hola {name}",
-      loading: "Cargando aplicaciones…",
-      empty: "No hay aplicaciones disponibles.",
-      error: "No se pudieron cargar las aplicaciones.",
     },
   },
   errors: {
@@ -638,6 +630,7 @@ export const es: typeof pt = {
       description: "Resumen del espacio activo y accesos directos a los ajustes.",
       currentOrg: "Espacio actual",
       openStudio: "Abrir Studio",
+      openApps: "Abrir aplicaciones",
       quickLinks: "Accesos directos",
     },
     profile: {

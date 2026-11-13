@@ -18,7 +18,6 @@ export const en: typeof pt = {
     favoritesSubtitle: "Quick access to your favorite apps.",
     favoritesEmpty: "Star applications to see them here.",
     openBadge: "Open",
-    comingSoon: "Coming soon",
     favorite: "Add to favorites",
     unfavorite: "Remove from favorites",
     empty: "No applications match your search.",
@@ -26,13 +25,6 @@ export const en: typeof pt = {
     nav: {
       account: "Account",
       organization: "Organization",
-    },
-    switcher: {
-      open: "Open app switcher",
-      greeting: "Hello {name}",
-      loading: "Loading apps…",
-      empty: "No apps available.",
-      error: "Could not load apps.",
     },
   },
   errors: {
@@ -637,6 +629,7 @@ export const en: typeof pt = {
       description: "Overview of the active workspace and shortcuts to settings.",
       currentOrg: "Current workspace",
       openStudio: "Open Studio",
+      openApps: "Open applications",
       quickLinks: "Shortcuts",
     },
     profile: {

@@ -12,12 +12,16 @@ import { LayoutGrid } from "lucide-react";
 import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { cn } from "./cn";
+import { localizeSuiteApps } from "./suiteLabels";
 
 export type AppSwitcherApp = {
   id: string;
   name: string;
   shortName: string;
   description?: string;
+  nameKey?: string | null;
+  shortNameKey?: string | null;
+  descriptionKey?: string | null;
   logoUrl: string;
   homeUrl: string | null;
   status: "live" | "coming_soon" | string;
@@ -42,6 +46,8 @@ export type AppSwitcherProps = {
   /** Credentialed catalog URL (default `/api/suite/apps`). Ignored when `apps` is set. */
   appsUrl?: string;
   labels?: AppSwitcherLabels;
+  /** Host translator — localizes catalog name/description keys when present. */
+  translate?: (key: string) => string;
   className?: string;
   /** Highlight the app the host is currently in (muted / non-navigating). */
   currentAppId?: string;
@@ -66,16 +72,25 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   apps: appsProp,
   appsUrl = "/api/suite/apps",
   labels,
+  translate,
   className,
   currentAppId,
 }) => {
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [apps, setApps] = useState<AppSwitcherApp[]>(appsProp ?? []);
+  const [apps, setApps] = useState<AppSwitcherApp[]>(() =>
+    appsProp ? (translate ? localizeSuiteApps(appsProp, translate) : appsProp) : [],
+  );
   const [loading, setLoading] = useState(!appsProp);
   const [error, setError] = useState<string | null>(null);
 
+  const applyLocale = useCallback(
+    (list: AppSwitcherApp[]) => (translate ? localizeSuiteApps(list, translate) : list),
+    [translate],
+  );
+
+  // English defaults match `@hosanna/i18n` shared `suite.switcher`; hosts should pass localized labels.
   const openLabel = labels?.openMenu ?? "Open app switcher";
   const greetingTemplate = labels?.greeting ?? "Hello {name}";
   const comingSoonLabel = labels?.comingSoon ?? "Coming soon";
@@ -90,7 +105,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
 
   const loadApps = useCallback(async () => {
     if (appsProp) {
-      setApps(appsProp);
+      setApps(applyLocale(appsProp));
       setLoading(false);
       setError(null);
       return;
@@ -101,24 +116,24 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
       const res = await fetch(appsUrl, { credentials: "include" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as CatalogResponse;
-      setApps(Array.isArray(data.apps) ? data.apps : []);
+      setApps(applyLocale(Array.isArray(data.apps) ? data.apps : []));
     } catch {
       setError(errorLabel);
       setApps([]);
     } finally {
       setLoading(false);
     }
-  }, [appsProp, appsUrl, errorLabel]);
+  }, [appsProp, appsUrl, errorLabel, applyLocale]);
 
   useEffect(() => {
     if (appsProp) {
-      setApps(appsProp);
+      setApps(applyLocale(appsProp));
       setLoading(false);
       setError(null);
       return;
     }
     void loadApps();
-  }, [appsProp, loadApps]);
+  }, [appsProp, loadApps, applyLocale]);
 
   useEffect(() => {
     if (!open) return;

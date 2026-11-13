@@ -41,6 +41,12 @@ describe("listSuiteApps", () => {
     assert.equal(music?.logoUrl, "https://auth.hosanna.live/favicon.png");
   });
 
+  it("exposes i18n keys for catalog labels", () => {
+    const music = listSuiteApps(env).find((a) => a.id === "music");
+    assert.equal(music?.nameKey, "suite.apps.music.name");
+    assert.equal(music?.descriptionKey, "suite.apps.music.description");
+  });
+
   it("omits studio slug when none is provided", () => {
     const music = listSuiteApps({
       authOrigin: "https://auth.hosanna.live",

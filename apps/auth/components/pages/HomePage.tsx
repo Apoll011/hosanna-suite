@@ -4,7 +4,7 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useI18n } from "@/lib/ui/i18n";
 import type { AppSwitcherApp } from "@hosanna/ui";
-import { Spinner } from "@hosanna/ui";
+import { localizeSuiteApps, Spinner } from "@hosanna/ui";
 import {
   ChevronRight,
   LayoutGrid,
@@ -71,7 +71,8 @@ export function HomePage() {
       const res = await fetch("/api/suite/apps", { credentials: "include" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = (await res.json()) as { apps?: AppSwitcherApp[] };
-      setApps(Array.isArray(data.apps) ? data.apps : []);
+      const list = Array.isArray(data.apps) ? data.apps : [];
+      setApps(localizeSuiteApps(list, (key) => t(key as Parameters<typeof t>[0])));
     } catch {
       setAppsError(t("home.loadError"));
       setApps([]);
@@ -255,7 +256,7 @@ export function HomePage() {
                             </span>
                           ) : (
                             <span className="rounded-full bg-m3-sidebar px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-m3-secondary">
-                              {t("home.comingSoon")}
+                              {t("suite.comingSoon")}
                             </span>
                           )}
                         </div>

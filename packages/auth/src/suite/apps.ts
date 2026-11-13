@@ -29,6 +29,10 @@ export type SuiteAppDefinition = {
   name: string;
   shortName: string;
   description: string;
+  /** i18n key for localized name (e.g. suite.apps.music.name). */
+  nameKey?: string;
+  shortNameKey?: string;
+  descriptionKey?: string;
   /** Public path on the auth origin, or absolute URL. */
   logoUrl: string;
   status: SuiteAppStatus;
@@ -43,6 +47,9 @@ export type SuiteAppDto = {
   name: string;
   shortName: string;
   description: string;
+  nameKey?: string;
+  shortNameKey?: string;
+  descriptionKey?: string;
   logoUrl: string;
   /** Absolute or same-origin path; null when the app is not openable yet. */
   homeUrl: string | null;
@@ -56,6 +63,21 @@ export type SuiteAppDto = {
    */
   accessible: boolean;
 };
+
+function appKeys(id: SuiteAppId): Pick<SuiteAppDefinition, "nameKey" | "shortNameKey" | "descriptionKey"> {
+  if (id === "platform") {
+    return {
+      nameKey: "suite.apps.auth.name",
+      shortNameKey: "suite.apps.auth.shortName",
+      descriptionKey: "suite.apps.auth.description",
+    };
+  }
+  return {
+    nameKey: `suite.apps.${id}.name`,
+    shortNameKey: `suite.apps.${id}.shortName`,
+    descriptionKey: `suite.apps.${id}.description`,
+  };
+}
 
 function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
@@ -71,6 +93,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     name: "Account",
     shortName: "Account",
     description: "Profile, organization, billing, and security.",
+    ...appKeys("auth"),
     logoUrl: "/favicon.png",
     status: "live",
     sortOrder: 10,
@@ -82,6 +105,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     name: "Music",
     shortName: "Music",
     description: "Songs, collections, ChordPro charts, and stage tools.",
+    ...appKeys("music"),
     logoUrl: "/favicon.png",
     status: "live",
     sortOrder: 20,
@@ -93,6 +117,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     name: "Planning",
     shortName: "Planning",
     description: "Services, events, teams, rooms, and resources.",
+    ...appKeys("planning"),
     logoUrl: "/favicon.png",
     status: "coming_soon",
     sortOrder: 30,
@@ -104,6 +129,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     name: "Presenter",
     shortName: "Presenter",
     description: "Booth show control, lyrics, media, and stream feed.",
+    ...appKeys("presenter"),
     logoUrl: "/favicon.png",
     status: "coming_soon",
     sortOrder: 40,
@@ -115,6 +141,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     name: "Community",
     shortName: "Community",
     description: "People, posts, sermons, forms, prayer, and check-in.",
+    ...appKeys("community"),
     logoUrl: "/favicon.png",
     status: "coming_soon",
     sortOrder: 50,
@@ -126,6 +153,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     name: "Finance",
     shortName: "Finance",
     description: "Giving, funds, budgets, expenses, and statements.",
+    ...appKeys("finance"),
     logoUrl: "/favicon.png",
     status: "coming_soon",
     sortOrder: 60,
@@ -177,6 +205,9 @@ export function listSuiteApps(env: SuiteAppUrlEnv): SuiteAppDto[] {
         name: app.name,
         shortName: app.shortName,
         description: app.description,
+        nameKey: app.nameKey,
+        shortNameKey: app.shortNameKey,
+        descriptionKey: app.descriptionKey,
         logoUrl: resolveLogoUrl(app.logoUrl, env.authOrigin),
         homeUrl,
         status: app.status,
