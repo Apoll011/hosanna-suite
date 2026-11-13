@@ -3,6 +3,7 @@
 import { AuthAccountMenu } from "@/components/account/AuthAccountMenu";
 import { AccountToastBanner } from "@/components/account/AccountToast";
 import { NavigationProgress } from "@/components/account/NavigationProgress";
+import { BrandMark } from "@/components/BrandMark";
 import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
 import { AuthAppSwitcher } from "@/components/suite/AuthAppSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
@@ -47,11 +48,7 @@ export function AccountShell({
           <ArrowLeft className="h-4 w-4 text-m3-text" />
         </span>
         <span className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}>
-          <img
-            src="/favicon.png"
-            alt=""
-            className="h-5 w-5 scale-110 object-cover object-center"
-          />
+          <BrandMark />
         </span>
       </span>
       <span className="relative inline-grid overflow-hidden text-xs font-semibold tracking-tight sm:text-sm">
@@ -71,13 +68,7 @@ export function AccountShell({
     </>
   ) : (
     <>
-      <span className="relative flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-md">
-        <img
-          src="/favicon.png"
-          alt=""
-          className="h-full w-full scale-110 object-cover object-center"
-        />
-      </span>
+      <BrandMark />
       <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
     </>
   );

@@ -2,6 +2,7 @@
 
 import { AuthAccountMenu } from "@/components/account/AuthAccountMenu";
 import { NavigationProgress } from "@/components/account/NavigationProgress";
+import { BrandMark } from "@/components/BrandMark";
 import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
 import { AuthAppSwitcher } from "@/components/suite/AuthAppSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
@@ -42,11 +43,7 @@ export function HomeShell({ children }: { children: ReactNode }) {
             className="group relative flex select-none items-center gap-2 rounded-full border border-m3-border/60 bg-m3-card/80 px-2.5 py-1.5 shadow-xs transition-colors hover:bg-m3-hover"
             prefetch
           >
-            <img
-              src="/favicon.png"
-              alt=""
-              className="h-5 w-5 scale-110 object-cover object-center"
-            />
+            <BrandMark />
             <span className="text-xs font-semibold tracking-tight sm:text-sm">
               {t("brand.name")}
             </span>

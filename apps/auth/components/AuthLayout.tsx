@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandMark } from "@/components/BrandMark";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useI18n } from "@/lib/ui/i18n";
@@ -45,7 +46,7 @@ export function AuthLayout({
 
       <header className="relative z-20 flex shrink-0 items-center justify-between px-4 pt-4 pb-2 sm:px-8">
         <div className="flex items-center gap-2 select-none rounded-full border border-m3-border/60 bg-m3-card/75 px-3 py-1.5 shadow-xs backdrop-blur-md">
-          <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
+          <BrandMark />
           <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
         </div>
 
