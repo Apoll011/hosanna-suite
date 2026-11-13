@@ -5,7 +5,6 @@ import { OrgSwitcher } from "@/components/account/OrgSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useI18n } from "@/lib/ui/i18n";
 import type { TranslationKey } from "@/lib/ui/i18n";
-import { getStudioUrl } from "@/lib/auth/redirect";
 import { Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import {
   Activity,
@@ -139,10 +138,10 @@ export function OrgOverviewPage() {
                   size="sm"
                   icon={<ArrowUpRight className="h-4 w-4" />}
                   onClick={() => {
-                    window.location.assign(`${getStudioUrl()}/${organization.slug}`);
+                    window.location.assign("/home");
                   }}
                 >
-                  {t("accountOrg.overview.openStudio")}
+                  {t("accountOrg.overview.openApps")}
                 </Button>
               </div>
             </div>

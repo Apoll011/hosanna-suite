@@ -140,4 +140,46 @@ export const sharedPt = {
       },
     },
   },
+  suite: {
+    comingSoon: "Em breve",
+    switcher: {
+      open: "Abrir seletor de aplicações",
+      greeting: "Olá {name}",
+      loading: "A carregar aplicações…",
+      empty: "Sem aplicações disponíveis.",
+      error: "Não foi possível carregar as aplicações.",
+    },
+    apps: {
+      auth: {
+        name: "Conta",
+        shortName: "Conta",
+        description: "Perfil, organização, faturação e segurança.",
+      },
+      music: {
+        name: "Music",
+        shortName: "Music",
+        description: "Músicas, coleções, ChordPro e ferramentas de palco.",
+      },
+      planning: {
+        name: "Planning",
+        shortName: "Planning",
+        description: "Cultos, eventos, equipas, salas e recursos.",
+      },
+      presenter: {
+        name: "Presenter",
+        shortName: "Presenter",
+        description: "Controlo de projeção, letras, média e feed de stream.",
+      },
+      community: {
+        name: "Community",
+        shortName: "Community",
+        description: "Pessoas, publicações, sermões, formulários, oração e check-in.",
+      },
+      finance: {
+        name: "Finance",
+        shortName: "Finance",
+        description: "Dádivas, fundos, orçamentos, despesas e extratos.",
+      },
+    },
+  },
 };

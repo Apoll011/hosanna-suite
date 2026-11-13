@@ -3,6 +3,28 @@ export const pt = {
   common: {
     goHome: "Ir para o início",
   },
+  home: {
+    title: "Aplicações",
+    subtitle: "Abra as aplicações Hosanna do seu espaço.",
+    searchPlaceholder: "Pesquisar aplicações…",
+    filterAll: "Todas as aplicações",
+    viewGrid: "Vista em grelha",
+    viewList: "Vista em lista",
+    catalogTitle: "As aplicações da Hosanna",
+    catalogSubtitle: "Produtos do suite disponíveis para a sua organização.",
+    favoritesTitle: "As minhas aplicações",
+    favoritesSubtitle: "Acesso rápido às suas aplicações favoritas.",
+    favoritesEmpty: "Marque aplicações com a estrela para as ver aqui.",
+    openBadge: "Aberta",
+    favorite: "Adicionar aos favoritos",
+    unfavorite: "Remover dos favoritos",
+    empty: "Nenhuma aplicação corresponde à pesquisa.",
+    loadError: "Não foi possível carregar as aplicações.",
+    nav: {
+      account: "Conta",
+      organization: "Organização",
+    },
+  },
   errors: {
     notFound: {
       code: "404",
@@ -605,6 +627,7 @@ export const pt = {
       description: "Resumo do espaço ativo e atalhos para as definições.",
       currentOrg: "Espaço atual",
       openStudio: "Abrir Studio",
+      openApps: "Abrir aplicações",
       quickLinks: "Atalhos",
     },
     profile: {

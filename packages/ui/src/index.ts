@@ -6,6 +6,19 @@
  */
 
 export { cn, type ClassValue } from "./cn";
+export {
+  AppSwitcher,
+  type AppSwitcherApp,
+  type AppSwitcherLabels,
+  type AppSwitcherProps,
+} from "./AppSwitcher";
+export {
+  localizeSuiteApp,
+  localizeSuiteApps,
+  resolveSuiteAppLabel,
+  type SuiteAppLabelField,
+  type SuiteAppLocalizable,
+} from "./suiteLabels";
 export { Badge, type BadgeProps } from "./Badge";
 export { Button, type ButtonProps } from "./Button";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";

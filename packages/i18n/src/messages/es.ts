@@ -142,4 +142,46 @@ export const sharedEs: typeof sharedPt = {
       },
     },
   },
+  suite: {
+    comingSoon: "Próximamente",
+    switcher: {
+      open: "Abrir selector de aplicaciones",
+      greeting: "Hola {name}",
+      loading: "Cargando aplicaciones…",
+      empty: "No hay aplicaciones disponibles.",
+      error: "No se pudieron cargar las aplicaciones.",
+    },
+    apps: {
+      auth: {
+        name: "Cuenta",
+        shortName: "Cuenta",
+        description: "Perfil, organización, facturación y seguridad.",
+      },
+      music: {
+        name: "Music",
+        shortName: "Music",
+        description: "Canciones, colecciones, ChordPro y herramientas de escenario.",
+      },
+      planning: {
+        name: "Planning",
+        shortName: "Planning",
+        description: "Servicios, eventos, equipos, salas y recursos.",
+      },
+      presenter: {
+        name: "Presenter",
+        shortName: "Presenter",
+        description: "Control de proyección, letras, media y feed de stream.",
+      },
+      community: {
+        name: "Community",
+        shortName: "Community",
+        description: "Personas, publicaciones, sermones, formularios, oración y check-in.",
+      },
+      finance: {
+        name: "Finance",
+        shortName: "Finance",
+        description: "Ofrendas, fondos, presupuestos, gastos y estados.",
+      },
+    },
+  },
 };

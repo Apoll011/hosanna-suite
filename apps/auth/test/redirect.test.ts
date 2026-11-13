@@ -110,11 +110,11 @@ describe("resolvePostOrgDestination", () => {
     }
   });
 
-  it("defaults to studio /{slug}", () => {
+  it("defaults to suite /home", () => {
     delete process.env.NEXT_PUBLIC_STUDIO_URL;
     // @ts-expect-error minimal window
     globalThis.window = { location: { origin: "https://auth.hosanna.live" } };
-    assert.equal(resolvePostOrgDestination("grace"), "https://studio.hosanna.live/grace");
+    assert.equal(resolvePostOrgDestination("grace"), "/home");
   });
 
   it("upgrades studio root returnUrl to /{slug}", () => {
@@ -199,11 +199,11 @@ describe("resolveSocialCallbackURL", () => {
     );
   });
 
-  it("falls back to studio with stored org slug", () => {
+  it("falls back to suite /home with stored org slug", () => {
     const storage = installDom();
     delete process.env.NEXT_PUBLIC_STUDIO_URL;
     storage.setItem("active_org_slug", "grace");
-    assert.equal(resolveSocialCallbackURL(), "https://studio.hosanna.live/grace");
+    assert.equal(resolveSocialCallbackURL(), "https://auth.hosanna.live/home");
   });
 
   it("falls back to onboarding when no slug", () => {

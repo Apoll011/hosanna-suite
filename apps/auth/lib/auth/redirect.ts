@@ -1,6 +1,6 @@
 import { authClient } from "@/lib/auth/client";
 
-/** Studio origin for post-login redirects. */
+/** Studio origin for product deep links / handoff. */
 export function getStudioUrl(): string {
   return (
     (typeof process !== "undefined" && process.env.NEXT_PUBLIC_STUDIO_URL) ||
@@ -43,16 +43,20 @@ export function navigateToRedirectTarget(target: string): void {
   window.location.assign(target);
 }
 
+function authHomePath(): string {
+  return "/home";
+}
+
 /**
  * After the user gains an org (create / accept invite): honor returnUrl/redirect
- * when present, upgrading Studio root → `/{slug}`; otherwise open Studio on the org.
+ * when present, upgrading Studio root → `/{slug}`; otherwise open suite home.
  */
 export function resolvePostOrgDestination(
   slug: string,
   searchParams?: URLSearchParams | { get: (key: string) => string | null } | null,
 ): string {
   const studio = getStudioUrl();
-  const fallback = `${studio}/${slug}`;
+  const fallback = authHomePath();
   const explicit = searchParams ? readRedirectParam(searchParams) : null;
   if (!explicit) return fallback;
 
@@ -82,7 +86,7 @@ export function navigateAfterOrgReady(
 }
 
 /**
- * After successful auth: honor redirect/returnUrl, else org → Studio, else onboarding.
+ * After successful auth: honor redirect/returnUrl, else org → /home, else onboarding.
  */
 export async function redirectAfterSuccessfulAuth(
   searchParams?: URLSearchParams | { get: (key: string) => string | null },
@@ -107,9 +111,9 @@ export async function redirectAfterSuccessfulAuth(
       try {
         await authClient.organization.setActive({ organizationSlug: slug });
       } catch {
-        /* studio still opens with the slug even if setActive fails */
+        /* home still opens even if setActive fails */
       }
-      window.location.assign(`${getStudioUrl()}/${slug}`);
+      window.location.assign(authHomePath());
       return;
     }
   } catch {
@@ -133,7 +137,7 @@ export function resolveSocialCallbackURL(
   }
   const storedSlug = localStorage.getItem("active_org_slug");
   if (storedSlug) {
-    return `${getStudioUrl()}/${storedSlug}`;
+    return `${window.location.origin}${authHomePath()}`;
   }
   return `${window.location.origin}/onboarding`;
 }
