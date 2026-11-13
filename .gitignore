@@ -30,6 +30,7 @@ logs/
 
 # local AI / agent tooling
 .agents/
+AGENTS.md
 .claude/
 .impeccable/
 skills-lock.json

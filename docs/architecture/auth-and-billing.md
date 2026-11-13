@@ -79,6 +79,12 @@ Via `@better-auth/stripe`:
 
 Studio client uses `authClient.subscription.*` (list, upgrade, portal); display prices fetch from auth `/api/billing/pricing`.
 
+## Suite hub and personal preferences
+
+Auth also hosts the post-login **home** (`/home`), session-gated **suite app catalog** (`GET /api/suite/apps`), and the shared store for **theme / language** plus per-app preference scopes under `user.metadata`.
+
+See [suite-hub-and-preferences.md](./suite-hub-and-preferences.md) for App Switcher, AccountMenu, caching, and how to `registerAppSettingsScope` for a new suite app.
+
 Expected `hosanna-cloud` Global Config JSON:
 
 ```json

@@ -273,6 +273,8 @@ Post-login **home** lives on the auth site at `auth.hosanna.live/home` — not a
 
 A shared Google-style **App Switcher** (`@hosanna/ui`) — waffle button opening a popover with a greeting and the app grid — mounts on auth chrome and can be reused by every suite web app against the same catalog. Switcher and product-label strings live in `@hosanna/i18n` (`suite.*`). Presenter’s Operator is the desktop booth app; Confidence is the web companion — both sit under the same suite identity.
 
+**Shipped today:** catalog registry + `/api/suite/apps`, home hub, App Switcher / AccountMenu in `@hosanna/ui`, and cross-app **personal settings** (`theme` / `language` plus per-app scopes under `apps.<id>` in `user.metadata`). Implementation notes: [architecture/suite-hub-and-preferences.md](./architecture/suite-hub-and-preferences.md).
+
 ### 4.2. Auth and roles
 
 Better Auth remains the identity layer. Roles move to a clearer model: a small set of **general** org roles, plus **per-app** roles assigned on invite.
