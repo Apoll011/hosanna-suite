@@ -1,68 +1,97 @@
 "use client";
 
+import { authClient } from "@/lib/auth/client";
+import { applyDocumentTheme } from "@/lib/ui/theme-boot";
+import {
+  DEFAULT_PERSONAL_SETTINGS,
+  getPersonalSettings,
+  resolveDarkMode,
+  runThemeTransition,
+  subscribePersonalSettings,
+  updatePersonalSettingsSafe,
+  writeThemeCookie,
+  type PersonalTheme,
+} from "@hosanna/auth";
 import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
-import { THEME_STORAGE_KEY, writeThemeCookie } from "@/lib/ui/theme-boot";
-
 type ThemeContextValue = {
+  theme: PersonalTheme;
   darkMode: boolean;
+  setTheme: (theme: PersonalTheme) => void;
   toggleDarkMode: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function applyDarkClass(dark: boolean) {
-  const root = document.documentElement;
-  root.classList.toggle("dark", dark);
-  root.style.colorScheme = dark ? "dark" : "light";
-  root.style.backgroundColor = "";
-}
-
-function readInitialDark(): boolean {
-  if (typeof document === "undefined") return false;
-  // Prefer the class the head bootstrap already set (avoids a second paint).
-  if (document.documentElement.classList.contains("dark")) return true;
-  try {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === "dark") return true;
-    if (stored === "light") return false;
-  } catch {
-    /* private mode / storage blocked */
-  }
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+function getSnapshot() {
+  return getPersonalSettings().theme;
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [darkMode, setDarkMode] = useState(readInitialDark);
+  const theme = useSyncExternalStore(
+    subscribePersonalSettings,
+    getSnapshot,
+    () => DEFAULT_PERSONAL_SETTINGS.theme,
+  );
+  const [systemDark, setSystemDark] = useState(false);
+  const mounted = useRef(false);
 
-  useLayoutEffect(() => {
-    applyDarkClass(darkMode);
-    writeThemeCookie(darkMode ? "dark" : "light");
-  }, [darkMode]);
-
-  const toggleDarkMode = useCallback(() => {
-    setDarkMode((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, next ? "dark" : "light");
-      } catch {
-        /* private mode / storage blocked */
-      }
-      writeThemeCookie(next ? "dark" : "light");
-      applyDarkClass(next);
-      return next;
-    });
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const sync = () => setSystemDark(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
-  const value = useMemo(() => ({ darkMode, toggleDarkMode }), [darkMode, toggleDarkMode]);
+  const darkMode = theme === "system" ? systemDark : theme === "dark";
+
+  useLayoutEffect(() => {
+    const apply = () => {
+      applyDocumentTheme(darkMode);
+      writeThemeCookie(theme);
+    };
+    if (!mounted.current) {
+      mounted.current = true;
+      apply();
+      return;
+    }
+    runThemeTransition(apply);
+  }, [darkMode, theme]);
+
+  const setTheme = useCallback((next: PersonalTheme) => {
+    if (getPersonalSettings().theme === next) return;
+    void updatePersonalSettingsSafe(
+      { theme: next },
+      {
+        readRemoteMetadata: async () => {
+          const session = await authClient.getSession();
+          return (session.data?.user as { metadata?: unknown } | undefined)?.metadata;
+        },
+      },
+    );
+  }, []);
+
+  const toggleDarkMode = useCallback(() => {
+    const resolved = resolveDarkMode(getPersonalSettings().theme);
+    setTheme(resolved ? "light" : "dark");
+  }, [setTheme]);
+
+  const value = useMemo(
+    () => ({ theme, darkMode, setTheme, toggleDarkMode }),
+    [theme, darkMode, setTheme, toggleDarkMode],
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

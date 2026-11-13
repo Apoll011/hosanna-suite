@@ -1,6 +1,14 @@
 "use client";
 
+import { readCachedActiveOrg } from "@/lib/organization/cache";
 import { MESSAGES } from "@/locales/ui";
+import {
+  DEFAULT_PERSONAL_SETTINGS,
+  getPersonalSettings,
+  subscribePersonalSettings,
+  updatePersonalSettingsSafe,
+  type PersonalLanguage,
+} from "@hosanna/auth";
 import {
   DEFAULT_LANGUAGE,
   LANGUAGE_LOCALE,
@@ -8,7 +16,6 @@ import {
   resolveString,
   type Interpolation,
   type Language,
-  type PersonalLanguage,
   type TranslationKeyOf,
   type TranslationPluralKeyOf,
 } from "@hosanna/i18n";
@@ -18,11 +25,11 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
-const STORAGE_KEY = "hosanna_auth_language";
+import { authClient } from "@/lib/auth/client";
 
 export type TranslationKey = TranslationKeyOf<(typeof MESSAGES)["pt"]>;
 export type TranslationPluralKey = TranslationPluralKeyOf<(typeof MESSAGES)["pt"]>;
@@ -40,25 +47,53 @@ export interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [personalLanguage, setPersonalLanguageState] = useState<PersonalLanguage>("auto");
+function readOrgLocale(): string | null {
+  try {
+    const org = readCachedActiveOrg();
+    const meta = org?.metadata;
+    const obj =
+      typeof meta === "string"
+        ? (JSON.parse(meta) as Record<string, unknown>)
+        : meta && typeof meta === "object"
+          ? (meta as Record<string, unknown>)
+          : null;
+    if (!obj) return null;
+    const settings = obj.settings as Record<string, unknown> | undefined;
+    const general = settings?.general as Record<string, unknown> | undefined;
+    const locale = general?.locale ?? obj.locale;
+    return typeof locale === "string" && locale.length > 0 ? locale : null;
+  } catch {
+    return null;
+  }
+}
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as PersonalLanguage | Language | null;
-    if (stored === "pt" || stored === "en" || stored === "es" || stored === "auto") {
-      setPersonalLanguageState(stored);
-    }
-  }, []);
+function getPersonalLanguageSnapshot(): PersonalLanguage {
+  return getPersonalSettings().language ?? DEFAULT_PERSONAL_SETTINGS.language;
+}
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const personalLanguage = useSyncExternalStore(
+    subscribePersonalSettings,
+    getPersonalLanguageSnapshot,
+    () => DEFAULT_PERSONAL_SETTINGS.language,
+  );
 
   const language = useMemo<Language>(() => {
     const browser =
       typeof navigator !== "undefined" ? (navigator.languages ?? navigator.language) : undefined;
-    return resolveLanguage(personalLanguage, null, browser);
+    return resolveLanguage(personalLanguage, readOrgLocale(), browser);
   }, [personalLanguage]);
 
   const setPersonalLanguage = useCallback((lang: PersonalLanguage) => {
-    setPersonalLanguageState(lang);
-    localStorage.setItem(STORAGE_KEY, lang);
+    void updatePersonalSettingsSafe(
+      { language: lang },
+      {
+        readRemoteMetadata: async () => {
+          const session = await authClient.getSession();
+          return (session.data?.user as { metadata?: unknown } | undefined)?.metadata;
+        },
+      },
+    );
   }, []);
 
   const t = useCallback<TranslateFn>(

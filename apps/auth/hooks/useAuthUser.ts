@@ -10,6 +10,11 @@ import {
   type CachedAuthUser,
 } from "@/lib/session/cache";
 import {
+  clearPersonalSettingsCache,
+  getPersistedSettingsJson,
+  syncSettingsFromMetadata,
+} from "@hosanna/auth";
+import {
   useCallback,
   useEffect,
   useRef,
@@ -62,6 +67,7 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
 
   const clear = useCallback(() => {
     clearCachedUser();
+    clearPersonalSettingsCache();
     setUser(null);
   }, []);
 
@@ -76,11 +82,13 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
         return readCachedUser();
       }
 
-      const next = session.data?.user ? toCachedUser(session.data.user as CachedAuthUser) : null;
+      const rawUser = session.data?.user as CachedAuthUser | undefined;
+      const next = rawUser ? toCachedUser(rawUser) : null;
 
       if (!next) {
         clearCachedUser();
         clearCachedOrg();
+        clearPersonalSettingsCache();
         setUser(null);
         if (requireAuthRef.current && typeof window !== "undefined") {
           window.location.replace(loginRedirectRef.current);
@@ -92,6 +100,7 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
       if (previous?.id && previous.id !== next.id) {
         // Different account in the same browser — drop the prior org snapshot.
         clearCachedOrg();
+        clearPersonalSettingsCache();
         try {
           localStorage.removeItem("active_org_slug");
         } catch {
@@ -99,9 +108,19 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
         }
       }
 
-      writeCachedUser(next);
-      setUser(next);
-      return next;
+      // Prefer local personal-settings when caching so a lagging metadata
+      // round-trip cannot regress an optimistic edit made on this origin.
+      const localSettingsJson = getPersistedSettingsJson();
+      const userToCache: CachedAuthUser = localSettingsJson
+        ? { ...next, metadata: localSettingsJson }
+        : next;
+
+      // Always reconcile cross-app theme/language from server metadata.
+      syncSettingsFromMetadata(rawUser?.metadata ?? next.metadata);
+
+      writeCachedUser(userToCache);
+      setUser(userToCache);
+      return userToCache;
     } catch (err) {
       console.warn("[auth] getSession threw:", err);
       return readCachedUser();

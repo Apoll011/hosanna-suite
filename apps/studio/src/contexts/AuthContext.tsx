@@ -8,7 +8,11 @@ import { InvitationStatus } from "better-auth/plugins/organization";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getDemoOrganization, getDemoUser } from "../demo/demoAuth";
 import { clearDemoData, isDemoMode } from "../demo/index";
-import { getPersistedSettingsJson, syncSettingsFromMetadata } from "../hooks/usePersonalSettings";
+import {
+  clearPersonalSettingsCache,
+  getPersistedSettingsJson,
+  syncSettingsFromMetadata,
+} from "../hooks/usePersonalSettings";
 import { authClient } from "../lib/authClient";
 import {
   CACHED_ORG_KEY,
@@ -500,6 +504,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     await authClient.signOut({ fetchOptions: {} });
     posthog.reset();
     handleClearSession();
+    clearPersonalSettingsCache();
     localStorage.clear();
 
     // Reset the IDB singleton *before* deleting the databases.
