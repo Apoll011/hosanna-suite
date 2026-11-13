@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/db/prisma";
 import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
 import { listAuthSuiteApps } from "@/lib/suite/apps";
+import { withAuthCors } from "@hosanna/auth/server";
 
 /** GET /api/suite/apps — suite product catalog for home + App Switcher. */
-export async function GET() {
+async function getApps(_request: Request): Promise<Response> {
   try {
     const ctx = await requireAuthSession();
 
@@ -25,3 +26,9 @@ export async function GET() {
     return jsonError(err);
   }
 }
+
+const handler = withAuthCors(getApps);
+
+export const GET = handler;
+/** Preflight for Studio / other *.hosanna.live origins. */
+export const OPTIONS = handler;
