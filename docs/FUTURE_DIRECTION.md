@@ -40,7 +40,7 @@ Services and scheduling move into **Planning**. Studio is renamed **Hosanna Musi
 | **Hosanna Music**     | Worship leaders, vocalists, band         | Songs, collections, sheets, libraries, stage-oriented charts                                            |
 | **Hosanna Presenter** | Media & tech teams                       | Native desktop show control — lyrics, media, screens, stream feed; ChordPro-native and Music hitch-sync |
 | **Hosanna Planning**  | Service & ministry leads, facility leads | Calendar-first services & events, teams, rooms & resources                                              |
-| **Hosanna Community** | Pastors, staff, members (via Member app) | People/CRM, content, engagement                                                                         |
+| **Hosanna Community** | Pastors, staff, members (via Member app) | People/CRM, posts & sermons, forms, prayer, check-in                                                    |
 | **Hosanna Finance**   | Treasurers, admins, donors               | Giving, funds, budgets, expenses, statements                                                            |
 
 ---
@@ -170,34 +170,41 @@ Managed in their own tabs, then requested from events or by people directly.
 
 ### 3.4. Hosanna Community
 
-Admin-facing church life and CRM. **Members interact in the Hosanna Member app**; Community is where staff manage people, publish content, and configure engagement.
+Staff-facing church life and CRM on the web for now. **Member-facing interaction is the Hosanna Member app** (and anonymous entry via the church public QR). Community is where staff manage people, publish content, run check-in, and configure engagement.
 
 Three domains:
 
 **People**
 
-- CRM, families/households, membership, pastoral care, and groups
+- **Persons** on a modular, easy-to-extend profile model: contact fields, custom fields, tags/segments, membership status, milestones (e.g. baptism), and whatever the church adds later without a schema rewrite
+- **Lifecycle** — starts anonymous (e.g. QR / guest), can become a signed-in **user**, then a **member** of the church
+- **Households** — a unit of people (family/household) used where the church thinks in groups of related persons
+- **Private notes** — staff-only notes on a person
+- **Groups and classes** — small groups, life groups, and classes (e.g. Sunday kids class) as first-class rosters staff manage in Community
 
 **Content**
 
-- Feed and announcements (**Posts** — staff/admins only)
-- **Sermons** — authored in Community; the Member app plays them. One sermon record can carry **video** and **audio** (podcast) links together, with series/speaker/scripture-style metadata
+- **Posts** — staff/admins only; Markdown in a rich editor (formatting, media, links — the full editor feature set). No comments
+- **Sermons** — authored in Community; the Member app plays them. One sermon record can carry **video** and **audio** (podcast) links, series/speaker/scripture-style metadata, and **public notes** (Markdown the pastor writes for everyone on that sermon — bullet points, outline, etc.)
+  - **Series** — first-class (ordered list, artwork, and the sermons that belong to it)
   - **Live** — upcoming or in-progress stream; Member app shows Watch Live treatment
-  - **Archive** — past recording kept as a library resource. When a live sermon ends, it converts into archive
-- Churches publish links manually (e.g. YouTube for video, podcast/host URL for audio)
+  - **Archive** — past recording kept as a library resource
+- Churches publish media links manually (e.g. YouTube for video, podcast/host URL for audio)
 
 **Engagement**
 
-- Events and registrations from Planning (calendar, detail, price/booking fields, Member app signup)
-- Prayer requests
+- **Events** — read-only mirror of Planning (calendar, detail, price/booking). Registration stays in the Member app
+- **Forms** — staff-authored forms members (and guests) can submit from the Member app
+- **Prayer requests** — anyone may submit, including anonymous. Visibility defaults to leaders and assigned people; those people can **publish** a request onto a prayer wall when appropriate
 - Notifications via the shared notification API
-- **Check-in and attendance**
-  - Member attendance at services, events, and groups
+- **Check-in and attendance** — Community admin owns check-in and reports; Member app is the pass / QR surface
+  - Member attendance at services, events, groups, and classes
   - Children’s check-in: children, guardians, authorized pickups, classroom assignment
   - Volunteer check-in for ministry participation
+  - Attendance from check-in when possible, with manual headcount as a fallback; records tie to Planning services/events by ID
   - Attendance history and participation reporting
 
-Wiki-style manuals and in-app team chat are **out**. Prayer requests cover that kind of member interaction without a general chat product.
+Wiki-style manuals and in-app team chat are **out**.
 
 ---
 
@@ -322,4 +329,4 @@ flowchart TD
 
 **Hosanna Musician** — authenticated band/stage use; dark, high-contrast, offline-first charts and tools; hitch-sync follow with local unlock when Presenter is live.
 
-**Hosanna Member** — congregation and volunteers. Sign in to the church **or** enter through the church’s **public QR** for anonymous access. Surfaces feed, sermons (live, archive, audio), event registration/booking from Planning, prayer requests, check-in, giving/tithes, and schedule Accept/Decline. It talks to Community, Planning, and Finance APIs; it is not a third admin console.
+**Hosanna Member** — congregation and volunteers. Sign in to the church **or** enter through the church’s **public QR** for anonymous access. Surfaces feed, sermons (live, archive, audio, public notes), event registration/booking from Planning, forms, prayer requests (and the published prayer wall), check-in, giving/tithes, and schedule Accept/Decline. It talks to Community, Planning, and Finance APIs; it is not a third admin console.
