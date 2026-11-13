@@ -150,6 +150,7 @@ export const sharedEs: typeof sharedPt = {
       loading: "Cargando aplicaciones…",
       empty: "No hay aplicaciones disponibles.",
       error: "No se pudieron cargar las aplicaciones.",
+      goHome: "Inicio Hosanna",
     },
     apps: {
       auth: {

@@ -13,12 +13,14 @@ import React from "react";
 export const StudioAppSwitcher: React.FC = () => {
   const { t } = useI18n();
   const { user } = useAuth();
-  const appsUrl = `${getAuthAppUrl()}/api/suite/apps`;
+  const authOrigin = getAuthAppUrl();
+  const appsUrl = `${authOrigin}/api/suite/apps`;
 
   return (
     <AppSwitcher
       displayName={user?.name || user?.email || ""}
       appsUrl={appsUrl}
+      homeHubUrl={`${authOrigin}/home`}
       currentAppId="music"
       translate={(key) => t(key as Parameters<typeof t>[0])}
       labels={{
@@ -28,6 +30,7 @@ export const StudioAppSwitcher: React.FC = () => {
         loading: t("suite.switcher.loading"),
         empty: t("suite.switcher.empty"),
         error: t("suite.switcher.error"),
+        goHome: t("suite.switcher.goHome"),
       }}
     />
   );

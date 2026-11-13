@@ -15,6 +15,7 @@ export const pt = {
     favoritesTitle: "As minhas aplicações",
     favoritesSubtitle: "Acesso rápido às suas aplicações favoritas.",
     favoritesEmpty: "Marque aplicações com a estrela para as ver aqui.",
+    addShortcut: "Adicionar atalho",
     openBadge: "Aberta",
     favorite: "Adicionar aos favoritos",
     unfavorite: "Remover dos favoritos",
@@ -553,6 +554,11 @@ export const pt = {
     title: "Conta",
     subtitle: "Gerir o seu perfil, segurança, notificações e sessões Hosanna.",
     signOut: "Terminar sessão",
+    menu: {
+      open: "Menu da conta",
+      theme: "Tema",
+      language: "Idioma",
+    },
     notifications: {
       title: "Preferências de notificação",
       description: "Escolha como a Hosanna o contacta — caixa de entrada, push e email.",

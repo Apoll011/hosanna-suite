@@ -1,9 +1,9 @@
 "use client";
 
-import { LanguageSelector } from "@/components/LanguageSelector";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { AuthAccountMenu } from "@/components/account/AuthAccountMenu";
 import { AccountToastBanner } from "@/components/account/AccountToast";
 import { NavigationProgress } from "@/components/account/NavigationProgress";
+import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
 import { AuthAppSwitcher } from "@/components/suite/AuthAppSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useI18n } from "@/lib/ui/i18n";
@@ -23,11 +23,13 @@ export function AccountShell({
   toast?: { msg: string; type: "success" | "error" } | null;
   /** When set, the brand pill shows a back arrow on hover and navigates here. */
   returnUrl?: string | null;
+  /** @deprecated Logos + account menu are built into the shell. */
   headerActions?: ReactNode;
 }) {
   const { t } = useI18n();
   const { isRefreshing } = useActiveOrganization();
   const canGoBack = Boolean(returnUrl);
+  void headerActions;
 
   const brandPillClass =
     "group relative flex select-none items-center gap-2 rounded-full border border-m3-border/60 bg-m3-sidebar/80 px-2.5 py-1.5 transition-colors hover:bg-m3-hover";
@@ -45,7 +47,7 @@ export function AccountShell({
           <ArrowLeft className="h-4 w-4 text-m3-text" />
         </span>
         <span className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}>
-          <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
+          <img src="/favicon.png" alt="" className="h-5 w-5 object-contain" />
         </span>
       </span>
       <span className="relative inline-grid overflow-hidden text-xs font-semibold tracking-tight sm:text-sm">
@@ -66,7 +68,7 @@ export function AccountShell({
   ) : (
     <>
       <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
-        <img src="/favicon.png" alt="" className="h-5 w-5 rounded-md object-contain" />
+        <img src="/favicon.png" alt="" className="h-5 w-5 object-contain" />
       </span>
       <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
     </>
@@ -96,11 +98,10 @@ export function AccountShell({
             </Link>
           )}
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            <AuthLogosToggle />
             <AuthAppSwitcher currentAppId="auth" />
-            {headerActions}
-            <LanguageSelector />
-            <ThemeToggle className="bg-m3-sidebar/80 hover:bg-m3-hover" />
+            <AuthAccountMenu />
           </div>
         </div>
       </header>

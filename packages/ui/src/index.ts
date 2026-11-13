@@ -7,11 +7,29 @@
 
 export { cn, type ClassValue } from "./cn";
 export {
+  AccountMenu,
+  type AccountMenuLabels,
+  type AccountMenuLink,
+  type AccountMenuOrg,
+  type AccountMenuProps,
+  type AccountMenuUser,
+} from "./AccountMenu";
+export {
   AppSwitcher,
   type AppSwitcherApp,
   type AppSwitcherLabels,
   type AppSwitcherProps,
 } from "./AppSwitcher";
+export {
+  SuiteAppIcon,
+  type SuiteAppIconProps,
+} from "./SuiteAppIcon";
+export {
+  loadSuiteApps,
+  peekSuiteAppsCache,
+  resetSuiteAppsCacheForTests,
+  type SuiteCatalogApp,
+} from "./suiteAppsCache";
 export {
   localizeSuiteApp,
   localizeSuiteApps,

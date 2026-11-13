@@ -148,6 +148,7 @@ export const sharedPt = {
       loading: "A carregar aplicações…",
       empty: "Sem aplicações disponíveis.",
       error: "Não foi possível carregar as aplicações.",
+      goHome: "Início Hosanna",
     },
     apps: {
       auth: {

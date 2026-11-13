@@ -149,6 +149,7 @@ export const sharedEn: typeof sharedPt = {
       loading: "Loading apps…",
       empty: "No apps available.",
       error: "Could not load apps.",
+      goHome: "Hosanna Home",
     },
     apps: {
       auth: {

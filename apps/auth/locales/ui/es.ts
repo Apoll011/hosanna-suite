@@ -17,6 +17,7 @@ export const es: typeof pt = {
     favoritesTitle: "Mis aplicaciones",
     favoritesSubtitle: "Acceso rápido a tus aplicaciones favoritas.",
     favoritesEmpty: "Marca aplicaciones con la estrella para verlas aquí.",
+    addShortcut: "Añadir acceso",
     openBadge: "Abierta",
     favorite: "Añadir a favoritos",
     unfavorite: "Quitar de favoritos",
@@ -557,6 +558,11 @@ export const es: typeof pt = {
     title: "Cuenta",
     subtitle: "Gestiona tu perfil, seguridad, notificaciones y sesiones de Hosanna.",
     signOut: "Cerrar sesión",
+    menu: {
+      open: "Menú de la cuenta",
+      theme: "Tema",
+      language: "Idioma",
+    },
     notifications: {
       title: "Preferencias de notificación",
       description: "Elige cómo te contacta Hosanna — buzón, push y email.",

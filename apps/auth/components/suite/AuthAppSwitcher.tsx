@@ -8,11 +8,11 @@ import { AppSwitcher } from "@hosanna/ui";
 export function AuthAppSwitcher({ currentAppId = "auth" }: { currentAppId?: string }) {
   const { t } = useI18n();
   const { user } = useAuthUser({ requireAuth: false, loginRedirect: "/login?redirect=/home" });
-
   return (
     <AppSwitcher
       displayName={user?.name || user?.email || ""}
       appsUrl="/api/suite/apps"
+      homeHubUrl="/home"
       currentAppId={currentAppId}
       translate={(key) => t(key as Parameters<typeof t>[0])}
       labels={{
@@ -22,6 +22,7 @@ export function AuthAppSwitcher({ currentAppId = "auth" }: { currentAppId?: stri
         loading: t("suite.switcher.loading"),
         empty: t("suite.switcher.empty"),
         error: t("suite.switcher.error"),
+        goHome: t("suite.switcher.goHome"),
       }}
     />
   );

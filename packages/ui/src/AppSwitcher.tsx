@@ -3,31 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * Google-style waffle App Switcher: grid button opens a popover with
- * “Hello {name}” and the suite app catalog.
+ * greeting, suite catalog, and a link back to the auth home hub.
  */
 
 "use client";
 
-import { LayoutGrid } from "lucide-react";
+import { Home, LayoutGrid } from "lucide-react";
 import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { cn } from "./cn";
+import { SuiteAppIcon } from "./SuiteAppIcon";
+import { loadSuiteApps, peekSuiteAppsCache, type SuiteCatalogApp } from "./suiteAppsCache";
 import { localizeSuiteApps } from "./suiteLabels";
 
-export type AppSwitcherApp = {
-  id: string;
-  name: string;
-  shortName: string;
-  description?: string;
-  nameKey?: string | null;
-  shortNameKey?: string | null;
-  descriptionKey?: string | null;
-  logoUrl: string;
-  homeUrl: string | null;
-  status: "live" | "coming_soon" | string;
-  accessible?: boolean;
-  accent?: string;
-};
+export type AppSwitcherApp = SuiteCatalogApp;
 
 export type AppSwitcherLabels = {
   openMenu?: string;
@@ -36,6 +25,8 @@ export type AppSwitcherLabels = {
   loading?: string;
   empty?: string;
   error?: string;
+  /** Link to auth `/home` hub. */
+  goHome?: string;
 };
 
 export type AppSwitcherProps = {
@@ -45,6 +36,8 @@ export type AppSwitcherProps = {
   apps?: AppSwitcherApp[];
   /** Credentialed catalog URL (default `/api/suite/apps`). Ignored when `apps` is set. */
   appsUrl?: string;
+  /** Absolute or same-origin URL for the suite home hub. */
+  homeHubUrl?: string;
   labels?: AppSwitcherLabels;
   /** Host translator — localizes catalog name/description keys when present. */
   translate?: (key: string) => string;
@@ -52,8 +45,6 @@ export type AppSwitcherProps = {
   /** Highlight the app the host is currently in (muted / non-navigating). */
   currentAppId?: string;
 };
-
-type CatalogResponse = { apps?: AppSwitcherApp[] };
 
 function firstName(displayName: string): string {
   const trimmed = displayName.trim();
@@ -71,6 +62,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   displayName,
   apps: appsProp,
   appsUrl = "/api/suite/apps",
+  homeHubUrl,
   labels,
   translate,
   className,
@@ -79,47 +71,56 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [apps, setApps] = useState<AppSwitcherApp[]>(() =>
-    appsProp ? (translate ? localizeSuiteApps(appsProp, translate) : appsProp) : [],
-  );
-  const [loading, setLoading] = useState(!appsProp);
-  const [error, setError] = useState<string | null>(null);
 
   const applyLocale = useCallback(
     (list: AppSwitcherApp[]) => (translate ? localizeSuiteApps(list, translate) : list),
     [translate],
   );
 
-  // English defaults match `@hosanna/i18n` shared `suite.switcher`; hosts should pass localized labels.
+  const [apps, setApps] = useState<AppSwitcherApp[]>(() => {
+    if (appsProp) return applyLocale(appsProp);
+    const cached = peekSuiteAppsCache(appsUrl);
+    return cached ? applyLocale(cached) : [];
+  });
+  const [loading, setLoading] = useState(() => !appsProp && !peekSuiteAppsCache(appsUrl));
+  const [error, setError] = useState<string | null>(null);
+
   const openLabel = labels?.openMenu ?? "Open app switcher";
   const greetingTemplate = labels?.greeting ?? "Hello {name}";
   const comingSoonLabel = labels?.comingSoon ?? "Coming soon";
   const loadingLabel = labels?.loading ?? "Loading apps…";
   const emptyLabel = labels?.empty ?? "No apps available.";
   const errorLabel = labels?.error ?? "Could not load apps.";
+  const goHomeLabel = labels?.goHome ?? "Hosanna Home";
 
   const greeting = greetingTemplate.replace(
     "{name}",
     firstName(displayName) || displayName || "there",
   );
 
-  const loadApps = useCallback(async () => {
+  const refresh = useCallback(async () => {
     if (appsProp) {
       setApps(applyLocale(appsProp));
       setLoading(false);
       setError(null);
       return;
     }
-    setLoading(true);
-    setError(null);
+    const cached = peekSuiteAppsCache(appsUrl);
+    if (cached?.length) {
+      setApps(applyLocale(cached));
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     try {
-      const res = await fetch(appsUrl, { credentials: "include" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as CatalogResponse;
-      setApps(applyLocale(Array.isArray(data.apps) ? data.apps : []));
+      const list = await loadSuiteApps(appsUrl);
+      setApps(applyLocale(list));
+      setError(null);
     } catch {
-      setError(errorLabel);
-      setApps([]);
+      if (!peekSuiteAppsCache(appsUrl)?.length) {
+        setError(errorLabel);
+        setApps([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -132,12 +133,11 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
       setError(null);
       return;
     }
-    void loadApps();
-  }, [appsProp, loadApps, applyLocale]);
+    void refresh();
+  }, [appsProp, refresh, applyLocale]);
 
   useEffect(() => {
     if (!open) return;
-    if (!appsProp) void loadApps();
     const onPointerDown = (e: PointerEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
@@ -150,7 +150,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open, appsProp, loadApps]);
+  }, [open]);
 
   const onSelect = (app: AppSwitcherApp) => {
     if (!isOpenable(app) || !app.homeUrl) return;
@@ -160,6 +160,12 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
     }
     setOpen(false);
     window.location.assign(app.homeUrl);
+  };
+
+  const goHome = () => {
+    if (!homeHubUrl) return;
+    setOpen(false);
+    window.location.assign(homeHubUrl);
   };
 
   return (
@@ -181,21 +187,31 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
           id={panelId}
           role="dialog"
           aria-label={openLabel}
-          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,20rem)] overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-lg"
+          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_16px_48px_-16px_rgb(0_0_0_/0.4)]"
         >
-          <div className="border-b border-m3-border/60 px-4 py-3">
+          <div className="flex items-center justify-between gap-2 border-b border-m3-border/60 px-4 py-3">
             <p className="text-sm font-semibold tracking-tight text-m3-text">{greeting}</p>
+            {homeHubUrl ? (
+              <button
+                type="button"
+                onClick={goHome}
+                className="inline-flex items-center gap-1.5 rounded-full bg-m3-sidebar/80 px-2.5 py-1 text-[11px] font-semibold text-m3-primary transition-colors hover:bg-m3-hover"
+              >
+                <Home className="h-3.5 w-3.5" aria-hidden />
+                {goHomeLabel}
+              </button>
+            ) : null}
           </div>
 
-          <div className="max-h-[min(70vh,22rem)] overflow-y-auto p-3">
-            {loading ? (
+          <div className="max-h-[min(70vh,24rem)] overflow-y-auto p-3">
+            {loading && apps.length === 0 ? (
               <p className="px-2 py-6 text-center text-sm text-m3-secondary">{loadingLabel}</p>
-            ) : error ? (
+            ) : error && apps.length === 0 ? (
               <p className="px-2 py-6 text-center text-sm text-m3-danger">{error}</p>
             ) : apps.length === 0 ? (
               <p className="px-2 py-6 text-center text-sm text-m3-secondary">{emptyLabel}</p>
             ) : (
-              <ul className="grid grid-cols-3 gap-1">
+              <ul className="grid grid-cols-3 gap-1.5">
                 {apps.map((app) => {
                   const openable = isOpenable(app);
                   const isCurrent = currentAppId === app.id;
@@ -205,38 +221,23 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
                         type="button"
                         disabled={!openable}
                         title={
-                          openable
-                            ? app.name
-                            : `${app.name} — ${comingSoonLabel}`
+                          openable ? app.name : `${app.name} — ${comingSoonLabel}`
                         }
                         onClick={() => onSelect(app)}
                         className={cn(
-                          "flex w-full flex-col items-center gap-1.5 rounded-xl px-2 py-2.5 text-center transition-colors",
+                          "flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-3 text-center transition-colors",
                           openable
                             ? "hover:bg-m3-hover cursor-pointer"
                             : "cursor-not-allowed opacity-55",
-                          isCurrent && "bg-m3-hover/80",
+                          isCurrent && "bg-m3-hover/90 ring-1 ring-m3-primary/20",
                         )}
                       >
-                        <span
-                          className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-m3-border/50 bg-m3-sidebar/80"
-                          style={
-                            app.accent
-                              ? { backgroundColor: `${app.accent}22`, borderColor: `${app.accent}44` }
-                              : undefined
-                          }
-                        >
-                          <img
-                            src={app.logoUrl}
-                            alt=""
-                            className="h-6 w-6 object-contain"
-                          />
-                        </span>
-                        <span className="line-clamp-2 w-full text-[11px] font-medium leading-tight text-m3-text">
+                        <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="sm" />
+                        <span className="line-clamp-2 w-full text-[11px] font-semibold leading-tight text-m3-text">
                           {app.shortName || app.name}
                         </span>
                         {app.status === "coming_soon" ? (
-                          <span className="text-[9px] font-semibold uppercase tracking-wide text-m3-secondary">
+                          <span className="rounded-full bg-m3-sidebar px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-m3-secondary">
                             {comingSoonLabel}
                           </span>
                         ) : null}

@@ -34,7 +34,6 @@ import { ViewName } from "../../layouts/view";
 import { getAvatarGradient, getInitials } from "../../utils";
 import { getRoleLabel } from "../../utils/settingsUtils";
 import { FolderTreeItemNode, FolderTreeNode } from "../explorer";
-import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 
 interface AppSidebarProps {
   isSidebarOpen: boolean;
@@ -207,7 +206,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   Hosanna Studio
                 </h1>
                 <div className="flex items-center shrink-0">
-                  <StudioAppSwitcher />
                   <Button
                     type="button"
                     variant="ghost"
@@ -543,12 +541,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </div>
           </button>
         </AnyRoleGate>
-
-        {isSidebarCollapsed ? (
-          <div className="mt-2 pt-2 border-t border-m3-border flex justify-center shrink-0">
-            <StudioAppSwitcher />
-          </div>
-        ) : null}
 
         {user && (
           <div className="mt-2 pt-2 border-t border-m3-border relative shrink-0" ref={userMenuRef}>
