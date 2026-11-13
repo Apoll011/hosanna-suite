@@ -152,7 +152,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
     <div ref={rootRef} className={cn("relative", className)}>
       <button
         type="button"
-        className="group inline-flex items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
+        className="group inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
         aria-label={openLabel}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -161,13 +161,13 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
       >
         <span
           className={cn(
-            "flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-[12px] font-bold text-white shadow-sm ring-2 ring-transparent transition-[box-shadow,ring] group-hover:ring-m3-primary/35",
+            "flex h-7 w-7 items-center justify-center overflow-hidden rounded-full text-[11px] font-bold leading-none text-white shadow-sm ring-2 ring-transparent transition-[box-shadow,ring] group-hover:ring-m3-primary/35",
             open && "ring-m3-primary/50",
             !user?.image && "bg-linear-to-br from-sky-500 to-indigo-600",
           )}
         >
           {user?.image ? (
-            <img src={user.image} alt="" className="h-full w-full object-cover" />
+            <img src={user.image} alt="" className="block h-full w-full object-cover" />
           ) : (
             initials(user)
           )}
@@ -256,9 +256,9 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
           ) : null}
 
           {(themeControl || languageControl) && (
-            <div className="space-y-1 border-b border-m3-border/60 p-2">
-              {themeControl ? <div className="px-1">{themeControl}</div> : null}
-              {languageControl ? <div className="px-1">{languageControl}</div> : null}
+            <div className="space-y-0.5 border-b border-m3-border/60 px-2 py-1.5">
+              {themeControl}
+              {languageControl}
             </div>
           )}
 

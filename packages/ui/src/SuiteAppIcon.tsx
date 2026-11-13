@@ -2,8 +2,8 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  *
- * App logo tile — soft rounded well + full-bleed contain so brand marks
- * are not a tiny square floating inside a clipped circle.
+ * App logo tile — mark is scaled to fill the rounded well; opaque edges
+ * (e.g. white square PNG padding) are cropped by overflow.
  */
 
 "use client";
@@ -23,9 +23,9 @@ export type SuiteAppIconProps = {
 };
 
 const SIZE = {
-  sm: { tile: "h-10 w-10 rounded-xl", pad: "p-1.5" },
-  md: { tile: "h-12 w-12 rounded-2xl", pad: "p-2" },
-  lg: { tile: "h-14 w-14 rounded-2xl", pad: "p-2.5" },
+  sm: "h-10 w-10 rounded-xl",
+  md: "h-12 w-12 rounded-2xl",
+  lg: "h-14 w-14 rounded-2xl",
 } as const;
 
 export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
@@ -35,29 +35,31 @@ export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
   imgClassName,
   size = "md",
 }) => {
-  const s = SIZE[size];
   return (
     <span
       className={cn(
         "relative flex shrink-0 items-center justify-center overflow-hidden shadow-sm ring-1 ring-black/5 dark:ring-white/10",
-        s.tile,
-        s.pad,
+        SIZE[size],
         className,
       )}
       style={
         accent
           ? {
-              backgroundColor: `${accent}18`,
+              backgroundColor: `${accent}22`,
               boxShadow: `inset 0 0 0 1px ${accent}33, 0 1px 2px rgb(0 0 0 / 0.04)`,
             }
           : { backgroundColor: "color-mix(in srgb, var(--color-m3-sidebar) 90%, transparent)" }
       }
     >
+      {/* Scale past the well so white square padding is cropped by overflow. */}
       <img
         src={logoUrl}
         alt=""
         draggable={false}
-        className={cn("h-full w-full object-contain", imgClassName)}
+        className={cn(
+          "h-full w-full max-w-none scale-[1.28] object-cover object-center",
+          imgClassName,
+        )}
       />
     </span>
   );

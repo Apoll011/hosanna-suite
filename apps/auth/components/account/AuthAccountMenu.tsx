@@ -1,7 +1,7 @@
 "use client";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { MenuThemeToggle } from "@/components/account/MenuThemeToggle";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth/client";
@@ -27,6 +27,9 @@ export function AuthAccountMenu({ className }: { className?: string }) {
     await authClient.signOut();
     router.replace("/login");
   };
+
+  const prefsRow =
+    "flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text";
 
   return (
     <AccountMenu
@@ -88,15 +91,15 @@ export function AuthAccountMenu({ className }: { className?: string }) {
         language: t("account.menu.language"),
       }}
       themeControl={
-        <div className="flex items-center justify-between gap-3 rounded-xl px-2.5 py-2">
-          <span className="text-sm text-m3-text">{t("account.menu.theme")}</span>
-          <ThemeToggle className="border-m3-border/50 bg-m3-sidebar/60 hover:bg-m3-hover" />
+        <div className={prefsRow}>
+          <span className="font-medium">{t("account.menu.theme")}</span>
+          <MenuThemeToggle />
         </div>
       }
       languageControl={
-        <div className="flex items-center justify-between gap-3 rounded-xl px-2.5 py-2">
-          <span className="text-sm text-m3-text">{t("account.menu.language")}</span>
-          <LanguageSelector className="[&_button]:bg-m3-sidebar/60 [&_button]:shadow-none [&_button]:p-2" />
+        <div className={prefsRow}>
+          <span className="font-medium">{t("account.menu.language")}</span>
+          <LanguageSelector className="[&_button]:h-7 [&_button]:gap-1 [&_button]:rounded-full [&_button]:border-m3-border/50 [&_button]:bg-m3-sidebar/70 [&_button]:p-1.5 [&_button]:shadow-none [&_button]:text-[10px]" />
         </div>
       }
     />

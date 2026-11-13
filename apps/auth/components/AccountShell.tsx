@@ -47,7 +47,11 @@ export function AccountShell({
           <ArrowLeft className="h-4 w-4 text-m3-text" />
         </span>
         <span className={`${swapMotion} z-10 justify-center group-hover:opacity-0`}>
-          <img src="/favicon.png" alt="" className="h-5 w-5 object-contain" />
+          <img
+            src="/favicon.png"
+            alt=""
+            className="h-5 w-5 scale-110 object-cover object-center"
+          />
         </span>
       </span>
       <span className="relative inline-grid overflow-hidden text-xs font-semibold tracking-tight sm:text-sm">
@@ -67,8 +71,12 @@ export function AccountShell({
     </>
   ) : (
     <>
-      <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
-        <img src="/favicon.png" alt="" className="h-5 w-5 object-contain" />
+      <span className="relative flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-md">
+        <img
+          src="/favicon.png"
+          alt=""
+          className="h-full w-full scale-110 object-cover object-center"
+        />
       </span>
       <span className="text-xs font-semibold tracking-tight sm:text-sm">{t("brand.name")}</span>
     </>
@@ -98,7 +106,7 @@ export function AccountShell({
             </Link>
           )}
 
-          <div className="flex items-center gap-0.5 sm:gap-1">
+          <div className="flex h-9 items-center gap-0.5 sm:gap-1">
             <AuthLogosToggle />
             <AuthAppSwitcher currentAppId="auth" />
             <AuthAccountMenu />
