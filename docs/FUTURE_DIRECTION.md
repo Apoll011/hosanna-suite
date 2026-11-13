@@ -39,7 +39,7 @@ Services and scheduling move into **Planning**. Studio is renamed **Hosanna Musi
 | :-------------------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------ |
 | **Hosanna Music**     | Worship leaders, vocalists, band         | Songs, collections, sheets, libraries, stage-oriented charts                                            |
 | **Hosanna Presenter** | Media & tech teams                       | Native desktop show control — lyrics, media, screens, stream feed; ChordPro-native and Music hitch-sync |
-| **Hosanna Planning**  | Service & ministry leads, facility leads | Services, events, teams, light resource booking                                                         |
+| **Hosanna Planning**  | Service & ministry leads, facility leads | Calendar-first services & events, teams, rooms & resources                                              |
 | **Hosanna Community** | Pastors, staff, members (via Member app) | People/CRM, content, engagement                                                                         |
 | **Hosanna Finance**   | Treasurers, admins, donors               | Giving, funds, budgets, expenses, statements                                                            |
 
@@ -121,7 +121,7 @@ Presenter publishes live position on the hitch bus. Hosanna Musician jumps to th
 Any signed-in account that belongs to the org can use it under the same church subscription — no per-seat Presenter license.
 
 **Service video today and later**  
-Organizers publish YouTube Live or VOD links in Community; Community and the Member app surface Watch Live and the sermon archive. Presenter contributes to that stream by exposing a program feed into OBS / vMix.
+Organizers publish sermon links in Community (**Live** and **Archive**, plus optional audio); Community and the Member app surface Watch Live and the archive. Presenter contributes to that stream by exposing a program feed into OBS / vMix.
 
 A separate **Hosanna Live** capability (ingest camera, program, and house audio; encode and distribute to YouTube and the Member app) remains a later vision only — not decided for shipping with Presenter, and kept decoupled from the offline Operator path.
 
@@ -129,24 +129,36 @@ A separate **Hosanna Live** capability (ingest camera, program, and house audio;
 
 ### 3.3. Hosanna Planning
 
-Operational planning for church life: services, events, people on teams, and light facility/gear booking.
+Operational planning for church life. The home surface is a **calendar** where staff create **services** and **events** (filters and colors distinguish them).
 
 **Services and events**
 
-- Creating a **service** also creates its linked **event**
-- Other gatherings are the same event model with **no** service link
-- Events can be published into Community for member-facing visibility and registration
+- Creating a **service** also creates its linked **event**. From the service, that linked event is editable with mostly the same fields as a standalone event, plus service-oriented extras and values pre-filled from a template
+- Standalone events (retreats, camping, conferences, rehearsals, and the rest) use the same event model with **no** service link
+- Events publish into Community for the member-facing calendar and detail pages. Registration (including price and related booking fields set at create time) happens in the **Member app**
 - Run-of-show (order, timings, notes, Music song IDs) is a first-class capability of a service, not a separate product
 - Planning publishes the plan; it does **not** run a live “behind/ahead” clock — that is not its job
+
+**Templates**
+
+- One template model for both. A **service template** is an event template marked for services
+- Templates can carry responsibilities/teams, default rooms, and default resources
+- Recurrence is template-driven: stamp out instances from a template — not a separate “edit this occurrence / edit the series” engine
 
 **People and teams**
 
 - People join the org with accounts, can belong to several orgs, and join **teams**
 - Scheduling flows (including Accept / Decline on the Member app) hang off that membership model
 
-**Resources**
+**Rooms and resources**
 
-- Rooms, vehicles, and equipment stay **lightweight**: attach what an event needs and surface **warnings** when rooms, gear, or people collide — not a heavy CMMS
+Managed in their own tabs, then requested from events or by people directly.
+
+- **Resources** — description, inventory **amount**, optional approval (a role and/or a named person). Events or individuals request quantities; the system tracks what is allocated and warns when requests exceed what is free
+- **Rooms** — same request and approval model, with **capacity** instead of amount. Events or individuals can request a room; ad-hoc person requests appear on the calendar as blocks
+- **Maintenance / temporary blocks** — rooms and resources can be blocked for maintenance or similar; blocked inventory cannot be requested while the block is active
+- **Usage log** — rooms and resources keep a use history (who/what/when) without turning Planning into a full CMMS
+- Conflicts across rooms, gear, and people surface as **warnings**
 
 **Integrations**
 
@@ -169,11 +181,14 @@ Three domains:
 **Content**
 
 - Feed and announcements (**Posts** — staff/admins only)
-- Sermons and media: churches publish manually (e.g. YouTube), with series/speaker/scripture-style metadata; the Member app can show live when the church is broadcasting
+- **Sermons** — authored in Community; the Member app plays them. One sermon record can carry **video** and **audio** (podcast) links together, with series/speaker/scripture-style metadata
+  - **Live** — upcoming or in-progress stream; Member app shows Watch Live treatment
+  - **Archive** — past recording kept as a library resource. When a live sermon ends, it converts into archive
+- Churches publish links manually (e.g. YouTube for video, podcast/host URL for audio)
 
 **Engagement**
 
-- Events and registrations (including events published from Planning)
+- Events and registrations from Planning (calendar, detail, price/booking fields, Member app signup)
 - Prayer requests
 - Notifications via the shared notification API
 - **Check-in and attendance**
@@ -296,8 +311,8 @@ flowchart TD
 
     subgraph MemberApp ["Hosanna Member"]
         C1[Feed & announcements]
-        C2[Sermons & live]
-        C3[Events & RSVP]
+        C2[Sermons live & archive]
+        C3[Event registration]
         C4[Prayer requests]
         C5[Check-in]
         C6[Giving & tithes]
@@ -307,4 +322,4 @@ flowchart TD
 
 **Hosanna Musician** — authenticated band/stage use; dark, high-contrast, offline-first charts and tools; hitch-sync follow with local unlock when Presenter is live.
 
-**Hosanna Member** — congregation and volunteers. Sign in to the church **or** enter through the church’s **public QR** for anonymous access. Surfaces feed, sermons/live, events/RSVP, prayer requests, check-in, giving/tithes, and schedule Accept/Decline. It talks to Community, Planning, and Finance APIs; it is not a third admin console.
+**Hosanna Member** — congregation and volunteers. Sign in to the church **or** enter through the church’s **public QR** for anonymous access. Surfaces feed, sermons (live, archive, audio), event registration/booking from Planning, prayer requests, check-in, giving/tithes, and schedule Accept/Decline. It talks to Community, Planning, and Finance APIs; it is not a third admin console.
