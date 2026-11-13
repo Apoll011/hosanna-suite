@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-Hosanna is growing from a worship songbook and service-planning tool into a modular **Church Operating Suite**: focused apps that share one account system, one church database, a **home hub**, and a Google-style **App Switcher**.
+Hosanna is growing from a worship songbook and service-planning tool into a modular **Church Operating Suite**: focused apps that share one account system, one church database, a post-login **home** on the auth site, and a Google-style **App Switcher** on every app.
 
 The suite stays open and practical for churches of every size. Product work also includes stronger branding (new primary logo and a distinct mark per app) and a likely subscription adjustment (for example from \$12 to \$14).
 
@@ -11,7 +11,7 @@ flowchart TD
     subgraph PlatformCore ["Hosanna Platform Core"]
         Auth["Unified Auth & SSO (Better Auth)"]
         Org["Multi-Tenant Church DB"]
-        Hub["Home Hub & App Switcher"]
+        Hub["auth home + App Switcher"]
         Notif["Notification API"]
     end
 
@@ -240,13 +240,18 @@ Shared foundation so the suite feels like one product.
 
 ```mermaid
 flowchart TD
-    User([User]) --> Hub[Home Hub]
-    Hub --> Switcher[App Switcher]
-    Switcher --> Music[Music]
-    Switcher --> Presenter[Presenter]
-    Switcher --> Planning[Planning]
-    Switcher --> Community[Community]
-    Switcher --> Finance[Finance]
+    User([User]) --> AuthHome["auth.hosanna.live/home"]
+    User --> Switcher[App Switcher]
+    AuthHome --> Music[Music]
+    AuthHome --> Presenter[Presenter]
+    AuthHome --> Planning[Planning]
+    AuthHome --> Community[Community]
+    AuthHome --> Finance[Finance]
+    Switcher --> Music
+    Switcher --> Presenter
+    Switcher --> Planning
+    Switcher --> Community
+    Switcher --> Finance
 
     subgraph Shared ["Shared core"]
         Auth[Better Auth / SSO]
@@ -262,9 +267,11 @@ flowchart TD
     Music & Presenter & Planning & Community & Finance --> Notif
 ```
 
-### 4.1. Home hub and App Switcher
+### 4.1. Auth home and App Switcher
 
-After sign-in, a **home hub** launches the apps the user may open (and supports switching org when they belong to more than one). Every web app also carries a Google-style **App Switcher** in the header. Presenter’s Operator is the desktop booth app; Confidence is the web companion — both sit under the same suite identity.
+Post-login **home** lives on the auth site at `auth.hosanna.live/home` — not a separate suite app. It lists the apps the user may open and supports switching org when they belong to more than one.
+
+Every web app also carries a Google-style **App Switcher** (header grid) to move between products without returning to home. Presenter’s Operator is the desktop booth app; Confidence is the web companion — both sit under the same suite identity.
 
 ### 4.2. Auth and roles
 
