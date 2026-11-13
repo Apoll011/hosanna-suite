@@ -1,9 +1,6 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- *
- * App logo tile — mark is scaled to fill the rounded well; opaque edges
- * (e.g. white square PNG padding) are cropped by overflow.
  */
 
 "use client";
@@ -28,6 +25,7 @@ const SIZE = {
   lg: "h-14 w-14 rounded-2xl",
 } as const;
 
+/** Rounded app tile — contain + inset so edge-to-edge marks are not cropped. */
 export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
   logoUrl,
   accent,
@@ -51,13 +49,12 @@ export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
           : { backgroundColor: "color-mix(in srgb, var(--color-m3-sidebar) 90%, transparent)" }
       }
     >
-      {/* Scale past the well so white square padding is cropped by overflow. */}
       <img
         src={logoUrl}
         alt=""
         draggable={false}
         className={cn(
-          "h-full w-full max-w-none scale-[1.28] object-cover object-center",
+          "box-border h-full w-full object-contain object-center p-[14%]",
           imgClassName,
         )}
       />

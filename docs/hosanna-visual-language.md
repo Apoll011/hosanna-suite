@@ -225,7 +225,7 @@ Shared across Auth and Studio via `@hosanna/ui` — one composition language, no
 **Home (`auth …/home`)**
 
 - Quiet page: brand-present header, then one app grid (live + coming soon). No marketing hero, no stat strips.
-- Tiles use `SuiteAppIcon`: rounded well, logo **scaled to cover** (crop opaque padding; no letterboxed marks).
+- Tiles use `SuiteAppIcon`: rounded accent well, logo **`object-contain` with inset** so full mark artwork stays visible (Hosanna favicon fills the PNG — do not `object-cover` / scale-up into the guitar).
 - Coming-soon apps stay visible but muted / non-primary.
 
 **App Switcher**

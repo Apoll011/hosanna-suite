@@ -19,7 +19,7 @@ export function HomeShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="relative min-h-full w-full flex flex-col overflow-x-hidden bg-m3-bg text-m3-text font-sans antialiased selection:bg-m3-primary/20">
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
         <Image
           src="/background.webp"
           alt=""
