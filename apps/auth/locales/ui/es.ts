@@ -5,6 +5,36 @@ export const es: typeof pt = {
   common: {
     goHome: "Ir al inicio",
   },
+  home: {
+    title: "Aplicaciones",
+    subtitle: "Abre las aplicaciones Hosanna de tu espacio.",
+    searchPlaceholder: "Buscar aplicaciones…",
+    filterAll: "Todas las aplicaciones",
+    viewGrid: "Vista de cuadrícula",
+    viewList: "Vista de lista",
+    catalogTitle: "Las aplicaciones de Hosanna",
+    catalogSubtitle: "Productos del suite disponibles para tu organización.",
+    favoritesTitle: "Mis aplicaciones",
+    favoritesSubtitle: "Acceso rápido a tus aplicaciones favoritas.",
+    favoritesEmpty: "Marca aplicaciones con la estrella para verlas aquí.",
+    openBadge: "Abierta",
+    comingSoon: "Próximamente",
+    favorite: "Añadir a favoritos",
+    unfavorite: "Quitar de favoritos",
+    empty: "Ninguna aplicación coincide con la búsqueda.",
+    loadError: "No se pudieron cargar las aplicaciones.",
+    nav: {
+      account: "Cuenta",
+      organization: "Organización",
+    },
+    switcher: {
+      open: "Abrir selector de aplicaciones",
+      greeting: "Hola {name}",
+      loading: "Cargando aplicaciones…",
+      empty: "No hay aplicaciones disponibles.",
+      error: "No se pudieron cargar las aplicaciones.",
+    },
+  },
   errors: {
     notFound: {
       code: "404",

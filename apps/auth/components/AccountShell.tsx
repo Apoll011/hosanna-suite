@@ -4,6 +4,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AccountToastBanner } from "@/components/account/AccountToast";
 import { NavigationProgress } from "@/components/account/NavigationProgress";
+import { AuthAppSwitcher } from "@/components/suite/AuthAppSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useI18n } from "@/lib/ui/i18n";
 import { LoadingBar } from "@hosanna/ui";
@@ -90,12 +91,13 @@ export function AccountShell({
               {brandContent}
             </a>
           ) : (
-            <Link href="/account" className={brandPillClass} prefetch>
+            <Link href="/home" className={brandPillClass} prefetch>
               {brandContent}
             </Link>
           )}
 
           <div className="flex items-center gap-2">
+            <AuthAppSwitcher currentAppId="auth" />
             {headerActions}
             <LanguageSelector />
             <ThemeToggle className="bg-m3-sidebar/80 hover:bg-m3-hover" />

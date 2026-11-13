@@ -5,6 +5,36 @@ export const en: typeof pt = {
   common: {
     goHome: "Go home",
   },
+  home: {
+    title: "Applications",
+    subtitle: "Open the Hosanna apps for your workspace.",
+    searchPlaceholder: "Search applications…",
+    filterAll: "All applications",
+    viewGrid: "Grid view",
+    viewList: "List view",
+    catalogTitle: "Hosanna applications",
+    catalogSubtitle: "Suite products available for your organization.",
+    favoritesTitle: "My applications",
+    favoritesSubtitle: "Quick access to your favorite apps.",
+    favoritesEmpty: "Star applications to see them here.",
+    openBadge: "Open",
+    comingSoon: "Coming soon",
+    favorite: "Add to favorites",
+    unfavorite: "Remove from favorites",
+    empty: "No applications match your search.",
+    loadError: "Could not load applications.",
+    nav: {
+      account: "Account",
+      organization: "Organization",
+    },
+    switcher: {
+      open: "Open app switcher",
+      greeting: "Hello {name}",
+      loading: "Loading apps…",
+      empty: "No apps available.",
+      error: "Could not load apps.",
+    },
+  },
   errors: {
     notFound: {
       code: "404",
