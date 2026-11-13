@@ -25,7 +25,6 @@ const SIZE = {
   lg: "h-14 w-14 rounded-2xl",
 } as const;
 
-/** Rounded app tile — contain + inset so edge-to-edge marks are not cropped. */
 export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
   logoUrl,
   accent,
