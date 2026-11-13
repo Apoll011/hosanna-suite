@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth/server";
 
-/** Logged-in → account center; guests → login. */
+/** Logged-in → suite home; guests → login. */
 export default async function HomePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  redirect(session?.user ? "/account" : "/login");
+  redirect(session?.user ? "/home" : "/login");
 }

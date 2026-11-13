@@ -5,6 +5,28 @@ export const en: typeof pt = {
   common: {
     goHome: "Go home",
   },
+  home: {
+    title: "Applications",
+    subtitle: "Open the Hosanna apps for your workspace.",
+    searchPlaceholder: "Search applications…",
+    filterAll: "All applications",
+    viewGrid: "Grid view",
+    viewList: "List view",
+    catalogTitle: "Hosanna applications",
+    catalogSubtitle: "Suite products available for your organization.",
+    favoritesTitle: "My applications",
+    favoritesSubtitle: "Quick access to your favorite apps.",
+    favoritesEmpty: "Star applications to see them here.",
+    openBadge: "Open",
+    favorite: "Add to favorites",
+    unfavorite: "Remove from favorites",
+    empty: "No applications match your search.",
+    loadError: "Could not load applications.",
+    nav: {
+      account: "Account",
+      organization: "Organization",
+    },
+  },
   errors: {
     notFound: {
       code: "404",
@@ -607,6 +629,7 @@ export const en: typeof pt = {
       description: "Overview of the active workspace and shortcuts to settings.",
       currentOrg: "Current workspace",
       openStudio: "Open Studio",
+      openApps: "Open applications",
       quickLinks: "Shortcuts",
     },
     profile: {

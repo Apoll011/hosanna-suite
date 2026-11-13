@@ -34,6 +34,7 @@ import { ViewName } from "../../layouts/view";
 import { getAvatarGradient, getInitials } from "../../utils";
 import { getRoleLabel } from "../../utils/settingsUtils";
 import { FolderTreeItemNode, FolderTreeNode } from "../explorer";
+import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 
 interface AppSidebarProps {
   isSidebarOpen: boolean;
@@ -201,21 +202,24 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   : "opacity-100 max-w-50 translate-x-0"
               }`}
             >
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-center justify-between w-full gap-1">
                 <h1 className="font-display font-semibold text-title text-m3-text leading-none truncate">
                   Hosanna Studio
                 </h1>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsSidebarCollapsed(true)}
-                  className="hidden md:flex shrink-0 -mr-2 min-h-10 min-w-10"
-                  title={t("sidebar.collapse")}
-                  aria-label={t("sidebar.collapse")}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center shrink-0">
+                  <StudioAppSwitcher />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsSidebarCollapsed(true)}
+                    className="hidden md:flex shrink-0 -mr-2 min-h-10 min-w-10"
+                    title={t("sidebar.collapse")}
+                    aria-label={t("sidebar.collapse")}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
               {organization && (
                 <button
@@ -539,6 +543,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </div>
           </button>
         </AnyRoleGate>
+
+        {isSidebarCollapsed ? (
+          <div className="mt-2 pt-2 border-t border-m3-border flex justify-center shrink-0">
+            <StudioAppSwitcher />
+          </div>
+        ) : null}
 
         {user && (
           <div className="mt-2 pt-2 border-t border-m3-border relative shrink-0" ref={userMenuRef}>

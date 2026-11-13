@@ -18,6 +18,8 @@ export const sharedEn: typeof sharedPt = {
     retry: "Retry",
     refresh: "Refresh",
     loading: "Loading…",
+    expand: "Expand",
+    collapse: "Collapse",
   },
   billing: {
     period: {
@@ -136,6 +138,48 @@ export const sharedEn: typeof sharedPt = {
         emailDesc: "To the member's inbox",
         both: "Both",
         bothDesc: "Inbox and push",
+      },
+    },
+  },
+  suite: {
+    comingSoon: "Coming soon",
+    switcher: {
+      open: "Open app switcher",
+      greeting: "Hello {name}",
+      loading: "Loading apps…",
+      empty: "No apps available.",
+      error: "Could not load apps.",
+    },
+    apps: {
+      auth: {
+        name: "Account",
+        shortName: "Account",
+        description: "Profile, organization, billing, and security.",
+      },
+      music: {
+        name: "Music",
+        shortName: "Music",
+        description: "Songs, collections, ChordPro charts, and stage tools.",
+      },
+      planning: {
+        name: "Planning",
+        shortName: "Planning",
+        description: "Services, events, teams, rooms, and resources.",
+      },
+      presenter: {
+        name: "Presenter",
+        shortName: "Presenter",
+        description: "Booth show control, lyrics, media, and stream feed.",
+      },
+      community: {
+        name: "Community",
+        shortName: "Community",
+        description: "People, posts, sermons, forms, prayer, and check-in.",
+      },
+      finance: {
+        name: "Finance",
+        shortName: "Finance",
+        description: "Giving, funds, budgets, expenses, and statements.",
       },
     },
   },

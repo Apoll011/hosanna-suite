@@ -14,7 +14,6 @@ import { Button, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui
 import {
   Bell,
   Building2,
-  ChevronDown,
   CreditCard,
   Info,
   Link2,
@@ -32,7 +31,6 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNo
 
 type Target = "user" | "org" | "team";
 type TypePreset = "info" | "organization" | "team" | "security" | "billing";
-type SectionId = "recipient" | "delivery" | "content";
 
 type Recipient = {
   userId: string;
@@ -77,52 +75,6 @@ function initials(name: string) {
   return `${parts[0]![0] ?? ""}${parts[1]![0] ?? ""}`.toUpperCase();
 }
 
-function ExpandableSection({
-  id,
-  title,
-  summary,
-  open,
-  onToggle,
-  children,
-}: {
-  id: string;
-  title: string;
-  summary?: string;
-  open: boolean;
-  onToggle: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <div className="border-b border-m3-border last:border-b-0">
-      <button
-        type="button"
-        id={`${id}-trigger`}
-        aria-expanded={open}
-        aria-controls={`${id}-panel`}
-        onClick={onToggle}
-        className="w-full flex items-center gap-3 py-3.5 text-left cursor-pointer hover:bg-m3-hover/40 px-1 -mx-1 rounded-md transition-colors"
-      >
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold text-m3-text">{title}</span>
-          {summary ? (
-            <span className="block text-[11px] text-m3-secondary mt-0.5 truncate">{summary}</span>
-          ) : null}
-        </span>
-        <ChevronDown
-          className={`w-4 h-4 text-m3-secondary shrink-0 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      {open ? (
-        <div id={`${id}-panel`} role="region" aria-labelledby={`${id}-trigger`} className="pb-4">
-          {children}
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
 export function OrgNotificationsPage() {
   const { t } = useI18n();
   const { organization, isLoading } = useActiveOrganization();
@@ -143,7 +95,6 @@ export function OrgNotificationsPage() {
   const [href, setHref] = useState("");
   const [channels, setChannels] = useState<NotificationChannel[]>(["inbox"]);
   const [isSending, setIsSending] = useState(false);
-  const [openSection, setOpenSection] = useState<SectionId>("recipient");
 
   const { granted: canSend, loading: canLoading } = useCan("notification.sent");
   const isOrgTarget = target === "org";
@@ -323,69 +274,6 @@ export function OrgNotificationsPage() {
     }
   };
 
-  const recipientSummary = useMemo(() => {
-    if (isOrgTarget) {
-      return selectedRoles.length > 0
-        ? selectedRoles.map((r) => t(`settings.roles.${r}` as "settings.roles.owner")).join(", ")
-        : organization?.name ?? t("settings.notifications.recipient.organization");
-    }
-    if (isTeamTarget) {
-      return selectedTeam?.name || t("settings.notifications.content.types.team");
-    }
-    return recipient?.name || t("settings.notifications.recipient.user");
-  }, [
-    isOrgTarget,
-    isTeamTarget,
-    organization?.name,
-    recipient?.name,
-    selectedRoles,
-    selectedTeam?.name,
-    t,
-  ]);
-
-  const deliverySummary = useMemo(
-    () =>
-      CHANNELS.filter((c) => channels.includes(c.value))
-        .map((c) =>
-          t(`settings.notifications.delivery.${c.value}` as "settings.notifications.delivery.inbox"),
-        )
-        .join(" · "),
-    [channels, t],
-  );
-
-  const contentSummary = useMemo(() => {
-    const typeLabel = t(
-      `settings.notifications.content.types.${typePreset}` as "settings.notifications.content.types.info",
-    );
-    return title.trim() ? `${typeLabel} · ${title.trim()}` : typeLabel;
-  }, [t, title, typePreset]);
-
-  const audienceSummary = useMemo(() => {
-    if (isOrgTarget) {
-      return selectedRoles.length > 0
-        ? t("settings.notifications.summaryOrgRoles", {
-            roles: selectedRoles
-              .map((r) => t(`settings.roles.${r}` as "settings.roles.owner"))
-              .join(", "),
-          })
-        : t("settings.notifications.summaryOrg");
-    }
-    if (isTeamTarget) {
-      const teamName = selectedTeam?.name ?? "—";
-      return selectedRoles.length > 0
-        ? t("settings.notifications.summaryTeamRoles", {
-            team: teamName,
-            roles: selectedRoles
-              .map((r) => t(`settings.roles.${r}` as "settings.roles.owner"))
-              .join(", "),
-          })
-        : t("settings.notifications.summaryTeam", { team: teamName });
-    }
-    return t("settings.notifications.summaryUser", {
-      name: recipient?.name ?? "—",
-    });
-  }, [isOrgTarget, isTeamTarget, recipient?.name, selectedRoles, selectedTeam?.name, t]);
-
   if (isLoading || canLoading) {
     return (
       <AccountCenter>
@@ -441,27 +329,28 @@ export function OrgNotificationsPage() {
       <Info className="w-4 h-4" />
     );
 
-  const roleChips = (
-    <div className="flex flex-wrap gap-1.5">
-      {ORG_ROLES.map((role) => {
-        const isSelected = selectedRoles.includes(role);
-        return (
-          <button
-            key={role}
-            type="button"
-            onClick={() => toggleRole(role)}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
-              isSelected
-                ? "bg-m3-primary text-white border-m3-primary"
-                : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
-            }`}
-          >
-            {t(`settings.roles.${role}` as "settings.roles.owner")}
-          </button>
-        );
-      })}
-    </div>
-  );
+  const audienceSummary = isOrgTarget
+    ? selectedRoles.length > 0
+      ? t("settings.notifications.summaryOrgRoles", {
+          roles: selectedRoles
+            .map((r) => t(`settings.roles.${r}` as "settings.roles.owner"))
+            .join(", "),
+        })
+      : t("settings.notifications.summaryOrg")
+    : isTeamTarget
+      ? selectedRoles.length > 0
+        ? t("settings.notifications.summaryTeamRoles", {
+            team: selectedTeam?.name ?? "—",
+            roles: selectedRoles
+              .map((r) => t(`settings.roles.${r}` as "settings.roles.owner"))
+              .join(", "),
+          })
+        : t("settings.notifications.summaryTeam", {
+            team: selectedTeam?.name ?? "—",
+          })
+      : t("settings.notifications.summaryUser", {
+          name: recipient?.name ?? "—",
+        });
 
   return (
     <AccountCenter toast={toast}>
@@ -472,349 +361,370 @@ export function OrgNotificationsPage() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-          <div className="lg:col-span-3">
-            <Surface className="space-y-0">
-              <ExpandableSection
-                id="notif-recipient"
-                title={t("settings.notifications.recipient.title")}
-                summary={recipientSummary}
-                open={openSection === "recipient"}
-                onToggle={() => setOpenSection("recipient")}
-              >
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-m3-sidebar">
-                    {(
-                      [
-                        {
-                          value: "org" as const,
-                          label: t("settings.notifications.recipient.organization"),
-                          icon: <Building2 className="w-4 h-4" />,
-                        },
-                        {
-                          value: "team" as const,
-                          label: t("settings.notifications.content.types.team"),
-                          icon: <Users className="w-4 h-4" />,
-                        },
-                        {
-                          value: "user" as const,
-                          label: t("settings.notifications.recipient.user"),
-                          icon: <UserIcon className="w-4 h-4" />,
-                        },
-                      ] as const
-                    ).map((opt) => {
-                      const activeOpt = target === opt.value;
+          <div className="lg:col-span-3 space-y-5">
+            <Surface className="space-y-4">
+              <div>
+                <h3 className="text-sm font-semibold text-m3-text">
+                  {t("settings.notifications.recipient.title")}
+                </h3>
+                <p className="text-xs text-m3-secondary mt-0.5">
+                  {t("settings.notifications.recipient.desc")}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-m3-sidebar">
+                {(
+                  [
+                    {
+                      value: "org" as const,
+                      label: t("settings.notifications.recipient.organization"),
+                      icon: <Building2 className="w-4 h-4" />,
+                    },
+                    {
+                      value: "team" as const,
+                      label: t("settings.notifications.content.types.team"),
+                      icon: <Users className="w-4 h-4" />,
+                    },
+                    {
+                      value: "user" as const,
+                      label: t("settings.notifications.recipient.user"),
+                      icon: <UserIcon className="w-4 h-4" />,
+                    },
+                  ] as const
+                ).map((opt) => {
+                  const activeOpt = target === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => {
+                        setTarget(opt.value);
+                        setRecipient(null);
+                        setQuery("");
+                        if (opt.value !== "team") setSelectedTeamId("");
+                      }}
+                      className={`flex items-center justify-center gap-2 min-h-9 px-3 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                        activeOpt
+                          ? "bg-m3-card text-m3-text shadow-sm"
+                          : "text-m3-secondary hover:text-m3-text"
+                      }`}
+                    >
+                      {opt.icon}
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {isTeamTarget ? (
+                <div className="space-y-3">
+                  <label className="text-xs font-medium text-m3-text">
+                    {t("settings.notifications.content.types.team")}
+                  </label>
+                  <select
+                    value={selectedTeamId}
+                    onChange={(e) => setSelectedTeamId(e.target.value)}
+                    className="w-full min-h-10 px-3 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
+                  >
+                    <option value="">
+                      {t("settings.notifications.recipient.searchPlaceholder")}
+                    </option>
+                    {teams.map((team) => (
+                      <option key={team.id} value={team.id}>
+                        {team.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="flex flex-wrap gap-1.5">
+                    {ORG_ROLES.map((role) => {
+                      const isSelected = selectedRoles.includes(role);
                       return (
                         <button
-                          key={opt.value}
+                          key={role}
                           type="button"
-                          onClick={() => {
-                            setTarget(opt.value);
-                            setRecipient(null);
-                            setQuery("");
-                            if (opt.value !== "team") setSelectedTeamId("");
-                          }}
-                          className={`flex items-center justify-center gap-2 min-h-9 px-3 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                            activeOpt
-                              ? "bg-m3-card text-m3-text shadow-sm"
-                              : "text-m3-secondary hover:text-m3-text"
+                          onClick={() => toggleRole(role)}
+                          className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                            isSelected
+                              ? "bg-m3-primary text-white border-m3-primary"
+                              : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
                           }`}
                         >
-                          {opt.icon}
-                          {opt.label}
+                          {t(`settings.roles.${role}` as "settings.roles.owner")}
                         </button>
                       );
                     })}
                   </div>
-
-                  {isTeamTarget ? (
-                    <div className="space-y-3">
-                      <label className="text-xs font-medium text-m3-text">
-                        {t("settings.notifications.content.types.team")}
-                      </label>
-                      <select
-                        value={selectedTeamId}
-                        onChange={(e) => setSelectedTeamId(e.target.value)}
-                        className="w-full min-h-10 px-3 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
-                      >
-                        <option value="">
-                          {t("settings.notifications.recipient.searchPlaceholder")}
-                        </option>
-                        {teams.map((team) => (
-                          <option key={team.id} value={team.id}>
-                            {team.name}
-                          </option>
-                        ))}
-                      </select>
-                      <div>
-                        <div className="flex items-center justify-between gap-2 mb-2">
-                          <label className="text-xs font-medium text-m3-text">
-                            {t("settings.notifications.recipient.rolesFilter")}
-                          </label>
-                          <span className="text-xs text-m3-secondary">
-                            {selectedRoles.length === 0
-                              ? t("settings.notifications.recipient.everyone")
-                              : `${selectedRoles.length}`}
-                          </span>
-                        </div>
-                        {roleChips}
-                      </div>
-                    </div>
-                  ) : isOrgTarget ? (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-3 rounded-lg border border-m3-border bg-m3-sidebar/50">
-                        <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
-                          <Building2 className="w-4 h-4" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-m3-text truncate">
-                            {organization.name}
-                          </p>
-                          <p className="text-xs text-m3-secondary">
-                            {t("settings.notifications.recipient.inboxOnly")}
-                          </p>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between gap-2 mb-2">
-                          <label className="text-xs font-medium text-m3-text">
-                            {t("settings.notifications.recipient.rolesFilter")}
-                          </label>
-                          <span className="text-xs text-m3-secondary">
-                            {selectedRoles.length === 0
-                              ? t("settings.notifications.recipient.everyone")
-                              : `${selectedRoles.length}`}
-                          </span>
-                        </div>
-                        {roleChips}
-                      </div>
-                    </div>
-                  ) : recipient ? (
-                    <div className="flex items-center gap-3 p-3 rounded-lg border border-m3-primary/25 bg-m3-primary/5">
-                      <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center shrink-0 overflow-hidden">
-                        {recipient.image ? (
-                          <img src={recipient.image} alt="" className="w-full h-full object-cover" />
-                        ) : (
-                          initials(recipient.name)
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-m3-text truncate">{recipient.name}</p>
-                        <p className="text-xs text-m3-secondary truncate">{recipient.email}</p>
-                      </div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-m3-secondary px-1.5 py-0.5 rounded bg-m3-sidebar border border-m3-border">
-                        {t(
-                          `settings.roles.${recipient.role as AppRole}` as "settings.roles.owner",
-                        )}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setRecipient(null)}
-                        title={t("settings.notifications.recipient.clear")}
-                        className="p-1.5 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="relative">
-                        <Search className="w-4 h-4 text-m3-secondary absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                        <input
-                          type="text"
-                          value={query}
-                          onChange={(e) => setQuery(e.target.value)}
-                          placeholder={t("settings.notifications.recipient.searchPlaceholder")}
-                          className="w-full pl-9 pr-3 min-h-10 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
-                        />
-                      </div>
-                      <div className="max-h-56 overflow-y-auto rounded-md border border-m3-border divide-y divide-m3-border/60">
-                        {isLoadingMembers ? (
-                          <div className="py-8 flex justify-center">
-                            <Spinner
-                              size="sm"
-                              label={t("settings.notifications.recipient.searching")}
-                            />
-                          </div>
-                        ) : membersError ? (
-                          <div className="py-8 text-center space-y-3">
-                            <p className="text-sm text-m3-danger">{membersError}</p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              type="button"
-                              onClick={() => void loadMembers()}
-                            >
-                              {t("common.retry")}
-                            </Button>
-                          </div>
-                        ) : filteredMembers.length === 0 ? (
-                          <p className="py-8 text-center text-sm text-m3-secondary">
-                            {t("settings.notifications.recipient.noResults")}
-                          </p>
-                        ) : (
-                          filteredMembers.map((member) => (
-                            <button
-                              key={member.userId}
-                              type="button"
-                              onClick={() => {
-                                setRecipient(member);
-                                setQuery("");
-                              }}
-                              className="w-full flex items-center gap-3 p-3 text-left hover:bg-m3-hover transition-colors cursor-pointer"
-                            >
-                              <div className="w-8 h-8 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center shrink-0 overflow-hidden">
-                                {member.image ? (
-                                  <img
-                                    src={member.image}
-                                    alt=""
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  initials(member.name)
-                                )}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-sm font-medium text-m3-text truncate">
-                                  {member.name}
-                                </p>
-                                <p className="text-xs text-m3-secondary truncate">{member.email}</p>
-                              </div>
-                              <span className="text-[10px] font-semibold uppercase tracking-wide text-m3-secondary px-1.5 py-0.5 rounded bg-m3-sidebar border border-m3-border">
-                                {t(
-                                  `settings.roles.${member.role as AppRole}` as "settings.roles.owner",
-                                )}
-                              </span>
-                            </button>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  )}
                 </div>
-              </ExpandableSection>
+              ) : isOrgTarget ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 rounded-lg border border-m3-border bg-m3-sidebar/50">
+                    <div className="w-9 h-9 rounded-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                      <Building2 className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-m3-text truncate">
+                        {organization.name}
+                      </p>
+                      <p className="text-xs text-m3-secondary">
+                        {t("settings.notifications.recipient.inboxOnly")}
+                      </p>
+                    </div>
+                  </div>
 
-              <ExpandableSection
-                id="notif-delivery"
-                title={t("settings.notifications.delivery.title")}
-                summary={deliverySummary}
-                open={openSection === "delivery"}
-                onToggle={() => setOpenSection("delivery")}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {CHANNELS.map((opt) => {
-                    const activeCh = channels.includes(opt.value);
-                    return (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => toggleChannel(opt.value)}
-                        className={`flex items-center gap-2.5 p-3 rounded-lg border text-left transition-colors cursor-pointer ${
-                          activeCh
-                            ? "border-m3-primary bg-m3-primary/5"
-                            : "border-m3-border hover:border-m3-primary/40"
-                        }`}
-                      >
-                        <span
-                          className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 ${
-                            activeCh
-                              ? "bg-m3-primary text-white"
-                              : "bg-m3-sidebar text-m3-secondary"
-                          }`}
-                        >
-                          {opt.icon}
-                        </span>
-                        <span className="min-w-0">
-                          <span
-                            className={`block text-sm font-medium ${
-                              activeCh ? "text-m3-primary" : "text-m3-text"
-                            }`}
-                          >
-                            {t(
-                              `settings.notifications.delivery.${opt.value}` as "settings.notifications.delivery.inbox",
-                            )}
-                          </span>
-                          <span className="block text-xs text-m3-secondary">
-                            {t(
-                              `settings.notifications.delivery.${opt.value}Desc` as "settings.notifications.delivery.inboxDesc",
-                            )}
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </ExpandableSection>
-
-              <ExpandableSection
-                id="notif-content"
-                title={t("settings.notifications.content.title")}
-                summary={contentSummary}
-                open={openSection === "content"}
-                onToggle={() => setOpenSection("content")}
-              >
-                <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-medium text-m3-text block mb-2">
-                      {t("settings.notifications.content.typeLabel")}
-                    </label>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <label className="text-xs font-medium text-m3-text">
+                        {t("settings.notifications.recipient.rolesFilter")}
+                      </label>
+                      <span className="text-xs text-m3-secondary">
+                        {selectedRoles.length === 0
+                          ? t("settings.notifications.recipient.everyone")
+                          : `${selectedRoles.length}`}
+                      </span>
+                    </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {TYPE_PRESETS.map((preset) => {
-                        const isActive = typePreset === preset.value;
+                      {ORG_ROLES.map((role) => {
+                        const isSelected = selectedRoles.includes(role);
                         return (
                           <button
-                            key={preset.value}
+                            key={role}
                             type="button"
-                            onClick={() => setTypePreset(preset.value)}
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
-                              isActive
+                            onClick={() => toggleRole(role)}
+                            className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                              isSelected
                                 ? "bg-m3-primary text-white border-m3-primary"
                                 : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
                             }`}
                           >
-                            {preset.icon}
-                            {t(
-                              `settings.notifications.content.types.${preset.value}` as "settings.notifications.content.types.info",
-                            )}
+                            {t(`settings.roles.${role}` as "settings.roles.owner")}
                           </button>
                         );
                       })}
                     </div>
                   </div>
-
-                  <Input
-                    label={t("settings.notifications.content.titleLabel")}
-                    placeholder={t("settings.notifications.content.titlePlaceholder")}
-                    value={title}
-                    maxLength={255}
-                    required
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-m3-text">
-                      {t("settings.notifications.content.descriptionLabel")}
-                    </label>
-                    <textarea
-                      value={description}
-                      maxLength={1000}
-                      rows={3}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder={t("settings.notifications.content.descriptionPlaceholder")}
-                      className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary resize-y"
+                </div>
+              ) : recipient ? (
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-m3-primary/25 bg-m3-primary/5">
+                  <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center shrink-0 overflow-hidden">
+                    {recipient.image ? (
+                      <img src={recipient.image} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      initials(recipient.name)
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-m3-text truncate">{recipient.name}</p>
+                    <p className="text-xs text-m3-secondary truncate">{recipient.email}</p>
+                  </div>
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-m3-secondary px-1.5 py-0.5 rounded bg-m3-sidebar border border-m3-border">
+                    {t(`settings.roles.${recipient.role as AppRole}` as "settings.roles.owner")}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setRecipient(null)}
+                    title={t("settings.notifications.recipient.clear")}
+                    className="p-1.5 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Search className="w-4 h-4 text-m3-secondary absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder={t("settings.notifications.recipient.searchPlaceholder")}
+                      className="w-full pl-9 pr-3 min-h-10 bg-m3-card border border-m3-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary"
                     />
                   </div>
-
-                  <Input
-                    label={t("settings.notifications.content.linkLabel")}
-                    placeholder={t("settings.notifications.content.linkPlaceholder")}
-                    helperText={t("settings.notifications.content.linkHint")}
-                    value={href}
-                    maxLength={2048}
-                    icon={<Link2 className="w-4 h-4" />}
-                    onChange={(e) => setHref(e.target.value)}
-                  />
+                  <div className="max-h-56 overflow-y-auto rounded-md border border-m3-border divide-y divide-m3-border/60">
+                    {isLoadingMembers ? (
+                      <div className="py-8 flex justify-center">
+                        <Spinner
+                          size="sm"
+                          label={t("settings.notifications.recipient.searching")}
+                        />
+                      </div>
+                    ) : membersError ? (
+                      <div className="py-8 text-center space-y-3">
+                        <p className="text-sm text-m3-danger">{membersError}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          type="button"
+                          onClick={() => void loadMembers()}
+                        >
+                          {t("common.retry")}
+                        </Button>
+                      </div>
+                    ) : filteredMembers.length === 0 ? (
+                      <p className="py-8 text-center text-sm text-m3-secondary">
+                        {t("settings.notifications.recipient.noResults")}
+                      </p>
+                    ) : (
+                      filteredMembers.map((member) => (
+                        <button
+                          key={member.userId}
+                          type="button"
+                          onClick={() => {
+                            setRecipient(member);
+                            setQuery("");
+                          }}
+                          className="w-full flex items-center gap-3 p-3 text-left hover:bg-m3-hover transition-colors cursor-pointer"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center shrink-0 overflow-hidden">
+                            {member.image ? (
+                              <img
+                                src={member.image}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              initials(member.name)
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-m3-text truncate">
+                              {member.name}
+                            </p>
+                            <p className="text-xs text-m3-secondary truncate">{member.email}</p>
+                          </div>
+                          <span className="text-[10px] font-semibold uppercase tracking-wide text-m3-secondary px-1.5 py-0.5 rounded bg-m3-sidebar border border-m3-border">
+                            {t(
+                              `settings.roles.${member.role as AppRole}` as "settings.roles.owner",
+                            )}
+                          </span>
+                        </button>
+                      ))
+                    )}
+                  </div>
                 </div>
-              </ExpandableSection>
+              )}
+            </Surface>
+
+            <Surface className="space-y-4">
+              <div>
+                <h3 className="text-sm font-semibold text-m3-text">
+                  {t("settings.notifications.delivery.title")}
+                </h3>
+                <p className="text-xs text-m3-secondary mt-0.5">
+                  {t("settings.notifications.delivery.desc")}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {CHANNELS.map((opt) => {
+                  const activeCh = channels.includes(opt.value);
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => toggleChannel(opt.value)}
+                      className={`flex flex-col items-start gap-1.5 p-3 rounded-lg border text-left transition-colors cursor-pointer ${
+                        activeCh
+                          ? "border-m3-primary bg-m3-primary/5"
+                          : "border-m3-border hover:border-m3-primary/40"
+                      }`}
+                    >
+                      <span
+                        className={`w-8 h-8 rounded-md flex items-center justify-center ${
+                          activeCh ? "bg-m3-primary text-white" : "bg-m3-sidebar text-m3-secondary"
+                        }`}
+                      >
+                        {opt.icon}
+                      </span>
+                      <span
+                        className={`text-sm font-medium ${
+                          activeCh ? "text-m3-primary" : "text-m3-text"
+                        }`}
+                      >
+                        {t(
+                          `settings.notifications.delivery.${opt.value}` as "settings.notifications.delivery.inbox",
+                        )}
+                      </span>
+                      <span className="text-xs text-m3-secondary">
+                        {t(
+                          `settings.notifications.delivery.${opt.value}Desc` as "settings.notifications.delivery.inboxDesc",
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Surface>
+
+            <Surface className="space-y-4">
+              <div>
+                <h3 className="text-sm font-semibold text-m3-text">
+                  {t("settings.notifications.content.title")}
+                </h3>
+                <p className="text-xs text-m3-secondary mt-0.5">
+                  {t("settings.notifications.content.desc")}
+                </p>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-m3-text block mb-2">
+                  {t("settings.notifications.content.typeLabel")}
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {TYPE_PRESETS.map((preset) => {
+                    const isActive = typePreset === preset.value;
+                    return (
+                      <button
+                        key={preset.value}
+                        type="button"
+                        onClick={() => setTypePreset(preset.value)}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium border transition-colors cursor-pointer ${
+                          isActive
+                            ? "bg-m3-primary text-white border-m3-primary"
+                            : "bg-m3-card text-m3-secondary border-m3-border hover:border-m3-primary/40"
+                        }`}
+                      >
+                        {preset.icon}
+                        {t(
+                          `settings.notifications.content.types.${preset.value}` as "settings.notifications.content.types.info",
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <Input
+                label={t("settings.notifications.content.titleLabel")}
+                placeholder={t("settings.notifications.content.titlePlaceholder")}
+                value={title}
+                maxLength={255}
+                required
+                onChange={(e) => setTitle(e.target.value)}
+              />
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-medium text-m3-text">
+                  {t("settings.notifications.content.descriptionLabel")}
+                </label>
+                <textarea
+                  value={description}
+                  maxLength={1000}
+                  rows={3}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={t("settings.notifications.content.descriptionPlaceholder")}
+                  className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary resize-y"
+                />
+              </div>
+
+              <Input
+                label={t("settings.notifications.content.linkLabel")}
+                placeholder={t("settings.notifications.content.linkPlaceholder")}
+                helperText={t("settings.notifications.content.linkHint")}
+                value={href}
+                maxLength={2048}
+                icon={<Link2 className="w-4 h-4" />}
+                onChange={(e) => setHref(e.target.value)}
+              />
             </Surface>
           </div>
 
