@@ -6,16 +6,13 @@
 export {
   CROSS_APP_KEYS,
   DEFAULT_PERSONAL_SETTINGS,
-  NEW_USER_TOUR_SETTINGS,
   PERSONAL_SETTINGS_KEY,
   THEME_COOKIE,
+  type AppSettingsMap,
   type CrossAppKey,
-  type ExplorerDensity,
   type PersonalLanguage,
   type PersonalSettings,
   type PersonalTheme,
-  type SongScoreLayout,
-  type ViewMode,
 } from "./types.js";
 
 export {
@@ -27,8 +24,6 @@ export {
   parseSettingsJson,
   reloadPersonalSettingsFromCache,
   resetPersonalSettings,
-  shouldAutoStartProductTour,
-  shouldOfferMissedProductTour,
   subscribePersonalSettings,
   syncSettingsFromMetadata,
   updatePersonalSetting,
@@ -36,6 +31,27 @@ export {
   updatePersonalSettingsSafe,
   type PersonalSettingsHost,
 } from "./store.js";
+
+export {
+  applyScopeMigrations,
+  createAppSettingsAccessor,
+  defineAppSettingsScope,
+  getAppSettings,
+  getRegisteredAppSettingsScope,
+  getRegisteredAppSettingsScopes,
+  isAppSettingsScopeRegistered,
+  mergeAppSettingsMaps,
+  mergePersonalSettingsPreservingApps,
+  registerAppSettingsScope,
+  resolveAppSettingsScope,
+  subscribeAppSettings,
+  updateAppSetting,
+  updateAppSettings,
+  updateAppSettingsSafe,
+  type AppSettingsAccessor,
+  type AppSettingsScope,
+  type AppSettingsScopeId,
+} from "./scopes.js";
 
 export {
   THEME_BG,

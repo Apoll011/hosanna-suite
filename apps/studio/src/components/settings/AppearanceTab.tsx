@@ -6,7 +6,7 @@
 import { Surface, useCan } from "@hosanna/ui";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
 import type { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
-import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
+import { useStudioSettings } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
 
 import { LANGUAGES, type PersonalLanguage } from "@hosanna/i18n";
@@ -43,7 +43,7 @@ interface ThemeOption {
 
 export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast }) => {
   const { theme, setTheme } = useTheme();
-  const { settings, updateSetting } = usePersonalSettings();
+  const { settings, updateSetting } = useStudioSettings();
   const { t, personalLanguage, setPersonalLanguage } = useI18n();
   const { granted: canViewLibraryHealth } = useCan("library.health");
 

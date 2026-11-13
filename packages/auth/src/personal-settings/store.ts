@@ -3,8 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * Cached personal settings store — localStorage + Better Auth user.metadata.
+ * App-specific prefs live under `apps.<scopeId>` (see scopes.ts).
  */
 
+import {
+  applyScopeMigrations,
+  bindAppSettingsStore,
+  mergeAppSettingsMaps,
+  mergePersonalSettingsPreservingApps,
+} from "./scopes.js";
 import {
   CROSS_APP_KEYS,
   DEFAULT_PERSONAL_SETTINGS,
@@ -28,14 +35,11 @@ export type PersonalSettingsHost = {
 
 let host: PersonalSettingsHost | null = null;
 
+/** Core-only legacy keys (theme/language). App keys migrate via scope.migrateFromRoot. */
 const LEGACY_KEYS = {
   theme: "chordpro_theme",
   authTheme: "hosanna_auth_theme",
   authLanguage: "hosanna_auth_language",
-  showChordsDefault: "@hosanna:showChordsDefault",
-  sidebarCollapsed: "sidebarCollapsed",
-  viewMode: "viewMode",
-  explorerDensity: "explorer_density",
 } as const;
 
 type Listener = () => void;
@@ -43,6 +47,13 @@ const listeners = new Set<Listener>();
 
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 let state: PersonalSettings = loadSettings();
+
+bindAppSettingsStore({
+  getState: () => state,
+  setState,
+  subscribe: subscribePersonalSettings,
+  parseRemote: parseSettingsJson,
+});
 
 export function configurePersonalSettings(next: PersonalSettingsHost): void {
   host = next;
@@ -65,14 +76,6 @@ export function subscribePersonalSettings(listener: Listener): () => void {
   return () => {
     listeners.delete(listener);
   };
-}
-
-export function shouldAutoStartProductTour(settings: PersonalSettings): boolean {
-  return settings.productTourCompleted === false && !settings.productTourDismissedAt;
-}
-
-export function shouldOfferMissedProductTour(settings: PersonalSettings): boolean {
-  return settings.productTourCompleted === null;
 }
 
 function emit() {
@@ -105,14 +108,40 @@ function normalizeLanguage(value: unknown): PersonalLanguage | undefined {
   return undefined;
 }
 
+function normalizeCore(settings: PersonalSettings): PersonalSettings {
+  const theme = normalizeTheme(settings.theme);
+  const language = normalizeLanguage(settings.language);
+  if (theme) settings.theme = theme;
+  if (language) settings.language = language;
+  if (!settings.apps || typeof settings.apps !== "object") {
+    settings.apps = {};
+  }
+  return settings;
+}
+
+/**
+ * Build a settings object from a partial blob, always preserving `apps`
+ * namespaces from both base and patch.
+ */
+function hydrateFromPartial(
+  partial: Partial<PersonalSettings> | null | undefined,
+): PersonalSettings {
+  const merged = mergePersonalSettingsPreservingApps(
+    { ...DEFAULT_PERSONAL_SETTINGS, apps: {} },
+    partial ?? {},
+  );
+  return normalizeCore(merged);
+}
+
 function loadSettings(): PersonalSettings {
-  const settings: PersonalSettings = { ...DEFAULT_PERSONAL_SETTINGS };
-  if (typeof window === "undefined") return settings;
+  if (typeof window === "undefined") {
+    return { ...DEFAULT_PERSONAL_SETTINGS, apps: {} };
+  }
 
   try {
     const stored = localStorage.getItem(PERSONAL_SETTINGS_KEY);
     const parsedStored = parseSettingsJson(stored);
-    if (parsedStored) Object.assign(settings, parsedStored);
+    let settings = hydrateFromPartial(parsedStored);
 
     const hasLocalSettings = Boolean(parsedStored);
     if (!hasLocalSettings && host?.cachedUserKey) {
@@ -121,7 +150,10 @@ function loadSettings(): PersonalSettings {
         if (cachedUserStr) {
           const cachedUser = JSON.parse(cachedUserStr) as { metadata?: unknown };
           const parsedMetadata = parseSettingsJson(cachedUser?.metadata);
-          if (parsedMetadata) Object.assign(settings, parsedMetadata);
+          if (parsedMetadata) {
+            settings = mergePersonalSettingsPreservingApps(settings, parsedMetadata);
+            settings = normalizeCore(settings);
+          }
         }
       } catch {
         /* ignore */
@@ -140,40 +172,20 @@ function loadSettings(): PersonalSettings {
       settings.language = legacyLang;
       migrated = true;
     }
-    const legacyChords = localStorage.getItem(LEGACY_KEYS.showChordsDefault);
-    if (legacyChords !== null) {
-      settings.showChordsDefault = legacyChords === "true";
-      migrated = true;
-    }
-    const legacyCollapsed = localStorage.getItem(LEGACY_KEYS.sidebarCollapsed);
-    if (legacyCollapsed !== null) {
-      settings.sidebarCollapsed = legacyCollapsed === "true";
-      migrated = true;
-    }
-    const legacyViewMode = localStorage.getItem(LEGACY_KEYS.viewMode);
-    if (legacyViewMode === "grid" || legacyViewMode === "list") {
-      settings.viewMode = legacyViewMode;
-      migrated = true;
-    }
-    const legacyDensity = localStorage.getItem(LEGACY_KEYS.explorerDensity);
-    if (legacyDensity === "comfortable" || legacyDensity === "compact") {
-      settings.explorerDensity = legacyDensity;
-      migrated = true;
-    }
 
-    const theme = normalizeTheme(settings.theme);
-    const language = normalizeLanguage(settings.language);
-    if (theme) settings.theme = theme;
-    if (language) settings.language = language;
+    const scoped = applyScopeMigrations(settings);
+    settings = scoped.settings;
+    if (scoped.changed) migrated = true;
 
     if (migrated) {
       localStorage.setItem(PERSONAL_SETTINGS_KEY, JSON.stringify(settings));
       Object.values(LEGACY_KEYS).forEach((key) => localStorage.removeItem(key));
     }
+
+    return settings;
   } catch {
-    /* private mode */
+    return { ...DEFAULT_PERSONAL_SETTINGS, apps: {} };
   }
-  return settings;
 }
 
 async function syncMetadataToServer(settingsToSave: PersonalSettings) {
@@ -234,9 +246,8 @@ function setState(updater: (prev: PersonalSettings) => PersonalSettings, opts?: 
  * Hydrate / reconcile from Better Auth `user.metadata`.
  *
  * - If there is no local cache yet → full hydrate (login / new origin).
- * - If local exists → still apply **cross-app** keys (`theme`, `language`) so
- *   changes made on Studio show up on Auth (and vice versa) without waiting
- *   for a wiped localStorage.
+ * - If local exists → apply **cross-app** keys (`theme`, `language`) and merge
+ *   `apps.*` so Auth warm-cache picks up Studio scopes without wiping them.
  */
 export function syncSettingsFromMetadata(metadata: unknown): {
   themeChanged: boolean;
@@ -258,11 +269,9 @@ export function syncSettingsFromMetadata(metadata: unknown): {
   const prevLanguage = state.language;
 
   if (!hasLocal) {
-    const merged = { ...DEFAULT_PERSONAL_SETTINGS, ...parsed };
-    const theme = normalizeTheme(merged.theme);
-    const language = normalizeLanguage(merged.language);
-    if (theme) merged.theme = theme;
-    if (language) merged.language = language;
+    let merged = hydrateFromPartial(parsed);
+    const scoped = applyScopeMigrations(merged);
+    merged = scoped.settings;
     persistSettings(merged, { sync: false });
     return {
       themeChanged: merged.theme !== prevTheme,
@@ -270,7 +279,9 @@ export function syncSettingsFromMetadata(metadata: unknown): {
     };
   }
 
-  const patch: Partial<PersonalSettings> = {};
+  const patch: Partial<PersonalSettings> = {
+    apps: mergeAppSettingsMaps(parsed.apps, state.apps),
+  };
   for (const key of CROSS_APP_KEYS) {
     if (key === "theme") {
       const theme = normalizeTheme(parsed.theme);
@@ -281,14 +292,14 @@ export function syncSettingsFromMetadata(metadata: unknown): {
     }
   }
 
-  if (Object.keys(patch).length === 0) {
-    return { themeChanged: false, languageChanged: false };
-  }
+  let merged = mergePersonalSettingsPreservingApps(state, patch);
+  const scoped = applyScopeMigrations(merged);
+  merged = scoped.settings;
 
-  const merged = { ...state, ...patch };
   const themeChanged = merged.theme !== prevTheme;
   const languageChanged = merged.language !== prevLanguage;
-  if (!themeChanged && !languageChanged) {
+  const appsChanged = JSON.stringify(merged.apps ?? {}) !== JSON.stringify(state.apps ?? {});
+  if (!themeChanged && !languageChanged && !appsChanged && !scoped.changed) {
     return { themeChanged: false, languageChanged: false };
   }
 
@@ -300,17 +311,24 @@ export function updatePersonalSetting<K extends keyof PersonalSettings>(
   key: K,
   value: PersonalSettings[K],
 ): void {
+  if (key === "apps") {
+    setState((prev) => ({
+      ...prev,
+      apps: mergeAppSettingsMaps(prev.apps, value as PersonalSettings["apps"]),
+    }));
+    return;
+  }
   setState((prev) => ({ ...prev, [key]: value }));
 }
 
 export function updatePersonalSettings(patch: Partial<PersonalSettings>): PersonalSettings {
-  setState((prev) => ({ ...prev, ...patch }));
+  setState((prev) => mergePersonalSettingsPreservingApps(prev, patch));
   return state;
 }
 
 /**
  * Merge with latest server metadata before patching so Auth cannot wipe
- * Studio-only keys (and the reverse).
+ * other apps' `apps.*` scopes (and the reverse).
  */
 export async function updatePersonalSettingsSafe(
   patch: Partial<PersonalSettings>,
@@ -320,7 +338,13 @@ export async function updatePersonalSettingsSafe(
     try {
       const remote = parseSettingsJson(await opts.readRemoteMetadata());
       if (remote) {
-        state = { ...DEFAULT_PERSONAL_SETTINGS, ...remote, ...state };
+        // Remote fills gaps; local core + apps win on conflict.
+        state = {
+          ...hydrateFromPartial(remote),
+          theme: state.theme,
+          language: state.language,
+          apps: mergeAppSettingsMaps(remote.apps, state.apps),
+        };
       }
     } catch {
       /* keep local */
@@ -330,7 +354,7 @@ export async function updatePersonalSettingsSafe(
 }
 
 export function resetPersonalSettings(): void {
-  setState(() => ({ ...DEFAULT_PERSONAL_SETTINGS }));
+  setState(() => ({ ...DEFAULT_PERSONAL_SETTINGS, apps: {} }));
 }
 
 /** Drop the device cache (call on logout). Next login hydrates from metadata. */
@@ -340,7 +364,7 @@ export function clearPersonalSettingsCache(): void {
   } catch {
     /* ignore */
   }
-  state = { ...DEFAULT_PERSONAL_SETTINGS };
+  state = { ...DEFAULT_PERSONAL_SETTINGS, apps: {} };
   emit();
 }
 
@@ -363,7 +387,7 @@ if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
     if (e.key === PERSONAL_SETTINGS_KEY && e.newValue) {
       try {
-        state = { ...DEFAULT_PERSONAL_SETTINGS, ...JSON.parse(e.newValue) };
+        state = hydrateFromPartial(JSON.parse(e.newValue) as Partial<PersonalSettings>);
         writeThemeCookie(state.theme);
         emit();
       } catch {

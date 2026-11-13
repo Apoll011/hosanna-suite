@@ -7,7 +7,7 @@ import { useOutletContext } from "react-router-dom";
 import { FolderGridCard, FolderTableRow, SongGridCard, SongTableRow } from "../components/explorer";
 import { useAuth } from "../contexts/AuthContext";
 import { useAppNavigate } from "../hooks/useAppNavigate";
-import { usePersonalSettings } from "../hooks/usePersonalSettings";
+import { useStudioSettings } from "../hooks/usePersonalSettings";
 
 interface FolderExplorerContext {
   filteredSubfolders: Folder[];
@@ -94,11 +94,11 @@ export const FoldersPage: React.FC = () => {
   const { t } = useI18n();
   const context = useOutletContext<FolderExplorerContext>() ?? DEFAULT_CONTEXT;
   const { organization } = useAuth();
-  const { settings: personalSettings } = usePersonalSettings();
+  const { settings: studioSettings } = useStudioSettings();
   const { granted: canViewLibraryHealth } = useCan("library.health");
   const { granted: canCreateSong } = useCan("song.create");
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
-  const showSongScore = canViewLibraryHealth && personalSettings.showSongScore;
+  const showSongScore = canViewLibraryHealth && studioSettings.showSongScore;
 
   const {
     filteredSubfolders,
@@ -270,7 +270,7 @@ export const FoldersPage: React.FC = () => {
               getFolderPathString={getFolderPathString}
               density={density}
               showSongScore={showSongScore}
-              songScoreLayout={personalSettings.songScoreLayout}
+              songScoreLayout={studioSettings.songScoreLayout}
               onClick={(e) => handleItemClick(e, song.id, "song")}
               onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
               onContextMenu={(e) => handleContextMenu(e, "song", song)}
@@ -335,7 +335,7 @@ export const FoldersPage: React.FC = () => {
                     onDrop={(e) => handleFolderDrop(e, folder.id)}
                     showSongScore={showSongScore}
                     averageScore={folderAverageScores.get(folder.id) ?? null}
-                    songScoreLayout={personalSettings.songScoreLayout}
+                    songScoreLayout={studioSettings.songScoreLayout}
                   />
                 ))}
 
@@ -348,7 +348,7 @@ export const FoldersPage: React.FC = () => {
                     getFolderPathString={getFolderPathString}
                     density={density}
                     showSongScore={showSongScore}
-                    songScoreLayout={personalSettings.songScoreLayout}
+                    songScoreLayout={studioSettings.songScoreLayout}
                     onClick={(e) => handleItemClick(e, song.id, "song")}
                     onDoubleClick={() => navigate(`${slugPrefix}/songs/${song.id}`)}
                     onContextMenu={(e) => handleContextMenu(e, "song", song)}

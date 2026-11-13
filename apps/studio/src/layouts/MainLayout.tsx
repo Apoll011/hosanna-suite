@@ -54,7 +54,7 @@ import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
 import { useCollections } from "../hooks/useCollections";
 import { useFolders } from "../hooks/useFolders";
-import { usePersonalSettings } from "../hooks/usePersonalSettings";
+import { useStudioSettings } from "../hooks/usePersonalSettings";
 import { useServices } from "../hooks/useServices";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
@@ -75,7 +75,7 @@ export const MainLayout: React.FC = () => {
     [location.pathname, slugPrefix],
   );
 
-  const { settings, updateSetting } = usePersonalSettings();
+  const { settings, updateSetting } = useStudioSettings();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isSidebarCollapsed = settings.sidebarCollapsed;
