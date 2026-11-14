@@ -272,7 +272,7 @@ export const songsApi = {
   createImportJob: async (input: CreateSongImportJobInput): Promise<SongImportJob> => {
     const data = await unwrapApiResult(
       await getApiClient().openapi.POST("/songs/import/jobs", {
-        body: input as unknown as Record<string, unknown>,
+        body: input,
       }),
     );
     return data as unknown as SongImportJob;
