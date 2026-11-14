@@ -58,7 +58,7 @@ const KNOWN_DIRECTIVES = new Set([
   "ccli",
   "youtube",
   "key_note",
-  "tag",
+  "tags",
   "arranger",
   "meta",
   "comment",

@@ -140,11 +140,11 @@ const DIRECTIVES: ChordProDirectiveCapability[] = [
     example: "{key_note: Verso 4 e final modulam para D (meio tom acima)}",
   },
   {
-    name: "tag",
+    name: "tags",
     category: "metadata",
     support: "parsed",
     description:
-      "Editor-only label (e.g. a theme). Repeated {tag: …} lines accumulate in metadata.tag (comma-joined). Highlighted in the editor; NOT rendered in the song view.",
+      "Editor-only label (e.g. a theme, adoration etc). {tags: …} (comma-joined) are all made into a list. Highlighted in the editor; NOT rendered in the song view.",
     hosannaSpecific: true,
     example: "{tag: adoração}",
   },
