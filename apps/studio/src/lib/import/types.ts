@@ -6,6 +6,14 @@
 import { Song } from "@/src/types";
 import type { ComponentType } from "react";
 import type { ImportSink } from "./sink";
+import type {
+  SheetMusicImportOptions,
+  SheetMusicImportSession,
+} from "./sheetMusicProvider";
+import type {
+  SongbookBackupDocument,
+  SongbookImportOptions,
+} from "./songbook";
 
 export type ImportProgressPhase = "reading" | "processing" | "writing";
 
@@ -35,6 +43,10 @@ export interface InteractiveImportModalProps<TSession = unknown, TConfirm = unkn
   onConfirm: (options: TConfirm) => void | Promise<void>;
 }
 
+export type InteractiveImportModal =
+  | ComponentType<InteractiveImportModalProps<SheetMusicImportSession, SheetMusicImportOptions>>
+  | ComponentType<InteractiveImportModalProps<SongbookBackupDocument, SongbookImportOptions>>;
+
 export interface InteractiveImportToastCopy {
   title: string;
   description: string;
@@ -62,7 +74,7 @@ export interface SongImportProvider {
     ctx: SongImportContext,
   ): Promise<ProviderImportResult>;
 
-  Modal?: ComponentType<InteractiveImportModalProps<any, any>>;
+  Modal?: InteractiveImportModal;
 
   getPrepareProgressTitle?(t: ImportTranslate): string;
   getPreparedToast?(session: unknown, t: ImportTranslate): InteractiveImportToastCopy | null;
