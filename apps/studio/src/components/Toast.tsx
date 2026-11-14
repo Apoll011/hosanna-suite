@@ -42,9 +42,7 @@ function CircularProgress({ progress }: { progress: ToastProgress }) {
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
-          strokeDashoffset={
-            ratio === null ? circumference * 0.75 : circumference * (1 - ratio)
-          }
+          strokeDashoffset={ratio === null ? circumference * 0.75 : circumference * (1 - ratio)}
           className="text-m3-primary transition-[stroke-dashoffset] duration-200"
         />
       </svg>

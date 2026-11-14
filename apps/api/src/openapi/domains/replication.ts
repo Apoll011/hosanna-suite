@@ -1,10 +1,4 @@
-import {
-  jsonBody,
-  jsonResp,
-  op,
-  OpenApiOperation,
-  sessionAuth,
-} from "../builder.js";
+import { jsonBody, jsonResp, op, OpenApiOperation, sessionAuth } from "../builder.js";
 
 export function getReplicationPaths(): Record<string, Record<string, OpenApiOperation>> {
   return {

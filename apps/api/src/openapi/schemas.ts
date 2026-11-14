@@ -31,7 +31,13 @@ export const SongSchema = z
     folderId: z.string().uuid().nullable().optional().describe("Parent folder ID, null for root"),
     path: z.string().optional().describe("Full path in folder tree"),
     tags: z.array(z.string()).default([]).describe("Song tags / categories"),
-    song_number: z.number().int().positive().nullable().optional().describe("Catalog or hymnal number"),
+    song_number: z
+      .number()
+      .int()
+      .positive()
+      .nullable()
+      .optional()
+      .describe("Catalog or hymnal number"),
     createdAt: z.string().datetime().describe("Creation timestamp (ISO 8601)"),
     updatedAt: z.string().datetime().describe("Last updated timestamp (ISO 8601)"),
     deleted: z.boolean().default(false).describe("Soft-deleted flag"),
@@ -83,7 +89,10 @@ export const ServiceSchema = z
     name: z.string().describe("Service name or theme"),
     date: z.string().datetime().describe("Scheduled service date and time"),
     notes: z.string().nullable().optional().describe("General notes for musicians and tech team"),
-    elements: z.array(ServiceElementSchema).default([]).describe("Ordered list of service elements"),
+    elements: z
+      .array(ServiceElementSchema)
+      .default([])
+      .describe("Ordered list of service elements"),
     archived: z.boolean().default(false).describe("Archived service flag"),
     createdAt: z.string().datetime().describe("Creation timestamp (ISO 8601)"),
     updatedAt: z.string().datetime().describe("Last updated timestamp (ISO 8601)"),
@@ -163,7 +172,9 @@ export const PullResponseSchema = z
 
 export const ChangeRowSchema = z
   .object({
-    newDocumentState: z.record(z.string(), z.any()).describe("New document state submitted by client"),
+    newDocumentState: z
+      .record(z.string(), z.any())
+      .describe("New document state submitted by client"),
     assumedMasterState: z
       .record(z.string(), z.any())
       .nullable()

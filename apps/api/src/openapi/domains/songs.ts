@@ -57,7 +57,8 @@ export function getSongPaths(): Record<string, Record<string, OpenApiOperation>>
         tags: ["Songs"],
         operationId: "createSongsBatch",
         security: sessionAuth,
-        description: "Batch import or insert multiple song records in a single transactional request.",
+        description:
+          "Batch import or insert multiple song records in a single transactional request.",
         requestBody: jsonBody({
           type: "object",
           required: ["songs"],
@@ -80,7 +81,8 @@ export function getSongPaths(): Record<string, Record<string, OpenApiOperation>>
         tags: ["Songs"],
         operationId: "batchUpdateSongTags",
         security: sessionAuth,
-        description: "Apply tag modifications (append, replace, or remove) across multiple song IDs.",
+        description:
+          "Apply tag modifications (append, replace, or remove) across multiple song IDs.",
         requestBody: jsonBody(batchTagsSchema),
         responses: jsonResp(200, {
           type: "object",

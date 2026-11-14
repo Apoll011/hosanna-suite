@@ -86,8 +86,7 @@ export class ChordProImportProvider implements SongImportProvider {
 
     try {
       const result = await ctx.sink.createSongsBatch(songPayloads, {
-        onPrepareProgress: (done, total) =>
-          ctx.onProgress?.({ phase: "processing", done, total }),
+        onPrepareProgress: (done, total) => ctx.onProgress?.({ phase: "processing", done, total }),
         onProgress: (done, total) => ctx.onProgress?.({ phase: "writing", done, total }),
       });
       return {

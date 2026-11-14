@@ -76,8 +76,7 @@ function parseSong(raw: unknown): SongbookSong | null {
     .filter(Boolean);
 
   const songNumberRaw = row.SongNumber ?? row.songNumber;
-  const songNumber =
-    typeof songNumberRaw === "number" && songNumberRaw > 0 ? songNumberRaw : null;
+  const songNumber = typeof songNumberRaw === "number" && songNumberRaw > 0 ? songNumberRaw : null;
 
   const durationRaw = asNumber(row.Duration ?? row.duration, 0);
   const duration2 = asNumber(row.Duration2 ?? row.duration2, 0);
@@ -255,11 +254,7 @@ export function summarizeSongbookSetlists(doc: SongbookBackupDocument): Songbook
 
 export function looksLikeSongbookBackupFile(file: File): boolean {
   const name = file.name.toLowerCase();
-  return (
-    name.endsWith(".sbpbackup") ||
-    name === "datafile.txt" ||
-    name.endsWith(".sbpbackup.json")
-  );
+  return name.endsWith(".sbpbackup") || name === "datafile.txt" || name.endsWith(".sbpbackup.json");
 }
 
 export async function detectSongbookBackupFile(file: File): Promise<boolean> {

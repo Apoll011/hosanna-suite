@@ -7,7 +7,8 @@ export function getCronPaths(): Record<string, Record<string, OpenApiOperation>>
         tags: ["Cron"],
         operationId: "getCronPurgeTrash",
         security: cronAuth,
-        description: "Trigger background job to purge soft-deleted items whose purgeAt date has expired.",
+        description:
+          "Trigger background job to purge soft-deleted items whose purgeAt date has expired.",
         responses: jsonResp(200, {
           type: "object",
           properties: {
@@ -19,7 +20,8 @@ export function getCronPaths(): Record<string, Record<string, OpenApiOperation>>
         tags: ["Cron"],
         operationId: "postCronPurgeTrash",
         security: cronAuth,
-        description: "Trigger background job to purge soft-deleted items whose purgeAt date has expired.",
+        description:
+          "Trigger background job to purge soft-deleted items whose purgeAt date has expired.",
         responses: jsonResp(200, {
           type: "object",
           properties: {

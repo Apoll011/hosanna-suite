@@ -62,9 +62,7 @@ export function cleanJsonSchema(raw: unknown): Record<string, unknown> {
 
   if (Array.isArray(copy.required) && copy.properties && typeof copy.properties === "object") {
     const props = copy.properties as Record<string, Record<string, unknown>>;
-    copy.required = (copy.required as string[]).filter(
-      (key) => props[key]?.default === undefined,
-    );
+    copy.required = (copy.required as string[]).filter((key) => props[key]?.default === undefined);
     if ((copy.required as string[]).length === 0) {
       delete copy.required;
     }
@@ -115,8 +113,7 @@ export function jsonBody(
   schemaOrRef: z.ZodTypeAny | Record<string, unknown>,
   opts: { description?: string; required?: boolean } = {},
 ) {
-  const schema =
-    schemaOrRef instanceof z.ZodType ? zodToSchema(schemaOrRef) : schemaOrRef;
+  const schema = schemaOrRef instanceof z.ZodType ? zodToSchema(schemaOrRef) : schemaOrRef;
   return {
     required: opts.required ?? true,
     description: opts.description,
@@ -133,8 +130,7 @@ export function jsonResp(
   schemaOrRef: z.ZodTypeAny | Record<string, unknown>,
   description = "OK",
 ) {
-  const schema =
-    schemaOrRef instanceof z.ZodType ? zodToSchema(schemaOrRef) : schemaOrRef;
+  const schema = schemaOrRef instanceof z.ZodType ? zodToSchema(schemaOrRef) : schemaOrRef;
   return {
     [status]: {
       description,
@@ -147,10 +143,7 @@ export function jsonResp(
   };
 }
 
-export function op(
-  summary: string,
-  options: Partial<OpenApiOperation> = {},
-): OpenApiOperation {
+export function op(summary: string, options: Partial<OpenApiOperation> = {}): OpenApiOperation {
   const responses = options.responses || {
     200: { description: "OK" },
     401: {

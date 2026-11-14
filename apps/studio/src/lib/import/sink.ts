@@ -46,7 +46,9 @@ function adaptiveChunkSize(count: number): number {
   return 200;
 }
 
-export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDatabase()): ImportSink {
+export function createLocalImportSink(
+  dbPromise: Promise<HosanaDatabase> = getDatabase(),
+): ImportSink {
   return {
     async ensureFolders(inputs) {
       const db = await dbPromise;
@@ -105,10 +107,7 @@ export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDa
       const db = await dbPromise;
       if (songs.length === 0) return { created: [], failed: 0 };
 
-      const chunkSize = Math.max(
-        1,
-        options.chunkSize ?? adaptiveChunkSize(songs.length),
-      );
+      const chunkSize = Math.max(1, options.chunkSize ?? adaptiveChunkSize(songs.length));
       const prepared = await validateBatchSongs(db, songs, {
         onProgress: options.onPrepareProgress,
       });

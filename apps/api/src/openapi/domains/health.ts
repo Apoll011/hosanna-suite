@@ -7,7 +7,8 @@ export function getHealthPaths(): Record<string, Record<string, OpenApiOperation
         tags: ["Health"],
         operationId: "getHealth",
         security: [],
-        description: "Returns API service health, database connectivity status, and server timestamp.",
+        description:
+          "Returns API service health, database connectivity status, and server timestamp.",
         responses: jsonResp(200, {
           type: "object",
           properties: {

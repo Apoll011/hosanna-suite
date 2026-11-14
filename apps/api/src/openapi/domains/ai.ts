@@ -3,13 +3,7 @@ import {
   aiConfirmActionSchema,
   updateAiSettingsSchema,
 } from "../../validators/ai.validators.js";
-import {
-  jsonBody,
-  jsonResp,
-  op,
-  OpenApiOperation,
-  sessionAuth,
-} from "../builder.js";
+import { jsonBody, jsonResp, op, OpenApiOperation, sessionAuth } from "../builder.js";
 
 export function getAiPaths(): Record<string, Record<string, OpenApiOperation>> {
   return {
@@ -25,7 +19,8 @@ export function getAiPaths(): Record<string, Record<string, OpenApiOperation>> {
         tags: ["AI"],
         operationId: "updateAiSettings",
         security: sessionAuth,
-        description: "Update org AI provider, model selection, custom instructions, or memory toggles.",
+        description:
+          "Update org AI provider, model selection, custom instructions, or memory toggles.",
         requestBody: jsonBody(updateAiSettingsSchema),
         responses: jsonResp(200, { type: "object", additionalProperties: true }),
       }),
@@ -179,7 +174,8 @@ export function getAiPaths(): Record<string, Record<string, OpenApiOperation>> {
         tags: ["AI"],
         operationId: "aiChat",
         security: sessionAuth,
-        description: "Streaming worship assistant conversation supporting tool calls and UI messages.",
+        description:
+          "Streaming worship assistant conversation supporting tool calls and UI messages.",
         requestBody: jsonBody({
           type: "object",
           required: ["messages"],

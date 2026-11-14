@@ -108,9 +108,7 @@ function classifySectionLabel(rawLabel: string): { kind: SectionKind; label: str
 }
 
 function expandShorthandTabDirectives(body: string): string {
-  return body
-    .replace(/\{sot\}/gi, "{start_of_tab}")
-    .replace(/\{eot\}/gi, "{end_of_tab}");
+  return body.replace(/\{sot\}/gi, "{start_of_tab}").replace(/\{eot\}/gi, "{end_of_tab}");
 }
 
 export function convertSongbookCommentSections(body: string): string {
@@ -149,7 +147,10 @@ export function convertSongbookCommentSections(body: string): string {
   }
 
   closeOpen();
-  return out.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  return out
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function youtubeIdFromUrl(url: string): string | null {

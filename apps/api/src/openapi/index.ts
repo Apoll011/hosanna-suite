@@ -63,8 +63,7 @@ export function buildApiOpenApiDoc() {
           type: "apiKey",
           in: "cookie",
           name: "hosanna.session_token",
-          description:
-            "Better Auth session cookie forwarded to the auth app for validation.",
+          description: "Better Auth session cookie forwarded to the auth app for validation.",
         },
         bearerAuth: {
           type: "http",

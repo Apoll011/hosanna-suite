@@ -31,8 +31,8 @@ pnpm openapi:check                       # verify zero drift (fails on diff in p
 
 ## Scope
 
-| Included | Excluded |
-| --- | --- |
+| Included                                                                                                                                                          | Excluded     |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | Health, billing, cron, songs, folders, services, notes, annotations, replication, trash, backup, AI, YouTube/Cifra, notifications, Better Auth (live in auth app) | MCP (`/mcp`) |
 
 Auth: the API validates sessions via the auth app (`AUTH_URL`) using the Better Auth session cookie **or** `Authorization: Bearer`. Cron routes use `CRON_SECRET` as Bearer.

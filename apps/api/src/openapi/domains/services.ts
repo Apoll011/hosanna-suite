@@ -17,7 +17,12 @@ export function getServicePaths(): Record<string, Record<string, OpenApiOperatio
   const serviceIdParam = zodToPathParams(idParamSchema);
   const notePathParams = [
     { name: "id", in: "path" as const, required: true, schema: { type: "string", format: "uuid" } },
-    { name: "noteId", in: "path" as const, required: true, schema: { type: "string", format: "uuid" } },
+    {
+      name: "noteId",
+      in: "path" as const,
+      required: true,
+      schema: { type: "string", format: "uuid" },
+    },
   ];
 
   return {
@@ -27,7 +32,9 @@ export function getServicePaths(): Record<string, Record<string, OpenApiOperatio
         operationId: "listServices",
         security: sessionAuth,
         description: "List scheduled services with optional archived status filter.",
-        parameters: [{ name: "archived", in: "query", schema: { type: "boolean", default: false } }],
+        parameters: [
+          { name: "archived", in: "query", schema: { type: "boolean", default: false } },
+        ],
         responses: jsonResp(200, {
           type: "array",
           items: { $ref: "#/components/schemas/Service" },

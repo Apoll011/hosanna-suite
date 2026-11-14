@@ -1,11 +1,5 @@
 import { createSongImportJobSchema } from "../../validators/songImport.validators.js";
-import {
-  jsonBody,
-  jsonResp,
-  op,
-  OpenApiOperation,
-  sessionAuth,
-} from "../builder.js";
+import { jsonBody, jsonResp, op, OpenApiOperation, sessionAuth } from "../builder.js";
 
 export function getMediaPaths(): Record<string, Record<string, OpenApiOperation>> {
   return {
@@ -67,7 +61,8 @@ export function getMediaPaths(): Record<string, Record<string, OpenApiOperation>
         tags: ["Annotations"],
         operationId: "getAnnotation",
         security: sessionAuth,
-        description: "Retrieve sheet music pencil/stroke drawing annotations for a song in a service.",
+        description:
+          "Retrieve sheet music pencil/stroke drawing annotations for a song in a service.",
         parameters: [
           { name: "serviceId", in: "path", required: true, schema: { type: "string" } },
           { name: "songId", in: "path", required: true, schema: { type: "string" } },

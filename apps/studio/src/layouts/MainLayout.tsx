@@ -1561,27 +1561,26 @@ export const MainLayout: React.FC = () => {
       title: t("layout.importProgressSongbookTitle"),
       description: t("layout.importProgressStarting"),
       duration: 0,
-      progress: { value: 0, total: Math.max(1, songbookDocument.songs.length), indeterminate: true },
+      progress: {
+        value: 0,
+        total: Math.max(1, songbookDocument.songs.length),
+        indeterminate: true,
+      },
     });
     try {
       const provider = getSongbookProProvider();
       const sink = createLocalImportSink();
-      const result = await provider.importPrepared(
-        songbookDocument,
-        options,
-        sink,
-        (event) => {
-          setSongbookProgress({
-            done: Math.round(event.done),
-            total: Math.max(1, Math.round(event.total)),
-          });
-          const next = describeImportProgress(event);
-          updateToast(progressToastId, {
-            description: next.description,
-            progress: next.progress,
-          });
-        },
-      );
+      const result = await provider.importPrepared(songbookDocument, options, sink, (event) => {
+        setSongbookProgress({
+          done: Math.round(event.done),
+          total: Math.max(1, Math.round(event.total)),
+        });
+        const next = describeImportProgress(event);
+        updateToast(progressToastId, {
+          description: next.description,
+          progress: next.progress,
+        });
+      });
       removeToast(progressToastId);
       showToast(
         t("modals.songbookImport.success", { count: result.created }),

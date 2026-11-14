@@ -28,7 +28,13 @@ export function buildSongbookImportPlan(
 ): SongbookImportPlan {
   const selected = new Set(options.selectedSetlistIds);
   if (selected.size === 0) {
-    return { mode: options.mode, folders: [], collections: [], songs: [], skipped: doc.songs.length };
+    return {
+      mode: options.mode,
+      folders: [],
+      collections: [],
+      songs: [],
+      skipped: doc.songs.length,
+    };
   }
 
   const available = new Map(summarizeSongbookSetlists(doc).map((s) => [s.id, s]));
@@ -66,7 +72,9 @@ export function buildSongbookImportPlan(
 
       const migrated = migrateSongbookSongToChordPro(song);
       const folderKey = setlistKey(primary);
-      const folderName = sanitizePathSegment(folderNameByKey.get(folderKey) ?? setlistName(doc, primary));
+      const folderName = sanitizePathSegment(
+        folderNameByKey.get(folderKey) ?? setlistName(doc, primary),
+      );
       const basePath = `${folderName}/${sanitizePathSegment(migrated.title)}.pro`;
 
       songs.push({

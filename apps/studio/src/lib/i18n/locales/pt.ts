@@ -1437,8 +1437,7 @@ export const pt = {
     backToEdit: "Voltar para Edição",
     songbookImport: {
       title: "Importar backup SongbookPro",
-      description:
-        "A importar “{source}” ({songs} cânticos).",
+      description: "A importar “{source}” ({songs} cânticos).",
       placementLegend: "Tratar setlists como",
       asFolders: "Pastas",
       asFoldersDesc:

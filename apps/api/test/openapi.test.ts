@@ -73,9 +73,7 @@ describe("OpenAPI document builder", () => {
       assert.ok(schemas[schemaName], `Missing component schema: ${schemaName}`);
       assert.equal(typeof schemas[schemaName], "object");
       assert.ok(
-        schemas[schemaName].type ||
-          schemas[schemaName].anyOf ||
-          schemas[schemaName].enum,
+        schemas[schemaName].type || schemas[schemaName].anyOf || schemas[schemaName].enum,
         `${schemaName} must have a type, anyOf, or enum`,
       );
     }

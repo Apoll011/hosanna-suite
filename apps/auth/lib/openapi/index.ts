@@ -30,7 +30,8 @@ export function getAuthPaths(): Record<string, any> {
         summary: "Org subscription entitlement",
         operationId: "getBillingEntitlement",
         security: sessionAuth,
-        description: "Check active subscription entitlements and feature gates for the authenticated organization.",
+        description:
+          "Check active subscription entitlements and feature gates for the authenticated organization.",
         responses: {
           200: {
             description: "OK",
@@ -52,7 +53,8 @@ export function getAuthPaths(): Record<string, any> {
         summary: "Cron: agenda-reminders",
         operationId: "getCronAgendaReminders",
         security: cronAuth,
-        description: "Dispatch morning notifications for musicians with upcoming scheduled services.",
+        description:
+          "Dispatch morning notifications for musicians with upcoming scheduled services.",
         responses: {
           200: {
             description: "OK",
@@ -69,7 +71,8 @@ export function getAuthPaths(): Record<string, any> {
         summary: "Cron: agenda-reminders",
         operationId: "postCronAgendaReminders",
         security: cronAuth,
-        description: "Dispatch morning notifications for musicians with upcoming scheduled services.",
+        description:
+          "Dispatch morning notifications for musicians with upcoming scheduled services.",
         responses: {
           200: {
             description: "OK",
@@ -88,7 +91,8 @@ export function getAuthPaths(): Record<string, any> {
         summary: "Export backup",
         operationId: "exportBackup",
         security: sessionAuth,
-        description: "Export entire organization library (songs, folders, services) as a standalone JSON backup archive.",
+        description:
+          "Export entire organization library (songs, folders, services) as a standalone JSON backup archive.",
         responses: {
           200: {
             description: "OK",
@@ -149,7 +153,8 @@ export function getAuthPaths(): Record<string, any> {
         summary: "Send notification (hosted on auth.hosanna.live)",
         operationId: "sendNotification",
         security: sessionAuth,
-        description: "Unified multi-channel dispatch (inbox, push, email) with user/org/team targeting.",
+        description:
+          "Unified multi-channel dispatch (inbox, push, email) with user/org/team targeting.",
         requestBody: {
           required: true,
           content: {
@@ -216,12 +221,7 @@ export function buildAuthOpenApiDoc() {
       { url: "https://auth.hosanna.live/api", description: "Auth host" },
       { url: "http://localhost:5174/api", description: "Local auth dev" },
     ],
-    tags: [
-      { name: "Notifications" },
-      { name: "Billing" },
-      { name: "Backup" },
-      { name: "Cron" },
-    ],
+    tags: [{ name: "Notifications" }, { name: "Billing" }, { name: "Backup" }, { name: "Cron" }],
     paths: getAuthPaths(),
     components: {
       securitySchemes: {

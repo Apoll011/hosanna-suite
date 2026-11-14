@@ -56,8 +56,7 @@ export async function executeSongbookImport(
   }));
 
   const result = await sink.createSongsBatch(payloads, {
-    onPrepareProgress: (done, total) =>
-      options.onProgress?.({ phase: "processing", done, total }),
+    onPrepareProgress: (done, total) => options.onProgress?.({ phase: "processing", done, total }),
     onProgress: (done, total) => options.onProgress?.({ phase: "writing", done, total }),
   });
 

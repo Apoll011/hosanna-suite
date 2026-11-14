@@ -946,8 +946,7 @@ export const en: typeof pt = {
     importProgressProcessing: "Processing… ({done}/{total})",
     importProgressWriting: "Saving songs… ({done}/{total})",
     importProgressSongbookReadyTitle: "Backup ready",
-    importProgressSongbookReadyDesc:
-      "Found {count} songs. Choose setlists and confirm the import.",
+    importProgressSongbookReadyDesc: "Found {count} songs. Choose setlists and confirm the import.",
   },
   foldersPage: {
     dropHere: "Drop files here",
@@ -1428,8 +1427,7 @@ export const en: typeof pt = {
     backToEdit: "Back to Edit",
     songbookImport: {
       title: "Import SongbookPro backup",
-      description:
-        "Importing “{source}” ({songs} songs).",
+      description: "Importing “{source}” ({songs} songs).",
       placementLegend: "Treat setlists as",
       asFolders: "Folders",
       asFoldersDesc:

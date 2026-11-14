@@ -1,11 +1,5 @@
 import { idParamSchema } from "../../validators/common.validators.js";
-import {
-  jsonResp,
-  op,
-  OpenApiOperation,
-  sessionAuth,
-  zodToPathParams,
-} from "../builder.js";
+import { jsonResp, op, OpenApiOperation, sessionAuth, zodToPathParams } from "../builder.js";
 
 export function getTrashPaths(): Record<string, Record<string, OpenApiOperation>> {
   const idParam = zodToPathParams(idParamSchema);
