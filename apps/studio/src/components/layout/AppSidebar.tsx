@@ -539,10 +539,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         </AnyRoleGate>
 
         {user && (
-          <div
-            data-testid="nav-user-menu"
-            className="mt-2 shrink-0 border-t border-m3-border pt-2"
-          >
+          <div data-testid="nav-user-menu" className="mt-2 shrink-0 border-t border-m3-border pt-2">
             <AccountMenu
               variant="extended"
               collapsed={isSidebarCollapsed}
@@ -600,9 +597,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                     onNavigate();
                     navigateToAuthAccount({
                       path:
-                        link.href === "#organization"
-                          ? "/account/organization/profile"
-                          : undefined,
+                        link.href === "#organization" ? "/account/organization/profile" : undefined,
                       returnUrl: window.location.href,
                     });
                   }}

@@ -17,11 +17,7 @@ export {
   type AccountMenuTheme,
   type AccountMenuUser,
 } from "./AccountMenu";
-export {
-  MenuThemeToggle,
-  type MenuThemeToggleProps,
-  type MenuThemeValue,
-} from "./MenuThemeToggle";
+export { MenuThemeToggle, type MenuThemeToggleProps, type MenuThemeValue } from "./MenuThemeToggle";
 export {
   AppSwitcher,
   type AppSwitcherApp,

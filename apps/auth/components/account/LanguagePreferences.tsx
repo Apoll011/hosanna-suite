@@ -81,7 +81,9 @@ export function LanguagePreferencesSection({
                   {lang.flag}
                 </span>
                 <div className="min-w-0 text-left">
-                  <span className="block font-semibold text-sm text-m3-text">{lang.nativeLabel}</span>
+                  <span className="block font-semibold text-sm text-m3-text">
+                    {lang.nativeLabel}
+                  </span>
                   <span className="block mt-0.5 text-caption">{lang.englishLabel}</span>
                 </div>
               </div>

@@ -44,10 +44,7 @@ function applyTheme(darkMode: boolean, theme: PersonalTheme, animate: boolean) {
     applyDocumentTheme(darkMode);
     writeThemeCookie(theme);
   };
-  if (
-    !animate ||
-    (typeof document !== "undefined" && document.visibilityState === "hidden")
-  ) {
+  if (!animate || (typeof document !== "undefined" && document.visibilityState === "hidden")) {
     apply();
     return;
   }

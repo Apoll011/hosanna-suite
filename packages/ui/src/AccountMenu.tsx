@@ -231,7 +231,9 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
             {user?.name || user?.email || accountLabel}
           </p>
           {user?.name && user?.email ? (
-            <p className="mt-0.5 truncate text-[13px] leading-snug text-m3-secondary">{user.email}</p>
+            <p className="mt-0.5 truncate text-[13px] leading-snug text-m3-secondary">
+              {user.email}
+            </p>
           ) : null}
         </div>
         {onSignOut ? (
@@ -325,11 +327,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
           {showTheme && theme ? (
             <div className={prefsRow}>
               <span className="font-medium">{themeLabel}</span>
-              <MenuThemeToggle
-                language={language}
-                value={theme.value}
-                onChange={theme.onChange}
-              />
+              <MenuThemeToggle language={language} value={theme.value} onChange={theme.onChange} />
             </div>
           ) : null}
           {showLanguage ? (
