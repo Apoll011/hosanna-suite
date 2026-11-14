@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import express from "express";
 import { buildApiOpenApiDoc, getApiPaths } from "../src/openapi/index.js";
+import { openapiRouter } from "../src/routes/openapi.routes.js";
 
 describe("OpenAPI document builder", () => {
   it("builds valid OpenAPI 3.1 specification document", () => {
@@ -76,6 +78,29 @@ describe("OpenAPI document builder", () => {
         schemas[schemaName].type || schemas[schemaName].anyOf || schemas[schemaName].enum,
         `${schemaName} must have a type, anyOf, or enum`,
       );
+    }
+  });
+
+  it("serves /docs with permissive Content-Security-Policy for Scalar and Vercel", async () => {
+    const app = express();
+    app.use(openapiRouter);
+
+    const server = app.listen(0);
+    const address = server.address();
+    const port = typeof address === "object" && address ? address.port : 0;
+
+    try {
+      const res = await fetch(`http://127.0.0.1:${port}/docs`);
+      assert.equal(res.status, 200);
+      assert.ok(res.headers.get("content-type")?.includes("text/html"));
+
+      const csp = res.headers.get("content-security-policy");
+      assert.ok(csp, "Must contain Content-Security-Policy header");
+      assert.ok(csp.includes("https://cdn.jsdelivr.net"), "CSP must permit jsdelivr");
+      assert.ok(csp.includes("https://vercel.live"), "CSP must permit vercel live");
+      assert.ok(csp.includes("img-src 'self' data: https: blob:"), "CSP must permit external images and data/blob URIs");
+    } finally {
+      server.close();
     }
   });
 });

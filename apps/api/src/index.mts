@@ -16,6 +16,7 @@ import { apiRouter } from "./routes/index.js";
  * loads the ESM build, whose default export is the middleware function.
  */
 const helmet = helmetImport as unknown as (options?: {
+  contentSecurityPolicy?: boolean | Record<string, unknown>;
   crossOriginResourcePolicy?: { policy?: "same-origin" | "same-site" | "cross-origin" } | false;
   hsts?: { maxAge: number; includeSubDomains?: boolean; preload?: boolean } | false;
   noSniff?: boolean;
@@ -46,6 +47,7 @@ if (env.nodeEnv === "production" && !isVercel) {
 
 app.use(
   helmet({
+    contentSecurityPolicy: false,
     crossOriginResourcePolicy: { policy: "cross-origin" },
     hsts:
       env.nodeEnv === "production"
