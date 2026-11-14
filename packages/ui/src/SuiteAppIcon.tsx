@@ -53,7 +53,9 @@ export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
         alt=""
         draggable={false}
         className={cn(
-          "box-border h-full w-full object-contain object-center p-[14%]",
+          // Favicons are square; scale past the well so opaque padding is
+          // cropped by overflow-hidden and the mark fills the rounded tile.
+          "h-full w-full max-w-none scale-[1.28] object-cover object-center",
           imgClassName,
         )}
       />
