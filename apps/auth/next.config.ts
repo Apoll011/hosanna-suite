@@ -1,17 +1,10 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-import { syncBrandPublic } from "@hosanna/brand/sync-public";
 import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
-
-syncBrandPublic(path.resolve(path.dirname(fileURLToPath(import.meta.url)), "public"));
 
 const withSerwist = withSerwistInit({
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV === "development",
-  // Huge brand SVGs must not enter the precache; keep SW lean for auth.
   exclude: [/bimi\.svg$/, /hosanna_favicon\.svg$/, /favicon\.svg$/, /\/api\//],
   maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
 });
@@ -19,7 +12,6 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   transpilePackages: [
     "@hosanna/auth",
-    "@hosanna/brand",
     "@hosanna/chordpro",
     "@hosanna/db",
     "@hosanna/i18n",

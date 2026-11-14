@@ -1,6 +1,6 @@
 # Hosanna (hosanna.live)
 
-> Part of the **hosanna-suite** monorepo (`apps/saas`). Shared brand assets live in `@hosanna/brand`. See the [root README](../../README.md).
+> Part of the **hosanna-suite** monorepo (`apps/saas`). Brand assets live in `apps/saas/public`. See the [root README](../../README.md).
 
 **Production:** [hosanna.live](https://hosanna.live) — Cloudflare Worker `saas`, deployed from `main`/`master` via `.github/workflows/deploy.yml` (config: `.github/deploy-apps.json`, GitHub Environment `Production`).
 

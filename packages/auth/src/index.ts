@@ -38,9 +38,21 @@ export {
 export type {
   SuiteAppDefinition,
   SuiteAppDto,
+  SuiteAppLogoHost,
   SuiteAppStatus,
   SuiteAppUrlEnv,
 } from "./suite/apps.js";
+
+export {
+  applySuiteAppAccent,
+  brandTokensFromAccent,
+  getSuiteAppAccent,
+  getSuiteAppBrandTokens,
+  suiteAppAccentCssVars,
+  suiteAppAccentDarkCssVars,
+  suiteAppAccentStyle,
+} from "./suite/accent.js";
+export type { SuiteAppBrandTokens } from "./suite/accent.js";
 
 export { pluginLocaleOverrides } from "./i18n/plugin-locale-overrides.js";
 export { RESPONSIBILITIES } from "./authorization/responsibilities.js";

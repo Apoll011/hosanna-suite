@@ -2,13 +2,16 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  *
- * Canonical suite product catalog for auth home, future app switchers, and
- * deep links. Adding an app = one registry entry (+ env URL when it goes live).
+ * Canonical suite product catalog for auth home, app switchers, and deep links.
+ * Adding an app = one registry entry (+ env URL when it goes live).
  */
 
 import type { SuiteAppId } from "../authorization/domains.js";
 
 export type SuiteAppStatus = "live" | "coming_soon";
+
+/** Which product origin hosts a relative `logoUrl`. */
+export type SuiteAppLogoHost = "auth" | "studio" | "planning" | "finance" | "presenter" | "community";
 
 /** Env / runtime inputs used to resolve absolute home URLs. */
 export type SuiteAppUrlEnv = {
@@ -33,12 +36,17 @@ export type SuiteAppDefinition = {
   nameKey?: string;
   shortNameKey?: string;
   descriptionKey?: string;
-  /** Public path on the auth origin, or absolute URL. */
+  /**
+   * Logo path on {@link logoHost}, or an absolute URL.
+   * Each live app owns its favicon under its own `public/`.
+   */
   logoUrl: string;
+  /** Origin that serves `logoUrl` when relative. Defaults to `auth`. */
+  logoHost?: SuiteAppLogoHost;
   status: SuiteAppStatus;
   sortOrder: number;
-  /** Optional CSS color hint for tiles / switcher chrome. */
-  accent?: string;
+  /** App chrome accent (CSS hex). Drives tiles + host `--brand-*` via suite/accent. */
+  accent: string;
   categories?: readonly string[];
 };
 
@@ -55,7 +63,7 @@ export type SuiteAppDto = {
   homeUrl: string | null;
   status: SuiteAppStatus;
   sortOrder: number;
-  accent?: string;
+  accent: string;
   categories?: string[];
   /**
    * Hook for future app-role / entitlement filtering.
@@ -97,6 +105,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "Profile, organization, billing, and security.",
     ...appKeys("auth"),
     logoUrl: "/favicon.png",
+    logoHost: "auth",
     status: "live",
     sortOrder: 10,
     accent: "#0F766E",
@@ -109,9 +118,10 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "Songs, collections, ChordPro charts, and stage tools.",
     ...appKeys("music"),
     logoUrl: "/favicon.png",
+    logoHost: "studio",
     status: "live",
     sortOrder: 20,
-    accent: "#2563eb",
+    accent: "#0284c7",
     categories: ["worship"],
   },
   {
@@ -121,6 +131,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "Services, events, teams, rooms, and resources.",
     ...appKeys("planning"),
     logoUrl: "/favicon.png",
+    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 30,
     accent: "#059669",
@@ -133,6 +144,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "Booth show control, lyrics, media, and stream feed.",
     ...appKeys("presenter"),
     logoUrl: "/favicon.png",
+    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 40,
     accent: "#d97706",
@@ -145,6 +157,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "People, posts, sermons, forms, prayer, and check-in.",
     ...appKeys("community"),
     logoUrl: "/favicon.png",
+    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 50,
     accent: "#7c3aed",
@@ -157,6 +170,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "Giving, funds, budgets, expenses, and statements.",
     ...appKeys("finance"),
     logoUrl: "/favicon.png",
+    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 60,
     accent: "#0d9488",
@@ -189,10 +203,29 @@ function resolveHomeUrl(app: SuiteAppDefinition, env: SuiteAppUrlEnv): string | 
   }
 }
 
-function resolveLogoUrl(logoUrl: string, authOrigin: string): string {
+function originForLogoHost(host: SuiteAppLogoHost, env: SuiteAppUrlEnv): string {
+  switch (host) {
+    case "studio":
+      return stripTrailingSlash(env.studioUrl);
+    case "planning":
+      return stripTrailingSlash(env.planningUrl || env.authOrigin);
+    case "finance":
+      return stripTrailingSlash(env.financeUrl || env.authOrigin);
+    case "presenter":
+      return stripTrailingSlash(env.presenterUrl || env.authOrigin);
+    case "community":
+      return stripTrailingSlash(env.communityUrl || env.authOrigin);
+    case "auth":
+    default:
+      return stripTrailingSlash(env.authOrigin);
+  }
+}
+
+function resolveLogoUrl(app: SuiteAppDefinition, env: SuiteAppUrlEnv): string {
+  const logoUrl = app.logoUrl;
   if (logoUrl.startsWith("http://") || logoUrl.startsWith("https://")) return logoUrl;
   const path = logoUrl.startsWith("/") ? logoUrl : `/${logoUrl}`;
-  return `${stripTrailingSlash(authOrigin)}${path}`;
+  return `${originForLogoHost(app.logoHost ?? "auth", env)}${path}`;
 }
 
 /** Resolve the catalog into DTOs for HTTP / UI consumers. */
@@ -210,7 +243,7 @@ export function listSuiteApps(env: SuiteAppUrlEnv): SuiteAppDto[] {
         nameKey: app.nameKey,
         shortNameKey: app.shortNameKey,
         descriptionKey: app.descriptionKey,
-        logoUrl: resolveLogoUrl(app.logoUrl, env.authOrigin),
+        logoUrl: resolveLogoUrl(app, env),
         homeUrl,
         status: app.status,
         sortOrder: app.sortOrder,

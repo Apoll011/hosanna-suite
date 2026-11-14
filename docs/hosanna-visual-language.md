@@ -64,6 +64,8 @@ Semantic tokens (`--m3-*`). One accent; status colors only for status.
 
 **Use accent for:** current selection, active nav, links, focus rings, primary commits.
 
+**Per-app accent:** Auth chrome uses suite registry `auth` (`#0F766E` teal). Studio / Music uses `music` (`#0284c7` sky). Apply via `applySuiteAppAccent` / `suiteAppAccentStyle` from `@hosanna/auth` so `--m3-primary*` stay in sync with the catalog. App tiles use each DTO’s `accent` wash behind `SuiteAppIcon`.
+
 **Do not** paint menu icons emerald/amber/sky for decoration. Status color belongs on status: score, sync, destructive action, toast.
 
 ---

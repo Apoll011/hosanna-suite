@@ -20,7 +20,6 @@ COPY packages/chordpro/package.json packages/chordpro/
 COPY packages/types/package.json packages/types/
 COPY packages/i18n/package.json packages/i18n/
 COPY packages/ui/package.json packages/ui/
-COPY packages/brand/package.json packages/brand/
 COPY apps/api/package.json apps/api/
 COPY apps/studio/package.json apps/studio/
 COPY apps/saas/package.json apps/saas/
@@ -75,7 +74,6 @@ COPY packages/chordpro packages/chordpro
 COPY packages/types packages/types
 COPY packages/i18n packages/i18n
 COPY packages/ui packages/ui
-COPY packages/brand packages/brand
 COPY apps/studio apps/studio
 RUN pnpm --filter @hosanna/auth build \
  && pnpm --filter @hosanna/chordpro build \

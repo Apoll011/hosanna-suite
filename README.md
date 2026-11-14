@@ -14,7 +14,7 @@ pnpm + Turborepo monorepo for the Hosanna web platform:
 | `packages/types`    | `@hosanna/types`    | OpenAPI contract + generated TS types                                  |
 | `packages/i18n`     | `@hosanna/i18n`     | Shared UI language model                                               |
 | `packages/ui`       | `@hosanna/ui`       | Shared `cn()` + provider icons                                         |
-| `packages/brand`    | `@hosanna/brand`    | Shared favicon / apple-touch / OG assets                               |
+| _(per-app `public/`)_| —                  | Favicons / apple-touch / OG live in each app (`auth`, `studio`, `saas`) |
 | `packages/config`   | `@hosanna/config`   | Shared tsconfig + Prettier                                             |
 
 **Not in this repo:** the Flutter musician app and the Astro blog — those stay separate.
@@ -80,11 +80,10 @@ pnpm docker:up
 
 Images are defined in the root `Dockerfile` (`api` and `studio` targets) and orchestrated by `docker-compose.yml`.
 
-## Shared brand assets
+## Per-app brand assets
 
-Favicon, apple-touch icons, and OG image live in `packages/brand/public` (sourced from the former saas assets).  
-Each app keeps only its own `robots.txt`, `sitemap.xml`, and `_routes.json` under `apps/*/public`.  
-Vite apps pick them up via `@hosanna/brand/vite-plugin`; the auth Next app syncs them with `@hosanna/brand/sync-public` from `next.config.ts`.
+Each app owns favicons / apple-touch / OG under `apps/<app>/public` (Auth has its own mark; Studio and SaaS share the Music/Hosanna guitar set).  
+Suite accents and logo hosts live in `@hosanna/auth` (`SUITE_APP_REGISTRY` + `applySuiteAppAccent` / `suiteAppAccentStyle`).
 
 ## Docs
 

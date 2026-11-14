@@ -48,7 +48,9 @@ Product copy for the grid / switcher lives in `@hosanna/i18n` under `suite.*`.
 
 **HTTP:** `GET /api/suite/apps` on the auth app — session-gated, CORS via `withAuthCors` so Studio (and other origins) can call it with credentials.
 
-Each DTO includes id, status (`live` | `coming_soon`), URLs, logo, and i18n keys. Clients must not hardcode the product list.
+Each DTO includes id, status (`live` | `coming_soon`), URLs, logo (resolved via per-app `logoHost`), **accent**, and i18n keys. Clients must not hardcode the product list.
+
+**Per-app accent:** registry `accent` hex is the source of truth. Hosts apply it with `applySuiteAppAccent(id)` / `suiteAppAccentStyle(id)` (`packages/auth/src/suite/accent.ts`), which sets `--brand-*` / `--m3-primary*`. `@hosanna/ui` already consumes those CSS variables — no per-component rewiring. Favicons live in each app’s `public/` (Auth ≠ Studio/SaaS).
 
 **Client cache:** suite apps are fetched once per page lifetime and shared (SWR-style) between home and the App Switcher so opening the waffle does not refetch every time. Cache key / helpers live next to the UI (`suiteAppsCache` in `@hosanna/ui` / auth consumers).
 

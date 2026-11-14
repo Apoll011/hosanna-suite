@@ -1,6 +1,6 @@
 # Hosanna Studio
 
-> Part of the **hosanna-suite** monorepo (`apps/studio`). Shared brand assets live in `@hosanna/brand`. Architecture docs: [docs/architecture](../../docs/architecture/README.md). See the [root README](../../README.md).
+> Part of the **hosanna-suite** monorepo (`apps/studio`). Brand assets live in `apps/studio/public`. Architecture docs: [docs/architecture](../../docs/architecture/README.md). See the [root README](../../README.md).
 
 **Hosanna Studio** is the web dashboard for [Hosanna](https://hosanna.live) — the ChordPro songbook and worship planning platform for churches.
 

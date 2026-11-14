@@ -180,9 +180,6 @@ importers:
       '@hosanna/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@hosanna/brand':
-        specifier: workspace:*
-        version: link:../../packages/brand
       '@hosanna/cache':
         specifier: workspace:*
         version: link:../../packages/cache
@@ -425,9 +422,6 @@ importers:
       '@eslint/js':
         specifier: ^9.32.0
         version: 9.39.5
-      '@hosanna/brand':
-        specifier: workspace:*
-        version: link:../../packages/brand
       '@hosanna/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -579,9 +573,6 @@ importers:
         specifier: ^6.2.3
         version: 6.4.5(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
     devDependencies:
-      '@hosanna/brand':
-        specifier: workspace:*
-        version: link:../../packages/brand
       '@hosanna/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -687,21 +678,6 @@ importers:
       stripe:
         specifier: ^22.6.1
         version: 22.6.2(@types/node@22.20.5)
-    devDependencies:
-      '@hosanna/config':
-        specifier: workspace:*
-        version: link:../config
-      '@types/node':
-        specifier: 'catalog:'
-        version: 22.20.5
-      tsx:
-        specifier: ^4.23.15
-        version: 4.23.15
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-
-  packages/brand:
     devDependencies:
       '@hosanna/config':
         specifier: workspace:*

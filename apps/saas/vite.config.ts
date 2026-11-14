@@ -1,4 +1,3 @@
-import { hosannaBrandPublic } from "@hosanna/brand/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
@@ -8,7 +7,7 @@ import { defineConfig } from "vite";
 // The output of `vite build` is a fully static site (see scripts/prerender.mjs
 // for per-route HTML shells).
 export default defineConfig({
-  plugins: [react(), tailwindcss(), hosannaBrandPublic()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
