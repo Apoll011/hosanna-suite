@@ -12,6 +12,7 @@ import {
   captcha,
   haveIBeenPwned,
   jwt,
+  openAPI,
   organization,
   twoFactor,
 } from "better-auth/plugins";
@@ -464,6 +465,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
       inbox(),
       bearer(),
       jwt(),
+      openAPI({
+        path: "/reference",
+      }),
       mcp({
         // Absolute Studio URLs — relative paths would redirect to the API host.
         loginPage: `${appUrl}/login`,

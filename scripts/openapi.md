@@ -19,9 +19,10 @@ pnpm openapi:check                       # verify zero drift (fails on diff in p
    - Live docs: `GET /api/docs` (interactive API reference via Scalar)
 
 2. **`apps/auth` (`auth.hosanna.live`)**:
-   Owns identity-adjacent REST endpoints (`/api/notifications`, `/api/billing/*`, `/api/backup*`, `/api/cron/agenda-reminders`).
-   - Schema source of truth: `apps/auth/lib/openapi/`.
-   - Live spec: `GET /api/openapi.json`
+   Owns identity-adjacent REST endpoints (`/api/notifications`, `/api/billing/*`, `/api/backup*`, `/api/cron/agenda-reminders`) and Better Auth.
+   - Schema source of truth: `apps/auth/lib/openapi/` + Better Auth `openAPI()` plugin in `@hosanna/auth`.
+   - Live spec: `GET /api/openapi.json` (dynamically merges Better Auth routes with custom domain routes).
+   - Live docs: `GET /api/auth/reference` (interactive API reference via Better Auth Scalar UI).
 
 3. **`packages/types` (`@hosanna/types`)**:
    Single downstream artifact for client consumers.
@@ -32,8 +33,7 @@ pnpm openapi:check                       # verify zero drift (fails on diff in p
 
 | Included | Excluded |
 | --- | --- |
-| Health, billing, cron, songs, folders, services, notes, annotations, replication, trash, backup, AI, YouTube/Cifra, notifications | Better Auth (`AUTH_URL/api/auth/*`, hosted by `apps/auth`) — use Better Auth docs/clients |
-| | MCP (`/mcp`) |
+| Health, billing, cron, songs, folders, services, notes, annotations, replication, trash, backup, AI, YouTube/Cifra, notifications, Better Auth (live in auth app) | MCP (`/mcp`) |
 
 Auth: the API validates sessions via the auth app (`AUTH_URL`) using the Better Auth session cookie **or** `Authorization: Bearer`. Cron routes use `CRON_SECRET` as Bearer.
 
