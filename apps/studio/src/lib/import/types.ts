@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ComponentType } from "react";
 import { Song } from "@/src/types";
+import type { ComponentType } from "react";
 import type { ImportSink } from "./sink";
 
 export type ImportProgressPhase = "reading" | "processing" | "writing";
@@ -24,10 +24,7 @@ export interface SongImportContext {
   onProgress?: ImportProgressCallback;
 }
 
-export type ImportTranslate = (
-  key: string,
-  params?: Record<string, string | number>,
-) => string;
+export type ImportTranslate = (key: string, params?: Record<string, string | number>) => string;
 
 export interface InteractiveImportModalProps<TSession = unknown, TConfirm = unknown> {
   isOpen: boolean;
@@ -72,6 +69,8 @@ export interface SongImportProvider {
   getCommitProgressTitle?(t: ImportTranslate): string;
   getSuccessMessage?(result: ProviderImportResult, t: ImportTranslate): string | null;
   getErrorMessage?(error: unknown, t: ImportTranslate): string;
+
+  isActive(): boolean | Promise<boolean>;
 }
 
 export function isInteractiveImportProvider(
@@ -82,9 +81,7 @@ export function isInteractiveImportProvider(
   commit: NonNullable<SongImportProvider["commit"]>;
   Modal: NonNullable<SongImportProvider["Modal"]>;
 } {
-  return Boolean(
-    provider.interactive && provider.prepare && provider.commit && provider.Modal,
-  );
+  return Boolean(provider.interactive && provider.prepare && provider.commit && provider.Modal);
 }
 
 export interface ImportResult {

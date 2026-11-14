@@ -94,4 +94,8 @@ export class SongbookProImportProvider implements SongImportProvider {
     if (error instanceof Error && error.message) return error.message;
     return t("modals.songbookImport.parseError");
   }
+
+  isActive(): boolean {
+    return true;
+  }
 }

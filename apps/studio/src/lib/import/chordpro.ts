@@ -106,4 +106,8 @@ export class ChordProImportProvider implements SongImportProvider {
       };
     }
   }
+
+  isActive(): boolean {
+    return true;
+  }
 }

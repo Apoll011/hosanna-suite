@@ -8,8 +8,9 @@ import {
   type CreateSongImportJobInput,
   type SongImportSourceType,
 } from "@/src/api/songs";
-import { Song } from "@/src/types";
+import { aiApi } from "@/src/api/ai";
 import { SheetMusicImportModal } from "@/src/components/modals/SheetMusicImportModal";
+import { Song } from "@/src/types";
 import { renderImageFile, renderPdfPages } from "./pdfRenderer";
 import type {
   ImportProgressCallback,
@@ -64,8 +65,7 @@ export class SheetMusicImportProvider implements SongImportProvider {
     const file = files[0];
     if (!file) throw new Error("No sheet music selected.");
 
-    const isPdf =
-      file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
 
     let payload: CreateSongImportJobInput;
     let previewImage: string;
@@ -170,5 +170,10 @@ export class SheetMusicImportProvider implements SongImportProvider {
   getErrorMessage(error: unknown, t: ImportTranslate) {
     if (error instanceof Error && error.message) return error.message;
     return t("modals.sheetMusicImport.failed");
+  }
+
+  async isActive(): Promise<boolean> {
+    const settings = await aiApi.getSettings();
+    return settings.configured && settings.enabled;
   }
 }

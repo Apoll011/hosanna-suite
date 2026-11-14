@@ -100,7 +100,7 @@ const StepProgress: React.FC<{ steps: SongImportStep[]; labelFor: (id: string) =
           </div>
           <span
             className={[
-              "text-[11px] leading-tight text-center max-w-[84px]",
+              "text-[11px] leading-tight text-center max-w-21",
               step.done || step.active ? "text-m3-text font-medium" : "text-m3-secondary/70",
             ].join(" ")}
           >

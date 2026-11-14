@@ -127,4 +127,8 @@ export class JsonImportProvider implements SongImportProvider {
       };
     }
   }
+
+  isActive(): boolean {
+    return true;
+  }
 }
