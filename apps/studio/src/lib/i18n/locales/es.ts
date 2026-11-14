@@ -1381,6 +1381,13 @@ export const es: typeof pt = {
       key: "Tono",
       tempo: "Tempo",
       timeSignature: "Compás",
+      steps: {
+        process: "Procesar el archivo",
+        extract: "Extraer letra y acordes",
+        metadata: "Identificar metadatos",
+        verify: "Verificar y enriquecer",
+        draft: "Preparar el borrador",
+      },
       cancelReasons: {
         not_a_song: "Esto no parece una partitura de canción.",
         unreadable: "La imagen está demasiado borrosa u oscura para leer.",

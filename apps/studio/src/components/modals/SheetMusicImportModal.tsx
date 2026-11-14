@@ -43,6 +43,14 @@ const cancelReasonKeys: Record<SongImportCancelCode, TranslationKey> = {
   multiple_unclear: "modals.sheetMusicImport.cancelReasons.multiple_unclear",
 };
 
+const stepLabelKeys: Record<string, TranslationKey> = {
+  process: "modals.sheetMusicImport.steps.process",
+  extract: "modals.sheetMusicImport.steps.extract",
+  metadata: "modals.sheetMusicImport.steps.metadata",
+  verify: "modals.sheetMusicImport.steps.verify",
+  draft: "modals.sheetMusicImport.steps.draft",
+};
+
 const CircularProgress: React.FC = () => (
   <svg
     className="w-7 h-7 animate-spin"
@@ -64,7 +72,10 @@ const CircularProgress: React.FC = () => (
   </svg>
 );
 
-const StepProgress: React.FC<{ steps: SongImportStep[] }> = ({ steps }) => (
+const StepProgress: React.FC<{ steps: SongImportStep[]; labelFor: (id: string) => string }> = ({
+  steps,
+  labelFor,
+}) => (
   <div className="flex items-start">
     {steps.map((step, i) => (
       <React.Fragment key={step.id}>
@@ -93,7 +104,7 @@ const StepProgress: React.FC<{ steps: SongImportStep[] }> = ({ steps }) => (
               step.done || step.active ? "text-m3-text font-medium" : "text-m3-secondary/70",
             ].join(" ")}
           >
-            {step.label}
+            {labelFor(step.id)}
           </span>
         </div>
         {i < steps.length - 1 && (

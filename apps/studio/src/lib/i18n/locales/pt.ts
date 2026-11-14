@@ -1375,6 +1375,13 @@ export const pt = {
       key: "Tom",
       tempo: "Tempo",
       timeSignature: "Compasso",
+      steps: {
+        process: "Processar o ficheiro",
+        extract: "Extrair letra e acordes",
+        metadata: "Identificar metadados",
+        verify: "Verificar e enriquecer",
+        draft: "Preparar o rascunho",
+      },
       cancelReasons: {
         not_a_song: "Isto não parece uma partitura de cântico.",
         unreadable: "A imagem está demasiado desfocada ou escura para ler.",

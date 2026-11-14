@@ -99,3 +99,48 @@ export type AiConfirmAction = {
   id: string;
   folderAction?: "move_to_root" | "delete_songs";
 };
+
+export type SongImportStep = {
+  id: string;
+  label: string;
+  done: boolean;
+  active: boolean;
+};
+
+export type SongImportCancelCode =
+  | "not_a_song"
+  | "unreadable"
+  | "blank"
+  | "wrong_content"
+  | "multiple_unclear";
+
+export type SongImportDraft = {
+  title: string;
+  artist: string;
+  content: string;
+  key?: string;
+  tempo?: string;
+  timeSignature?: string;
+  confidence?: number;
+  warnings: string[];
+  possibleDuplicates?: Array<{ id: string; title: string; artist: string; score: number }>;
+};
+
+export type SongImportJob = {
+  id: string;
+  status: "queued" | "running" | "completed" | "failed" | "cancelled";
+  steps: SongImportStep[];
+  result?: SongImportDraft;
+  errorMessage?: string;
+  cancelCode?: SongImportCancelCode;
+  cancelReason?: string;
+  cancelledBy?: "ai" | "user";
+};
+
+export type NewSongInput = {
+  title: string;
+  artist?: string;
+  content: string;
+  folderId?: string | null;
+  tags?: string[];
+};

@@ -1365,6 +1365,13 @@ export const en: typeof pt = {
       key: "Key",
       tempo: "Tempo",
       timeSignature: "Time Signature",
+      steps: {
+        process: "Process the file",
+        extract: "Extract lyrics and chords",
+        metadata: "Identify metadata",
+        verify: "Verify & enrich",
+        draft: "Prepare the draft",
+      },
       cancelReasons: {
         not_a_song: "This doesn't look like a song sheet.",
         unreadable: "The image is too blurry or dark to read.",
