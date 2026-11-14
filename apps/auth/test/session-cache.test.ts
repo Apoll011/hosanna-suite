@@ -74,6 +74,7 @@ describe("session-cache", () => {
       email: "ada@example.com",
       image: null,
       twoFactorEnabled: true,
+      metadata: null,
     });
 
     writeCachedSessions([
