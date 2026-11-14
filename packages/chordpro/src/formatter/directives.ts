@@ -31,6 +31,8 @@ const DIRECTIVE_ALIAS_MAP: Record<string, string> = {
   original_key: "original_key",
   sov_ver: "start_of_version",
   eov_ver: "end_of_version",
+  key_shift: "keyshift",
+  ks: "keyshift",
 };
 
 /** Known standard directive names (canonical). Used for unknown-directive warnings. */
@@ -47,10 +49,11 @@ const KNOWN_DIRECTIVES = new Set([
   "key",
   "original_key",
   "capo",
+  "keyshift",
+  "key_shift",
   "tempo",
   "time",
   "duration",
-  "capo",
   "song_number",
   "ccli",
   "youtube",

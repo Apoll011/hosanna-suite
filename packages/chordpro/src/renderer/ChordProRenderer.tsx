@@ -51,6 +51,7 @@ export interface ChordProPreviewProps {
   showDiagrams?: boolean;
   fileName?: string;
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
+  capoLabel?: string | null;
 }
 
 const ChordProRenderer = React.memo(
@@ -61,6 +62,7 @@ const ChordProRenderer = React.memo(
     showDiagrams = false,
     fileName,
     scrollContainerRef,
+    capoLabel,
   }: ChordProPreviewProps) => {
     const { metadata } = song;
     const instrument = metadata.instrument ?? "guitar";
@@ -167,18 +169,28 @@ const ChordProRenderer = React.memo(
                   {metadata.key && (
                     <span className="text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-lg border border-indigo-100 dark:border-indigo-950/50 flex items-center gap-1">
                       <Key className="w-3 h-3" />
-                      Tom: {soundingKey}
+                      Tom: {capoLabel !== undefined ? (capoLabel !== null ? capoLabel.split("shapes in")[1]?.trim() ?? soundingKey : soundingKey) : soundingKey}
                     </span>
                   )}
-                  {effectiveCapo > 0 && (
-                    <span className="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-lg border border-amber-100 dark:border-amber-950/50">
-                      Capo: {effectiveCapo}ª casa
-                    </span>
-                  )}
-                  {effectiveCapo > 0 && (
-                    <span className="text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-950/50">
-                      Formato: {renderedKey}
-                    </span>
+                  {capoLabel === undefined ? (
+                    <>
+                      {effectiveCapo > 0 && (
+                        <span className="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-lg border border-amber-100 dark:border-amber-950/50">
+                          Capo: {effectiveCapo}ª casa
+                        </span>
+                      )}
+                      {effectiveCapo > 0 && (
+                        <span className="text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-100 dark:border-emerald-950/50">
+                          Formato: {renderedKey}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    capoLabel !== null && (
+                      <span className="text-[10px] font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 px-2.5 py-1 rounded-lg border border-amber-100 dark:border-amber-950/50">
+                        {capoLabel}
+                      </span>
+                    )
                   )}
                   {metadata.originalKey && (
                     <span className="text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 px-2.5 py-1 rounded-lg border border-purple-100 dark:border-purple-950/50">
@@ -229,25 +241,35 @@ const ChordProRenderer = React.memo(
                 </div>
               )}
 
-              {effectiveCapo !== 0 && (
-                <div className="mt-4 bg-indigo-50 dark:bg-indigo-950/40 text-xs px-3 py-2 rounded-xl text-indigo-700 dark:text-indigo-300 flex items-center justify-between border border-indigo-100 dark:border-indigo-950/50 flex-wrap gap-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold">
-                      Tom:{" "}
-                      <span className="text-indigo-600 dark:text-indigo-400 font-bold bg-white dark:bg-zinc-900 px-2 py-0.5 rounded border ml-0.5 text-xs">
-                        {soundingKey}
-                      </span>
-                    </span>
-                    {effectiveCapo > 0 && (
-                      <span className="font-semibold text-amber-700 dark:text-amber-300">
-                        • Capo:{" "}
-                        <span className="text-amber-700 dark:text-amber-300 font-bold bg-amber-100 dark:bg-amber-900/60 px-2 py-0.5 rounded border border-amber-300 dark:border-amber-800 text-xs ml-0.5">
-                          {effectiveCapo}ª casa ({renderedKey})
+              {capoLabel !== undefined ? (
+                capoLabel !== null && (
+                  <div className="mt-4 bg-indigo-50 dark:bg-indigo-950/40 text-xs px-3 py-2 rounded-xl text-indigo-700 dark:text-indigo-300 flex items-center justify-between border border-indigo-100 dark:border-indigo-950/50 flex-wrap gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold">{capoLabel}</span>
+                    </div>
+                  </div>
+                )
+              ) : (
+                effectiveCapo !== 0 && (
+                  <div className="mt-4 bg-indigo-50 dark:bg-indigo-950/40 text-xs px-3 py-2 rounded-xl text-indigo-700 dark:text-indigo-300 flex items-center justify-between border border-indigo-100 dark:border-indigo-950/50 flex-wrap gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold">
+                        Tom:{" "}
+                        <span className="text-indigo-600 dark:text-indigo-400 font-bold bg-white dark:bg-zinc-900 px-2 py-0.5 rounded border ml-0.5 text-xs">
+                          {soundingKey}
                         </span>
                       </span>
-                    )}
+                      {effectiveCapo > 0 && (
+                        <span className="font-semibold text-amber-700 dark:text-amber-300">
+                          • Capo:{" "}
+                          <span className="text-amber-700 dark:text-amber-300 font-bold bg-amber-100 dark:bg-amber-900/60 px-2 py-0.5 rounded border border-amber-300 dark:border-amber-800 text-xs ml-0.5">
+                            {effectiveCapo}ª casa ({renderedKey})
+                          </span>
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )
               )}
             </div>
 

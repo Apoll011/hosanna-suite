@@ -58,7 +58,7 @@ const BLOCK_END_ALIASES: Record<string, string> = {
   end_of_grid: "grid",
 };
 
-const NUMERIC_DIRECTIVES = new Set(["capo", "tempo"]);
+const NUMERIC_DIRECTIVES = new Set(["tempo"]);
 
 function analyzeBracketContent(
   content: string,
@@ -278,6 +278,34 @@ export function lintChordPro(content: string): ChordProDiagnostic[] {
           message: `Valor de '${rawName}' deveria ser numérico, encontrado "${value}".`,
           code: "non-numeric-value",
         });
+      }
+
+      if (lowerName === "capo" && value) {
+        const n = parseInt(value, 10);
+        if (!/^[0-9]+$/.test(value.trim()) || !Number.isInteger(n) || n < 0 || n > 11) {
+          diagnostics.push({
+            line: i,
+            column: line.indexOf(":") + 1,
+            endColumn: line.length,
+            severity: "warning",
+            message: `Valor de capo deve ser um inteiro entre 0 e 11, encontrado "${value}".`,
+            code: "invalid-capo-range",
+          });
+        }
+      }
+
+      if ((lowerName === "keyshift" || lowerName === "key_shift") && value) {
+        const n = parseInt(value, 10);
+        if (!/^-?[0-9]+$/.test(value.trim()) || !Number.isInteger(n)) {
+          diagnostics.push({
+            line: i,
+            column: line.indexOf(":") + 1,
+            endColumn: line.length,
+            severity: "warning",
+            message: `Valor de keyshift deve ser um inteiro com sinal, encontrado "${value}".`,
+            code: "invalid-keyshift-value",
+          });
+        }
       }
 
       if (

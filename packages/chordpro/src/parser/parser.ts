@@ -64,6 +64,7 @@ export interface SongAST {
     tempo?: string;
     time?: string;
     capo?: string;
+    keyShift?: string;
     songNumber?: string;
     youtube?: string;
     ccli?: string;
@@ -235,6 +236,8 @@ export function parseChordProDocument(content: string): ChordProDocument {
     start_of_version: "start_of_version",
     end_of_version: "end_of_version",
     eov_ver: "end_of_version",
+    key_shift: "key_shift",
+    keyshift: "key_shift",
   };
 
   for (let i = 0; i < lines.length; i++) {
@@ -636,6 +639,7 @@ export function buildChordProText(
     "key",
     "originalKey",
     "capo",
+    "keyShift",
     "tempo",
     "time",
     "duration",
