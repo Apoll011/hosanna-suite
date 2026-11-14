@@ -69,12 +69,16 @@ Shared Google-style waffle in `@hosanna/ui`:
 
 ## 4. AccountMenu
 
-Shared account popover in `@hosanna/ui` (Auth wires it as `AuthAccountMenu`):
+Shared account menu in `@hosanna/ui` (Auth wires it as `AuthAccountMenu`; Studio sidebar uses `variant="extended"`):
 
+- Profile header: name + email, icon-only sign-out on the right
+- Org switcher (name + `@slug` only; expands when the user has more than one org)
 - Theme control (light / dark / system)
 - Language control
-- Org switcher (when the user has more than one org)
 - Links into account / org surfaces on auth
+- Optional host `sections` (ReactNode or `(close) => ReactNode`) after links — Studio passes Configurations + Analysis
+
+**Variants:** `popover` (circular avatar, Auth header) and `extended` (full-width sidebar footer row that expands upward; supports `collapsed` for the rail).
 
 Theme and language writes go through the **personal-settings** store (below), not ad-hoc `localStorage` keys.
 

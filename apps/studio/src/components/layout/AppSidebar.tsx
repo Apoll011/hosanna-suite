@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
+import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -20,7 +20,6 @@ import {
   Church,
   HardDrive,
   LibraryBig,
-  LogOut,
   Music,
   Settings,
   Trash2,
@@ -31,8 +30,9 @@ import React, { useEffect, useRef, useState } from "react";
 import type { Organization as AuthOrganization } from "../../contexts/AuthContext";
 import { ViewName } from "../../layouts/view";
 
-import { getAvatarGradient, getInitials } from "../../utils";
 import { getRoleLabel } from "../../utils/settingsUtils";
+import { MenuLanguageSelector } from "../account/MenuLanguageSelector";
+import { MenuThemeToggle } from "../account/MenuThemeToggle";
 import { FolderTreeItemNode, FolderTreeNode } from "../explorer";
 
 interface AppSidebarProps {
@@ -60,6 +60,7 @@ interface AppSidebarProps {
   showFolderTree: boolean;
   user?: {
     name: string;
+    email?: string;
     image?: unknown;
     role?: string;
   } | null;
@@ -107,9 +108,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const { t } = useI18n();
   const { granted: canViewLibraryHealth } = useCan("library.health");
   const shortName = organization?.metadata?.shortName || "";
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
-  const userMenuRef = useRef<HTMLDivElement>(null);
   const orgMenuRef = useRef<HTMLDivElement>(null);
   const hasMultipleOrgs = (organizations?.length ?? 0) > 1;
 
@@ -117,9 +116,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setIsUserMenuOpen(false);
-      }
       if (orgMenuRef.current && !orgMenuRef.current.contains(event.target as Node)) {
         setIsOrgMenuOpen(false);
       }
@@ -543,108 +539,117 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         </AnyRoleGate>
 
         {user && (
-          <div className="mt-2 pt-2 border-t border-m3-border relative shrink-0" ref={userMenuRef}>
-            <button
-              data-tour="nav-user-menu"
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              title={isSidebarCollapsed ? user.name : undefined}
-              className="w-full flex items-center justify-between p-2 min-h-10 rounded-md hover:bg-m3-hover transition-colors cursor-pointer"
-            >
-              <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                <div
-                  className={`w-8 h-8 rounded-full bg-linear-to-tr ${getAvatarGradient(
-                    user.name,
-                  )} flex items-center justify-center text-white font-semibold text-xs shadow-sm shrink-0`}
-                >
-                  {user.image ? (
-                    <img
-                      src={user.image as string}
-                      alt={user.name}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  ) : (
-                    getInitials(user.name)
-                  )}
-                </div>
-                <div
-                  className={`flex flex-col min-w-0 text-left transition-[opacity,max-width,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
-                    isSidebarCollapsed
-                      ? "opacity-0 max-w-0 -translate-x-2 pointer-events-none"
-                      : "opacity-100 max-w-35 translate-x-0"
-                  }`}
-                >
-                  <span className="text-xs font-medium text-m3-text truncate">{user.name}</span>
-                  <span className="text-caption truncate">
-                    {getRoleLabel(user.role ?? "guest")}
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`transition-[opacity,max-width] duration-300 ease-in-out overflow-hidden shrink-0 ${
-                  isSidebarCollapsed
-                    ? "opacity-0 max-w-0 pointer-events-none"
-                    : "opacity-100 max-w-6"
-                }`}
-              >
-                <Settings className="w-4 h-4 text-m3-secondary shrink-0" />
-              </div>
-            </button>
-
-            {isUserMenuOpen && (
-              <div className="absolute bottom-full left-0 mb-2 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-150">
-                {canViewLibraryHealth && (
-                  <button
-                    onClick={() => {
-                      setIsUserMenuOpen(false);
-                      navigate(`${slugPrefix}/analytics`);
-                      if (window.innerWidth < 768) setIsSidebarOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
-                  >
-                    <BarChart3 className="w-4 h-4 text-m3-secondary" />
-                    {t("sidebar.openAnalytics")}
-                  </button>
-                )}
+          <div
+            data-testid="nav-user-menu"
+            className="mt-2 shrink-0 border-t border-m3-border pt-2"
+          >
+            <AccountMenu
+              variant="extended"
+              collapsed={isSidebarCollapsed}
+              triggerSubtitle={getRoleLabel(user.role ?? "guest")}
+              user={{
+                name: user.name,
+                email: user.email,
+                image: typeof user.image === "string" ? user.image : null,
+              }}
+              organization={
+                organization
+                  ? {
+                      id: organization.id,
+                      name: organization.name,
+                      slug: organization.slug,
+                      logo: organization.logo ?? null,
+                    }
+                  : null
+              }
+              organizations={(organizations ?? []).map((o) => ({
+                id: o.id,
+                name: o.name,
+                slug: o.slug,
+                logo: o.logo ?? null,
+              }))}
+              onSwitchOrganization={(org) => {
+                const match = organizations?.find((o) => o.id === org.id);
+                if (match && onSwitchOrganization) void onSwitchOrganization(match);
+              }}
+              onSignOut={logout}
+              labels={{
+                openMenu: t("sidebar.accountMenu"),
+                account: t("sidebar.openAccount"),
+                signOut: t("sidebar.logout"),
+                switchOrganization: t("sidebar.switchWorkspace"),
+                theme: t("sidebar.theme"),
+                language: t("sidebar.language"),
+              }}
+              links={[
+                {
+                  href: "#account",
+                  label: t("sidebar.openAccount"),
+                  icon: <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />,
+                },
+              ]}
+              renderLink={(link, className, onNavigate) => (
                 <button
+                  key={link.href + link.label}
+                  type="button"
+                  role="menuitem"
+                  className={`${className} w-full cursor-pointer text-left`}
+                  onMouseEnter={() => prefetchAuthAccount()}
+                  onFocus={() => prefetchAuthAccount()}
                   onClick={() => {
-                    setIsUserMenuOpen(false);
-                    navigate(`${slugPrefix}/settings`);
-                    if (window.innerWidth < 768) setIsSidebarOpen(false);
+                    onNavigate();
+                    navigateToAuthAccount({ returnUrl: window.location.href });
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
                 >
-                  <Settings className="w-4 h-4 text-m3-secondary" />
-                  {t("sidebar.openSettings")}
+                  {link.icon}
+                  {link.label}
                 </button>
-                <div className="my-1 border-t border-m3-border" />
-                <div className="flex items-center gap-1">
-                  <button
-                    onMouseEnter={() => prefetchAuthAccount()}
-                    onFocus={() => prefetchAuthAccount()}
-                    onClick={() => {
-                      setIsUserMenuOpen(false);
-                      navigateToAuthAccount({ returnUrl: window.location.href });
-                    }}
-                    className="min-w-0 flex-1 flex items-center gap-3 px-3 py-2 min-h-10 text-xs font-medium text-m3-text hover:bg-m3-hover rounded-md transition-colors cursor-pointer text-left"
-                  >
-                    <UserRound className="w-4 h-4 text-m3-secondary shrink-0" />
-                    <span className="truncate">{t("sidebar.openAccount")}</span>
-                  </button>
+              )}
+              themeControl={
+                <div className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text">
+                  <span className="font-medium">{t("sidebar.theme")}</span>
+                  <MenuThemeToggle />
+                </div>
+              }
+              languageControl={
+                <div className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text">
+                  <span className="font-medium">{t("sidebar.language")}</span>
+                  <MenuLanguageSelector />
+                </div>
+              }
+              sections={(close) => (
+                <>
                   <button
                     type="button"
+                    role="menuitem"
+                    className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-m3-text transition-colors hover:bg-m3-hover"
                     onClick={() => {
-                      setIsUserMenuOpen(false);
-                      logout();
+                      close();
+                      navigate(`${slugPrefix}/settings`);
+                      if (window.innerWidth < 768) setIsSidebarOpen(false);
                     }}
-                    title={t("sidebar.logout")}
-                    aria-label={t("sidebar.logout")}
-                    className="shrink-0 inline-flex items-center justify-center min-h-10 min-w-10 rounded-md text-m3-danger hover:bg-m3-danger/10 transition-colors cursor-pointer"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <Settings className="h-4 w-4 text-m3-secondary" aria-hidden />
+                    {t("sidebar.openSettings")}
                   </button>
-                </div>
-              </div>
-            )}
+                  {canViewLibraryHealth ? (
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-m3-text transition-colors hover:bg-m3-hover"
+                      onClick={() => {
+                        close();
+                        navigate(`${slugPrefix}/analytics`);
+                        if (window.innerWidth < 768) setIsSidebarOpen(false);
+                      }}
+                    >
+                      <BarChart3 className="h-4 w-4 text-m3-secondary" aria-hidden />
+                      {t("sidebar.openAnalytics")}
+                    </button>
+                  ) : null}
+                </>
+              )}
+            />
           </div>
         )}
       </aside>

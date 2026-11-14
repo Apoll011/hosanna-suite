@@ -68,6 +68,9 @@ export const pt = {
     openAnalytics: "Análises",
     switchWorkspace: "Mudar de organização",
     manageOrganization: "Gerir organização",
+    accountMenu: "Menu da conta",
+    theme: "Tema",
+    language: "Idioma",
   },
   addressBar: {
     atRootLevel: "No Nível Raiz",

@@ -238,7 +238,8 @@ Shared across Auth and Studio via `@hosanna/ui` — one composition language, no
 
 **AccountMenu**
 
-- Google-style account popover: identity, org switcher (when multi-org), theme + language controls, account links.
+- Shared identity menu: name + email with icon-only sign-out on the right; org name + `@slug` (no “active space” chip); theme + language; account links; optional host `sections` at the bottom.
+- Variants: `popover` (Auth header avatar) and `extended` (Studio sidebar footer — expands upward; collapses with the rail).
 - Theme control is compact (segmented / iOS-style toggle is fine); still uses m3 tokens — no purple/glow kit.
 - Org rows use the same quiet avatar + label pattern as elsewhere; destructive actions stay monochrome-until-danger.
 
