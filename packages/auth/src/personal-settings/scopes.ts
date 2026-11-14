@@ -178,13 +178,22 @@ export function registerAppSettingsScope<T extends Record<string, unknown>>(
   return scope;
 }
 
+/** Stable snapshots for `useSyncExternalStore` — new object identity only when data changes. */
+const appSettingsSnapshots = new Map<string, { raw: string; value: Record<string, unknown> }>();
+
 export function getAppSettings<T extends Record<string, unknown>>(
   scopeOrId: AppSettingsScope<T> | AppSettingsScopeId,
 ): T {
   const scope = resolveAppSettingsScope(scopeOrId);
-  const state = requireBridge().getState();
-  const stored = state.apps?.[scope.id] ?? {};
-  return { ...scope.defaults, ...stored } as T;
+  const stored = requireBridge().getState().apps?.[scope.id] ?? {};
+  const raw = JSON.stringify(stored);
+  const cached = appSettingsSnapshots.get(scope.id);
+  if (cached && cached.raw === raw) {
+    return cached.value as T;
+  }
+  const value = { ...scope.defaults, ...stored } as T & Record<string, unknown>;
+  appSettingsSnapshots.set(scope.id, { raw, value });
+  return value;
 }
 
 export function updateAppSettings<T extends Record<string, unknown>>(
@@ -273,6 +282,8 @@ export function createAppSettingsAccessor<T extends Record<string, unknown>>(
 ): AppSettingsAccessor<T> {
   return {
     scope,
+    // `getAppSettings` caches by serialized scope blob so snapshot identity is
+    // stable across React re-renders when nothing changed (required by uSES).
     get: () => getAppSettings(scope),
     set: (patch) => updateAppSettings(scope, patch),
     setKey: (key, value) => updateAppSetting(scope, key, value),
