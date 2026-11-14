@@ -8,8 +8,8 @@
 
 "use client";
 
-import { Home, LayoutGrid } from "lucide-react";
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import { Clock3, Home, LayoutGrid } from "lucide-react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { cn } from "./cn";
 import { SuiteAppIcon } from "./SuiteAppIcon";
@@ -168,6 +168,18 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
     window.location.assign(homeHubUrl);
   };
 
+  const { liveApps, hasComingSoon } = useMemo(() => {
+    const live: AppSwitcherApp[] = [];
+    let comingSoon = false;
+    for (const app of apps) {
+      if (app.status === "coming_soon") comingSoon = true;
+      else live.push(app);
+    }
+    return { liveApps: live, hasComingSoon: comingSoon };
+  }, [apps]);
+
+  const gridEmpty = liveApps.length === 0 && !hasComingSoon;
+
   return (
     <div ref={rootRef} className={cn("relative", className)}>
       <button
@@ -208,11 +220,11 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
               <p className="px-2 py-6 text-center text-sm text-m3-secondary">{loadingLabel}</p>
             ) : error && apps.length === 0 ? (
               <p className="px-2 py-6 text-center text-sm text-m3-danger">{error}</p>
-            ) : apps.length === 0 ? (
+            ) : gridEmpty ? (
               <p className="px-2 py-6 text-center text-sm text-m3-secondary">{emptyLabel}</p>
             ) : (
               <ul className="grid grid-cols-3 gap-1.5">
-                {apps.map((app) => {
+                {liveApps.map((app) => {
                   const openable = isOpenable(app);
                   const isCurrent = currentAppId === app.id;
                   return (
@@ -220,7 +232,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
                       <button
                         type="button"
                         disabled={!openable}
-                        title={openable ? app.name : `${app.name} — ${comingSoonLabel}`}
+                        title={app.name}
                         onClick={() => onSelect(app)}
                         className={cn(
                           "flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-3 text-center transition-colors",
@@ -234,15 +246,33 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
                         <span className="line-clamp-2 w-full text-[11px] font-semibold leading-tight text-m3-text">
                           {app.shortName || app.name}
                         </span>
-                        {app.status === "coming_soon" ? (
-                          <span className="rounded-full bg-m3-sidebar px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-m3-secondary">
-                            {comingSoonLabel}
-                          </span>
-                        ) : null}
                       </button>
                     </li>
                   );
                 })}
+                {hasComingSoon ? (
+                  <li>
+                    <div
+                      role="presentation"
+                      title={comingSoonLabel}
+                      aria-label={comingSoonLabel}
+                      className="flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-3 text-center opacity-55"
+                    >
+                      <span
+                        className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                        style={{
+                          backgroundColor:
+                            "color-mix(in srgb, var(--color-m3-sidebar) 90%, transparent)",
+                        }}
+                      >
+                        <Clock3 className="h-5 w-5 text-m3-secondary" aria-hidden />
+                      </span>
+                      <span className="line-clamp-2 w-full text-[11px] font-semibold leading-tight text-m3-text">
+                        {comingSoonLabel}
+                      </span>
+                    </div>
+                  </li>
+                ) : null}
               </ul>
             )}
           </div>
