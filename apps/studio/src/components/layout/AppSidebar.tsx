@@ -4,6 +4,7 @@
  */
 
 import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
+import { isDemoMode } from "@/src/demo";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -107,6 +108,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const { t, language } = useI18n();
   const { theme, setTheme } = useTheme();
   const { granted: canViewLibraryHealth } = useCan("library.health");
+  const isDemo = isDemoMode();
   const shortName = organization?.metadata?.shortName || "";
   const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
   const orgMenuRef = useRef<HTMLDivElement>(null);
@@ -148,6 +150,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
       <aside
         data-tour="sidebar"
+        data-testid="sidebar"
         className={`${
           isSidebarOpen ? "flex absolute inset-y-0 left-0 z-50 bg-m3-sidebar shadow-lg" : "hidden"
         } md:flex md:relative md:bg-m3-sidebar/30 ${
@@ -539,7 +542,11 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         </AnyRoleGate>
 
         {user && (
-          <div data-testid="nav-user-menu" className="mt-2 shrink-0 border-t border-m3-border pt-2">
+          <div
+            data-tour="nav-user-menu"
+            data-testid="nav-user-menu"
+            className="mt-2 shrink-0 border-t border-m3-border pt-2"
+          >
             <AccountMenu
               variant="extended"
               collapsed={isSidebarCollapsed}
@@ -571,20 +578,24 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               }}
               onSignOut={logout}
               language={language}
-              hide={{ language: true }}
+              hide={{ language: true, links: isDemo }}
               theme={{ value: theme, onChange: setTheme }}
-              links={[
-                {
-                  href: "#account",
-                  label: t("suite.accountMenu.account"),
-                  icon: <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />,
-                },
-                {
-                  href: "#organization",
-                  label: t("suite.accountMenu.organization"),
-                  icon: <Building2 className="h-4 w-4 text-m3-secondary" aria-hidden />,
-                },
-              ]}
+              links={
+                isDemo
+                  ? []
+                  : [
+                      {
+                        href: "#account",
+                        label: t("suite.accountMenu.account"),
+                        icon: <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />,
+                      },
+                      {
+                        href: "#organization",
+                        label: t("suite.accountMenu.organization"),
+                        icon: <Building2 className="h-4 w-4 text-m3-secondary" aria-hidden />,
+                      },
+                    ]
+              }
               renderLink={(link, className, onNavigate) => (
                 <button
                   key={link.href + link.label}
