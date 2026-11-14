@@ -49,6 +49,7 @@ async function fetchMbJson(url: URL): Promise<Response> {
         Accept: "application/json",
         "User-Agent": USER_AGENT,
       },
+      signal: AbortSignal.timeout(10_000),
     });
     if (res.ok) return res;
     if (res.status === 503 || res.status === 429) {

@@ -82,12 +82,13 @@ async function fetchDuckDuckGoHtml(query: string): Promise<string> {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({ q: query }).toString(),
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!res.ok) {
     const url = new URL("https://html.duckduckgo.com/html/");
     url.searchParams.set("q", query);
-    res = await fetch(url, { headers });
+    res = await fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
   }
 
   if (res.status === 403 || res.status === 429) {
@@ -143,6 +144,7 @@ async function searchDuckDuckGoInstantAnswer(
 
   const res = await fetch(url, {
     headers: { Accept: "application/json", "User-Agent": BROWSER_UA },
+    signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
     throw new ProviderError(
@@ -200,6 +202,7 @@ async function searchWikipedia(query: string, limit: number): Promise<WebSearchH
 
   const res = await fetch(url, {
     headers: { Accept: "application/json", "User-Agent": "HosannaMCP/2.20" },
+    signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
     throw new ProviderError("wikipedia", `Wikipedia OpenSearch HTTP ${res.status}`, "unavailable");

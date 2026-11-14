@@ -629,7 +629,9 @@ async function gatherOnlineEvidence(
   let duration: string | undefined;
   let artistHint: string | undefined;
 
-  const [mbRes, ytRes, webRes, ccliRes] = await Promise.allSettled([
+  const EVIDENCE_TIMEOUT_MS = 25_000;
+
+  const evidenceSettled = Promise.allSettled([
     searchMusicBrainzRecordings({
       title,
       artist: artist || undefined,
@@ -654,6 +656,20 @@ async function gatherOnlineEvidence(
       nativeAuth,
     }),
   ]);
+
+  const timeoutSettled = new Promise<PromiseSettledResult<never>[]>((resolve) => {
+    const t = setTimeout(() => {
+      resolve([
+        { status: "rejected", reason: new Error("Evidence timeout") },
+        { status: "rejected", reason: new Error("Evidence timeout") },
+        { status: "rejected", reason: new Error("Evidence timeout") },
+        { status: "rejected", reason: new Error("Evidence timeout") },
+      ]);
+    }, EVIDENCE_TIMEOUT_MS);
+    t.unref?.();
+  });
+
+  const [mbRes, ytRes, webRes, ccliRes] = await Promise.race([evidenceSettled, timeoutSettled]);
 
   if (mbRes.status === "fulfilled") {
     sources.push("MusicBrainz");
