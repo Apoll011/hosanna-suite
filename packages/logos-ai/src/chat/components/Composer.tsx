@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useLogosI18n } from "../../host";
+import { useLogosHost, useLogosI18n } from "../../host";
 import {
   ArrowUp,
   Eye,
@@ -71,6 +71,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
   ref,
 ) {
   const { t } = useLogosI18n();
+  const host = useLogosHost();
   const [draft, setDraft] = useState("");
   const [slashIndex, setSlashIndex] = useState(0);
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
@@ -124,6 +125,32 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
     const collected: ChatAttachment[] = [];
     for (const file of incoming) {
       if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) break;
+      const isPdf =
+        file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+      if (isPdf && host.renderPdf) {
+        try {
+          const rendered = await host.renderPdf(file);
+          if (rendered.imagesBase64.length > 0) {
+            rendered.imagesBase64.forEach((dataUrl, idx) => {
+              if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) return;
+              collected.push({
+                id: newId(),
+                file,
+                name:
+                  rendered.imagesBase64.length > 1
+                    ? `${file.name} (p. ${idx + 1})`
+                    : file.name,
+                size: file.size,
+                mimeType: "image/jpeg",
+                dataUrl,
+                isImage: true,
+              });
+            });
+            continue;
+          }
+        } catch {
+        }
+      }
       try {
         collected.push(await fileToAttachment(file));
       } catch {
@@ -131,7 +158,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
       }
     }
     if (collected.length) setAttachments((prev) => [...prev, ...collected]);
-  }, []);
+  }, [host.renderPdf]);
 
   const removeAttachment = (id: string) =>
     setAttachments((prev) => prev.filter((a) => a.id !== id));

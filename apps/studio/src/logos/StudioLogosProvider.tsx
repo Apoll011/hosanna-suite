@@ -24,6 +24,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useSong, useSongMutations } from "../hooks/useSongs";
 import { deriveView } from "../layouts/view";
 import { useI18n } from "../lib/i18n";
+import { renderPdfPages } from "../lib/import/pdfRenderer";
 import type { ServiceElement } from "../types";
 
 function useStudioSong(id: string | null | undefined) {
@@ -160,6 +161,7 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
         },
         getImportJob: (id) => songsApi.getImportJob(id),
         cancelImportJob: (id) => songsApi.cancelImportJob(id),
+        renderPdf: renderPdfPages,
       }),
     [
       catalog,
