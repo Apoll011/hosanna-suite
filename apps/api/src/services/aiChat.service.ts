@@ -105,6 +105,7 @@ const folderIconSchema = z.enum(FOLDER_ICON_IDS);
 const folderColorSchema = z.enum(FOLDER_COLOR_IDS);
 import type { AiProvider } from "./orgAiConfig.service.js";
 import { AI_PROVIDER_DEFAULT_BASE_URL, OrgAiConfigService } from "./orgAiConfig.service.js";
+import { SongImportService } from "./songImport.service.js";
 
 export type ChatPageContext = {
   kind?:
@@ -175,6 +176,27 @@ function buildModel(
 
 function textResult(data: unknown) {
   return typeof data === "string" ? data : JSON.stringify(data, null, 2);
+}
+
+const songImport = new SongImportService();
+
+function modelFileDataToBase64(data: unknown): string | null {
+  if (typeof data === "string") {
+    const idx = data.indexOf("base64,");
+    return idx >= 0 ? data.slice(idx + "base64,".length) : data;
+  }
+  if (data instanceof Uint8Array) return Buffer.from(data).toString("base64");
+  if (data instanceof ArrayBuffer) return Buffer.from(new Uint8Array(data)).toString("base64");
+  if (Buffer.isBuffer(data)) return data.toString("base64");
+  if (data && typeof data === "object") {
+    const obj = data as { type?: string; data?: unknown; url?: unknown };
+    if (obj.type === "data" && obj.data != null) return modelFileDataToBase64(obj.data);
+    if (obj.type === "url" && typeof obj.url === "string") {
+      const idx = obj.url.indexOf("base64,");
+      return idx >= 0 ? obj.url.slice(idx + "base64,".length) : null;
+    }
+  }
+  return null;
 }
 
 /** Studio-only: stage a destructive action for the Confirm button (does not mutate). */
@@ -1616,6 +1638,78 @@ function buildHosannaTools(
         return textResult({ songs, missing, count: songs.length });
       },
     }),
+    songs_import_sheet: tool({
+      description:
+        "Run the AI song-import pipeline on a sheet-music image (or the page images of a PDF) the user attached in chat. Creates an import job and returns its id — the chat UI polls it and shows live step progress. Only call when the user asks to import a chord sheet and an image/PDF is attached.",
+      inputSchema: z.object({
+        fileIndex: z
+          .number()
+          .int()
+          .min(0)
+          .optional()
+          .describe("Which attached image to use when several are attached; defaults to the first."),
+      }),
+      execute: async (args, { messages }) => {
+        const ctx = requireMcpContext(authInfo);
+        requirePermission(ctx, "song.import");
+
+        let userContent: unknown = [];
+        for (let i = messages.length - 1; i >= 0; i--) {
+          const m = messages[i];
+          if (m?.role === "user") {
+            userContent = m.content;
+            break;
+          }
+        }
+        const parts = Array.isArray(userContent) ? userContent : [];
+        const images = parts.filter(
+          (p) =>
+            p &&
+            typeof p === "object" &&
+            (p as { type?: string }).type === "file" &&
+            typeof (p as { mediaType?: string }).mediaType === "string" &&
+            ((p as { mediaType?: string }).mediaType as string).startsWith("image/"),
+        );
+        if (images.length === 0) {
+          return textResult({
+            error: true,
+            code: "no_sheet",
+            message: "No image attachment found. Attach a photo or PDF of a chord sheet.",
+          });
+        }
+
+        const primary = images[args.fileIndex ?? 0] ?? images[0];
+        const primaryB64 = modelFileDataToBase64((primary as { data?: unknown }).data);
+        if (!primaryB64) {
+          return textResult({
+            error: true,
+            code: "unreadable_file",
+            message: "Could not read the attached image.",
+          });
+        }
+
+        const mimeOf = (p: unknown) => (p as { mediaType?: string }).mediaType ?? "image/jpeg";
+        const rest = args.fileIndex == null ? images.slice(1) : [];
+        const restImages = rest
+          .map((p) => ({
+            base64: modelFileDataToBase64((p as { data?: unknown }).data),
+            mime: mimeOf(p),
+          }))
+          .filter((x): x is { base64: string; mime: string } => Boolean(x.base64));
+
+        const fileName = (primary as { filename?: string }).filename;
+        const job = await songImport.createJob({
+          orgId: ctx.orgId,
+          sourceType: restImages.length > 0 ? "gallery" : "photo",
+          imageBase64: primaryB64,
+          imageMimeType: mimeOf(primary),
+          imagesBase64: restImages.map((x) => x.base64),
+          imageMimeTypes: restImages.map((x) => x.mime),
+          fileName: typeof fileName === "string" ? fileName : undefined,
+        });
+        return textResult({ importJobId: job.id, status: job.status, steps: job.steps });
+      },
+    }),
     songs_create_draft: tool({
       description: "Draft a new song without saving. Optional folderId.",
       inputSchema: z.object({
@@ -2297,7 +2391,7 @@ const LOGOS_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosan
 - On thin hosts, navigate/print tools become an optional "Open in Music" chat card (no auto tab switch). Use open_app only when the user clearly wants to leave for another product (account settings, marketing, a future app).
 
 ## Capabilities (use them)
-- Songs: search, search_lyrics (plain lyrics ignoring chords), get/get_many, draft, propose_edit/fix/transpose, save, move, delete, restore; trash_list
+- Songs: search, search_lyrics (plain lyrics ignoring chords), get/get_many, draft, propose_edit/fix/transpose, save, move, delete, restore, import_sheet (run AI sheet-music import on an attached image/PDF); trash_list
 - Services: search/get (expandSongs), propose_edit, plan_suggest, validate, save, delete, restore
 - People/org: me, members_list, members_get, members_resolve, org_get. Resolve people before agenda assignees.
 - Record status: draft = not persisted; saved/verified = in DB. Never call a draft "saved".
