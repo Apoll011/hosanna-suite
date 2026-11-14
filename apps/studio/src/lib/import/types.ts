@@ -34,7 +34,7 @@ export interface SongImportContext {
 
 export type ImportTranslate = (key: string, params?: Record<string, string | number>) => string;
 
-export interface InteractiveImportModalProps<TSession = unknown, TConfirm = unknown> {
+export interface InteractiveImportModalProps<TSession, TConfirm> {
   isOpen: boolean;
   session: TSession;
   isImporting: boolean;
@@ -69,18 +69,24 @@ export interface SongImportProvider {
 
   matchesFile?(file: File): boolean | Promise<boolean>;
 
-  prepare?(files: readonly File[], onProgress?: ImportProgressCallback): Promise<unknown>;
+  prepare?(
+    files: readonly File[],
+    onProgress?: ImportProgressCallback,
+  ): Promise<InteractiveImportSession>;
 
   commit?(
-    session: unknown,
-    options: unknown,
+    session: InteractiveImportSession,
+    options: InteractiveImportConfirmOptions,
     ctx: SongImportContext,
   ): Promise<ProviderImportResult>;
 
   Modal?: ComponentType<InteractiveImportModalPropsForRegistry>;
 
   getPrepareProgressTitle?(t: ImportTranslate): string;
-  getPreparedToast?(session: unknown, t: ImportTranslate): InteractiveImportToastCopy | null;
+  getPreparedToast?(
+    session: InteractiveImportSession,
+    t: ImportTranslate,
+  ): InteractiveImportToastCopy | null;
   getCommitProgressTitle?(t: ImportTranslate): string;
   getSuccessMessage?(result: ProviderImportResult, t: ImportTranslate): string | null;
   getErrorMessage?(error: unknown, t: ImportTranslate): string;

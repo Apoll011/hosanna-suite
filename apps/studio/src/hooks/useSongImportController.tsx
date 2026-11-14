@@ -10,6 +10,8 @@ import {
   describeImportProgress,
   isInteractiveImportProvider,
   songImportRegistry,
+  type InteractiveImportConfirmOptions,
+  type InteractiveImportSession,
   type ProviderImportResult,
   type SongImportProvider,
 } from "@/src/lib/import";
@@ -17,7 +19,7 @@ import React, { useCallback, useMemo, useState } from "react";
 
 interface ActiveInteractiveSession {
   provider: SongImportProvider;
-  data: unknown;
+  data: InteractiveImportSession;
 }
 
 export function useSongImportController(options: {
@@ -73,7 +75,7 @@ export function useSongImportController(options: {
   }, [isImporting]);
 
   const confirmSession = useCallback(
-    async (confirmOptions: unknown) => {
+    async (confirmOptions: InteractiveImportConfirmOptions) => {
       if (!session || !isInteractiveImportProvider(session.provider)) return;
       const provider = session.provider;
       setIsImporting(true);
