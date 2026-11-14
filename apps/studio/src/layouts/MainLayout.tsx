@@ -1585,7 +1585,7 @@ export const MainLayout: React.FC = () => {
             type="file"
             ref={fileInputRef}
             multiple
-            accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json"
+            accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json,.pdf,.png,.jpg,.jpeg,.webp"
             onChange={handleChordProFileUpload}
             className="hidden"
           />
