@@ -1,5 +1,5 @@
 export function BrandMark({
-  className = "h-5 w-5",
+  className = "h-6 w-6",
   alt = "",
 }: {
   className?: string;
@@ -11,7 +11,7 @@ export function BrandMark({
         src="/favicon.png"
         alt={alt}
         draggable={false}
-        className="box-border h-full w-full object-contain object-center p-[12%]"
+        className="box-border h-full w-full object-contain object-center p-[5%]"
       />
     </span>
   );

@@ -110,7 +110,7 @@ Only cross-app prefs live at the root:
 
 **First paint:** `buildThemeBootScript()` (Auth layout / Studio `index.html`) reads personal-settings → optional legacy keys → cookie → default light, then toggles `.dark` before paint.
 
-**Transitions:** `runThemeTransition` + `html.theme-transition` CSS (Auth `globals.css`, Studio `index.css`) so cross-app hydrate and menu toggles animate instead of flashing.
+**Transitions:** `runThemeTransition` prefers the View Transition API (root crossfade ~220ms). CSS fallback only on `html`/`body` via `html.theme-transition` — never a universal `*` transition (that was laggy and fought VT).
 
 **Safe writes:** `updatePersonalSettingsSafe(patch, { readRemoteMetadata })` merges remote metadata before patching so Auth cannot clobber Studio `apps.*` (and the reverse). Prefer this for theme/language toggles.
 

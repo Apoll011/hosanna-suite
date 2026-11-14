@@ -40,7 +40,7 @@ export function AccountShell({
 
   const brandContent = canGoBack ? (
     <>
-      <span className="relative h-5 w-5 shrink-0 overflow-hidden">
+      <span className="relative h-6 w-6 shrink-0 overflow-hidden">
         <span
           className={`${swapMotion} justify-center -translate-x-full opacity-0 group-hover:translate-x-0 group-hover:opacity-100`}
           aria-hidden

@@ -258,7 +258,7 @@ Motion explains size or presence. No bounce, flash, or blocking the next click.
 | Menu enter                                                      | **180ms**             | `.hosanna-enter`                                                                                                                           |
 | Dialog / toast                                                  | **200ms**             | Scrim fade + panel scale 0.98                                                                                                              |
 | Button / color hover                                            | ~150ms                | Color only                                                                                                                                 |
-| Theme flip (menu toggle or cross-app hydrate)                   | ~350ms / View Transition when available | `runThemeTransition` + `html.theme-transition` on color/fill/stroke/border; no full-page flash |
+| Theme flip (menu toggle or cross-app hydrate)                   | ~220ms View Transition (root crossfade); CSS fallback on `html`/`body` only | `runThemeTransition` — never universal `*` transitions (laggy / fights VT) |
 
 On phone, a covering panel may **translate** instead of changing width — same duration and easing, still mounted through close.
 

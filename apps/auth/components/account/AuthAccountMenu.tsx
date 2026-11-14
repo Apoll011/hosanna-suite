@@ -99,7 +99,7 @@ export function AuthAccountMenu({ className }: { className?: string }) {
       languageControl={
         <div className={prefsRow}>
           <span className="font-medium">{t("account.menu.language")}</span>
-          <LanguageSelector className="[&_button]:h-7 [&_button]:gap-1 [&_button]:rounded-full [&_button]:border-m3-border/50 [&_button]:bg-m3-sidebar/70 [&_button]:p-1.5 [&_button]:shadow-none [&_button]:text-[10px]" />
+          <LanguageSelector variant="menu" />
         </div>
       }
     />

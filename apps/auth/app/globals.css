@@ -227,16 +227,25 @@ html.dark {
   outline-offset: 2px;
 }
 
-/* Smooth theme flips when prefs sync from another app / menu toggle. */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition:
-    background-color 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease,
-    fill 0.35s ease,
-    stroke 0.35s ease,
-    box-shadow 0.35s ease !important;
+/* Theme flips: View Transition crossfade when available (see runThemeTransition). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.22s;
+  animation-timing-function: ease;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Fallback only — root surfaces, never a universal `*` transition (that was laggy). */
+html.theme-transition,
+html.theme-transition body {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease !important;
+}
+

@@ -10,6 +10,8 @@ export const THEME_BG = {
   dark: "#0b0d12",
 } as const;
 
+const FALLBACK_MS = 220;
+
 function cookieDomain(): string {
   if (typeof location === "undefined") return "";
   const host = location.hostname;
@@ -41,14 +43,28 @@ export function applyDocumentTheme(dark: boolean) {
   root.style.backgroundColor = "";
 }
 
-/** Smooth theme flip after cross-app hydrate or local toggle. */
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+/**
+ * Smooth theme flip after cross-app hydrate or local toggle.
+ * Prefer the View Transition API (one crossfade of the root). Avoid the old
+ * `theme-transition *` universal CSS transitions — they fight VT and jank the UI.
+ */
 export function runThemeTransition(apply: () => void) {
   if (typeof document === "undefined") {
     apply();
     return;
   }
-  const root = document.documentElement;
-  root.classList.add("theme-transition");
+
+  if (prefersReducedMotion()) {
+    apply();
+    return;
+  }
 
   const doc = document as Document & {
     startViewTransition?: (cb: () => void) => { finished: Promise<unknown> };
@@ -56,18 +72,19 @@ export function runThemeTransition(apply: () => void) {
 
   if (typeof doc.startViewTransition === "function") {
     try {
-      const vt = doc.startViewTransition(() => {
+      doc.startViewTransition(() => {
         apply();
       });
-      void vt.finished.finally(() => root.classList.remove("theme-transition"));
       return;
     } catch {
-      /* fall through */
+      /* fall through to CSS fallback */
     }
   }
 
+  const root = document.documentElement;
+  root.classList.add("theme-transition");
   apply();
-  window.setTimeout(() => root.classList.remove("theme-transition"), 400);
+  window.setTimeout(() => root.classList.remove("theme-transition"), FALLBACK_MS);
 }
 
 /**
