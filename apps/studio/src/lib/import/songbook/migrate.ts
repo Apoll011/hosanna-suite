@@ -212,7 +212,7 @@ export function migrateSongbookSongToChordPro(song: SongbookSong): {
     headers.push(`{meta: section_order ${escapeDirectiveValue(song.sectionOrder)}}`);
   }
   if (song.keyShift !== 0) {
-    headers.push(`{meta: key_shift ${song.keyShift}}`);
+    headers.push(`{keyshift: ${song.keyShift}}`);
   }
   if (song.durationSeconds > 0 && !hasDirective(song.content, "duration")) {
     headers.push(`{duration: ${song.durationSeconds}}`);
