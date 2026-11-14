@@ -8,12 +8,16 @@
 export { cn, type ClassValue } from "./cn";
 export {
   AccountMenu,
+  AccountMenuDivider,
+  type AccountMenuHide,
   type AccountMenuLabels,
   type AccountMenuLink,
   type AccountMenuOrg,
   type AccountMenuProps,
+  type AccountMenuTheme,
   type AccountMenuUser,
 } from "./AccountMenu";
+export { MenuThemeToggle, type MenuThemeToggleProps } from "./MenuThemeToggle";
 export {
   AppSwitcher,
   type AppSwitcherApp,

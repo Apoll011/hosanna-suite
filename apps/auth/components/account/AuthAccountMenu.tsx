@@ -1,13 +1,13 @@
 "use client";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { MenuThemeToggle } from "@/components/account/MenuThemeToggle";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth/client";
 import { clearCachedOrg } from "@/lib/organization/cache";
 import { clearCachedUser } from "@/lib/session/cache";
 import { useI18n } from "@/lib/ui/i18n";
+import { useTheme } from "@/lib/ui/theme";
 import { AccountMenu } from "@hosanna/ui";
 import { Building2, UserRound } from "lucide-react";
 import Link from "next/link";
@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 export function AuthAccountMenu({ className }: { className?: string }) {
   const { t } = useI18n();
   const router = useRouter();
+  const { darkMode, toggleDarkMode } = useTheme();
   const { user, clear } = useAuthUser({
     requireAuth: false,
     loginRedirect: "/login?redirect=/home",
@@ -30,9 +31,6 @@ export function AuthAccountMenu({ className }: { className?: string }) {
     await authClient.signOut();
     router.replace("/login");
   };
-
-  const prefsRow =
-    "flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text";
 
   return (
     <AccountMenu
@@ -93,18 +91,8 @@ export function AuthAccountMenu({ className }: { className?: string }) {
         theme: t("account.menu.theme"),
         language: t("account.menu.language"),
       }}
-      themeControl={
-        <div className={prefsRow}>
-          <span className="font-medium">{t("account.menu.theme")}</span>
-          <MenuThemeToggle />
-        </div>
-      }
-      languageControl={
-        <div className={prefsRow}>
-          <span className="font-medium">{t("account.menu.language")}</span>
-          <LanguageSelector variant="menu" />
-        </div>
-      }
+      theme={{ darkMode, onToggle: toggleDarkMode }}
+      languageControl={<LanguageSelector variant="menu" />}
     />
   );
 }

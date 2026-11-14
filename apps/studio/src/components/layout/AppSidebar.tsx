@@ -3,7 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
+import {
+  AccountMenu,
+  AccountMenuDivider,
+  Button,
+  Badge,
+  useCan,
+  AnyRoleGate,
+  Can,
+} from "@hosanna/ui";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -27,12 +35,11 @@ import {
   Users,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import { useTheme } from "../../contexts/ThemeContext";
 import type { Organization as AuthOrganization } from "../../contexts/AuthContext";
 import { ViewName } from "../../layouts/view";
 
 import { getRoleLabel } from "../../utils/settingsUtils";
-import { MenuLanguageSelector } from "../account/MenuLanguageSelector";
-import { MenuThemeToggle } from "../account/MenuThemeToggle";
 import { FolderTreeItemNode, FolderTreeNode } from "../explorer";
 
 interface AppSidebarProps {
@@ -106,6 +113,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   logout,
 }) => {
   const { t } = useI18n();
+  const { darkMode, toggleDarkMode } = useTheme();
   const { granted: canViewLibraryHealth } = useCan("library.health");
   const shortName = organization?.metadata?.shortName || "";
   const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
@@ -581,11 +589,18 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 theme: t("sidebar.theme"),
                 language: t("sidebar.language"),
               }}
+              hide={{ language: true }}
+              theme={{ darkMode, onToggle: toggleDarkMode }}
               links={[
                 {
                   href: "#account",
                   label: t("sidebar.openAccount"),
                   icon: <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />,
+                },
+                {
+                  href: "#organization",
+                  label: t("sidebar.manageOrganization"),
+                  icon: <Building2 className="h-4 w-4 text-m3-secondary" aria-hidden />,
                 },
               ]}
               renderLink={(link, className, onNavigate) => (
@@ -598,25 +613,19 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   onFocus={() => prefetchAuthAccount()}
                   onClick={() => {
                     onNavigate();
-                    navigateToAuthAccount({ returnUrl: window.location.href });
+                    navigateToAuthAccount({
+                      path:
+                        link.href === "#organization"
+                          ? "/account/organization/profile"
+                          : undefined,
+                      returnUrl: window.location.href,
+                    });
                   }}
                 >
                   {link.icon}
                   {link.label}
                 </button>
               )}
-              themeControl={
-                <div className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text">
-                  <span className="font-medium">{t("sidebar.theme")}</span>
-                  <MenuThemeToggle />
-                </div>
-              }
-              languageControl={
-                <div className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text">
-                  <span className="font-medium">{t("sidebar.language")}</span>
-                  <MenuLanguageSelector />
-                </div>
-              }
               sections={(close) => (
                 <>
                   <button
@@ -633,19 +642,22 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                     {t("sidebar.openSettings")}
                   </button>
                   {canViewLibraryHealth ? (
-                    <button
-                      type="button"
-                      role="menuitem"
-                      className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-m3-text transition-colors hover:bg-m3-hover"
-                      onClick={() => {
-                        close();
-                        navigate(`${slugPrefix}/analytics`);
-                        if (window.innerWidth < 768) setIsSidebarOpen(false);
-                      }}
-                    >
-                      <BarChart3 className="h-4 w-4 text-m3-secondary" aria-hidden />
-                      {t("sidebar.openAnalytics")}
-                    </button>
+                    <>
+                      <AccountMenuDivider />
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-m3-text transition-colors hover:bg-m3-hover"
+                        onClick={() => {
+                          close();
+                          navigate(`${slugPrefix}/analytics`);
+                          if (window.innerWidth < 768) setIsSidebarOpen(false);
+                        }}
+                      >
+                        <BarChart3 className="h-4 w-4 text-m3-secondary" aria-hidden />
+                        {t("sidebar.openAnalytics")}
+                      </button>
+                    </>
                   ) : null}
                 </>
               )}

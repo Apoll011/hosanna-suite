@@ -12,6 +12,7 @@ import { Building2, Check, ChevronDown, LogOut, UserRound } from "lucide-react";
 import React, { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 import { cn } from "./cn";
+import { MenuThemeToggle } from "./MenuThemeToggle";
 
 export type AccountMenuUser = {
   name?: string | null;
@@ -42,22 +43,37 @@ export type AccountMenuLabels = {
   language?: string;
 };
 
+export type AccountMenuHide = {
+  theme?: boolean;
+  language?: boolean;
+  organization?: boolean;
+  links?: boolean;
+  sections?: boolean;
+};
+
+export type AccountMenuTheme = {
+  darkMode: boolean;
+  onToggle: () => void;
+};
+
 export type AccountMenuProps = {
   user: AccountMenuUser | null | undefined;
   labels?: AccountMenuLabels;
-  /** Primary profile / account center link. */
+  /** Primary profile / account center links (dividers inserted between them). */
   links?: AccountMenuLink[];
   onSignOut?: () => void | Promise<void>;
   /** Current org + list; when `organizations.length > 1`, expand to switch. */
   organization?: AccountMenuOrg | null;
   organizations?: AccountMenuOrg[];
   onSwitchOrganization?: (org: AccountMenuOrg) => void | Promise<void>;
-  /** Host-rendered theme control (toggle button or row). */
-  themeControl?: ReactNode;
-  /** Host-rendered language control. */
+  /** Built-in theme row (shared MenuThemeToggle). Prefer this over custom rows. */
+  theme?: AccountMenuTheme;
+  /** Host language control only — AccountMenu owns the label row. */
   languageControl?: ReactNode;
   /** Host-rendered blocks after links (e.g. Studio Configurations / Analysis). */
   sections?: ReactNode | ((close: () => void) => ReactNode);
+  /** Hide built-in regions without omitting props. */
+  hide?: AccountMenuHide;
   className?: string;
   /** Use an <a> for links (auth) vs host Link — pass renderLink to customize. */
   renderLink?: (link: AccountMenuLink, className: string, onNavigate: () => void) => ReactNode;
@@ -70,9 +86,13 @@ export type AccountMenuProps = {
   onOpenChange?: (open: boolean) => void;
   /** Extended trigger subtitle (e.g. role label). */
   triggerSubtitle?: string;
-  /** Extended trigger test id (Studio e2e). */
+  /** Trigger test id (Studio e2e / tours). */
   triggerTestId?: string;
 };
+
+export function AccountMenuDivider({ className }: { className?: string }) {
+  return <div role="separator" className={cn("my-1 border-t border-m3-border/60", className)} />;
+}
 
 function initials(user: AccountMenuUser | null | undefined): string {
   const fromName = user?.name?.trim()?.charAt(0);
@@ -100,6 +120,9 @@ function OrgAvatar({ org, size = "md" }: { org: AccountMenuOrg | null; size?: "s
   );
 }
 
+const prefsRow =
+  "flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-m3-text";
+
 export const AccountMenu: React.FC<AccountMenuProps> = ({
   user,
   labels,
@@ -108,9 +131,10 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
   organization,
   organizations = [],
   onSwitchOrganization,
-  themeControl,
+  theme,
   languageControl,
   sections,
+  hide,
   className,
   renderLink,
   variant = "popover",
@@ -138,6 +162,13 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
   const accountLabel = labels?.account ?? "Account";
   const signOutLabel = labels?.signOut ?? "Sign out";
   const switchOrgLabel = labels?.switchOrganization ?? "Switch organization";
+  const themeLabel = labels?.theme ?? "Theme";
+  const languageLabel = labels?.language ?? "Language";
+
+  const showOrg = !hide?.organization && Boolean(organization || organizations.length > 0);
+  const showTheme = Boolean(theme) && !hide?.theme;
+  const showLanguage = Boolean(languageControl) && !hide?.language;
+  const showLinks = links.length > 0 && !hide?.links;
 
   useEffect(() => {
     if (!open) return;
@@ -177,6 +208,13 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
   const linkClass =
     "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-m3-text transition-colors hover:bg-m3-hover";
 
+  const resolvedSections =
+    hide?.sections || !sections
+      ? null
+      : typeof sections === "function"
+        ? sections(close)
+        : sections;
+
   const panelBody = (
     <>
       <div className="flex items-center gap-3 border-b border-m3-border/60 px-4 py-3">
@@ -205,7 +243,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
         ) : null}
       </div>
 
-      {organization || organizations.length > 0 ? (
+      {showOrg ? (
         <div className="border-b border-m3-border/60 px-2 py-1">
           <button
             type="button"
@@ -274,43 +312,50 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
         </div>
       ) : null}
 
-      {(themeControl || languageControl) && (
+      {(showTheme || showLanguage) && (
         <div className="space-y-0.5 border-b border-m3-border/60 px-2 py-1.5">
-          {themeControl}
-          {languageControl}
+          {showTheme && theme ? (
+            <div className={prefsRow}>
+              <span className="font-medium">{themeLabel}</span>
+              <MenuThemeToggle darkMode={theme.darkMode} onToggle={theme.onToggle} />
+            </div>
+          ) : null}
+          {showLanguage ? (
+            <div className={prefsRow}>
+              <span className="font-medium">{languageLabel}</span>
+              {languageControl}
+            </div>
+          ) : null}
         </div>
       )}
 
-      {(() => {
-        const sectionNodes = typeof sections === "function" ? sections(close) : sections;
-        if (!links.length && !sectionNodes) return null;
-        return (
-          <div className="p-1.5">
-            {links.map((link) => {
-              if (renderLink) {
-                return (
-                  <React.Fragment key={link.href + link.label}>
-                    {renderLink(link, linkClass, close)}
-                  </React.Fragment>
-                );
-              }
-              return (
-                <a
-                  key={link.href + link.label}
-                  href={link.href}
-                  role="menuitem"
-                  className={linkClass}
-                  onClick={close}
-                >
-                  {link.icon ?? <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />}
-                  {link.label}
-                </a>
-              );
-            })}
-            {sectionNodes}
-          </div>
-        );
-      })()}
+      {(showLinks || resolvedSections) && (
+        <div className="p-1.5">
+          {showLinks
+            ? links.map((link, index) => (
+                <React.Fragment key={link.href + link.label}>
+                  {index > 0 ? <AccountMenuDivider /> : null}
+                  {renderLink ? (
+                    renderLink(link, linkClass, close)
+                  ) : (
+                    <a
+                      href={link.href}
+                      role="menuitem"
+                      className={linkClass}
+                      onClick={close}
+                    >
+                      {link.icon ?? <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />}
+                      {link.label}
+                    </a>
+                  )}
+                </React.Fragment>
+              ))
+            : null}
+
+          {showLinks && resolvedSections ? <AccountMenuDivider /> : null}
+          {resolvedSections}
+        </div>
+      )}
     </>
   );
 
