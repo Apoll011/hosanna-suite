@@ -4,6 +4,7 @@ import type { pt } from "./pt";
 export const en: typeof pt = {
   common: {
     goHome: "Go home",
+    back: "Back",
   },
   home: {
     title: "Applications",

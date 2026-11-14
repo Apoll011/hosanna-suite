@@ -2,6 +2,7 @@
 export const pt = {
   common: {
     goHome: "Ir para o início",
+    back: "Voltar",
   },
   home: {
     title: "Aplicações",

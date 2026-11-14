@@ -165,7 +165,12 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   const goHome = () => {
     if (!homeHubUrl) return;
     setOpen(false);
-    window.location.assign(homeHubUrl);
+    const url = new URL(homeHubUrl, window.location.href);
+    // From Music / other products, stamp returnUrl so Home can send the user back.
+    if (currentAppId && currentAppId !== "auth") {
+      url.searchParams.set("returnUrl", window.location.href);
+    }
+    window.location.assign(url.toString());
   };
 
   const { liveApps, hasComingSoon } = useMemo(() => {
