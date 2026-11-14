@@ -62,7 +62,7 @@ Lyrics
   });
 });
 
-describe("key_note / tag / chorus directives", () => {
+describe("key_note / tags / chorus directives", () => {
   it("stores key_note as metadata.keyNote", () => {
     const song = parseChordPro(
       "{title: X}\n{key_note: Verso 4 e final modulam para D (meio tom acima)}",
@@ -70,9 +70,14 @@ describe("key_note / tag / chorus directives", () => {
     assert.equal(song.metadata.keyNote, "Verso 4 e final modulam para D (meio tom acima)");
   });
 
-  it("accumulates repeated {tag} directives", () => {
-    const song = parseChordPro("{title: X}\n{tag: adoração}\n{tag: lenta}");
-    assert.equal(song.metadata.tag, "adoração, lenta");
+  it("parses comma-separated {tags} directives", () => {
+    const song = parseChordPro("{title: X}\n{tags: adoração, lenta,  congregação}");
+    assert.equal(song.metadata.tags, "adoração, lenta, congregação");
+  });
+
+  it("accumulates repeated {tags} directives", () => {
+    const song = parseChordPro("{title: X}\n{tags: adoração}\n{tags: lenta, congregação}");
+    assert.equal(song.metadata.tags, "adoração, lenta, congregação");
   });
 
   it("{chorus} recalls the previous chorus body", () => {

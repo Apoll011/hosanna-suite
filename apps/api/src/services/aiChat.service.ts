@@ -2409,7 +2409,7 @@ const LOGOS_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosan
 - On stale/concurrency errors, use the returned \`current\` object (do not re-fetch blindly).
 - \`{chorus}\` (alias \`{ch}\`, optional label \`{chorus: Refrão final}\`) recalls the previous \`start_of_chorus\` block without copying it. When a chorus repeats UNCHANGED, write \`{chorus}\` instead of duplicating the lines (unless the user asks for a physical copy or the repeat has different chords/words). Never put \`{chorus}\` before any chorus exists.
 - \`{key_note: text}\` is a free-text note about key changes (e.g. \`{key_note: Verso 4 e final modulam para D (meio tom acima)}\`); the renderer shows it under the song header. Use it for modulations — not \`{c:}\`, not \`{key:}\` (which is the main key).
-- \`{tag: label}\` is an editor-only label (not rendered). Repeat the directive for several tags. Do not add tags the user did not ask for.
+- \`{tags: label1, label2}\` stores comma-separated editor-only labels (not rendered). Do not add tags the user did not ask for.
 - Propagating/completing chords: \`songs_draft_propagate_chords\` / \`chordpro_propagate_chords\` return a DRAFT that is NOT staged. Read \`review\` and \`skipped\`: re-place every chord marked \`check\` on the right word/syllable yourself (use the source line as reference), fill \`skipped\` lines when the chords are obvious, make sure no chord lands mid-word by accident, then call \`songs_propose_edit\` ONCE with the corrected full content. Never propose the raw draft unchecked and never invent chords the song does not already use.
 
 ## Host awareness

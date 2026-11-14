@@ -221,7 +221,7 @@ export function lintChordPro(content: string): ChordProDiagnostic[] {
         continue;
       }
 
-      if ((lowerName === "key_note" || lowerName === "tag") && !value) {
+      if ((lowerName === "key_note" || lowerName === "tags") && !value) {
         diagnostics.push({
           line: i,
           column: line.indexOf("{"),

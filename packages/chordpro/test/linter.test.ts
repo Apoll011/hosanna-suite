@@ -31,8 +31,8 @@ describe("ChordPro linter — chorus recall / tags", () => {
     assert.equal(d.length, 0);
   });
 
-  it("warns on empty key_note / tag", () => {
-    const d = lintChordPro("{key_note}\n{tag: }\n{key_note: D}");
+  it("warns on empty key_note / tags", () => {
+    const d = lintChordPro("{key_note}\n{tags: }\n{key_note: D}");
     assert.equal(d.filter((x) => x.code === "empty-directive-value").length, 2);
   });
 });

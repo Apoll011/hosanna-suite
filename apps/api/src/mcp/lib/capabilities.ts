@@ -146,7 +146,7 @@ const DIRECTIVES: ChordProDirectiveCapability[] = [
     description:
       "Editor-only label (e.g. a theme, adoration etc). {tags: …} (comma-joined) are all made into a list. Highlighted in the editor; NOT rendered in the song view.",
     hosannaSpecific: true,
-    example: "{tag: adoração}",
+    example: "{tags: adoração, lenta}",
   },
   {
     name: "arranger",
