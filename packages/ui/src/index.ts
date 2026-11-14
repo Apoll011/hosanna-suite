@@ -20,10 +20,7 @@ export {
   type AppSwitcherLabels,
   type AppSwitcherProps,
 } from "./AppSwitcher";
-export {
-  SuiteAppIcon,
-  type SuiteAppIconProps,
-} from "./SuiteAppIcon";
+export { SuiteAppIcon, type SuiteAppIconProps } from "./SuiteAppIcon";
 export {
   loadSuiteApps,
   peekSuiteAppsCache,

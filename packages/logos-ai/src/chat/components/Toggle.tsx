@@ -17,11 +17,7 @@ const SparkIcon: React.FC<{ busy: boolean; gradient: boolean }> = ({ busy, gradi
   const star = "origin-center transform-fill";
   const fill = gradient ? `url(#${gid})` : "currentColor";
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px]"
-      aria-hidden
-    >
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" aria-hidden>
       {gradient ? (
         <defs>
           <linearGradient id={gid} x1="0%" y1="0%" x2="100%" y2="100%">

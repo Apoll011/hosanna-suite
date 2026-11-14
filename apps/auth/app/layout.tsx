@@ -40,15 +40,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      style={suiteAppAccentCssVars("auth") as CSSProperties}
-    >
+    <html lang="en" suppressHydrationWarning style={suiteAppAccentCssVars("auth") as CSSProperties}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{ __html: AUTH_THEME_BOOT_SCRIPT }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: AUTH_THEME_BOOT_SCRIPT }} />
       </head>
       <body className="min-h-dvh antialiased font-sans">
         <AppProviders>{children}</AppProviders>

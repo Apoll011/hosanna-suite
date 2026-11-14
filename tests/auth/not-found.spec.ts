@@ -14,4 +14,3 @@ test.describe("Auth 404", () => {
     await expect(page).toHaveURL(/\/login/);
   });
 });
-

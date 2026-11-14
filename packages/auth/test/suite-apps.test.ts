@@ -18,7 +18,10 @@ describe("listSuiteApps", () => {
     const apps = listSuiteApps(env);
     assert.ok(apps.length >= 6);
     const orders = apps.map((a) => a.sortOrder);
-    assert.deepEqual(orders, [...orders].sort((a, b) => a - b));
+    assert.deepEqual(
+      orders,
+      [...orders].sort((a, b) => a - b),
+    );
 
     const auth = apps.find((a) => a.id === "auth");
     const music = apps.find((a) => a.id === "music");

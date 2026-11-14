@@ -20,12 +20,12 @@ flowchart LR
   Store --> Meta["user.metadata"]
 ```
 
-| Concern | Where it lives | Persisted how |
-| --- | --- | --- |
-| Suite product catalog | `@hosanna/auth` `SUITE_APP_REGISTRY` + `GET /api/suite/apps` | Server registry; clients SWR-cache the DTO |
-| Home + App Switcher + AccountMenu | Auth chrome + `@hosanna/ui` | Session-gated catalog fetch |
-| Theme + language | Core personal settings | `user.metadata` + per-origin `localStorage` + theme cookie |
-| App-only prefs (e.g. Studio view mode) | Registered `apps.<id>` scopes | Same blob; unknown scopes always preserved |
+| Concern                                | Where it lives                                               | Persisted how                                              |
+| -------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
+| Suite product catalog                  | `@hosanna/auth` `SUITE_APP_REGISTRY` + `GET /api/suite/apps` | Server registry; clients SWR-cache the DTO                 |
+| Home + App Switcher + AccountMenu      | Auth chrome + `@hosanna/ui`                                  | Session-gated catalog fetch                                |
+| Theme + language                       | Core personal settings                                       | `user.metadata` + per-origin `localStorage` + theme cookie |
+| App-only prefs (e.g. Studio view mode) | Registered `apps.<id>` scopes                                | Same blob; unknown scopes always preserved                 |
 
 ---
 
@@ -86,9 +86,9 @@ Package: `packages/auth/src/personal-settings/`.
 
 One JSON blob is stored in:
 
-1. **Better Auth `user.metadata`** (stringified JSON) — cross-origin source of truth  
-2. **`localStorage["personal-settings"]`** — per-origin cache for instant paint and offline edits  
-3. **Cookie `hosanna_color_scheme`** — theme only, shared on `.hosanna.live` for first paint across apps  
+1. **Better Auth `user.metadata`** (stringified JSON) — cross-origin source of truth
+2. **`localStorage["personal-settings"]`** — per-origin cache for instant paint and offline edits
+3. **Cookie `hosanna_color_scheme`** — theme only, shared on `.hosanna.live` for first paint across apps
 
 Host apps call `configurePersonalSettings({ updateUserMetadata, cachedUserKey? })` once at boot (Auth providers, Studio `usePersonalSettings`). Writes debounce (~300ms) into metadata and keep the cached session user warm when `cachedUserKey` is set.
 
@@ -100,7 +100,7 @@ Only cross-app prefs live at the root:
 {
   "theme": "dark",
   "language": "en",
-  "apps": { }
+  "apps": {}
 }
 ```
 
@@ -151,15 +151,15 @@ export const planningSettings = createAppSettingsAccessor(myScope);
 
 **API surface** (`@hosanna/auth`):
 
-| API | Role |
-| --- | --- |
-| `defineAppSettingsScope` | Typed definition (defaults + optional migration) |
-| `registerAppSettingsScope` | Idempotent register; re-runs flat→nested migration |
-| `getAppSettings` / `updateAppSetting(s)` | Read/write with cache + debounced metadata sync |
-| `updateAppSettingsSafe` | Merge remote `apps` before write |
-| `subscribeAppSettings` | Scope-filtered listener for React `useSyncExternalStore` |
-| `createAppSettingsAccessor` | Stable `{ get, set, setKey, subscribe }` bundle |
-| `mergeAppSettingsMaps` / `mergePersonalSettingsPreservingApps` | Used internally; **unknown scopes are always kept** |
+| API                                                            | Role                                                     |
+| -------------------------------------------------------------- | -------------------------------------------------------- |
+| `defineAppSettingsScope`                                       | Typed definition (defaults + optional migration)         |
+| `registerAppSettingsScope`                                     | Idempotent register; re-runs flat→nested migration       |
+| `getAppSettings` / `updateAppSetting(s)`                       | Read/write with cache + debounced metadata sync          |
+| `updateAppSettingsSafe`                                        | Merge remote `apps` before write                         |
+| `subscribeAppSettings`                                         | Scope-filtered listener for React `useSyncExternalStore` |
+| `createAppSettingsAccessor`                                    | Stable `{ get, set, setKey, subscribe }` bundle          |
+| `mergeAppSettingsMaps` / `mergePersonalSettingsPreservingApps` | Used internally; **unknown scopes are always kept**      |
 
 **Invariant:** registration is for defaults, types, and migration — **not** permission to keep data. Auth never registers `studio`, but every Auth theme write must still preserve `apps.studio` when merging metadata.
 
@@ -209,17 +209,17 @@ Example stored blob after Studio has run:
 
 ## 6. Key files
 
-| Area | Path |
-| --- | --- |
-| Suite registry | `packages/auth/src/suite/apps.ts` |
-| Catalog API | `apps/auth/app/api/suite/apps/route.ts` |
-| Home UI | `apps/auth` home shell / pages |
-| App Switcher / AccountMenu / icons | `packages/ui` |
-| Personal settings store | `packages/auth/src/personal-settings/store.ts` |
-| Scope registry | `packages/auth/src/personal-settings/scopes.ts` |
-| Theme boot / transitions | `packages/auth/src/personal-settings/theme.ts` |
-| Studio scope | `apps/studio/src/lib/studioSettings.ts` |
-| Auth configure host | `apps/auth/components/providers.tsx` |
-| Studio configure host | `apps/studio/src/hooks/usePersonalSettings.tsx` |
+| Area                               | Path                                            |
+| ---------------------------------- | ----------------------------------------------- |
+| Suite registry                     | `packages/auth/src/suite/apps.ts`               |
+| Catalog API                        | `apps/auth/app/api/suite/apps/route.ts`         |
+| Home UI                            | `apps/auth` home shell / pages                  |
+| App Switcher / AccountMenu / icons | `packages/ui`                                   |
+| Personal settings store            | `packages/auth/src/personal-settings/store.ts`  |
+| Scope registry                     | `packages/auth/src/personal-settings/scopes.ts` |
+| Theme boot / transitions           | `packages/auth/src/personal-settings/theme.ts`  |
+| Studio scope                       | `apps/studio/src/lib/studioSettings.ts`         |
+| Auth configure host                | `apps/auth/components/providers.tsx`            |
+| Studio configure host              | `apps/studio/src/hooks/usePersonalSettings.tsx` |
 
 Product-level intent for home + switcher also appears in [FUTURE_DIRECTION.md](../FUTURE_DIRECTION.md) §4.1.

@@ -228,7 +228,11 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
               </button>
 
               {orgOpen && canSwitchOrg ? (
-                <div className="mt-1 space-y-0.5 rounded-xl bg-m3-sidebar/50 p-1" role="group" aria-label={switchOrgLabel}>
+                <div
+                  className="mt-1 space-y-0.5 rounded-xl bg-m3-sidebar/50 p-1"
+                  role="group"
+                  aria-label={switchOrgLabel}
+                >
                   {organizations.map((org) => {
                     const active = org.id === organization?.id;
                     return (
@@ -240,7 +244,9 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
                         disabled={Boolean(switchingId)}
                         className={cn(
                           "flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left text-sm transition-colors",
-                          active ? "bg-m3-primary/10 text-m3-primary" : "hover:bg-m3-hover text-m3-text",
+                          active
+                            ? "bg-m3-primary/10 text-m3-primary"
+                            : "hover:bg-m3-hover text-m3-text",
                         )}
                         onClick={() => void onSelectOrg(org)}
                       >

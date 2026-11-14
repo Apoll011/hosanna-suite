@@ -4,15 +4,15 @@ What to configure and verify after the architecture fixes in this folder. Treat 
 
 ## Surface → host map
 
-| Surface      | Repo               | Typical host                                            | Notes                                   |
-| ------------ | ------------------ | ------------------------------------------------------- | --------------------------------------- |
-| API          | `Hosanna-server`   | **Vercel** (`api.hosanna.live`)                         | Fluid / serverless Express              |
-| Studio       | `Hosana-dashboard` | **Vercel** and/or **Cloudflare Workers** assets         | SPA; `wrangler.jsonc` + `vercel.json`   |
-| Marketing    | `hosanna-saas`     | **Vercel** (`hosanna.live`)                             | Static + prerender                      |
-| Blog         | `hosanna-blog`     | **Cloudflare Workers** (preferred) or Netlify           | `wrangler.jsonc` / `netlify.toml`       |
-| DB / storage | —                  | **Supabase**                                            | Postgres pooler + `avatars` bucket      |
-| Push / live  | —                  | **Firebase**                                            | FCM + Firestore rules                   |
-| Auth extras  | —                  | **Google OAuth**, **Turnstile**, **Stripe**, **Resend** |                                         |
+| Surface      | Repo               | Typical host                                            | Notes                                 |
+| ------------ | ------------------ | ------------------------------------------------------- | ------------------------------------- |
+| API          | `Hosanna-server`   | **Vercel** (`api.hosanna.live`)                         | Fluid / serverless Express            |
+| Studio       | `Hosana-dashboard` | **Vercel** and/or **Cloudflare Workers** assets         | SPA; `wrangler.jsonc` + `vercel.json` |
+| Marketing    | `hosanna-saas`     | **Vercel** (`hosanna.live`)                             | Static + prerender                    |
+| Blog         | `hosanna-blog`     | **Cloudflare Workers** (preferred) or Netlify           | `wrangler.jsonc` / `netlify.toml`     |
+| DB / storage | —                  | **Supabase**                                            | Postgres pooler + `avatars` bucket    |
+| Push / live  | —                  | **Firebase**                                            | FCM + Firestore rules                 |
+| Auth extras  | —                  | **Google OAuth**, **Turnstile**, **Stripe**, **Resend** |                                       |
 
 ---
 

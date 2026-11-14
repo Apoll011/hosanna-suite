@@ -59,4 +59,3 @@ test.describe("SaaS contact form", () => {
     await expect(page.getByLabel(/^Email$/i)).toHaveValue("test@example.com");
   });
 });
-

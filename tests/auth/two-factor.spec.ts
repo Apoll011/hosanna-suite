@@ -17,4 +17,3 @@ test.describe("Auth two-factor", () => {
     await expect(page.getByLabel(/Backup code/i)).toBeVisible();
   });
 });
-

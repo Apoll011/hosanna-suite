@@ -10,7 +10,9 @@ test.describe("Auth new organization (/new)", () => {
 
   test("links back to sign in", async ({ page }) => {
     await page.goto("/new");
-    await expect(page.getByRole("link", { name: /Already have an account\? Sign in/i })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Already have an account\? Sign in/i }),
+    ).toBeVisible();
   });
 
   test("continue stays disabled until workspace fields are valid", async ({ page }) => {
@@ -24,4 +26,3 @@ test.describe("Auth new organization (/new)", () => {
     ).toBeVisible({ timeout: 20_000 });
   });
 });
-

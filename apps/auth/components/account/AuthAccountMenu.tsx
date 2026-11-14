@@ -17,7 +17,10 @@ import { useRouter } from "next/navigation";
 export function AuthAccountMenu({ className }: { className?: string }) {
   const { t } = useI18n();
   const router = useRouter();
-  const { user, clear } = useAuthUser({ requireAuth: false, loginRedirect: "/login?redirect=/home" });
+  const { user, clear } = useAuthUser({
+    requireAuth: false,
+    loginRedirect: "/login?redirect=/home",
+  });
   const { organization, organizations, switchOrganization } = useActiveOrganization();
 
   const logout = async () => {

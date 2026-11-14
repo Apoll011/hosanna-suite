@@ -11,14 +11,7 @@ import {
   Spinner,
   SuiteAppIcon,
 } from "@hosanna/ui";
-import {
-  ChevronRight,
-  LayoutGrid,
-  List,
-  Plus,
-  Search,
-  Star,
-} from "lucide-react";
+import { ChevronRight, LayoutGrid, List, Plus, Search, Star } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -54,10 +47,7 @@ export function HomePage() {
     loginRedirect: "/login?redirect=/home",
   });
   const { organization, organizations, isLoading: orgLoading } = useActiveOrganization();
-  const translate = useCallback(
-    (key: string) => t(key as Parameters<typeof t>[0]),
-    [t],
-  );
+  const translate = useCallback((key: string) => t(key as Parameters<typeof t>[0]), [t]);
 
   const [apps, setApps] = useState<AppSwitcherApp[]>(() => {
     const cached = peekSuiteAppsCache(APPS_URL);
@@ -240,9 +230,7 @@ export function HomePage() {
                       aria-label={fav ? t("home.unfavorite") : t("home.favorite")}
                       onClick={() => toggleFavorite(app.id)}
                     >
-                      <Star
-                        className={`h-4 w-4 ${fav ? "fill-amber-400 text-amber-500" : ""}`}
-                      />
+                      <Star className={`h-4 w-4 ${fav ? "fill-amber-400 text-amber-500" : ""}`} />
                     </button>
 
                     <button
@@ -299,9 +287,7 @@ export function HomePage() {
             const tile = (
               <div
                 className={`flex w-28 flex-col items-center gap-2.5 rounded-3xl border border-m3-border/50 bg-m3-card px-3 py-3.5 shadow-[0_8px_24px_-16px_rgb(0_0_0_/0.35)] transition-[transform,border-color] ${
-                  openable
-                    ? "hover:-translate-y-0.5 hover:border-m3-primary/30"
-                    : "opacity-60"
+                  openable ? "hover:-translate-y-0.5 hover:border-m3-primary/30" : "opacity-60"
                 }`}
               >
                 <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="sm" />

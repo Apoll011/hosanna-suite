@@ -29,12 +29,7 @@ export {
 } from "./authorization/appRoles.js";
 export type { AppRoleId } from "./authorization/appRoles.js";
 
-export {
-  SUITE_APP_REGISTRY,
-  getSuiteApp,
-  getSuiteAppUrl,
-  listSuiteApps,
-} from "./suite/apps.js";
+export { SUITE_APP_REGISTRY, getSuiteApp, getSuiteAppUrl, listSuiteApps } from "./suite/apps.js";
 export type {
   SuiteAppDefinition,
   SuiteAppDto,

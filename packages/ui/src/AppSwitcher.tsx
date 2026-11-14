@@ -220,9 +220,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
                       <button
                         type="button"
                         disabled={!openable}
-                        title={
-                          openable ? app.name : `${app.name} — ${comingSoonLabel}`
-                        }
+                        title={openable ? app.name : `${app.name} — ${comingSoonLabel}`}
                         onClick={() => onSelect(app)}
                         className={cn(
                           "flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-3 text-center transition-colors",

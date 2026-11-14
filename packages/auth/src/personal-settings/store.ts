@@ -168,7 +168,12 @@ function loadSettings(): PersonalSettings {
       migrated = true;
     }
     const legacyLang = localStorage.getItem(LEGACY_KEYS.authLanguage);
-    if (legacyLang === "pt" || legacyLang === "en" || legacyLang === "es" || legacyLang === "auto") {
+    if (
+      legacyLang === "pt" ||
+      legacyLang === "en" ||
+      legacyLang === "es" ||
+      legacyLang === "auto"
+    ) {
       settings.language = legacyLang;
       migrated = true;
     }
@@ -205,7 +210,9 @@ async function syncMetadataToServer(settingsToSave: PersonalSettings) {
   }
 
   if (!host?.updateUserMetadata) {
-    console.warn("[personal-settings] configurePersonalSettings() was not called; skip metadata sync");
+    console.warn(
+      "[personal-settings] configurePersonalSettings() was not called; skip metadata sync",
+    );
     return;
   }
 
@@ -238,7 +245,10 @@ function persistSettings(newSettings: PersonalSettings, opts?: { sync?: boolean 
   }, 300);
 }
 
-function setState(updater: (prev: PersonalSettings) => PersonalSettings, opts?: { sync?: boolean }) {
+function setState(
+  updater: (prev: PersonalSettings) => PersonalSettings,
+  opts?: { sync?: boolean },
+) {
   persistSettings(updater(state), opts);
 }
 

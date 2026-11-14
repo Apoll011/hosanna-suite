@@ -49,7 +49,9 @@ test.describe("Studio demo navigation", () => {
   test("user menu opens", async ({ page }) => {
     await page.locator('[data-tour="nav-user-menu"]').click();
     await expect(
-      page.getByText(/Settings|Definições|Configuración|Account|Conta|Cuenta|Analytics|Análises/i).first(),
+      page
+        .getByText(/Settings|Definições|Configuración|Account|Conta|Cuenta|Analytics|Análises/i)
+        .first(),
     ).toBeVisible();
   });
 });

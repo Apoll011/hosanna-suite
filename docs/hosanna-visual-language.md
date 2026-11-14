@@ -6,12 +6,12 @@ This is not a new brand brief. It records what already ships. Prefer tokens and 
 
 **Source of truth**
 
-| Layer             | Where                                                                                                 |
-| ----------------- | ----------------------------------------------------------------------------------------------------- |
-| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                  |
+| Layer             | Where                                                                                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                |
 | Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `SuiteAppIcon`, …) |
-| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls           |
-| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Logos → App Switcher → AccountMenu     |
+| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                         |
+| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Logos → App Switcher → AccountMenu                                                     |
 
 When Studio and Auth disagree, **Studio tokens win** and Auth should catch up — except Auth has no lyric/score surface, so it may omit `--font-lyric`.
 
@@ -250,15 +250,15 @@ Theme and language persist through `@hosanna/auth` personal settings (cookie + m
 
 Motion explains size or presence. No bounce, flash, or blocking the next click.
 
-| Pattern                                                         | Duration              | Notes                                                                                                                                      |
-| --------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Panel open/close (editor panes, library beside order, sidebars) | **300ms** ease-in-out | Keep mounted; animate width/flex + opacity. Closed = width 0, opacity 0, no pointer events. Avoid `display: none` / `hidden` mid-animation |
-| Mode crossfade (Plan ↔ Read)                                    | ~300ms                | Both views mounted; ~4px travel                                                                                                            |
-| Expanding row body/notes                                        | ~300ms                | Animate height; keep content mounted                                                                                                       |
-| Menu enter                                                      | **180ms**             | `.hosanna-enter`                                                                                                                           |
-| Dialog / toast                                                  | **200ms**             | Scrim fade + panel scale 0.98                                                                                                              |
-| Button / color hover                                            | ~150ms                | Color only                                                                                                                                 |
-| Theme flip (menu toggle or cross-app hydrate)                   | ~220ms View Transition (root crossfade); CSS fallback on `html`/`body` only | `runThemeTransition` — never universal `*` transitions (laggy / fights VT) |
+| Pattern                                                         | Duration                                                                    | Notes                                                                                                                                      |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Panel open/close (editor panes, library beside order, sidebars) | **300ms** ease-in-out                                                       | Keep mounted; animate width/flex + opacity. Closed = width 0, opacity 0, no pointer events. Avoid `display: none` / `hidden` mid-animation |
+| Mode crossfade (Plan ↔ Read)                                    | ~300ms                                                                      | Both views mounted; ~4px travel                                                                                                            |
+| Expanding row body/notes                                        | ~300ms                                                                      | Animate height; keep content mounted                                                                                                       |
+| Menu enter                                                      | **180ms**                                                                   | `.hosanna-enter`                                                                                                                           |
+| Dialog / toast                                                  | **200ms**                                                                   | Scrim fade + panel scale 0.98                                                                                                              |
+| Button / color hover                                            | ~150ms                                                                      | Color only                                                                                                                                 |
+| Theme flip (menu toggle or cross-app hydrate)                   | ~220ms View Transition (root crossfade); CSS fallback on `html`/`body` only | `runThemeTransition` — never universal `*` transitions (laggy / fights VT)                                                                 |
 
 On phone, a covering panel may **translate** instead of changing width — same duration and easing, still mounted through close.
 

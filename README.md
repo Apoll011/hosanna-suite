@@ -2,20 +2,20 @@
 
 pnpm + Turborepo monorepo for the Hosanna web platform:
 
-| Path                | Package             | Role                                                                   |
-| ------------------- | ------------------- | ---------------------------------------------------------------------- |
-| `apps/saas`         | `@hosanna/saas`     | Marketing site ([hosanna.live](https://hosanna.live))                  |
-| `apps/studio`       | `@hosanna/studio`   | Studio PWA ([studio.hosanna.live](https://studio.hosanna.live))        |
-| `apps/auth`         | `@hosanna/auth-app` | Auth UI + Better Auth ([auth.hosanna.live](https://auth.hosanna.live)) |
-| `apps/api`          | `@hosanna/api`      | REST + MCP API ([api.hosanna.live](https://api.hosanna.live))          |
-| `packages/chordpro` | `@hosanna/chordpro` | ChordPro parser / renderer / editor                                    |
-| `packages/db`       | `@hosanna/db`       | Prisma schema, migrations, client                                      |
-| `packages/auth`     | `@hosanna/auth`     | Shared Better Auth factory, RBAC, auth client helpers                  |
-| `packages/types`    | `@hosanna/types`    | OpenAPI contract + generated TS types                                  |
-| `packages/i18n`     | `@hosanna/i18n`     | Shared UI language model                                               |
-| `packages/ui`       | `@hosanna/ui`       | Shared `cn()` + provider icons                                         |
-| _(per-app `public/`)_| —                  | Favicons / apple-touch / OG live in each app (`auth`, `studio`, `saas`) |
-| `packages/config`   | `@hosanna/config`   | Shared tsconfig + Prettier                                             |
+| Path                  | Package             | Role                                                                    |
+| --------------------- | ------------------- | ----------------------------------------------------------------------- |
+| `apps/saas`           | `@hosanna/saas`     | Marketing site ([hosanna.live](https://hosanna.live))                   |
+| `apps/studio`         | `@hosanna/studio`   | Studio PWA ([studio.hosanna.live](https://studio.hosanna.live))         |
+| `apps/auth`           | `@hosanna/auth-app` | Auth UI + Better Auth ([auth.hosanna.live](https://auth.hosanna.live))  |
+| `apps/api`            | `@hosanna/api`      | REST + MCP API ([api.hosanna.live](https://api.hosanna.live))           |
+| `packages/chordpro`   | `@hosanna/chordpro` | ChordPro parser / renderer / editor                                     |
+| `packages/db`         | `@hosanna/db`       | Prisma schema, migrations, client                                       |
+| `packages/auth`       | `@hosanna/auth`     | Shared Better Auth factory, RBAC, auth client helpers                   |
+| `packages/types`      | `@hosanna/types`    | OpenAPI contract + generated TS types                                   |
+| `packages/i18n`       | `@hosanna/i18n`     | Shared UI language model                                                |
+| `packages/ui`         | `@hosanna/ui`       | Shared `cn()` + provider icons                                          |
+| _(per-app `public/`)_ | —                   | Favicons / apple-touch / OG live in each app (`auth`, `studio`, `saas`) |
+| `packages/config`     | `@hosanna/config`   | Shared tsconfig + Prettier                                              |
 
 **Not in this repo:** the Flutter musician app and the Astro blog — those stay separate.
 

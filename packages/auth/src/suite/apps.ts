@@ -11,7 +11,8 @@ import type { SuiteAppId } from "../authorization/domains.js";
 export type SuiteAppStatus = "live" | "coming_soon";
 
 /** Which product origin hosts a relative `logoUrl`. */
-export type SuiteAppLogoHost = "auth" | "studio" | "planning" | "finance" | "presenter" | "community";
+export type SuiteAppLogoHost =
+  "auth" | "studio" | "planning" | "finance" | "presenter" | "community";
 
 /** Env / runtime inputs used to resolve absolute home URLs. */
 export type SuiteAppUrlEnv = {

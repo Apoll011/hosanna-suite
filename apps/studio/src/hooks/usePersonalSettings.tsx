@@ -57,11 +57,11 @@ function ensureConfigured() {
   configurePersonalSettings({
     cachedUserKey: CACHED_USER_KEY,
     updateUserMetadata: async (metadataJson) => {
-      await (authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>)(
-        {
-          metadata: metadataJson,
-        },
-      );
+      await (
+        authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>
+      )({
+        metadata: metadataJson,
+      });
     },
   });
 }
