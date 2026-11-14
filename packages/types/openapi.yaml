@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Hosanna API
   version: 2.22.2
-  description: >
+  description: |-
     Production REST API for Hosanna Studio and the Flutter musician app.
     Authentication is Better Auth (session cookie or Bearer). `/api/auth/*` is owned by Better Auth
     and is not expanded here. MCP lives at `/mcp` (outside this document).
@@ -48,15 +48,23 @@ paths:
                 properties:
                   status:
                     type: string
+                    example: ok
                   timestamp:
                     type: string
+                    format: date-time
       tags:
         - Health
-      security: []
+      description: Returns API service health, database connectivity status, and server timestamp.
       operationId: getHealth
+      security: []
   /billing/pricing:
     get:
+      tags:
+        - Billing
       summary: Public plan display prices
+      operationId: getBillingPricing
+      security: []
+      description: Returns public localized subscription pricing tiers from Global Config.
       responses:
         "200":
           description: OK
@@ -64,13 +72,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PlanPricing"
-      tags:
-        - Billing
-      security: []
-      operationId: getBillingPricing
   /billing/entitlement:
     get:
+      tags:
+        - Billing
       summary: Org subscription entitlement
+      operationId: getBillingEntitlement
+      security: &a10
+        - cookieAuth: []
+        - bearerAuth: []
+      description: Check active subscription entitlements and feature gates for the authenticated organization.
       responses:
         "200":
           description: OK
@@ -81,30 +92,15 @@ paths:
                 properties:
                   entitled:
                     type: boolean
-      tags:
-        - Billing
-      security: &a2
-        - cookieAuth: []
-        - bearerAuth: []
-      operationId: getBillingEntitlement
   /cron/agenda-reminders:
     get:
-      summary: "Cron: agenda-reminders"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
       tags:
         - Cron
+      summary: "Cron: agenda-reminders"
+      operationId: getCronAgendaReminders
       security: &a1
         - cronSecret: []
-      operationId: getCronagendaReminders
-    post:
-      summary: "Cron: agenda-reminders"
+      description: Dispatch morning notifications for musicians with upcoming scheduled services.
       responses:
         "200":
           description: OK
@@ -113,10 +109,21 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
+    post:
       tags:
         - Cron
+      summary: "Cron: agenda-reminders"
+      operationId: postCronAgendaReminders
       security: *a1
-      operationId: postCronagendaReminders
+      description: Dispatch morning notifications for musicians with upcoming scheduled services.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
   /cron/purge-trash:
     get:
       summary: "Cron: purge-trash"
@@ -127,11 +134,16 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                properties:
+                  purged:
+                    type: integer
+                    description: Count of purged items
       tags:
         - Cron
-      security: *a1
-      operationId: getCronpurgeTrash
+      description: Trigger background job to purge soft-deleted items whose purgeAt date has expired.
+      operationId: getCronPurgeTrash
+      security: &a2
+        - cronSecret: []
     post:
       summary: "Cron: purge-trash"
       responses:
@@ -141,40 +153,49 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                properties:
+                  purged:
+                    type: integer
+                    description: Count of purged items
       tags:
         - Cron
-      security: *a1
-      operationId: postCronpurgeTrash
+      description: Trigger background job to purge soft-deleted items whose purgeAt date has expired.
+      operationId: postCronPurgeTrash
+      security: *a2
   /songs/import/jobs:
     post:
       summary: Start a Logos AI song-import job (photo/gallery/PDF)
       responses:
         "202":
-          description: Job accepted (queued/running); poll GET for progress
+          description: Job created and queued
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SongImportJob"
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                type: object
+                required:
+                  - id
+                  - status
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum:
+                      - queued
       tags:
         - Songs
-      security: *a2
+      description: Accepts a sheet-music image (and optional extra page screenshots for PDFs). Returns 202 with a job id immediately; poll GET /songs/import/jobs/{id} for real step progress. Cancel with DELETE. Does not persist a song — the client reviews the draft then creates locally.
       operationId: createSongImportJob
+      security: &a3
+        - cookieAuth: []
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - sourceType
-                - imageBase64
               properties:
                 sourceType:
                   type: string
@@ -184,27 +205,33 @@ paths:
                     - pdf
                 imageBase64:
                   type: string
-                  description: Photo/gallery bytes, or PDF page-1 screenshot (base64)
+                  minLength: 1
                 imageMimeType:
-                  type: string
                   default: image/jpeg
+                  type: string
+                  minLength: 1
                 imagesBase64:
-                  type: array
                   maxItems: 4
+                  type: array
                   items:
                     type: string
-                  description: Extra page screenshots (pages 2+)
+                    minLength: 1
                 imageMimeTypes:
-                  type: array
                   maxItems: 4
+                  type: array
                   items:
                     type: string
+                    minLength: 1
                 pdfBase64:
                   type: string
-                  description: Required when sourceType is pdf
+                  minLength: 1
                 fileName:
                   type: string
-      description: Accepts a sheet-music image (and optional extra page screenshots for PDFs). Returns 202 with a job id immediately; poll GET /songs/import/jobs/{id} for real step progress. Cancel with DELETE. Does not persist a song — the client reviews the draft then creates locally.
+                  maxLength: 255
+              required:
+                - sourceType
+                - imageBase64
+              additionalProperties: false
   /songs/import/jobs/{id}:
     get:
       summary: Poll a Logos AI song-import job
@@ -217,8 +244,9 @@ paths:
                 $ref: "#/components/schemas/SongImportJob"
       tags:
         - Songs
-      security: *a2
+      description: Poll import job status, progress steps, and extracted ChordPro content.
       operationId: getSongImportJob
+      security: *a3
       parameters:
         - name: id
           in: path
@@ -237,8 +265,9 @@ paths:
                 $ref: "#/components/schemas/SongImportJob"
       tags:
         - Songs
-      security: *a2
+      description: Cancel an active song import pipeline job.
       operationId: cancelSongImportJob
+      security: *a3
       parameters:
         - name: id
           in: path
@@ -271,35 +300,51 @@ paths:
                     type: integer
       tags:
         - Songs
-      security: *a2
+      description: Paginated song library query with optional text search, tag filtering, folder scoping, and sort order.
       operationId: listSongs
+      security: *a3
       parameters:
         - name: page
           in: query
+          required: false
           schema:
-            type: integer
             default: 1
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
         - name: limit
           in: query
+          required: false
           schema:
-            type: integer
             default: 50
+            type: integer
+            minimum: 1
+            maximum: 9007199254740991
         - name: search
           in: query
+          required: false
           schema:
             type: string
         - name: folder
           in: query
+          required: false
           schema:
             type: string
-          description: UUID or "root"
+        - name: key
+          in: query
+          required: false
+          schema:
+            type: string
         - name: tag
           in: query
+          required: false
           schema:
             type: string
         - name: sortBy
           in: query
+          required: false
           schema:
+            default: title
             type: string
             enum:
               - title
@@ -308,11 +353,18 @@ paths:
               - updatedAt
         - name: sortOrder
           in: query
+          required: false
           schema:
+            default: asc
             type: string
             enum:
               - asc
               - desc
+        - name: searchFields
+          in: query
+          required: false
+          schema:
+            type: string
     post:
       summary: Create song
       responses:
@@ -326,36 +378,43 @@ paths:
           description: Unauthorized
       tags:
         - Songs
-      security: *a2
+      description: Create a new song document with ChordPro content and folder assignment.
       operationId: createSong
+      security: *a3
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - title
               properties:
                 title:
                   type: string
+                  minLength: 1
                 artist:
                   type: string
                 content:
                   type: string
                 folderId:
-                  type: string
-                  format: uuid
-                  nullable: true
+                  anyOf:
+                    - type: string
+                      format: uuid
+                      pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                    - type: "null"
                 song_number:
-                  type: integer
-                  nullable: true
+                  anyOf:
+                    - type: number
+                      exclusiveMinimum: 0
+                    - type: "null"
                 path:
                   type: string
                 tags:
                   type: array
                   items:
                     type: string
+              required:
+                - title
+              additionalProperties: false
   /songs/batch:
     post:
       summary: Create songs batch
@@ -370,8 +429,9 @@ paths:
                   $ref: "#/components/schemas/Song"
       tags:
         - Songs
-      security: *a2
+      description: Batch import or insert multiple song records in a single transactional request.
       operationId: createSongsBatch
+      security: *a3
       requestBody:
         required: true
         content:
@@ -404,34 +464,39 @@ paths:
                     type: integer
       tags:
         - Songs
-      security: *a2
+      description: Apply tag modifications (append, replace, or remove) across multiple song IDs.
       operationId: batchUpdateSongTags
+      security: *a3
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - songIds
-                - tags
               properties:
                 songIds:
+                  minItems: 1
                   type: array
                   items:
                     type: string
                     format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
                 tags:
+                  minItems: 1
                   type: array
                   items:
                     type: string
                 mode:
+                  default: append
                   type: string
                   enum:
                     - append
                     - replace
                     - remove
-                  default: append
+              required:
+                - songIds
+                - tags
+              additionalProperties: false
   /songs/{id}:
     get:
       summary: Get song
@@ -444,15 +509,17 @@ paths:
                 $ref: "#/components/schemas/Song"
       tags:
         - Songs
-      security: *a2
+      description: Retrieve a single song by its UUID.
       operationId: getSong
-      parameters:
+      security: *a3
+      parameters: &a4
         - name: id
           in: path
           required: true
           schema:
             type: string
             format: uuid
+            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
     put:
       summary: Update song
       responses:
@@ -463,49 +530,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/Song"
         "409":
-          description: Conflict
+          description: Conflict - song was modified concurrently
       tags:
         - Songs
-      security: *a2
+      description: Update song metadata, title, or ChordPro content. Enforces optimistic concurrency via updatedAt.
       operationId: updateSong
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a4
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - updatedAt
               properties:
                 updatedAt:
                   type: string
                   format: date-time
                 title:
                   type: string
+                  minLength: 1
                 artist:
                   type: string
                 content:
                   type: string
                 folderId:
-                  type: string
-                  format: uuid
-                  nullable: true
+                  anyOf:
+                    - type: string
+                      format: uuid
+                      pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                    - type: "null"
                 song_number:
-                  type: integer
-                  nullable: true
+                  anyOf:
+                    - type: number
+                      exclusiveMinimum: 0
+                    - type: "null"
                 path:
                   type: string
                 tags:
                   type: array
                   items:
                     type: string
+              required:
+                - updatedAt
+              additionalProperties: false
     delete:
       summary: Delete song
       responses:
@@ -513,15 +581,10 @@ paths:
           description: Deleted
       tags:
         - Songs
-      security: *a2
+      description: Soft-delete a song into trash.
       operationId: deleteSong
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a4
   /songs/{id}/download:
     get:
       summary: Download song ChordPro
@@ -534,15 +597,10 @@ paths:
                 type: string
       tags:
         - Songs
-      security: *a2
+      description: Download raw ChordPro text representation as a file attachment.
       operationId: downloadSong
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a4
   /songs/{id}/move:
     put:
       summary: Move song
@@ -555,34 +613,32 @@ paths:
                 $ref: "#/components/schemas/Song"
       tags:
         - Songs
-      security: *a2
+      description: Move song into another folder or to library root (null folderId).
       operationId: moveSong
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a4
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - updatedAt
-                - folderId
               properties:
                 updatedAt:
                   type: string
                   format: date-time
                 folderId:
-                  type: string
-                  format: uuid
-                  nullable: true
+                  anyOf:
+                    - type: string
+                      format: uuid
+                      pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                    - type: "null"
                 newPath:
                   type: string
+              required:
+                - updatedAt
+                - folderId
+              additionalProperties: false
   /folders:
     get:
       summary: List folders
@@ -597,8 +653,9 @@ paths:
                   $ref: "#/components/schemas/Folder"
       tags:
         - Folders
-      security: *a2
+      description: Retrieve complete folder hierarchy with song and subfolder counts.
       operationId: listFolders
+      security: *a3
     post:
       summary: Create folder
       responses:
@@ -610,27 +667,32 @@ paths:
                 $ref: "#/components/schemas/Folder"
       tags:
         - Folders
-      security: *a2
+      description: Create a new folder in library root or as a child of parentId.
       operationId: createFolder
+      security: *a3
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - name
               properties:
                 name:
                   type: string
+                  minLength: 1
                 parentId:
-                  type: string
-                  format: uuid
-                  nullable: true
+                  anyOf:
+                    - type: string
+                      format: uuid
+                      pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                    - type: "null"
                 color:
                   type: string
                 icon:
                   type: string
+              required:
+                - name
+              additionalProperties: false
   /folders/flat:
     get:
       summary: List folders flat
@@ -645,8 +707,9 @@ paths:
                   $ref: "#/components/schemas/Folder"
       tags:
         - Folders
-      security: *a2
+      description: Retrieve a flat unnested list of all folders in the active organization.
       operationId: listFoldersFlat
+      security: *a3
   /folders/{id}:
     put:
       summary: Update folder
@@ -659,37 +722,44 @@ paths:
                 $ref: "#/components/schemas/Folder"
       tags:
         - Folders
-      security: *a2
+      description: Update folder name, color, icon, or parent location with concurrency check.
       operationId: updateFolder
-      parameters:
-        - name: id
+      security: *a3
+      parameters: &a6
+        - &a5
+          name: id
           in: path
           required: true
           schema:
             type: string
             format: uuid
+            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - updatedAt
               properties:
                 updatedAt:
                   type: string
                   format: date-time
                 name:
                   type: string
+                  minLength: 1
                 parentId:
-                  type: string
-                  format: uuid
-                  nullable: true
+                  anyOf:
+                    - type: string
+                      format: uuid
+                      pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                    - type: "null"
                 color:
                   type: string
                 icon:
                   type: string
+              required:
+                - updatedAt
+              additionalProperties: false
     delete:
       summary: Delete folder
       responses:
@@ -702,23 +772,20 @@ paths:
                 additionalProperties: true
       tags:
         - Folders
-      security: *a2
+      description: Delete folder according to the action query strategy.
       operationId: deleteFolder
+      security: *a3
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - *a5
         - name: action
           in: query
+          required: false
           schema:
+            default: move_to_root
             type: string
             enum:
               - move_to_root
               - delete_songs
-            default: move_to_root
   /folders/{id}/move-content-to-root:
     delete:
       summary: Delete folder moving content to root
@@ -736,15 +803,10 @@ paths:
                     type: integer
       tags:
         - Folders
-      security: *a2
+      description: Delete folder and move its songs and subfolders to organization root.
       operationId: deleteFolderMoveContentToRoot
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a6
   /folders/{id}/with-content:
     delete:
       summary: Delete folder with content
@@ -758,15 +820,10 @@ paths:
                 additionalProperties: true
       tags:
         - Folders
-      security: *a2
+      description: Cascade delete a folder and all contained songs and subfolders into trash.
       operationId: deleteFolderWithContent
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a6
   /services:
     get:
       summary: List services
@@ -781,8 +838,9 @@ paths:
                   $ref: "#/components/schemas/Service"
       tags:
         - Services
-      security: *a2
+      description: List scheduled services with optional archived status filter.
       operationId: listServices
+      security: *a3
       parameters:
         - name: archived
           in: query
@@ -800,8 +858,9 @@ paths:
                 $ref: "#/components/schemas/Service"
       tags:
         - Services
-      security: *a2
+      description: Create an order of service with service date and optional element sequence.
       operationId: createService
+      security: *a3
       requestBody:
         required: true
         content:
@@ -834,15 +893,17 @@ paths:
                 $ref: "#/components/schemas/Service"
       tags:
         - Services
-      security: *a2
+      description: Retrieve a service order and its ordered elements by UUID.
       operationId: getService
-      parameters:
+      security: *a3
+      parameters: &a7
         - name: id
           in: path
           required: true
           schema:
             type: string
             format: uuid
+            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
     put:
       summary: Update service
       responses:
@@ -854,31 +915,26 @@ paths:
                 $ref: "#/components/schemas/Service"
       tags:
         - Services
-      security: *a2
+      description: Update service details, notes, or archived status with concurrency check.
       operationId: updateService
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a7
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - updatedAt
               properties:
                 updatedAt:
                   type: string
                   format: date-time
                 name:
                   type: string
+                  minLength: 1
                 date:
                   type: string
+                  minLength: 1
                 notes:
                   type: string
                 archived:
@@ -886,7 +942,48 @@ paths:
                 elements:
                   type: array
                   items:
-                    $ref: "#/components/schemas/ServiceElement"
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      type:
+                        type: string
+                        enum:
+                          - welcome
+                          - scripture
+                          - message
+                          - announcement
+                          - custom
+                          - song
+                      title:
+                        type: string
+                        minLength: 1
+                      content:
+                        type: string
+                      position:
+                        type: integer
+                        minimum: 0
+                        maximum: 9007199254740991
+                      songId:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      notes:
+                        type: string
+                      passage:
+                        type: string
+                      duration:
+                        type: number
+                        minimum: 0
+                    required:
+                      - id
+                      - type
+                      - title
+                    additionalProperties: false
+              required:
+                - updatedAt
+              additionalProperties: false
     delete:
       summary: Delete service
       responses:
@@ -894,15 +991,10 @@ paths:
           description: Deleted
       tags:
         - Services
-      security: *a2
+      description: Soft-delete service into trash.
       operationId: deleteService
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a7
   /services/{id}/elements:
     put:
       summary: Replace service elements
@@ -915,15 +1007,10 @@ paths:
                 $ref: "#/components/schemas/Service"
       tags:
         - Services
-      security: *a2
+      description: Reorder or replace the full element sequence for a service.
       operationId: updateServiceElements
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a7
       requestBody:
         required: true
         content:
@@ -955,8 +1042,9 @@ paths:
                   $ref: "#/components/schemas/ServiceNote"
       tags:
         - ServiceNotes
-      security: *a2
+      description: List musician and team notes attached to a service or specific element.
       operationId: listServiceNotes
+      security: *a3
       parameters:
         - name: id
           in: path
@@ -988,8 +1076,9 @@ paths:
                 $ref: "#/components/schemas/ServiceNote"
       tags:
         - ServiceNotes
-      security: *a2
+      description: Attach a new collaborative note to a service or service element.
       operationId: createServiceNote
+      security: *a3
       parameters:
         - name: id
           in: path
@@ -1029,9 +1118,10 @@ paths:
                 $ref: "#/components/schemas/ServiceNote"
       tags:
         - ServiceNotes
-      security: *a2
+      description: Edit text or privacy of an existing service note.
       operationId: updateServiceNote
-      parameters:
+      security: *a3
+      parameters: &a8
         - name: id
           in: path
           required: true
@@ -1062,21 +1152,10 @@ paths:
           description: Deleted
       tags:
         - ServiceNotes
-      security: *a2
+      description: Delete a service note.
       operationId: deleteServiceNote
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: noteId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a8
   /annotation/services/{serviceId}/songs/{songId}/annotation:
     get:
       summary: Get song annotation
@@ -1091,8 +1170,9 @@ paths:
           description: Not found
       tags:
         - Annotations
-      security: *a2
+      description: Retrieve sheet music pencil/stroke drawing annotations for a song in a service.
       operationId: getAnnotation
+      security: *a3
       parameters:
         - name: serviceId
           in: path
@@ -1124,8 +1204,9 @@ paths:
                     type: integer
       tags:
         - Annotations
-      security: *a2
+      description: Save updated stroke annotation canvas data.
       operationId: putAnnotation
+      security: *a3
       parameters:
         - name: serviceId
           in: path
@@ -1160,8 +1241,9 @@ paths:
                 $ref: "#/components/schemas/PullResponse"
       tags:
         - Replication
-      security: *a2
+      description: Pull changes for a single collection since the supplied checkpoint.
       operationId: pullCollection
+      security: *a3
       parameters:
         - name: collection
           in: path
@@ -1188,8 +1270,9 @@ paths:
                   $ref: "#/components/schemas/PullResponse"
       tags:
         - Replication
-      security: *a2
+      description: Pull updates across multiple collections in a single round-trip.
       operationId: pullAllCollections
+      security: *a3
       requestBody:
         required: true
         content:
@@ -1221,8 +1304,9 @@ paths:
                 description: Conflict documents (empty if all accepted)
       tags:
         - Replication
-      security: *a2
+      description: Push local change rows to the server for replication merge.
       operationId: pushCollection
+      security: *a3
       parameters:
         - name: collection
           in: path
@@ -1269,8 +1353,9 @@ paths:
                       $ref: "#/components/schemas/Service"
       tags:
         - Trash
-      security: *a2
+      description: List soft-deleted songs, folders, and services pending purge.
       operationId: listTrash
+      security: *a3
   /trash/songs/{id}/restore:
     post:
       summary: Restore trashed song
@@ -1284,15 +1369,17 @@ paths:
                 additionalProperties: true
       tags:
         - Trash
-      security: *a2
+      description: Restore a soft-deleted song back to the active library.
       operationId: restoreTrashSong
-      parameters:
+      security: *a3
+      parameters: &a9
         - name: id
           in: path
           required: true
           schema:
             type: string
             format: uuid
+            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
   /trash/folders/{id}/restore:
     post:
       summary: Restore trashed folder
@@ -1306,15 +1393,10 @@ paths:
                 additionalProperties: true
       tags:
         - Trash
-      security: *a2
+      description: Restore a soft-deleted folder back to the active folder tree.
       operationId: restoreTrashFolder
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a9
   /trash/services/{id}/restore:
     post:
       summary: Restore trashed service
@@ -1328,18 +1410,18 @@ paths:
                 additionalProperties: true
       tags:
         - Trash
-      security: *a2
+      description: Restore a soft-deleted service back to scheduled services.
       operationId: restoreTrashService
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+      security: *a3
+      parameters: *a9
   /backup:
     get:
+      tags:
+        - Backup
       summary: Export backup
+      operationId: exportBackup
+      security: *a10
+      description: Export entire organization library (songs, folders, services) as a standalone JSON backup archive.
       responses:
         "200":
           description: OK
@@ -1347,13 +1429,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BackupDocument"
-      tags:
-        - Backup
-      security: *a2
-      operationId: exportBackup
   /backup/restore:
     post:
+      tags:
+        - Backup
       summary: Restore backup
+      operationId: restoreBackup
+      security: *a10
+      description: Restore organization library from an uploaded backup JSON file.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BackupDocument"
       responses:
         "200":
           description: OK
@@ -1377,16 +1466,6 @@ paths:
                         type: integer
                       agendaEvents:
                         type: integer
-      tags:
-        - Backup
-      security: *a2
-      operationId: restoreBackup
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BackupDocument"
   /ai/settings:
     get:
       summary: Get AI settings
@@ -1400,8 +1479,9 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Retrieve active organization AI configuration and enabled capabilities.
       operationId: getAiSettings
+      security: *a3
     put:
       summary: Update AI settings
       responses:
@@ -1414,15 +1494,61 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Update org AI provider, model selection, custom instructions, or memory toggles.
       operationId: updateAiSettings
+      security: *a3
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              properties:
+                provider:
+                  type: string
+                  enum:
+                    - openai
+                    - anthropic
+                    - google
+                    - deepseek
+                    - openai_compatible
+                model:
+                  type: string
+                  minLength: 1
+                enabled:
+                  type: boolean
+                apiKey:
+                  type: string
+                  minLength: 1
+                baseUrl:
+                  anyOf:
+                    - type: string
+                      format: uri
+                    - type: "null"
+                maxToolCalls:
+                  type: integer
+                  minimum: 1
+                  maximum: 40
+                temperature:
+                  anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1.5
+                    - type: "null"
+                maxOutputTokens:
+                  anyOf:
+                    - type: integer
+                      minimum: 256
+                      maximum: 32000
+                    - type: "null"
+                instructions:
+                  anyOf:
+                    - type: string
+                      maxLength: 2000
+                    - type: "null"
+                memoryEnabled:
+                  type: boolean
+              additionalProperties: false
   /ai/settings/key:
     delete:
       summary: Clear AI API key
@@ -1436,8 +1562,9 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Remove custom BYOK provider API key.
       operationId: deleteAiSettingsKey
+      security: *a3
   /ai/billing:
     get:
       summary: AI provider billing/balance
@@ -1451,8 +1578,9 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Fetch DeepSeek/OpenAI balance and quota status.
       operationId: getAiBilling
+      security: *a3
   /ai/memory:
     get:
       summary: List organization AI memory
@@ -1482,8 +1610,9 @@ paths:
                           type: string
       tags:
         - AI
-      security: *a2
+      description: List shared organization AI memory items.
       operationId: listAiMemory
+      security: *a3
     post:
       summary: Add organization AI memory
       responses:
@@ -1496,8 +1625,9 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Add a persistent memory note to the organization AI context.
       operationId: createAiMemory
+      security: *a3
       requestBody:
         required: true
         content:
@@ -1523,8 +1653,9 @@ paths:
                     type: integer
       tags:
         - AI
-      security: *a2
+      description: Clear all organization shared AI memory items.
       operationId: clearAiMemory
+      security: *a3
   /ai/memory/{id}:
     delete:
       summary: Delete organization AI memory item
@@ -1533,8 +1664,9 @@ paths:
           description: Deleted
       tags:
         - AI
-      security: *a2
+      description: Remove a single AI memory note by ID.
       operationId: deleteAiMemory
+      security: *a3
       parameters:
         - name: id
           in: path
@@ -1570,8 +1702,9 @@ paths:
                           type: string
       tags:
         - AI
-      security: *a2
+      description: List personal musician AI memory items.
       operationId: listPersonalAiMemory
+      security: *a3
     post:
       summary: Add personal AI memory
       responses:
@@ -1584,8 +1717,9 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Save a personal preference or context item for AI.
       operationId: createPersonalAiMemory
+      security: *a3
       requestBody:
         required: true
         content:
@@ -1611,8 +1745,9 @@ paths:
                     type: integer
       tags:
         - AI
-      security: *a2
+      description: Clear all personal AI memory items.
       operationId: clearPersonalAiMemory
+      security: *a3
   /ai/memory/personal/{id}:
     delete:
       summary: Delete personal AI memory item
@@ -1621,8 +1756,9 @@ paths:
           description: Deleted
       tags:
         - AI
-      security: *a2
+      description: Delete a personal AI memory entry by ID.
       operationId: deletePersonalAiMemory
+      security: *a3
       parameters:
         - name: id
           in: path
@@ -1642,17 +1778,15 @@ paths:
                 additionalProperties: true
       tags:
         - AI
-      security: *a2
+      description: Validate and execute a user-confirmed destructive AI tool action.
       operationId: confirmAiAction
+      security: *a3
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - action
-                - id
               properties:
                 action:
                   type: string
@@ -1664,11 +1798,16 @@ paths:
                     - delete_agenda
                 id:
                   type: string
+                  minLength: 1
                 folderAction:
                   type: string
                   enum:
                     - move_to_root
                     - delete_songs
+              required:
+                - action
+                - id
+              additionalProperties: false
   /ai/chat:
     post:
       summary: AI chat stream (UI message stream)
@@ -1681,8 +1820,9 @@ paths:
                 type: string
       tags:
         - AI
-      security: *a2
+      description: Streaming worship assistant conversation supporting tool calls and UI messages.
       operationId: aiChat
+      security: *a3
       requestBody:
         required: true
         content:
@@ -1708,7 +1848,6 @@ paths:
                     - pt
                     - en
                     - es
-      description: Returns an AI SDK UI message stream (not a single JSON body).
   /youtube/duration:
     get:
       summary: YouTube duration
@@ -1722,8 +1861,9 @@ paths:
                 additionalProperties: true
       tags:
         - Integrations
-      security: *a2
+      description: Inspect video title and duration from a YouTube URL or video ID.
       operationId: getYoutubeDuration
+      security: *a3
       parameters:
         - name: url
           in: query
@@ -1744,8 +1884,9 @@ paths:
                 additionalProperties: true
       tags:
         - Integrations
-      security: *a2
+      description: Scrape and parse public chord charts from online tablature sites.
       operationId: importCifra
+      security: *a3
       parameters:
         - name: url
           in: query
@@ -1755,20 +1896,12 @@ paths:
             format: uri
   /notifications:
     post:
-      summary: Send notification (hosted on auth.hosanna.live)
-      description: Unified multi-channel dispatch (inbox, push, email) with user/org/team targeting.
-      responses:
-        "201":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
       tags:
         - Notifications
-      security: *a2
+      summary: Send notification (hosted on auth.hosanna.live)
       operationId: sendNotification
+      security: *a10
+      description: Unified multi-channel dispatch (inbox, push, email) with user/org/team targeting.
       requestBody:
         required: true
         content:
@@ -1823,6 +1956,14 @@ paths:
                 email:
                   type: object
                   additionalProperties: true
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
 components:
   securitySchemes:
     cookieAuth:
@@ -1841,117 +1982,209 @@ components:
   schemas:
     Error:
       type: object
-      required:
-        - error
       properties:
         error:
           type: object
-          required:
-            - code
-            - message
           properties:
             code:
               type: string
+              description: Machine-readable error code
             message:
               type: string
-            details: {}
+              description: Human-readable error message
+            details:
+              description: Additional structured error context
+          required:
+            - code
+            - message
+          additionalProperties: false
+          description: Error payload details
+      required:
+        - error
+      additionalProperties: false
+      description: Standard Hosanna API error envelope
     Checkpoint:
-      type: object
-      nullable: true
-      properties:
-        updatedAt:
-          type: number
-          description: Unix epoch ms
-        id:
-          type: string
+      anyOf:
+        - type: object
+          properties:
+            updatedAt:
+              type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+              description: Unix epoch timestamp in milliseconds
+            id:
+              type: string
+              description: Document unique identifier
+          required:
+            - updatedAt
+            - id
+          additionalProperties: false
+        - type: "null"
+      description: Replication checkpoint cursor
     Song:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Unique song UUID
         orgId:
           type: string
+          description: Organization ID owning the song
         title:
           type: string
+          description: Song title
         artist:
+          description: Artist or songwriter
           type: string
         content:
+          description: ChordPro song lyrics and chords
           type: string
         folderId:
-          type: string
-          format: uuid
-          nullable: true
+          description: Parent folder ID, null for root
+          anyOf:
+            - type: string
+              format: uuid
+              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+            - type: "null"
         path:
+          description: Full path in folder tree
           type: string
         tags:
+          default: []
+          description: Song tags / categories
           type: array
           items:
             type: string
         song_number:
-          type: integer
-          nullable: true
+          description: Catalog or hymnal number
+          anyOf:
+            - type: integer
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+            - type: "null"
         createdAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Creation timestamp (ISO 8601)
         updatedAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last updated timestamp (ISO 8601)
         deleted:
+          default: false
+          description: Soft-deleted flag
           type: boolean
         purgeAt:
-          type: string
-          format: date-time
-          nullable: true
+          description: Trash retention purge deadline
+          anyOf:
+            - type: string
+              format: date-time
+              pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+            - type: "null"
         collectionIds:
+          default: []
+          description: Associated collection UUIDs
           type: array
           items:
             type: string
             format: uuid
+            pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
         isDeleted:
+          default: false
+          description: Replication sync tombstone alias
           type: boolean
+      required:
+        - id
+        - orgId
+        - title
+        - createdAt
+        - updatedAt
+      additionalProperties: false
+      description: Song document with ChordPro lyrics and metadata
     Folder:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Unique folder UUID
         orgId:
           type: string
+          description: Organization ID owning the folder
         name:
           type: string
+          description: Folder display name
         color:
+          description: Hex color code or theme color identifier
           type: string
         icon:
+          description: Icon identifier
           type: string
         parentId:
-          type: string
-          format: uuid
-          nullable: true
+          description: Parent folder UUID, null for root
+          anyOf:
+            - type: string
+              format: uuid
+              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+            - type: "null"
         createdAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Creation timestamp (ISO 8601)
         updatedAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last updated timestamp (ISO 8601)
         deleted:
+          default: false
+          description: Soft-deleted flag
           type: boolean
         purgeAt:
-          type: string
-          format: date-time
-          nullable: true
+          description: Trash retention purge deadline
+          anyOf:
+            - type: string
+              format: date-time
+              pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+            - type: "null"
         songCount:
+          default: 0
+          description: Count of direct child songs
           type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
         folderCount:
+          default: 0
+          description: Count of direct child folders
           type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
         isDeleted:
+          default: false
+          description: Replication sync tombstone alias
           type: boolean
+      required:
+        - id
+        - orgId
+        - name
+        - createdAt
+        - updatedAt
+      additionalProperties: false
+      description: Folder document for hierarchical song organization
     ServiceElement:
       type: object
       properties:
         id:
+          description: Element unique identifier
           type: string
         type:
+          description: Service element type
           type: string
           enum:
             - welcome
@@ -1961,167 +2194,302 @@ components:
             - custom
             - song
         title:
+          description: Element title
           type: string
         content:
-          type: string
-          nullable: true
+          description: Element body or scripture text
+          type:
+            - string
+            - "null"
         position:
+          description: Order position in the service
           type: integer
-          nullable: true
+          minimum: -9007199254740991
+          maximum: 9007199254740991
         songId:
-          type: string
-          nullable: true
+          description: Associated song UUID when type is song
+          type:
+            - string
+            - "null"
         notes:
-          type: string
-          nullable: true
+          description: Worship leader / musician notes
+          type:
+            - string
+            - "null"
         passage:
-          type: string
-          nullable: true
+          description: Scripture reference passage
+          type:
+            - string
+            - "null"
         duration:
-          type: integer
-          nullable: true
+          description: Estimated duration in seconds
+          anyOf:
+            - type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+            - type: "null"
+      additionalProperties: {}
+      description: Individual item within a worship service order
     Service:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Unique service UUID
         name:
           type: string
+          description: Service name or theme
         date:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Scheduled service date and time
         notes:
-          type: string
-          nullable: true
+          description: General notes for musicians and tech team
+          type:
+            - string
+            - "null"
         elements:
+          default: []
+          description: Ordered list of service elements
           type: array
           items:
-            $ref: "#/components/schemas/ServiceElement"
+            type: object
+            properties:
+              id:
+                description: Element unique identifier
+                type: string
+              type:
+                description: Service element type
+                type: string
+                enum:
+                  - welcome
+                  - scripture
+                  - message
+                  - announcement
+                  - custom
+                  - song
+              title:
+                description: Element title
+                type: string
+              content:
+                description: Element body or scripture text
+                type:
+                  - string
+                  - "null"
+              position:
+                description: Order position in the service
+                type: integer
+                minimum: -9007199254740991
+                maximum: 9007199254740991
+              songId:
+                description: Associated song UUID when type is song
+                type:
+                  - string
+                  - "null"
+              notes:
+                description: Worship leader / musician notes
+                type:
+                  - string
+                  - "null"
+              passage:
+                description: Scripture reference passage
+                type:
+                  - string
+                  - "null"
+              duration:
+                description: Estimated duration in seconds
+                anyOf:
+                  - type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                  - type: "null"
+            additionalProperties: {}
+            description: Individual item within a worship service order
         archived:
+          default: false
+          description: Archived service flag
           type: boolean
         createdAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Creation timestamp (ISO 8601)
         updatedAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last updated timestamp (ISO 8601)
         isDeleted:
+          default: false
+          description: Replication sync tombstone alias
           type: boolean
         purgeAt:
-          type: string
-          format: date-time
-          nullable: true
+          description: Trash retention purge deadline
+          anyOf:
+            - type: string
+              format: date-time
+              pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+            - type: "null"
+      required:
+        - id
+        - name
+        - date
+        - createdAt
+        - updatedAt
+      additionalProperties: false
+      description: Worship service order of service document
     ServiceNote:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Unique note UUID
+        orgId:
+          type: string
+          description: Owning organization ID
         serviceId:
           type: string
           format: uuid
-        elementId:
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Parent service UUID
+        title:
           type: string
-          nullable: true
-        body:
+          description: Note title
+        content:
           type: string
-        private:
+          description: Note content
+        type:
+          description: Note category or role target
+          type: string
+        position:
+          description: Ordering position
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        isDeleted:
+          default: false
+          description: Replication tombstone flag
           type: boolean
-        author:
-          type: object
-          nullable: true
-          properties:
-            id:
-              type: string
-            name:
-              type: string
-            image:
-              type: string
-              nullable: true
         createdAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Creation timestamp (ISO 8601)
         updatedAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last updated timestamp (ISO 8601)
+      required:
+        - id
+        - orgId
+        - serviceId
+        - title
+        - content
+        - createdAt
+        - updatedAt
+      additionalProperties: false
+      description: Collaborative note attached to a service
     Collection:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Collection unique UUID
+        orgId:
+          type: string
+          description: Owning organization ID
         name:
           type: string
-        description:
-          type: string
-          nullable: true
+          description: Collection name
         color:
+          description: Collection color code
           type: string
         icon:
+          description: Collection icon
           type: string
-        image:
-          type: string
-          nullable: true
-        songIds:
-          type: array
-          items:
-            type: string
-            format: uuid
         songCount:
+          default: 0
+          description: Number of songs in this collection
           type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        isDeleted:
+          default: false
+          description: Replication tombstone flag
+          type: boolean
         createdAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Creation timestamp (ISO 8601)
         updatedAt:
           type: string
           format: date-time
-        isDeleted:
-          type: boolean
-        purgeAt:
-          type: string
-          format: date-time
-          nullable: true
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last updated timestamp (ISO 8601)
+      required:
+        - id
+        - orgId
+        - name
+        - createdAt
+        - updatedAt
+      additionalProperties: false
+      description: Custom song collection / tag grouping
     AgendaEvent:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        date:
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Event unique UUID
+        orgId:
           type: string
+          description: Owning organization ID
         title:
           type: string
-        type:
+          description: Event title
+        date:
           type: string
-        time:
-          type: string
-        durationMinutes:
-          type: integer
-        location:
-          type: string
-          nullable: true
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Event start date/time (ISO 8601)
         notes:
-          type: string
-          nullable: true
-        reminder: {}
-        linkedServiceId:
-          type: string
-          format: uuid
-          nullable: true
-        responsibilities: {}
+          description: Event notes
+          type:
+            - string
+            - "null"
+        isDeleted:
+          default: false
+          description: Replication tombstone flag
+          type: boolean
         createdAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Creation timestamp (ISO 8601)
         updatedAt:
           type: string
           format: date-time
-        isDeleted:
-          type: boolean
-        purgeAt:
-          type: string
-          format: date-time
-          nullable: true
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last updated timestamp (ISO 8601)
+      required:
+        - id
+        - orgId
+        - title
+        - date
+        - createdAt
+        - updatedAt
+      additionalProperties: false
+      description: Agenda calendar event for ministry teams
     PlanPricing:
       type: object
       properties:
@@ -2129,127 +2497,234 @@ components:
           type: string
           enum:
             - cloud
+          description: Plan tier identifier
         currency:
           type: string
+          description: Three-letter ISO currency code
         monthly:
           type: object
           properties:
             amount:
               type: string
+              description: Formatted monthly amount
             amountCents:
               type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+              description: Monthly price in cents
             period:
               type: string
               enum:
                 - month
                 - year
               description: Stable period id; clients localize via billing.period.*
+          required:
+            - amount
+            - amountCents
+            - period
+          additionalProperties: false
+          description: Monthly billing option
         annual:
           type: object
           properties:
             amount:
               type: string
+              description: Formatted annual amount
             amountCents:
               type: integer
+              minimum: -9007199254740991
+              maximum: 9007199254740991
+              description: Annual price in cents
             period:
               type: string
               enum:
                 - month
                 - year
               description: Stable period id; clients localize via billing.period.*
+          required:
+            - amount
+            - amountCents
+            - period
+          additionalProperties: false
+          description: Annual billing option
+      required:
+        - plan
+        - currency
+        - monthly
+        - annual
+      additionalProperties: false
+      description: Public subscription plan pricing tiers
     BackupDocument:
       type: object
-      required:
-        - version
-        - folders
-        - songs
-        - services
       properties:
         version:
           type: string
-          example: "2.2"
+          description: Backup schema version (e.g., 2.2)
         exportedAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Export ISO timestamp
         folders:
           type: array
           items:
-            $ref: "#/components/schemas/Folder"
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+          description: Exported folder documents
         songs:
           type: array
           items:
-            $ref: "#/components/schemas/Song"
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+          description: Exported song documents
         services:
           type: array
           items:
-            $ref: "#/components/schemas/Service"
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+          description: Exported service orders
         collections:
+          description: Exported song collections
           type: array
           items:
-            $ref: "#/components/schemas/Collection"
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
         agendaEvents:
+          description: Exported calendar agenda events
           type: array
           items:
-            $ref: "#/components/schemas/AgendaEvent"
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+      required:
+        - version
+        - exportedAt
+        - folders
+        - songs
+        - services
+      additionalProperties: false
+      description: Full organization data archive for backup and restore
     ReplicationCollection:
       type: string
       enum:
         - songs
         - folders
-        - collections
         - services
-        - agendaEvents
+        - collections
+        - service_notes
+        - agenda_events
+      description: Supported replication collection name
     PullRequest:
       type: object
       properties:
         checkpoint:
-          $ref: "#/components/schemas/Checkpoint"
+          description: Current client checkpoint per collection
+          anyOf:
+            - type: object
+              propertyNames:
+                type: string
+              additionalProperties: {}
+            - type: "null"
         limit:
-          type: integer
-          minimum: 1
-          maximum: 2000
           default: 100
+          description: Maximum changes to pull
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+      additionalProperties: false
+      description: Multi-collection pull request payload
     PullResponse:
       type: object
       properties:
+        checkpoint:
+          description: New checkpoint state per collection
+          anyOf:
+            - type: object
+              propertyNames:
+                type: string
+              additionalProperties: {}
+            - type: "null"
         documents:
           type: array
           items:
             type: object
-            additionalProperties: true
-        checkpoint:
-          $ref: "#/components/schemas/Checkpoint"
+            propertyNames:
+              type: string
+            additionalProperties: {}
+          description: List of changed documents
+        hasMore:
+          type: boolean
+          description: Whether more changes remain to be pulled
+      required:
+        - documents
+        - hasMore
+      additionalProperties: false
+      description: Replication pull response payload
     ChangeRow:
       type: object
-      required:
-        - newDocumentState
       properties:
         newDocumentState:
           type: object
-          additionalProperties: true
+          propertyNames:
+            type: string
+          additionalProperties: {}
+          description: New document state submitted by client
         assumedMasterState:
-          type: object
-          additionalProperties: true
-          nullable: true
+          description: Client baseline state for three-way merge
+          anyOf:
+            - type: object
+              propertyNames:
+                type: string
+              additionalProperties: {}
+            - type: "null"
+      required:
+        - newDocumentState
+      additionalProperties: false
+      description: Single document mutation row for replication push
     AnnotationGetResponse:
       type: object
       properties:
         canvasDataBase64:
           type: string
+          description: Base64-encoded canvas stroke drawing data
         updatedAt:
           type: string
           format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+          description: Last modified timestamp
         updatedById:
-          type: string
-          nullable: true
+          description: User ID who last updated annotations
+          type:
+            - string
+            - "null"
         revision:
           type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+          description: Monotonically increasing annotation revision
+      required:
+        - canvasDataBase64
+        - updatedAt
+        - revision
+      additionalProperties: false
+      description: Sheet music stroke annotations for a song in a service
     SongImportJob:
       type: object
       properties:
         id:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+          description: Import job UUID
         status:
           type: string
           enum:
@@ -2258,6 +2733,7 @@ components:
             - completed
             - failed
             - cancelled
+          description: Job execution status
         steps:
           type: array
           items:
@@ -2265,88 +2741,99 @@ components:
             properties:
               id:
                 type: string
+                description: Step identifier
               label:
                 type: string
+                description: Human-readable step label
               done:
                 type: boolean
+                description: Whether step completed successfully
               active:
                 type: boolean
+                description: Whether step is currently executing
+            required:
+              - id
+              - label
+              - done
+              - active
+            additionalProperties: false
+          description: Progress breakdown of the import pipeline
         result:
-          type: object
-          nullable: true
-          properties:
-            title:
-              type: string
-            artist:
-              type: string
-            content:
-              type: string
-            key:
-              type: string
-            tempo:
-              type: string
-            timeSignature:
-              type: string
-            confidence:
-              type: number
-            warnings:
-              type: array
-              items:
-                type: string
-            youtube:
-              type: string
-            ccli:
-              type: string
-            composer:
-              type: string
-            copyright:
-              type: string
-            subtitle:
-              type: string
-            duration:
-              type: string
-            diagnostics:
-              type: array
-              items:
-                type: object
-                properties:
-                  severity:
-                    type: string
-                  message:
-                    type: string
-                  line:
-                    type: integer
-            possibleDuplicates:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
-                  artist:
-                    type: string
-                  score:
-                    type: number
-        errorMessage:
-          type: string
-          nullable: true
-        cancelCode:
-          type: string
-          nullable: true
-          enum:
-            - not_a_song
-            - unreadable
-            - blank
-            - wrong_content
-            - multiple_unclear
+          description: Extracted result when status is completed
+          anyOf:
+            - type: object
+              properties:
+                title:
+                  description: Extracted song title
+                  type: string
+                artist:
+                  description: Extracted song artist
+                  type: string
+                content:
+                  description: Extracted ChordPro lyrics
+                  type: string
+                key:
+                  description: Detected musical key
+                  type: string
+                bpm:
+                  description: Detected tempo
+                  type: number
+                timeSignature:
+                  description: Detected time signature
+                  type: string
+                language:
+                  description: Detected song language
+                  type: string
+                songId:
+                  description: Created song UUID if auto-saved
+                  type: string
+                  format: uuid
+                  pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+              additionalProperties: false
+            - type: "null"
+        error:
+          description: Error details when status is failed
+          anyOf:
+            - type: object
+              properties:
+                code:
+                  type: string
+                  description: Error classification code
+                message:
+                  type: string
+                  description: Human-readable failure message
+              required:
+                - code
+                - message
+              additionalProperties: false
+            - type: "null"
+        rejectionReason:
+          description: AI pipeline rejection reason
+          anyOf:
+            - type: string
+              enum:
+                - not_a_song
+                - unreadable
+                - blank
+                - wrong_content
+                - multiple_unclear
+            - type: "null"
         cancelReason:
-          type: string
-          nullable: true
+          description: Reason if cancelled
+          type:
+            - string
+            - "null"
         cancelledBy:
-          type: string
-          nullable: true
-          enum:
-            - ai
-            - user
+          description: Who cancelled the job
+          anyOf:
+            - type: string
+              enum:
+                - ai
+                - user
+            - type: "null"
+      required:
+        - id
+        - status
+        - steps
+      additionalProperties: false
+      description: Asynchronous AI-powered song sheet/PDF import job

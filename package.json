@@ -23,7 +23,8 @@
     "db:migrate": "pnpm --filter @hosanna/db db:migrate",
     "db:migrate:dev": "pnpm --filter @hosanna/db db:migrate:dev",
     "db:push": "pnpm --filter @hosanna/db db:push",
-    "openapi:generate": "node ./scripts/generate-openapi.mjs && pnpm --filter @hosanna/types generate"
+    "openapi:generate": "pnpm --filter @hosanna/api exec tsx ../../scripts/generate-openapi.mjs && pnpm --filter @hosanna/types generate",
+    "openapi:check": "pnpm openapi:generate && git diff --exit-code packages/types"
   },
   "prettier": "./packages/config/prettier.json",
   "devDependencies": {

@@ -11,7 +11,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Health check */
+    /**
+     * Health check
+     * @description Returns API service health, database connectivity status, and server timestamp.
+     */
     get: operations["getHealth"];
     put?: never;
     post?: never;
@@ -28,7 +31,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Public plan display prices */
+    /**
+     * Public plan display prices
+     * @description Returns public localized subscription pricing tiers from Global Config.
+     */
     get: operations["getBillingPricing"];
     put?: never;
     post?: never;
@@ -45,7 +51,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Org subscription entitlement */
+    /**
+     * Org subscription entitlement
+     * @description Check active subscription entitlements and feature gates for the authenticated organization.
+     */
     get: operations["getBillingEntitlement"];
     put?: never;
     post?: never;
@@ -62,11 +71,17 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Cron: agenda-reminders */
-    get: operations["getCronagendaReminders"];
+    /**
+     * Cron: agenda-reminders
+     * @description Dispatch morning notifications for musicians with upcoming scheduled services.
+     */
+    get: operations["getCronAgendaReminders"];
     put?: never;
-    /** Cron: agenda-reminders */
-    post: operations["postCronagendaReminders"];
+    /**
+     * Cron: agenda-reminders
+     * @description Dispatch morning notifications for musicians with upcoming scheduled services.
+     */
+    post: operations["postCronAgendaReminders"];
     delete?: never;
     options?: never;
     head?: never;
@@ -80,11 +95,17 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Cron: purge-trash */
-    get: operations["getCronpurgeTrash"];
+    /**
+     * Cron: purge-trash
+     * @description Trigger background job to purge soft-deleted items whose purgeAt date has expired.
+     */
+    get: operations["getCronPurgeTrash"];
     put?: never;
-    /** Cron: purge-trash */
-    post: operations["postCronpurgeTrash"];
+    /**
+     * Cron: purge-trash
+     * @description Trigger background job to purge soft-deleted items whose purgeAt date has expired.
+     */
+    post: operations["postCronPurgeTrash"];
     delete?: never;
     options?: never;
     head?: never;
@@ -118,11 +139,17 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Poll a Logos AI song-import job */
+    /**
+     * Poll a Logos AI song-import job
+     * @description Poll import job status, progress steps, and extracted ChordPro content.
+     */
     get: operations["getSongImportJob"];
     put?: never;
     post?: never;
-    /** Cancel a running Logos AI song-import job */
+    /**
+     * Cancel a running Logos AI song-import job
+     * @description Cancel an active song import pipeline job.
+     */
     delete: operations["cancelSongImportJob"];
     options?: never;
     head?: never;
@@ -136,10 +163,16 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List songs */
+    /**
+     * List songs
+     * @description Paginated song library query with optional text search, tag filtering, folder scoping, and sort order.
+     */
     get: operations["listSongs"];
     put?: never;
-    /** Create song */
+    /**
+     * Create song
+     * @description Create a new song document with ChordPro content and folder assignment.
+     */
     post: operations["createSong"];
     delete?: never;
     options?: never;
@@ -156,7 +189,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Create songs batch */
+    /**
+     * Create songs batch
+     * @description Batch import or insert multiple song records in a single transactional request.
+     */
     post: operations["createSongsBatch"];
     delete?: never;
     options?: never;
@@ -172,7 +208,10 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    /** Batch update song tags */
+    /**
+     * Batch update song tags
+     * @description Apply tag modifications (append, replace, or remove) across multiple song IDs.
+     */
     put: operations["batchUpdateSongTags"];
     post?: never;
     delete?: never;
@@ -188,12 +227,21 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get song */
+    /**
+     * Get song
+     * @description Retrieve a single song by its UUID.
+     */
     get: operations["getSong"];
-    /** Update song */
+    /**
+     * Update song
+     * @description Update song metadata, title, or ChordPro content. Enforces optimistic concurrency via updatedAt.
+     */
     put: operations["updateSong"];
     post?: never;
-    /** Delete song */
+    /**
+     * Delete song
+     * @description Soft-delete a song into trash.
+     */
     delete: operations["deleteSong"];
     options?: never;
     head?: never;
@@ -207,7 +255,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Download song ChordPro */
+    /**
+     * Download song ChordPro
+     * @description Download raw ChordPro text representation as a file attachment.
+     */
     get: operations["downloadSong"];
     put?: never;
     post?: never;
@@ -225,7 +276,10 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    /** Move song */
+    /**
+     * Move song
+     * @description Move song into another folder or to library root (null folderId).
+     */
     put: operations["moveSong"];
     post?: never;
     delete?: never;
@@ -241,10 +295,16 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List folders */
+    /**
+     * List folders
+     * @description Retrieve complete folder hierarchy with song and subfolder counts.
+     */
     get: operations["listFolders"];
     put?: never;
-    /** Create folder */
+    /**
+     * Create folder
+     * @description Create a new folder in library root or as a child of parentId.
+     */
     post: operations["createFolder"];
     delete?: never;
     options?: never;
@@ -259,7 +319,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List folders flat */
+    /**
+     * List folders flat
+     * @description Retrieve a flat unnested list of all folders in the active organization.
+     */
     get: operations["listFoldersFlat"];
     put?: never;
     post?: never;
@@ -277,10 +340,16 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    /** Update folder */
+    /**
+     * Update folder
+     * @description Update folder name, color, icon, or parent location with concurrency check.
+     */
     put: operations["updateFolder"];
     post?: never;
-    /** Delete folder */
+    /**
+     * Delete folder
+     * @description Delete folder according to the action query strategy.
+     */
     delete: operations["deleteFolder"];
     options?: never;
     head?: never;
@@ -297,7 +366,10 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Delete folder moving content to root */
+    /**
+     * Delete folder moving content to root
+     * @description Delete folder and move its songs and subfolders to organization root.
+     */
     delete: operations["deleteFolderMoveContentToRoot"];
     options?: never;
     head?: never;
@@ -314,7 +386,10 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Delete folder with content */
+    /**
+     * Delete folder with content
+     * @description Cascade delete a folder and all contained songs and subfolders into trash.
+     */
     delete: operations["deleteFolderWithContent"];
     options?: never;
     head?: never;
@@ -328,10 +403,16 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List services */
+    /**
+     * List services
+     * @description List scheduled services with optional archived status filter.
+     */
     get: operations["listServices"];
     put?: never;
-    /** Create service */
+    /**
+     * Create service
+     * @description Create an order of service with service date and optional element sequence.
+     */
     post: operations["createService"];
     delete?: never;
     options?: never;
@@ -346,12 +427,21 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get service */
+    /**
+     * Get service
+     * @description Retrieve a service order and its ordered elements by UUID.
+     */
     get: operations["getService"];
-    /** Update service */
+    /**
+     * Update service
+     * @description Update service details, notes, or archived status with concurrency check.
+     */
     put: operations["updateService"];
     post?: never;
-    /** Delete service */
+    /**
+     * Delete service
+     * @description Soft-delete service into trash.
+     */
     delete: operations["deleteService"];
     options?: never;
     head?: never;
@@ -366,7 +456,10 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    /** Replace service elements */
+    /**
+     * Replace service elements
+     * @description Reorder or replace the full element sequence for a service.
+     */
     put: operations["updateServiceElements"];
     post?: never;
     delete?: never;
@@ -382,10 +475,16 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List service notes */
+    /**
+     * List service notes
+     * @description List musician and team notes attached to a service or specific element.
+     */
     get: operations["listServiceNotes"];
     put?: never;
-    /** Create service note */
+    /**
+     * Create service note
+     * @description Attach a new collaborative note to a service or service element.
+     */
     post: operations["createServiceNote"];
     delete?: never;
     options?: never;
@@ -401,10 +500,16 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    /** Update service note */
+    /**
+     * Update service note
+     * @description Edit text or privacy of an existing service note.
+     */
     put: operations["updateServiceNote"];
     post?: never;
-    /** Delete service note */
+    /**
+     * Delete service note
+     * @description Delete a service note.
+     */
     delete: operations["deleteServiceNote"];
     options?: never;
     head?: never;
@@ -418,9 +523,15 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get song annotation */
+    /**
+     * Get song annotation
+     * @description Retrieve sheet music pencil/stroke drawing annotations for a song in a service.
+     */
     get: operations["getAnnotation"];
-    /** Put song annotation */
+    /**
+     * Put song annotation
+     * @description Save updated stroke annotation canvas data.
+     */
     put: operations["putAnnotation"];
     post?: never;
     delete?: never;
@@ -438,7 +549,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Pull one collection */
+    /**
+     * Pull one collection
+     * @description Pull changes for a single collection since the supplied checkpoint.
+     */
     post: operations["pullCollection"];
     delete?: never;
     options?: never;
@@ -455,7 +569,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Pull multiple collections */
+    /**
+     * Pull multiple collections
+     * @description Pull updates across multiple collections in a single round-trip.
+     */
     post: operations["pullAllCollections"];
     delete?: never;
     options?: never;
@@ -472,7 +589,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Push one collection */
+    /**
+     * Push one collection
+     * @description Push local change rows to the server for replication merge.
+     */
     post: operations["pushCollection"];
     delete?: never;
     options?: never;
@@ -487,7 +607,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List trash */
+    /**
+     * List trash
+     * @description List soft-deleted songs, folders, and services pending purge.
+     */
     get: operations["listTrash"];
     put?: never;
     post?: never;
@@ -506,7 +629,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Restore trashed song */
+    /**
+     * Restore trashed song
+     * @description Restore a soft-deleted song back to the active library.
+     */
     post: operations["restoreTrashSong"];
     delete?: never;
     options?: never;
@@ -523,7 +649,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Restore trashed folder */
+    /**
+     * Restore trashed folder
+     * @description Restore a soft-deleted folder back to the active folder tree.
+     */
     post: operations["restoreTrashFolder"];
     delete?: never;
     options?: never;
@@ -540,7 +669,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Restore trashed service */
+    /**
+     * Restore trashed service
+     * @description Restore a soft-deleted service back to scheduled services.
+     */
     post: operations["restoreTrashService"];
     delete?: never;
     options?: never;
@@ -555,7 +687,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Export backup */
+    /**
+     * Export backup
+     * @description Export entire organization library (songs, folders, services) as a standalone JSON backup archive.
+     */
     get: operations["exportBackup"];
     put?: never;
     post?: never;
@@ -574,7 +709,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Restore backup */
+    /**
+     * Restore backup
+     * @description Restore organization library from an uploaded backup JSON file.
+     */
     post: operations["restoreBackup"];
     delete?: never;
     options?: never;
@@ -589,9 +727,15 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get AI settings */
+    /**
+     * Get AI settings
+     * @description Retrieve active organization AI configuration and enabled capabilities.
+     */
     get: operations["getAiSettings"];
-    /** Update AI settings */
+    /**
+     * Update AI settings
+     * @description Update org AI provider, model selection, custom instructions, or memory toggles.
+     */
     put: operations["updateAiSettings"];
     post?: never;
     delete?: never;
@@ -610,7 +754,10 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Clear AI API key */
+    /**
+     * Clear AI API key
+     * @description Remove custom BYOK provider API key.
+     */
     delete: operations["deleteAiSettingsKey"];
     options?: never;
     head?: never;
@@ -624,7 +771,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** AI provider billing/balance */
+    /**
+     * AI provider billing/balance
+     * @description Fetch DeepSeek/OpenAI balance and quota status.
+     */
     get: operations["getAiBilling"];
     put?: never;
     post?: never;
@@ -641,12 +791,21 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List organization AI memory */
+    /**
+     * List organization AI memory
+     * @description List shared organization AI memory items.
+     */
     get: operations["listAiMemory"];
     put?: never;
-    /** Add organization AI memory */
+    /**
+     * Add organization AI memory
+     * @description Add a persistent memory note to the organization AI context.
+     */
     post: operations["createAiMemory"];
-    /** Clear organization AI memory */
+    /**
+     * Clear organization AI memory
+     * @description Clear all organization shared AI memory items.
+     */
     delete: operations["clearAiMemory"];
     options?: never;
     head?: never;
@@ -663,7 +822,10 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Delete organization AI memory item */
+    /**
+     * Delete organization AI memory item
+     * @description Remove a single AI memory note by ID.
+     */
     delete: operations["deleteAiMemory"];
     options?: never;
     head?: never;
@@ -677,12 +839,21 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** List personal AI memory */
+    /**
+     * List personal AI memory
+     * @description List personal musician AI memory items.
+     */
     get: operations["listPersonalAiMemory"];
     put?: never;
-    /** Add personal AI memory */
+    /**
+     * Add personal AI memory
+     * @description Save a personal preference or context item for AI.
+     */
     post: operations["createPersonalAiMemory"];
-    /** Clear personal AI memory */
+    /**
+     * Clear personal AI memory
+     * @description Clear all personal AI memory items.
+     */
     delete: operations["clearPersonalAiMemory"];
     options?: never;
     head?: never;
@@ -699,7 +870,10 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
-    /** Delete personal AI memory item */
+    /**
+     * Delete personal AI memory item
+     * @description Delete a personal AI memory entry by ID.
+     */
     delete: operations["deletePersonalAiMemory"];
     options?: never;
     head?: never;
@@ -715,7 +889,10 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Confirm staged AI destructive action */
+    /**
+     * Confirm staged AI destructive action
+     * @description Validate and execute a user-confirmed destructive AI tool action.
+     */
     post: operations["confirmAiAction"];
     delete?: never;
     options?: never;
@@ -734,7 +911,7 @@ export interface paths {
     put?: never;
     /**
      * AI chat stream (UI message stream)
-     * @description Returns an AI SDK UI message stream (not a single JSON body).
+     * @description Streaming worship assistant conversation supporting tool calls and UI messages.
      */
     post: operations["aiChat"];
     delete?: never;
@@ -750,7 +927,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** YouTube duration */
+    /**
+     * YouTube duration
+     * @description Inspect video title and duration from a YouTube URL or video ID.
+     */
     get: operations["getYoutubeDuration"];
     put?: never;
     post?: never;
@@ -767,7 +947,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Import from Cifra Club / Ultimate Guitar */
+    /**
+     * Import from Cifra Club / Ultimate Guitar
+     * @description Scrape and parse public chord charts from online tablature sites.
+     */
     get: operations["importCifra"];
     put?: never;
     post?: never;
@@ -801,254 +984,510 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** @description Standard Hosanna API error envelope */
     Error: {
+      /** @description Error payload details */
       error: {
+        /** @description Machine-readable error code */
         code: string;
+        /** @description Human-readable error message */
         message: string;
+        /** @description Additional structured error context */
         details?: unknown;
       };
     };
+    /** @description Replication checkpoint cursor */
     Checkpoint: {
-      /** @description Unix epoch ms */
-      updatedAt?: number;
-      id?: string;
+      /** @description Unix epoch timestamp in milliseconds */
+      updatedAt: number;
+      /** @description Document unique identifier */
+      id: string;
     } | null;
+    /** @description Song document with ChordPro lyrics and metadata */
     Song: {
-      /** Format: uuid */
-      id?: string;
-      orgId?: string;
-      title?: string;
+      /**
+       * Format: uuid
+       * @description Unique song UUID
+       */
+      id: string;
+      /** @description Organization ID owning the song */
+      orgId: string;
+      /** @description Song title */
+      title: string;
+      /** @description Artist or songwriter */
       artist?: string;
+      /** @description ChordPro song lyrics and chords */
       content?: string;
-      /** Format: uuid */
+      /** @description Parent folder ID, null for root */
       folderId?: string | null;
+      /** @description Full path in folder tree */
       path?: string;
-      tags?: string[];
+      /**
+       * @description Song tags / categories
+       * @default []
+       */
+      tags: string[];
+      /** @description Catalog or hymnal number */
       song_number?: number | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      deleted?: boolean;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description Creation timestamp (ISO 8601)
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description Last updated timestamp (ISO 8601)
+       */
+      updatedAt: string;
+      /**
+       * @description Soft-deleted flag
+       * @default false
+       */
+      deleted: boolean;
+      /** @description Trash retention purge deadline */
       purgeAt?: string | null;
-      collectionIds?: string[];
-      isDeleted?: boolean;
+      /**
+       * @description Associated collection UUIDs
+       * @default []
+       */
+      collectionIds: string[];
+      /**
+       * @description Replication sync tombstone alias
+       * @default false
+       */
+      isDeleted: boolean;
     };
+    /** @description Folder document for hierarchical song organization */
     Folder: {
-      /** Format: uuid */
-      id?: string;
-      orgId?: string;
-      name?: string;
+      /**
+       * Format: uuid
+       * @description Unique folder UUID
+       */
+      id: string;
+      /** @description Organization ID owning the folder */
+      orgId: string;
+      /** @description Folder display name */
+      name: string;
+      /** @description Hex color code or theme color identifier */
       color?: string;
+      /** @description Icon identifier */
       icon?: string;
-      /** Format: uuid */
+      /** @description Parent folder UUID, null for root */
       parentId?: string | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      deleted?: boolean;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description Creation timestamp (ISO 8601)
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description Last updated timestamp (ISO 8601)
+       */
+      updatedAt: string;
+      /**
+       * @description Soft-deleted flag
+       * @default false
+       */
+      deleted: boolean;
+      /** @description Trash retention purge deadline */
       purgeAt?: string | null;
-      songCount?: number;
-      folderCount?: number;
-      isDeleted?: boolean;
+      /**
+       * @description Count of direct child songs
+       * @default 0
+       */
+      songCount: number;
+      /**
+       * @description Count of direct child folders
+       * @default 0
+       */
+      folderCount: number;
+      /**
+       * @description Replication sync tombstone alias
+       * @default false
+       */
+      isDeleted: boolean;
     };
+    /** @description Individual item within a worship service order */
     ServiceElement: {
+      /** @description Element unique identifier */
       id?: string;
-      /** @enum {string} */
+      /**
+       * @description Service element type
+       * @enum {string}
+       */
       type?: "welcome" | "scripture" | "message" | "announcement" | "custom" | "song";
+      /** @description Element title */
       title?: string;
+      /** @description Element body or scripture text */
       content?: string | null;
-      position?: number | null;
+      /** @description Order position in the service */
+      position?: number;
+      /** @description Associated song UUID when type is song */
       songId?: string | null;
+      /** @description Worship leader / musician notes */
       notes?: string | null;
+      /** @description Scripture reference passage */
       passage?: string | null;
+      /** @description Estimated duration in seconds */
       duration?: number | null;
+    } & {
+      [key: string]: unknown;
     };
+    /** @description Worship service order of service document */
     Service: {
-      /** Format: uuid */
-      id?: string;
-      name?: string;
-      /** Format: date-time */
-      date?: string;
+      /**
+       * Format: uuid
+       * @description Unique service UUID
+       */
+      id: string;
+      /** @description Service name or theme */
+      name: string;
+      /**
+       * Format: date-time
+       * @description Scheduled service date and time
+       */
+      date: string;
+      /** @description General notes for musicians and tech team */
       notes?: string | null;
-      elements?: components["schemas"]["ServiceElement"][];
-      archived?: boolean;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      isDeleted?: boolean;
-      /** Format: date-time */
-      purgeAt?: string | null;
-    };
-    ServiceNote: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      serviceId?: string;
-      elementId?: string | null;
-      body?: string;
-      private?: boolean;
-      author?: {
+      /**
+       * @description Ordered list of service elements
+       * @default []
+       */
+      elements: ({
+        /** @description Element unique identifier */
         id?: string;
-        name?: string;
-        image?: string | null;
-      } | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    Collection: {
-      /** Format: uuid */
-      id?: string;
-      name?: string;
-      description?: string | null;
-      color?: string;
-      icon?: string;
-      image?: string | null;
-      songIds?: string[];
-      songCount?: number;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      isDeleted?: boolean;
-      /** Format: date-time */
+        /**
+         * @description Service element type
+         * @enum {string}
+         */
+        type?: "welcome" | "scripture" | "message" | "announcement" | "custom" | "song";
+        /** @description Element title */
+        title?: string;
+        /** @description Element body or scripture text */
+        content?: string | null;
+        /** @description Order position in the service */
+        position?: number;
+        /** @description Associated song UUID when type is song */
+        songId?: string | null;
+        /** @description Worship leader / musician notes */
+        notes?: string | null;
+        /** @description Scripture reference passage */
+        passage?: string | null;
+        /** @description Estimated duration in seconds */
+        duration?: number | null;
+      } & {
+        [key: string]: unknown;
+      })[];
+      /**
+       * @description Archived service flag
+       * @default false
+       */
+      archived: boolean;
+      /**
+       * Format: date-time
+       * @description Creation timestamp (ISO 8601)
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description Last updated timestamp (ISO 8601)
+       */
+      updatedAt: string;
+      /**
+       * @description Replication sync tombstone alias
+       * @default false
+       */
+      isDeleted: boolean;
+      /** @description Trash retention purge deadline */
       purgeAt?: string | null;
     };
-    AgendaEvent: {
-      /** Format: uuid */
-      id?: string;
-      date?: string;
-      title?: string;
+    /** @description Collaborative note attached to a service */
+    ServiceNote: {
+      /**
+       * Format: uuid
+       * @description Unique note UUID
+       */
+      id: string;
+      /** @description Owning organization ID */
+      orgId: string;
+      /**
+       * Format: uuid
+       * @description Parent service UUID
+       */
+      serviceId: string;
+      /** @description Note title */
+      title: string;
+      /** @description Note content */
+      content: string;
+      /** @description Note category or role target */
       type?: string;
-      time?: string;
-      durationMinutes?: number;
-      location?: string | null;
+      /** @description Ordering position */
+      position?: number;
+      /**
+       * @description Replication tombstone flag
+       * @default false
+       */
+      isDeleted: boolean;
+      /**
+       * Format: date-time
+       * @description Creation timestamp (ISO 8601)
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description Last updated timestamp (ISO 8601)
+       */
+      updatedAt: string;
+    };
+    /** @description Custom song collection / tag grouping */
+    Collection: {
+      /**
+       * Format: uuid
+       * @description Collection unique UUID
+       */
+      id: string;
+      /** @description Owning organization ID */
+      orgId: string;
+      /** @description Collection name */
+      name: string;
+      /** @description Collection color code */
+      color?: string;
+      /** @description Collection icon */
+      icon?: string;
+      /**
+       * @description Number of songs in this collection
+       * @default 0
+       */
+      songCount: number;
+      /**
+       * @description Replication tombstone flag
+       * @default false
+       */
+      isDeleted: boolean;
+      /**
+       * Format: date-time
+       * @description Creation timestamp (ISO 8601)
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description Last updated timestamp (ISO 8601)
+       */
+      updatedAt: string;
+    };
+    /** @description Agenda calendar event for ministry teams */
+    AgendaEvent: {
+      /**
+       * Format: uuid
+       * @description Event unique UUID
+       */
+      id: string;
+      /** @description Owning organization ID */
+      orgId: string;
+      /** @description Event title */
+      title: string;
+      /**
+       * Format: date-time
+       * @description Event start date/time (ISO 8601)
+       */
+      date: string;
+      /** @description Event notes */
       notes?: string | null;
-      reminder?: unknown;
-      /** Format: uuid */
-      linkedServiceId?: string | null;
-      responsibilities?: unknown;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      isDeleted?: boolean;
-      /** Format: date-time */
-      purgeAt?: string | null;
+      /**
+       * @description Replication tombstone flag
+       * @default false
+       */
+      isDeleted: boolean;
+      /**
+       * Format: date-time
+       * @description Creation timestamp (ISO 8601)
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description Last updated timestamp (ISO 8601)
+       */
+      updatedAt: string;
     };
+    /** @description Public subscription plan pricing tiers */
     PlanPricing: {
-      /** @enum {string} */
-      plan?: "cloud";
-      currency?: string;
-      monthly?: {
-        amount?: string;
-        amountCents?: number;
+      /**
+       * @description Plan tier identifier
+       * @enum {string}
+       */
+      plan: "cloud";
+      /** @description Three-letter ISO currency code */
+      currency: string;
+      /** @description Monthly billing option */
+      monthly: {
+        /** @description Formatted monthly amount */
+        amount: string;
+        /** @description Monthly price in cents */
+        amountCents: number;
         /**
          * @description Stable period id; clients localize via billing.period.*
          * @enum {string}
          */
-        period?: "month" | "year";
+        period: "month" | "year";
       };
-      annual?: {
-        amount?: string;
-        amountCents?: number;
+      /** @description Annual billing option */
+      annual: {
+        /** @description Formatted annual amount */
+        amount: string;
+        /** @description Annual price in cents */
+        amountCents: number;
         /**
          * @description Stable period id; clients localize via billing.period.*
          * @enum {string}
          */
-        period?: "month" | "year";
+        period: "month" | "year";
       };
     };
+    /** @description Full organization data archive for backup and restore */
     BackupDocument: {
-      /** @example 2.2 */
+      /** @description Backup schema version (e.g., 2.2) */
       version: string;
-      /** Format: date-time */
-      exportedAt?: string;
-      folders: components["schemas"]["Folder"][];
-      songs: components["schemas"]["Song"][];
-      services: components["schemas"]["Service"][];
-      collections?: components["schemas"]["Collection"][];
-      agendaEvents?: components["schemas"]["AgendaEvent"][];
-    };
-    /** @enum {string} */
-    ReplicationCollection: "songs" | "folders" | "collections" | "services" | "agendaEvents";
-    PullRequest: {
-      checkpoint?: components["schemas"]["Checkpoint"];
-      /** @default 100 */
-      limit: number;
-    };
-    PullResponse: {
-      documents?: {
+      /**
+       * Format: date-time
+       * @description Export ISO timestamp
+       */
+      exportedAt: string;
+      /** @description Exported folder documents */
+      folders: {
         [key: string]: unknown;
       }[];
-      checkpoint?: components["schemas"]["Checkpoint"];
+      /** @description Exported song documents */
+      songs: {
+        [key: string]: unknown;
+      }[];
+      /** @description Exported service orders */
+      services: {
+        [key: string]: unknown;
+      }[];
+      /** @description Exported song collections */
+      collections?: {
+        [key: string]: unknown;
+      }[];
+      /** @description Exported calendar agenda events */
+      agendaEvents?: {
+        [key: string]: unknown;
+      }[];
     };
+    /**
+     * @description Supported replication collection name
+     * @enum {string}
+     */
+    ReplicationCollection:
+      "songs" | "folders" | "services" | "collections" | "service_notes" | "agenda_events";
+    /** @description Multi-collection pull request payload */
+    PullRequest: {
+      /** @description Current client checkpoint per collection */
+      checkpoint?: {
+        [key: string]: unknown;
+      } | null;
+      /**
+       * @description Maximum changes to pull
+       * @default 100
+       */
+      limit: number;
+    };
+    /** @description Replication pull response payload */
+    PullResponse: {
+      /** @description New checkpoint state per collection */
+      checkpoint?: {
+        [key: string]: unknown;
+      } | null;
+      /** @description List of changed documents */
+      documents: {
+        [key: string]: unknown;
+      }[];
+      /** @description Whether more changes remain to be pulled */
+      hasMore: boolean;
+    };
+    /** @description Single document mutation row for replication push */
     ChangeRow: {
+      /** @description New document state submitted by client */
       newDocumentState: {
         [key: string]: unknown;
       };
+      /** @description Client baseline state for three-way merge */
       assumedMasterState?: {
         [key: string]: unknown;
       } | null;
     };
+    /** @description Sheet music stroke annotations for a song in a service */
     AnnotationGetResponse: {
-      canvasDataBase64?: string;
-      /** Format: date-time */
-      updatedAt?: string;
+      /** @description Base64-encoded canvas stroke drawing data */
+      canvasDataBase64: string;
+      /**
+       * Format: date-time
+       * @description Last modified timestamp
+       */
+      updatedAt: string;
+      /** @description User ID who last updated annotations */
       updatedById?: string | null;
-      revision?: number;
+      /** @description Monotonically increasing annotation revision */
+      revision: number;
     };
+    /** @description Asynchronous AI-powered song sheet/PDF import job */
     SongImportJob: {
-      /** Format: uuid */
-      id?: string;
-      /** @enum {string} */
-      status?: "queued" | "running" | "completed" | "failed" | "cancelled";
-      steps?: {
-        id?: string;
-        label?: string;
-        done?: boolean;
-        active?: boolean;
+      /**
+       * Format: uuid
+       * @description Import job UUID
+       */
+      id: string;
+      /**
+       * @description Job execution status
+       * @enum {string}
+       */
+      status: "queued" | "running" | "completed" | "failed" | "cancelled";
+      /** @description Progress breakdown of the import pipeline */
+      steps: {
+        /** @description Step identifier */
+        id: string;
+        /** @description Human-readable step label */
+        label: string;
+        /** @description Whether step completed successfully */
+        done: boolean;
+        /** @description Whether step is currently executing */
+        active: boolean;
       }[];
+      /** @description Extracted result when status is completed */
       result?: {
+        /** @description Extracted song title */
         title?: string;
+        /** @description Extracted song artist */
         artist?: string;
+        /** @description Extracted ChordPro lyrics */
         content?: string;
+        /** @description Detected musical key */
         key?: string;
-        tempo?: string;
+        /** @description Detected tempo */
+        bpm?: number;
+        /** @description Detected time signature */
         timeSignature?: string;
-        confidence?: number;
-        warnings?: string[];
-        youtube?: string;
-        ccli?: string;
-        composer?: string;
-        copyright?: string;
-        subtitle?: string;
-        duration?: string;
-        diagnostics?: {
-          severity?: string;
-          message?: string;
-          line?: number;
-        }[];
-        possibleDuplicates?: {
-          id?: string;
-          title?: string;
-          artist?: string;
-          score?: number;
-        }[];
+        /** @description Detected song language */
+        language?: string;
+        /**
+         * Format: uuid
+         * @description Created song UUID if auto-saved
+         */
+        songId?: string;
       } | null;
-      errorMessage?: string | null;
-      /** @enum {string|null} */
-      cancelCode?:
-        "not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear" | null;
+      /** @description Error details when status is failed */
+      error?: {
+        /** @description Error classification code */
+        code: string;
+        /** @description Human-readable failure message */
+        message: string;
+      } | null;
+      /** @description AI pipeline rejection reason */
+      rejectionReason?:
+        ("not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear") | null;
+      /** @description Reason if cancelled */
       cancelReason?: string | null;
-      /** @enum {string|null} */
-      cancelledBy?: "ai" | "user" | null;
+      /** @description Who cancelled the job */
+      cancelledBy?: ("ai" | "user") | null;
     };
   };
   responses: never;
@@ -1075,7 +1514,9 @@ export interface operations {
         };
         content: {
           "application/json": {
+            /** @example ok */
             status?: string;
+            /** Format: date-time */
             timestamp?: string;
           };
         };
@@ -1124,7 +1565,7 @@ export interface operations {
       };
     };
   };
-  getCronagendaReminders: {
+  getCronAgendaReminders: {
     parameters: {
       query?: never;
       header?: never;
@@ -1146,7 +1587,7 @@ export interface operations {
       };
     };
   };
-  postCronagendaReminders: {
+  postCronAgendaReminders: {
     parameters: {
       query?: never;
       header?: never;
@@ -1168,7 +1609,7 @@ export interface operations {
       };
     };
   };
-  getCronpurgeTrash: {
+  getCronPurgeTrash: {
     parameters: {
       query?: never;
       header?: never;
@@ -1184,13 +1625,14 @@ export interface operations {
         };
         content: {
           "application/json": {
-            [key: string]: unknown;
+            /** @description Count of purged items */
+            purged?: number;
           };
         };
       };
     };
   };
-  postCronpurgeTrash: {
+  postCronPurgeTrash: {
     parameters: {
       query?: never;
       header?: never;
@@ -1206,7 +1648,8 @@ export interface operations {
         };
         content: {
           "application/json": {
-            [key: string]: unknown;
+            /** @description Count of purged items */
+            purged?: number;
           };
         };
       };
@@ -1224,36 +1667,29 @@ export interface operations {
         "application/json": {
           /** @enum {string} */
           sourceType: "photo" | "gallery" | "pdf";
-          /** @description Photo/gallery bytes, or PDF page-1 screenshot (base64) */
           imageBase64: string;
           /** @default image/jpeg */
           imageMimeType?: string;
-          /** @description Extra page screenshots (pages 2+) */
           imagesBase64?: string[];
           imageMimeTypes?: string[];
-          /** @description Required when sourceType is pdf */
           pdfBase64?: string;
           fileName?: string;
         };
       };
     };
     responses: {
-      /** @description Job accepted (queued/running); poll GET for progress */
+      /** @description Job created and queued */
       202: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["SongImportJob"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Error"];
+          "application/json": {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            status: "queued";
+          };
         };
       };
     };
@@ -1308,11 +1744,12 @@ export interface operations {
         page?: number;
         limit?: number;
         search?: string;
-        /** @description UUID or "root" */
         folder?: string;
+        key?: string;
         tag?: string;
         sortBy?: "title" | "artist" | "createdAt" | "updatedAt";
         sortOrder?: "asc" | "desc";
+        searchFields?: string;
       };
       header?: never;
       path?: never;
@@ -1350,7 +1787,6 @@ export interface operations {
           title: string;
           artist?: string;
           content?: string;
-          /** Format: uuid */
           folderId?: string | null;
           song_number?: number | null;
           path?: string;
@@ -1479,7 +1915,6 @@ export interface operations {
           title?: string;
           artist?: string;
           content?: string;
-          /** Format: uuid */
           folderId?: string | null;
           song_number?: number | null;
           path?: string;
@@ -1497,7 +1932,7 @@ export interface operations {
           "application/json": components["schemas"]["Song"];
         };
       };
-      /** @description Conflict */
+      /** @description Conflict - song was modified concurrently */
       409: {
         headers: {
           [name: string]: unknown;
@@ -1562,7 +1997,6 @@ export interface operations {
         "application/json": {
           /** Format: date-time */
           updatedAt: string;
-          /** Format: uuid */
           folderId: string | null;
           newPath?: string;
         };
@@ -1611,7 +2045,6 @@ export interface operations {
       content: {
         "application/json": {
           name: string;
-          /** Format: uuid */
           parentId?: string | null;
           color?: string;
           icon?: string;
@@ -1665,7 +2098,6 @@ export interface operations {
           /** Format: date-time */
           updatedAt: string;
           name?: string;
-          /** Format: uuid */
           parentId?: string | null;
           color?: string;
           icon?: string;
@@ -1850,7 +2282,19 @@ export interface operations {
           date?: string;
           notes?: string;
           archived?: boolean;
-          elements?: components["schemas"]["ServiceElement"][];
+          elements?: {
+            id: string;
+            /** @enum {string} */
+            type: "welcome" | "scripture" | "message" | "announcement" | "custom" | "song";
+            title: string;
+            content?: string;
+            position?: number;
+            /** Format: uuid */
+            songId?: string;
+            notes?: string;
+            passage?: string;
+            duration?: number;
+          }[];
         };
       };
     };
@@ -2356,7 +2800,17 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": {
-          [key: string]: unknown;
+          /** @enum {string} */
+          provider?: "openai" | "anthropic" | "google" | "deepseek" | "openai_compatible";
+          model?: string;
+          enabled?: boolean;
+          apiKey?: string;
+          baseUrl?: string | null;
+          maxToolCalls?: number;
+          temperature?: number | null;
+          maxOutputTokens?: number | null;
+          instructions?: string | null;
+          memoryEnabled?: boolean;
         };
       };
     };
