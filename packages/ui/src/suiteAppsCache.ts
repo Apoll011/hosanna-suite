@@ -17,7 +17,7 @@ export type SuiteCatalogApp = {
   nameKey?: string | null;
   shortNameKey?: string | null;
   descriptionKey?: string | null;
-  logoUrl: string;
+  logoUrl?: string | null;
   homeUrl: string | null;
   status: "live" | "coming_soon" | string;
   accessible?: boolean;

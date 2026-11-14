@@ -39,9 +39,10 @@ export type SuiteAppDefinition = {
   descriptionKey?: string;
   /**
    * Logo path on {@link logoHost}, or an absolute URL.
+   * Omit for coming-soon apps until a real mark exists (UI shows a clock fallback).
    * Each live app owns its favicon under its own `public/`.
    */
-  logoUrl: string;
+  logoUrl?: string;
   /** Origin that serves `logoUrl` when relative. Defaults to `auth`. */
   logoHost?: SuiteAppLogoHost;
   status: SuiteAppStatus;
@@ -59,7 +60,8 @@ export type SuiteAppDto = {
   nameKey?: string;
   shortNameKey?: string;
   descriptionKey?: string;
-  logoUrl: string;
+  /** Absolute logo URL, or null when the app has no mark yet. */
+  logoUrl: string | null;
   /** Absolute or same-origin path; null when the app is not openable yet. */
   homeUrl: string | null;
   status: SuiteAppStatus;
@@ -131,8 +133,6 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     shortName: "Planning",
     description: "Services, events, teams, rooms, and resources.",
     ...appKeys("planning"),
-    logoUrl: "/favicon.png",
-    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 30,
     accent: "#059669",
@@ -144,8 +144,6 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     shortName: "Presenter",
     description: "Booth show control, lyrics, media, and stream feed.",
     ...appKeys("presenter"),
-    logoUrl: "/favicon.png",
-    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 40,
     accent: "#d97706",
@@ -157,8 +155,6 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     shortName: "Community",
     description: "People, posts, sermons, forms, prayer, and check-in.",
     ...appKeys("community"),
-    logoUrl: "/favicon.png",
-    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 50,
     accent: "#7c3aed",
@@ -170,8 +166,6 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     shortName: "Finance",
     description: "Giving, funds, budgets, expenses, and statements.",
     ...appKeys("finance"),
-    logoUrl: "/favicon.png",
-    logoHost: "auth",
     status: "coming_soon",
     sortOrder: 60,
     accent: "#0d9488",
@@ -222,8 +216,9 @@ function originForLogoHost(host: SuiteAppLogoHost, env: SuiteAppUrlEnv): string 
   }
 }
 
-function resolveLogoUrl(app: SuiteAppDefinition, env: SuiteAppUrlEnv): string {
-  const logoUrl = app.logoUrl;
+function resolveLogoUrl(app: SuiteAppDefinition, env: SuiteAppUrlEnv): string | null {
+  const logoUrl = app.logoUrl?.trim();
+  if (!logoUrl) return null;
   if (logoUrl.startsWith("http://") || logoUrl.startsWith("https://")) return logoUrl;
   const path = logoUrl.startsWith("/") ? logoUrl : `/${logoUrl}`;
   return `${originForLogoHost(app.logoHost ?? "auth", env)}${path}`;

@@ -5,12 +5,14 @@
 
 "use client";
 
+import { Clock3 } from "lucide-react";
 import React from "react";
 
 import { cn } from "./cn";
 
 export type SuiteAppIconProps = {
-  logoUrl: string;
+  /** Absolute or same-origin logo URL. When missing, shows the coming-soon clock. */
+  logoUrl?: string | null;
   accent?: string;
   /** Outer tile size classes (default h-12 w-12). */
   className?: string;
@@ -25,6 +27,12 @@ const SIZE = {
   lg: "h-14 w-14 rounded-2xl",
 } as const;
 
+const ICON = {
+  sm: "h-5 w-5",
+  md: "h-6 w-6",
+  lg: "h-7 w-7",
+} as const;
+
 export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
   logoUrl,
   accent,
@@ -32,6 +40,8 @@ export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
   imgClassName,
   size = "md",
 }) => {
+  const hasLogo = Boolean(logoUrl?.trim());
+
   return (
     <span
       className={cn(
@@ -48,17 +58,20 @@ export const SuiteAppIcon: React.FC<SuiteAppIconProps> = ({
           : { backgroundColor: "color-mix(in srgb, var(--color-m3-sidebar) 90%, transparent)" }
       }
     >
-      <img
-        src={logoUrl}
-        alt=""
-        draggable={false}
-        className={cn(
-          // Square edge-to-edge marks: fill the well 1:1. Parent overflow +
-          // radius softens corners without zooming into the artwork.
-          "h-full w-full object-cover object-center",
-          imgClassName,
-        )}
-      />
+      {hasLogo ? (
+        <img
+          src={logoUrl!}
+          alt=""
+          draggable={false}
+          className={cn("h-full w-full object-cover object-center", imgClassName)}
+        />
+      ) : (
+        <Clock3
+          className={cn(ICON[size], accent ? "opacity-80" : "text-m3-secondary")}
+          style={accent ? { color: accent } : undefined}
+          aria-hidden
+        />
+      )}
     </span>
   );
 };

@@ -8,7 +8,7 @@
 
 "use client";
 
-import { Clock3, Home, LayoutGrid } from "lucide-react";
+import { Home, LayoutGrid } from "lucide-react";
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { cn } from "./cn";
@@ -258,15 +258,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
                       aria-label={comingSoonLabel}
                       className="flex w-full flex-col items-center gap-2 rounded-2xl px-2 py-3 text-center opacity-55"
                     >
-                      <span
-                        className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5 dark:ring-white/10"
-                        style={{
-                          backgroundColor:
-                            "color-mix(in srgb, var(--color-m3-sidebar) 90%, transparent)",
-                        }}
-                      >
-                        <Clock3 className="h-5 w-5 text-m3-secondary" aria-hidden />
-                      </span>
+                      <SuiteAppIcon size="sm" />
                       <span className="line-clamp-2 w-full text-[11px] font-semibold leading-tight text-m3-text">
                         {comingSoonLabel}
                       </span>
