@@ -6,6 +6,7 @@
 import { ChordProImportProvider } from "./chordpro";
 import { JsonImportProvider } from "./json";
 import { SongImportRegistry } from "./registry";
+import { SheetMusicImportProvider } from "./sheetMusicProvider";
 import { SongbookProImportProvider } from "./songbookProvider";
 
 export type {
@@ -35,9 +36,15 @@ export {
   type SongbookSetlistSummary,
 } from "./songbook";
 export { SongbookProImportProvider } from "./songbookProvider";
+export {
+  SheetMusicImportProvider,
+  type SheetMusicImportOptions,
+  type SheetMusicImportSession,
+} from "./sheetMusicProvider";
 
 export const songImportRegistry = new SongImportRegistry();
 
 songImportRegistry.register(new ChordProImportProvider());
 songImportRegistry.register(new JsonImportProvider());
 songImportRegistry.register(new SongbookProImportProvider());
+songImportRegistry.register(new SheetMusicImportProvider());
