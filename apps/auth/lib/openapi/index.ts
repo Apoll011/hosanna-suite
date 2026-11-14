@@ -1,4 +1,4 @@
-import { getAuthComponentSchemas } from "./schemas.js";
+import { getAuthComponentSchemas } from "./schemas";
 
 const sessionAuth = [{ cookieAuth: [] }, { bearerAuth: [] }];
 const cronAuth = [{ cronSecret: [] }];
