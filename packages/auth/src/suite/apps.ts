@@ -64,7 +64,9 @@ export type SuiteAppDto = {
   accessible: boolean;
 };
 
-function appKeys(id: SuiteAppId): Pick<SuiteAppDefinition, "nameKey" | "shortNameKey" | "descriptionKey"> {
+function appKeys(
+  id: SuiteAppId,
+): Pick<SuiteAppDefinition, "nameKey" | "shortNameKey" | "descriptionKey"> {
   if (id === "platform") {
     return {
       nameKey: "suite.apps.auth.name",
@@ -97,7 +99,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     logoUrl: "/favicon.png",
     status: "live",
     sortOrder: 10,
-    accent: "#64748b",
+    accent: "#0F766E",
     categories: ["platform"],
   },
   {
