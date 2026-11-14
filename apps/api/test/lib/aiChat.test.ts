@@ -4,6 +4,7 @@ import { APICallError } from "ai";
 import {
   chatStepSafetyLimit,
   describeChatError,
+  filterUnsupportedFileParts,
   localePromptBlock,
   modelFileDataToBase64,
   runBatch,
@@ -115,5 +116,57 @@ describe("modelFileDataToBase64", () => {
     );
     assert.equal(modelFileDataToBase64({ type: "url", url: "https://example.com/x.png" }), null);
     assert.equal(modelFileDataToBase64(null), null);
+  });
+});
+
+describe("filterUnsupportedFileParts", () => {
+  const sampleMessages = [
+    {
+      id: "u1",
+      role: "user" as const,
+      parts: [
+        { type: "text" as const, text: "Add this song" },
+        {
+          type: "file" as const,
+          url: "data:application/pdf;base64,JVBERi0x...",
+          mediaType: "application/pdf",
+          filename: "sheet.pdf",
+        },
+        {
+          type: "file" as const,
+          url: "data:image/jpeg;base64,/9j/4AAQ...",
+          mediaType: "image/jpeg",
+          filename: "sheet.jpg",
+        },
+      ],
+    },
+  ];
+
+  it("converts unsupported PDF and image parts to text for DeepSeek", () => {
+    const out = filterUnsupportedFileParts(sampleMessages, "deepseek");
+    assert.equal(out[0].parts.length, 3);
+    assert.equal(out[0].parts[0].type, "text");
+    assert.equal(out[0].parts[1].type, "text");
+    assert.match((out[0].parts[1] as { text: string }).text, /Attached PDF: sheet\.pdf/);
+    assert.equal(out[0].parts[2].type, "text");
+    assert.match((out[0].parts[2] as { text: string }).text, /Attached image: sheet\.jpg/);
+  });
+
+  it("converts unsupported PDF to text but preserves images for OpenAI", () => {
+    const out = filterUnsupportedFileParts(sampleMessages, "openai");
+    assert.equal(out[0].parts[0].type, "text");
+    assert.equal(out[0].parts[1].type, "text");
+    assert.match((out[0].parts[1] as { text: string }).text, /Attached PDF: sheet\.pdf/);
+    assert.equal(out[0].parts[2].type, "file");
+  });
+
+  it("preserves native PDF and image parts for Google and Anthropic", () => {
+    const googleOut = filterUnsupportedFileParts(sampleMessages, "google");
+    assert.equal(googleOut[0].parts[1].type, "file");
+    assert.equal(googleOut[0].parts[2].type, "file");
+
+    const anthropicOut = filterUnsupportedFileParts(sampleMessages, "anthropic");
+    assert.equal(anthropicOut[0].parts[1].type, "file");
+    assert.equal(anthropicOut[0].parts[2].type, "file");
   });
 });

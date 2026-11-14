@@ -251,7 +251,7 @@ export async function runBatch<I>(
 
 function buildHosannaTools(
   authInfo: AuthInfo,
-  opts?: { nativeWebAuth?: NativeWebAuth | null; memory?: AiMemoryService },
+  opts?: { nativeWebAuth?: NativeWebAuth | null; memory?: AiMemoryService; rawMessages?: UIMessage[] },
 ) {
   const memory = opts?.memory;
   const nativeWebAuth = opts?.nativeWebAuth ?? null;
@@ -1653,33 +1653,55 @@ function buildHosannaTools(
         const ctx = requireMcpContext(authInfo);
         requirePermission(ctx, "song.import");
 
-        let userContent: unknown = [];
-        for (let i = messages.length - 1; i >= 0; i--) {
-          const m = messages[i];
-          if (m?.role === "user") {
-            userContent = m.content;
-            break;
+        let rawParts: unknown[] = [];
+        if (opts?.rawMessages) {
+          for (let i = opts.rawMessages.length - 1; i >= 0; i--) {
+            const m = opts.rawMessages[i];
+            if (m?.role === "user" && Array.isArray(m.parts)) {
+              rawParts = m.parts;
+              break;
+            }
           }
         }
-        const parts = Array.isArray(userContent) ? userContent : [];
-        const images = parts.filter(
-          (p) =>
-            p &&
-            typeof p === "object" &&
-            (p as { type?: string }).type === "file" &&
-            typeof (p as { mediaType?: string }).mediaType === "string" &&
-            ((p as { mediaType?: string }).mediaType as string).startsWith("image/"),
+        if (rawParts.length === 0) {
+          for (let i = messages.length - 1; i >= 0; i--) {
+            const m = messages[i];
+            if (m?.role === "user" && Array.isArray(m.content)) {
+              rawParts = m.content;
+              break;
+            }
+          }
+        }
+
+        const fileParts = rawParts.filter(
+          (p): p is Record<string, unknown> =>
+            Boolean(p && typeof p === "object" && (p as { type?: string }).type === "file"),
         );
+
+        const images = fileParts.filter((p) => {
+          const media = String(p.mediaType || "");
+          return media.startsWith("image/");
+        });
+
         if (images.length === 0) {
+          const pdfPart = fileParts.find((p) => String(p.mediaType || "") === "application/pdf");
+          if (pdfPart) {
+            return textResult({
+              error: true,
+              code: "pdf_requires_rendering",
+              message:
+                "PDF sheet music needs to be rendered to images before import. Please use the Sheet Music Importer modal in Studio.",
+            });
+          }
           return textResult({
             error: true,
             code: "no_sheet",
-            message: "No image attachment found. Attach a photo or PDF of a chord sheet.",
+            message: "No sheet music image or PDF found in the message.",
           });
         }
 
         const primary = images[args.fileIndex ?? 0] ?? images[0];
-        const primaryB64 = modelFileDataToBase64((primary as { data?: unknown }).data);
+        const primaryB64 = modelFileDataToBase64(primary.url ?? primary.data);
         if (!primaryB64) {
           return textResult({
             error: true,
@@ -1688,16 +1710,16 @@ function buildHosannaTools(
           });
         }
 
-        const mimeOf = (p: unknown) => (p as { mediaType?: string }).mediaType ?? "image/jpeg";
+        const mimeOf = (p: Record<string, unknown>) => String(p.mediaType || "image/jpeg");
         const rest = args.fileIndex == null ? images.slice(1) : [];
         const restImages = rest
           .map((p) => ({
-            base64: modelFileDataToBase64((p as { data?: unknown }).data),
+            base64: modelFileDataToBase64(p.url ?? p.data),
             mime: mimeOf(p),
           }))
           .filter((x): x is { base64: string; mime: string } => Boolean(x.base64));
 
-        const fileName = (primary as { filename?: string }).filename;
+        const fileName = typeof primary.filename === "string" ? primary.filename : undefined;
         const job = await songImport.createJob({
           orgId: ctx.orgId,
           sourceType: restImages.length > 0 ? "gallery" : "photo",
@@ -1705,7 +1727,7 @@ function buildHosannaTools(
           imageMimeType: mimeOf(primary),
           imagesBase64: restImages.map((x) => x.base64),
           imageMimeTypes: restImages.map((x) => x.mime),
-          fileName: typeof fileName === "string" ? fileName : undefined,
+          fileName,
         });
         return textResult({ importJobId: job.id, status: job.status, steps: job.steps });
       },
@@ -2493,7 +2515,55 @@ export function describeChatError(error: unknown): string {
     }
     return "The AI provider could not process this request.";
   }
+  const msg = error instanceof Error ? error.message : String(error);
+  if (/UnsupportedFunctionalityError|file part|media type|data URL/i.test(msg)) {
+    return "The configured AI provider does not support this file attachment type. Try attaching as an image or use the Sheet Music Importer.";
+  }
   return "Something went wrong while generating the reply. Please try again.";
+}
+
+export function filterUnsupportedFileParts(
+  messages: UIMessage[],
+  provider: AiProvider,
+): UIMessage[] {
+  const supportsPdf = provider === "google" || provider === "anthropic";
+  const supportsImage = provider === "google" || provider === "anthropic" || provider === "openai";
+
+  return messages.map((m) => {
+    if (m.role !== "user" || !Array.isArray(m.parts)) return m;
+    const parts = m.parts.map((p) => {
+      if (p.type !== "file") return p;
+      const filePart = p as { type: "file"; mediaType?: string; url?: string; filename?: string };
+      const mediaType = filePart.mediaType || "application/octet-stream";
+      const isPdf = mediaType === "application/pdf";
+      const isImage = mediaType.startsWith("image/");
+
+      if (isPdf && !supportsPdf) {
+        return {
+          type: "text" as const,
+          text: `[Attached PDF: ${filePart.filename || "document.pdf"}. The document is attached and available for tools.]`,
+        };
+      }
+
+      if (isImage && !supportsImage) {
+        return {
+          type: "text" as const,
+          text: `[Attached image: ${filePart.filename || "sheet.jpg"}. The image is attached and available for tools.]`,
+        };
+      }
+
+      if (!isPdf && !isImage) {
+        return {
+          type: "text" as const,
+          text: `[Attached file: ${filePart.filename || "attachment"} (${mediaType}).]`,
+        };
+      }
+
+      return p;
+    });
+
+    return { ...m, parts };
+  });
 }
 
 export class AiChatService {
@@ -2520,6 +2590,7 @@ export class AiChatService {
     const tools = buildHosannaTools(opts.authInfo, {
       nativeWebAuth,
       memory: runtime.memoryEnabled ? this.memory : undefined,
+      rawMessages: opts.messages,
     });
     const system =
       LOGOS_CHAT_SYSTEM +
@@ -2529,7 +2600,8 @@ export class AiChatService {
       localePromptBlock(opts.locale) +
       clockContextPromptBlock() +
       contextBlock(opts.pageContext);
-    const modelMessages = await convertToModelMessages(opts.messages);
+    const messages = filterUnsupportedFileParts(opts.messages, runtime.provider);
+    const modelMessages = await convertToModelMessages(messages);
 
     const budget: ToolBudgetState = {
       max: runtime.maxToolCalls,
