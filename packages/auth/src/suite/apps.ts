@@ -88,7 +88,6 @@ function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
-
 /**
  * Hosanna Suite — Application Brand Colors
  *
@@ -99,10 +98,10 @@ function stripTrailingSlash(url: string): string {
  * Applications:
  *
  * Auth
- *      Primary:       #7057B8  (Royal Violet)
- *      Dark:          #493B7D
- *      Bright:        #967FCF
- *      Container:     #E9E3F5
+ *      Primary:       #0F766E  (-)
+ *      Dark:          -
+ *      Bright:        -
+ *      Container:     -
  *
  * Planning
  *      Primary:       #C49A3A  (Golden Amber)
@@ -133,7 +132,6 @@ function stripTrailingSlash(url: string): string {
  * semantic colors. Shared semantic tokens (success, warning,
  * error, etc.) should remain independent of application branding.
  */
-
 
 /**
  * Static product registry. Account (`auth`) and Music are live today;
