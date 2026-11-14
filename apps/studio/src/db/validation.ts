@@ -423,6 +423,13 @@ export async function validateBatchSongs(
   const now = new Date().toISOString();
   const prepared: SongDocType[] = [];
   const seenPaths = new Set<string>();
+  const existingPaths = new Set(
+    db.songs
+      .getAllRaw()
+      .filter((s) => !s.isDeleted && !s._deleted && typeof s.path === "string")
+      .map((s) => s.path as string),
+  );
+  const folderNameCache = new Map<string, string>();
 
   for (const item of songsList) {
     const title = (item.title || "").trim();
@@ -431,34 +438,35 @@ export async function validateBatchSongs(
     }
 
     const folderId = item.folderId ?? null;
-    const computedPath = await computeSongPath(db, title, folderId, item.path);
-
-    if (seenPaths.has(computedPath)) {
-      throw new UniqueConstraintError(
-        `Duplicate song in batch with path: "${computedPath}".`,
-        ["orgId", "path"],
-        computedPath,
-      );
+    let folderNameOverride: string | undefined;
+    if (folderId && !item.path) {
+      const cached = folderNameCache.get(folderId);
+      if (cached !== undefined) {
+        folderNameOverride = cached;
+      } else {
+        const folderDoc = await db.folders.findOne(folderId).exec();
+        if (!folderDoc || folderDoc.isDeleted || folderDoc._deleted) {
+          throw new ForeignKeyError(
+            `Folder with ID "${folderId}" does not exist or has been deleted.`,
+            "folder",
+            folderId,
+          );
+        }
+        folderNameOverride = String(folderDoc.name ?? "");
+        folderNameCache.set(folderId, folderNameOverride);
+      }
     }
-    seenPaths.add(computedPath);
 
-    const existing = await db.songs
-      .find({
-        selector: {
-          path: computedPath,
-          isDeleted: { $ne: true },
-          _deleted: { $ne: true },
-        },
-      })
-      .exec();
+    const computedPath = await computeSongPath(db, title, folderId, item.path, folderNameOverride);
 
-    if (existing.length > 0) {
+    if (seenPaths.has(computedPath) || existingPaths.has(computedPath)) {
       throw new UniqueConstraintError(
         `A song with path "${computedPath}" already exists in the database.`,
         ["orgId", "path"],
         computedPath,
       );
     }
+    seenPaths.add(computedPath);
 
     prepared.push({
       id: item.id || crypto.randomUUID(),
@@ -466,6 +474,7 @@ export async function validateBatchSongs(
       artist: item.artist || "",
       content: item.content || "",
       folderId,
+      collectionIds: Array.isArray(item.collectionIds) ? item.collectionIds : [],
       path: computedPath,
       tags: Array.isArray(item.tags) ? item.tags : [],
       song_number: item.song_number ?? null,

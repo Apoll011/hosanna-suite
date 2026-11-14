@@ -1,10 +1,22 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Song } from "@/src/types";
-import { ImportResult, ProviderImportResult, SongImportProvider } from "./types";
+import {
+  ImportResult,
+  ProviderImportResult,
+  ProvidersMetadata,
+  SongImportProvider,
+} from "./types";
 
 export class SongImportRegistry {
   private readonly providers = new Map<string, SongImportProvider>();
+  private readonly byId = new Map<string, SongImportProvider>();
 
   register(provider: SongImportProvider) {
+    this.byId.set(provider.id, provider);
     for (const ext of provider.supportedExtensions) {
       this.providers.set(ext.toLowerCase(), provider);
     }
@@ -14,15 +26,20 @@ export class SongImportRegistry {
     return this.providers.get(extension.toLowerCase());
   }
 
+  getProviderById(id: string) {
+    return this.byId.get(id);
+  }
+
   getProviders(): ProvidersMetadata[] {
     const providers = new Map<string, ProvidersMetadata>();
 
-    this.providers.forEach((provider) => {
+    this.byId.forEach((provider) => {
       providers.set(provider.id, {
         id: provider.id,
         name: provider.name,
         description: provider.description,
         supportedExtensions: provider.supportedExtensions,
+        interactive: provider.interactive,
       });
     });
 
@@ -40,10 +57,10 @@ export class SongImportRegistry {
 
       const provider = this.providers.get(extension);
 
-      if (!provider) {
+      if (!provider || provider.interactive) {
         results.push({
-          providerId: "unknown",
-          fileTypeName: extension || "Unknown",
+          providerId: provider?.id ?? "unknown",
+          fileTypeName: provider?.fileTypeName ?? (extension || "Unknown"),
           created: 0,
           failed: 0,
           ignored: 1,
@@ -78,12 +95,4 @@ export class SongImportRegistry {
       results,
     };
   }
-}
-
-interface ProvidersMetadata {
-  id: string;
-  name: string;
-  description?: string;
-
-  supportedExtensions: readonly string[];
 }

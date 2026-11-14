@@ -1415,6 +1415,29 @@ export const en: typeof pt = {
     supportedProviders: "Supported Providers",
     detectedProvider: "Detected: {provider}",
     backToEdit: "Back to Edit",
+    songbookImport: {
+      title: "Import SongbookPro backup",
+      description:
+        "Importing “{source}” ({songs} songs).",
+      placementLegend: "Treat setlists as",
+      asFolders: "Folders",
+      asFoldersDesc:
+        "Uses each song’s first setlist (e.g. [6, …]) and creates a folder; other memberships are ignored.",
+      asCollections: "Collections",
+      asCollectionsDesc:
+        "Creates one collection per selected setlist and adds each song to every matching setlist.",
+      setlistsLegend: "Setlists to import",
+      selectAll: "Select all",
+      selectNone: "Clear",
+      songCount: "{count} songs",
+      noSetlists: "No setlists found in this backup.",
+      importAction: "Import {count} songs",
+      importing: "Importing…",
+      progressLabel: "Progress",
+      success: "Imported {count} songs from SongbookPro.",
+      partialError: "Failed to import {count} songs.",
+      parseError: "Could not read the SongbookPro backup.",
+    },
   },
   explorer: {
     moreOptions: "More options",

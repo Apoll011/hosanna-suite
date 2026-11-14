@@ -53,15 +53,25 @@ import { getPersonalSettings } from "@hosanna/auth";
 import { writeThemeCookie } from "../lib/themeBoot";
 import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
-import { useCollections } from "../hooks/useCollections";
+import { invalidateCollectionsCache, useCollections } from "../hooks/useCollections";
 import { useFolders } from "../hooks/useFolders";
 import { useStudioSettings } from "../hooks/usePersonalSettings";
 import { useServices } from "../hooks/useServices";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
-import { songImportRegistry, type ProviderImportResult } from "../lib/import";
+import {
+  createLocalImportSink,
+  detectSongbookBackupFile,
+  getSongbookProProvider,
+  parseSongbookBackupFile,
+  songImportRegistry,
+  type ProviderImportResult,
+  type SongbookBackupDocument,
+  type SongbookImportOptions,
+} from "../lib/import";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
 import { filterSearchableSongsWithLiqe } from "../utils";
+import { SongbookImportModal } from "../components/modals/SongbookImportModal";
 import { deriveView } from "./view";
 
 export const MainLayout: React.FC = () => {
@@ -241,6 +251,12 @@ export const MainLayout: React.FC = () => {
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const openModal = useCallback((modal: ActiveModal) => setActiveModal(modal), []);
   const closeModal = useCallback(() => setActiveModal(null), []);
+
+  const [songbookDocument, setSongbookDocument] = useState<SongbookBackupDocument | null>(null);
+  const [isSongbookImporting, setIsSongbookImporting] = useState(false);
+  const [songbookProgress, setSongbookProgress] = useState<{ done: number; total: number } | null>(
+    null,
+  );
 
   const handleSearchChange = useCallback(
     (val: string) => {
@@ -1400,8 +1416,30 @@ export const MainLayout: React.FC = () => {
   const processAndUploadFiles = async (fileList: File[]) => {
     if (!fileList || fileList.length === 0) return;
 
+    const songbookFiles: File[] = [];
+    const otherFiles: File[] = [];
+    for (const file of fileList) {
+      if (await detectSongbookBackupFile(file)) {
+        songbookFiles.push(file);
+      } else {
+        otherFiles.push(file);
+      }
+    }
+
+    if (songbookFiles.length > 0) {
+      try {
+        const doc = await parseSongbookBackupFile(songbookFiles[0]!);
+        setSongbookDocument(doc);
+        setSongbookProgress(null);
+      } catch {
+        showToast(t("modals.songbookImport.parseError"), "error");
+      }
+    }
+
+    if (otherFiles.length === 0) return;
+
     setIsUploadingFiles(true);
-    const result = await songImportRegistry.importFiles(fileList, {
+    const result = await songImportRegistry.importFiles(otherFiles, {
       folderId: currentFolderId,
     });
 
@@ -1411,6 +1449,42 @@ export const MainLayout: React.FC = () => {
 
     await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
     setIsUploadingFiles(false);
+  };
+
+  const handleSongbookImportConfirm = async (options: SongbookImportOptions) => {
+    if (!songbookDocument) return;
+    setIsSongbookImporting(true);
+    setSongbookProgress({ done: 0, total: songbookDocument.songs.length });
+    try {
+      const provider = getSongbookProProvider();
+      const sink = createLocalImportSink();
+      const result = await provider.importPrepared(
+        songbookDocument,
+        options,
+        sink,
+        (done, total) => setSongbookProgress({ done, total }),
+      );
+      showToast(
+        t("modals.songbookImport.success", { count: result.created }),
+        result.created > 0 ? "success" : "warning",
+      );
+      if (result.failed > 0) {
+        showToast(t("modals.songbookImport.partialError", { count: result.failed }), "error");
+      }
+      if (result.ignored > 0) {
+        showToastImportResult({ ...result, created: 0, failed: 0 });
+      }
+      invalidateSongsCache();
+      invalidateCollectionsCache();
+      await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
+      setSongbookDocument(null);
+      setSongbookProgress(null);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : t("modals.songbookImport.parseError");
+      showToast(message, "error");
+    } finally {
+      setIsSongbookImporting(false);
+    }
   };
 
   const handleChordProFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1622,7 +1696,7 @@ export const MainLayout: React.FC = () => {
             type="file"
             ref={fileInputRef}
             multiple
-            accept=".pro,.chordpro,.txt,.chopro"
+            accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json"
             onChange={handleChordProFileUpload}
             className="hidden"
           />
@@ -1877,6 +1951,20 @@ export const MainLayout: React.FC = () => {
             }));
           if (fList.length) printFolders(fList);
         }}
+      />
+
+      <SongbookImportModal
+        isOpen={Boolean(songbookDocument)}
+        document={songbookDocument}
+        isImporting={isSongbookImporting}
+        progress={songbookProgress}
+        onClose={() => {
+          if (!isSongbookImporting) {
+            setSongbookDocument(null);
+            setSongbookProgress(null);
+          }
+        }}
+        onConfirm={handleSongbookImportConfirm}
       />
 
       <ExplorerModals

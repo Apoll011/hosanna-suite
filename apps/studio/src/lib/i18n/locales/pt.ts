@@ -1424,6 +1424,29 @@ export const pt = {
     supportedProviders: "Provedores Suportados",
     detectedProvider: "Detetado: {provider}",
     backToEdit: "Voltar para Edição",
+    songbookImport: {
+      title: "Importar backup SongbookPro",
+      description:
+        "A importar “{source}” ({songs} cânticos).",
+      placementLegend: "Tratar setlists como",
+      asFolders: "Pastas",
+      asFoldersDesc:
+        "Usa a primeira setlist de cada cântico (ex.: [6, …]) e cria uma pasta; as restantes são ignoradas.",
+      asCollections: "Coleções",
+      asCollectionsDesc:
+        "Cria uma coleção por setlist selecionada e associa cada cântico às setlists em que aparece.",
+      setlistsLegend: "Setlists a importar",
+      selectAll: "Selecionar todas",
+      selectNone: "Limpar",
+      songCount: "{count} cânticos",
+      noSetlists: "Nenhuma setlist encontrada neste backup.",
+      importAction: "Importar {count} cânticos",
+      importing: "A importar…",
+      progressLabel: "Progresso",
+      success: "Importados {count} cânticos do SongbookPro.",
+      partialError: "Falha ao importar {count} cânticos.",
+      parseError: "Não foi possível ler o backup SongbookPro.",
+    },
   },
   explorer: {
     moreOptions: "Mais opções",

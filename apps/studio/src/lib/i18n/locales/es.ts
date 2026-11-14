@@ -1432,6 +1432,28 @@ export const es: typeof pt = {
     supportedProviders: "Proveedores Compatibles",
     detectedProvider: "Detectado: {provider}",
     backToEdit: "Volver a Edición",
+    songbookImport: {
+      title: "Importar copia SongbookPro",
+      description: "Importando “{source}” ({songs} canciones).",
+      placementLegend: "Tratar setlists como",
+      asFolders: "Carpetas",
+      asFoldersDesc:
+        "Usa la primera setlist de cada canción (p. ej. [6, …]) y crea una carpeta; el resto se ignora.",
+      asCollections: "Colecciones",
+      asCollectionsDesc:
+        "Crea una colección por setlist seleccionada y añade cada canción a las setlists en las que aparece.",
+      setlistsLegend: "Setlists a importar",
+      selectAll: "Seleccionar todas",
+      selectNone: "Limpiar",
+      songCount: "{count} canciones",
+      noSetlists: "No se encontraron setlists en esta copia.",
+      importAction: "Importar {count} canciones",
+      importing: "Importando…",
+      progressLabel: "Progreso",
+      success: "Se importaron {count} canciones de SongbookPro.",
+      partialError: "Error al importar {count} canciones.",
+      parseError: "No se pudo leer la copia de SongbookPro.",
+    },
   },
   explorer: {
     moreOptions: "Más opciones",
