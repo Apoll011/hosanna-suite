@@ -1455,39 +1455,68 @@ export interface components {
       /** @description Extracted result when status is completed */
       result?: {
         /** @description Extracted song title */
-        title?: string;
-        /** @description Extracted song artist */
-        artist?: string;
-        /** @description Extracted ChordPro lyrics */
-        content?: string;
+        title: string;
+        /** @description Extracted artist or songwriter */
+        artist: string;
+        /** @description Extracted ChordPro content */
+        content: string;
         /** @description Detected musical key */
         key?: string;
-        /** @description Detected tempo */
-        bpm?: number;
+        /** @description Detected tempo marking or BPM */
+        tempo?: string;
         /** @description Detected time signature */
         timeSignature?: string;
-        /** @description Detected song language */
-        language?: string;
-        /**
-         * Format: uuid
-         * @description Created song UUID if auto-saved
-         */
-        songId?: string;
-      } | null;
-      /** @description Error details when status is failed */
-      error?: {
-        /** @description Error classification code */
-        code: string;
-        /** @description Human-readable failure message */
-        message: string;
-      } | null;
-      /** @description AI pipeline rejection reason */
-      rejectionReason?:
-        ("not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear") | null;
+        /** @description Extraction confidence 0-1 */
+        confidence?: number;
+        /** @description Human-readable warnings */
+        warnings: string[];
+        /** @description ChordPro diagnostics */
+        diagnostics?: {
+          /** @description Diagnostic severity (error/warning) */
+          severity: string;
+          /** @description Diagnostic message */
+          message: string;
+          /** @description One-based source line when applicable */
+          line?: number;
+        }[];
+        /** @description Possible duplicates */
+        possibleDuplicates?: {
+          /** @description Existing song UUID */
+          id: string;
+          /** @description Existing song title */
+          title: string;
+          /** @description Existing song artist */
+          artist: string;
+          /** @description Similarity score 0-1 */
+          score: number;
+        }[];
+        /** @description YouTube watch URL */
+        youtube?: string;
+        /** @description CCLI song number */
+        ccli?: string;
+        /** @description Composer / writers */
+        composer?: string;
+        /** @description Copyright / publisher line */
+        copyright?: string;
+        /** @description Subtitle or alternate title */
+        subtitle?: string;
+        /** @description Song duration */
+        duration?: string;
+      };
+      /** @description Failure message when status is failed */
+      errorMessage?: string;
+      /**
+       * @description AI pipeline rejection reason
+       * @enum {string}
+       */
+      cancelCode?: "not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear";
       /** @description Reason if cancelled */
-      cancelReason?: string | null;
-      /** @description Who cancelled the job */
-      cancelledBy?: ("ai" | "user") | null;
+      cancelReason?: string;
+      /**
+       * @description Who cancelled the job
+       * @enum {string}
+       */
+      cancelledBy?: "ai" | "user";
     };
   };
   responses: never;

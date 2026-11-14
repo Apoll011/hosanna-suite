@@ -192,51 +192,60 @@ export const AnnotationGetResponseSchema = z
   })
   .describe("Sheet music stroke annotations for a song in a service");
 
+const SongImportStepSchema = z.object({
+  id: z.string().describe("Step identifier"),
+  label: z.string().describe("Human-readable step label"),
+  done: z.boolean().describe("Whether step completed successfully"),
+  active: z.boolean().describe("Whether step is currently executing"),
+});
+
+const SongImportDiagnosticSchema = z.object({
+  severity: z.string().describe("Diagnostic severity (error/warning)"),
+  message: z.string().describe("Diagnostic message"),
+  line: z.number().int().optional().describe("One-based source line when applicable"),
+});
+
+const SongImportDuplicateSchema = z.object({
+  id: z.string().describe("Existing song UUID"),
+  title: z.string().describe("Existing song title"),
+  artist: z.string().describe("Existing song artist"),
+  score: z.number().describe("Similarity score 0-1"),
+});
+
+const SongImportDraftSchema = z.object({
+  title: z.string().describe("Extracted song title"),
+  artist: z.string().describe("Extracted artist or songwriter"),
+  content: z.string().describe("Extracted ChordPro content"),
+  key: z.string().optional().describe("Detected musical key"),
+  tempo: z.string().optional().describe("Detected tempo marking or BPM"),
+  timeSignature: z.string().optional().describe("Detected time signature"),
+  confidence: z.number().min(0).max(1).optional().describe("Extraction confidence 0-1"),
+  warnings: z.array(z.string()).describe("Human-readable warnings"),
+  diagnostics: z.array(SongImportDiagnosticSchema).optional().describe("ChordPro diagnostics"),
+  possibleDuplicates: z.array(SongImportDuplicateSchema).optional().describe("Possible duplicates"),
+  youtube: z.string().optional().describe("YouTube watch URL"),
+  ccli: z.string().optional().describe("CCLI song number"),
+  composer: z.string().optional().describe("Composer / writers"),
+  copyright: z.string().optional().describe("Copyright / publisher line"),
+  subtitle: z.string().optional().describe("Subtitle or alternate title"),
+  duration: z.string().optional().describe("Song duration"),
+});
+
 export const SongImportJobSchema = z
   .object({
     id: z.string().uuid().describe("Import job UUID"),
     status: z
       .enum(["queued", "running", "completed", "failed", "cancelled"])
       .describe("Job execution status"),
-    steps: z
-      .array(
-        z.object({
-          id: z.string().describe("Step identifier"),
-          label: z.string().describe("Human-readable step label"),
-          done: z.boolean().describe("Whether step completed successfully"),
-          active: z.boolean().describe("Whether step is currently executing"),
-        }),
-      )
-      .describe("Progress breakdown of the import pipeline"),
-    result: z
-      .object({
-        title: z.string().optional().describe("Extracted song title"),
-        artist: z.string().optional().describe("Extracted song artist"),
-        content: z.string().optional().describe("Extracted ChordPro lyrics"),
-        key: z.string().optional().describe("Detected musical key"),
-        bpm: z.number().optional().describe("Detected tempo"),
-        timeSignature: z.string().optional().describe("Detected time signature"),
-        language: z.string().optional().describe("Detected song language"),
-        songId: z.string().uuid().optional().describe("Created song UUID if auto-saved"),
-      })
-      .nullable()
-      .optional()
-      .describe("Extracted result when status is completed"),
-    error: z
-      .object({
-        code: z.string().describe("Error classification code"),
-        message: z.string().describe("Human-readable failure message"),
-      })
-      .nullable()
-      .optional()
-      .describe("Error details when status is failed"),
-    rejectionReason: z
+    steps: z.array(SongImportStepSchema).describe("Progress breakdown of the import pipeline"),
+    result: SongImportDraftSchema.optional().describe("Extracted result when status is completed"),
+    errorMessage: z.string().optional().describe("Failure message when status is failed"),
+    cancelCode: z
       .enum(["not_a_song", "unreadable", "blank", "wrong_content", "multiple_unclear"])
-      .nullable()
       .optional()
       .describe("AI pipeline rejection reason"),
-    cancelReason: z.string().nullable().optional().describe("Reason if cancelled"),
-    cancelledBy: z.enum(["ai", "user"]).nullable().optional().describe("Who cancelled the job"),
+    cancelReason: z.string().optional().describe("Reason if cancelled"),
+    cancelledBy: z.enum(["ai", "user"]).optional().describe("Who cancelled the job"),
   })
   .describe("Asynchronous AI-powered song sheet/PDF import job");
 

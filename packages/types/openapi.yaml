@@ -2760,77 +2760,126 @@ components:
           description: Progress breakdown of the import pipeline
         result:
           description: Extracted result when status is completed
-          anyOf:
-            - type: object
-              properties:
-                title:
-                  description: Extracted song title
-                  type: string
-                artist:
-                  description: Extracted song artist
-                  type: string
-                content:
-                  description: Extracted ChordPro lyrics
-                  type: string
-                key:
-                  description: Detected musical key
-                  type: string
-                bpm:
-                  description: Detected tempo
-                  type: number
-                timeSignature:
-                  description: Detected time signature
-                  type: string
-                language:
-                  description: Detected song language
-                  type: string
-                songId:
-                  description: Created song UUID if auto-saved
-                  type: string
-                  format: uuid
-                  pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
-              additionalProperties: false
-            - type: "null"
-        error:
-          description: Error details when status is failed
-          anyOf:
-            - type: object
-              properties:
-                code:
-                  type: string
-                  description: Error classification code
-                message:
-                  type: string
-                  description: Human-readable failure message
-              required:
-                - code
-                - message
-              additionalProperties: false
-            - type: "null"
-        rejectionReason:
+          type: object
+          properties:
+            title:
+              type: string
+              description: Extracted song title
+            artist:
+              type: string
+              description: Extracted artist or songwriter
+            content:
+              type: string
+              description: Extracted ChordPro content
+            key:
+              description: Detected musical key
+              type: string
+            tempo:
+              description: Detected tempo marking or BPM
+              type: string
+            timeSignature:
+              description: Detected time signature
+              type: string
+            confidence:
+              description: Extraction confidence 0-1
+              type: number
+              minimum: 0
+              maximum: 1
+            warnings:
+              type: array
+              items:
+                type: string
+              description: Human-readable warnings
+            diagnostics:
+              description: ChordPro diagnostics
+              type: array
+              items:
+                type: object
+                properties:
+                  severity:
+                    type: string
+                    description: Diagnostic severity (error/warning)
+                  message:
+                    type: string
+                    description: Diagnostic message
+                  line:
+                    description: One-based source line when applicable
+                    type: integer
+                    minimum: -9007199254740991
+                    maximum: 9007199254740991
+                required:
+                  - severity
+                  - message
+                additionalProperties: false
+            possibleDuplicates:
+              description: Possible duplicates
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Existing song UUID
+                  title:
+                    type: string
+                    description: Existing song title
+                  artist:
+                    type: string
+                    description: Existing song artist
+                  score:
+                    type: number
+                    description: Similarity score 0-1
+                required:
+                  - id
+                  - title
+                  - artist
+                  - score
+                additionalProperties: false
+            youtube:
+              description: YouTube watch URL
+              type: string
+            ccli:
+              description: CCLI song number
+              type: string
+            composer:
+              description: Composer / writers
+              type: string
+            copyright:
+              description: Copyright / publisher line
+              type: string
+            subtitle:
+              description: Subtitle or alternate title
+              type: string
+            duration:
+              description: Song duration
+              type: string
+          required:
+            - title
+            - artist
+            - content
+            - warnings
+          additionalProperties: false
+        errorMessage:
+          description: Failure message when status is failed
+          type: string
+        cancelCode:
           description: AI pipeline rejection reason
-          anyOf:
-            - type: string
-              enum:
-                - not_a_song
-                - unreadable
-                - blank
-                - wrong_content
-                - multiple_unclear
-            - type: "null"
+          type: string
+          enum:
+            - not_a_song
+            - unreadable
+            - blank
+            - wrong_content
+            - multiple_unclear
         cancelReason:
           description: Reason if cancelled
-          type:
-            - string
-            - "null"
+          type: string
         cancelledBy:
           description: Who cancelled the job
-          anyOf:
-            - type: string
-              enum:
-                - ai
-                - user
-            - type: "null"
+          type: string
+          enum:
+            - ai
+            - user
       required:
         - id
         - status
