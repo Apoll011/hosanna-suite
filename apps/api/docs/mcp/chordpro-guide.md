@@ -32,7 +32,8 @@ Essential metadata: `title`, `artist`, `key`, `duration`, `youtube`, `song_numbe
 | artist       | a     |                                                                                                                                          |
 | key          | k     | Used by transpose / analysis                                                                                                             |
 | original_key |       |                                                                                                                                          |
-| capo         |       | Linted as numeric                                                                                                                        |
+| capo         |       | Initial capo (0–11). Seeds toolbar; on capo instruments, shapes shift down. Chords in file are sounding pitch.                           |
+| keyshift     | ks    | Initial key shift in semitones (signed integer). Seeds toolbar transpose for all instruments.                                            |
 | tempo        |       | Linted as numeric                                                                                                                        |
 | time         |       | Time signature                                                                                                                           |
 | duration     |       | Hosanna — service planning defaults                                                                                                      |

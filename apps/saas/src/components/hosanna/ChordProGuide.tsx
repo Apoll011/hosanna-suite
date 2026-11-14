@@ -72,6 +72,12 @@ const DIRECTIVES: DirectiveEntry[] = [
     descriptionKey: "capo",
   },
   {
+    directive: "keyshift",
+    alias: "ks",
+    category: "metadata",
+    descriptionKey: "keyshift",
+  },
+  {
     directive: "duration",
     category: "metadata",
     alias: "duration",

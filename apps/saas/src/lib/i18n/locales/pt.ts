@@ -552,7 +552,8 @@ export const pt = {
     original_key: "Tom original, quando diferente do tom em que a equipa toca",
     tempo: "Batidas por minuto (BPM), útil para o metrónomo ou guias",
     time: "Compasso rítmico, ex: 4/4 ou 6/8",
-    capo: "Casa do capotraste sugerida para a guitarra",
+    capo: "Casa inicial do capotraste (0–11) para instrumentos compatíveis. Os acordes no ficheiro são reais (som ouvido); o capo desce os formatos exibidos.",
+    keyshift: "Desvio inicial de tom em semitons (ex.: -3, +2). Define a transposição inicial da barra para todos os instrumentos.",
     duration:
       "Duração em mm:ss ou segundos, Nos cultos é usada para ter uma estimativa da sua duração.",
     album: "Álbum ou coletânea de origem",
