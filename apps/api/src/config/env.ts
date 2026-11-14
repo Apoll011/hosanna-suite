@@ -83,7 +83,7 @@ export const env = {
   /**
    * Max connections in the pg pool.
    * Defaults to 5 on Vercel (many warm isolates × large pools exhaust Postgres)
-   * and 20 for long-running hosts (Docker / local).
+   * and 20 for long-running local hosts.
    */
   dbPoolMax: parseInt(process.env.DB_POOL_MAX ?? (isVercel ? "5" : "20"), 10),
 

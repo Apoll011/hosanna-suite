@@ -19,8 +19,6 @@
     "fix:tailwind": "node ./scripts/fix-tailwind.mjs",
     "fix:eslint": "turbo run fix --continue",
     "fix": "pnpm run fix:tailwind; pnpm run fix:eslint; pnpm run format",
-    "docker:up": "docker compose up --build -d",
-    "docker:down": "docker compose down",
     "db:generate": "pnpm --filter @hosanna/db db:generate",
     "db:migrate": "pnpm --filter @hosanna/db db:migrate",
     "db:migrate:dev": "pnpm --filter @hosanna/db db:migrate:dev",

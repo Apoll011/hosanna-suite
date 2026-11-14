@@ -23,7 +23,7 @@ pnpm + Turborepo monorepo for the Hosanna web platform:
 
 - Node.js **24+**
 - [pnpm](https://pnpm.io) **11.24** (via Corepack: `corepack enable`)
-- Optional: Docker + Compose for local Postgres / full stack
+- Postgres (e.g. local install or Supabase) for Auth / API
 
 ## Quick start
 
@@ -63,22 +63,6 @@ pnpm dev
 | `pnpm db:generate`    | Prisma client                                                 |
 | `pnpm db:migrate`     | `prisma migrate deploy`                                       |
 | `pnpm db:migrate:dev` | Create/apply a migration in development                       |
-| `pnpm docker:up`      | Build & start Postgres + API + Studio                         |
-| `pnpm docker:down`    | Stop the stack                                                |
-
-## Docker (db + api + studio)
-
-```bash
-# Minimal: copy apps/api/.env and set the Better Auth / Stripe / etc. secrets.
-# Compose overrides DATABASE_URL to point at the local Postgres service.
-pnpm docker:up
-
-# API  → http://localhost:3000
-# Studio (nginx) → http://localhost:8080
-# Postgres → localhost:5432 (user/pass/db: hosanna)
-```
-
-Images are defined in the root `Dockerfile` (`api` and `studio` targets) and orchestrated by `docker-compose.yml`.
 
 ## Per-app brand assets
 
@@ -98,5 +82,5 @@ Commits, authors, and timestamps from those projects are part of this history. T
 ## Deploy notes
 
 - Point Vercel / Cloudflare project **root directories** at `apps/saas`, `apps/studio`, or `apps/api` (or run filtered turbo builds from the monorepo root).
-- Prisma migrations: `pnpm db:migrate` (or the API Docker entrypoint, which runs migrate before boot).
+- Prisma migrations: `pnpm db:migrate` before deploying API/auth that depend on schema.
 - Chordpro npm publish: GitHub release tags starting with `chordpro-v` / `@hosanna/chordpro@` trigger [`.github/workflows/publish-chordpro.yml`](./.github/workflows/publish-chordpro.yml).

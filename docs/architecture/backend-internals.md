@@ -14,7 +14,7 @@ Package: `@hosanna/backend`. Entry: `src/index.mts`.
 8. Routers: `/mcp`, `/api`
 9. `notFoundHandler` → `errorHandler` → `{ error: { code, message } }`
 
-Vercel: default export of the Express app; `maxDuration = 60`. Docker: `listen(PORT)`.
+Vercel: default export of the Express app; `maxDuration = 60`. Local: `listen(PORT)`.
 
 ## Route map (`/api`)
 

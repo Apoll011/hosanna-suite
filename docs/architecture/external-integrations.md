@@ -11,7 +11,8 @@ Everything outside the Hosanna repos that the product depends on.
 | **Firebase Cloud Messaging** | Push via auth-hosted dispatcher; tokens in `PushDevice` (session `fcm`/`notify` legacy) | `FCM_*` on **auth** Vercel                                                       |
 | **Cloud Firestore**          | Realtime signals: `services/{id}/realtime/notes`, `services/{id}/annotations/{songId}`  | Same Firebase project; see [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) |
 
-Local Docker Compose can run Postgres without Supabase for development.
+For local development you can point `DATABASE_URL` / `DIRECT_URL` at any Postgres
+instance (local install or a Supabase project).
 
 ## Auth and fraud
 
