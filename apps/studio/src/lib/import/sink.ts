@@ -10,6 +10,7 @@ import {
   validateBatchSongs,
   type HosanaDatabase,
 } from "@/src/db";
+import { yieldToUi } from "./readFile";
 
 export interface ImportFolderInput {
   key: string;
@@ -26,6 +27,7 @@ export interface ImportCollectionInput {
 export interface ImportSongsBatchOptions {
   chunkSize?: number;
   onProgress?: (done: number, total: number) => void;
+  onPrepareProgress?: (done: number, total: number) => void;
 }
 
 export interface ImportSink {
@@ -37,16 +39,11 @@ export interface ImportSink {
   ): Promise<{ created: Song[]; failed: number }>;
 }
 
-const DEFAULT_CHUNK = 200;
-
-async function yieldToUi(): Promise<void> {
-  await new Promise<void>((resolve) => {
-    if (typeof requestAnimationFrame === "function") {
-      requestAnimationFrame(() => resolve());
-    } else {
-      setTimeout(resolve, 0);
-    }
-  });
+function adaptiveChunkSize(count: number): number {
+  if (count >= 2000) return 75;
+  if (count >= 800) return 100;
+  if (count >= 300) return 150;
+  return 200;
 }
 
 export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDatabase()): ImportSink {
@@ -57,7 +54,8 @@ export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDa
       if (inputs.length === 0) return map;
 
       const now = new Date().toISOString();
-      for (const input of inputs) {
+      for (let i = 0; i < inputs.length; i++) {
+        const input = inputs[i]!;
         const id = crypto.randomUUID();
         await db.folders.insert({
           id,
@@ -70,6 +68,7 @@ export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDa
           _deleted: false,
         });
         map.set(input.key, id);
+        if ((i + 1) % 25 === 0) await yieldToUi();
       }
       return map;
     },
@@ -80,7 +79,8 @@ export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDa
       if (inputs.length === 0) return map;
 
       const now = new Date().toISOString();
-      for (const input of inputs) {
+      for (let i = 0; i < inputs.length; i++) {
+        const input = inputs[i]!;
         const id = crypto.randomUUID();
         await db.collections.insert({
           id,
@@ -96,6 +96,7 @@ export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDa
           _deleted: false,
         });
         map.set(input.key, id);
+        if ((i + 1) % 25 === 0) await yieldToUi();
       }
       return map;
     },
@@ -104,8 +105,13 @@ export function createLocalImportSink(dbPromise: Promise<HosanaDatabase> = getDa
       const db = await dbPromise;
       if (songs.length === 0) return { created: [], failed: 0 };
 
-      const chunkSize = Math.max(1, options.chunkSize ?? DEFAULT_CHUNK);
-      const prepared = await validateBatchSongs(db, songs);
+      const chunkSize = Math.max(
+        1,
+        options.chunkSize ?? adaptiveChunkSize(songs.length),
+      );
+      const prepared = await validateBatchSongs(db, songs, {
+        onProgress: options.onPrepareProgress,
+      });
       const created: Song[] = [];
       let failed = 0;
 

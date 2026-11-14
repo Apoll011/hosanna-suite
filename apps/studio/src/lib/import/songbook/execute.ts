@@ -4,12 +4,13 @@
  */
 
 import type { ImportSink } from "../sink";
-import type { ProviderImportResult } from "../types";
+import type { ImportProgressCallback, ProviderImportResult } from "../types";
+import { yieldToUi } from "../readFile";
 import { buildSongbookImportPlan } from "./plan";
 import type { SongbookBackupDocument, SongbookImportOptions } from "./types";
 
 export interface ExecuteSongbookImportOptions extends SongbookImportOptions {
-  onProgress?: (done: number, total: number) => void;
+  onProgress?: ImportProgressCallback;
 }
 
 export async function executeSongbookImport(
@@ -17,6 +18,9 @@ export async function executeSongbookImport(
   options: ExecuteSongbookImportOptions,
   sink: ImportSink,
 ): Promise<ProviderImportResult> {
+  options.onProgress?.({ phase: "processing", done: 0, total: Math.max(1, doc.songs.length) });
+  await yieldToUi();
+
   const plan = buildSongbookImportPlan(doc, options);
   if (plan.songs.length === 0) {
     return {
@@ -27,6 +31,12 @@ export async function executeSongbookImport(
       ignored: plan.skipped,
     };
   }
+
+  options.onProgress?.({
+    phase: "processing",
+    done: plan.songs.length,
+    total: Math.max(plan.songs.length, doc.songs.length),
+  });
 
   const folderIds = await sink.ensureFolders(plan.folders);
   const collectionIds = await sink.ensureCollections(plan.collections);
@@ -46,7 +56,9 @@ export async function executeSongbookImport(
   }));
 
   const result = await sink.createSongsBatch(payloads, {
-    onProgress: options.onProgress,
+    onPrepareProgress: (done, total) =>
+      options.onProgress?.({ phase: "processing", done, total }),
+    onProgress: (done, total) => options.onProgress?.({ phase: "writing", done, total }),
   });
 
   return {

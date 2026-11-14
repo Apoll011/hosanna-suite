@@ -419,6 +419,7 @@ export function validateAgendaEventRules(event: {
 export async function validateBatchSongs(
   db: HosanaDatabase,
   songsList: Array<Partial<SongDocType> & { title: string }>,
+  options: { onProgress?: (done: number, total: number) => void } = {},
 ): Promise<Array<Song>> {
   const now = new Date().toISOString();
   const prepared: SongDocType[] = [];
@@ -430,8 +431,11 @@ export async function validateBatchSongs(
       .map((s) => s.path as string),
   );
   const folderNameCache = new Map<string, string>();
+  const total = songsList.length;
+  const yieldEvery = total >= 1000 ? 50 : 100;
 
-  for (const item of songsList) {
+  for (let index = 0; index < songsList.length; index++) {
+    const item = songsList[index]!;
     const title = (item.title || "").trim();
     if (!title) {
       throw new RequiredFieldError("title", "Song title is required.");
@@ -482,6 +486,15 @@ export async function validateBatchSongs(
       updatedAt: now,
       _deleted: false,
     });
+
+    const done = index + 1;
+    options.onProgress?.(done, total);
+    if (done % yieldEvery === 0) {
+      await new Promise<void>((resolve) => {
+        if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => resolve());
+        else setTimeout(resolve, 0);
+      });
+    }
   }
 
   return prepared;

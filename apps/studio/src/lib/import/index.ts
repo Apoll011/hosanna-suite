@@ -8,9 +8,17 @@ import { JsonImportProvider } from "./json";
 import { SongImportRegistry } from "./registry";
 import { SongbookProImportProvider } from "./songbookProvider";
 
-export type { ImportResult, ProviderImportResult, SongImportProvider } from "./types";
+export type {
+  ImportProgressCallback,
+  ImportProgressEvent,
+  ImportProgressPhase,
+  ImportResult,
+  ProviderImportResult,
+  SongImportProvider,
+} from "./types";
 export type { ImportSink } from "./sink";
 export { createLocalImportSink, createLocalImportSink as createDefaultImportSink } from "./sink";
+export { readFileTextWithProgress, yieldToUi } from "./readFile";
 export {
   detectSongbookBackupFile,
   looksLikeSongbookBackupFile,

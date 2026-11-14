@@ -5,7 +5,52 @@
 
 import { AlertCircle, AlertTriangle, CheckCircle2, Info, X } from "lucide-react";
 import React from "react";
-import { useSync } from "../contexts/SyncContext";
+import { useSync, type ToastProgress } from "../contexts/SyncContext";
+
+function CircularProgress({ progress }: { progress: ToastProgress }) {
+  const size = 28;
+  const stroke = 3;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const ratio =
+    progress.indeterminate || !progress.total || progress.total <= 0
+      ? null
+      : Math.max(0, Math.min(1, progress.value / progress.total));
+
+  return (
+    <div
+      className={`relative shrink-0 ${progress.indeterminate || ratio === null ? "animate-spin" : ""}`}
+      style={{ width: size, height: size }}
+      aria-hidden="true"
+    >
+      <svg width={size} height={size} className="-rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={stroke}
+          className="text-m3-border"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={
+            ratio === null ? circumference * 0.75 : circumference * (1 - ratio)
+          }
+          className="text-m3-primary transition-[stroke-dashoffset] duration-200"
+        />
+      </svg>
+    </div>
+  );
+}
 
 export const ToastContainer: React.FC = () => {
   const { toasts, removeToast } = useSync();
@@ -27,7 +72,9 @@ export const ToastContainer: React.FC = () => {
           className="pointer-events-auto flex items-start justify-between gap-4 p-5 bg-m3-card/80 backdrop-blur-xl border border-m3-border/50 rounded-xl shadow-lg shadow-black/20 animate-in slide-in-from-right-10 duration-300"
         >
           <div className="flex items-start gap-4 flex-1">
-            <div className="mt-0.5">{icons[toast.type]}</div>
+            <div className="mt-0.5">
+              {toast.progress ? <CircularProgress progress={toast.progress} /> : icons[toast.type]}
+            </div>
             <div className="flex-1 min-w-0">
               {toast.title ? (
                 <>

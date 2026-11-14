@@ -937,6 +937,17 @@ export const en: typeof pt = {
     uploadSuccess: '{count} {type} file(s) uploaded successfully to "{folder}"!',
     uploadError: "Error uploading {count} {type} file(s)",
     uploadIgnored: "Ignored {count} {type} file(s)",
+    uploadErrorGeneric: "Failed to import files.",
+    importProgressTitle: "Importing files",
+    importProgressSongbookTitle: "Processing SongbookPro backup",
+    importProgressStarting: "Preparing import…",
+    importProgressFiles: "files",
+    importProgressReading: "Reading {name}…",
+    importProgressProcessing: "Processing… ({done}/{total})",
+    importProgressWriting: "Saving songs… ({done}/{total})",
+    importProgressSongbookReadyTitle: "Backup ready",
+    importProgressSongbookReadyDesc:
+      "Found {count} songs. Choose setlists and confirm the import.",
   },
   foldersPage: {
     dropHere: "Drop files here",

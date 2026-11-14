@@ -15,6 +15,7 @@ export {
   looksLikeSongbookBackupFile,
   parseSongbookBackupFile,
   parseSongbookBackupJson,
+  parseSongbookBackupJsonAsync,
   summarizeSongbookSetlists,
 } from "./parse";
 export { buildSongbookImportPlan } from "./plan";

@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { ImportProgressCallback } from "../types";
+import { readFileBufferWithProgress, yieldToUi } from "../readFile";
 import {
   SONGBOOK_UNFILED_ID,
   type SongbookBackupDocument,
@@ -132,6 +134,47 @@ export function parseSongbookBackupJson(
   return { folders, songs, sourceLabel };
 }
 
+export async function parseSongbookBackupJsonAsync(
+  text: string,
+  sourceLabel = "SongbookPro backup",
+  onProgress?: ImportProgressCallback,
+): Promise<SongbookBackupDocument> {
+  onProgress?.({ phase: "processing", done: 0, total: 1 });
+  await yieldToUi();
+
+  const parsed = JSON.parse(stripVersionHeader(text)) as unknown;
+  const root = asRecord(parsed);
+  if (!root) {
+    throw new Error("Invalid SongbookPro backup root.");
+  }
+
+  const folders = (Array.isArray(root.folders) ? root.folders : [])
+    .map(parseFolder)
+    .filter((f): f is SongbookFolder => Boolean(f) && !f!.deleted)
+    .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+
+  const rawSongs = Array.isArray(root.songs) ? root.songs : [];
+  const songs: SongbookSong[] = [];
+  const total = Math.max(1, rawSongs.length);
+  const yieldEvery = total >= 1000 ? 50 : 100;
+
+  for (let i = 0; i < rawSongs.length; i++) {
+    const song = parseSong(rawSongs[i]);
+    if (song && !song.deleted) songs.push(song);
+    if ((i + 1) % yieldEvery === 0) {
+      onProgress?.({ phase: "processing", done: i + 1, total });
+      await yieldToUi();
+    }
+  }
+
+  if (songs.length === 0) {
+    throw new Error("No songs found in SongbookPro backup.");
+  }
+
+  onProgress?.({ phase: "processing", done: total, total });
+  return { folders, songs, sourceLabel };
+}
+
 export function isSongbookBackupObject(value: unknown): boolean {
   const root = asRecord(value);
   if (!root) return false;
@@ -145,11 +188,23 @@ export function isSongbookBackupObject(value: unknown): boolean {
   );
 }
 
-export async function parseSongbookBackupFile(file: File): Promise<SongbookBackupDocument> {
-  const buffer = await file.arrayBuffer();
+export async function parseSongbookBackupFile(
+  file: File,
+  onProgress?: ImportProgressCallback,
+): Promise<SongbookBackupDocument> {
+  const buffer = await readFileBufferWithProgress(file, ({ bytesRead, totalBytes }) => {
+    onProgress?.({
+      phase: "reading",
+      done: bytesRead,
+      total: Math.max(1, totalBytes),
+      label: file.name,
+    });
+  });
   let text: string;
 
   if (isZipBuffer(buffer) || file.name.toLowerCase().endsWith(".sbpbackup")) {
+    onProgress?.({ phase: "processing", done: 0, total: 1, label: file.name });
+    await yieldToUi();
     const extracted = await extractZipTextFile(buffer, ["datafile.txt"]);
     if (!extracted) {
       throw new Error("Could not find dataFile.txt inside the SongbookPro backup.");
@@ -159,7 +214,7 @@ export async function parseSongbookBackupFile(file: File): Promise<SongbookBacku
     text = new TextDecoder("utf-8").decode(buffer);
   }
 
-  return parseSongbookBackupJson(text, file.name);
+  return parseSongbookBackupJsonAsync(text, file.name, onProgress);
 }
 
 export function summarizeSongbookSetlists(doc: SongbookBackupDocument): SongbookSetlistSummary[] {

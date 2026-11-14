@@ -16,6 +16,12 @@ export interface ToastAction {
   variant?: "primary" | "secondary";
 }
 
+export interface ToastProgress {
+  value: number;
+  total?: number;
+  indeterminate?: boolean;
+}
+
 export interface ToastMessage {
   id: string;
   type: "success" | "error" | "info" | "warning";
@@ -24,7 +30,7 @@ export interface ToastMessage {
   description?: string;
   action?: ToastAction;
   duration?: number;
-  /** Fired when the toast is removed (X, action, or auto-dismiss). */
+  progress?: ToastProgress;
   onDismiss?: () => void;
 }
 
@@ -34,13 +40,17 @@ interface ShowToastOptions {
   description?: string;
   action?: ToastAction;
   duration?: number;
+  progress?: ToastProgress;
   onDismiss?: () => void;
 }
+
+type ToastUpdate = Partial<Omit<ToastMessage, "id">>;
 
 interface SyncContextType {
   syncStatus: SyncStatus;
   toasts: ToastMessage[];
-  showToast: (textOrOptions: string | ShowToastOptions, type?: ToastMessage["type"]) => void;
+  showToast: (textOrOptions: string | ShowToastOptions, type?: ToastMessage["type"]) => string;
+  updateToast: (id: string, patch: ToastUpdate) => void;
   removeToast: (id: string) => void;
   triggerSyncCheck: () => Promise<void>;
   lastSyncedAt: Date | null;
@@ -75,6 +85,20 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, []);
 
+  const scheduleAutoDismiss = useCallback((id: string, duration: number) => {
+    const existing = toastTimersRef.current.get(id);
+    if (existing !== undefined) {
+      clearTimeout(existing);
+      toastTimersRef.current.delete(id);
+    }
+    if (duration <= 0) return;
+    const timer = setTimeout(() => {
+      toastTimersRef.current.delete(id);
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, duration);
+    toastTimersRef.current.set(id, timer);
+  }, []);
+
   const showToast = useCallback(
     (textOrOptions: string | ShowToastOptions, type: ToastMessage["type"] = "info") => {
       const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
@@ -90,24 +114,32 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
           description: textOrOptions.description,
           action: textOrOptions.action,
           duration: textOrOptions.duration,
+          progress: textOrOptions.progress,
           onDismiss: textOrOptions.onDismiss,
         };
       }
 
       setToasts((prev) => [...prev, toastItem]);
-
-      const duration = toastItem.duration !== undefined ? toastItem.duration : 4000;
-      if (duration > 0) {
-        const timer = setTimeout(() => {
-          toastTimersRef.current.delete(id);
-          setToasts((prev) => prev.filter((t) => t.id !== id));
-        }, duration);
-        toastTimersRef.current.set(id, timer);
-      }
+      scheduleAutoDismiss(id, toastItem.duration !== undefined ? toastItem.duration : 4000);
+      return id;
     },
-    // removeToast intentionally not in deps — we inline the filter here to
-    // avoid capturing a stale removeToast that itself closes over stale state.
-    [],
+    [scheduleAutoDismiss],
+  );
+
+  const updateToast = useCallback(
+    (id: string, patch: ToastUpdate) => {
+      setToasts((prev) =>
+        prev.map((toast) => {
+          if (toast.id !== id) return toast;
+          const next = { ...toast, ...patch };
+          if (patch.duration !== undefined) {
+            scheduleAutoDismiss(id, patch.duration);
+          }
+          return next;
+        }),
+      );
+    },
+    [scheduleAutoDismiss],
   );
 
   useEffect(() => {
@@ -191,6 +223,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         syncStatus,
         toasts,
         showToast,
+        updateToast,
         removeToast,
         triggerSyncCheck,
         lastSyncedAt,

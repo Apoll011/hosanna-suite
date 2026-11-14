@@ -6,6 +6,23 @@
 import { Song } from "@/src/types";
 import type { ImportSink } from "./sink";
 
+export type ImportProgressPhase = "reading" | "processing" | "writing";
+
+export interface ImportProgressEvent {
+  phase: ImportProgressPhase;
+  done: number;
+  total: number;
+  label?: string;
+}
+
+export type ImportProgressCallback = (event: ImportProgressEvent) => void;
+
+export interface SongImportContext {
+  songData: Partial<Song>;
+  sink: ImportSink;
+  onProgress?: ImportProgressCallback;
+}
+
 export interface SongImportProvider {
   readonly id: string;
   readonly name: string;
@@ -16,9 +33,9 @@ export interface SongImportProvider {
 
   readonly interactive?: boolean;
 
-  import(files: readonly File[], songData: Partial<Song>): Promise<ProviderImportResult>;
+  import(files: readonly File[], ctx: SongImportContext): Promise<ProviderImportResult>;
 
-  prepare?(files: readonly File[]): Promise<unknown>;
+  prepare?(files: readonly File[], onProgress?: ImportProgressCallback): Promise<unknown>;
 
   importWithSink?(
     files: readonly File[],

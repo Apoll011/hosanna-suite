@@ -944,6 +944,17 @@ export const pt = {
     uploadSuccess: '{count} ficheiro(s) {type} carregado(s) com sucesso para "{folder}"!',
     uploadError: "Erro ao carregar {count} ficheiro(s) {type}",
     uploadIgnored: "Ignorado {count} ficheiro(s) {type}",
+    uploadErrorGeneric: "Falha ao importar ficheiros.",
+    importProgressTitle: "A importar ficheiros",
+    importProgressSongbookTitle: "A processar backup SongbookPro",
+    importProgressStarting: "A preparar a importação…",
+    importProgressFiles: "ficheiros",
+    importProgressReading: "A ler {name}…",
+    importProgressProcessing: "A processar… ({done}/{total})",
+    importProgressWriting: "A guardar cânticos… ({done}/{total})",
+    importProgressSongbookReadyTitle: "Backup pronto",
+    importProgressSongbookReadyDesc:
+      "Encontrados {count} cânticos. Escolhe as setlists e confirma a importação.",
   },
   foldersPage: {
     dropHere: "Solte os ficheiros aqui",

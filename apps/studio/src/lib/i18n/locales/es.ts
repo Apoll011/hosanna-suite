@@ -949,6 +949,17 @@ export const es: typeof pt = {
     uploadSuccess: '¡{count} archivo(s) {type} subido(s) con éxito a "{folder}"!',
     uploadError: "Error al subir {count} archivo(s) {type}",
     uploadIgnored: "Ignorado(s) {count} archivo(s) {type}",
+    uploadErrorGeneric: "Error al importar archivos.",
+    importProgressTitle: "Importando archivos",
+    importProgressSongbookTitle: "Procesando copia SongbookPro",
+    importProgressStarting: "Preparando la importación…",
+    importProgressFiles: "archivos",
+    importProgressReading: "Leyendo {name}…",
+    importProgressProcessing: "Procesando… ({done}/{total})",
+    importProgressWriting: "Guardando canciones… ({done}/{total})",
+    importProgressSongbookReadyTitle: "Copia lista",
+    importProgressSongbookReadyDesc:
+      "Se encontraron {count} canciones. Elige las setlists y confirma la importación.",
   },
   foldersPage: {
     dropHere: "Suelte los archivos aquí",

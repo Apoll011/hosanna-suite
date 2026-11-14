@@ -65,6 +65,7 @@ import {
   getSongbookProProvider,
   parseSongbookBackupFile,
   songImportRegistry,
+  type ImportProgressEvent,
   type ProviderImportResult,
   type SongbookBackupDocument,
   type SongbookImportOptions,
@@ -113,7 +114,7 @@ export const MainLayout: React.FC = () => {
     printEvent,
   } = usePrint();
 
-  const { showToast, triggerSyncCheck } = useSync();
+  const { showToast, updateToast, removeToast, triggerSyncCheck } = useSync();
 
   const handleSwitchOrganization = useCallback(
     async (org: Parameters<typeof switchOrganization>[0]) => {
@@ -1413,48 +1414,155 @@ export const MainLayout: React.FC = () => {
     }
   };
 
+  const describeImportProgress = (event: ImportProgressEvent) => {
+    if (event.phase === "reading") {
+      return {
+        description: t("layout.importProgressReading", {
+          name: event.label || t("layout.importProgressFiles"),
+        }),
+        progress: {
+          value: event.done,
+          total: Math.max(1, event.total),
+          indeterminate: event.total <= 0,
+        },
+      };
+    }
+    if (event.phase === "processing") {
+      return {
+        description: t("layout.importProgressProcessing", {
+          done: Math.round(event.done),
+          total: Math.max(1, Math.round(event.total)),
+        }),
+        progress: {
+          value: event.done,
+          total: Math.max(1, event.total),
+        },
+      };
+    }
+    return {
+      description: t("layout.importProgressWriting", {
+        done: Math.round(event.done),
+        total: Math.max(1, Math.round(event.total)),
+      }),
+      progress: {
+        value: event.done,
+        total: Math.max(1, event.total),
+      },
+    };
+  };
+
   const processAndUploadFiles = async (fileList: File[]) => {
     if (!fileList || fileList.length === 0) return;
 
-    const songbookFiles: File[] = [];
-    const otherFiles: File[] = [];
-    for (const file of fileList) {
-      if (await detectSongbookBackupFile(file)) {
-        songbookFiles.push(file);
+    const progressToastId = showToast({
+      type: "info",
+      title: t("layout.importProgressTitle"),
+      description: t("layout.importProgressStarting"),
+      duration: 0,
+      progress: { value: 0, total: 1, indeterminate: true },
+    });
+
+    const pushProgress = (event: ImportProgressEvent) => {
+      const next = describeImportProgress(event);
+      updateToast(progressToastId, {
+        description: next.description,
+        progress: next.progress,
+      });
+    };
+
+    try {
+      const songbookFiles: File[] = [];
+      const otherFiles: File[] = [];
+      for (const file of fileList) {
+        if (await detectSongbookBackupFile(file)) {
+          songbookFiles.push(file);
+        } else {
+          otherFiles.push(file);
+        }
+      }
+
+      if (songbookFiles.length > 0) {
+        try {
+          updateToast(progressToastId, {
+            title: t("layout.importProgressSongbookTitle"),
+            description: t("layout.importProgressReading", {
+              name: songbookFiles[0]!.name,
+            }),
+            progress: { value: 0, total: 1, indeterminate: true },
+          });
+          const doc = await parseSongbookBackupFile(songbookFiles[0]!, pushProgress);
+          setSongbookDocument(doc);
+          setSongbookProgress(null);
+          removeToast(progressToastId);
+          showToast({
+            type: "success",
+            title: t("layout.importProgressSongbookReadyTitle"),
+            description: t("layout.importProgressSongbookReadyDesc", {
+              count: doc.songs.length,
+            }),
+            duration: 3500,
+          });
+        } catch {
+          removeToast(progressToastId);
+          showToast(t("modals.songbookImport.parseError"), "error");
+        }
+      }
+
+      if (otherFiles.length === 0) return;
+
+      setIsUploadingFiles(true);
+      let activeToastId = progressToastId;
+      if (songbookFiles.length > 0) {
+        activeToastId = showToast({
+          type: "info",
+          title: t("layout.importProgressTitle"),
+          description: t("layout.importProgressStarting"),
+          duration: 0,
+          progress: { value: 0, total: 1, indeterminate: true },
+        });
       } else {
-        otherFiles.push(file);
+        updateToast(activeToastId, {
+          title: t("layout.importProgressTitle"),
+          description: t("layout.importProgressStarting"),
+          progress: { value: 0, total: 1, indeterminate: true },
+        });
       }
+
+      const result = await songImportRegistry.importFiles(otherFiles, {
+        songData: { folderId: currentFolderId },
+        sink: createLocalImportSink(),
+        onProgress: (event) => {
+          const next = describeImportProgress(event);
+          updateToast(activeToastId, {
+            description: next.description,
+            progress: next.progress,
+          });
+        },
+      });
+      removeToast(activeToastId);
+      result.results.forEach((r) => showToastImportResult(r));
+
+      await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
+      setIsUploadingFiles(false);
+    } catch (err) {
+      removeToast(progressToastId);
+      const message = err instanceof Error ? err.message : t("layout.uploadErrorGeneric");
+      showToast(message, "error");
+      setIsUploadingFiles(false);
     }
-
-    if (songbookFiles.length > 0) {
-      try {
-        const doc = await parseSongbookBackupFile(songbookFiles[0]!);
-        setSongbookDocument(doc);
-        setSongbookProgress(null);
-      } catch {
-        showToast(t("modals.songbookImport.parseError"), "error");
-      }
-    }
-
-    if (otherFiles.length === 0) return;
-
-    setIsUploadingFiles(true);
-    const result = await songImportRegistry.importFiles(otherFiles, {
-      folderId: currentFolderId,
-    });
-
-    result.results.forEach((r) => {
-      showToastImportResult(r);
-    });
-
-    await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
-    setIsUploadingFiles(false);
   };
 
   const handleSongbookImportConfirm = async (options: SongbookImportOptions) => {
     if (!songbookDocument) return;
     setIsSongbookImporting(true);
     setSongbookProgress({ done: 0, total: songbookDocument.songs.length });
+    const progressToastId = showToast({
+      type: "info",
+      title: t("layout.importProgressSongbookTitle"),
+      description: t("layout.importProgressStarting"),
+      duration: 0,
+      progress: { value: 0, total: Math.max(1, songbookDocument.songs.length), indeterminate: true },
+    });
     try {
       const provider = getSongbookProProvider();
       const sink = createLocalImportSink();
@@ -1462,8 +1570,19 @@ export const MainLayout: React.FC = () => {
         songbookDocument,
         options,
         sink,
-        (done, total) => setSongbookProgress({ done, total }),
+        (event) => {
+          setSongbookProgress({
+            done: Math.round(event.done),
+            total: Math.max(1, Math.round(event.total)),
+          });
+          const next = describeImportProgress(event);
+          updateToast(progressToastId, {
+            description: next.description,
+            progress: next.progress,
+          });
+        },
       );
+      removeToast(progressToastId);
       showToast(
         t("modals.songbookImport.success", { count: result.created }),
         result.created > 0 ? "success" : "warning",
@@ -1480,6 +1599,7 @@ export const MainLayout: React.FC = () => {
       setSongbookDocument(null);
       setSongbookProgress(null);
     } catch (err) {
+      removeToast(progressToastId);
       const message = err instanceof Error ? err.message : t("modals.songbookImport.parseError");
       showToast(message, "error");
     } finally {
