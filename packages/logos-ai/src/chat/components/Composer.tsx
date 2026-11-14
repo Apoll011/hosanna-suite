@@ -4,7 +4,15 @@
  */
 
 import { useLogosI18n } from "../../host";
-import { ArrowUp, Eye, EyeOff, Square } from "lucide-react";
+import {
+  ArrowUp,
+  Eye,
+  EyeOff,
+  FileText,
+  Paperclip,
+  Square,
+  X,
+} from "lucide-react";
 import React, {
   forwardRef,
   useCallback,
@@ -15,7 +23,7 @@ import React, {
   useState,
 } from "react";
 import { allChips } from "../../core/tools";
-import type { PageContextSnapshot } from "../../types";
+import { newId, type ChatAttachment, type PageContextSnapshot } from "../../types";
 
 export type AiChatComposerHandle = { focus: () => void };
 
@@ -24,13 +32,38 @@ type Props = {
   pageContext: PageContextSnapshot;
   includeContext: boolean;
   onToggleContext: (v: boolean) => void;
-  onSend: (text: string) => void;
+  onSend: (text: string, attachments?: ChatAttachment[]) => void;
   onStop: () => void;
   /** Scope for draft persistence (conversation id). */
   draftKey: string;
 };
 
 const MAX_ROWS_PX = 168;
+const MAX_ATTACHMENTS = 5;
+
+function fileToAttachment(file: File): Promise<ChatAttachment> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () =>
+      resolve({
+        id: newId(),
+        file,
+        name: file.name || "attachment",
+        size: file.size,
+        mimeType: file.type || "application/octet-stream",
+        dataUrl: reader.result as string,
+        isImage: file.type.startsWith("image/"),
+      });
+    reader.onerror = () => reject(reader.error ?? new Error("Could not read file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 /** Auto-growing composer with `/` quick actions; stays usable while streaming. */
 export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function AiChatComposer(
@@ -40,8 +73,13 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
   const { t } = useLogosI18n();
   const [draft, setDraft] = useState("");
   const [slashIndex, setSlashIndex] = useState(0);
+  const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
+  const [dragging, setDragging] = useState(false);
   const areaRef = useRef<HTMLTextAreaElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const storageKey = `hosanna:ai-draft:${draftKey}`;
+  const attachmentsRef = useRef<ChatAttachment[]>([]);
+  attachmentsRef.current = attachments;
 
   useImperativeHandle(ref, () => ({
     focus: () => areaRef.current?.focus(),
@@ -82,12 +120,31 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
 
   useEffect(() => setSlashIndex(0), [slashQuery]);
 
+  const addFiles = useCallback(async (incoming: readonly File[]) => {
+    const collected: ChatAttachment[] = [];
+    for (const file of incoming) {
+      if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) break;
+      try {
+        collected.push(await fileToAttachment(file));
+      } catch {
+        /* skip unreadable file */
+      }
+    }
+    if (collected.length) setAttachments((prev) => [...prev, ...collected]);
+  }, []);
+
+  const removeAttachment = (id: string) =>
+    setAttachments((prev) => prev.filter((a) => a.id !== id));
+
   const submit = useCallback(
     (text: string) => {
       const value = text.trim();
-      if (!value || streaming) return;
+      const hasAttachments = attachmentsRef.current.length > 0;
+      if ((!value && !hasAttachments) || streaming) return;
+      const sending = attachmentsRef.current;
       setDraft("");
-      onSend(value);
+      setAttachments([]);
+      onSend(value, sending);
     },
     [streaming, onSend],
   );
@@ -101,8 +158,40 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
 
   const slashOpen = slashQuery !== null;
 
+  const onPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    const files: File[] = [];
+    for (const item of Array.from(items)) {
+      if (item.kind === "file") {
+        const file = item.getAsFile();
+        if (file) files.push(file);
+      }
+    }
+    if (files.length === 0) return;
+    e.preventDefault();
+    void addFiles(files);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    if (e.dataTransfer.files?.length) void addFiles(Array.from(e.dataTransfer.files));
+  };
+
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragLeave={(e) => {
+        if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+        setDragging(false);
+      }}
+      onDrop={onDrop}
+    >
       {slashOpen && (
         <div
           role="listbox"
@@ -144,12 +233,79 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
         </div>
       )}
 
-      <div className="flex items-end gap-2 rounded-lg border border-m3-border bg-m3-bg px-2.5 py-2 focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 transition-shadow">
+      {attachments.length > 0 && (
+        <div className="mb-2 flex flex-wrap gap-2">
+          {attachments.map((a) => (
+            <div
+              key={a.id}
+              className="group relative flex items-center gap-2 rounded-lg border border-m3-border bg-m3-card pl-1.5 pr-1 py-1 max-w-full"
+            >
+              {a.isImage ? (
+                <img
+                  src={a.dataUrl}
+                  alt={a.name}
+                  className="w-8 h-8 rounded object-cover border border-m3-border shrink-0"
+                />
+              ) : (
+                <span className="w-8 h-8 rounded flex items-center justify-center bg-m3-sidebar text-m3-secondary shrink-0">
+                  <FileText className="w-4 h-4" />
+                </span>
+              )}
+              <span className="min-w-0">
+                <span className="block text-[11.5px] text-m3-text truncate max-w-36">{a.name}</span>
+                <span className="block text-[10px] text-m3-secondary tabular-nums">
+                  {formatBytes(a.size)}
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={() => removeAttachment(a.id)}
+                aria-label={t("ai.chat.removeAttachment")}
+                className="shrink-0 w-5 h-5 rounded flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <input
+        ref={fileRef}
+        type="file"
+        multiple
+        accept="image/*,.pdf,.txt,.pro,.chordpro,.chopro,.md,.json"
+        className="hidden"
+        onChange={(e) => {
+          const files = e.target.files;
+          if (files?.length) void addFiles(Array.from(files));
+          if (e.target) e.target.value = "";
+        }}
+      />
+
+      <div
+        className={[
+          "flex items-end gap-2 rounded-lg border bg-m3-bg px-2.5 py-2 transition-shadow",
+          dragging
+            ? "border-m3-primary ring-2 ring-m3-primary/20"
+            : "border-m3-border focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20",
+        ].join(" ")}
+      >
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          aria-label={t("ai.chat.attachFiles")}
+          title={t("ai.chat.attachFiles")}
+          className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors"
+        >
+          <Paperclip className="w-4 h-4" />
+        </button>
         <textarea
           ref={areaRef}
           rows={1}
           value={draft}
           onChange={(e) => setDraft(e.currentTarget.value)}
+          onPaste={onPaste}
           onKeyDown={(e) => {
             if (e.nativeEvent.isComposing) return;
             if (slashOpen && slashItems.length > 0) {
@@ -205,7 +361,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
           <button
             type="button"
             onClick={() => submit(draft)}
-            disabled={!draft.trim()}
+            disabled={!draft.trim() && attachments.length === 0}
             className="shrink-0 w-8 h-8 rounded-full bg-m3-primary text-white flex items-center justify-center disabled:opacity-35 hover:opacity-90 transition-opacity"
             aria-label={t("ai.chat.send")}
             title={t("ai.chat.send")}

@@ -29,6 +29,11 @@ export const chat: typeof chatPt = {
   suggestions: "Suggestions",
   quickActions: "Quick actions",
   composerHint: "Enter to send · Shift+Enter for a new line",
+  attachFiles: "Attach files",
+  dropFiles: "Drop files to attach",
+  maxFilesReached: "You can attach up to {count} files",
+  removeAttachment: "Remove attachment",
+  closeImage: "Close preview",
   slashEmpty: "No matching actions",
   mascotLabel: "Logos AI",
   status: {

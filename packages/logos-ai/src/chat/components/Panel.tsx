@@ -297,7 +297,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
           pageContext={pageContext}
           includeContext={includeContext}
           onToggleContext={setIncludeContext}
-          onSend={(text) => void send(text)}
+          onSend={(text, attachments) => void send(text, attachments)}
           onStop={stop}
           draftKey={threadId}
         />

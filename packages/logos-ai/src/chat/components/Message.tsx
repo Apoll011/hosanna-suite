@@ -9,9 +9,12 @@ import {
   Brain,
   ChevronRight,
   CornerDownRight,
+  FileText,
+  Maximize2,
   Pencil,
   RefreshCw,
   Square,
+  X,
 } from "lucide-react";
 import React, { memo, useMemo, useRef, useState } from "react";
 import { AiChatMarkdown } from "./Markdown";
@@ -20,7 +23,7 @@ import { CopyButton } from "./CopyButton";
 import { LogosMascot } from "../../mascot";
 import { groupParts } from "../../core/stream";
 import { formatDuration } from "../../core/tools";
-import { messageText, type AiChatMessage, type LogosMood } from "../../types";
+import { messageText, type AiChatMessage, type AiMessagePart, type LogosMood } from "../../types";
 
 type Props = {
   msg: AiChatMessage;
@@ -43,8 +46,16 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
 }) => {
   const { t } = useLogosI18n();
   const text = messageText(msg);
+  const files = useMemo(
+    () =>
+      msg.parts.filter(
+        (p): p is Extract<AiMessagePart, { type: "file" }> => p.type === "file",
+      ),
+    [msg.parts],
+  );
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(text);
+  const [lightbox, setLightbox] = useState<string | null>(null);
   const areaRef = useRef<HTMLTextAreaElement>(null);
 
   const submit = () => {
@@ -99,10 +110,53 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
   }
 
   return (
-    <div className="group/msg flex flex-col items-end gap-0.5 max-w-[92%]">
-      <div className="rounded-lg rounded-br-sm px-3 py-2 text-[13px] leading-relaxed bg-m3-primary text-white whitespace-pre-wrap wrap-break-word">
-        {text}
-      </div>
+    <div className="group/msg flex flex-col items-end gap-1.5 max-w-[92%]">
+      {files.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 justify-end">
+          {files.map((f) =>
+            f.mimeType.startsWith("image/") ? (
+              <button
+                key={f.name ?? f.data}
+                type="button"
+                onClick={() => setLightbox(f.data)}
+                className="relative rounded-lg border border-m3-border overflow-hidden hover:ring-2 hover:ring-m3-primary/40 transition-shadow"
+                title={f.name}
+              >
+                <img src={f.data} alt={f.name ?? ""} className="h-20 w-20 object-cover" />
+                <span className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors">
+                  <Maximize2 className="w-4 h-4 text-white opacity-0 group-hover/msg:opacity-100" />
+                </span>
+              </button>
+            ) : (
+              <div
+                key={f.name ?? f.data}
+                className="inline-flex items-center gap-1.5 max-w-full rounded-lg border border-m3-border bg-m3-card px-2.5 py-1.5"
+              >
+                <FileText className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span className="min-w-0">
+                  <span className="block text-[11.5px] text-m3-text truncate max-w-40">
+                    {f.name}
+                  </span>
+                  {typeof f.size === "number" && (
+                    <span className="block text-[10px] text-m3-secondary tabular-nums">
+                      {f.size < 1024
+                        ? `${f.size} B`
+                        : f.size < 1024 * 1024
+                          ? `${Math.round(f.size / 1024)} KB`
+                          : `${(f.size / (1024 * 1024)).toFixed(1)} MB`}
+                    </span>
+                  )}
+                </span>
+              </div>
+            ),
+          )}
+        </div>
+      )}
+      {text ? (
+        <div className="rounded-lg rounded-br-sm px-3 py-2 text-[13px] leading-relaxed bg-m3-primary text-white whitespace-pre-wrap wrap-break-word">
+          {text}
+        </div>
+      ) : null}
       <div className={ACTIONS}>
         <CopyButton text={text} className="p-1" />
         {!streaming && (
@@ -120,6 +174,30 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
           </button>
         )}
       </div>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setLightbox(null)}
+        >
+          <img
+            src={lightbox}
+            alt=""
+            className="max-h-full max-w-full rounded-lg shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            type="button"
+            onClick={() => setLightbox(null)}
+            aria-label={t("ai.chat.closeImage")}
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -27,6 +27,11 @@ export const chat = {
   suggestions: "Sugestões",
   quickActions: "Ações rápidas",
   composerHint: "Enter para enviar · Shift+Enter para nova linha",
+  attachFiles: "Anexar ficheiros",
+  dropFiles: "Arraste ficheiros para anexar",
+  maxFilesReached: "Podes anexar até {count} ficheiros",
+  removeAttachment: "Remover anexo",
+  closeImage: "Fechar pré-visualização",
   slashEmpty: "Nenhuma ação encontrada",
   mascotLabel: "Logos AI",
   status: {
