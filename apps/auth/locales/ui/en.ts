@@ -564,6 +564,13 @@ export const en: typeof pt = {
       theme: "Theme",
       language: "Language",
     },
+    language: {
+      title: "Language",
+      desc: "Choose the interface language. Automatic follows your organization or browser.",
+      auto: "Automatic",
+      autoDesc: "Follow organization or browser",
+      changed: "Language changed to {language}.",
+    },
     notifications: {
       title: "Notification preferences",
       description: "Choose how Hosanna reaches you — inbox, push, and email.",

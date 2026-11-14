@@ -560,6 +560,13 @@ export const pt = {
       theme: "Tema",
       language: "Idioma",
     },
+    language: {
+      title: "Idioma",
+      desc: "Escolha o idioma da interface. Automático segue a organização ou o browser.",
+      auto: "Automático",
+      autoDesc: "Seguir a organização ou o browser",
+      changed: "Idioma alterado para {language}.",
+    },
     notifications: {
       title: "Preferências de notificação",
       description: "Escolha como a Hosanna o contacta — caixa de entrada, push e email.",
