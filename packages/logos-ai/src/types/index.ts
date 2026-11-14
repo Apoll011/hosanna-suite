@@ -19,6 +19,7 @@ export type {
   AiThread,
   AiThreadSummary,
   AiToolCallState,
+  ChatAttachment,
   PageContextSnapshot,
   QuickChip,
 } from "./chat";
