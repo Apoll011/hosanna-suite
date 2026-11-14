@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ChordProRenderer, parseChordPro } from "@hosanna/chordpro";
-import { Button, Input, Modal } from "@hosanna/ui";
 import {
   songsApi,
   type SongImportCancelCode,
@@ -13,12 +11,14 @@ import {
 } from "@/src/api/songs";
 import { useFolders } from "@/src/hooks/useFolders";
 import { useI18n, type TranslationKey } from "@/src/lib/i18n";
-import type { InteractiveImportModalProps } from "@/src/lib/import/types";
 import type {
   SheetMusicImportOptions,
   SheetMusicImportSession,
 } from "@/src/lib/import/sheetMusicProvider";
-import { AlertTriangle, Check, FileText, Image as ImageIcon, Loader2, X } from "lucide-react";
+import type { InteractiveImportModalProps } from "@/src/lib/import/types";
+import { ChordProRenderer, parseChordPro } from "@hosanna/chordpro";
+import { Button, Input, Modal } from "@hosanna/ui";
+import { AlertTriangle, Check, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 export type SheetMusicImportModalProps = InteractiveImportModalProps<
