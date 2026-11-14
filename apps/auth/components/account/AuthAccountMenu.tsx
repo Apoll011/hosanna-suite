@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 export function AuthAccountMenu({ className }: { className?: string }) {
   const { t, language } = useI18n();
   const router = useRouter();
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { user, clear } = useAuthUser({
     requireAuth: false,
     loginRedirect: "/login?redirect=/home",
@@ -83,7 +83,7 @@ export function AuthAccountMenu({ className }: { className?: string }) {
         </Link>
       )}
       onSignOut={logout}
-      theme={{ darkMode, onToggle: toggleDarkMode }}
+      theme={{ value: theme, onChange: setTheme }}
       languageControl={<LanguageSelector variant="menu" />}
     />
   );

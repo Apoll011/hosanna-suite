@@ -52,7 +52,7 @@ export function AuthLayout({
 
         <div className="flex items-center gap-2">
           <LanguageSelector />
-          <ThemeToggle className="bg-m3-card/75 backdrop-blur-md hover:bg-m3-card dark:hover:bg-m3-hover shadow-xs" />
+          <ThemeToggle />
         </div>
       </header>
 

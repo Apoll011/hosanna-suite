@@ -160,7 +160,9 @@ export const sharedEs: typeof sharedPt = {
       switchOrganization: "Cambiar de organización",
       theme: "Tema",
       language: "Idioma",
-      toggleTheme: "Cambiar tema",
+      themeSystem: "Usar tema del sistema",
+      themeLight: "Usar tema claro",
+      themeDark: "Usar tema oscuro",
     },
     apps: {
       auth: {

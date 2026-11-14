@@ -158,7 +158,9 @@ export const sharedPt = {
       switchOrganization: "Mudar de organização",
       theme: "Tema",
       language: "Idioma",
-      toggleTheme: "Alternar tema",
+      themeSystem: "Usar tema do sistema",
+      themeLight: "Usar tema claro",
+      themeDark: "Usar tema escuro",
     },
     apps: {
       auth: {

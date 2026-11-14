@@ -3,75 +3,81 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Moon, Sun } from "lucide-react";
+import { Monitor, MoonStar, Sun } from "lucide-react";
 import React from "react";
 
 import { cn } from "./cn";
 
+export type MenuThemeValue = "system" | "light" | "dark";
+
 export type MenuThemeToggleProps = {
-  darkMode: boolean;
-  onToggle: () => void;
+  value: MenuThemeValue;
+  onChange: (theme: MenuThemeValue) => void;
   className?: string;
-  "aria-label"?: string;
+  labels?: {
+    system?: string;
+    light?: string;
+    dark?: string;
+  };
 };
 
+const OPTIONS: {
+  id: MenuThemeValue;
+  Icon: typeof Monitor;
+  defaultLabel: string;
+}[] = [
+  { id: "system", Icon: Monitor, defaultLabel: "Switch to system theme" },
+  { id: "light", Icon: Sun, defaultLabel: "Switch to light theme" },
+  { id: "dark", Icon: MoonStar, defaultLabel: "Switch to dark theme" },
+];
+
 export const MenuThemeToggle: React.FC<MenuThemeToggleProps> = ({
-  darkMode,
-  onToggle,
+  value,
+  onChange,
   className = "",
-  "aria-label": ariaLabel = "Toggle theme",
+  labels,
 }) => (
-  <button
-    type="button"
-    role="switch"
-    aria-checked={darkMode}
-    aria-label={ariaLabel}
-    onClick={onToggle}
+  <div
+    role="radiogroup"
+    aria-label="Theme"
     className={cn(
-      "relative inline-flex h-7 w-[3.25rem] shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary",
-      darkMode
-        ? "bg-linear-to-r from-indigo-600 to-slate-700 shadow-[inset_0_1px_2px_rgb(0_0_0_/0.35)]"
-        : "bg-linear-to-r from-sky-200 to-amber-200 shadow-[inset_0_1px_2px_rgb(0_0_0_/0.08)]",
+      "inline-flex items-center overflow-hidden rounded-full bg-m3-card ring-1 ring-inset ring-m3-border",
       className,
     )}
   >
-    <Sun
-      className={cn(
-        "pointer-events-none absolute left-1.5 h-3 w-3 transition-opacity duration-200",
-        darkMode ? "opacity-30 text-amber-100/80" : "opacity-90 text-amber-600",
-      )}
-      aria-hidden
-    />
-    <Moon
-      className={cn(
-        "pointer-events-none absolute right-1.5 h-3 w-3 transition-opacity duration-200",
-        darkMode ? "opacity-90 text-indigo-100" : "opacity-35 text-slate-500",
-      )}
-      aria-hidden
-    />
-
-    <span
-      className={cn(
-        "relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-[0_2px_8px_rgb(0_0_0_/0.22)] transition-transform duration-200 ease-out",
-        darkMode ? "translate-x-[1.55rem]" : "translate-x-0",
-      )}
-    >
-      <span className="relative h-3.5 w-3.5">
-        <Sun
+    {OPTIONS.map(({ id, Icon, defaultLabel }) => {
+      const selected = value === id;
+      const label =
+        id === "system"
+          ? (labels?.system ?? defaultLabel)
+          : id === "light"
+            ? (labels?.light ?? defaultLabel)
+            : (labels?.dark ?? defaultLabel);
+      return (
+        <button
+          key={id}
+          type="button"
+          role="radio"
+          aria-checked={selected}
+          aria-label={label}
+          title={label}
+          onClick={() => onChange(id)}
           className={cn(
-            "absolute inset-0 h-3.5 w-3.5 text-amber-500 transition-opacity duration-150",
-            darkMode ? "opacity-0" : "opacity-100",
+            "relative flex size-8 cursor-pointer items-center justify-center rounded-full transition-colors [&_svg]:size-4",
+            selected
+              ? "text-m3-text"
+              : "text-m3-secondary hover:text-m3-text",
           )}
-          aria-hidden
-        />
-        <Moon
-          className={cn(
-            "absolute inset-0 h-3.5 w-3.5 text-indigo-600 transition-opacity duration-150",
-            darkMode ? "opacity-100" : "opacity-0",
-          )}
-          aria-hidden
-        />
-      </span>
-    </span>
-  </button>
+        >
+          <Icon aria-hidden />
+          {selected ? (
+            <span
+              className="pointer-events-none absolute inset-0 rounded-full border border-m3-border"
+              aria-hidden
+            />
+          ) : null}
+        </button>
+      );
+    })}
+  </div>
 );

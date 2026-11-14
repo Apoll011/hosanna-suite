@@ -105,7 +105,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   logout,
 }) => {
   const { t, language } = useI18n();
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { granted: canViewLibraryHealth } = useCan("library.health");
   const shortName = organization?.metadata?.shortName || "";
   const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
@@ -575,7 +575,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               onSignOut={logout}
               language={language}
               hide={{ language: true }}
-              theme={{ darkMode, onToggle: toggleDarkMode }}
+              theme={{ value: theme, onChange: setTheme }}
               links={[
                 {
                   href: "#account",

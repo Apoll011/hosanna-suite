@@ -44,7 +44,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     getSnapshot,
     () => DEFAULT_PERSONAL_SETTINGS.theme,
   );
-  const [systemDark, setSystemDark] = useState(false);
+  const [systemDark, setSystemDark] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : false,
+  );
   const mounted = useRef(false);
 
   useEffect(() => {
@@ -72,6 +76,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = useCallback((next: PersonalTheme) => {
     if (getPersonalSettings().theme === next) return;
+    writeThemeCookie(next);
     void updatePersonalSettingsSafe(
       { theme: next },
       {

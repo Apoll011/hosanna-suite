@@ -13,7 +13,7 @@ import { Building2, Check, ChevronDown, LogOut, UserRound } from "lucide-react";
 import React, { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { cn } from "./cn";
-import { MenuThemeToggle } from "./MenuThemeToggle";
+import { MenuThemeToggle, type MenuThemeValue } from "./MenuThemeToggle";
 import { sharedUiT } from "./sharedT";
 
 export type AccountMenuUser = {
@@ -55,8 +55,8 @@ export type AccountMenuHide = {
 };
 
 export type AccountMenuTheme = {
-  darkMode: boolean;
-  onToggle: () => void;
+  value: MenuThemeValue;
+  onChange: (theme: MenuThemeValue) => void;
 };
 
 export type AccountMenuProps = {
@@ -326,9 +326,13 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
             <div className={prefsRow}>
               <span className="font-medium">{themeLabel}</span>
               <MenuThemeToggle
-                darkMode={theme.darkMode}
-                onToggle={theme.onToggle}
-                aria-label={t("suite.accountMenu.toggleTheme")}
+                value={theme.value}
+                onChange={theme.onChange}
+                labels={{
+                  system: t("suite.accountMenu.themeSystem"),
+                  light: t("suite.accountMenu.themeLight"),
+                  dark: t("suite.accountMenu.themeDark"),
+                }}
               />
             </div>
           ) : null}
