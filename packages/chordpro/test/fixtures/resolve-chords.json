@@ -1,0 +1,62 @@
+[
+  {
+    "id": "fs-capo4-guitar",
+    "description": "F# song + capo 4 on guitar → D shapes, label shown",
+    "input": { "chords": ["F#", "B", "C#m", "A"], "key": "F#", "keyShift": 0, "capo": 4, "instrument": "guitar" },
+    "expected": { "shownKey": "D", "shownChords": ["D", "G", "Am", "E"], "capoLabel": "Capo 4 · shapes in D" }
+  },
+  {
+    "id": "capo-piano",
+    "description": "Capo 4 on piano → no capo effect, label null",
+    "input": { "chords": ["F#", "B", "C#m"], "key": "F#", "keyShift": 0, "capo": 4, "instrument": "piano" },
+    "expected": { "shownKey": "F#", "shownChords": ["F#", "B", "C#m"], "capoLabel": null }
+  },
+  {
+    "id": "keyshift-plus2-guitar",
+    "description": "keyshift +2 on guitar",
+    "input": { "chords": ["C", "G", "Am", "F"], "key": "C", "keyShift": 2, "capo": 0, "instrument": "guitar" },
+    "expected": { "shownKey": "D", "shownChords": ["D", "A", "Bm", "G"], "capoLabel": null }
+  },
+  {
+    "id": "keyshift-plus2-piano",
+    "description": "keyshift +2 on piano",
+    "input": { "chords": ["C", "G", "Am", "F"], "key": "C", "keyShift": 2, "capo": 0, "instrument": "piano" },
+    "expected": { "shownKey": "D", "shownChords": ["D", "A", "Bm", "G"], "capoLabel": null }
+  },
+  {
+    "id": "keyshift-and-capo",
+    "description": "keyshift +2 + capo 2 on guitar → shapeSemitones=0, same chords, label shown",
+    "input": { "chords": ["C", "G", "Am"], "key": "C", "keyShift": 2, "capo": 2, "instrument": "guitar" },
+    "expected": { "shownKey": "C", "shownChords": ["C", "G", "Am"], "capoLabel": "Capo 2 · shapes in C" }
+  },
+  {
+    "id": "capo-zero",
+    "description": "capo 0 → no capo effect",
+    "input": { "chords": ["G", "Em", "C", "D"], "key": "G", "keyShift": 0, "capo": 0, "instrument": "guitar" },
+    "expected": { "shownKey": "G", "shownChords": ["G", "Em", "C", "D"], "capoLabel": null }
+  },
+  {
+    "id": "invalid-capo",
+    "description": "Invalid capo (12) treated as 0",
+    "input": { "chords": ["A", "D", "E"], "key": "A", "keyShift": 0, "capo": 0, "instrument": "guitar" },
+    "expected": { "shownKey": "A", "shownChords": ["A", "D", "E"], "capoLabel": null }
+  },
+  {
+    "id": "slash-chord",
+    "description": "Slash chord survives transpose",
+    "input": { "chords": ["G/B", "C/E"], "key": "G", "keyShift": 2, "capo": 0, "instrument": "guitar" },
+    "expected": { "shownKey": "A", "shownChords": ["A/C#", "D/F#"], "capoLabel": null }
+  },
+  {
+    "id": "flat-chord",
+    "description": "Flat chords shifted up 2",
+    "input": { "chords": ["Bb", "Gm", "Eb", "F"], "key": "Bb", "keyShift": 2, "capo": 0, "instrument": "guitar" },
+    "expected": { "shownKey": "C", "shownChords": ["C", "Am", "F", "G"], "capoLabel": null }
+  },
+  {
+    "id": "ukulele-capo",
+    "description": "Capo 2 on ukulele (supportsCapo) → label shown",
+    "input": { "chords": ["C", "F", "G"], "key": "C", "keyShift": 0, "capo": 2, "instrument": "ukulele" },
+    "expected": { "shownKey": "A#", "shownChords": ["A#", "D#", "F"], "capoLabel": "Capo 2 · shapes in A#" }
+  }
+]
