@@ -12,7 +12,7 @@ import {
   type SongImportStep,
 } from "@/src/api/songs";
 import { useFolders } from "@/src/hooks/useFolders";
-import { useI18n } from "@/src/lib/i18n";
+import { useI18n, type TranslationKey } from "@/src/lib/i18n";
 import type { InteractiveImportModalProps } from "@/src/lib/import/types";
 import type {
   SheetMusicImportOptions,
@@ -35,8 +35,13 @@ export type SheetMusicImportModalProps = InteractiveImportModalProps<
 
 const POLL_INTERVAL_MS = 900;
 
-const cancelReasonKey = (code: SongImportCancelCode): string =>
-  `modals.sheetMusicImport.cancelReasons.${code}`;
+const cancelReasonKeys: Record<SongImportCancelCode, TranslationKey> = {
+  not_a_song: "modals.sheetMusicImport.cancelReasons.not_a_song",
+  unreadable: "modals.sheetMusicImport.cancelReasons.unreadable",
+  blank: "modals.sheetMusicImport.cancelReasons.blank",
+  wrong_content: "modals.sheetMusicImport.cancelReasons.wrong_content",
+  multiple_unclear: "modals.sheetMusicImport.cancelReasons.multiple_unclear",
+};
 
 const CircularProgress: React.FC = () => (
   <svg
@@ -346,7 +351,7 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
               job.status === "failed"
                 ? job.errorMessage ?? t("modals.sheetMusicImport.failed")
                 : job.cancelledBy === "ai" && job.cancelCode
-                  ? t(cancelReasonKey(job.cancelCode), { reason: job.cancelReason ?? "" })
+                  ? t(cancelReasonKeys[job.cancelCode], { reason: job.cancelReason ?? "" })
                   : job.cancelReason ?? t("modals.sheetMusicImport.cancelledByUser")
             }
             tone={job.status === "failed" ? "error" : "warning"}
