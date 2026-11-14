@@ -5,6 +5,8 @@
 
 import { useI18n } from "@/src/lib/i18n";
 import { Song } from "@/src/types";
+import { resolveChords, parseCapoValue, parseKeyShiftValue } from "@hosanna/chordpro";
+import { loadSongPitchOverlay } from "@/src/hooks/usePreviewSettings";
 import React, { useMemo } from "react";
 import { safeParseSong } from "../parseSong";
 import { buildSongBlocks } from "../songBlocks";
@@ -41,22 +43,39 @@ export const SongPrintView = React.memo<SongPrintViewProps>(function SongPrintVi
   const cacheKey = `${song.id}:${song.updatedAt ?? ""}:${song.content.length}`;
 
   const parsed = useMemo(() => safeParseSong(song.content, cacheKey), [song.content, cacheKey]);
+  const meta = parsed?.metadata ?? {};
+
+  const overlay = useMemo(() => loadSongPitchOverlay(song.id), [song.id]);
+  const effectiveKeyShift = overlay ? overlay.transposeVal : parseKeyShiftValue(meta.keyShift);
+  const effectiveCapo = overlay ? overlay.capoVal : parseCapoValue(meta.capo);
+
+  const { shownKey, capoLabel } = useMemo(() => {
+    return resolveChords({
+      chords: [],
+      key: meta.key,
+      keyShift: effectiveKeyShift,
+      capo: effectiveCapo,
+      instrument: "guitar",
+    });
+  }, [meta.key, effectiveKeyShift, effectiveCapo]);
+
   const blocks = useMemo(() => {
     if (!parsed) return [];
-    const display = showChords ? parsed : parsed.removeChords(true);
+    const delta = effectiveKeyShift - effectiveCapo;
+    const transposed = delta !== 0 ? parsed.transpose(delta) : parsed;
+    const display = showChords ? transposed : transposed.removeChords(true);
     return buildSongBlocks(display, { showChords });
-  }, [parsed, showChords]);
+  }, [parsed, showChords, effectiveKeyShift, effectiveCapo]);
 
-  const meta = parsed?.metadata ?? {};
   const title = meta.title || song.title;
   const subtitle = [meta.subtitle, meta.artist || song.artist].filter(Boolean).join(" · ");
   const number = meta.songNumber || song.song_number;
 
   const metaItems = [
-    { label: t("print.song.key"), value: meta.key },
+    { label: t("print.song.key"), value: shownKey || meta.key },
     {
       label: t("print.song.capo"),
-      value: meta.capo && meta.capo !== "0" ? meta.capo : undefined,
+      value: capoLabel || (effectiveCapo > 0 ? `${effectiveCapo}ª casa` : undefined),
     },
     {
       label: t("print.song.tempo"),

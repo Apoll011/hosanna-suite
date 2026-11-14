@@ -42,7 +42,7 @@ Give accurate explanations and edits based on what Hosanna **actually** implemen
 
 `title`, `subtitle`, `artist`, `key`, `original_key`, `capo`, `tempo`, `time`, `duration`, `song_number`, `youtube`, `ccli`, …
 
-Hosanna extras: `{key_note: …}` (note about key changes/modulations, rendered under the song header — e.g. `{key_note: Verso 4 e final modulam para D (meio tom acima)}`), `{tag: …}` (editor-only label, repeatable, not rendered), `{arranger: …}`.
+Hosanna extras: `{key_note: …}` (note about key changes/modulations, rendered under the song header — e.g. `{key_note: Verso 4 e final modulam para D (meio tom acima)}`), `{tags: …}` (comma-separated editor-only labels, not rendered), `{arranger: …}`.
 
 Unknown `{name: value}` becomes camelCased metadata — fine for extras, but prefer documented names.
 

@@ -32,7 +32,8 @@ Essential metadata: `title`, `artist`, `key`, `duration`, `youtube`, `song_numbe
 | artist       | a     |                                                                                                                                          |
 | key          | k     | Used by transpose / analysis                                                                                                             |
 | original_key |       |                                                                                                                                          |
-| capo         |       | Linted as numeric                                                                                                                        |
+| capo         |       | Initial capo (0–11). Seeds toolbar; on capo instruments, shapes shift down. Chords in file are sounding pitch.                           |
+| keyshift     | ks    | Initial key shift in semitones (signed integer). Seeds toolbar transpose for all instruments.                                            |
 | tempo        |       | Linted as numeric                                                                                                                        |
 | time         |       | Time signature                                                                                                                           |
 | duration     |       | Hosanna — service planning defaults                                                                                                      |
@@ -40,7 +41,7 @@ Essential metadata: `title`, `artist`, `key`, `duration`, `youtube`, `song_numbe
 | youtube      |       | Hosanna — reference video                                                                                                                |
 | ccli         |       | Stored as metadata                                                                                                                       |
 | key_note     |       | Hosanna — note about key changes, shown by the renderer under the header (`{key_note: Verso 4 e final modulam para D (meio tom acima)}`) |
-| tag          |       | Hosanna — editor-only label, repeatable, NOT rendered (`{tag: adoração}`)                                                                |
+| tags         |       | Hosanna — comma-separated editor-only labels, NOT rendered (`{tags: adoração, lenta}`)                                                   |
 | arranger     |       | Arranger credit (footer)                                                                                                                 |
 
 Unknown `{name: value}` directives are stored as camelCased metadata.

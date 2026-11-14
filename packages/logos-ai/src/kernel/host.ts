@@ -6,7 +6,14 @@
  */
 
 import type { LogosCatalog } from "../catalog/types";
-import type { AiChatContext, AiConfirmAction, AiSettingsPublic, AiUiMessage } from "../types/api";
+import type {
+  AiChatContext,
+  AiConfirmAction,
+  AiSettingsPublic,
+  AiUiMessage,
+  NewSongInput,
+  SongImportJob,
+} from "../types/api";
 import type { LogosHostProfile } from "./capabilities";
 
 export type LogosTranslate = (key: string, vars?: Record<string, string | number>) => string;
@@ -38,11 +45,22 @@ export type LogosApi = LogosChatApi & {
     id: string,
     data: import("../catalog/types").CatalogSongPatch,
   ) => Promise<import("../catalog/types").CatalogSong | void>;
+  createSong?: (data: NewSongInput) => Promise<import("../catalog/types").CatalogSong | void>;
+  getImportJob?: (id: string) => Promise<SongImportJob>;
+  cancelImportJob?: (id: string) => Promise<SongImportJob>;
   getService?: (id: string) => Promise<import("../catalog/types").CatalogService | null>;
   updateService?: (
     id: string,
     data: import("../catalog/types").CatalogServicePatch,
   ) => Promise<import("../catalog/types").CatalogService | void>;
+};
+
+export type RenderedPdfResult = {
+  imageBase64: string;
+  imagesBase64: string[];
+  mimeTypes: string[];
+  pdfBase64?: string;
+  pageCount: number;
 };
 
 export type LogosHost = {
@@ -63,6 +81,7 @@ export type LogosHost = {
   canUpdateService?: boolean;
   deriveView: (pathname: string, slugPrefix: string) => string;
   profile: LogosHostProfile;
+  renderPdf?: (file: File) => Promise<RenderedPdfResult>;
 };
 
 /** Legacy song React adapter (Studio RxDB). Optional. */
@@ -90,6 +109,10 @@ export type CreateLogosHostInput = {
   slugPrefix: string;
   canUseAi: boolean;
   deriveView: (pathname: string, slugPrefix: string) => string;
+  createSong?: LogosApi["createSong"];
+  getImportJob?: LogosApi["getImportJob"];
+  cancelImportJob?: LogosApi["cancelImportJob"];
+  renderPdf?: (file: File) => Promise<RenderedPdfResult>;
 };
 
 /**
@@ -104,6 +127,9 @@ export function createLogosHost(input: CreateLogosHostInput): LogosHost {
       updateSong: async (id, data) => {
         await catalog.update("song", id, data);
       },
+      createSong: input.createSong,
+      getImportJob: input.getImportJob,
+      cancelImportJob: input.cancelImportJob,
       getService: (id) => catalog.get("service", id),
       updateService: async (id, data) => {
         await catalog.update("service", id, data);
@@ -122,5 +148,6 @@ export function createLogosHost(input: CreateLogosHostInput): LogosHost {
     canUpdateService: catalog.canUpdate("service"),
     deriveView: input.deriveView,
     profile: input.profile,
+    renderPdf: input.renderPdf,
   };
 }

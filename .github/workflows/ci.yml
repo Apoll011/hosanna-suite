@@ -45,6 +45,9 @@ jobs:
       - name: Workspace health
         run: pnpm test:workspace
 
+      - name: OpenAPI contract freshness
+        run: pnpm openapi:check
+
       - name: Typecheck
         env:
           TURBO_TELEMETRY_DISABLED: "1"

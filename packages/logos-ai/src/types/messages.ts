@@ -38,11 +38,20 @@ function clipForHistory(value: unknown): unknown {
 export function toUiMessages(messages: AiChatMessage[]): AiUiMessage[] {
   const out = messages.map((m) => {
     if (m.role === "user") {
-      return {
-        id: m.id,
-        role: "user" as const,
-        parts: [{ type: "text", text: messageText(m) }],
-      };
+      const parts: AiUiMessage["parts"] = [];
+      for (const p of m.parts) {
+        if (p.type === "text") {
+          if (p.text) parts.push({ type: "text", text: p.text });
+        } else if (p.type === "file") {
+          parts.push({
+            type: "file",
+            url: p.data,
+            mediaType: p.mimeType,
+            ...(p.name ? { filename: p.name } : {}),
+          });
+        }
+      }
+      return { id: m.id, role: "user" as const, parts };
     }
     const parts: AiUiMessage["parts"] = [];
     for (const p of m.parts) {

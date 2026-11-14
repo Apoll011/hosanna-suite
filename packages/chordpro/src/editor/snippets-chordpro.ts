@@ -28,8 +28,8 @@ export async function registerChordproSnippets(aceInstance?: any): Promise<void>
         "snippet keynote",
         "	{key_note: ${1:Verso 4 e final modulam para D (meio tom acima)}}",
 
-        "snippet tag",
-        "	{tag: ${1:value}}",
+        "snippet tags",
+        "	{tags: ${1:value}}",
 
         "snippet number",
         "	{song_number: ${1:number}}",
@@ -50,6 +50,10 @@ export async function registerChordproSnippets(aceInstance?: any): Promise<void>
         // capo tag
         "snippet capo",
         "	{capo: ${1:5}}",
+
+        // keyshift tag
+        "snippet keyshift",
+        "	{key_shift: ${1:0}}",
 
         // composer tag
         "snippet composer",

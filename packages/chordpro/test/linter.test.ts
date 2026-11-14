@@ -31,8 +31,45 @@ describe("ChordPro linter — chorus recall / tags", () => {
     assert.equal(d.length, 0);
   });
 
-  it("warns on empty key_note / tag", () => {
-    const d = lintChordPro("{key_note}\n{tag: }\n{key_note: D}");
+  it("warns on empty key_note / tags", () => {
+    const d = lintChordPro("{key_note}\n{tags: }\n{key_note: D}");
     assert.equal(d.filter((x) => x.code === "empty-directive-value").length, 2);
+  });
+});
+
+describe("ChordPro linter — capo / keyshift validation", () => {
+  it("warns on capo out of range (12)", () => {
+    const d = lintChordPro("{capo: 12}");
+    assert.ok(d.some((x) => x.code === "invalid-capo-range"));
+  });
+
+  it("accepts capo 0", () => {
+    const d = lintChordPro("{capo: 0}");
+    assert.ok(!d.some((x) => x.code === "invalid-capo-range"));
+  });
+
+  it("accepts capo 11", () => {
+    const d = lintChordPro("{capo: 11}");
+    assert.ok(!d.some((x) => x.code === "invalid-capo-range"));
+  });
+
+  it("warns on non-integer capo", () => {
+    const d = lintChordPro("{capo: 2.5}");
+    assert.ok(d.some((x) => x.code === "invalid-capo-range"));
+  });
+
+  it("warns on non-integer keyshift", () => {
+    const d = lintChordPro("{keyshift: abc}");
+    assert.ok(d.some((x) => x.code === "invalid-keyshift-value"));
+  });
+
+  it("accepts valid negative keyshift", () => {
+    const d = lintChordPro("{keyshift: -3}");
+    assert.ok(!d.some((x) => x.code === "invalid-keyshift-value"));
+  });
+
+  it("accepts key_shift alias", () => {
+    const d = lintChordPro("{key_shift: 2}");
+    assert.ok(!d.some((x) => x.code === "invalid-keyshift-value"));
   });
 });

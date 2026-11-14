@@ -227,7 +227,7 @@ export type RenderBlock =
 export function groupParts(parts: AiMessagePart[]): RenderBlock[] {
   const blocks: RenderBlock[] = [];
   parts.forEach((part, i) => {
-    if (part.type === "step") return;
+    if (part.type === "step" || part.type === "file") return;
     if (part.type === "tool") {
       if (SILENT_TOOLS.has(part.tool.toolName)) return;
       const last = blocks[blocks.length - 1];

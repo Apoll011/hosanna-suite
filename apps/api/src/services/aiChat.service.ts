@@ -105,6 +105,7 @@ const folderIconSchema = z.enum(FOLDER_ICON_IDS);
 const folderColorSchema = z.enum(FOLDER_COLOR_IDS);
 import type { AiProvider } from "./orgAiConfig.service.js";
 import { AI_PROVIDER_DEFAULT_BASE_URL, OrgAiConfigService } from "./orgAiConfig.service.js";
+import { SongImportService } from "./songImport.service.js";
 
 export type ChatPageContext = {
   kind?:
@@ -177,6 +178,27 @@ function textResult(data: unknown) {
   return typeof data === "string" ? data : JSON.stringify(data, null, 2);
 }
 
+const songImport = new SongImportService();
+
+export function modelFileDataToBase64(data: unknown): string | null {
+  if (typeof data === "string") {
+    const idx = data.indexOf("base64,");
+    return idx >= 0 ? data.slice(idx + "base64,".length) : data;
+  }
+  if (data instanceof Uint8Array) return Buffer.from(data).toString("base64");
+  if (data instanceof ArrayBuffer) return Buffer.from(new Uint8Array(data)).toString("base64");
+  if (Buffer.isBuffer(data)) return data.toString("base64");
+  if (data && typeof data === "object") {
+    const obj = data as { type?: string; data?: unknown; url?: unknown };
+    if (obj.type === "data" && obj.data != null) return modelFileDataToBase64(obj.data);
+    if (obj.type === "url" && typeof obj.url === "string") {
+      const idx = obj.url.indexOf("base64,");
+      return idx >= 0 ? obj.url.slice(idx + "base64,".length) : null;
+    }
+  }
+  return null;
+}
+
 /** Studio-only: stage a destructive action for the Confirm button (does not mutate). */
 function deleteConfirmation(opts: {
   action:
@@ -229,7 +251,11 @@ export async function runBatch<I>(
 
 function buildHosannaTools(
   authInfo: AuthInfo,
-  opts?: { nativeWebAuth?: NativeWebAuth | null; memory?: AiMemoryService },
+  opts?: {
+    nativeWebAuth?: NativeWebAuth | null;
+    memory?: AiMemoryService;
+    rawMessages?: UIMessage[];
+  },
 ) {
   const memory = opts?.memory;
   const nativeWebAuth = opts?.nativeWebAuth ?? null;
@@ -1616,6 +1642,101 @@ function buildHosannaTools(
         return textResult({ songs, missing, count: songs.length });
       },
     }),
+    songs_import_sheet: tool({
+      description:
+        "Run the AI song-import pipeline on a sheet-music image (or the page images of a PDF) the user attached in chat. Creates an import job and returns its id — the chat UI polls it and shows live step progress. Only call when the user asks to import a chord sheet and an image/PDF is attached.",
+      inputSchema: z.object({
+        fileIndex: z
+          .number()
+          .int()
+          .min(0)
+          .optional()
+          .describe(
+            "Which attached image to use when several are attached; defaults to the first.",
+          ),
+      }),
+      execute: async (args, { messages }) => {
+        const ctx = requireMcpContext(authInfo);
+        requirePermission(ctx, "song.import");
+
+        let rawParts: unknown[] = [];
+        if (opts?.rawMessages) {
+          for (let i = opts.rawMessages.length - 1; i >= 0; i--) {
+            const m = opts.rawMessages[i];
+            if (m?.role === "user" && Array.isArray(m.parts)) {
+              rawParts = m.parts;
+              break;
+            }
+          }
+        }
+        if (rawParts.length === 0) {
+          for (let i = messages.length - 1; i >= 0; i--) {
+            const m = messages[i];
+            if (m?.role === "user" && Array.isArray(m.content)) {
+              rawParts = m.content;
+              break;
+            }
+          }
+        }
+
+        const fileParts = rawParts.filter((p): p is Record<string, unknown> =>
+          Boolean(p && typeof p === "object" && (p as { type?: string }).type === "file"),
+        );
+
+        const images = fileParts.filter((p) => {
+          const media = String(p.mediaType || "");
+          return media.startsWith("image/");
+        });
+
+        if (images.length === 0) {
+          const pdfPart = fileParts.find((p) => String(p.mediaType || "") === "application/pdf");
+          if (pdfPart) {
+            return textResult({
+              error: true,
+              code: "pdf_requires_rendering",
+              message:
+                "PDF sheet music needs to be rendered to images before import. Please use the Sheet Music Importer modal in Studio.",
+            });
+          }
+          return textResult({
+            error: true,
+            code: "no_sheet",
+            message: "No sheet music image or PDF found in the message.",
+          });
+        }
+
+        const primary = images[args.fileIndex ?? 0] ?? images[0];
+        const primaryB64 = modelFileDataToBase64(primary.url ?? primary.data);
+        if (!primaryB64) {
+          return textResult({
+            error: true,
+            code: "unreadable_file",
+            message: "Could not read the attached image.",
+          });
+        }
+
+        const mimeOf = (p: Record<string, unknown>) => String(p.mediaType || "image/jpeg");
+        const rest = args.fileIndex == null ? images.slice(1) : [];
+        const restImages = rest
+          .map((p) => ({
+            base64: modelFileDataToBase64(p.url ?? p.data),
+            mime: mimeOf(p),
+          }))
+          .filter((x): x is { base64: string; mime: string } => Boolean(x.base64));
+
+        const fileName = typeof primary.filename === "string" ? primary.filename : undefined;
+        const job = await songImport.createJob({
+          orgId: ctx.orgId,
+          sourceType: restImages.length > 0 ? "gallery" : "photo",
+          imageBase64: primaryB64,
+          imageMimeType: mimeOf(primary),
+          imagesBase64: restImages.map((x) => x.base64),
+          imageMimeTypes: restImages.map((x) => x.mime),
+          fileName,
+        });
+        return textResult({ importJobId: job.id, status: job.status, steps: job.steps });
+      },
+    }),
     songs_create_draft: tool({
       description: "Draft a new song without saving. Optional folderId.",
       inputSchema: z.object({
@@ -2273,6 +2394,7 @@ const LOGOS_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosan
 ## Style (strict)
 - Be brief. Prefer doing over asking. One short sentence + tools beats essays.
 - Do NOT paste full ChordPro bodies into chat. Call propose/edit tools; the host UI shows Accept/Decline (or opens Music when the current app has no editor).
+- When the user attaches an image or PDF of a chord sheet and asks to import it, call \`songs_import_sheet\` once — the chat UI polls the job and shows a Save Song card. Never retype lyrics/chords the model cannot see.
 - Prefer pageContext ids + updatedAt. Do NOT call list/search just to discover the open song/service/folder.
 - Skills/docs are NOT in your context until you read them: hosanna_skills_list → hosanna_skill_read, or hosanna_resource_read. Never invent skill contents — quote what the tool returns.
 - For clear requests (transpose to D, repeat a section 2×, duplicate last verse, fix chords, complete metadata, create folder/event), act immediately with a sensible default. Ask at most ONE question only when blocked.
@@ -2287,7 +2409,7 @@ const LOGOS_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosan
 - On stale/concurrency errors, use the returned \`current\` object (do not re-fetch blindly).
 - \`{chorus}\` (alias \`{ch}\`, optional label \`{chorus: Refrão final}\`) recalls the previous \`start_of_chorus\` block without copying it. When a chorus repeats UNCHANGED, write \`{chorus}\` instead of duplicating the lines (unless the user asks for a physical copy or the repeat has different chords/words). Never put \`{chorus}\` before any chorus exists.
 - \`{key_note: text}\` is a free-text note about key changes (e.g. \`{key_note: Verso 4 e final modulam para D (meio tom acima)}\`); the renderer shows it under the song header. Use it for modulations — not \`{c:}\`, not \`{key:}\` (which is the main key).
-- \`{tag: label}\` is an editor-only label (not rendered). Repeat the directive for several tags. Do not add tags the user did not ask for.
+- \`{tags: label1, label2}\` stores comma-separated editor-only labels (not rendered). Do not add tags the user did not ask for.
 - Propagating/completing chords: \`songs_draft_propagate_chords\` / \`chordpro_propagate_chords\` return a DRAFT that is NOT staged. Read \`review\` and \`skipped\`: re-place every chord marked \`check\` on the right word/syllable yourself (use the source line as reference), fill \`skipped\` lines when the chords are obvious, make sure no chord lands mid-word by accident, then call \`songs_propose_edit\` ONCE with the corrected full content. Never propose the raw draft unchecked and never invent chords the song does not already use.
 
 ## Host awareness
@@ -2297,7 +2419,7 @@ const LOGOS_CHAT_SYSTEM = `You are Logos, the friendly AI assistant inside Hosan
 - On thin hosts, navigate/print tools become an optional "Open in Music" chat card (no auto tab switch). Use open_app only when the user clearly wants to leave for another product (account settings, marketing, a future app).
 
 ## Capabilities (use them)
-- Songs: search, search_lyrics (plain lyrics ignoring chords), get/get_many, draft, propose_edit/fix/transpose, save, move, delete, restore; trash_list
+- Songs: search, search_lyrics (plain lyrics ignoring chords), get/get_many, draft, propose_edit/fix/transpose, save, move, delete, restore, import_sheet (run AI sheet-music import on an attached image/PDF); trash_list
 - Services: search/get (expandSongs), propose_edit, plan_suggest, validate, save, delete, restore
 - People/org: me, members_list, members_get, members_resolve, org_get. Resolve people before agenda assignees.
 - Record status: draft = not persisted; saved/verified = in DB. Never call a draft "saved".
@@ -2398,7 +2520,55 @@ export function describeChatError(error: unknown): string {
     }
     return "The AI provider could not process this request.";
   }
+  const msg = error instanceof Error ? error.message : String(error);
+  if (/UnsupportedFunctionalityError|file part|media type|data URL/i.test(msg)) {
+    return "The configured AI provider does not support this file attachment type. Try attaching as an image or use the Sheet Music Importer.";
+  }
   return "Something went wrong while generating the reply. Please try again.";
+}
+
+export function filterUnsupportedFileParts(
+  messages: UIMessage[],
+  provider: AiProvider,
+): UIMessage[] {
+  const supportsPdf = provider === "google" || provider === "anthropic";
+  const supportsImage = provider === "google" || provider === "anthropic" || provider === "openai";
+
+  return messages.map((m) => {
+    if (m.role !== "user" || !Array.isArray(m.parts)) return m;
+    const parts = m.parts.map((p) => {
+      if (p.type !== "file") return p;
+      const filePart = p as { type: "file"; mediaType?: string; url?: string; filename?: string };
+      const mediaType = filePart.mediaType || "application/octet-stream";
+      const isPdf = mediaType === "application/pdf";
+      const isImage = mediaType.startsWith("image/");
+
+      if (isPdf && !supportsPdf) {
+        return {
+          type: "text" as const,
+          text: `[Attached PDF: ${filePart.filename || "document.pdf"}. The document is attached and available for tools.]`,
+        };
+      }
+
+      if (isImage && !supportsImage) {
+        return {
+          type: "text" as const,
+          text: `[Attached image: ${filePart.filename || "sheet.jpg"}. The image is attached and available for tools.]`,
+        };
+      }
+
+      if (!isPdf && !isImage) {
+        return {
+          type: "text" as const,
+          text: `[Attached file: ${filePart.filename || "attachment"} (${mediaType}).]`,
+        };
+      }
+
+      return p;
+    });
+
+    return { ...m, parts };
+  });
 }
 
 export class AiChatService {
@@ -2425,6 +2595,7 @@ export class AiChatService {
     const tools = buildHosannaTools(opts.authInfo, {
       nativeWebAuth,
       memory: runtime.memoryEnabled ? this.memory : undefined,
+      rawMessages: opts.messages,
     });
     const system =
       LOGOS_CHAT_SYSTEM +
@@ -2434,7 +2605,8 @@ export class AiChatService {
       localePromptBlock(opts.locale) +
       clockContextPromptBlock() +
       contextBlock(opts.pageContext);
-    const modelMessages = await convertToModelMessages(opts.messages);
+    const messages = filterUnsupportedFileParts(opts.messages, runtime.provider);
+    const modelMessages = await convertToModelMessages(messages);
 
     const budget: ToolBudgetState = {
       max: runtime.maxToolCalls,

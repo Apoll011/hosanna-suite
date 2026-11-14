@@ -1,6 +1,5 @@
 "use client";
 
-import { LanguageSelector } from "@/components/LanguageSelector";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { authClient } from "@/lib/auth/client";
@@ -57,6 +56,7 @@ export function AuthAccountMenu({ className }: { className?: string }) {
         const match = organizations.find((o) => o.id === org.id);
         if (match) await switchOrganization(match);
       }}
+      hide={{ language: true }}
       links={[
         {
           href: "/account",
@@ -84,7 +84,6 @@ export function AuthAccountMenu({ className }: { className?: string }) {
       )}
       onSignOut={logout}
       theme={{ value: theme, onChange: setTheme }}
-      languageControl={<LanguageSelector variant="menu" />}
     />
   );
 }

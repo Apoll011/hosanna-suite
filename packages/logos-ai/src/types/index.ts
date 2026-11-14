@@ -11,6 +11,11 @@ export type {
   AiSettingsPublic,
   AiUiMessage,
   NativeWebCapability,
+  NewSongInput,
+  SongImportCancelCode,
+  SongImportDraft,
+  SongImportJob,
+  SongImportStep,
 } from "./api";
 export type {
   AiChatMessage,
@@ -19,6 +24,7 @@ export type {
   AiThread,
   AiThreadSummary,
   AiToolCallState,
+  ChatAttachment,
   PageContextSnapshot,
   QuickChip,
 } from "./chat";

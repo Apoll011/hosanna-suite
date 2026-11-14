@@ -19,6 +19,7 @@ export type AiToolCallState = {
 
 export type AiMessagePart =
   | { type: "text"; text: string }
+  | { type: "file"; data: string; mimeType: string; name?: string; size?: number }
   | { type: "reasoning"; text: string }
   | { type: "tool"; tool: AiToolCallState }
   /** Model step boundary (kept so history round-trips faithfully). */
@@ -63,6 +64,16 @@ export type AiThread = {
 
 export type AiThreadSummary = Pick<AiThread, "id" | "title" | "createdAt" | "updatedAt"> & {
   messageCount: number;
+};
+
+export type ChatAttachment = {
+  id: string;
+  file: File;
+  name: string;
+  size: number;
+  mimeType: string;
+  dataUrl: string;
+  isImage: boolean;
 };
 
 export type QuickChip = {

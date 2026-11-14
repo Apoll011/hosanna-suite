@@ -144,3 +144,47 @@ test("history round-trips tool calls and drops empty assistant turns", () => {
   assert.equal(tool.state, "output-available");
   assert.equal(tool.toolCallId, "1");
 });
+
+test("toUiMessages preserves file parts on user attachments", () => {
+  const ui = toUiMessages([
+    {
+      id: "u",
+      role: "user",
+      createdAt: 0,
+      parts: [
+        { type: "text", text: "import this" },
+        {
+          type: "file",
+          data: "data:image/png;base64,abc",
+          mimeType: "image/png",
+          name: "sheet.png",
+          size: 3,
+        },
+      ],
+    },
+  ]);
+  assert.equal(ui.length, 1);
+  assert.deepEqual(ui[0].parts, [
+    { type: "text", text: "import this" },
+    {
+      type: "file",
+      url: "data:image/png;base64,abc",
+      mediaType: "image/png",
+      filename: "sheet.png",
+    },
+  ]);
+});
+
+test("file-only user message keeps its file parts", () => {
+  const ui = toUiMessages([
+    {
+      id: "u",
+      role: "user",
+      createdAt: 0,
+      parts: [{ type: "file", data: "data:image/jpeg;base64,x", mimeType: "image/jpeg" }],
+    },
+  ]);
+  assert.deepEqual(ui[0].parts, [
+    { type: "file", url: "data:image/jpeg;base64,x", mediaType: "image/jpeg" },
+  ]);
+});

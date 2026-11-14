@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { asDeferredOffer, parseToolActions } from "../../actions";
+import { asDeferredOffer, parseToolActions, unwrapToolJson } from "../../actions";
 import { useLogosHost, useLogosI18n } from "../../host";
 import { hasCapability } from "../../host/capabilities";
 import { AlertCircle, Check, ChevronDown, ChevronRight, Loader2, X } from "lucide-react";
@@ -12,6 +12,7 @@ import { AiConfirmCard } from "./ConfirmCard";
 import { AiHostActionCard } from "./HostActionCard";
 import { AiProposalCard } from "../../proposals/components/Card";
 import { AiServiceProposalCard } from "../../proposals/components/ServiceCard";
+import { AiSongImportCard } from "./SongImportCard";
 import { CopyButton } from "./CopyButton";
 import { countByName, toolRunStatus } from "../../core/stream";
 import {
@@ -221,6 +222,17 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
     [parsedActions, thinNavigate, thinPrint],
   );
 
+  const importJobs = useMemo(
+    () =>
+      tools.map((tool) => {
+        if (tool.toolName !== "songs_import_sheet" || tool.status !== "done") return null;
+        const body = unwrapToolJson(tool.output);
+        const id = body?.importJobId;
+        return typeof id === "string" ? id : null;
+      }),
+    [tools],
+  );
+
   const current = useMemo(() => {
     for (let i = tools.length - 1; i >= 0; i--) {
       if (tools[i].status === "running") return tools[i];
@@ -305,6 +317,10 @@ export const AiToolGroup = memo(function AiToolGroup({ tools }: { tools: AiToolC
 
       {confirmations.map((c, i) =>
         c ? <AiConfirmCard key={tools[i].toolCallId} confirmation={c} /> : null,
+      )}
+
+      {importJobs.map((id, i) =>
+        id ? <AiSongImportCard key={`imp-${tools[i].toolCallId}`} jobId={id} /> : null,
       )}
     </div>
   );

@@ -3,6 +3,7 @@ export * from "./capabilities";
 export * from "./chordDictionary";
 export * from "./linter";
 export * from "./parser";
+export * from "./resolveChords";
 export * from "./score";
 export * from "./transformations";
 export * from "./transpose";

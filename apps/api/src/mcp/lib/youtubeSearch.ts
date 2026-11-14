@@ -107,7 +107,7 @@ async function durationViaYouTubeApi(videoId: string): Promise<YouTubeDurationRe
   url.searchParams.set("id", videoId);
   url.searchParams.set("key", key);
 
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(`${hintForApiStatus(res.status, body)} (${body.slice(0, 160)})`);
@@ -139,6 +139,7 @@ async function durationViaWatchPage(videoId: string): Promise<YouTubeDurationRes
       "User-Agent": "Mozilla/5.0 (compatible; HosannaBot/1.0; +https://hosanna.live)",
       "Accept-Language": "en-US,en;q=0.9",
     },
+    signal: AbortSignal.timeout(8_000),
   });
   if (!res.ok) {
     throw new Error(`YouTube watch page returned ${res.status}`);
@@ -233,7 +234,7 @@ async function searchViaYouTubeApi(
   url.searchParams.set("maxResults", String(limit));
   url.searchParams.set("key", key);
 
-  const res = await fetch(url);
+  const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(`${hintForApiStatus(res.status, body)} (${body.slice(0, 160)})`);

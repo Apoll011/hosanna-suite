@@ -3,6 +3,7 @@ import { Router } from "express";
 import { cronRouter } from "./cron.routes.js";
 import { folderRouter } from "./folder.routes.js";
 import { healthRouter } from "./health.routes.js";
+import { openapiRouter } from "./openapi.routes.js";
 import { replicationRouter } from "./replication.routes.js";
 import { serviceRouter } from "./service.routes.js";
 import { songRouter } from "./song.routes.js";
@@ -29,6 +30,7 @@ const aiChatLimiter = rateLimit({
 
 apiRouter.use("/health", healthLimiter, healthRouter);
 apiRouter.use("/cron", cronRouter);
+apiRouter.use(openapiRouter);
 
 apiRouter.use(authenticate);
 apiRouter.use("/replication", syncLimiter, replicationRouter);

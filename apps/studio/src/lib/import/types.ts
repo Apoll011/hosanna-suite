@@ -1,4 +1,53 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Song } from "@/src/types";
+import type { ComponentType } from "react";
+import type { ImportSink } from "./sink";
+import type { SheetMusicImportOptions, SheetMusicImportSession } from "./sheetMusicProvider";
+import type { SongbookBackupDocument, SongbookImportOptions } from "./songbook";
+
+export type ImportProgressPhase = "reading" | "processing" | "writing";
+
+export interface ImportProgressEvent {
+  phase: ImportProgressPhase;
+  done: number;
+  total: number;
+  label?: string;
+}
+
+export type ImportProgressCallback = (event: ImportProgressEvent) => void;
+
+export interface SongImportContext {
+  songData: Partial<Song>;
+  sink: ImportSink;
+  onProgress?: ImportProgressCallback;
+}
+
+export type ImportTranslate = (key: string, params?: Record<string, string | number>) => string;
+
+export interface InteractiveImportModalProps<TSession, TConfirm> {
+  isOpen: boolean;
+  session: TSession;
+  isImporting: boolean;
+  progress: { done: number; total: number } | null;
+  onClose: () => void;
+  onConfirm: (options: TConfirm) => void | Promise<void>;
+}
+
+export type InteractiveImportSession = SheetMusicImportSession | SongbookBackupDocument;
+export type InteractiveImportConfirmOptions = SheetMusicImportOptions | SongbookImportOptions;
+export type InteractiveImportModalPropsForRegistry = InteractiveImportModalProps<
+  InteractiveImportSession,
+  InteractiveImportConfirmOptions
+>;
+
+export interface InteractiveImportToastCopy {
+  title: string;
+  description: string;
+}
 
 export interface SongImportProvider {
   readonly id: string;
@@ -8,7 +57,46 @@ export interface SongImportProvider {
 
   readonly supportedExtensions: readonly string[];
 
-  import(files: readonly File[], songData: Partial<Song>): Promise<ProviderImportResult>;
+  readonly interactive?: boolean;
+
+  import(files: readonly File[], ctx: SongImportContext): Promise<ProviderImportResult>;
+
+  matchesFile?(file: File): boolean | Promise<boolean>;
+
+  prepare?(
+    files: readonly File[],
+    onProgress?: ImportProgressCallback,
+  ): Promise<InteractiveImportSession>;
+
+  commit?(
+    session: InteractiveImportSession,
+    options: InteractiveImportConfirmOptions,
+    ctx: SongImportContext,
+  ): Promise<ProviderImportResult>;
+
+  Modal?: ComponentType<InteractiveImportModalPropsForRegistry>;
+
+  getPrepareProgressTitle?(t: ImportTranslate): string;
+  getPreparedToast?(
+    session: InteractiveImportSession,
+    t: ImportTranslate,
+  ): InteractiveImportToastCopy | null;
+  getCommitProgressTitle?(t: ImportTranslate): string;
+  getSuccessMessage?(result: ProviderImportResult, t: ImportTranslate): string | null;
+  getErrorMessage?(error: unknown, t: ImportTranslate): string;
+
+  isActive(): boolean | Promise<boolean>;
+}
+
+export function isInteractiveImportProvider(
+  provider: SongImportProvider,
+): provider is SongImportProvider & {
+  interactive: true;
+  prepare: NonNullable<SongImportProvider["prepare"]>;
+  commit: NonNullable<SongImportProvider["commit"]>;
+  Modal: NonNullable<SongImportProvider["Modal"]>;
+} {
+  return Boolean(provider.interactive && provider.prepare && provider.commit && provider.Modal);
 }
 
 export interface ImportResult {
@@ -23,4 +111,12 @@ export interface ProviderImportResult {
   created: number;
   failed: number;
   ignored: number;
+}
+
+export interface ProvidersMetadata {
+  id: string;
+  name: string;
+  description?: string;
+  supportedExtensions: readonly string[];
+  interactive?: boolean;
 }

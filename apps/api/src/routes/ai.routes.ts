@@ -1,5 +1,5 @@
 import { Router } from "express";
-import type { UIMessage } from "ai";
+import { APICallError, type UIMessage } from "ai";
 import { requirePermission } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";
 import { authInfoFromRequest } from "../mcp/authFromRequest.js";
@@ -238,7 +238,14 @@ aiRouter.post(
       originalMessages: messages,
       sendReasoning: true,
       onError: (error) => {
-        if (!abort.signal.aborted) console.error("AI chat stream error:", error);
+        if (!abort.signal.aborted) {
+          const detail = APICallError.isInstance(error)
+            ? `status=${error.statusCode} responseBody=${JSON.stringify(error.responseBody)}`
+            : error instanceof Error
+              ? error.stack || error.message
+              : String(error);
+          console.error("AI chat stream error:", detail);
+        }
         return describeChatError(error);
       },
       messageMetadata: ({ part }) => {

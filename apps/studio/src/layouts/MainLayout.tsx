@@ -53,13 +53,13 @@ import { getPersonalSettings } from "@hosanna/auth";
 import { writeThemeCookie } from "../lib/themeBoot";
 import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
-import { useCollections } from "../hooks/useCollections";
+import { invalidateCollectionsCache, useCollections } from "../hooks/useCollections";
 import { useFolders } from "../hooks/useFolders";
 import { useStudioSettings } from "../hooks/usePersonalSettings";
 import { useServices } from "../hooks/useServices";
+import { useSongImportController } from "../hooks/useSongImportController";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
-import { songImportRegistry, type ProviderImportResult } from "../lib/import";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
 import { filterSearchableSongsWithLiqe } from "../utils";
 import { deriveView } from "./view";
@@ -751,7 +751,15 @@ export const MainLayout: React.FC = () => {
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [_isUploadingFiles, setIsUploadingFiles] = useState(false);
+  const { handleFiles: processAndUploadFiles, modal: songImportModal } = useSongImportController({
+    folderId: currentFolderId,
+    resolveFolderName: () => (currentFolder ? currentFolder.name : t("layout.rootDirectory")),
+    onImported: async () => {
+      invalidateSongsCache();
+      invalidateCollectionsCache();
+      await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
+    },
+  });
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [isInternalDragActive, setIsInternalDragActive] = useState(false);
   const [dropTargetFolderId, setDropTargetFolderId] = useState<string | null>(null);
@@ -1363,56 +1371,6 @@ export const MainLayout: React.FC = () => {
     clearSelection();
   };
 
-  const showToastImportResult = (result: ProviderImportResult) => {
-    if (result.created > 0) {
-      const targetFolderName = currentFolder ? currentFolder.name : t("layout.rootDirectory");
-      showToast(
-        t("layout.uploadSuccess", {
-          count: result.created,
-          type: result.fileTypeName,
-          folder: targetFolderName,
-        }),
-        "success",
-      );
-    }
-
-    if (result.failed > 0) {
-      showToast(
-        t("layout.uploadError", {
-          count: result.failed,
-          type: result.fileTypeName,
-        }),
-        "error",
-      );
-    }
-
-    if (result.ignored > 0) {
-      showToast(
-        t("layout.uploadIgnored", {
-          count: result.ignored,
-          type: result.fileTypeName,
-        }),
-        "warning",
-      );
-    }
-  };
-
-  const processAndUploadFiles = async (fileList: File[]) => {
-    if (!fileList || fileList.length === 0) return;
-
-    setIsUploadingFiles(true);
-    const result = await songImportRegistry.importFiles(fileList, {
-      folderId: currentFolderId,
-    });
-
-    result.results.forEach((r) => {
-      showToastImportResult(r);
-    });
-
-    await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
-    setIsUploadingFiles(false);
-  };
-
   const handleChordProFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
@@ -1622,7 +1580,7 @@ export const MainLayout: React.FC = () => {
             type="file"
             ref={fileInputRef}
             multiple
-            accept=".pro,.chordpro,.txt,.chopro"
+            accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json,.pdf,.png,.jpg,.jpeg,.webp"
             onChange={handleChordProFileUpload}
             className="hidden"
           />
@@ -1878,6 +1836,8 @@ export const MainLayout: React.FC = () => {
           if (fList.length) printFolders(fList);
         }}
       />
+
+      {songImportModal}
 
       <ExplorerModals
         activeModal={activeModal}

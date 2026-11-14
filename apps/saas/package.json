@@ -78,5 +78,5 @@
     "wrangler": "^4.151.1"
   },
   "prettier": "@hosanna/config/prettier",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }

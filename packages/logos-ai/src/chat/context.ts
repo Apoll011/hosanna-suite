@@ -8,6 +8,7 @@ import type {
   AiChatMessage,
   AiSettingsPublic,
   AiThreadSummary,
+  ChatAttachment,
   LogosMood,
   PageContextSnapshot,
   QuickChip,
@@ -30,7 +31,7 @@ export type AiChatContextValue = {
   setIncludeContext: (v: boolean) => void;
   threads: AiThreadSummary[];
   threadId: string;
-  send: (text: string) => Promise<void>;
+  send: (text: string, attachments?: ChatAttachment[]) => Promise<void>;
   stop: () => void;
   /** Delete the current conversation and start fresh. */
   clear: () => void;

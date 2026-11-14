@@ -64,14 +64,15 @@ export interface SongAST {
     tempo?: string;
     time?: string;
     capo?: string;
+    keyShift?: string;
     songNumber?: string;
     youtube?: string;
     ccli?: string;
     duration?: string;
     /** Free-text note about key changes, from `{key_note: …}` (shown by the renderer). */
     keyNote?: string;
-    /** Editor-only labels from `{tag: …}` (repeated directives are comma-joined; not rendered). */
-    tag?: string;
+    /** Editor-only labels from `{tags: …}` (comma-joined; not rendered). */
+    tags?: string;
     arranger?: string;
     [key: string]: string | undefined;
   };
@@ -235,6 +236,8 @@ export function parseChordProDocument(content: string): ChordProDocument {
     start_of_version: "start_of_version",
     end_of_version: "end_of_version",
     eov_ver: "end_of_version",
+    key_shift: "key_shift",
+    keyshift: "key_shift",
   };
 
   for (let i = 0; i < lines.length; i++) {
@@ -469,12 +472,18 @@ export function parseChordProDocument(content: string): ChordProDocument {
           }
           break;
 
-        case "tag":
-          // Editor-only labels: repeated `{tag: x}` lines accumulate.
-          if (value) {
-            ctx.metadata["tag"] = ctx.metadata["tag"] ? `${ctx.metadata["tag"]}, ${value}` : value;
+        case "tags": {
+          const tags = value
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean);
+          if (tags.length > 0) {
+            ctx.metadata["tags"] = ctx.metadata["tags"]
+              ? `${ctx.metadata["tags"]}, ${tags.join(", ")}`
+              : tags.join(", ");
           }
           break;
+        }
 
         default:
           if (value) {
@@ -636,6 +645,7 @@ export function buildChordProText(
     "key",
     "originalKey",
     "capo",
+    "keyShift",
     "tempo",
     "time",
     "duration",
