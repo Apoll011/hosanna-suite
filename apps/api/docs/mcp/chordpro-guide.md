@@ -41,7 +41,7 @@ Essential metadata: `title`, `artist`, `key`, `duration`, `youtube`, `song_numbe
 | youtube      |       | Hosanna — reference video                                                                                                                |
 | ccli         |       | Stored as metadata                                                                                                                       |
 | key_note     |       | Hosanna — note about key changes, shown by the renderer under the header (`{key_note: Verso 4 e final modulam para D (meio tom acima)}`) |
-| tags         |       | Hosanna — comma-separated editor-only labels, NOT rendered (`{tags: adoração, lenta}`)                                                  |
+| tags         |       | Hosanna — comma-separated editor-only labels, NOT rendered (`{tags: adoração, lenta}`)                                                   |
 | arranger     |       | Arranger credit (footer)                                                                                                                 |
 
 Unknown `{name: value}` directives are stored as camelCased metadata.
