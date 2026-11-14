@@ -88,6 +88,53 @@ function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
+
+/**
+ * Hosanna Suite — Application Brand Colors
+ *
+ * Each application has an independent accent color and visual identity.
+ * Shared design philosophy: bold geometry, distinctive silhouettes,
+ * carefully designed negative space, and consistent UI craftsmanship.
+ *
+ * Applications:
+ *
+ * Auth
+ *      Primary:       #7057B8  (Royal Violet)
+ *      Dark:          #493B7D
+ *      Bright:        #967FCF
+ *      Container:     #E9E3F5
+ *
+ * Planning
+ *      Primary:       #C49A3A  (Golden Amber)
+ *      Dark:          #8B6928
+ *      Bright:        #D8B76D
+ *      Container:     #F3E8CC
+ *
+ * Presenter
+ *      Primary:       #244A78  (Midnight Navy)
+ *      Dark:          #142B45
+ *      Bright:        #3975A8
+ *      Container:     #DCEAF5
+ *
+ * Community
+ *      Primary:       #D46F61  (Warm Coral)
+ *      Dark:          #814238
+ *      Bright:        #E99A85
+ *      Container:     #F3D0C5
+ *
+ * Finance
+ *      Primary:       #167C62  (Rich Emerald)
+ *      Dark:          #104638
+ *      Bright:        #39A889
+ *      Container:     #D9EEE6
+ *
+ * Note:
+ * These are application-specific brand accents, not global
+ * semantic colors. Shared semantic tokens (success, warning,
+ * error, etc.) should remain independent of application branding.
+ */
+
+
 /**
  * Static product registry. Account (`auth`) and Music are live today;
  * Music still launches on the Studio origin until the Music rename ships.
@@ -149,7 +196,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     ...appKeys("community"),
     status: "coming_soon",
     sortOrder: 50,
-    accent: "#7c3aed",
+    accent: "#D46F61",
     categories: ["people"],
   },
   {
@@ -160,7 +207,7 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     ...appKeys("finance"),
     status: "coming_soon",
     sortOrder: 60,
-    accent: "#0d9488",
+    accent: "#167C62",
     categories: ["stewardship"],
   },
 ] as const;
