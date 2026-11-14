@@ -53,7 +53,7 @@ export async function registerChordproSnippets(aceInstance?: any): Promise<void>
 
         // keyshift tag
         "snippet keyshift",
-        "	{keyshift: ${1:0}}",
+        "	{key_shift: ${1:0}}",
 
         // composer tag
         "snippet composer",
