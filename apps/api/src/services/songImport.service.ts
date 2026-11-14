@@ -152,11 +152,15 @@ type CancelFields = z.infer<typeof cancelSchema>;
 
 const JOB_TTL_MS = 30 * 60 * 1000;
 const jobs = new Map<string, SongImportJob>();
+const jobAbortControllers = new Map<string, AbortController>();
 
 function pruneJobsSafe() {
   const cutoff = Date.now() - JOB_TTL_MS;
   for (const [id, job] of jobs) {
-    if (job.createdAt < cutoff) jobs.delete(id);
+    if (job.createdAt < cutoff) {
+      jobs.delete(id);
+      jobAbortControllers.delete(id);
+    }
   }
 }
 
@@ -242,6 +246,7 @@ type GenerateOpts = {
   maxOutputTokens?: number;
   messages?: ModelMessage[];
   prompt?: string;
+  abortSignal?: AbortSignal;
 };
 
 function providerExtras(provider: AiProvider) {
@@ -290,6 +295,7 @@ async function analyzeSheetMusic(
       model: opts.model,
       temperature: opts.temperature,
       maxOutputTokens: opts.maxOutputTokens,
+      abortSignal: opts.abortSignal,
       ...providerExtras(opts.provider),
       ...(messages ? { messages } : { prompt: promptBase }),
       tools,
@@ -332,6 +338,7 @@ async function analyzeSheetMusic(
     model: opts.model,
     temperature: opts.temperature,
     maxOutputTokens: opts.maxOutputTokens,
+    abortSignal: opts.abortSignal,
     ...providerExtras(opts.provider),
     ...(messages
       ? { messages: appendTextToMessages(messages, jsonHint) }
@@ -376,6 +383,7 @@ async function generateSongDraft(opts: GenerateOpts): Promise<DraftFields> {
       model: opts.model,
       temperature: opts.temperature,
       maxOutputTokens: opts.maxOutputTokens,
+      abortSignal: opts.abortSignal,
       ...providerExtras(opts.provider),
       ...(messages ? { messages } : { prompt: promptBase }),
       tools: {
@@ -412,6 +420,7 @@ async function generateSongDraft(opts: GenerateOpts): Promise<DraftFields> {
     model: opts.model,
     temperature: opts.temperature,
     maxOutputTokens: opts.maxOutputTokens,
+    abortSignal: opts.abortSignal,
     ...providerExtras(opts.provider),
     ...(messages
       ? { messages: appendTextToMessages(messages, jsonHint) }
@@ -767,6 +776,7 @@ export class SongImportService {
       return publicJob(job);
     }
     job.abortRequested = true;
+    jobAbortControllers.get(id)?.abort();
     job.status = "cancelled";
     job.cancelledBy = "user";
     job.cancelReason = "Import cancelled by user.";
@@ -823,6 +833,13 @@ export class SongImportService {
   }
 
   private async run(job: SongImportJob, input: CreateInput) {
+    const controller = new AbortController();
+    jobAbortControllers.set(job.id, controller);
+    const timeout = setTimeout(() => {
+      controller.abort(new Error("Song import timed out after 90 seconds."));
+    }, 90_000);
+    timeout.unref?.();
+
     try {
       assertNotAborted(job);
       job.status = "running";
@@ -866,6 +883,7 @@ export class SongImportService {
         provider: runtime.provider,
         temperature: runtime.temperature ?? 0.2,
         maxOutputTokens: runtime.maxOutputTokens ?? 4096,
+        abortSignal: controller.signal,
         messages: [
           {
             role: "user",
@@ -953,6 +971,7 @@ export class SongImportService {
           temperature: 0.1,
           maxOutputTokens: runtime.maxOutputTokens ?? 4096,
           prompt: verifyPrompt,
+          abortSignal: controller.signal,
         });
         assertNotAborted(job);
 
@@ -1059,6 +1078,9 @@ export class SongImportService {
         job.errorMessage = err instanceof Error ? err.message : "Import failed unexpectedly.";
       }
       job.updatedAt = Date.now();
+    } finally {
+      clearTimeout(timeout);
+      jobAbortControllers.delete(job.id);
     }
   }
 }
