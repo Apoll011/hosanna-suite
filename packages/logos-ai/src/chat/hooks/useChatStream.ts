@@ -21,7 +21,7 @@ import {
   type StreamEvent,
 } from "../../core/stream";
 import { useLogosHost } from "../../host";
-import { newId, toUiMessages, type AiChatMessage } from "../../types";
+import { newId, toUiMessages, type AiChatMessage, type AiMessagePart, type ChatAttachment } from "../../types";
 
 export function useChatStream(opts: {
   routeRef: MutableRefObject<{
@@ -202,13 +202,25 @@ export function useChatStream(opts: {
   );
 
   const send = useCallback(
-    async (text: string) => {
+    async (text: string, attachments?: ChatAttachment[]) => {
       const trimmed = text.trim();
-      if (!trimmed || streamingRef.current) return;
+      const hasAttachments = Boolean(attachments && attachments.length > 0);
+      if ((!trimmed && !hasAttachments) || streamingRef.current) return;
+      const parts: AiMessagePart[] = [];
+      if (trimmed) parts.push({ type: "text", text: trimmed });
+      for (const a of attachments ?? []) {
+        parts.push({
+          type: "file",
+          data: a.dataUrl,
+          mimeType: a.mimeType,
+          name: a.name,
+          size: a.size,
+        });
+      }
       const userMsg: AiChatMessage = {
         id: newId(),
         role: "user",
-        parts: [{ type: "text", text: trimmed }],
+        parts,
         createdAt: Date.now(),
       };
       await run([...messagesRef.current, userMsg]);
