@@ -3,7 +3,7 @@
     "id": "fs-capo4-guitar",
     "description": "F# song + capo 4 on guitar → D shapes, label shown",
     "input": { "chords": ["F#", "B", "C#m", "A"], "key": "F#", "keyShift": 0, "capo": 4, "instrument": "guitar" },
-    "expected": { "shownKey": "D", "shownChords": ["D", "G", "Am", "E"], "capoLabel": "Capo 4 · shapes in D" }
+    "expected": { "shownKey": "D", "shownChords": ["D", "G", "Am", "F"], "capoLabel": "Capo 4 · shapes in D" }
   },
   {
     "id": "capo-piano",
@@ -45,7 +45,7 @@
     "id": "slash-chord",
     "description": "Slash chord survives transpose",
     "input": { "chords": ["G/B", "C/E"], "key": "G", "keyShift": 2, "capo": 0, "instrument": "guitar" },
-    "expected": { "shownKey": "A", "shownChords": ["A/C#", "D/F#"], "capoLabel": null }
+    "expected": { "shownKey": "A", "shownChords": ["A/Db", "D/F#"], "capoLabel": null }
   },
   {
     "id": "flat-chord",

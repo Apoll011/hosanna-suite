@@ -3,16 +3,18 @@ import { instrumentRegistry } from "../instruments/registry";
 
 export function parseCapoValue(raw: string | number | undefined): number {
   if (raw === undefined || raw === null || raw === "") return 0;
-  const n = typeof raw === "number" ? raw : parseInt(String(raw), 10);
-  if (!Number.isInteger(n) || n < 0 || n > 11) return 0;
+  const s = String(raw).trim();
+  if (!/^[0-9]+$/.test(s)) return 0;
+  const n = parseInt(s, 10);
+  if (n < 0 || n > 11) return 0;
   return n;
 }
 
 export function parseKeyShiftValue(raw: string | number | undefined): number {
   if (raw === undefined || raw === null || raw === "") return 0;
-  const n = typeof raw === "number" ? raw : parseInt(String(raw), 10);
-  if (!Number.isInteger(n)) return 0;
-  return n;
+  const s = String(raw).trim();
+  if (!/^-?[0-9]+$/.test(s)) return 0;
+  return parseInt(s, 10);
 }
 
 export interface ResolveChordOptions {
