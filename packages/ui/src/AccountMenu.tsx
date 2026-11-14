@@ -326,13 +326,9 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
             <div className={prefsRow}>
               <span className="font-medium">{themeLabel}</span>
               <MenuThemeToggle
+                language={language}
                 value={theme.value}
                 onChange={theme.onChange}
-                labels={{
-                  system: t("suite.accountMenu.themeSystem"),
-                  light: t("suite.accountMenu.themeLight"),
-                  dark: t("suite.accountMenu.themeDark"),
-                }}
               />
             </div>
           ) : null}
