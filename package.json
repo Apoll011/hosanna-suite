@@ -11,6 +11,8 @@
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "test:workspace": "node --test scripts/workspace-health.test.mjs",
     "clean": "turbo run clean",
     "format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore",
