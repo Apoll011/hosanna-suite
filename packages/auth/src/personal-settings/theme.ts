@@ -96,9 +96,10 @@ export function runThemeTransition(apply: () => void) {
 
 /**
  * Inline &lt;head&gt; bootstrap shared by Auth + Studio.
- * Order: personal-settings → optional legacy keys → cookie → light.
+ * Order: personal-settings → optional legacy keys → shared cookie (wins when set) → light.
+ * Cookie is last so cross-origin handoffs paint correctly before React.
  */
 export function buildThemeBootScript(opts?: { legacyLocalKeys?: readonly string[] }): string {
   const legacy = JSON.stringify(opts?.legacyLocalKeys ?? []);
-  return `(function(){try{var c=${JSON.stringify(THEME_COOKIE)},bg=${JSON.stringify(THEME_BG)},pk=${JSON.stringify(PERSONAL_SETTINGS_KEY)},legacy=${legacy};var theme="light";var raw=localStorage.getItem(pk);if(raw){try{var p=JSON.parse(raw);if(p&&(p.theme==="light"||p.theme==="dark"||p.theme==="system"))theme=p.theme;}catch(e){}}else{for(var i=0;i<legacy.length;i++){var v=localStorage.getItem(legacy[i]);if(v==="light"||v==="dark"||v==="system"){theme=v;break;}}if(theme==="light"){var m=document.cookie.match(new RegExp("(?:^|; )"+c+"=([^;]*)"));if(m){var cv=decodeURIComponent(m[1]);if(cv==="light"||cv==="dark"||cv==="system")theme=cv;}}}var dark=theme==="dark"||(theme==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.classList.toggle("dark",dark);r.style.colorScheme=dark?"dark":"light";r.style.backgroundColor=dark?bg.dark:bg.light;}catch(e){}})();`;
+  return `(function(){try{var c=${JSON.stringify(THEME_COOKIE)},bg=${JSON.stringify(THEME_BG)},pk=${JSON.stringify(PERSONAL_SETTINGS_KEY)},legacy=${legacy};var theme="light";var raw=localStorage.getItem(pk);if(raw){try{var p=JSON.parse(raw);if(p&&(p.theme==="light"||p.theme==="dark"||p.theme==="system"))theme=p.theme;}catch(e){}}else{for(var i=0;i<legacy.length;i++){var v=localStorage.getItem(legacy[i]);if(v==="light"||v==="dark"||v==="system"){theme=v;break;}}}var m=document.cookie.match(new RegExp("(?:^|; )"+c+"=([^;]*)"));if(m){var cv=decodeURIComponent(m[1]);if(cv==="light"||cv==="dark"||cv==="system")theme=cv;}var dark=theme==="dark"||(theme==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.classList.toggle("dark",dark);r.style.colorScheme=dark?"dark":"light";r.style.backgroundColor=dark?bg.dark:bg.light;}catch(e){}})();`;
 }

@@ -77,6 +77,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    syncThemeFromSharedCookie();
     const pullShared = () => {
       syncThemeFromSharedCookie();
     };

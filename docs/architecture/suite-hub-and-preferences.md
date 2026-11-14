@@ -117,7 +117,7 @@ Only cross-app prefs live at the root:
 - `language`: `"pt" | "en" | "es" | "auto"`
 - `CROSS_APP_KEYS` drives `syncSettingsFromMetadata` so a change on Studio shows up on Auth (and the reverse) without wiping localStorage
 
-**First paint:** `buildThemeBootScript()` (Auth layout / Studio `index.html`) reads personal-settings → optional legacy keys → cookie → default light, then toggles `.dark` before paint.
+**First paint:** `buildThemeBootScript()` (Auth layout / Studio `index.html`) reads personal-settings → optional legacy keys → shared cookie (wins when set) → default light, then toggles `.dark` before paint. Cookie wins so Auth↔Studio handoffs match before React hydrates; providers also call `syncThemeFromSharedCookie()` on mount and on focus/visibility.
 
 **Transitions:** `runThemeTransition` prefers the View Transition API (root crossfade ~220ms). CSS fallback only on `html`/`body` via `html.theme-transition` — never a universal `*` transition (that was laggy and fought VT).
 

@@ -187,6 +187,18 @@ function loadSettings(): PersonalSettings {
       Object.values(LEGACY_KEYS).forEach((key) => localStorage.removeItem(key));
     }
 
+    const cookieTheme = readThemeCookie();
+    if (cookieTheme && cookieTheme !== settings.theme) {
+      settings = { ...settings, theme: cookieTheme, revisedAt: Date.now() };
+      try {
+        localStorage.setItem(PERSONAL_SETTINGS_KEY, JSON.stringify(settings));
+      } catch {
+        /* ignore */
+      }
+    } else if (!cookieTheme) {
+      writeThemeCookie(settings.theme);
+    }
+
     return settings;
   } catch {
     return { ...DEFAULT_PERSONAL_SETTINGS, apps: {} };

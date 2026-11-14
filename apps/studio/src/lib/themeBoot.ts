@@ -17,10 +17,6 @@ export {
   writeThemeCookie,
 } from "@hosanna/auth";
 
-/**
- * Inline &lt;head&gt; bootstrap — keep byte-for-byte with index.html injection.
- * Resolves: personal-settings → legacy chordpro_theme → cookie → default light.
- */
 export const STUDIO_THEME_BOOT_SCRIPT = buildThemeBootScript({
   legacyLocalKeys: ["chordpro_theme"],
 });

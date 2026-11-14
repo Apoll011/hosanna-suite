@@ -70,6 +70,7 @@ export const ThemeProvider: React.FC<{
   }, []);
 
   useEffect(() => {
+    syncThemeFromSharedCookie();
     const pullShared = () => {
       syncThemeFromSharedCookie();
     };
