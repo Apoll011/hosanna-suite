@@ -5,6 +5,7 @@ import {
   chatStepSafetyLimit,
   describeChatError,
   localePromptBlock,
+  modelFileDataToBase64,
   runBatch,
 } from "../../src/services/aiChat.service.js";
 import { AppError } from "../../src/utils/errors.js";
@@ -98,5 +99,21 @@ describe("runBatch", () => {
 describe("chat step budget", () => {
   it("leaves room for the final answer after the tool budget", () => {
     assert.ok(chatStepSafetyLimit(12) > 12);
+  });
+});
+
+describe("modelFileDataToBase64", () => {
+  it("strips data-URL prefixes and normalizes binary data", () => {
+    assert.equal(modelFileDataToBase64("data:image/png;base64,abc"), "abc");
+    assert.equal(modelFileDataToBase64("plainbase64"), "plainbase64");
+    assert.equal(modelFileDataToBase64(Buffer.from("hi")), "aGk=");
+    assert.equal(modelFileDataToBase64(new Uint8Array([104, 105])), "aGk=");
+    assert.equal(modelFileDataToBase64({ type: "data", data: Buffer.from("hi") }), "aGk=");
+    assert.equal(
+      modelFileDataToBase64({ type: "url", url: "data:image/jpeg;base64,zz" }),
+      "zz",
+    );
+    assert.equal(modelFileDataToBase64({ type: "url", url: "https://example.com/x.png" }), null);
+    assert.equal(modelFileDataToBase64(null), null);
   });
 });

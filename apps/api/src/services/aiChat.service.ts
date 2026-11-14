@@ -180,7 +180,7 @@ function textResult(data: unknown) {
 
 const songImport = new SongImportService();
 
-function modelFileDataToBase64(data: unknown): string | null {
+export function modelFileDataToBase64(data: unknown): string | null {
   if (typeof data === "string") {
     const idx = data.indexOf("base64,");
     return idx >= 0 ? data.slice(idx + "base64,".length) : data;

@@ -147,6 +147,19 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
         slugPrefix: organization?.slug ? `/${organization.slug}` : "",
         canUseAi,
         deriveView,
+        createSong: async (data) => {
+          const song = await songsApi.createSong(data);
+          return {
+            id: song.id,
+            title: song.title,
+            artist: song.artist,
+            content: song.content,
+            song_number: song.song_number,
+            updatedAt: song.updatedAt,
+          };
+        },
+        getImportJob: (id) => songsApi.getImportJob(id),
+        cancelImportJob: (id) => songsApi.cancelImportJob(id),
       }),
     [
       catalog,
