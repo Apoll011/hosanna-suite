@@ -344,7 +344,10 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
 
         {job && running && (
           <div className="space-y-5">
-            <StepProgress steps={job.steps} />
+            <StepProgress
+              steps={job.steps}
+              labelFor={(id) => t(stepLabelKeys[id] ?? "modals.sheetMusicImport.title")}
+            />
             <p className="m-0 text-[12.5px] text-m3-secondary text-center animate-pulse">
               {t("modals.sheetMusicImport.processing")}
             </p>
