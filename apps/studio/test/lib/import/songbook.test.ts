@@ -53,11 +53,14 @@ describe("songbook import", () => {
     assert.equal(migrated.title, "Quando Ouvires");
     assert.match(migrated.content, /\{title:\s*Quando Ouvires\}/);
     assert.match(migrated.content, /\{artist:/);
+    assert.match(migrated.content, /\{song_number:\s*1\}/);
+    assert.ok(!/\{meta:\s*song_number/i.test(migrated.content));
     assert.match(migrated.content, /\{start_of_verse/);
     assert.match(migrated.content, /\{start_of_chorus/);
     assert.match(migrated.content, /\{end_of_chorus\}/);
     assert.ok(!/\{c:\s*Verse\}/i.test(migrated.content));
     assert.ok(migrated.tags.includes("SongbookPro"));
+    assert.equal(migrated.song_number, 1);
   });
 
   it("converts SongbookPro {c:} labels into section environments", () => {

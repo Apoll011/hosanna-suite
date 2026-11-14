@@ -13,11 +13,17 @@ export type {
   ImportProgressEvent,
   ImportProgressPhase,
   ImportResult,
+  ImportTranslate,
+  InteractiveImportModalProps,
+  InteractiveImportToastCopy,
   ProviderImportResult,
+  SongImportContext,
   SongImportProvider,
 } from "./types";
+export { isInteractiveImportProvider } from "./types";
 export type { ImportSink } from "./sink";
 export { createLocalImportSink, createLocalImportSink as createDefaultImportSink } from "./sink";
+export { describeImportProgress } from "./progressCopy";
 export { readFileTextWithProgress, yieldToUi } from "./readFile";
 export {
   detectSongbookBackupFile,
@@ -35,11 +41,3 @@ export const songImportRegistry = new SongImportRegistry();
 songImportRegistry.register(new ChordProImportProvider());
 songImportRegistry.register(new JsonImportProvider());
 songImportRegistry.register(new SongbookProImportProvider());
-
-export function getSongbookProProvider(): SongbookProImportProvider {
-  const provider = songImportRegistry.getProviderById("songbook-pro");
-  if (!provider || !(provider instanceof SongbookProImportProvider)) {
-    throw new Error("SongbookPro import provider is not registered.");
-  }
-  return provider;
-}

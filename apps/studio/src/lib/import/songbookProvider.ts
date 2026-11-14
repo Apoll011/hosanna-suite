@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ImportSink } from "./sink";
+import { SongbookImportModal } from "@/src/components/modals/SongbookImportModal";
 import {
+  detectSongbookBackupFile,
   executeSongbookImport,
   parseSongbookBackupFile,
   type SongbookBackupDocument,
@@ -12,6 +13,7 @@ import {
 } from "./songbook";
 import type {
   ImportProgressCallback,
+  ImportTranslate,
   ProviderImportResult,
   SongImportContext,
   SongImportProvider,
@@ -25,6 +27,11 @@ export class SongbookProImportProvider implements SongImportProvider {
     "Imports songs from a SongbookPro backup (.sbpbackup or dataFile.txt). Audio is skipped.";
   readonly supportedExtensions = [".sbpbackup", ".sbpbackup.json"] as const;
   readonly interactive = true;
+  readonly Modal = SongbookImportModal;
+
+  matchesFile(file: File) {
+    return detectSongbookBackupFile(file);
+  }
 
   async prepare(
     files: readonly File[],
@@ -46,12 +53,45 @@ export class SongbookProImportProvider implements SongImportProvider {
     };
   }
 
-  async importPrepared(
-    doc: SongbookBackupDocument,
-    options: SongbookImportOptions,
-    sink: ImportSink,
-    onProgress?: ImportProgressCallback,
+  async commit(
+    session: unknown,
+    options: unknown,
+    ctx: SongImportContext,
   ): Promise<ProviderImportResult> {
-    return executeSongbookImport(doc, { ...options, onProgress }, sink);
+    return executeSongbookImport(
+      session as SongbookBackupDocument,
+      {
+        ...(options as SongbookImportOptions),
+        onProgress: ctx.onProgress,
+      },
+      ctx.sink,
+    );
+  }
+
+  getPrepareProgressTitle(t: ImportTranslate) {
+    return t("layout.importProgressSongbookTitle");
+  }
+
+  getCommitProgressTitle(t: ImportTranslate) {
+    return t("layout.importProgressSongbookTitle");
+  }
+
+  getPreparedToast(session: unknown, t: ImportTranslate) {
+    const doc = session as SongbookBackupDocument;
+    return {
+      title: t("layout.importProgressSongbookReadyTitle"),
+      description: t("layout.importProgressSongbookReadyDesc", {
+        count: doc.songs.length,
+      }),
+    };
+  }
+
+  getSuccessMessage(result: ProviderImportResult, t: ImportTranslate) {
+    return t("modals.songbookImport.success", { count: result.created });
+  }
+
+  getErrorMessage(error: unknown, t: ImportTranslate) {
+    if (error instanceof Error && error.message) return error.message;
+    return t("modals.songbookImport.parseError");
   }
 }

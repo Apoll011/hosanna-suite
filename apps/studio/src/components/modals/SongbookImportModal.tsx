@@ -5,26 +5,24 @@
 
 import { Button, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import type { SongbookBackupDocument, SongbookSetlistSummary } from "@/src/lib/import";
-import { summarizeSongbookSetlists } from "@/src/lib/import";
+import {
+  summarizeSongbookSetlists,
+  type SongbookBackupDocument,
+  type SongbookImportOptions,
+  type SongbookSetlistSummary,
+} from "@/src/lib/import/songbook";
+import type { InteractiveImportModalProps } from "@/src/lib/import/types";
 import { CheckSquare, LibraryBig, Loader2, Square } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
-export interface SongbookImportModalProps {
-  isOpen: boolean;
-  document: SongbookBackupDocument | null;
-  isImporting?: boolean;
-  progress?: { done: number; total: number } | null;
-  onClose: () => void;
-  onConfirm: (options: {
-    selectedSetlistIds: number[];
-    alsoCreateCollections: boolean;
-  }) => Promise<void> | void;
-}
+export type SongbookImportModalProps = InteractiveImportModalProps<
+  SongbookBackupDocument,
+  SongbookImportOptions
+>;
 
 export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
   isOpen,
-  document,
+  session,
   isImporting = false,
   progress = null,
   onClose,
@@ -32,29 +30,29 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
 }) => {
   const { t } = useI18n();
   const setlists = useMemo<SongbookSetlistSummary[]>(
-    () => (document ? summarizeSongbookSetlists(document) : []),
-    [document],
+    () => (session ? summarizeSongbookSetlists(session) : []),
+    [session],
   );
 
   const [alsoCreateCollections, setAlsoCreateCollections] = useState(false);
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    if (!isOpen || !document) return;
+    if (!isOpen || !session) return;
     setAlsoCreateCollections(false);
-    setSelected(new Set(summarizeSongbookSetlists(document).map((s) => s.id)));
-  }, [isOpen, document]);
+    setSelected(new Set(summarizeSongbookSetlists(session).map((s) => s.id)));
+  }, [isOpen, session]);
 
   const selectedCount = selected.size;
   const selectedSongCount = useMemo(() => {
-    if (!document) return 0;
+    if (!session) return 0;
     let count = 0;
-    for (const song of document.songs) {
+    for (const song of session.songs) {
       const membership = song.folderIds.length > 0 ? song.folderIds : [0];
       if (membership.some((id) => selected.has(id))) count += 1;
     }
     return count;
-  }, [document, selected]);
+  }, [session, selected]);
 
   const toggle = (id: number) => {
     setSelected((prev) => {
@@ -110,8 +108,8 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
       <div className="space-y-5">
         <p className="text-sm text-m3-secondary leading-relaxed">
           {t("modals.songbookImport.description", {
-            source: document?.sourceLabel ?? "SongbookPro",
-            songs: document?.songs.length ?? 0,
+            source: session?.sourceLabel ?? "SongbookPro",
+            songs: session?.songs.length ?? 0,
           })}
         </p>
 

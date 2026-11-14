@@ -8,6 +8,7 @@ import { createLocalImportSink, type ImportSink } from "./sink";
 import {
   ImportProgressCallback,
   ImportResult,
+  isInteractiveImportProvider,
   ProviderImportResult,
   ProvidersMetadata,
   SongImportProvider,
@@ -17,6 +18,11 @@ export interface ImportFilesOptions {
   songData?: Partial<Song>;
   sink?: ImportSink;
   onProgress?: ImportProgressCallback;
+}
+
+function fileExtension(file: File): string {
+  const dot = file.name.lastIndexOf(".");
+  return dot >= 0 ? file.name.substring(dot).toLowerCase() : "";
 }
 
 export class SongImportRegistry {
@@ -54,6 +60,48 @@ export class SongImportRegistry {
     return [...providers.values()];
   }
 
+  getInteractiveProviders(): SongImportProvider[] {
+    return [...this.byId.values()].filter(isInteractiveImportProvider);
+  }
+
+  async matchInteractiveProvider(file: File): Promise<SongImportProvider | null> {
+    for (const provider of this.getInteractiveProviders()) {
+      if (provider.matchesFile) {
+        if (await provider.matchesFile(file)) return provider;
+        continue;
+      }
+      if (this.providers.get(fileExtension(file)) === provider) return provider;
+    }
+    return null;
+  }
+
+  async partitionFiles(files: readonly File[]): Promise<{
+    interactive: Array<{ provider: SongImportProvider; files: File[] }>;
+    direct: File[];
+  }> {
+    const interactiveMap = new Map<SongImportProvider, File[]>();
+    const direct: File[] = [];
+
+    for (const file of files) {
+      const interactive = await this.matchInteractiveProvider(file);
+      if (interactive) {
+        const bucket = interactiveMap.get(interactive);
+        if (bucket) bucket.push(file);
+        else interactiveMap.set(interactive, [file]);
+        continue;
+      }
+      direct.push(file);
+    }
+
+    return {
+      interactive: [...interactiveMap.entries()].map(([provider, providerFiles]) => ({
+        provider,
+        files: providerFiles,
+      })),
+      direct,
+    };
+  }
+
   async importFiles(
     files: readonly File[],
     songDataOrOptions: Partial<Song> | ImportFilesOptions = {},
@@ -73,11 +121,10 @@ export class SongImportRegistry {
     const results: ProviderImportResult[] = [];
 
     for (const file of files) {
-      const dot = file.name.lastIndexOf(".");
-      const extension = dot >= 0 ? file.name.substring(dot).toLowerCase() : "";
+      const extension = fileExtension(file);
       const provider = this.providers.get(extension);
 
-      if (!provider || provider.interactive) {
+      if (!provider || isInteractiveImportProvider(provider)) {
         results.push({
           providerId: provider?.id ?? "unknown",
           fileTypeName: provider?.fileTypeName ?? (extension || "Unknown"),

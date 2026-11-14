@@ -206,7 +206,7 @@ export function migrateSongbookSongToChordPro(song: SongbookSong): {
     headers.push(`{copyright: ${escapeDirectiveValue(song.copyright)}}`);
   }
   if (song.songNumber && !hasDirective(song.content, "song_number")) {
-    headers.push(`{meta: song_number ${song.songNumber}}`);
+    headers.push(`{song_number: ${song.songNumber}}`);
   }
   if (song.sectionOrder) {
     headers.push(`{meta: section_order ${escapeDirectiveValue(song.sectionOrder)}}`);
