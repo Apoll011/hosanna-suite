@@ -49,6 +49,7 @@ import {
 } from "@hosanna/logos-ai";
 import { StudioLogosProvider } from "../logos/StudioLogosProvider";
 import { getAuthAppUrl, navigateToAuthAccount, prefetchAuthAccount } from "../lib/authUrl";
+import { getPersonalSettings } from "@hosanna/auth";
 import { writeThemeCookie } from "../lib/themeBoot";
 import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
@@ -897,7 +898,7 @@ export const MainLayout: React.FC = () => {
           }),
         navigateSameOrigin: (path) => navigate(path),
         prepareCrossOriginNavigate: ({ url }) => {
-          writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
+          writeThemeCookie(getPersonalSettings().theme);
           return url;
         },
       });

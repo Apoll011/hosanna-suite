@@ -7,6 +7,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -16,6 +17,7 @@ import {
   getPersonalSettings,
   resolveDarkMode,
   runThemeTransition,
+  syncThemeFromSharedCookie,
   updatePersonalSettingsSafe,
   type PersonalTheme,
 } from "@hosanna/auth";
@@ -34,12 +36,25 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function applyTheme(darkMode: boolean, theme: Theme, animate: boolean) {
+  const apply = () => {
+    applyDocumentTheme(darkMode);
+    writeThemeCookie(theme);
+  };
+  if (!animate || document.visibilityState === "hidden") {
+    apply();
+    return;
+  }
+  runThemeTransition(apply);
+}
+
 export const ThemeProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const { settings } = usePersonalSettings();
   const theme = settings.theme;
   const mounted = useRef(false);
+  const lastApplied = useRef<{ theme: Theme; darkMode: boolean } | null>(null);
 
   const [systemDark, setSystemDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -52,6 +67,18 @@ export const ThemeProvider: React.FC<{
     };
     media.addEventListener("change", listener);
     return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    const pullShared = () => {
+      syncThemeFromSharedCookie();
+    };
+    window.addEventListener("focus", pullShared);
+    document.addEventListener("visibilitychange", pullShared);
+    return () => {
+      window.removeEventListener("focus", pullShared);
+      document.removeEventListener("visibilitychange", pullShared);
+    };
   }, []);
 
   const setTheme = useCallback((next: Theme) => {
@@ -71,16 +98,13 @@ export const ThemeProvider: React.FC<{
   const darkMode = theme === "system" ? systemDark : theme === "dark";
 
   useLayoutEffect(() => {
-    const apply = () => {
-      applyDocumentTheme(darkMode);
-      writeThemeCookie(theme);
-    };
-    if (!mounted.current) {
-      mounted.current = true;
-      apply();
-      return;
-    }
-    runThemeTransition(apply);
+    const prev = lastApplied.current;
+    if (prev?.theme === theme && prev?.darkMode === darkMode) return;
+
+    const animate = mounted.current;
+    if (!mounted.current) mounted.current = true;
+    lastApplied.current = { theme, darkMode };
+    applyTheme(darkMode, theme, animate);
   }, [darkMode, theme]);
 
   const toggleDarkMode = useCallback(() => {

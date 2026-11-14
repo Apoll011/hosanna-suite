@@ -25,6 +25,12 @@ export interface PersonalSettings {
   /** UI language preference. `"auto"` follows org → browser → default. */
   language: PersonalLanguage;
   theme: PersonalTheme;
+  /**
+   * Monotonic local write clock for core prefs (theme/language).
+   * Used so a lagging session/metadata refetch cannot revert a fresher edit
+   * from this browser (or another tab that already wrote a newer value).
+   */
+  revisedAt?: number;
   /** App-scoped preference namespaces. */
   apps?: AppSettingsMap;
   [key: string]: unknown;

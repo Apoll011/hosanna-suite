@@ -95,9 +95,11 @@ One JSON blob is stored in:
 
 1. **Better Auth `user.metadata`** (stringified JSON) — cross-origin source of truth
 2. **`localStorage["personal-settings"]`** — per-origin cache for instant paint and offline edits
-3. **Cookie `hosanna_color_scheme`** — theme only, shared on `.hosanna.live` for first paint across apps
+3. **Cookie `hosanna_color_scheme`** — theme preference (`light` | `dark` | `system`), shared on `.hosanna.live` for first paint **and** live pull on window focus (`syncThemeFromSharedCookie`)
 
 Host apps call `configurePersonalSettings({ updateUserMetadata, cachedUserKey? })` once at boot (Auth providers, Studio `usePersonalSettings`). Writes debounce (~300ms) into metadata and keep the cached session user warm when `cachedUserKey` is set.
+
+**Multi-window / cross-app:** each write bumps `revisedAt`. Session metadata hydrate must not revert a fresher local (or peer-tab) edit. Same-origin tabs sync via `storage` events; different suite origins sync theme via the shared cookie on focus/visibility. Always write the preference (`system` included) to the cookie — never the resolved light/dark class.
 
 ### 5.1 Core (shared) keys
 

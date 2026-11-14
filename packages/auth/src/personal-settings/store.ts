@@ -21,7 +21,7 @@ import {
   type PersonalSettings,
   type PersonalTheme,
 } from "./types.js";
-import { writeThemeCookie } from "./theme.js";
+import { readThemeCookie, writeThemeCookie } from "./theme.js";
 
 export type PersonalSettingsHost = {
   /** Persist the full JSON blob to Better Auth `user.metadata`. */
@@ -231,7 +231,24 @@ function writeLocal(next: PersonalSettings) {
   }
 }
 
+function bumpRevisedAt(settings: PersonalSettings): PersonalSettings {
+  return { ...settings, revisedAt: Date.now() };
+}
+
+function coreEquals(a: PersonalSettings, b: PersonalSettings): boolean {
+  return (
+    a.theme === b.theme &&
+    a.language === b.language &&
+    (a.revisedAt ?? 0) === (b.revisedAt ?? 0) &&
+    JSON.stringify(a.apps ?? {}) === JSON.stringify(b.apps ?? {})
+  );
+}
+
 function persistSettings(newSettings: PersonalSettings, opts?: { sync?: boolean }) {
+  if (coreEquals(state, newSettings)) {
+    state = newSettings;
+    return;
+  }
   state = newSettings;
   writeLocal(newSettings);
   writeThemeCookie(newSettings.theme);
@@ -247,9 +264,10 @@ function persistSettings(newSettings: PersonalSettings, opts?: { sync?: boolean 
 
 function setState(
   updater: (prev: PersonalSettings) => PersonalSettings,
-  opts?: { sync?: boolean },
+  opts?: { sync?: boolean; bumpRevision?: boolean },
 ) {
-  persistSettings(updater(state), opts);
+  const next = updater(state);
+  persistSettings(opts?.bumpRevision === false ? next : bumpRevisedAt(next), opts);
 }
 
 /**
@@ -289,17 +307,29 @@ export function syncSettingsFromMetadata(metadata: unknown): {
     };
   }
 
+  const remoteRevised =
+    typeof parsed.revisedAt === "number" && Number.isFinite(parsed.revisedAt)
+      ? parsed.revisedAt
+      : 0;
+  const localRevised =
+    typeof state.revisedAt === "number" && Number.isFinite(state.revisedAt) ? state.revisedAt : 0;
+  // Fresher local (or peer-tab) writes win over a lagging session metadata blob.
+  const remoteCoreWins = remoteRevised >= localRevised;
+
   const patch: Partial<PersonalSettings> = {
     apps: mergeAppSettingsMaps(parsed.apps, state.apps),
   };
-  for (const key of CROSS_APP_KEYS) {
-    if (key === "theme") {
-      const theme = normalizeTheme(parsed.theme);
-      if (theme) patch.theme = theme;
-    } else if (key === "language") {
-      const language = normalizeLanguage(parsed.language);
-      if (language) patch.language = language;
+  if (remoteCoreWins) {
+    for (const key of CROSS_APP_KEYS) {
+      if (key === "theme") {
+        const theme = normalizeTheme(parsed.theme);
+        if (theme) patch.theme = theme;
+      } else if (key === "language") {
+        const language = normalizeLanguage(parsed.language);
+        if (language) patch.language = language;
+      }
     }
+    if (remoteRevised > 0) patch.revisedAt = remoteRevised;
   }
 
   let merged = mergePersonalSettingsPreservingApps(state, patch);
@@ -313,6 +343,7 @@ export function syncSettingsFromMetadata(metadata: unknown): {
     return { themeChanged: false, languageChanged: false };
   }
 
+  // Metadata hydrate must not invent a newer revisedAt (would block real peers).
   persistSettings(merged, { sync: false });
   return { themeChanged, languageChanged };
 }
@@ -322,17 +353,23 @@ export function updatePersonalSetting<K extends keyof PersonalSettings>(
   value: PersonalSettings[K],
 ): void {
   if (key === "apps") {
-    setState((prev) => ({
-      ...prev,
-      apps: mergeAppSettingsMaps(prev.apps, value as PersonalSettings["apps"]),
-    }));
+    setState(
+      (prev) => ({
+        ...prev,
+        apps: mergeAppSettingsMaps(prev.apps, value as PersonalSettings["apps"]),
+      }),
+      { bumpRevision: false },
+    );
     return;
   }
   setState((prev) => ({ ...prev, [key]: value }));
 }
 
 export function updatePersonalSettings(patch: Partial<PersonalSettings>): PersonalSettings {
-  setState((prev) => mergePersonalSettingsPreservingApps(prev, patch));
+  const touchesCore = CROSS_APP_KEYS.some((key) => key in patch);
+  setState((prev) => mergePersonalSettingsPreservingApps(prev, patch), {
+    bumpRevision: touchesCore,
+  });
   return state;
 }
 
@@ -387,17 +424,34 @@ export function isCrossAppKey(key: string): key is CrossAppKey {
  * Used after bfcache restore / tab focus so in-memory state matches disk.
  */
 export function reloadPersonalSettingsFromCache(): PersonalSettings {
-  state = loadSettings();
+  const next = loadSettings();
+  if (coreEquals(state, next)) return state;
+  state = next;
   writeThemeCookie(state.theme);
   emit();
   return state;
+}
+
+/**
+ * Pull theme preference from the shared `.hosanna.live` cookie (other suite
+ * origins write it). Used on focus/visibility so Auth ↔ Studio update live
+ * without a full reload. No-ops when the cookie matches local state.
+ */
+export function syncThemeFromSharedCookie(): boolean {
+  const cookieTheme = readThemeCookie();
+  if (!cookieTheme || cookieTheme === state.theme) return false;
+  // Cookie is the cross-origin signal; bump clock so lagging metadata cannot revert it.
+  persistSettings(bumpRevisedAt({ ...state, theme: cookieTheme }), { sync: true });
+  return true;
 }
 
 if (typeof window !== "undefined") {
   window.addEventListener("storage", (e) => {
     if (e.key === PERSONAL_SETTINGS_KEY && e.newValue) {
       try {
-        state = hydrateFromPartial(JSON.parse(e.newValue) as Partial<PersonalSettings>);
+        const next = hydrateFromPartial(JSON.parse(e.newValue) as Partial<PersonalSettings>);
+        if (coreEquals(state, next)) return;
+        state = next;
         writeThemeCookie(state.theme);
         emit();
       } catch {

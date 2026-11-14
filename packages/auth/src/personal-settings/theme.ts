@@ -29,6 +29,22 @@ export function writeThemeCookie(mode: PersonalTheme) {
   }
 }
 
+/** Read the shared preference cookie (`light` | `dark` | `system`). */
+export function readThemeCookie(): PersonalTheme | null {
+  if (typeof document === "undefined") return null;
+  try {
+    const match = document.cookie.match(
+      new RegExp(`(?:^|; )${THEME_COOKIE.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}=([^;]*)`),
+    );
+    if (!match) return null;
+    const value = decodeURIComponent(match[1] ?? "");
+    if (value === "light" || value === "dark" || value === "system") return value;
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
 export function resolveDarkMode(theme: PersonalTheme): boolean {
   if (theme === "dark") return true;
   if (theme === "light") return false;

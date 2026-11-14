@@ -7,6 +7,7 @@ import { aiApi } from "@/lib/services/ai-api";
 import { apiFetch } from "@/lib/services/api";
 import { writeThemeCookie } from "@/lib/ui/theme-boot";
 import { useI18n } from "@/lib/ui/i18n";
+import { getPersonalSettings } from "@hosanna/auth";
 import {
   AiChatDock,
   AiChatProvider,
@@ -68,7 +69,7 @@ function AuthOpenAppListener() {
           }),
         navigateSameOrigin: (path) => router.push(path),
         prepareCrossOriginNavigate: ({ url }) => {
-          writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
+          writeThemeCookie(getPersonalSettings().theme);
           return url;
         },
       });
