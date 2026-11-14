@@ -3,6 +3,62 @@ import { Folder, GetSongsParams, ParsedSong, Song, SongsResponse } from "../type
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";
 
+export type SongImportSourceType = "photo" | "gallery" | "pdf";
+
+export type SongImportStep = {
+  id: string;
+  label: string;
+  done: boolean;
+  active: boolean;
+};
+
+export type SongImportCancelCode =
+  | "not_a_song"
+  | "unreadable"
+  | "blank"
+  | "wrong_content"
+  | "multiple_unclear";
+
+export type SongImportDraft = {
+  title: string;
+  artist: string;
+  content: string;
+  key?: string;
+  tempo?: string;
+  timeSignature?: string;
+  confidence?: number;
+  warnings: string[];
+  diagnostics?: Array<{ severity: string; message: string; line?: number }>;
+  possibleDuplicates?: Array<{ id: string; title: string; artist: string; score: number }>;
+  youtube?: string;
+  ccli?: string;
+  composer?: string;
+  copyright?: string;
+  subtitle?: string;
+  duration?: string;
+};
+
+export type SongImportJob = {
+  id: string;
+  status: "queued" | "running" | "completed" | "failed" | "cancelled";
+  steps: SongImportStep[];
+  result?: SongImportDraft;
+  errorMessage?: string;
+  cancelCode?: SongImportCancelCode;
+  cancelReason?: string;
+  cancelledBy?: "ai" | "user";
+};
+
+export type CreateSongImportJobInput = {
+  sourceType: SongImportSourceType;
+  imageBase64: string;
+  imageMimeType?: string;
+  imagesBase64?: string[];
+  imageMimeTypes?: string[];
+  pdfBase64?: string;
+  fileName?: string;
+};
+
 export function parseSong(apiSong: Song, folders: Folder[] = []): ParsedSong {
   const parsed = parseChordPro(apiSong.content || "");
   const songPath = apiSong.path || "";
@@ -211,5 +267,32 @@ export const songsApi = {
       success: data?.success ?? true,
       count: data?.count ?? 0,
     };
+  },
+
+  createImportJob: async (input: CreateSongImportJobInput): Promise<SongImportJob> => {
+    const data = await unwrapApiResult(
+      await getApiClient().openapi.POST("/songs/import/jobs", {
+        body: input as unknown as Record<string, unknown>,
+      }),
+    );
+    return data as unknown as SongImportJob;
+  },
+
+  getImportJob: async (id: string): Promise<SongImportJob> => {
+    const data = await unwrapApiResult(
+      await getApiClient().openapi.GET("/songs/import/jobs/{id}", {
+        params: { path: { id } },
+      }),
+    );
+    return data as unknown as SongImportJob;
+  },
+
+  cancelImportJob: async (id: string): Promise<SongImportJob> => {
+    const data = await unwrapApiResult(
+      await getApiClient().openapi.DELETE("/songs/import/jobs/{id}", {
+        params: { path: { id } },
+      }),
+    );
+    return data as unknown as SongImportJob;
   },
 };
