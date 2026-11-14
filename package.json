@@ -27,7 +27,9 @@
   },
   "prettier": "./packages/config/prettier.json",
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@tailwindcss/language-server": "^0.16.0",
+    "@types/node": "catalog:",
     "prettier": "^3.7.3",
     "tailwint": "^1.1.16",
     "turbo": "^2.11.10",
