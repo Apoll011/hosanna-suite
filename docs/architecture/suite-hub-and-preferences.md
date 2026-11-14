@@ -75,8 +75,8 @@ Shared account menu in `@hosanna/ui` (Auth wires it as `AuthAccountMenu`; Studio
 - Org switcher (name + `@slug` only; expands when the user has more than one org)
 - Theme via `theme={{ darkMode, onToggle }}` — AccountMenu owns the row and uses shared `MenuThemeToggle`
 - Language via `languageControl` (control only; AccountMenu owns the label row) — omit or `hide.language` to hide
-- Links into account / org surfaces (auto-dividers between links; divider before `sections`)
-- Optional host `sections` (ReactNode or `(close) => ReactNode`) — use `AccountMenuDivider` between custom items
+- Links into account / org surfaces (grouped; one divider before `sections` when both exist)
+- Optional host `sections` (ReactNode or `(close) => ReactNode`) — use `AccountMenuDivider` only when you want a split inside custom items
 - `hide?: { theme?, language?, organization?, links?, sections? }` to suppress regions without dropping props
 
 **Variants:** `popover` (circular avatar, Auth header) and `extended` (full-width sidebar footer row that expands upward; supports `collapsed` for the rail).

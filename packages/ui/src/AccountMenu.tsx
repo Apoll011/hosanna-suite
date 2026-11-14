@@ -344,24 +344,24 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
       {(showLinks || resolvedSections) && (
         <div className="p-1.5">
           {showLinks
-            ? links.map((link, index) => (
-                <React.Fragment key={link.href + link.label}>
-                  {index > 0 ? <AccountMenuDivider /> : null}
-                  {renderLink ? (
-                    renderLink(link, linkClass, close)
-                  ) : (
-                    <a
-                      href={link.href}
-                      role="menuitem"
-                      className={linkClass}
-                      onClick={close}
-                    >
-                      {link.icon ?? <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />}
-                      {link.label}
-                    </a>
-                  )}
-                </React.Fragment>
-              ))
+            ? links.map((link) =>
+                renderLink ? (
+                  <React.Fragment key={link.href + link.label}>
+                    {renderLink(link, linkClass, close)}
+                  </React.Fragment>
+                ) : (
+                  <a
+                    key={link.href + link.label}
+                    href={link.href}
+                    role="menuitem"
+                    className={linkClass}
+                    onClick={close}
+                  >
+                    {link.icon ?? <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />}
+                    {link.label}
+                  </a>
+                ),
+              )
             : null}
 
           {showLinks && resolvedSections ? <AccountMenuDivider /> : null}

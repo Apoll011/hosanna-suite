@@ -3,15 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  AccountMenu,
-  AccountMenuDivider,
-  Button,
-  Badge,
-  useCan,
-  AnyRoleGate,
-  Can,
-} from "@hosanna/ui";
+import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
 import { posthog } from "@/src/lib/posthog";
@@ -635,22 +627,19 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                     {t("sidebar.openSettings")}
                   </button>
                   {canViewLibraryHealth ? (
-                    <>
-                      <AccountMenuDivider />
-                      <button
-                        type="button"
-                        role="menuitem"
-                        className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-m3-text transition-colors hover:bg-m3-hover"
-                        onClick={() => {
-                          close();
-                          navigate(`${slugPrefix}/analytics`);
-                          if (window.innerWidth < 768) setIsSidebarOpen(false);
-                        }}
-                      >
-                        <BarChart3 className="h-4 w-4 text-m3-secondary" aria-hidden />
-                        {t("sidebar.openAnalytics")}
-                      </button>
-                    </>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm text-m3-text transition-colors hover:bg-m3-hover"
+                      onClick={() => {
+                        close();
+                        navigate(`${slugPrefix}/analytics`);
+                        if (window.innerWidth < 768) setIsSidebarOpen(false);
+                      }}
+                    >
+                      <BarChart3 className="h-4 w-4 text-m3-secondary" aria-hidden />
+                      {t("sidebar.openAnalytics")}
+                    </button>
                   ) : null}
                 </>
               )}

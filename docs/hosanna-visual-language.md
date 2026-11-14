@@ -238,7 +238,7 @@ Shared across Auth and Studio via `@hosanna/ui` — one composition language, no
 
 **AccountMenu**
 
-- Shared identity menu: name + email with icon-only sign-out on the right; org name + `@slug` (no “active space” chip); built-in theme row (`MenuThemeToggle`); optional language control; account/org links with dividers; optional host `sections` (`AccountMenuDivider` between custom items).
+- Shared identity menu: name + email with icon-only sign-out on the right; org name + `@slug` (no “active space” chip); built-in theme row (`MenuThemeToggle`); optional language control; account/org links as one group, then one divider, then host `sections` (no auto-dividers inside either group).
 - `hide` flags suppress theme / language / organization / links / sections per host (e.g. Studio hides language).
 - Variants: `popover` (Auth header avatar) and `extended` (Studio sidebar footer — expands upward; collapses with the rail).
 - Theme control is the shared compact iOS-style toggle; still uses m3 tokens — no purple/glow kit.
