@@ -166,7 +166,6 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
     if (!homeHubUrl) return;
     setOpen(false);
     const url = new URL(homeHubUrl, window.location.href);
-    // From Music / other products, stamp returnUrl so Home can send the user back.
     if (currentAppId && currentAppId !== "auth") {
       url.searchParams.set("returnUrl", window.location.href);
     }

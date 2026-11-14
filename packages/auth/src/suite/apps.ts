@@ -37,13 +37,7 @@ export type SuiteAppDefinition = {
   nameKey?: string;
   shortNameKey?: string;
   descriptionKey?: string;
-  /**
-   * Logo path on {@link logoHost}, or an absolute URL.
-   * Omit for coming-soon apps until a real mark exists (UI shows a clock fallback).
-   * Each live app owns its favicon under its own `public/`.
-   */
   logoUrl?: string;
-  /** Origin that serves `logoUrl` when relative. Defaults to `auth`. */
   logoHost?: SuiteAppLogoHost;
   status: SuiteAppStatus;
   sortOrder: number;
@@ -60,9 +54,7 @@ export type SuiteAppDto = {
   nameKey?: string;
   shortNameKey?: string;
   descriptionKey?: string;
-  /** Absolute logo URL, or null when the app has no mark yet. */
   logoUrl: string | null;
-  /** Absolute or same-origin path; null when the app is not openable yet. */
   homeUrl: string | null;
   status: SuiteAppStatus;
   sortOrder: number;

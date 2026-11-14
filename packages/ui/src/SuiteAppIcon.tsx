@@ -11,12 +11,9 @@ import React from "react";
 import { cn } from "./cn";
 
 export type SuiteAppIconProps = {
-  /** Absolute or same-origin logo URL. When missing, shows the coming-soon clock. */
   logoUrl?: string | null;
   accent?: string;
-  /** Outer tile size classes (default h-12 w-12). */
   className?: string;
-  /** Extra classes on the img. */
   imgClassName?: string;
   size?: "sm" | "md" | "lg";
 };

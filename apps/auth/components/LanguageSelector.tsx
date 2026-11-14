@@ -12,7 +12,6 @@ export function LanguageSelector({
   variant = "default",
 }: {
   className?: string;
-  /** `menu` = compact code chips for AccountMenu (no nested dropdown). */
   variant?: Variant;
 }) {
   const { language, setPersonalLanguage } = useI18n();

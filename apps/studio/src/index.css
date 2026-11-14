@@ -468,7 +468,6 @@ textarea:focus-visible,
   }
 }
 
-/* Theme flips: View Transition crossfade when available (see runThemeTransition). */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.22s;
@@ -482,7 +481,6 @@ textarea:focus-visible,
   }
 }
 
-/* Fallback only — root surfaces, never a universal `*` transition (that was laggy). */
 html.theme-transition,
 html.theme-transition body {
   transition:

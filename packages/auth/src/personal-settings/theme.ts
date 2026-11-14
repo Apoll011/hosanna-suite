@@ -49,11 +49,6 @@ function prefersReducedMotion(): boolean {
   );
 }
 
-/**
- * Smooth theme flip after cross-app hydrate or local toggle.
- * Prefer the View Transition API (one crossfade of the root). Avoid the old
- * `theme-transition *` universal CSS transitions — they fight VT and jank the UI.
- */
 export function runThemeTransition(apply: () => void) {
   if (typeof document === "undefined") {
     apply();
@@ -75,9 +70,7 @@ export function runThemeTransition(apply: () => void) {
         apply();
       });
       return;
-    } catch {
-      /* fall through to CSS fallback */
-    }
+    } catch {}
   }
 
   const root = document.documentElement;
