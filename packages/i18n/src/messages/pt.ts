@@ -164,8 +164,8 @@ export const sharedPt = {
     },
     apps: {
       auth: {
-        name: "Conta",
-        shortName: "Conta",
+        name: "Account",
+        shortName: "Account",
         description: "Perfil, organização, faturação e segurança.",
       },
       music: {
