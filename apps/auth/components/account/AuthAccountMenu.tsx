@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 /** Auth-wired Google-style account menu (theme, language, org switcher). */
 export function AuthAccountMenu({ className }: { className?: string }) {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const router = useRouter();
   const { darkMode, toggleDarkMode } = useTheme();
   const { user, clear } = useAuthUser({
@@ -35,6 +35,7 @@ export function AuthAccountMenu({ className }: { className?: string }) {
   return (
     <AccountMenu
       className={className}
+      language={language}
       user={user}
       organization={
         organization
@@ -59,12 +60,12 @@ export function AuthAccountMenu({ className }: { className?: string }) {
       links={[
         {
           href: "/account",
-          label: t("home.nav.account"),
+          label: t("suite.accountMenu.account"),
           icon: <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />,
         },
         {
           href: "/account/organization",
-          label: t("home.nav.organization"),
+          label: t("suite.accountMenu.organization"),
           icon: <Building2 className="h-4 w-4 text-m3-secondary" aria-hidden />,
         },
       ]}
@@ -82,15 +83,6 @@ export function AuthAccountMenu({ className }: { className?: string }) {
         </Link>
       )}
       onSignOut={logout}
-      labels={{
-        openMenu: t("account.menu.open"),
-        account: t("account.nav.home"),
-        signOut: t("account.signOut"),
-        organization: t("accountOrg.switcher.label"),
-        switchOrganization: t("accountOrg.switcher.switch"),
-        theme: t("account.menu.theme"),
-        language: t("account.menu.language"),
-      }}
       theme={{ darkMode, onToggle: toggleDarkMode }}
       languageControl={<LanguageSelector variant="menu" />}
     />

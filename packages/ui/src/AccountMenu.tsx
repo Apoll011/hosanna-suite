@@ -8,11 +8,13 @@
 
 "use client";
 
+import type { Language } from "@hosanna/i18n";
 import { Building2, Check, ChevronDown, LogOut, UserRound } from "lucide-react";
-import React, { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { cn } from "./cn";
 import { MenuThemeToggle } from "./MenuThemeToggle";
+import { sharedUiT } from "./sharedT";
 
 export type AccountMenuUser = {
   name?: string | null;
@@ -33,6 +35,7 @@ export type AccountMenuLink = {
   icon?: ReactNode;
 };
 
+/** Optional overrides only — defaults come from `@hosanna/i18n` `suite.accountMenu.*`. */
 export type AccountMenuLabels = {
   openMenu?: string;
   account?: string;
@@ -58,6 +61,9 @@ export type AccountMenuTheme = {
 
 export type AccountMenuProps = {
   user: AccountMenuUser | null | undefined;
+  /** Active UI language; defaults to `document.documentElement.lang`. */
+  language?: Language;
+  /** Rare overrides for chrome copy — prefer shared i18n keys. */
   labels?: AccountMenuLabels;
   /** Primary profile / account center links (dividers inserted between them). */
   links?: AccountMenuLink[];
@@ -125,6 +131,7 @@ const prefsRow =
 
 export const AccountMenu: React.FC<AccountMenuProps> = ({
   user,
+  language,
   labels,
   links = [],
   onSignOut,
@@ -149,6 +156,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
   const [openUncontrolled, setOpenUncontrolled] = useState(false);
   const [orgOpen, setOrgOpen] = useState(false);
   const [switchingId, setSwitchingId] = useState<string | null>(null);
+  const t = useMemo(() => sharedUiT(language), [language]);
 
   const isControlled = openControlled !== undefined;
   const open = isControlled ? openControlled : openUncontrolled;
@@ -158,12 +166,12 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
     onOpenChange?.(value);
   };
 
-  const openLabel = labels?.openMenu ?? "Account menu";
-  const accountLabel = labels?.account ?? "Account";
-  const signOutLabel = labels?.signOut ?? "Sign out";
-  const switchOrgLabel = labels?.switchOrganization ?? "Switch organization";
-  const themeLabel = labels?.theme ?? "Theme";
-  const languageLabel = labels?.language ?? "Language";
+  const openLabel = labels?.openMenu ?? t("suite.accountMenu.open");
+  const accountLabel = labels?.account ?? t("suite.accountMenu.account");
+  const signOutLabel = labels?.signOut ?? t("suite.accountMenu.signOut");
+  const switchOrgLabel = labels?.switchOrganization ?? t("suite.accountMenu.switchOrganization");
+  const themeLabel = labels?.theme ?? t("suite.accountMenu.theme");
+  const languageLabel = labels?.language ?? t("suite.accountMenu.language");
 
   const showOrg = !hide?.organization && Boolean(organization || organizations.length > 0);
   const showTheme = Boolean(theme) && !hide?.theme;
@@ -317,7 +325,11 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
           {showTheme && theme ? (
             <div className={prefsRow}>
               <span className="font-medium">{themeLabel}</span>
-              <MenuThemeToggle darkMode={theme.darkMode} onToggle={theme.onToggle} />
+              <MenuThemeToggle
+                darkMode={theme.darkMode}
+                onToggle={theme.onToggle}
+                aria-label={t("suite.accountMenu.toggleTheme")}
+              />
             </div>
           ) : null}
           {showLanguage ? (

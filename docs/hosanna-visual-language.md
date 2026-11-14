@@ -243,6 +243,7 @@ Shared across Auth and Studio via `@hosanna/ui` — one composition language, no
 - Variants: `popover` (Auth header avatar) and `extended` (Studio sidebar footer — expands upward; collapses with the rail).
 - Theme control is the shared compact iOS-style toggle; still uses m3 tokens — no purple/glow kit.
 - Org rows use the same quiet avatar + label pattern as elsewhere; destructive actions stay monochrome-until-danger.
+- Chrome strings: `@hosanna/i18n` (`suite.accountMenu.*`). Pass `language`; do not re-translate the same chrome in each app.
 
 Theme and language persist through `@hosanna/auth` personal settings (cookie + metadata). Do not invent parallel `localStorage` theme keys on new surfaces.
 

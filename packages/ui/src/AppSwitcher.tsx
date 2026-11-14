@@ -8,16 +8,19 @@
 
 "use client";
 
+import type { Language } from "@hosanna/i18n";
 import { Home, LayoutGrid } from "lucide-react";
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { cn } from "./cn";
+import { sharedUiT } from "./sharedT";
 import { SuiteAppIcon } from "./SuiteAppIcon";
 import { loadSuiteApps, peekSuiteAppsCache, type SuiteCatalogApp } from "./suiteAppsCache";
 import { localizeSuiteApps } from "./suiteLabels";
 
 export type AppSwitcherApp = SuiteCatalogApp;
 
+/** Optional overrides only — defaults come from `@hosanna/i18n` `suite.switcher.*`. */
 export type AppSwitcherLabels = {
   openMenu?: string;
   greeting?: string;
@@ -32,14 +35,17 @@ export type AppSwitcherLabels = {
 export type AppSwitcherProps = {
   /** Shown in the popover greeting (“Hello {displayName}”). */
   displayName: string;
+  /** Active UI language; defaults to `document.documentElement.lang`. */
+  language?: Language;
   /** Preloaded apps — skips fetch when provided. */
   apps?: AppSwitcherApp[];
   /** Credentialed catalog URL (default `/api/suite/apps`). Ignored when `apps` is set. */
   appsUrl?: string;
   /** Absolute or same-origin URL for the suite home hub. */
   homeHubUrl?: string;
+  /** Rare overrides for chrome copy — prefer shared i18n keys. */
   labels?: AppSwitcherLabels;
-  /** Host translator — localizes catalog name/description keys when present. */
+  /** Optional host translator override for catalog keys (`suite.apps.*`). */
   translate?: (key: string) => string;
   className?: string;
   /** Highlight the app the host is currently in (muted / non-navigating). */
@@ -60,6 +66,7 @@ function isOpenable(app: AppSwitcherApp): boolean {
 
 export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   displayName,
+  language,
   apps: appsProp,
   appsUrl = "/api/suite/apps",
   homeHubUrl,
@@ -71,10 +78,12 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const t = useMemo(() => sharedUiT(language), [language]);
+  const catalogT = translate ?? t;
 
   const applyLocale = useCallback(
-    (list: AppSwitcherApp[]) => (translate ? localizeSuiteApps(list, translate) : list),
-    [translate],
+    (list: AppSwitcherApp[]) => localizeSuiteApps(list, catalogT),
+    [catalogT],
   );
 
   const [apps, setApps] = useState<AppSwitcherApp[]>(() => {
@@ -85,13 +94,13 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   const [loading, setLoading] = useState(() => !appsProp && !peekSuiteAppsCache(appsUrl));
   const [error, setError] = useState<string | null>(null);
 
-  const openLabel = labels?.openMenu ?? "Open app switcher";
-  const greetingTemplate = labels?.greeting ?? "Hello {name}";
-  const comingSoonLabel = labels?.comingSoon ?? "Coming soon";
-  const loadingLabel = labels?.loading ?? "Loading apps…";
-  const emptyLabel = labels?.empty ?? "No apps available.";
-  const errorLabel = labels?.error ?? "Could not load apps.";
-  const goHomeLabel = labels?.goHome ?? "Hosanna Home";
+  const openLabel = labels?.openMenu ?? t("suite.switcher.open");
+  const greetingTemplate = labels?.greeting ?? t("suite.switcher.greeting");
+  const comingSoonLabel = labels?.comingSoon ?? t("suite.comingSoon");
+  const loadingLabel = labels?.loading ?? t("suite.switcher.loading");
+  const emptyLabel = labels?.empty ?? t("suite.switcher.empty");
+  const errorLabel = labels?.error ?? t("suite.switcher.error");
+  const goHomeLabel = labels?.goHome ?? t("suite.switcher.goHome");
 
   const greeting = greetingTemplate.replace(
     "{name}",

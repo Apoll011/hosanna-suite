@@ -11,27 +11,18 @@ import React from "react";
 
 /** Studio-mounted App Switcher — loads catalog from auth `/api/suite/apps`. */
 export const StudioAppSwitcher: React.FC = () => {
-  const { t } = useI18n();
+  const { language } = useI18n();
   const { user } = useAuth();
   const authOrigin = getAuthAppUrl();
   const appsUrl = `${authOrigin}/api/suite/apps`;
 
   return (
     <AppSwitcher
+      language={language}
       displayName={user?.name || user?.email || ""}
       appsUrl={appsUrl}
       homeHubUrl={`${authOrigin}/home`}
       currentAppId="music"
-      translate={(key) => t(key as Parameters<typeof t>[0])}
-      labels={{
-        openMenu: t("suite.switcher.open"),
-        greeting: t("suite.switcher.greeting"),
-        comingSoon: t("suite.comingSoon"),
-        loading: t("suite.switcher.loading"),
-        empty: t("suite.switcher.empty"),
-        error: t("suite.switcher.error"),
-        goHome: t("suite.switcher.goHome"),
-      }}
     />
   );
 };

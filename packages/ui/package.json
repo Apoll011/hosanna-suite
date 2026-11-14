@@ -21,6 +21,7 @@
     "test": "tsx --test \"test/**/*.test.ts\""
   },
   "dependencies": {
+    "@hosanna/i18n": "workspace:*",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.5.0"
   },

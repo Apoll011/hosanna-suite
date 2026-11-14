@@ -112,7 +112,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   navigate,
   logout,
 }) => {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { darkMode, toggleDarkMode } = useTheme();
   const { granted: canViewLibraryHealth } = useCan("library.health");
   const shortName = organization?.metadata?.shortName || "";
@@ -581,25 +581,18 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                 if (match && onSwitchOrganization) void onSwitchOrganization(match);
               }}
               onSignOut={logout}
-              labels={{
-                openMenu: t("sidebar.accountMenu"),
-                account: t("sidebar.openAccount"),
-                signOut: t("sidebar.logout"),
-                switchOrganization: t("sidebar.switchWorkspace"),
-                theme: t("sidebar.theme"),
-                language: t("sidebar.language"),
-              }}
+              language={language}
               hide={{ language: true }}
               theme={{ darkMode, onToggle: toggleDarkMode }}
               links={[
                 {
                   href: "#account",
-                  label: t("sidebar.openAccount"),
+                  label: t("suite.accountMenu.account"),
                   icon: <UserRound className="h-4 w-4 text-m3-secondary" aria-hidden />,
                 },
                 {
                   href: "#organization",
-                  label: t("sidebar.manageOrganization"),
+                  label: t("suite.accountMenu.organization"),
                   icon: <Building2 className="h-4 w-4 text-m3-secondary" aria-hidden />,
                 },
               ]}

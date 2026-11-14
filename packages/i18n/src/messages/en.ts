@@ -151,6 +151,16 @@ export const sharedEn: typeof sharedPt = {
       error: "Could not load apps.",
       goHome: "Hosanna Home",
     },
+    accountMenu: {
+      open: "Account menu",
+      account: "Account",
+      signOut: "Sign out",
+      organization: "Organization",
+      switchOrganization: "Switch organization",
+      theme: "Theme",
+      language: "Language",
+      toggleTheme: "Toggle theme",
+    },
     apps: {
       auth: {
         name: "Account",

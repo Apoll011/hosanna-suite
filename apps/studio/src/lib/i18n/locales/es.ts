@@ -70,9 +70,6 @@ export const es: typeof pt = {
     openAnalytics: "Analíticas",
     switchWorkspace: "Cambiar de organización",
     manageOrganization: "Gestionar organización",
-    accountMenu: "Menú de cuenta",
-    theme: "Tema",
-    language: "Idioma",
   },
   addressBar: {
     atRootLevel: "En el Nivel Raíz",

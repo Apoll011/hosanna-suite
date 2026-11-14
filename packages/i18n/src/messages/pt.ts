@@ -150,6 +150,16 @@ export const sharedPt = {
       error: "Não foi possível carregar as aplicações.",
       goHome: "Início Hosanna",
     },
+    accountMenu: {
+      open: "Menu da conta",
+      account: "Conta",
+      signOut: "Terminar sessão",
+      organization: "Organização",
+      switchOrganization: "Mudar de organização",
+      theme: "Tema",
+      language: "Idioma",
+      toggleTheme: "Alternar tema",
+    },
     apps: {
       auth: {
         name: "Conta",
