@@ -21,7 +21,14 @@ import {
   dropTargetForElements,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { ChordProRenderer, parseChordPro } from "@hosanna/chordpro";
+import {
+  ChordProRenderer,
+  parseChordPro,
+  resolveChords,
+  parseCapoValue,
+  parseKeyShiftValue,
+  instrumentRegistry,
+} from "@hosanna/chordpro";
 import {
   AlertTriangle,
   ArrowDown,
@@ -138,21 +145,54 @@ const SongPreview: React.FC<{ element: ServiceElement; chrome?: boolean }> = ({
 }) => {
   const { t } = useI18n();
   const { data: song, isLoading } = useSong(element.songId || null);
-  const { settings, updateSetting, resetSettings } = usePreviewSettings();
   const [showSettings, setShowSettings] = useState(false);
   const deferredContent = useDeferredValue(song?.content || "");
+
+  const parsed = useMemo(() => {
+    return parseChordPro(deferredContent || song?.content || "");
+  }, [deferredContent, song?.content]);
+
+  const directiveDefaults = useMemo(
+    () => ({
+      transposeVal: parseKeyShiftValue(parsed.metadata.keyShift),
+      capoVal: parseCapoValue(parsed.metadata.capo),
+    }),
+    [parsed.metadata.keyShift, parsed.metadata.capo],
+  );
+
+  const { settings, updateSetting, resetSettings } = usePreviewSettings(
+    element.songId,
+    directiveDefaults,
+  );
+
+  const supportsCapo = useMemo(() => {
+    return instrumentRegistry.get(settings.instrument)?.supportsCapo ?? false;
+  }, [settings.instrument]);
+
+  const { capoLabel } = useMemo(() => {
+    return resolveChords({
+      chords: [],
+      key: parsed.metadata.key,
+      keyShift: settings.transposeVal,
+      capo: settings.capoVal,
+      instrument: settings.instrument,
+    });
+  }, [parsed.metadata.key, settings.transposeVal, settings.capoVal, settings.instrument]);
+
   const transformedSong = useMemo(() => {
-    let transformed = parseChordPro(deferredContent || song?.content || "")
-      .transpose(settings.transposeVal)
+    const delta = settings.transposeVal - (supportsCapo ? settings.capoVal : 0);
+    let transformed = parsed
+      .transpose(delta)
       .instrument(settings.instrument);
     if (!settings.showChords) transformed = transformed.removeChords(true);
     return transformed;
   }, [
-    deferredContent,
-    song?.content,
+    parsed,
     settings.instrument,
     settings.showChords,
     settings.transposeVal,
+    settings.capoVal,
+    supportsCapo,
   ]);
 
   if (isLoading)
@@ -190,7 +230,7 @@ const SongPreview: React.FC<{ element: ServiceElement; chrome?: boolean }> = ({
               settings={settings}
               updateSetting={updateSetting}
               resetSettings={resetSettings}
-              capo={transformedSong.metadata.capo}
+              supportsCapo={supportsCapo}
             />
           )}
         </>
@@ -204,6 +244,7 @@ const SongPreview: React.FC<{ element: ServiceElement; chrome?: boolean }> = ({
           song={transformedSong}
           fontSize={settings.fontSize}
           showDiagrams={settings.showDiagrams}
+          capoLabel={capoLabel}
         />
       </div>
     </div>

@@ -13,7 +13,14 @@ import { useI18n } from "@/src/lib/i18n";
 import { emitOnboardingEvent } from "@/src/lib/tour";
 
 import { Song } from "@/src/types";
-import { ChordProRenderer, parseChordPro } from "@hosanna/chordpro";
+import {
+  ChordProRenderer,
+  parseChordPro,
+  resolveChords,
+  parseCapoValue,
+  parseKeyShiftValue,
+  instrumentRegistry,
+} from "@hosanna/chordpro";
 import { Editor } from "@hosanna/chordpro/editor";
 import {
   ArrowLeft,
@@ -87,17 +94,40 @@ export const SongEditorPage: React.FC = () => {
     resetSettings: resetEditorSettings,
   } = useEditorSettings();
 
-  const { settings, updateSetting, resetSettings } = usePreviewSettings();
+  const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
+
+  const directiveDefaults = useMemo(
+    () => ({
+      transposeVal: parseKeyShiftValue(parsedSong.metadata.keyShift),
+      capoVal: parseCapoValue(parsedSong.metadata.capo),
+    }),
+    [parsedSong.metadata.keyShift, parsedSong.metadata.capo],
+  );
+
+  const { settings, updateSetting, resetSettings } = usePreviewSettings(song?.id, directiveDefaults);
   const { fontSize, showDiagrams } = settings;
 
   const isSavingRef = useRef(false);
 
-  const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
+  const supportsCapo = useMemo(() => {
+    return instrumentRegistry.get(settings.instrument)?.supportsCapo ?? false;
+  }, [settings.instrument]);
+
+  const { capoLabel } = useMemo(() => {
+    return resolveChords({
+      chords: [],
+      key: parsedSong.metadata.key,
+      keyShift: settings.transposeVal,
+      capo: settings.capoVal,
+      instrument: settings.instrument,
+    });
+  }, [parsedSong.metadata.key, settings.transposeVal, settings.capoVal, settings.instrument]);
 
   const transformedSong = useMemo(() => {
+    const delta = settings.transposeVal - (supportsCapo ? settings.capoVal : 0);
     let transformed = parsedSong
       .selectVariant(selectedVariant)
-      .transpose(settings.transposeVal)
+      .transpose(delta)
       .instrument(settings.instrument);
     if (!settings.showChords) transformed = transformed.removeChords(true);
     return transformed;
@@ -107,6 +137,8 @@ export const SongEditorPage: React.FC = () => {
     settings.instrument,
     settings.showChords,
     settings.transposeVal,
+    settings.capoVal,
+    supportsCapo,
   ]);
 
   const currentSongIdRef = useRef<string | null>(null);
@@ -472,7 +504,7 @@ export const SongEditorPage: React.FC = () => {
               settings={settings}
               updateSetting={updateSetting}
               resetSettings={resetSettings}
-              capo={transformedSong.metadata.capo}
+              supportsCapo={supportsCapo}
             />
           )}
           <div
@@ -483,6 +515,7 @@ export const SongEditorPage: React.FC = () => {
               song={transformedSong}
               fontSize={fontSize}
               showDiagrams={showDiagrams}
+              capoLabel={capoLabel}
             />
           </div>
         </div>

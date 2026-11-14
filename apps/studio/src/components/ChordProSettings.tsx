@@ -7,14 +7,20 @@ export const ChordProPreviewSettings: React.FC<{
   settings: ReturnType<typeof usePreviewSettings>["settings"];
   updateSetting: ReturnType<typeof usePreviewSettings>["updateSetting"];
   resetSettings: ReturnType<typeof usePreviewSettings>["resetSettings"];
-  capo?: string;
-}> = ({ settings, updateSetting, resetSettings, capo }) => {
+  supportsCapo?: boolean;
+}> = ({ settings, updateSetting, resetSettings, supportsCapo }) => {
   const { t } = useI18n();
-  const { showChords, transposeVal, fontSize, instrument, showDiagrams } = settings;
+  const { showChords, transposeVal, capoVal = 0, fontSize, instrument, showDiagrams } = settings;
   const availableInstruments = instrumentRegistry.list();
+  const effectiveSupportsCapo =
+    supportsCapo ?? (instrumentRegistry.get(instrument)?.supportsCapo ?? false);
 
   const handleTranspose = (delta: number) => {
     updateSetting("transposeVal", transposeVal + delta);
+  };
+
+  const handleCapo = (delta: number) => {
+    updateSetting("capoVal", Math.max(0, Math.min(11, capoVal + delta)));
   };
 
   return (
@@ -54,16 +60,41 @@ export const ChordProPreviewSettings: React.FC<{
 
       {showChords && (
         <>
-          {capo && (
-            <div className="flex items-center justify-between border-t border-m3-border/30 pt-3">
-              <span className="text-[10px] font-bold text-m3-secondary uppercase">
-                {t("misc.chordproSettings.capo")}
-              </span>
-              <span className="text-xs font-bold px-2 py-1 bg-m3-primary/10 text-m3-primary rounded font-mono">
-                {capo}
-              </span>
+          {effectiveSupportsCapo && (
+            <div className="space-y-2 border-t border-m3-border/30 pt-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-m3-secondary uppercase">
+                  {t("misc.chordproSettings.capo")}
+                </span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded font-mono">
+                  {capoVal > 0 ? `${capoVal}ª` : t("misc.chordproSettings.off")}
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-1 bg-m3-sidebar p-0.5 rounded-lg border border-m3-border/30">
+                <button
+                  onClick={() => handleCapo(-1)}
+                  disabled={capoVal <= 0}
+                  className="py-1 flex justify-center items-center text-m3-text hover:bg-m3-hover disabled:opacity-30 rounded-md cursor-pointer"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => updateSetting("capoVal", 0)}
+                  className={`py-1 text-[10px] font-bold rounded-md cursor-pointer ${capoVal === 0 ? "bg-m3-primary text-white" : "text-m3-secondary hover:bg-m3-hover"}`}
+                >
+                  {t("misc.chordproSettings.off")}
+                </button>
+                <button
+                  onClick={() => handleCapo(1)}
+                  disabled={capoVal >= 11}
+                  className="py-1 flex justify-center items-center text-m3-text hover:bg-m3-hover disabled:opacity-30 rounded-md cursor-pointer"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
             </div>
           )}
+
           <div className="space-y-2 border-t border-m3-border/30 pt-3">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-bold text-m3-secondary uppercase">

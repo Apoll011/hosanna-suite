@@ -3,20 +3,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 export interface PreviewSettings {
   showChords: boolean;
   transposeVal: number;
+  capoVal: number;
   fontSize: number;
   instrument: string;
   showDiagrams: boolean;
   showYoutubePlayer: boolean;
 }
 
+export interface SongPitchOverlay {
+  transposeVal: number;
+  capoVal: number;
+}
+
 const DEFAULT_SETTINGS: PreviewSettings = {
   showChords: true,
   transposeVal: 0,
+  capoVal: 0,
   fontSize: 16,
   instrument: "guitar",
   showDiagrams: true,
@@ -24,6 +31,37 @@ const DEFAULT_SETTINGS: PreviewSettings = {
 };
 
 const STORAGE_KEY = "chordpro-preview-settings";
+const OVERLAYS_STORAGE_KEY = "chordpro-preview-overlays";
+
+export function loadAllSongPitchOverlays(): Record<string, SongPitchOverlay> {
+  try {
+    const raw = localStorage.getItem(OVERLAYS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function loadSongPitchOverlay(songId: string): SongPitchOverlay | null {
+  const all = loadAllSongPitchOverlays();
+  return all[songId] ?? null;
+}
+
+export function saveSongPitchOverlay(songId: string, overlay: SongPitchOverlay): void {
+  try {
+    const all = loadAllSongPitchOverlays();
+    all[songId] = overlay;
+    localStorage.setItem(OVERLAYS_STORAGE_KEY, JSON.stringify(all));
+  } catch {}
+}
+
+export function clearSongPitchOverlay(songId: string): void {
+  try {
+    const all = loadAllSongPitchOverlays();
+    delete all[songId];
+    localStorage.setItem(OVERLAYS_STORAGE_KEY, JSON.stringify(all));
+  } catch {}
+}
 
 function loadSettings(): PreviewSettings {
   try {
@@ -35,8 +73,6 @@ function loadSettings(): PreviewSettings {
   }
 }
 
-// Module-level store: every hook instance reads/writes the same state,
-// so a change in one component is immediately visible in all others.
 let state: PreviewSettings = loadSettings();
 const listeners = new Set<() => void>();
 
@@ -72,17 +108,62 @@ if (typeof window !== "undefined") {
   });
 }
 
-export function usePreviewSettings() {
+export function usePreviewSettings(
+  songId?: string | null,
+  directiveDefaults?: { transposeVal: number; capoVal: number },
+) {
   const settings = useSyncExternalStore(subscribe, getSnapshot);
+
+  useEffect(() => {
+    if (!songId) return;
+    const overlay = loadSongPitchOverlay(songId);
+    if (overlay) {
+      setState((prev) => ({
+        ...prev,
+        transposeVal: overlay.transposeVal,
+        capoVal: overlay.capoVal,
+      }));
+    } else if (directiveDefaults) {
+      setState((prev) => ({
+        ...prev,
+        transposeVal: directiveDefaults.transposeVal,
+        capoVal: directiveDefaults.capoVal,
+      }));
+    }
+  }, [songId, directiveDefaults?.transposeVal, directiveDefaults?.capoVal]);
 
   const updateSetting = useCallback(
     <K extends keyof PreviewSettings>(key: K, value: PreviewSettings[K]) => {
-      setState((prev) => ({ ...prev, [key]: value }));
+      setState((prev) => {
+        const next = { ...prev, [key]: value };
+        if (songId && (key === "transposeVal" || key === "capoVal")) {
+          saveSongPitchOverlay(songId, {
+            transposeVal: next.transposeVal,
+            capoVal: next.capoVal,
+          });
+        }
+        return next;
+      });
     },
-    [],
+    [songId],
   );
 
-  const resetSettings = useCallback(() => setState(() => DEFAULT_SETTINGS), []);
+  const resetSettings = useCallback(() => {
+    if (songId) {
+      clearSongPitchOverlay(songId);
+      setState((prev) => ({
+        ...DEFAULT_SETTINGS,
+        fontSize: prev.fontSize,
+        instrument: prev.instrument,
+        showDiagrams: prev.showDiagrams,
+        showChords: prev.showChords,
+        transposeVal: directiveDefaults?.transposeVal ?? 0,
+        capoVal: directiveDefaults?.capoVal ?? 0,
+      }));
+    } else {
+      setState(() => DEFAULT_SETTINGS);
+    }
+  }, [songId, directiveDefaults?.transposeVal, directiveDefaults?.capoVal]);
 
   return { settings, updateSetting, resetSettings };
 }
