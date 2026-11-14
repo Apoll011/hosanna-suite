@@ -43,9 +43,12 @@ export interface InteractiveImportModalProps<TSession = unknown, TConfirm = unkn
   onConfirm: (options: TConfirm) => void | Promise<void>;
 }
 
-export type InteractiveImportModal =
-  | ComponentType<InteractiveImportModalProps<SheetMusicImportSession, SheetMusicImportOptions>>
-  | ComponentType<InteractiveImportModalProps<SongbookBackupDocument, SongbookImportOptions>>;
+export type InteractiveImportSession = SheetMusicImportSession | SongbookBackupDocument;
+export type InteractiveImportConfirmOptions = SheetMusicImportOptions | SongbookImportOptions;
+export type InteractiveImportModalPropsForRegistry = InteractiveImportModalProps<
+  InteractiveImportSession,
+  InteractiveImportConfirmOptions
+>;
 
 export interface InteractiveImportToastCopy {
   title: string;
@@ -74,7 +77,7 @@ export interface SongImportProvider {
     ctx: SongImportContext,
   ): Promise<ProviderImportResult>;
 
-  Modal?: InteractiveImportModal;
+  Modal?: ComponentType<InteractiveImportModalPropsForRegistry>;
 
   getPrepareProgressTitle?(t: ImportTranslate): string;
   getPreparedToast?(session: unknown, t: ImportTranslate): InteractiveImportToastCopy | null;
