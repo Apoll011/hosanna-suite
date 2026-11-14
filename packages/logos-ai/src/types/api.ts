@@ -108,11 +108,7 @@ export type SongImportStep = {
 };
 
 export type SongImportCancelCode =
-  | "not_a_song"
-  | "unreadable"
-  | "blank"
-  | "wrong_content"
-  | "multiple_unclear";
+  "not_a_song" | "unreadable" | "blank" | "wrong_content" | "multiple_unclear";
 
 export type SongImportDraft = {
   title: string;

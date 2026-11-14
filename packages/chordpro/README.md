@@ -233,7 +233,9 @@ The editor includes ChordPro completion, diagnostics, section shortcuts (`Alt+V`
 Metadata includes `title`, `subtitle`, `artist`, `composer`, `album`, `copyright`, `key`, `original_key`, `capo`, `keyshift`, `tempo`, `time`, `duration`, `song_number`, `ccli`, and `youtube`. Sections include verses, choruses, bridges, tabs, grids, comments (with optional `|style` suffixes), repeats, and named versions (`start_of_version` / `end_of_version`).
 
 ### Sounding chords and transposition
+
 In Hosanna, chords written in the ChordPro source represent **sounding pitch** (the heard concert pitch, differing from traditional ChordPro's capo-as-shapes). `{capo: N}` and `{keyshift: N}` directives seed the initial toolbar settings:
+
 - `keyshift`: shifts chords by N semitones across all instruments.
 - `capo`: on instruments supporting capo (e.g., guitar, ukulele), shifts displayed shapes down by N semitones and displays a capo indicator (`Capo N · shapes in KEY`). On non-capo instruments (e.g., piano), capo is hidden and sounding chords remain unchanged.
 - Toolbar settings always win over directives; modifying toolbar settings does not rewrite document source.

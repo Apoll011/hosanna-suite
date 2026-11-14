@@ -142,15 +142,7 @@ export function useSongImportController(options: {
         setIsImporting(false);
       }
     },
-    [
-      options,
-      removeToast,
-      session,
-      showToast,
-      showToastImportResult,
-      t,
-      updateToast,
-    ],
+    [options, removeToast, session, showToast, showToastImportResult, t, updateToast],
   );
 
   const handleFiles = useCallback(
@@ -249,10 +241,7 @@ export function useSongImportController(options: {
         setIsUploading(false);
       } catch (err) {
         removeToast(progressToastId);
-        showToast(
-          err instanceof Error ? err.message : t("layout.uploadErrorGeneric"),
-          "error",
-        );
+        showToast(err instanceof Error ? err.message : t("layout.uploadErrorGeneric"), "error");
         setIsUploading(false);
       }
     },

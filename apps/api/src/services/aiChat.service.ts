@@ -251,7 +251,11 @@ export async function runBatch<I>(
 
 function buildHosannaTools(
   authInfo: AuthInfo,
-  opts?: { nativeWebAuth?: NativeWebAuth | null; memory?: AiMemoryService; rawMessages?: UIMessage[] },
+  opts?: {
+    nativeWebAuth?: NativeWebAuth | null;
+    memory?: AiMemoryService;
+    rawMessages?: UIMessage[];
+  },
 ) {
   const memory = opts?.memory;
   const nativeWebAuth = opts?.nativeWebAuth ?? null;
@@ -1647,7 +1651,9 @@ function buildHosannaTools(
           .int()
           .min(0)
           .optional()
-          .describe("Which attached image to use when several are attached; defaults to the first."),
+          .describe(
+            "Which attached image to use when several are attached; defaults to the first.",
+          ),
       }),
       execute: async (args, { messages }) => {
         const ctx = requireMcpContext(authInfo);
@@ -1673,9 +1679,8 @@ function buildHosannaTools(
           }
         }
 
-        const fileParts = rawParts.filter(
-          (p): p is Record<string, unknown> =>
-            Boolean(p && typeof p === "object" && (p as { type?: string }).type === "file"),
+        const fileParts = rawParts.filter((p): p is Record<string, unknown> =>
+          Boolean(p && typeof p === "object" && (p as { type?: string }).type === "file"),
         );
 
         const images = fileParts.filter((p) => {

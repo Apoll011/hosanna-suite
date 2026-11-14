@@ -18,14 +18,7 @@ import type {
   SheetMusicImportOptions,
   SheetMusicImportSession,
 } from "@/src/lib/import/sheetMusicProvider";
-import {
-  AlertTriangle,
-  Check,
-  FileText,
-  Image as ImageIcon,
-  Loader2,
-  X,
-} from "lucide-react";
+import { AlertTriangle, Check, FileText, Image as ImageIcon, Loader2, X } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 export type SheetMusicImportModalProps = InteractiveImportModalProps<
@@ -52,12 +45,7 @@ const stepLabelKeys: Record<string, TranslationKey> = {
 };
 
 const CircularProgress: React.FC = () => (
-  <svg
-    className="w-7 h-7 animate-spin"
-    viewBox="0 0 28 28"
-    fill="none"
-    aria-hidden
-  >
+  <svg className="w-7 h-7 animate-spin" viewBox="0 0 28 28" fill="none" aria-hidden>
     <circle cx="14" cy="14" r="11" stroke="currentColor" strokeOpacity="0.15" strokeWidth="3" />
     <circle
       cx="14"
@@ -131,9 +119,7 @@ const TerminalBanner: React.FC<{
     role="alert"
     className={[
       "flex items-start gap-3 rounded-xl border px-3.5 py-3",
-      tone === "error"
-        ? "border-red-500/30 bg-red-500/5"
-        : "border-amber-500/30 bg-amber-500/5",
+      tone === "error" ? "border-red-500/30 bg-red-500/5" : "border-amber-500/30 bg-amber-500/5",
     ].join(" ")}
   >
     <AlertTriangle
@@ -364,10 +350,10 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
             }
             message={
               job.status === "failed"
-                ? job.errorMessage ?? t("modals.sheetMusicImport.failed")
+                ? (job.errorMessage ?? t("modals.sheetMusicImport.failed"))
                 : job.cancelledBy === "ai" && job.cancelCode
                   ? t(cancelReasonKeys[job.cancelCode], { reason: job.cancelReason ?? "" })
-                  : job.cancelReason ?? t("modals.sheetMusicImport.cancelledByUser")
+                  : (job.cancelReason ?? t("modals.sheetMusicImport.cancelledByUser"))
             }
             tone={job.status === "failed" ? "error" : "warning"}
           />
@@ -385,7 +371,9 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
               {job.result?.warnings?.length ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-600 dark:text-amber-400">
                   <AlertTriangle className="w-3.5 h-3.5" />
-                  {t("modals.sheetMusicImport.warningsCount", { count: job.result.warnings.length })}
+                  {t("modals.sheetMusicImport.warningsCount", {
+                    count: job.result.warnings.length,
+                  })}
                 </span>
               ) : null}
             </div>

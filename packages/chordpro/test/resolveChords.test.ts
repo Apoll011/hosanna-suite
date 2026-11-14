@@ -16,7 +16,11 @@ describe("resolveChords — fixture suite", () => {
     it(f.description, () => {
       const result = resolveChords(f.input);
       assert.equal(result.shownKey, f.expected.shownKey, `shownKey mismatch for ${f.id}`);
-      assert.deepEqual(result.shownChords, f.expected.shownChords, `shownChords mismatch for ${f.id}`);
+      assert.deepEqual(
+        result.shownChords,
+        f.expected.shownChords,
+        `shownChords mismatch for ${f.id}`,
+      );
       assert.equal(result.capoLabel, f.expected.capoLabel, `capoLabel mismatch for ${f.id}`);
     });
   }

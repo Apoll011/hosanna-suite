@@ -47,10 +47,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
   const { t } = useLogosI18n();
   const text = messageText(msg);
   const files = useMemo(
-    () =>
-      msg.parts.filter(
-        (p): p is Extract<AiMessagePart, { type: "file" }> => p.type === "file",
-      ),
+    () => msg.parts.filter((p): p is Extract<AiMessagePart, { type: "file" }> => p.type === "file"),
     [msg.parts],
   );
   const [editing, setEditing] = useState(false);

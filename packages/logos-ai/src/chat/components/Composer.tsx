@@ -4,15 +4,7 @@
  */
 
 import { useLogosHost, useLogosI18n } from "../../host";
-import {
-  ArrowUp,
-  Eye,
-  EyeOff,
-  FileText,
-  Paperclip,
-  Square,
-  X,
-} from "lucide-react";
+import { ArrowUp, Eye, EyeOff, FileText, Paperclip, Square, X } from "lucide-react";
 import React, {
   forwardRef,
   useCallback,
@@ -121,44 +113,43 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
 
   useEffect(() => setSlashIndex(0), [slashQuery]);
 
-  const addFiles = useCallback(async (incoming: readonly File[]) => {
-    const collected: ChatAttachment[] = [];
-    for (const file of incoming) {
-      if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) break;
-      const isPdf =
-        file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      if (isPdf && host.renderPdf) {
-        try {
-          const rendered = await host.renderPdf(file);
-          if (rendered.imagesBase64.length > 0) {
-            rendered.imagesBase64.forEach((dataUrl, idx) => {
-              if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) return;
-              collected.push({
-                id: newId(),
-                file,
-                name:
-                  rendered.imagesBase64.length > 1
-                    ? `${file.name} (p. ${idx + 1})`
-                    : file.name,
-                size: file.size,
-                mimeType: "image/jpeg",
-                dataUrl,
-                isImage: true,
+  const addFiles = useCallback(
+    async (incoming: readonly File[]) => {
+      const collected: ChatAttachment[] = [];
+      for (const file of incoming) {
+        if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) break;
+        const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+        if (isPdf && host.renderPdf) {
+          try {
+            const rendered = await host.renderPdf(file);
+            if (rendered.imagesBase64.length > 0) {
+              rendered.imagesBase64.forEach((dataUrl, idx) => {
+                if (attachmentsRef.current.length + collected.length >= MAX_ATTACHMENTS) return;
+                collected.push({
+                  id: newId(),
+                  file,
+                  name:
+                    rendered.imagesBase64.length > 1 ? `${file.name} (p. ${idx + 1})` : file.name,
+                  size: file.size,
+                  mimeType: "image/jpeg",
+                  dataUrl,
+                  isImage: true,
+                });
               });
-            });
-            continue;
-          }
+              continue;
+            }
+          } catch {}
+        }
+        try {
+          collected.push(await fileToAttachment(file));
         } catch {
+          /* skip unreadable file */
         }
       }
-      try {
-        collected.push(await fileToAttachment(file));
-      } catch {
-        /* skip unreadable file */
-      }
-    }
-    if (collected.length) setAttachments((prev) => [...prev, ...collected]);
-  }, [host.renderPdf]);
+      if (collected.length) setAttachments((prev) => [...prev, ...collected]);
+    },
+    [host.renderPdf],
+  );
 
   const removeAttachment = (id: string) =>
     setAttachments((prev) => prev.filter((a) => a.id !== id));

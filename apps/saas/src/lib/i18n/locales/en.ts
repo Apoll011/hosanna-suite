@@ -549,7 +549,8 @@ export const en: typeof import("./pt").pt = {
     tempo: "Beats per minute (BPM), useful for metronomes or click tracks",
     time: "Time signature, e.g. 4/4 or 6/8",
     capo: "Initial capo fret (0–11) for instruments that support capo. Chords in file are sounding pitch; capo shifts shown shapes down.",
-    keyshift: "Initial key shift in semitones (e.g. -3, +2). Seeds toolbar transpose for all instruments.",
+    keyshift:
+      "Initial key shift in semitones (e.g. -3, +2). Seeds toolbar transpose for all instruments.",
     duration: "Duration in mm:ss or seconds, used to estimate service lengths.",
     album: "Source album or collection",
     composer: "Melody composer",

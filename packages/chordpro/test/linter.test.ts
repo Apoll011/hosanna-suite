@@ -37,7 +37,6 @@ describe("ChordPro linter — chorus recall / tags", () => {
   });
 });
 
-
 describe("ChordPro linter — capo / keyshift validation", () => {
   it("warns on capo out of range (12)", () => {
     const d = lintChordPro("{capo: 12}");

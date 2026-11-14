@@ -181,9 +181,7 @@ const SongPreview: React.FC<{ element: ServiceElement; chrome?: boolean }> = ({
 
   const transformedSong = useMemo(() => {
     const delta = settings.transposeVal - (supportsCapo ? settings.capoVal : 0);
-    let transformed = parsed
-      .transpose(delta)
-      .instrument(settings.instrument);
+    let transformed = parsed.transpose(delta).instrument(settings.instrument);
     if (!settings.showChords) transformed = transformed.removeChords(true);
     return transformed;
   }, [

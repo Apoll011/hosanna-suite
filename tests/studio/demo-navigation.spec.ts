@@ -65,9 +65,7 @@ test.describe("Studio demo navigation", () => {
         .getByText(/Settings|Definições|Configuración|Analytics|Análises/i)
         .first(),
     ).toBeVisible();
-    await expect(
-      page.getByRole("menu").getByText(/^(Account|Conta|Cuenta)$/i),
-    ).toHaveCount(0);
+    await expect(page.getByRole("menu").getByText(/^(Account|Conta|Cuenta)$/i)).toHaveCount(0);
     await expect(
       page.getByRole("menu").getByText(/^(Organization|Organização|Organización)$/i),
     ).toHaveCount(0);

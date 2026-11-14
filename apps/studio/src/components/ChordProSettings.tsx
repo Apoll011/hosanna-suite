@@ -13,7 +13,7 @@ export const ChordProPreviewSettings: React.FC<{
   const { showChords, transposeVal, capoVal = 0, fontSize, instrument, showDiagrams } = settings;
   const availableInstruments = instrumentRegistry.list();
   const effectiveSupportsCapo =
-    supportsCapo ?? (instrumentRegistry.get(instrument)?.supportsCapo ?? false);
+    supportsCapo ?? instrumentRegistry.get(instrument)?.supportsCapo ?? false;
 
   const handleTranspose = (delta: number) => {
     updateSetting("transposeVal", transposeVal + delta);

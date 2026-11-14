@@ -98,7 +98,10 @@ describe("OpenAPI document builder", () => {
       assert.ok(csp, "Must contain Content-Security-Policy header");
       assert.ok(csp.includes("https://cdn.jsdelivr.net"), "CSP must permit jsdelivr");
       assert.ok(csp.includes("https://vercel.live"), "CSP must permit vercel live");
-      assert.ok(csp.includes("img-src 'self' data: https: blob:"), "CSP must permit external images and data/blob URIs");
+      assert.ok(
+        csp.includes("img-src 'self' data: https: blob:"),
+        "CSP must permit external images and data/blob URIs",
+      );
     } finally {
       server.close();
     }

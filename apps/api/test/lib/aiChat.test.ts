@@ -110,10 +110,7 @@ describe("modelFileDataToBase64", () => {
     assert.equal(modelFileDataToBase64(Buffer.from("hi")), "aGk=");
     assert.equal(modelFileDataToBase64(new Uint8Array([104, 105])), "aGk=");
     assert.equal(modelFileDataToBase64({ type: "data", data: Buffer.from("hi") }), "aGk=");
-    assert.equal(
-      modelFileDataToBase64({ type: "url", url: "data:image/jpeg;base64,zz" }),
-      "zz",
-    );
+    assert.equal(modelFileDataToBase64({ type: "url", url: "data:image/jpeg;base64,zz" }), "zz");
     assert.equal(modelFileDataToBase64({ type: "url", url: "https://example.com/x.png" }), null);
     assert.equal(modelFileDataToBase64(null), null);
   });

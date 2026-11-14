@@ -21,7 +21,13 @@ import {
   type StreamEvent,
 } from "../../core/stream";
 import { useLogosHost } from "../../host";
-import { newId, toUiMessages, type AiChatMessage, type AiMessagePart, type ChatAttachment } from "../../types";
+import {
+  newId,
+  toUiMessages,
+  type AiChatMessage,
+  type AiMessagePart,
+  type ChatAttachment,
+} from "../../types";
 
 export function useChatStream(opts: {
   routeRef: MutableRefObject<{

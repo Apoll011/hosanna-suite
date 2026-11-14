@@ -6,14 +6,7 @@
 import { dispatchLibraryChanged } from "../../core/bridge";
 import { useLogosHost, useLogosI18n } from "../../host";
 import type { SongImportJob, SongImportStep } from "../../types";
-import {
-  AlertTriangle,
-  Check,
-  FileText,
-  Loader2,
-  Music,
-  X,
-} from "lucide-react";
+import { AlertTriangle, Check, FileText, Loader2, Music, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 const POLL_INTERVAL_MS = 900;
@@ -185,7 +178,7 @@ export const AiSongImportCard: React.FC<{ jobId: string }> = ({ jobId }) => {
   const reason =
     job?.cancelledBy === "ai" && cancelCode
       ? t(`ai.chat.import.cancelReasons.${cancelCode}`)
-      : job?.cancelReason ?? t("ai.chat.import.cancelledByUser");
+      : (job?.cancelReason ?? t("ai.chat.import.cancelledByUser"));
 
   if (!canPoll) {
     return (
@@ -222,10 +215,7 @@ export const AiSongImportCard: React.FC<{ jobId: string }> = ({ jobId }) => {
       <div className="px-3 py-3 space-y-3">
         {running && job && (
           <>
-            <StepProgress
-              steps={job.steps}
-              labelFor={(id) => t(`ai.chat.import.steps.${id}`)}
-            />
+            <StepProgress steps={job.steps} labelFor={(id) => t(`ai.chat.import.steps.${id}`)} />
             <p className="m-0 text-[11.5px] text-m3-secondary text-center animate-pulse">
               {t("ai.chat.import.processing")}
             </p>
@@ -250,7 +240,7 @@ export const AiSongImportCard: React.FC<{ jobId: string }> = ({ jobId }) => {
             <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
             <span className="min-w-0 flex-1">
               {job.status === "failed"
-                ? job.errorMessage ?? t("ai.chat.import.errorTitle")
+                ? (job.errorMessage ?? t("ai.chat.import.errorTitle"))
                 : reason}
             </span>
           </div>
@@ -337,7 +327,11 @@ export const AiSongImportCard: React.FC<{ jobId: string }> = ({ jobId }) => {
               disabled={cancelling}
               className="inline-flex items-center gap-1 text-[11px] text-m3-secondary hover:text-m3-text px-2 py-1 rounded-sm hover:bg-m3-hover disabled:opacity-50"
             >
-              {cancelling ? <Loader2 className="w-3 h-3 animate-spin" /> : <X className="w-3 h-3" />}
+              {cancelling ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <X className="w-3 h-3" />
+              )}
               {t("ai.chat.import.cancel")}
             </button>
           )}

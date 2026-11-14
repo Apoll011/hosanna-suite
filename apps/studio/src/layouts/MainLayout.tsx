@@ -242,7 +242,6 @@ export const MainLayout: React.FC = () => {
   const openModal = useCallback((modal: ActiveModal) => setActiveModal(modal), []);
   const closeModal = useCallback(() => setActiveModal(null), []);
 
-
   const handleSearchChange = useCallback(
     (val: string) => {
       setSearchQuery(val);
@@ -752,13 +751,9 @@ export const MainLayout: React.FC = () => {
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const {
-    handleFiles: processAndUploadFiles,
-    modal: songImportModal,
-  } = useSongImportController({
+  const { handleFiles: processAndUploadFiles, modal: songImportModal } = useSongImportController({
     folderId: currentFolderId,
-    resolveFolderName: () =>
-      currentFolder ? currentFolder.name : t("layout.rootDirectory"),
+    resolveFolderName: () => (currentFolder ? currentFolder.name : t("layout.rootDirectory")),
     onImported: async () => {
       invalidateSongsCache();
       invalidateCollectionsCache();

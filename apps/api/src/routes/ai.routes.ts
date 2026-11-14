@@ -241,7 +241,9 @@ aiRouter.post(
         if (!abort.signal.aborted) {
           const detail = APICallError.isInstance(error)
             ? `status=${error.statusCode} responseBody=${JSON.stringify(error.responseBody)}`
-            : error instanceof Error ? error.stack || error.message : String(error);
+            : error instanceof Error
+              ? error.stack || error.message
+              : String(error);
           console.error("AI chat stream error:", detail);
         }
         return describeChatError(error);

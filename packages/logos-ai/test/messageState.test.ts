@@ -153,14 +153,25 @@ test("toUiMessages preserves file parts on user attachments", () => {
       createdAt: 0,
       parts: [
         { type: "text", text: "import this" },
-        { type: "file", data: "data:image/png;base64,abc", mimeType: "image/png", name: "sheet.png", size: 3 },
+        {
+          type: "file",
+          data: "data:image/png;base64,abc",
+          mimeType: "image/png",
+          name: "sheet.png",
+          size: 3,
+        },
       ],
     },
   ]);
   assert.equal(ui.length, 1);
   assert.deepEqual(ui[0].parts, [
     { type: "text", text: "import this" },
-    { type: "file", url: "data:image/png;base64,abc", mediaType: "image/png", filename: "sheet.png" },
+    {
+      type: "file",
+      url: "data:image/png;base64,abc",
+      mediaType: "image/png",
+      filename: "sheet.png",
+    },
   ]);
 });
 

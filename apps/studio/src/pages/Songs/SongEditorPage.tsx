@@ -104,7 +104,10 @@ export const SongEditorPage: React.FC = () => {
     [parsedSong.metadata.keyShift, parsedSong.metadata.capo],
   );
 
-  const { settings, updateSetting, resetSettings } = usePreviewSettings(song?.id, directiveDefaults);
+  const { settings, updateSetting, resetSettings } = usePreviewSettings(
+    song?.id,
+    directiveDefaults,
+  );
   const { fontSize, showDiagrams } = settings;
 
   const isSavingRef = useRef(false);

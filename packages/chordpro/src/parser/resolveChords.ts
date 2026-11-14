@@ -34,16 +34,13 @@ export interface ResolvedChords {
 export function resolveChords(opts: ResolveChordOptions): ResolvedChords {
   const { chords, key, keyShift, capo, instrument } = opts;
 
-  const profile = typeof instrument === "string"
-    ? instrumentRegistry.get(instrument)
-    : instrument;
+  const profile = typeof instrument === "string" ? instrumentRegistry.get(instrument) : instrument;
 
   const supportsCapo = profile?.supportsCapo ?? false;
   const shapeSemitones = keyShift - (supportsCapo ? capo : 0);
 
-  const shownChords = shapeSemitones === 0
-    ? [...chords]
-    : chords.map((c) => transposeChord(c, shapeSemitones));
+  const shownChords =
+    shapeSemitones === 0 ? [...chords] : chords.map((c) => transposeChord(c, shapeSemitones));
 
   const rawKey = key ?? "C";
   const shownKey = shapeSemitones === 0 ? rawKey : transposeChord(rawKey, shapeSemitones);
