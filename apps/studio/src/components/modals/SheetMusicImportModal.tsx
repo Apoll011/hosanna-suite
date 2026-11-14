@@ -204,6 +204,7 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
       } catch (err) {
         if (!active) return;
         setPollError(err instanceof Error ? err.message : t("modals.sheetMusicImport.failed"));
+        timer = setTimeout(poll, POLL_INTERVAL_MS * 2);
       }
     };
 
