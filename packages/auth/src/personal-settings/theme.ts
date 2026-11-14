@@ -29,7 +29,6 @@ export function writeThemeCookie(mode: PersonalTheme) {
   }
 }
 
-/** Read the shared preference cookie (`light` | `dark` | `system`). */
 export function readThemeCookie(): PersonalTheme | null {
   if (typeof document === "undefined") return null;
   try {

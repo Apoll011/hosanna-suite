@@ -313,7 +313,6 @@ export function syncSettingsFromMetadata(metadata: unknown): {
       : 0;
   const localRevised =
     typeof state.revisedAt === "number" && Number.isFinite(state.revisedAt) ? state.revisedAt : 0;
-  // Fresher local (or peer-tab) writes win over a lagging session metadata blob.
   const remoteCoreWins = remoteRevised >= localRevised;
 
   const patch: Partial<PersonalSettings> = {
@@ -343,7 +342,6 @@ export function syncSettingsFromMetadata(metadata: unknown): {
     return { themeChanged: false, languageChanged: false };
   }
 
-  // Metadata hydrate must not invent a newer revisedAt (would block real peers).
   persistSettings(merged, { sync: false });
   return { themeChanged, languageChanged };
 }
@@ -432,15 +430,9 @@ export function reloadPersonalSettingsFromCache(): PersonalSettings {
   return state;
 }
 
-/**
- * Pull theme preference from the shared `.hosanna.live` cookie (other suite
- * origins write it). Used on focus/visibility so Auth ↔ Studio update live
- * without a full reload. No-ops when the cookie matches local state.
- */
 export function syncThemeFromSharedCookie(): boolean {
   const cookieTheme = readThemeCookie();
   if (!cookieTheme || cookieTheme === state.theme) return false;
-  // Cookie is the cross-origin signal; bump clock so lagging metadata cannot revert it.
   persistSettings(bumpRevisedAt({ ...state, theme: cookieTheme }), { sync: true });
   return true;
 }
