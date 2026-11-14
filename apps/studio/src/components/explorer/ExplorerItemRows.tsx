@@ -1,5 +1,5 @@
 import { Button } from "@hosanna/ui";
-import { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
+import type { SongScoreLayout } from "@/src/lib/studioSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FileMusic, MoreVertical } from "lucide-react";

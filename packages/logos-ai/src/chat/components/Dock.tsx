@@ -97,9 +97,9 @@ export const AiChatDock: React.FC = () => {
       style={{ ["--ai-w" as string]: `${width}px` }}
       className={`${
         open
-          ? "fixed inset-0 z-50 sm:static sm:z-auto sm:w-(--ai-w) border-l border-m3-border"
+          ? "fixed inset-0 z-50 bg-m3-card sm:static sm:z-20 sm:w-(--ai-w) border-l border-m3-border"
           : "w-0 border-l-0"
-      } h-full shrink-0 overflow-hidden relative ${
+      } h-full shrink-0 overflow-hidden relative isolate ${
         dragging ? "select-none" : "sm:transition-[width] sm:duration-200 sm:ease-out"
       }`}
     >

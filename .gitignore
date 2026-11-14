@@ -30,6 +30,7 @@ logs/
 
 # local AI / agent tooling
 .agents/
+AGENTS.md
 .claude/
 .impeccable/
 skills-lock.json
@@ -49,3 +50,10 @@ skills-lock.json
 .vscode
 .vercel
 .env*
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

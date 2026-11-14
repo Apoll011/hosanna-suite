@@ -1,4 +1,3 @@
-import { hosannaBrandPublic } from "@hosanna/brand/vite-plugin";
 import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
 import { createRequire } from "node:module";
@@ -31,7 +30,6 @@ export default defineConfig(() => {
     plugins: [
       preact(),
       tailwindcss(),
-      hosannaBrandPublic(),
       VitePWA({
         registerType: "prompt",
         workbox: {

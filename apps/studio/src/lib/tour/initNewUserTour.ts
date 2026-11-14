@@ -3,22 +3,20 @@
  * Call after successful sign-up while a session exists.
  */
 
+import { getPersonalSettings, updateAppSettings } from "@hosanna/auth";
 import {
-  DEFAULT_SETTINGS,
   NEW_USER_TOUR_SETTINGS,
-  type PersonalSettings,
-} from "../../hooks/usePersonalSettings";
+  ensureStudioSettingsRegistered,
+  studioSettingsScope,
+} from "../studioSettings";
 import { authClient } from "../authClient";
 
 export async function initializeNewUserTourSettings(): Promise<void> {
-  const settings: PersonalSettings = {
-    ...DEFAULT_SETTINGS,
-    ...NEW_USER_TOUR_SETTINGS,
-  };
-
   try {
-    const serialized = JSON.stringify(settings);
-    localStorage.setItem("personal-settings", serialized);
+    ensureStudioSettingsRegistered();
+    updateAppSettings(studioSettingsScope, NEW_USER_TOUR_SETTINGS);
+
+    const serialized = JSON.stringify(getPersonalSettings());
     await (authClient.updateUser as unknown as (params: { metadata: string }) => Promise<unknown>)({
       metadata: serialized,
     });

@@ -6,6 +6,7 @@
  * warm the TLS connection early (preconnect), then assign immediately on click.
  */
 
+import { getPersonalSettings } from "@hosanna/auth";
 import { authAppHref, getAuthAppUrl } from "./authUrl";
 import { writeThemeCookie } from "./themeBoot";
 
@@ -48,7 +49,7 @@ export function navigateToAuthAccount(options?: NavigateToAuthAccountOptions): v
   const normalized = path.startsWith("/") ? path : `/${path}`;
   const url = authAppHref(normalized, { returnUrl });
 
-  writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  writeThemeCookie(getPersonalSettings().theme);
   // Best-effort connection warm if idle prefetch never ran — still non-blocking.
   prefetchAuthAccount();
   window.location.assign(url);

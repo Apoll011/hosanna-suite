@@ -467,3 +467,23 @@ textarea:focus-visible,
     font-weight: bold !important;
   }
 }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.22s;
+  animation-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+html.theme-transition,
+html.theme-transition body {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease !important;
+}

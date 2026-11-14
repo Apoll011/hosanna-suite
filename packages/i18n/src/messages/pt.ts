@@ -148,6 +148,19 @@ export const sharedPt = {
       loading: "A carregar aplicações…",
       empty: "Sem aplicações disponíveis.",
       error: "Não foi possível carregar as aplicações.",
+      goHome: "Início Hosanna",
+    },
+    accountMenu: {
+      open: "Menu da conta",
+      account: "Conta",
+      signOut: "Terminar sessão",
+      organization: "Organização",
+      switchOrganization: "Mudar de organização",
+      theme: "Tema",
+      language: "Idioma",
+      themeSystem: "Usar tema do sistema",
+      themeLight: "Usar tema claro",
+      themeDark: "Usar tema escuro",
     },
     apps: {
       auth: {

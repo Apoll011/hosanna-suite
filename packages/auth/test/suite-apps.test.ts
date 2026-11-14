@@ -18,7 +18,10 @@ describe("listSuiteApps", () => {
     const apps = listSuiteApps(env);
     assert.ok(apps.length >= 6);
     const orders = apps.map((a) => a.sortOrder);
-    assert.deepEqual(orders, [...orders].sort((a, b) => a - b));
+    assert.deepEqual(
+      orders,
+      [...orders].sort((a, b) => a - b),
+    );
 
     const auth = apps.find((a) => a.id === "auth");
     const music = apps.find((a) => a.id === "music");
@@ -36,9 +39,16 @@ describe("listSuiteApps", () => {
     assert.equal(planning?.accessible, false);
   });
 
-  it("resolves logo URLs against the auth origin", () => {
-    const music = listSuiteApps(env).find((a) => a.id === "music");
-    assert.equal(music?.logoUrl, "https://auth.hosanna.live/favicon.png");
+  it("resolves logos against each app's logoHost origin", () => {
+    const apps = listSuiteApps(env);
+    const auth = apps.find((a) => a.id === "auth");
+    const music = apps.find((a) => a.id === "music");
+    const planning = apps.find((a) => a.id === "planning");
+    assert.equal(auth?.logoUrl, "https://auth.hosanna.live/favicon.png");
+    assert.equal(auth?.accent, "#0F766E");
+    assert.equal(music?.logoUrl, "https://studio.hosanna.live/favicon.png");
+    assert.equal(music?.accent, "#0284c7");
+    assert.equal(planning?.logoUrl, null);
   });
 
   it("exposes i18n keys for catalog labels", () => {

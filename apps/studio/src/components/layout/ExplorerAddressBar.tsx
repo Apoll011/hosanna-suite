@@ -37,6 +37,7 @@ import { emitOnboardingEvent } from "../../lib/tour";
 import { AiChatToggle } from "@hosanna/logos-ai";
 import { InboxButton, InboxFetchClient } from "../Inbox";
 import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
+import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 import { SyncStatusBadge } from "../SyncStatusBadge";
 import { ActiveModal } from "./ExplorerModals";
 
@@ -424,6 +425,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
         <InboxButton client={authClient as InboxFetchClient} className="shrink-0" />
 
         <AiChatToggle />
+        <StudioAppSwitcher />
 
         <CanAny
           permissions={[

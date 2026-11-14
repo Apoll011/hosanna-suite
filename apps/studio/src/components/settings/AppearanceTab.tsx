@@ -6,83 +6,32 @@
 import { Surface, useCan } from "@hosanna/ui";
 import { SongScoreVisualizer } from "@/src/components/explorer/SongScoreVisualizer";
 import type { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
-import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
+import { useStudioSettings } from "@/src/hooks/usePersonalSettings";
 import { useI18n } from "@/src/lib/i18n";
 
-import { LANGUAGES, type PersonalLanguage } from "@hosanna/i18n";
 import {
   BarChart2,
   Check,
   FolderTree,
-  Globe,
   Layout,
-  MonitorSmartphone,
-  Moon,
   Music2,
   Sliders,
   Smartphone,
   Star,
-  Sun,
-  User,
 } from "lucide-react";
 import React from "react";
-import { useTheme } from "../../contexts/ThemeContext";
 
 export interface AppearanceTabProps {
   active: boolean;
   showToast?: (text: string, variant: "success" | "error" | "info" | "warning") => void;
 }
 
-interface ThemeOption {
-  id: "light" | "dark" | "system";
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  previewBg: string;
-}
-
 export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast }) => {
-  const { theme, setTheme } = useTheme();
-  const { settings, updateSetting } = usePersonalSettings();
-  const { t, personalLanguage, setPersonalLanguage } = useI18n();
+  const { settings, updateSetting } = useStudioSettings();
+  const { t } = useI18n();
   const { granted: canViewLibraryHealth } = useCan("library.health");
 
   if (!active) return null;
-
-  const themes: ThemeOption[] = [
-    {
-      id: "light",
-      title: t("settings.appearance.light"),
-      description: t("settings.appearance.lightDesc"),
-      icon: Sun,
-      previewBg: "from-amber-500/10 to-orange-500/5 text-amber-600 dark:text-amber-400",
-    },
-    {
-      id: "system",
-      title: t("settings.appearance.auto"),
-      description: t("settings.appearance.autoDesc"),
-      icon: MonitorSmartphone,
-      previewBg: "from-m3-secondary/10 to-m3-secondary/5 text-m3-secondary",
-    },
-    {
-      id: "dark",
-      title: t("settings.appearance.dark"),
-      description: t("settings.appearance.darkDesc"),
-      icon: Moon,
-      previewBg: "from-m3-primary/10 to-sky-500/5 text-m3-primary",
-    },
-  ];
-
-  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
-    setTheme(newTheme);
-    const label =
-      newTheme === "system"
-        ? t("settings.appearance.auto")
-        : newTheme === "light"
-          ? t("settings.appearance.light")
-          : t("settings.appearance.dark");
-    showToast?.(t("settings.toast.themeChanged", { theme: label }), "info");
-  };
 
   const handleFolderTreeToggle = (checked: boolean) => {
     updateSetting("showFolderTree", checked);
@@ -100,150 +49,8 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({ active, showToast 
     );
   };
 
-  const handleLanguageChange = (lang: PersonalLanguage) => {
-    setPersonalLanguage(lang);
-    const label =
-      lang === "auto"
-        ? t("settings.appearance.languageAuto")
-        : (LANGUAGES.find((l) => l.code === lang)?.nativeLabel ?? lang);
-    showToast?.(t("settings.toast.languageChanged", { language: label }), "info");
-  };
-
-  const optionCard = (selected: boolean) =>
-    `group relative rounded-[var(--radius-lg)] border p-4 text-left transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-m3-primary/50 ${
-      selected
-        ? "border-m3-primary bg-m3-primary/5 ring-2 ring-m3-primary/20 shadow-sm"
-        : "border-m3-border hover:border-m3-primary/40 bg-m3-sidebar/40"
-    }`;
-
   return (
     <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <Surface className="h-full">
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div>
-              <h2 className="text-title text-m3-text flex items-center gap-2">
-                <MonitorSmartphone className="w-5 h-5 text-m3-primary" />
-                {t("settings.appearance.themeTitle")}
-              </h2>
-              <p className="mt-1 text-muted">{t("settings.appearance.themeDesc")}</p>
-            </div>
-            <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
-              <User className="w-3.5 h-3.5" />
-              {t("settings.appearance.personalPreference")}
-            </span>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            {themes.map((item) => {
-              const Icon = item.icon;
-              const selected = theme === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => handleThemeChange(item.id)}
-                  aria-pressed={selected}
-                  className={`${optionCard(selected)} p-5`}
-                >
-                  {selected && (
-                    <div className="absolute top-4 right-4 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center shadow-sm">
-                      <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div
-                      className={`inline-flex rounded-md p-2.5 bg-linear-to-br border border-m3-border/50 ${item.previewBg}`}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </div>
-                  </div>
-
-                  <h3 className="font-semibold text-sm text-m3-text">{item.title}</h3>
-                  <p className="mt-1 text-caption leading-relaxed">{item.description}</p>
-                </button>
-              );
-            })}
-          </div>
-        </Surface>
-
-        <Surface className="h-full">
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div>
-              <h3 className="text-title text-m3-text flex items-center gap-2">
-                <Globe className="w-5 h-5 text-m3-primary" />
-                {t("settings.appearance.languageTitle")}
-              </h3>
-              <p className="mt-1 text-muted">{t("settings.appearance.languageDesc")}</p>
-            </div>
-            <span className="text-caption bg-m3-sidebar text-m3-secondary px-3 py-1.5 rounded-md flex items-center gap-1.5 shrink-0">
-              <User className="w-3.5 h-3.5" />
-              {t("settings.appearance.personalPreference")}
-            </span>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => handleLanguageChange("auto")}
-              aria-pressed={personalLanguage === "auto"}
-              className={optionCard(personalLanguage === "auto")}
-            >
-              {personalLanguage === "auto" && (
-                <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center">
-                  <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
-                </div>
-              )}
-              <div className="flex items-center gap-3 pr-6">
-                <span className="text-2xl shrink-0" aria-hidden="true">
-                  🌐
-                </span>
-                <div className="min-w-0 text-left">
-                  <span className="block font-semibold text-sm text-m3-text">
-                    {t("settings.appearance.languageAuto")}
-                  </span>
-                  <span className="block mt-0.5 text-caption">
-                    {t("settings.appearance.languageAutoDesc")}
-                  </span>
-                </div>
-              </div>
-            </button>
-
-            {LANGUAGES.map((lang) => {
-              const selected = personalLanguage === lang.code;
-              return (
-                <button
-                  key={lang.code}
-                  type="button"
-                  onClick={() => handleLanguageChange(lang.code)}
-                  aria-pressed={selected}
-                  className={optionCard(selected)}
-                >
-                  {selected && (
-                    <div className="absolute top-3 right-3 h-5 w-5 rounded-full bg-m3-primary flex items-center justify-center">
-                      <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3 pr-6">
-                    <span className="text-2xl shrink-0" aria-hidden="true">
-                      {lang.flag}
-                    </span>
-                    <div className="min-w-0 text-left">
-                      <span className="block font-semibold text-sm text-m3-text">
-                        {lang.nativeLabel}
-                      </span>
-                      <span className="block mt-0.5 text-caption">{lang.englishLabel}</span>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </Surface>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Surface className="h-full">
           <div className="mb-6">

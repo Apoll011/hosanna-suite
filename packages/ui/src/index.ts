@@ -7,11 +7,30 @@
 
 export { cn, type ClassValue } from "./cn";
 export {
+  AccountMenu,
+  AccountMenuDivider,
+  type AccountMenuHide,
+  type AccountMenuLabels,
+  type AccountMenuLink,
+  type AccountMenuOrg,
+  type AccountMenuProps,
+  type AccountMenuTheme,
+  type AccountMenuUser,
+} from "./AccountMenu";
+export { MenuThemeToggle, type MenuThemeToggleProps, type MenuThemeValue } from "./MenuThemeToggle";
+export {
   AppSwitcher,
   type AppSwitcherApp,
   type AppSwitcherLabels,
   type AppSwitcherProps,
 } from "./AppSwitcher";
+export { SuiteAppIcon, type SuiteAppIconProps } from "./SuiteAppIcon";
+export {
+  loadSuiteApps,
+  peekSuiteAppsCache,
+  resetSuiteAppsCacheForTests,
+  type SuiteCatalogApp,
+} from "./suiteAppsCache";
 export {
   localizeSuiteApp,
   localizeSuiteApps,

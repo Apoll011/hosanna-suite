@@ -18,7 +18,7 @@ flowchart TB
     DART_CP["Dart ChordPro port<br/>Flutter songs/domain/chordpro"]
   end
 
-  subgraph API["Hosanna-server · api.hosanna.live<br/>Express · Prisma · Better Auth · Vercel / Docker"]
+  subgraph API["Hosanna-server · api.hosanna.live<br/>Express · Prisma · Better Auth · Vercel"]
     direction TB
 
     subgraph ENTRY["Entry"]

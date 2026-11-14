@@ -9,7 +9,7 @@ import { isDemoMode } from "@/src/demo";
 import {
   shouldAutoStartProductTour,
   shouldOfferMissedProductTour,
-  usePersonalSettings,
+  useStudioSettings,
 } from "@/src/hooks/usePersonalSettings";
 import { deriveView } from "@/src/layouts/view";
 import { useI18n } from "@/src/lib/i18n";
@@ -29,7 +29,7 @@ export const ProductTourController: React.FC = () => {
   const location = useLocation();
   const { organization } = useAuth();
   const { role, loading: roleLoading } = useActiveRole();
-  const { settings, updateSetting } = usePersonalSettings();
+  const { settings, updateSetting } = useStudioSettings();
   const { showToast } = useSync();
 
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";

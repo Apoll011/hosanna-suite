@@ -7,6 +7,8 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo } fro
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
+import { authClient } from "@/src/lib/authClient";
+import { updatePersonalSettingsSafe } from "@hosanna/auth";
 import {
   DEFAULT_LANGUAGE,
   LANGUAGE_LOCALE,
@@ -47,7 +49,7 @@ const I18nContext = createContext<I18nContextValue | null>(null);
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { organization } = useAuth();
-  const { settings, updateSetting } = usePersonalSettings();
+  const { settings } = usePersonalSettings();
 
   const personalLanguage: PersonalLanguage = settings.language ?? "auto";
   const orgLocale = organization?.metadata?.settings?.general?.locale;
@@ -81,10 +83,17 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [t],
   );
 
-  const setPersonalLanguage = useCallback(
-    (lang: PersonalLanguage) => updateSetting("language", lang),
-    [updateSetting],
-  );
+  const setPersonalLanguage = useCallback((lang: PersonalLanguage) => {
+    void updatePersonalSettingsSafe(
+      { language: lang },
+      {
+        readRemoteMetadata: async () => {
+          const session = await authClient.getSession();
+          return (session.data?.user as { metadata?: unknown } | undefined)?.metadata;
+        },
+      },
+    );
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;

@@ -6,7 +6,7 @@ Hosanna is not a single app — it is a small constellation of repos that share 
 
 | Path / package                         | Role                           | Stack                                       |
 | -------------------------------------- | ------------------------------ | ------------------------------------------- |
-| `Hosanna-server` · `@hosanna/backend`  | Production REST + MCP API      | Express, Prisma, Better Auth, Vercel/Docker |
+| `Hosanna-server` · `@hosanna/backend`  | Production REST + MCP API      | Express, Prisma, Better Auth, Vercel        |
 | `Hosana-dashboard` · `@hosanna/studio` | Studio SPA (planning, org, AI) | Preact/Vite PWA, IndexedDB replication      |
 | `Hosanna`                              | Musician mobile/desktop app    | Flutter, Riverpod, Drift/SQLite             |
 | `hosanna-shared` · `@hosanna/chordpro` | Shared ChordPro engine         | TypeScript (parser, editor, renderer, diff) |
@@ -65,7 +65,7 @@ Dev / staging variants (e.g. `dev-api.hosanna.live`) follow the same split.
 
 | Component           | Typical host                                                      |
 | ------------------- | ----------------------------------------------------------------- |
-| API                 | Vercel Fluid function **or** Docker (`docker-compose` + Postgres) |
+| API                 | Vercel Fluid function                                             |
 | Studio              | Static SPA — Vercel rewrite or Cloudflare Workers assets          |
 | Marketing           | Vercel                                                            |
 | Blog                | Cloudflare Workers static **or** Netlify                          |

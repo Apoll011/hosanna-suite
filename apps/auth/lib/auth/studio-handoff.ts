@@ -5,6 +5,7 @@
 
 import { getStudioUrl } from "@/lib/auth/redirect";
 import { writeThemeCookie } from "@/lib/ui/theme-boot";
+import { getPersonalSettings } from "@hosanna/auth";
 import { warmHosannaAppOrigin } from "@hosanna/logos-ai";
 
 let warmed = false;
@@ -30,7 +31,7 @@ export function navigateToStudioApp(options?: NavigateToStudioOptions): void {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   const url = `${getStudioUrl()}${normalized}`;
 
-  writeThemeCookie(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  writeThemeCookie(getPersonalSettings().theme);
   prefetchStudioApp();
   window.location.assign(url);
 }

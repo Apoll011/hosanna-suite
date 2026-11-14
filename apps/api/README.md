@@ -56,25 +56,14 @@ src/
   types/
   index.mts        app entrypoint
 ../../docs/mcp/          ChordPro guide, domain docs, and AI workflow skills
-                   (copied to dist/mcp/docs on build for Vercel/Docker)
+                   (copied to dist/mcp/docs on build for Vercel)
 ```
 
 The Prisma schema, migrations, and generated client live in the
 [`@hosanna/db`](../../packages/db) workspace package. RBAC statements and roles
 live in [`@hosanna/auth`](../../packages/auth).
 
-## Running with Docker (recommended)
-
-```bash
-cp .env.example .env
-# edit .env — see Environment variables below
-docker compose --env-file .env up --build
-```
-
-This starts Postgres + the API on `http://localhost:3000`. The container's
-entrypoint runs `prisma migrate deploy` automatically before booting.
-
-## Running locally (without Docker)
+## Running locally
 
 ```bash
 pnpm install                       # from the monorepo root; also runs prisma generate

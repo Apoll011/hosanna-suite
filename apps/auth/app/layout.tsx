@@ -1,10 +1,13 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
+import { getSuiteAppAccent, suiteAppAccentCssVars } from "@hosanna/auth";
 
 import { AppProviders } from "@/components/providers";
 import { AUTH_THEME_BOOT_SCRIPT, THEME_BG } from "@/lib/ui/theme-boot";
 
 import "./globals.css";
+
+const AUTH_ACCENT = getSuiteAppAccent("auth");
 
 export const metadata: Metadata = {
   applicationName: "Hosanna Auth",
@@ -14,17 +17,12 @@ export const metadata: Metadata = {
   },
   description: "Sign in to Hosanna Studio and related products.",
   metadataBase: new URL(process.env.AUTH_URL ?? "https://auth.hosanna.live"),
-  // Intentionally omit appleWebApp.capable — auth should not feel installable.
   formatDetection: {
     telephone: false,
   },
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.png", type: "image/png", sizes: "512x512" },
-    ],
+    icon: [{ url: "/favicon.png", type: "image/png", sizes: "512x512" }],
     apple: "/apple-touch-icon.png",
-    other: [{ rel: "mask-icon", url: "/hosanna_favicon.svg", color: "#0284c7" }],
   },
   openGraph: {
     title: "Hosanna Auth",
@@ -35,19 +33,16 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: THEME_BG.light },
+    { media: "(prefers-color-scheme: light)", color: AUTH_ACCENT },
     { media: "(prefers-color-scheme: dark)", color: THEME_BG.dark },
   ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning style={suiteAppAccentCssVars("auth") as CSSProperties}>
       <head>
-        <script
-          // Blocking boot: set .dark before first paint (localStorage → cookie → OS).
-          dangerouslySetInnerHTML={{ __html: AUTH_THEME_BOOT_SCRIPT }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: AUTH_THEME_BOOT_SCRIPT }} />
       </head>
       <body className="min-h-dvh antialiased font-sans">
         <AppProviders>{children}</AppProviders>

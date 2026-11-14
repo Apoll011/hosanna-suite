@@ -36,17 +36,18 @@ AUTH_URL=http://localhost:5174
 
 Public: `/login`, `/register`, `/new`, `/forgot-password`, `/reset-password`, `/verify-email`, `/two-factor`, `/auth/error`, `/accept-invitation`, `/captcha`
 
-Authenticated: `/onboarding`, `/oauth/consent`, `/account`
+Authenticated: `/home` (suite hub), `/onboarding`, `/oauth/consent`, `/account`
 
 API:
 
 - `/api/auth/*` + `/.well-known/*` — Better Auth + Stripe
+- `/api/suite/apps` — session-gated suite product catalog (home + App Switcher)
 - `/api/notifications*` — unified inbox / push / email dispatch, prefs, devices
 - `/api/billing/pricing`, `/api/billing/entitlement`
 - `/api/backup`, `/api/backup/restore`
 - `/api/cron/agenda-reminders`
 
-See [docs/architecture/notifications.md](../../docs/architecture/notifications.md).
+See [docs/architecture/notifications.md](../../docs/architecture/notifications.md) and [suite hub + personal preferences](../../docs/architecture/suite-hub-and-preferences.md).
 
 ## Deploy
 

@@ -2,20 +2,20 @@
 
 pnpm + Turborepo monorepo for the Hosanna web platform:
 
-| Path                | Package             | Role                                                                   |
-| ------------------- | ------------------- | ---------------------------------------------------------------------- |
-| `apps/saas`         | `@hosanna/saas`     | Marketing site ([hosanna.live](https://hosanna.live))                  |
-| `apps/studio`       | `@hosanna/studio`   | Studio PWA ([studio.hosanna.live](https://studio.hosanna.live))        |
-| `apps/auth`         | `@hosanna/auth-app` | Auth UI + Better Auth ([auth.hosanna.live](https://auth.hosanna.live)) |
-| `apps/api`          | `@hosanna/api`      | REST + MCP API ([api.hosanna.live](https://api.hosanna.live))          |
-| `packages/chordpro` | `@hosanna/chordpro` | ChordPro parser / renderer / editor                                    |
-| `packages/db`       | `@hosanna/db`       | Prisma schema, migrations, client                                      |
-| `packages/auth`     | `@hosanna/auth`     | Shared Better Auth factory, RBAC, auth client helpers                  |
-| `packages/types`    | `@hosanna/types`    | OpenAPI contract + generated TS types                                  |
-| `packages/i18n`     | `@hosanna/i18n`     | Shared UI language model                                               |
-| `packages/ui`       | `@hosanna/ui`       | Shared `cn()` + provider icons                                         |
-| `packages/brand`    | `@hosanna/brand`    | Shared favicon / apple-touch / OG assets                               |
-| `packages/config`   | `@hosanna/config`   | Shared tsconfig + Prettier                                             |
+| Path                  | Package             | Role                                                                    |
+| --------------------- | ------------------- | ----------------------------------------------------------------------- |
+| `apps/saas`           | `@hosanna/saas`     | Marketing site ([hosanna.live](https://hosanna.live))                   |
+| `apps/studio`         | `@hosanna/studio`   | Studio PWA ([studio.hosanna.live](https://studio.hosanna.live))         |
+| `apps/auth`           | `@hosanna/auth-app` | Auth UI + Better Auth ([auth.hosanna.live](https://auth.hosanna.live))  |
+| `apps/api`            | `@hosanna/api`      | REST + MCP API ([api.hosanna.live](https://api.hosanna.live))           |
+| `packages/chordpro`   | `@hosanna/chordpro` | ChordPro parser / renderer / editor                                     |
+| `packages/db`         | `@hosanna/db`       | Prisma schema, migrations, client                                       |
+| `packages/auth`       | `@hosanna/auth`     | Shared Better Auth factory, RBAC, auth client helpers                   |
+| `packages/types`      | `@hosanna/types`    | OpenAPI contract + generated TS types                                   |
+| `packages/i18n`       | `@hosanna/i18n`     | Shared UI language model                                                |
+| `packages/ui`         | `@hosanna/ui`       | Shared `cn()` + provider icons                                          |
+| _(per-app `public/`)_ | —                   | Favicons / apple-touch / OG live in each app (`auth`, `studio`, `saas`) |
+| `packages/config`     | `@hosanna/config`   | Shared tsconfig + Prettier                                              |
 
 **Not in this repo:** the Flutter musician app and the Astro blog — those stay separate.
 
@@ -23,7 +23,7 @@ pnpm + Turborepo monorepo for the Hosanna web platform:
 
 - Node.js **24+**
 - [pnpm](https://pnpm.io) **11.24** (via Corepack: `corepack enable`)
-- Optional: Docker + Compose for local Postgres / full stack
+- Postgres (e.g. local install or Supabase) for Auth / API
 
 ## Quick start
 
@@ -63,28 +63,11 @@ pnpm dev
 | `pnpm db:generate`    | Prisma client                                                 |
 | `pnpm db:migrate`     | `prisma migrate deploy`                                       |
 | `pnpm db:migrate:dev` | Create/apply a migration in development                       |
-| `pnpm docker:up`      | Build & start Postgres + API + Studio                         |
-| `pnpm docker:down`    | Stop the stack                                                |
 
-## Docker (db + api + studio)
+## Per-app brand assets
 
-```bash
-# Minimal: copy apps/api/.env and set the Better Auth / Stripe / etc. secrets.
-# Compose overrides DATABASE_URL to point at the local Postgres service.
-pnpm docker:up
-
-# API  → http://localhost:3000
-# Studio (nginx) → http://localhost:8080
-# Postgres → localhost:5432 (user/pass/db: hosanna)
-```
-
-Images are defined in the root `Dockerfile` (`api` and `studio` targets) and orchestrated by `docker-compose.yml`.
-
-## Shared brand assets
-
-Favicon, apple-touch icons, and OG image live in `packages/brand/public` (sourced from the former saas assets).  
-Each app keeps only its own `robots.txt`, `sitemap.xml`, and `_routes.json` under `apps/*/public`.  
-Vite apps pick them up via `@hosanna/brand/vite-plugin`; the auth Next app syncs them with `@hosanna/brand/sync-public` from `next.config.ts`.
+Each app owns favicons / apple-touch / OG under `apps/<app>/public` (Auth has its own mark; Studio and SaaS share the Music/Hosanna guitar set).  
+Suite accents and logo hosts live in `@hosanna/auth` (`SUITE_APP_REGISTRY` + `applySuiteAppAccent` / `suiteAppAccentStyle`).
 
 ## Docs
 
@@ -99,5 +82,5 @@ Commits, authors, and timestamps from those projects are part of this history. T
 ## Deploy notes
 
 - Point Vercel / Cloudflare project **root directories** at `apps/saas`, `apps/studio`, or `apps/api` (or run filtered turbo builds from the monorepo root).
-- Prisma migrations: `pnpm db:migrate` (or the API Docker entrypoint, which runs migrate before boot).
+- Prisma migrations: `pnpm db:migrate` before deploying API/auth that depend on schema.
 - Chordpro npm publish: GitHub release tags starting with `chordpro-v` / `@hosanna/chordpro@` trigger [`.github/workflows/publish-chordpro.yml`](./.github/workflows/publish-chordpro.yml).

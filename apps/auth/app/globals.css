@@ -15,15 +15,15 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Hosanna Auth — same design language as Studio
- * Figtree chrome, m3 sky brand, quiet surfaces
+ * Hosanna Auth — same design language as Studio; accent = suite registry `auth`
+ * (#0F766E). Keep in sync with SUITE_APP_REGISTRY / suiteAppAccentCssVars("auth").
  */
 
 :root {
-  --brand-500: #0284c7;
-  --brand-600: #0369a1;
-  --brand-400: #38bdf8;
-  --brand-100: #e0f2fe;
+  --brand-500: #0f766e;
+  --brand-600: #0b5c56;
+  --brand-400: #2dd4bf;
+  --brand-100: #ccfbf1;
 
   --success-500: #059669;
   --warning-500: #d97706;
@@ -68,9 +68,9 @@
 }
 
 .dark {
-  --m3-primary: #5babdb;
-  --m3-primary-light: #0f2d40;
-  --m3-primary-dark: #3d8ab8;
+  --m3-primary: #2dd4bf;
+  --m3-primary-light: #042f2e;
+  --m3-primary-dark: #14b8a6;
   --m3-bg: #0b0d12;
   --m3-sidebar: #12151c;
   --m3-toolbar: #12151c;
@@ -225,4 +225,24 @@ html.dark {
 .focus-ring:focus-visible {
   outline: 2px solid var(--m3-primary);
   outline-offset: 2px;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.22s;
+  animation-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+html.theme-transition,
+html.theme-transition body {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease !important;
 }

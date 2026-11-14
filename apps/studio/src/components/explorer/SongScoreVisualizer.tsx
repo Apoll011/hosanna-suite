@@ -1,4 +1,4 @@
-import { SongScoreLayout } from "@/src/hooks/usePersonalSettings";
+import type { SongScoreLayout } from "@/src/lib/studioSettings";
 import React from "react";
 
 export interface SongScoreVisualizerProps {

@@ -23,6 +23,7 @@
 
 - `better-auth` with plugins: i18n, dash, sentinel (infra), inbox, twoFactor, stripe, organization (+ teams)
 - Session via `credentials: "include"`; org must be active; trial/subscription gates onboarding
+- Suite chrome: App Switcher + AccountMenu against auth `GET /api/suite/apps`; personal prefs via `@hosanna/auth` (core theme/language + registered `apps.studio` scope). See [suite-hub-and-preferences.md](./suite-hub-and-preferences.md).
 
 **API base**
 

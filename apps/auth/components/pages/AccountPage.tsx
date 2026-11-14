@@ -2,6 +2,7 @@
 
 import { AccountCenter } from "@/components/account/AccountCenter";
 import { ActiveSessionsSection } from "@/components/account/ActiveSessions";
+import { LanguagePreferencesSection } from "@/components/account/LanguagePreferences";
 import { LoginHistorySection } from "@/components/account/LoginHistory";
 import { NotificationSettingsSection } from "@/components/account/NotificationSettings";
 import { SocialAccountsSection } from "@/components/account/SocialAccounts";
@@ -469,6 +470,8 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
             </div>
           </Surface>
         </div>
+
+        <LanguagePreferencesSection onToast={showToast} />
 
         <SocialAccountsSection onToast={showToast} />
 

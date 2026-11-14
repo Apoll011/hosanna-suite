@@ -150,6 +150,19 @@ export const sharedEs: typeof sharedPt = {
       loading: "Cargando aplicaciones…",
       empty: "No hay aplicaciones disponibles.",
       error: "No se pudieron cargar las aplicaciones.",
+      goHome: "Inicio Hosanna",
+    },
+    accountMenu: {
+      open: "Menú de cuenta",
+      account: "Cuenta",
+      signOut: "Cerrar sesión",
+      organization: "Organización",
+      switchOrganization: "Cambiar de organización",
+      theme: "Tema",
+      language: "Idioma",
+      themeSystem: "Usar tema del sistema",
+      themeLight: "Usar tema claro",
+      themeDark: "Usar tema oscuro",
     },
     apps: {
       auth: {

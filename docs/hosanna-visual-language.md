@@ -1,19 +1,21 @@
 # Hosanna visual language
 
-Canonical look-and-feel for Hosanna product surfaces: **Studio**, **Auth** (login + account center), and anything that shares `@hosanna/ui`.
+Canonical look-and-feel for Hosanna product surfaces: **Studio**, **Auth** (login, account center, **suite home**), and anything that shares `@hosanna/ui`.
 
-This is not a new brand brief. It records what already ships. Prefer tokens and shared components over one-off styling.
+This is not a new brand brief. It records what already ships. Prefer tokens and shared components over one-off styling. When UI direction moves in code, **update this file** in the same change.
 
 **Source of truth**
 
-| Layer             | Where                                                                                                 |
-| ----------------- | ----------------------------------------------------------------------------------------------------- |
-| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                  |
-| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, …) |
-| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read                                       |
-| Account chrome    | Auth `AccountNav`, `AccountLayoutChrome`, account pages                                               |
+| Layer             | Where                                                                                                                                               |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                |
+| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `SuiteAppIcon`, …) |
+| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                         |
+| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Logos → App Switcher → AccountMenu                                                     |
 
 When Studio and Auth disagree, **Studio tokens win** and Auth should catch up — except Auth has no lyric/score surface, so it may omit `--font-lyric`.
+
+Cross-app prefs and suite catalog behavior: [`architecture/suite-hub-and-preferences.md`](./architecture/suite-hub-and-preferences.md).
 
 ---
 
@@ -61,6 +63,8 @@ Semantic tokens (`--m3-*`). One accent; status colors only for status.
 | Success / warning / danger | `#34d399` / `#fbbf24` / `#fb7185`             |
 
 **Use accent for:** current selection, active nav, links, focus rings, primary commits.
+
+**Per-app accent:** Auth chrome uses suite registry `auth` (`#0F766E` teal). Studio / Music uses `music` (`#0284c7` sky). Apply via `applySuiteAppAccent` / `suiteAppAccentStyle` from `@hosanna/auth` so `--m3-primary*` stay in sync with the catalog. App tiles use each DTO’s `accent` wash behind `SuiteAppIcon`.
 
 **Do not** paint menu icons emerald/amber/sky for decoration. Status color belongs on status: score, sync, destructive action, toast.
 
@@ -209,11 +213,39 @@ One title, one toolbar, then the work. No hero banners, gradient headers, or a c
 |        | Studio                   | Auth                                                              |
 | ------ | ------------------------ | ----------------------------------------------------------------- |
 | Tokens | Full set + lyric font    | Same m3 tokens; no lyric surface                                  |
-| Shell  | App sidebar + main stage | Account nav + scrolling content                                   |
+| Shell  | App sidebar + main stage | Home hub, account nav + scrolling content                         |
+| Header | Address bar: AI → grid   | Same order: Logos AI → App Switcher → AccountMenu                 |
 | Toasts | Product toasts           | Banner under header, **offset past the fixed sidebar** on desktop |
 | Login  | —                        | Quiet form chrome; brand present but not a marketing hero         |
 
 Account settings pages should feel like Studio settings: `PageHeader`, `Surface` / bordered cards, `Tabs`, shared buttons — not a separate “admin theme.”
+
+### Suite shell (home, switcher, account menu)
+
+Shared across Auth and Studio via `@hosanna/ui` — one composition language, not a second product skin.
+
+**Home (`auth …/home`)**
+
+- Quiet page: brand-present header, then one app grid (live + coming soon). No marketing hero, no stat strips.
+- Tiles use `SuiteAppIcon`: rounded accent well, logo **`object-contain` with inset** so full mark artwork stays visible (Hosanna favicon fills the PNG — do not `object-cover` / scale-up into the guitar).
+- Coming-soon apps stay visible but muted / non-primary.
+
+**App Switcher**
+
+- Waffle opens a popover: short greeting, same catalog as home, link back to auth home.
+- Popover follows menu elevation (`--radius-xl`, card, border, `--shadow-lg`); enter motion aligned with `.hosanna-enter`.
+- Current app can be highlighted as “here” (muted, not a second accent system).
+
+**AccountMenu**
+
+- Shared identity menu: name + email with icon-only sign-out on the right; org name + `@slug` (no “active space” chip); built-in theme row (`MenuThemeToggle`); optional language control; account/org links as one group, then one divider, then host `sections` (no auto-dividers inside either group).
+- `hide` flags suppress theme / language / organization / links / sections per host (e.g. Studio hides language).
+- Variants: `popover` (Auth header avatar) and `extended` (Studio sidebar footer — expands upward; collapses with the rail).
+- Theme control is a compact 3-option radiogroup (system / light / dark) with Monitor / Sun / MoonStar; m3 tokens only.
+- Org rows use the same quiet avatar + label pattern as elsewhere; destructive actions stay monochrome-until-danger.
+- Chrome strings: `@hosanna/i18n` (`suite.accountMenu.*`). Pass `language`; do not re-translate the same chrome in each app.
+
+Theme and language persist through `@hosanna/auth` personal settings (cookie + metadata). Do not invent parallel `localStorage` theme keys on new surfaces.
 
 ---
 
@@ -221,14 +253,15 @@ Account settings pages should feel like Studio settings: `PageHeader`, `Surface`
 
 Motion explains size or presence. No bounce, flash, or blocking the next click.
 
-| Pattern                                                         | Duration              | Notes                                                                                                                                      |
-| --------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Panel open/close (editor panes, library beside order, sidebars) | **300ms** ease-in-out | Keep mounted; animate width/flex + opacity. Closed = width 0, opacity 0, no pointer events. Avoid `display: none` / `hidden` mid-animation |
-| Mode crossfade (Plan ↔ Read)                                    | ~300ms                | Both views mounted; ~4px travel                                                                                                            |
-| Expanding row body/notes                                        | ~300ms                | Animate height; keep content mounted                                                                                                       |
-| Menu enter                                                      | **180ms**             | `.hosanna-enter`                                                                                                                           |
-| Dialog / toast                                                  | **200ms**             | Scrim fade + panel scale 0.98                                                                                                              |
-| Button / color hover                                            | ~150ms                | Color only                                                                                                                                 |
+| Pattern                                                         | Duration                                                                    | Notes                                                                                                                                      |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Panel open/close (editor panes, library beside order, sidebars) | **300ms** ease-in-out                                                       | Keep mounted; animate width/flex + opacity. Closed = width 0, opacity 0, no pointer events. Avoid `display: none` / `hidden` mid-animation |
+| Mode crossfade (Plan ↔ Read)                                    | ~300ms                                                                      | Both views mounted; ~4px travel                                                                                                            |
+| Expanding row body/notes                                        | ~300ms                                                                      | Animate height; keep content mounted                                                                                                       |
+| Menu enter                                                      | **180ms**                                                                   | `.hosanna-enter`                                                                                                                           |
+| Dialog / toast                                                  | **200ms**                                                                   | Scrim fade + panel scale 0.98                                                                                                              |
+| Button / color hover                                            | ~150ms                                                                      | Color only                                                                                                                                 |
+| Theme flip (menu toggle or cross-app hydrate)                   | ~220ms View Transition (root crossfade); CSS fallback on `html`/`body` only | `runThemeTransition` — never universal `*` transitions (laggy / fights VT)                                                                 |
 
 On phone, a covering panel may **translate** instead of changing width — same duration and easing, still mounted through close.
 
@@ -299,4 +332,4 @@ A person who used Studio and then opens Auth or a native client should recognize
 
 ## Agent brief (copy when implementing a screen)
 
-You are building a Hosanna screen. Match Studio / Auth / `@hosanna/ui`. One sky accent (`#0284c7` light / `#5babdb` dark); quiet neutrals; Figtree for chrome; Source Serif 4 only for lyrics/readings; JetBrains Mono for chords. Page title ceiling 24px/600. Radius 6 / 10 / 14 / 20. Quiet shadows. Active nav = `bg-m3-primary/10 text-m3-primary`. Menus monochrome with one danger row; enter 180ms. Panels 300ms ease-in-out while mounted. Dialogs 200ms from scale 0.98. Prefer shared components. No new palette, display face, gradient system, or bounce motion.
+You are building a Hosanna screen. Match Studio / Auth / `@hosanna/ui`. One sky accent (`#0284c7` light / `#5babdb` dark); quiet neutrals; Figtree for chrome; Source Serif 4 only for lyrics/readings; JetBrains Mono for chords. Page title ceiling 24px/600. Radius 6 / 10 / 14 / 20. Quiet shadows. Active nav = `bg-m3-primary/10 text-m3-primary`. Menus monochrome with one danger row; enter 180ms. Panels 300ms ease-in-out while mounted. Dialogs 200ms from scale 0.98. Suite chrome (home grid, App Switcher, AccountMenu, `SuiteAppIcon` cover-crop) stays shared. Theme changes use the personal-settings transition path. Prefer shared components. No new palette, display face, gradient system, or bounce motion. If this doc drifts from code, update the doc.

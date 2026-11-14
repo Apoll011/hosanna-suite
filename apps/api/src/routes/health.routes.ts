@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const healthRouter = Router();
 
-// GET /api/health — no auth. Used by docker-compose healthchecks / load balancers.
+// GET /api/health — no auth. Used by load balancers / uptime checks.
 healthRouter.get(
   "/",
   asyncHandler(async (_req, res) => {

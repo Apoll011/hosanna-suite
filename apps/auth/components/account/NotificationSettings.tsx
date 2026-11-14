@@ -302,11 +302,9 @@ export function NotificationSettingsSection({
   const toggleSection = (id: SectionId) =>
     setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
 
-  const collapseAll = () =>
-    setOpenSections({ channels: false, categories: false, quiet: false });
+  const collapseAll = () => setOpenSections({ channels: false, categories: false, quiet: false });
 
-  const expandAll = () =>
-    setOpenSections({ channels: true, categories: true, quiet: true });
+  const expandAll = () => setOpenSections({ channels: true, categories: true, quiet: true });
 
   return (
     <Surface className="overflow-hidden">
@@ -420,9 +418,7 @@ export function NotificationSettingsSection({
                     <button
                       type="button"
                       aria-expanded={open}
-                      onClick={() =>
-                        setOpenCategories((prev) => ({ ...prev, [key]: !prev[key] }))
-                      }
+                      onClick={() => setOpenCategories((prev) => ({ ...prev, [key]: !prev[key] }))}
                       className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left cursor-pointer hover:bg-m3-hover/40 transition-colors"
                     >
                       <Icon className="w-4 h-4 text-m3-secondary shrink-0" />

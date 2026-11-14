@@ -4,6 +4,7 @@ import type { pt } from "./pt";
 export const es: typeof pt = {
   common: {
     goHome: "Ir al inicio",
+    back: "Volver",
   },
   home: {
     title: "Aplicaciones",
@@ -17,6 +18,7 @@ export const es: typeof pt = {
     favoritesTitle: "Mis aplicaciones",
     favoritesSubtitle: "Acceso rápido a tus aplicaciones favoritas.",
     favoritesEmpty: "Marca aplicaciones con la estrella para verlas aquí.",
+    addShortcut: "Añadir acceso",
     openBadge: "Abierta",
     favorite: "Añadir a favoritos",
     unfavorite: "Quitar de favoritos",
@@ -557,6 +559,18 @@ export const es: typeof pt = {
     title: "Cuenta",
     subtitle: "Gestiona tu perfil, seguridad, notificaciones y sesiones de Hosanna.",
     signOut: "Cerrar sesión",
+    menu: {
+      open: "Menú de la cuenta",
+      theme: "Tema",
+      language: "Idioma",
+    },
+    language: {
+      title: "Idioma",
+      desc: "Elige el idioma de la interfaz. Automático sigue la organización o el navegador.",
+      auto: "Automático",
+      autoDesc: "Seguir la organización o el navegador",
+      changed: "Idioma cambiado a {language}.",
+    },
     notifications: {
       title: "Preferencias de notificación",
       description: "Elige cómo te contacta Hosanna — buzón, push y email.",

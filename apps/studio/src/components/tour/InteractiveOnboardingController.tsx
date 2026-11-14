@@ -4,7 +4,7 @@
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { isDemoMode } from "@/src/demo";
-import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
+import { useStudioSettings } from "@/src/hooks/usePersonalSettings";
 import { deriveView } from "@/src/layouts/view";
 import { useI18n } from "@/src/lib/i18n";
 import {
@@ -22,7 +22,7 @@ export const InteractiveOnboardingController: React.FC = () => {
   const { t } = useI18n();
   const location = useLocation();
   const { organization } = useAuth();
-  const { updateSetting } = usePersonalSettings();
+  const { updateSetting } = useStudioSettings();
   const startedRef = useRef(false);
 
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";

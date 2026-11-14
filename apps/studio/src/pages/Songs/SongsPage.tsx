@@ -17,7 +17,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFolders } from "../../hooks/useFolders";
-import { usePersonalSettings } from "../../hooks/usePersonalSettings";
+import { useStudioSettings } from "../../hooks/usePersonalSettings";
 import { useAllSongs, useSearchableSongs } from "../../hooks/useSongs";
 import { filterSearchableSongsWithLiqe } from "../../utils";
 
@@ -38,7 +38,7 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 }) => {
   const { navigate } = useAppNavigate();
   const { t, locale } = useI18n();
-  const { settings } = usePersonalSettings();
+  const { settings } = useStudioSettings();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
   const context = (useOutletContext<Record<string, unknown>>() || {}) as Record<string, unknown>;

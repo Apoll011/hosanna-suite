@@ -1,23 +1,19 @@
 "use client";
 
+import { useI18n } from "@/lib/ui/i18n";
 import { useTheme } from "@/lib/ui/theme";
-import { Moon, Sun } from "lucide-react";
+import { MenuThemeToggle } from "@hosanna/ui";
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const { language } = useI18n();
 
   return (
-    <button
-      type="button"
-      onClick={toggleDarkMode}
-      aria-label="Toggle theme"
-      className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-m3-border/60 text-m3-secondary transition-all active:scale-95 ${className}`}
-    >
-      {darkMode ? (
-        <Sun className="h-4 w-4 text-amber-300" />
-      ) : (
-        <Moon className="h-4 w-4 text-m3-secondary" />
-      )}
-    </button>
+    <MenuThemeToggle
+      className={`bg-m3-card/75 backdrop-blur-md shadow-xs ${className}`}
+      language={language}
+      value={theme}
+      onChange={setTheme}
+    />
   );
 }

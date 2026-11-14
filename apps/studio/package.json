@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/studio",
-  "version": "2.24.5",
+  "version": "2.24.6",
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
@@ -53,7 +53,6 @@
     "vite": "^6.2.3"
   },
   "devDependencies": {
-    "@hosanna/brand": "workspace:*",
     "@hosanna/config": "workspace:*",
     "@hosanna/types": "workspace:*",
     "@types/cheerio": "^0.22.35",

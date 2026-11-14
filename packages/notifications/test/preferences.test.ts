@@ -96,7 +96,6 @@ describe("resolveChannelsForUser", () => {
     });
     assert.deepEqual(channels, { inbox: false, push: true, email: false });
   });
-
 });
 
 describe("preference persistence helpers", () => {
