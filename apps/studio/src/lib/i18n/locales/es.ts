@@ -1446,13 +1446,11 @@ export const es: typeof pt = {
     songbookImport: {
       title: "Importar copia SongbookPro",
       description: "Importando “{source}” ({songs} canciones).",
-      placementLegend: "Tratar setlists como",
-      asFolders: "Carpetas",
-      asFoldersDesc:
-        "Usa la primera setlist de cada canción (p. ej. [6, …]) y crea una carpeta; el resto se ignora.",
-      asCollections: "Colecciones",
-      asCollectionsDesc:
-        "Crea una colección por setlist seleccionada y añade cada canción a las setlists en las que aparece.",
+      foldersAlwaysDesc:
+        "Cada setlist seleccionada crea una carpeta. Cada canción va a la carpeta de su primera setlist (p. ej. [6, …]).",
+      alsoCollections: "También crear colecciones",
+      alsoCollectionsDesc:
+        "Además de las carpetas, crea una colección por setlist y asocia cada canción a todas las setlists en las que aparece.",
       setlistsLegend: "Setlists a importar",
       selectAll: "Seleccionar todas",
       selectNone: "Limpiar",

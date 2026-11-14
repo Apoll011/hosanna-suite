@@ -29,7 +29,7 @@ export function buildSongbookImportPlan(
   const selected = new Set(options.selectedSetlistIds);
   if (selected.size === 0) {
     return {
-      mode: options.mode,
+      alsoCreateCollections: options.alsoCreateCollections,
       folders: [],
       collections: [],
       songs: [],
@@ -41,18 +41,17 @@ export function buildSongbookImportPlan(
   const activeSelected = [...selected].filter((id) => available.has(id));
   const activeSet = new Set(activeSelected);
 
-  const folders: SongbookImportPlan["folders"] = [];
-  const collections: SongbookImportPlan["collections"] = [];
+  const folders: SongbookImportPlan["folders"] = activeSelected.map((id) => ({
+    key: setlistKey(id),
+    name: setlistName(doc, id),
+  }));
 
-  if (options.mode === "folders") {
-    for (const id of activeSelected) {
-      folders.push({ key: setlistKey(id), name: setlistName(doc, id) });
-    }
-  } else {
-    for (const id of activeSelected) {
-      collections.push({ key: setlistKey(id), name: setlistName(doc, id) });
-    }
-  }
+  const collections: SongbookImportPlan["collections"] = options.alsoCreateCollections
+    ? activeSelected.map((id) => ({
+        key: setlistKey(id),
+        name: setlistName(doc, id),
+      }))
+    : [];
 
   const folderNameByKey = new Map(folders.map((f) => [f.key, f.name]));
   const seenPaths = new Set<string>();
@@ -63,42 +62,22 @@ export function buildSongbookImportPlan(
     const membership =
       song.folderIds.length > 0 ? song.folderIds : ([SONGBOOK_UNFILED_ID] as number[]);
 
-    if (options.mode === "folders") {
-      const primary = membership.find((id) => activeSet.has(id));
-      if (primary === undefined) {
-        skipped += 1;
-        continue;
-      }
-
-      const migrated = migrateSongbookSongToChordPro(song);
-      const folderKey = setlistKey(primary);
-      const folderName = sanitizePathSegment(
-        folderNameByKey.get(folderKey) ?? setlistName(doc, primary),
-      );
-      const basePath = `${folderName}/${sanitizePathSegment(migrated.title)}.pro`;
-
-      songs.push({
-        title: migrated.title,
-        artist: migrated.artist,
-        content: migrated.content,
-        tags: migrated.tags,
-        song_number: migrated.song_number,
-        path: uniqueSongPath(basePath, seenPaths),
-        folderKey,
-        collectionKeys: [],
-        createdAt: song.modifiedAt ?? undefined,
-      });
-      continue;
-    }
-
-    const matched = membership.filter((id) => activeSet.has(id));
-    if (matched.length === 0) {
+    const primary = membership.find((id) => activeSet.has(id));
+    if (primary === undefined) {
       skipped += 1;
       continue;
     }
 
+    const matched = options.alsoCreateCollections
+      ? membership.filter((id) => activeSet.has(id))
+      : [];
+
     const migrated = migrateSongbookSongToChordPro(song);
-    const basePath = `${sanitizePathSegment(migrated.title)}.pro`;
+    const folderKey = setlistKey(primary);
+    const folderName = sanitizePathSegment(
+      folderNameByKey.get(folderKey) ?? setlistName(doc, primary),
+    );
+    const basePath = `${folderName}/${sanitizePathSegment(migrated.title)}.pro`;
 
     songs.push({
       title: migrated.title,
@@ -107,14 +86,14 @@ export function buildSongbookImportPlan(
       tags: migrated.tags,
       song_number: migrated.song_number,
       path: uniqueSongPath(basePath, seenPaths),
-      folderKey: null,
+      folderKey,
       collectionKeys: matched.map(setlistKey),
       createdAt: song.modifiedAt ?? undefined,
     });
   }
 
   return {
-    mode: options.mode,
+    alsoCreateCollections: options.alsoCreateCollections,
     folders,
     collections,
     songs,

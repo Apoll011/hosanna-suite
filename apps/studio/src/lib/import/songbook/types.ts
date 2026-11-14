@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type SongbookPlacementMode = "folders" | "collections";
-
 export interface SongbookFolder {
   id: number;
   name: string;
@@ -49,8 +47,8 @@ export interface SongbookSetlistSummary {
 }
 
 export interface SongbookImportOptions {
-  mode: SongbookPlacementMode;
   selectedSetlistIds: number[];
+  alsoCreateCollections: boolean;
 }
 
 export interface SongbookImportPlanSong {
@@ -66,7 +64,7 @@ export interface SongbookImportPlanSong {
 }
 
 export interface SongbookImportPlan {
-  mode: SongbookPlacementMode;
+  alsoCreateCollections: boolean;
   folders: Array<{ key: string; name: string }>;
   collections: Array<{ key: string; name: string }>;
   songs: SongbookImportPlanSong[];

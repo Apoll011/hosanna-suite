@@ -84,7 +84,7 @@ tab
     assert.match(converted, /\{end_of_tab\}/);
   });
 
-  it("plans folder mode from the first selected setlist only", () => {
+  it("always plans folders from the first selected setlist", () => {
     const text = readFileSync(samplePath, "utf8");
     const doc = parseSongbookBackupJson(text, "dataFile.txt");
     const multi = doc.songs.find((s) => s.folderIds.length > 1);
@@ -93,7 +93,7 @@ tab
     const primary = multi!.folderIds[0]!;
     const secondary = multi!.folderIds[1]!;
     const plan = buildSongbookImportPlan(doc, {
-      mode: "folders",
+      alsoCreateCollections: false,
       selectedSetlistIds: [primary, secondary],
     });
 
@@ -101,6 +101,8 @@ tab
     assert.ok(planned);
     assert.equal(planned!.folderKey, `setlist:${primary}`);
     assert.deepEqual(planned!.collectionKeys, []);
+    assert.equal(plan.folders.length, 2);
+    assert.equal(plan.collections.length, 0);
   });
 
   it("parses a .sbpbackup zip archive", async () => {
@@ -113,7 +115,7 @@ tab
     assert.ok(doc.folders.length > 0);
   });
 
-  it("plans collection mode with multi-setlist membership", () => {
+  it("optionally also plans collections for every matching setlist", () => {
     const text = readFileSync(samplePath, "utf8");
     const doc = parseSongbookBackupJson(text, "dataFile.txt");
     const multi = doc.songs.find((s) => s.folderIds.length > 1);
@@ -121,14 +123,15 @@ tab
 
     const [a, b] = multi!.folderIds;
     const plan = buildSongbookImportPlan(doc, {
-      mode: "collections",
+      alsoCreateCollections: true,
       selectedSetlistIds: [a!, b!],
     });
 
     const planned = plan.songs.find((s) => s.title === multi!.name);
     assert.ok(planned);
-    assert.equal(planned!.folderKey, null);
+    assert.equal(planned!.folderKey, `setlist:${a}`);
     assert.deepEqual(planned!.collectionKeys, [`setlist:${a}`, `setlist:${b}`]);
+    assert.equal(plan.folders.length, 2);
     assert.equal(plan.collections.length, 2);
   });
 });

@@ -26,7 +26,6 @@ export {
   summarizeSongbookSetlists,
   type SongbookBackupDocument,
   type SongbookImportOptions,
-  type SongbookPlacementMode,
   type SongbookSetlistSummary,
 } from "./songbook";
 export { SongbookProImportProvider } from "./songbookProvider";

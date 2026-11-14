@@ -5,13 +5,9 @@
 
 import { Button, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import type {
-  SongbookBackupDocument,
-  SongbookPlacementMode,
-  SongbookSetlistSummary,
-} from "@/src/lib/import";
+import type { SongbookBackupDocument, SongbookSetlistSummary } from "@/src/lib/import";
 import { summarizeSongbookSetlists } from "@/src/lib/import";
-import { CheckSquare, FolderTree, LibraryBig, Loader2, Square } from "lucide-react";
+import { CheckSquare, LibraryBig, Loader2, Square } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 
 export interface SongbookImportModalProps {
@@ -21,8 +17,8 @@ export interface SongbookImportModalProps {
   progress?: { done: number; total: number } | null;
   onClose: () => void;
   onConfirm: (options: {
-    mode: SongbookPlacementMode;
     selectedSetlistIds: number[];
+    alsoCreateCollections: boolean;
   }) => Promise<void> | void;
 }
 
@@ -40,30 +36,25 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
     [document],
   );
 
-  const [mode, setMode] = useState<SongbookPlacementMode>("folders");
+  const [alsoCreateCollections, setAlsoCreateCollections] = useState(false);
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     if (!isOpen || !document) return;
-    setMode("folders");
+    setAlsoCreateCollections(false);
     setSelected(new Set(summarizeSongbookSetlists(document).map((s) => s.id)));
   }, [isOpen, document]);
 
   const selectedCount = selected.size;
-  const selectedSongEstimate = useMemo(() => {
+  const selectedSongCount = useMemo(() => {
     if (!document) return 0;
-    const ids = new Set<number>();
+    let count = 0;
     for (const song of document.songs) {
       const membership = song.folderIds.length > 0 ? song.folderIds : [0];
-      if (mode === "folders") {
-        const primary = membership.find((id) => selected.has(id));
-        if (primary !== undefined) ids.add(song.id);
-      } else if (membership.some((id) => selected.has(id))) {
-        ids.add(song.id);
-      }
+      if (membership.some((id) => selected.has(id))) count += 1;
     }
-    return ids.size;
-  }, [document, mode, selected]);
+    return count;
+  }, [document, selected]);
 
   const toggle = (id: number) => {
     setSelected((prev) => {
@@ -80,8 +71,8 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
   const handleConfirm = async () => {
     if (selectedCount === 0 || isImporting) return;
     await onConfirm({
-      mode,
       selectedSetlistIds: [...selected],
+      alsoCreateCollections,
     });
   };
 
@@ -110,7 +101,7 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
                 {t("modals.songbookImport.importing")}
               </>
             ) : (
-              t("modals.songbookImport.importAction", { count: selectedSongEstimate })
+              t("modals.songbookImport.importAction", { count: selectedSongCount })
             )}
           </Button>
         </>
@@ -124,53 +115,35 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
           })}
         </p>
 
-        <fieldset className="space-y-2">
-          <legend className="text-xs font-semibold uppercase tracking-wide text-m3-secondary">
-            {t("modals.songbookImport.placementLegend")}
-          </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button
-              type="button"
-              disabled={isImporting}
-              onClick={() => setMode("folders")}
-              className={`flex items-start gap-3 p-3 rounded-xl border text-left transition-colors cursor-pointer ${
-                mode === "folders"
-                  ? "border-m3-primary bg-m3-primary/10"
-                  : "border-m3-border hover:bg-m3-hover"
-              }`}
-            >
-              <FolderTree className="w-4 h-4 mt-0.5 text-m3-primary shrink-0" />
-              <span>
-                <span className="block text-sm font-semibold text-m3-text">
-                  {t("modals.songbookImport.asFolders")}
-                </span>
-                <span className="block text-[11px] text-m3-secondary mt-0.5 leading-relaxed">
-                  {t("modals.songbookImport.asFoldersDesc")}
-                </span>
-              </span>
-            </button>
-            <button
-              type="button"
-              disabled={isImporting}
-              onClick={() => setMode("collections")}
-              className={`flex items-start gap-3 p-3 rounded-xl border text-left transition-colors cursor-pointer ${
-                mode === "collections"
-                  ? "border-m3-primary bg-m3-primary/10"
-                  : "border-m3-border hover:bg-m3-hover"
-              }`}
-            >
-              <LibraryBig className="w-4 h-4 mt-0.5 text-m3-primary shrink-0" />
-              <span>
-                <span className="block text-sm font-semibold text-m3-text">
-                  {t("modals.songbookImport.asCollections")}
-                </span>
-                <span className="block text-[11px] text-m3-secondary mt-0.5 leading-relaxed">
-                  {t("modals.songbookImport.asCollectionsDesc")}
-                </span>
-              </span>
-            </button>
-          </div>
-        </fieldset>
+        <p className="text-[12px] text-m3-secondary leading-relaxed rounded-xl border border-m3-border bg-m3-sidebar/40 px-3 py-2.5">
+          {t("modals.songbookImport.foldersAlwaysDesc")}
+        </p>
+
+        <button
+          type="button"
+          disabled={isImporting}
+          onClick={() => setAlsoCreateCollections((v) => !v)}
+          className={`w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-colors cursor-pointer ${
+            alsoCreateCollections
+              ? "border-m3-primary bg-m3-primary/10"
+              : "border-m3-border hover:bg-m3-hover"
+          }`}
+        >
+          {alsoCreateCollections ? (
+            <CheckSquare className="w-4 h-4 mt-0.5 text-m3-primary shrink-0" />
+          ) : (
+            <Square className="w-4 h-4 mt-0.5 text-m3-secondary shrink-0" />
+          )}
+          <LibraryBig className="w-4 h-4 mt-0.5 text-m3-primary shrink-0" />
+          <span className="min-w-0">
+            <span className="block text-sm font-semibold text-m3-text">
+              {t("modals.songbookImport.alsoCollections")}
+            </span>
+            <span className="block text-[11px] text-m3-secondary mt-0.5 leading-relaxed">
+              {t("modals.songbookImport.alsoCollectionsDesc")}
+            </span>
+          </span>
+        </button>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-3">
@@ -238,7 +211,7 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
             <div className="flex items-center justify-between text-[11px] text-m3-secondary">
               <span>{t("modals.songbookImport.progressLabel")}</span>
               <span>
-                {progress?.done ?? 0}/{progress?.total ?? selectedSongEstimate}
+                {progress?.done ?? 0}/{progress?.total ?? selectedSongCount}
               </span>
             </div>
             <div className="h-2 rounded-full bg-m3-border overflow-hidden">

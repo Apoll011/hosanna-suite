@@ -23,7 +23,6 @@ export type {
   SongbookBackupDocument,
   SongbookImportOptions,
   SongbookImportPlan,
-  SongbookPlacementMode,
   SongbookSetlistSummary,
   SongbookSong,
 } from "./types";

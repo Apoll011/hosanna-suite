@@ -1428,13 +1428,11 @@ export const en: typeof pt = {
     songbookImport: {
       title: "Import SongbookPro backup",
       description: "Importing “{source}” ({songs} songs).",
-      placementLegend: "Treat setlists as",
-      asFolders: "Folders",
-      asFoldersDesc:
-        "Uses each song’s first setlist (e.g. [6, …]) and creates a folder; other memberships are ignored.",
-      asCollections: "Collections",
-      asCollectionsDesc:
-        "Creates one collection per selected setlist and adds each song to every matching setlist.",
+      foldersAlwaysDesc:
+        "Each selected setlist becomes a folder. Each song goes into the folder of its first setlist (e.g. [6, …]).",
+      alsoCollections: "Also create collections",
+      alsoCollectionsDesc:
+        "In addition to folders, create one collection per setlist and add each song to every setlist it belongs to.",
       setlistsLegend: "Setlists to import",
       selectAll: "Select all",
       selectNone: "Clear",

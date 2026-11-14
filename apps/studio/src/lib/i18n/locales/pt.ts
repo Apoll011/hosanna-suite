@@ -1438,13 +1438,11 @@ export const pt = {
     songbookImport: {
       title: "Importar backup SongbookPro",
       description: "A importar “{source}” ({songs} cânticos).",
-      placementLegend: "Tratar setlists como",
-      asFolders: "Pastas",
-      asFoldersDesc:
-        "Usa a primeira setlist de cada cântico (ex.: [6, …]) e cria uma pasta; as restantes são ignoradas.",
-      asCollections: "Coleções",
-      asCollectionsDesc:
-        "Cria uma coleção por setlist selecionada e associa cada cântico às setlists em que aparece.",
+      foldersAlwaysDesc:
+        "Cada setlist selecionada cria uma pasta. Cada cântico vai para a pasta da sua primeira setlist (ex.: [6, …]).",
+      alsoCollections: "Também criar coleções",
+      alsoCollectionsDesc:
+        "Além das pastas, cria uma coleção por setlist e associa cada cântico a todas as setlists em que aparece.",
       setlistsLegend: "Setlists a importar",
       selectAll: "Selecionar todas",
       selectNone: "Limpar",
