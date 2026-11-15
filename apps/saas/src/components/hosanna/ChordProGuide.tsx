@@ -110,6 +110,13 @@ const DIRECTIVES: DirectiveEntry[] = [
     hosanna: true,
   },
   {
+    directive: "tags",
+    category: "metadata",
+    descriptionKey: "tags",
+    example: "{tags: Adoration, Salvation, Gospel}",
+    hosanna: true,
+  },
+  {
     directive: "comment",
     alias: "c",
     category: "comment",

@@ -560,6 +560,7 @@ export const en: typeof import("./pt").pt = {
     year: "Year of release or composition",
     youtube: "Video link. Creates a mini audio player in the app for rehearsals!",
     song_number: "Hymnal or church binder number for quick lookup",
+    tags: "Song Tags Separated by a ','",
     comment:
       "Band direction (e.g. Guitar Solo). Optional style suffix: {c: Softly|warning} or |style=name",
     comment_italic: "Italic comment for subtle dynamic cues",
