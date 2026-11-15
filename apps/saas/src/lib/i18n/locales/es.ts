@@ -567,6 +567,7 @@ export const es: typeof import("./pt").pt = {
     year: "Año de lanzamiento o composición",
     youtube: "Enlace del vídeo. ¡Crea un minirreproductor de audio para ensayar!",
     song_number: "Número del himnario o carpeta para búsqueda rápida",
+    tags: "Etiquetas de canción separadas por una ','",
     comment:
       "Instrucción para la banda (ej: Solo de guitarra). Estilo opcional: {c: Suave|warning} o |style=name",
     comment_italic: "Comentario en cursiva para notas dinámicas discretas",

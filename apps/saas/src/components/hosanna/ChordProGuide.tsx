@@ -59,6 +59,7 @@ const DIRECTIVES: DirectiveEntry[] = [
     directive: "original_key",
     category: "metadata",
     descriptionKey: "original_key",
+    hosanna: true,
   },
   {
     directive: "tempo",
@@ -72,10 +73,10 @@ const DIRECTIVES: DirectiveEntry[] = [
     descriptionKey: "capo",
   },
   {
-    directive: "keyshift",
-    alias: "ks",
+    directive: "key_shift",
     category: "metadata",
     descriptionKey: "keyshift",
+    hosanna: true,
   },
   {
     directive: "duration",
@@ -85,8 +86,8 @@ const DIRECTIVES: DirectiveEntry[] = [
   },
   { directive: "album", category: "metadata", descriptionKey: "album" },
   { directive: "composer", category: "metadata", descriptionKey: "composer" },
-  { directive: "arranger", category: "metadata", descriptionKey: "arranger" },
-  { directive: "lyricist", category: "metadata", descriptionKey: "lyricist" },
+  { directive: "arranger", category: "metadata", descriptionKey: "arranger", hosanna: true },
+  { directive: "lyricist", category: "metadata", descriptionKey: "lyricist", hosanna: true },
   {
     directive: "copyright",
     category: "metadata",
@@ -106,6 +107,13 @@ const DIRECTIVES: DirectiveEntry[] = [
     category: "metadata",
     descriptionKey: "song_number",
     example: "{song_number: 147}",
+    hosanna: true,
+  },
+  {
+    directive: "tags",
+    category: "metadata",
+    descriptionKey: "tags",
+    example: "{tags: Adoration, Salvation, Gospel}",
     hosanna: true,
   },
   {
@@ -132,6 +140,7 @@ const DIRECTIVES: DirectiveEntry[] = [
     alias: "re",
     category: "comment",
     descriptionKey: "repeat",
+    hosanna: true,
   },
   {
     directive: "start_of_version",
@@ -239,8 +248,8 @@ const DIRECTIVES: DirectiveEntry[] = [
     descriptionKey: "translator",
   },
   {
-    directive: "ccli",
-    alias: "ccli_number",
+    directive: "ccli_number",
+    alias: "ccli",
     category: "metadata",
     descriptionKey: "ccli",
   },

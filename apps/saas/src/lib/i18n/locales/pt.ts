@@ -565,6 +565,7 @@ export const pt = {
     year: "Ano de lançamento ou composição",
     youtube: "Link do vídeo. Cria um mini-player de áudio na app para ouvir durante o ensaio!",
     song_number: "Número do hinário ou pasta da igreja, para pesquisa rápida",
+    tags: "Etiquetas de música separadas por uma ','",
     comment:
       "Instrução para a banda (ex: Solo de guitarra). Estilo opcional: {c: Suave|warning} ou |style=name",
     comment_italic: "Comentário em itálico, para notas mais discretas (dinâmica)",
