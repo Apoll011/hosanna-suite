@@ -1,6 +1,7 @@
 {
   "framework": "nextjs",
   "regions": ["cdg1"],
+  "fluid": false,
   "crons": [
     {
       "path": "/api/cron/agenda-reminders",

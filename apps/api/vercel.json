@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "fluid": true,
+  "fluid": false,
   "regions": ["cdg1"],
   "relatedProjects": ["prj_qmEsyTUzOZDQzlhHLMi7BHBWx4ix"],
   "functions": {
