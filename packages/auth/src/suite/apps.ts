@@ -210,6 +210,8 @@ export const SUITE_APP_REGISTRY: readonly SuiteAppDefinition[] = [
     description: "Giving, funds, budgets, expenses, and statements.",
     ...appKeys("finance"),
     status: "coming_soon",
+    logoUrl: "brand/finance-source.jpeg",
+    logoHost: "auth",
     sortOrder: 60,
     accent: "#167C62",
     categories: ["stewardship"],
