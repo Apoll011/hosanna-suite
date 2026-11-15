@@ -206,6 +206,12 @@ const DIRECTIVES: DirectiveEntry[] = [
     hosanna: true,
   },
   {
+    directive: "new_song",
+    alias: "ns",
+    category: "structure",
+    descriptionKey: "new_song",
+  },
+  {
     directive: "start_of_tab",
     alias: "sot",
     category: "notation",
