@@ -1,4 +1,5 @@
 import { roles } from "@hosanna/auth";
+import { withAuthCors } from "@hosanna/auth/server";
 import { z } from "zod";
 import { getNotificationService } from "@/lib/notifications/service";
 import {
@@ -69,7 +70,7 @@ const createNotificationSchema = z
   });
 
 /** POST /api/notifications — unified multi-channel dispatch. */
-export async function POST(req: Request) {
+async function createNotification(req: Request): Promise<Response> {
   try {
     const ctx = await requireAuthSession();
     assertPermission(ctx, "notification.sent");
@@ -114,3 +115,9 @@ export async function POST(req: Request) {
     return jsonError(err);
   }
 }
+
+const handler = withAuthCors(createNotification);
+
+export const POST = handler;
+/** Preflight for Studio / other *.hosanna.live origins. */
+export const OPTIONS = handler;
