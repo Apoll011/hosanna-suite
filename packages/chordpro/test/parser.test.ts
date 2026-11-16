@@ -1,5 +1,5 @@
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   buildChordProText,
   parseChordPro,
@@ -71,13 +71,26 @@ describe("key_note / tags / chorus directives", () => {
   });
 
   it("parses comma-separated {tags} directives", () => {
-    const song = parseChordPro("{title: X}\n{tags: adoração, lenta,  congregação}");
-    assert.equal(song.metadata.tags, "adoração, lenta, congregação");
+    const song = parseChordPro("{title: X}\n{tags: adoração, lenta,    congregação}");
+    assert.ok(
+      Array.isArray(song.metadata.tags) &&
+        song.metadata.tags.every((item) => typeof item === "string"),
+      "Expected 'tags' to be an array of strings",
+    );
+    assert.deepEqual(song.metadata.tags, ["adoração", "lenta", "congregação"]);
   });
 
   it("accumulates repeated {tags} directives", () => {
     const song = parseChordPro("{title: X}\n{tags: adoração}\n{tags: lenta, congregação}");
-    assert.equal(song.metadata.tags, "adoração, lenta, congregação");
+    assert.ok(
+      Array.isArray(song.metadata.tags) &&
+        song.metadata.tags.every((item) => typeof item === "string"),
+      "Expected 'tags' to be an array of strings",
+    );
+    assert.deepEqual(
+      [...(song.metadata.tags as string[])].sort(),
+      [...["adoração", "lenta", "congregação"]].sort(),
+    );
   });
 
   it("{chorus} recalls the previous chorus body", () => {
