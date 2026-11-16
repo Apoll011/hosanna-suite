@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Spinner, Surface, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useServices } from "@/src/hooks/useServices";
 import { useAllSongs } from "@/src/hooks/useSongs";
 import { useI18n, type TranslationKey } from "@/src/lib/i18n";
 import { computeSetlistInsights, type SongPlayStat } from "@/src/lib/setlistInsights";
+import { Input, Spinner, Surface } from "@hosanna/ui";
 import {
   CalendarClock,
   ChevronRight,
@@ -154,7 +154,7 @@ export const SetlistInsightsTab: React.FC<SetlistInsightsTabProps> = ({ active }
   const formatCount = (n: number) => new Intl.NumberFormat(locale).format(n);
 
   const formatDate = (date: string) =>
-    new Date(`${date}T12:00:00`).toLocaleDateString(locale, {
+    new Date(date).toLocaleDateString(locale, {
       year: "numeric",
       month: "short",
       day: "numeric",
