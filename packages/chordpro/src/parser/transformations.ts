@@ -128,7 +128,7 @@ export function attachSongTransformations(song: SongAST): SongAST {
       });
       forEachVersion(next, (version) => {
         if (version.metadata.key)
-          version.metadata.key = transposeChord(version.metadata.key, semitones);
+          version.metadata.key = transposeChord(version.metadata.key as string, semitones);
       });
     });
   target.withCapo = (capo) =>

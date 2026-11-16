@@ -65,7 +65,7 @@ const ChordProRenderer = React.memo(
     capoLabel,
   }: ChordProPreviewProps) => {
     const { metadata } = song;
-    const instrument = metadata.instrument ?? "guitar";
+    const instrument = (metadata.instrument as string | undefined) ?? "guitar";
     const showChords = songHasChords(song);
     const effectiveCapo = Number(metadata.capo ?? 0);
     const soundingKey = useMemo(() => {
