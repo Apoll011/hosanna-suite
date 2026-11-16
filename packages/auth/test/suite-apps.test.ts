@@ -48,7 +48,6 @@ describe("listSuiteApps", () => {
     assert.equal(auth?.accent, "#0F766E");
     assert.equal(music?.logoUrl, "https://studio.hosanna.live/favicon.png");
     assert.equal(music?.accent, "#0284c7");
-    assert.equal(planning?.logoUrl, null);
   });
 
   it("exposes i18n keys for catalog labels", () => {

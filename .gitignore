@@ -30,7 +30,6 @@ logs/
 
 # local AI / agent tooling
 .agents/
-AGENTS.md
 .claude/
 .impeccable/
 skills-lock.json
@@ -57,5 +56,3 @@ skills-lock.json
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-
-sb/
