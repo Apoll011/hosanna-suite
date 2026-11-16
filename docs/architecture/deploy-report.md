@@ -96,7 +96,6 @@ cross-subdomain on `hosanna.live`.
 
 - `VITE_DASHBOARD_URL=https://studio.hosanna.live`
 - `VITE_API_URL=https://api.hosanna.live/api` (plan prices from `/billing/pricing`)
-- Vercel Analytics already in the app
 
 ---
 

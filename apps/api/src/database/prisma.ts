@@ -1,5 +1,5 @@
-import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@hosanna/db";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
@@ -7,16 +7,11 @@ import { env } from "../config/env.js";
 const pool = new Pool({
   connectionString: env.databaseUrl,
   max: env.dbPoolMax,
-  // On Vercel Fluid, close idle connections quickly so attachDatabasePool
-  // can release them before the isolate suspends. Long-running hosts keep
-  // connections warmer to avoid reconnect churn.
   idleTimeoutMillis: env.isVercel ? 5_000 : 30_000,
   connectionTimeoutMillis: 10_000,
   statement_timeout: 10_000,
 });
 
-// Fluid compute: close idle pool connections before the isolate suspends,
-// preventing leaked Postgres connections across freeze/thaw cycles.
 if (env.isVercel) {
   attachDatabasePool(pool);
 }

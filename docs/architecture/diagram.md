@@ -82,7 +82,6 @@ flowchart TB
     SCRAPE["Cifra Club / Ultimate Guitar"]
     META["MusicBrainz · DuckDuckGo"]
     POSTHOG["PostHog<br/>Studio analytics"]
-    VERCEL_A["Vercel Analytics<br/>Marketing"]
   end
 
   SAAS -->|"CTA → Studio signup"| STUDIO
@@ -143,7 +142,6 @@ flowchart TB
   CIFRA --> SCRAPE
 
   STUDIO --> POSTHOG
-  SAAS --> VERCEL_A
 ```
 
 ## Auth + sync sequence

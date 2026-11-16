@@ -15,8 +15,6 @@ function useRouteMetaUpdater() {
 export function RootComponent() {
   useRouteMetaUpdater();
 
-  // Vercel Analytics (/_vercel/insights/script.js) 404s on Cloudflare Pages —
-  // keep analytics on the host (Cloudflare Web Analytics beacon in index.html).
   return (
     <I18nProvider>
       <Outlet />
