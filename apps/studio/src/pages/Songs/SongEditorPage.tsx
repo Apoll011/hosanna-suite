@@ -242,10 +242,11 @@ export const SongEditorPage: React.FC = () => {
 
         if (meta.title) updates.title = meta.title;
         if (meta.artist) updates.artist = meta.artist;
-        if (meta.songNumber && Number(meta.songNumber))
-          updates.song_number = Number(meta.songNumber);
 
-        if (meta.tags) updates.tags = meta.tags;
+        updates.song_number =
+          meta.songNumber && Number(meta.songNumber) ? Number(meta.songNumber) : null;
+
+        updates.tags = meta.tags;
 
         const updated = await updateSong({ id: song.id, data: updates });
         if (updated?.updatedAt) {
