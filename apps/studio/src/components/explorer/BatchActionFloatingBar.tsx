@@ -1,6 +1,6 @@
-import { Button } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
-import { Archive, FolderInput, Printer, Tag, Trash2, X } from "lucide-react";
+import { Button } from "@hosanna/ui";
+import { Archive, FolderInput, Printer, Trash2, X } from "lucide-react";
 import React from "react";
 
 interface BatchActionFloatingBarProps {
@@ -8,7 +8,6 @@ interface BatchActionFloatingBarProps {
   itemLabel?: string;
   onArchive?: () => void;
   onPrint?: () => void;
-  onTag?: () => void;
   onMove?: () => void;
   onDelete: () => void;
   onCancel: () => void;
@@ -21,7 +20,6 @@ export const BatchActionFloatingBar: React.FC<BatchActionFloatingBarProps> = ({
   itemLabel = "cultos",
   onArchive,
   onPrint,
-  onTag,
   onMove,
   onDelete,
   onCancel,
@@ -35,17 +33,6 @@ export const BatchActionFloatingBar: React.FC<BatchActionFloatingBarProps> = ({
         {selectedCount} {itemLabel} selecionados
       </span>
       <div className="h-6 w-px bg-m3-border" />
-      {onTag && (
-        <Button
-          size="sm"
-          variant="ghost"
-          icon={<Tag className="w-4 h-4" />}
-          onClick={onTag}
-          className="text-m3-text hover:bg-m3-hover"
-        >
-          {t("songsPage.tag")}
-        </Button>
-      )}
       {onMove && (
         <Button
           size="sm"

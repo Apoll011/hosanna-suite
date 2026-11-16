@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
+import { emitOnboardingEvent } from "@/src/lib/tour";
 import { Collection, Folder, Song } from "@/src/types";
 import { ConversionResult } from "@hosanna/chordpro";
+import { Button, Input, Modal } from "@hosanna/ui";
 import {
   AlertTriangle,
   ChevronDown,
@@ -20,20 +21,18 @@ import {
   X,
 } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { emitOnboardingEvent } from "@/src/lib/tour";
+import { EventFormModal, EventFormValue } from "../agenda/EventModals";
 import { FolderTreeNode, getFolderDescendantIds, MoveFolderTreeItem } from "../explorer";
 import { FolderForm } from "../forms/FolderForm";
 import { ServiceForm } from "../forms/ServiceForm";
 import { SongForm } from "../forms/SongForm";
-import { EventFormModal, EventFormValue } from "../agenda/EventModals";
 import { AddToCollectionModal } from "../modals/AddToCollectionModal";
 import { BatchDeleteModal } from "../modals/BatchDeleteModal";
 import { BatchMoveModal } from "../modals/BatchMoveModal";
-import { BatchTagModal } from "../modals/BatchTagModal";
-import { ThirdPartyProvidersModal } from "../modals/ThirdPartyProvidersModal";
 import { CreateCollectionModal } from "../modals/CreateCollectionModal";
 import { CustomizeFolderModal } from "../modals/CustomizeFolderModal";
 import { MoveSongModal } from "../modals/MoveSongModal";
+import { ThirdPartyProvidersModal } from "../modals/ThirdPartyProvidersModal";
 
 export type ActiveModal =
   | "cifra-import"
@@ -45,7 +44,6 @@ export type ActiveModal =
   | "filter"
   | "batch-move"
   | "batch-delete"
-  | "batch-tag"
   | "batch-add-to-collection"
   | null;
 
@@ -944,13 +942,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
         selectedFolders={selectedFolderObjects}
         selectedSongsCount={selectedSongIds.size}
         onConfirm={onBatchDeleteConfirm}
-      />
-
-      <BatchTagModal
-        isOpen={activeModal === "batch-tag"}
-        onClose={onCloseModal}
-        selectedSongIds={Array.from(selectedSongIds)}
-        onConfirm={onBatchTagConfirm}
       />
 
       <AdvancedFilterPanel

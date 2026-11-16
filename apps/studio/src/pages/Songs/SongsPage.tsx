@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OverflowTagList } from "@/src/components/OverflowTagList";
-import { Badge, EmptyState, usePermissionValue, Can } from "@hosanna/ui";
 import { Table } from "@/src/components/common";
 import { MarqueeSelectionBox } from "@/src/components/explorer";
+import { OverflowTagList } from "@/src/components/OverflowTagList";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
 import { useI18n } from "@/src/lib/i18n";
+import { Badge, Can, EmptyState, usePermissionValue } from "@hosanna/ui";
 
 import { Song } from "@/src/types";
-import { FileText, FolderInput, Music, Tag, Trash2, X } from "lucide-react";
+import { FileText, FolderInput, Music, Trash2, X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
@@ -514,18 +514,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    openModal?.("batch-tag");
-                    setContextMenu(null);
-                  }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
-                >
-                  <Tag className="w-4 h-4 text-m3-secondary" />
-                  <span>{t("songsPage.tagCount", { count: selectedSongIds.size })}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
                     openModal?.("batch-move");
                     setContextMenu(null);
                   }}
@@ -597,19 +585,6 @@ export const SongsPage: React.FC<SongsPageProps> = ({
                 >
                   <FolderInput className="w-4 h-4 text-m3-secondary" />
                   <span>{t("songsPage.moveSong")}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedSongIds(new Set([contextMenu.song!.id]));
-                    openModal?.("batch-tag");
-                    setContextMenu(null);
-                  }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-m3-text hover:bg-m3-hover font-medium transition-colors text-left cursor-pointer"
-                >
-                  <Tag className="w-4 h-4 text-m3-secondary" />
-                  <span>{t("songsPage.tagSong")}</span>
                 </button>
               </Can>
 
