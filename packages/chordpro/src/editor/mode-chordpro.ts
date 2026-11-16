@@ -56,12 +56,18 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
                 "string",
                 "punctuation.tag",
               ],
-              regex: rStart + "(start_of_[a-z_]+|so[a-z])" + rSep + "(.*?)" + rEnd,
+              regex:
+                rStart +
+                "(start_of_[a-z_]+|soc|sov|sob|sot|sol|sog|sor|som|sop|soe)" +
+                rSep +
+                "(.*?)" +
+                rEnd,
+
               caseInsensitive: true,
             },
             {
               token: ["punctuation.tag", "markup.bold", "punctuation.tag"],
-              regex: rStart + "(start_of_[a-z_]+|so[a-z])" + rEnd,
+              regex: rStart + "(start_of_[a-z_]+|so(c|v|b|t|l|g|r|m|p|e))" + rEnd,
               caseInsensitive: true,
             },
 
@@ -191,8 +197,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
       oop.inherits(FoldMode, BaseFoldMode);
 
       (function (this: any) {
-        this.foldingStartMarker =
-          /\{\s*(so(?<short>[a-z_]+)|start_of_(?<long>[a-z_]+))(:.*?)?\s*\}/i;
+        this.foldingStartMarker = /\{\s*(so(?<short>[a-z])|start_of_(?<long>[a-z_]+))(:.*?)?\s*\}/i;
         this.foldingStopMarker = /\{\s*(eo(?<short>[a-z_]+)|end_of_(?<long>[a-z_]+))\s*\}/i;
 
         // Maps short codes to their long equivalents so {soc} matches {end_of_chorus}
