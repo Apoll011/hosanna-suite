@@ -4,7 +4,7 @@ export interface ChordProValidationReport {
   ok: boolean;
   diagnostics: ChordProDiagnostic[];
   parseErrors: string[];
-  metadata: Record<string, string | undefined>;
+  metadata: Record<string, string | string[] | undefined>;
   variantCount: number;
   analysis: ReturnType<ReturnType<typeof parseChordPro>["analyze"]> | null;
   score: ReturnType<ReturnType<typeof parseChordPro>["score"]> | null;
