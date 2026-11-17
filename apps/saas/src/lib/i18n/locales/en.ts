@@ -553,9 +553,9 @@ export const en: typeof import("./pt").pt = {
     original_key: "Original key, when different from the team's playing key",
     tempo: "Beats per minute (BPM), useful for metronomes or click tracks",
     time: "Time signature, e.g. 4/4 or 6/8",
-    capo: "Initial capo fret (0–11) for instruments that support capo. Chords in file are sounding pitch; capo shifts shown shapes down.",
+    capo: "Initial capo fret (0–11) for instruments that support capo. A variant inherits the song capo only when its key matches the main key (including enharmonic equivalents); a capo written in the variant wins.",
     keyshift:
-      "Initial key shift in semitones (e.g. -3, +2). Seeds toolbar transpose for all instruments.",
+      "Initial key shift in semitones (e.g. -3, +2). Seeds toolbar transpose for the main chart only; variants use only their own keyshift.",
     duration: "Duration in mm:ss or seconds, used to estimate service lengths.",
     album: "Source album or collection",
     composer: "Melody composer",
@@ -572,7 +572,7 @@ export const en: typeof import("./pt").pt = {
     comment_box: "Boxed comment, ideal for prominent on-screen notes",
     repeat: "Marks a repeated section (e.g. 2x, or on cue)",
     start_of_version:
-      "Starts a named arrangement variant (Acoustic, Capo 2…). Inherits default metadata; select in preview",
+      "Starts a named arrangement variant. Keyshift is never inherited. Capo inherits only when the variant key matches the main key; a different key has no inherited capo. Missing variant key means the main key. Toolbar values reset to the selected chart defaults when switching variants.",
     end_of_version: "Ends the current named arrangement variant",
     start_of_verse: "Starts a verse section",
     end_of_verse: "Ends current verse section",

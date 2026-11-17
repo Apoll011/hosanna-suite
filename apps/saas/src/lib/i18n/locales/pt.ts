@@ -557,9 +557,9 @@ export const pt = {
     original_key: "Tom original, quando diferente do tom em que a equipa toca",
     tempo: "Batidas por minuto (BPM), útil para o metrónomo ou guias",
     time: "Compasso rítmico, ex: 4/4 ou 6/8",
-    capo: "Casa inicial do capotraste (0–11) para instrumentos compatíveis. Os acordes no ficheiro são reais (som ouvido); o capo desce os formatos exibidos.",
+    capo: "Casa inicial do capotraste (0–11). Uma variante só herda o capo da música quando o tom corresponde ao tom principal, incluindo equivalentes enarmónicos; o capo escrito na variante prevalece.",
     keyshift:
-      "Desvio inicial de tom em semitons (ex.: -3, +2). Define a transposição inicial da barra para todos os instrumentos.",
+      "Desvio inicial de tom em semitons (ex.: -3, +2). Define a transposição inicial da música principal; variantes só usam o seu próprio keyshift.",
     duration:
       "Duração em mm:ss ou segundos, Nos cultos é usada para ter uma estimativa da sua duração.",
     album: "Álbum ou coletânea de origem",
@@ -577,7 +577,7 @@ export const pt = {
     comment_box: "Comentário em caixa, ideal para avisos importantes no ecrã",
     repeat: "Marca um trecho a repetir (ex: 2x, ou até sinal do líder)",
     start_of_version:
-      "Inicia uma variação/arranjo nomeado (Acústico, Capo 2…). Herda metadados; selecionável na pré-visualização",
+      "Inicia uma variante/arranjo. O keyshift nunca é herdado. O capo só é herdado quando o tom da variante corresponde ao tom principal; sem diretiva de tom, usa o tom principal. Os valores da barra voltam às predefinições da variante ao mudar de variante.",
     end_of_version: "Termina a variação/arranjo nomeado atual",
     start_of_verse: "Inicia um verso",
     end_of_verse: "Termina o verso atual",

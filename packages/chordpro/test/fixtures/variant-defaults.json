@@ -1,0 +1,44 @@
+[
+  {
+    "id": "keyshift-not-inherited-same-key-capo-is",
+    "content": "{key: C}\n{keyshift: +2}\n{capo: 4}\n{start_of_version: Same}\n{end_of_version}",
+    "variant": "same",
+    "expected": { "keyShift": 0, "capo": 4 }
+  },
+  {
+    "id": "different-key-clears-main-settings",
+    "content": "{key: C}\n{keyshift: +2}\n{capo: 4}\n{start_of_version: Different}\n{key: D}\n{end_of_version}",
+    "variant": "different",
+    "expected": { "keyShift": 0, "capo": 0 }
+  },
+  {
+    "id": "variant-capo-wins",
+    "content": "{key: C}\n{capo: 4}\n{start_of_version: Different}\n{key: D}\n{capo: 2}\n{end_of_version}",
+    "variant": "different",
+    "expected": { "keyShift": 0, "capo": 2 }
+  },
+  {
+    "id": "enharmonic-major-keys-match",
+    "content": "{key: F#}\n{capo: 4}\n{start_of_version: Flat spelling}\n{key: Gb}\n{end_of_version}",
+    "variant": "flat-spelling",
+    "expected": { "keyShift": 0, "capo": 4 }
+  },
+  {
+    "id": "minor-and-major-keys-differ",
+    "content": "{key: C}\n{capo: 4}\n{start_of_version: Minor}\n{key: Cm}\n{end_of_version}",
+    "variant": "minor",
+    "expected": { "keyShift": 0, "capo": 0 }
+  },
+  {
+    "id": "variant-without-key-uses-main-key-and-capo",
+    "content": "{key: C}\n{keyshift: +2}\n{capo: 4}\n{start_of_version: No key}\n{end_of_version}",
+    "variant": "no-key",
+    "expected": { "keyShift": 0, "capo": 4 }
+  },
+  {
+    "id": "variant-keyshift-is-own-directive",
+    "content": "{key: C}\n{keyshift: +2}\n{capo: 4}\n{start_of_version: Own shift}\n{keyshift: -3}\n{end_of_version}",
+    "variant": "own-shift",
+    "expected": { "keyShift": -3, "capo": 4 }
+  }
+]

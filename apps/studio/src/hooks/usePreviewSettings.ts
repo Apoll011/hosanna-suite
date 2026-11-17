@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 
 export interface PreviewSettings {
   showChords: boolean;
@@ -111,12 +111,17 @@ if (typeof window !== "undefined") {
 export function usePreviewSettings(
   songId?: string | null,
   directiveDefaults?: { transposeVal: number; capoVal: number },
+  variantId?: string | null,
 ) {
   const settings = useSyncExternalStore(subscribe, getSnapshot);
+  const previousScope = useRef<string | null>(null);
 
   useEffect(() => {
     if (!songId) return;
-    const overlay = loadSongPitchOverlay(songId);
+    const scope = `${songId}|${variantId ?? "default"}`;
+    const sameSong = previousScope.current?.split("|")[0] === songId;
+    previousScope.current = scope;
+    const overlay = sameSong ? null : loadSongPitchOverlay(songId);
     if (overlay) {
       setState((prev) => ({
         ...prev,
@@ -130,7 +135,7 @@ export function usePreviewSettings(
         capoVal: directiveDefaults.capoVal,
       }));
     }
-  }, [songId, directiveDefaults?.transposeVal, directiveDefaults?.capoVal, directiveDefaults]);
+  }, [songId, variantId, directiveDefaults?.transposeVal, directiveDefaults?.capoVal]);
 
   const updateSetting = useCallback(
     <K extends keyof PreviewSettings>(key: K, value: PreviewSettings[K]) => {

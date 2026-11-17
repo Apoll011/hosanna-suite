@@ -16,9 +16,8 @@ import { Song } from "@/src/types";
 import {
   ChordProRenderer,
   instrumentRegistry,
-  parseCapoValue,
   parseChordPro,
-  parseKeyShiftValue,
+  resolveVariantDefaults,
   resolveChords,
 } from "@hosanna/chordpro";
 import { Editor } from "@hosanna/chordpro/editor";
@@ -97,16 +96,20 @@ export const SongEditorPage: React.FC = () => {
   const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
 
   const directiveDefaults = useMemo(
-    () => ({
-      transposeVal: parseKeyShiftValue(parsedSong.metadata.keyShift),
-      capoVal: parseCapoValue(parsedSong.metadata.capo),
-    }),
-    [parsedSong.metadata.keyShift, parsedSong.metadata.capo],
+    () => {
+      const variant = selectedVariant
+        ? parsedSong.variants?.find((item) => item.id === selectedVariant)
+        : undefined;
+      const defaults = resolveVariantDefaults(parsedSong.default!, variant);
+      return { transposeVal: defaults.keyShift, capoVal: defaults.capo };
+    },
+    [parsedSong, selectedVariant],
   );
 
   const { settings, updateSetting, resetSettings } = usePreviewSettings(
     song?.id,
     directiveDefaults,
+    selectedVariant,
   );
   const { fontSize, showDiagrams } = settings;
 
@@ -117,14 +120,17 @@ export const SongEditorPage: React.FC = () => {
   }, [settings.instrument]);
 
   const { capoLabel } = useMemo(() => {
+    const version = selectedVariant
+      ? parsedSong.variants?.find((item) => item.id === selectedVariant)
+      : parsedSong.default;
     return resolveChords({
       chords: [],
-      key: parsedSong.metadata.key,
+      key: typeof version?.metadata.key === "string" ? version.metadata.key : undefined,
       keyShift: settings.transposeVal,
       capo: settings.capoVal,
       instrument: settings.instrument,
     });
-  }, [parsedSong.metadata.key, settings.transposeVal, settings.capoVal, settings.instrument]);
+  }, [parsedSong, selectedVariant, settings.transposeVal, settings.capoVal, settings.instrument]);
 
   const transformedSong = useMemo(() => {
     const delta = settings.transposeVal - (supportsCapo ? settings.capoVal : 0);

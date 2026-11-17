@@ -1,8 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { resolveChords, parseCapoValue, parseKeyShiftValue } from "../src/parser/resolveChords";
+import { resolveChords, parseCapoValue, parseKeyShiftValue, resolveVariantDefaults } from "../src/parser/resolveChords";
+import { parseChordProDocument } from "../src/parser/parser";
 import "../src/instruments";
 import fixtures from "./fixtures/resolve-chords.json" with { type: "json" };
+import variantFixtures from "./fixtures/variant-defaults.json" with { type: "json" };
 
 type Fixture = {
   id: string;
@@ -59,4 +61,20 @@ describe("parseKeyShiftValue", () => {
     assert.equal(parseKeyShiftValue("2.5"), 0);
     assert.equal(parseKeyShiftValue(""), 0);
   });
+});
+
+describe("variant directive defaults — shared fixtures", () => {
+  for (const fixture of variantFixtures as Array<{
+    id: string;
+    content: string;
+    variant: string;
+    expected: { keyShift: number; capo: number };
+  }>) {
+    it(fixture.id, () => {
+      const document = parseChordProDocument(fixture.content);
+      const variant = document.variants.find((item) => item.id === fixture.variant);
+      assert.ok(variant);
+      assert.deepEqual(resolveVariantDefaults(document.default, variant), fixture.expected);
+    });
+  }
 });

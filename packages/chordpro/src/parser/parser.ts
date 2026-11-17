@@ -37,6 +37,7 @@ export interface ChordProVersion {
   id: string;
   name: string;
   metadata: Record<string, string | string[]>;
+  declaredDirectives?: string[];
   body: SectionAST[];
 }
 
@@ -160,6 +161,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
     id: "default",
     name: "Padrão",
     metadata: {},
+    declaredDirectives: [],
     body: [],
   };
 
@@ -170,6 +172,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
     id: string;
     name: string;
     metadata: Record<string, string | string[]>;
+    declaredDirectives: Set<string>;
     sections: SectionAST[];
     currentSection: SectionAST | null;
     isTab: boolean;
@@ -183,6 +186,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
     id: "default",
     name: "Padrão",
     metadata: {},
+    declaredDirectives: new Set(),
     sections: [],
     currentSection: null,
     isTab: false,
@@ -295,6 +299,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
           id: variantId,
           name: versionName,
           metadata: { ...previousMetadata },
+          declaredDirectives: new Set(),
           sections: [],
           currentSection: null,
           isTab: false,
@@ -302,6 +307,11 @@ export function parseChordProDocument(content: string): ChordProDocument {
           lastChorusLines: [],
           startLineNumber: lineNumber,
         };
+        if (defaultContext.metadata.key) {
+          activeVariantContext.metadata.key = defaultContext.metadata.key;
+        } else {
+          delete activeVariantContext.metadata.key;
+        }
         continue;
       }
 
@@ -322,6 +332,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
           id: activeVariantContext.id,
           name: activeVariantContext.name,
           metadata: activeVariantContext.metadata,
+          declaredDirectives: [...activeVariantContext.declaredDirectives],
           body: activeVariantContext.sections,
         });
 
@@ -331,6 +342,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
 
       // Normal directive dispatch within the active context
       const ctx = activeVariantContext ?? defaultContext;
+      ctx.declaredDirectives.add(name);
 
       switch (name) {
         case "start_of_chorus":
@@ -585,11 +597,13 @@ export function parseChordProDocument(content: string): ChordProDocument {
       id: activeVariantContext.id,
       name: activeVariantContext.name,
       metadata: activeVariantContext.metadata,
+      declaredDirectives: [...activeVariantContext.declaredDirectives],
       body: activeVariantContext.sections,
     });
   }
 
   commitSectionInContext(defaultContext);
+  defaultVersion.declaredDirectives = [...defaultContext.declaredDirectives];
   if (!defaultContext.metadata.title) {
     defaultContext.metadata.title = "Sem Título";
   }
