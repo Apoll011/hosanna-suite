@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { useI18n } from '@/lib/i18n';
 import LanguageToggle, {
   FlagIcon,
   LANGUAGE_OPTIONS,
@@ -10,19 +11,7 @@ import TryPlayButton from './TryPlayButton';
 export type { LanguageCode };
 export type NavItem = 'features' | 'chordpro' | 'price' | 'about' | 'contact';
 
-const NAV_ITEMS: { id: NavItem; labels: Record<LanguageCode, string> }[] = [
-  { id: 'features', labels: { pt: 'FUNCIONALIDADES', en: 'FEATURES', es: 'FUNCIONES' } },
-  { id: 'chordpro', labels: { pt: 'CHORDPRO', en: 'CHORDPRO', es: 'CHORDPRO' } },
-  { id: 'price', labels: { pt: 'PREÇOS', en: 'PRICE', es: 'PRECIOS' } },
-  { id: 'about', labels: { pt: 'SOBRE', en: 'ABOUT', es: 'NOSOTROS' } },
-  { id: 'contact', labels: { pt: 'CONTATO', en: 'CONTACT', es: 'CONTACTO' } },
-];
-
-const TRY_LABELS: Record<LanguageCode, string> = {
-  pt: 'Testar',
-  en: 'Try',
-  es: 'Probar',
-};
+const NAV_ITEMS: NavItem[] = ['features', 'chordpro', 'price', 'about', 'contact'];
 
 interface HeroHeaderProps {
   activeNav: NavItem;
@@ -43,6 +32,7 @@ export default function HeroHeader({
   onTryClick,
   ready,
 }: HeroHeaderProps) {
+  const { t } = useI18n();
   const headerRef = useRef<HTMLElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const topBarRef = useRef<HTMLSpanElement>(null);
@@ -181,7 +171,7 @@ export default function HeroHeader({
           aria-label="Primary navigation"
           className="hidden md:flex lg:justify-self-center items-center md:gap-3.5 lg:gap-7 pointer-events-auto"
         >
-          {NAV_ITEMS.map(({ id, labels }) => {
+          {NAV_ITEMS.map((id) => {
             const isActive = activeNav === id;
             return (
               <div key={id} data-header-item className="opacity-0">
@@ -204,7 +194,7 @@ export default function HeroHeader({
                     />
                   )}
                   <span data-nav-label className="inline-block">
-                    {labels[language]}
+                    {t(`landing.nav.${id === 'price' ? 'pricing' : id}`)}
                   </span>
                 </button>
               </div>
@@ -218,13 +208,13 @@ export default function HeroHeader({
           className="hidden md:flex lg:justify-self-end items-center md:gap-2 lg:gap-2.5 opacity-0 pointer-events-auto shrink-0"
         >
           <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="responsive" />
-          <TryPlayButton label={TRY_LABELS[language]} onClick={onTryClick} size="md" />
+          <TryPlayButton label={t('landing.nav.tryFree')} onClick={onTryClick} size="md" />
         </div>
 
         {/* Mobile actions (compact language toggle + Try button + hamburger) (< 768px) */}
         <div data-header-item className="md:hidden flex items-center gap-1.5 opacity-0 pointer-events-auto">
           <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="sm" />
-          <TryPlayButton label={TRY_LABELS[language]} onClick={onTryClick} size="sm" />
+          <TryPlayButton label={t('landing.nav.tryFree')} onClick={onTryClick} size="sm" />
 
           <button
             type="button"
@@ -258,7 +248,7 @@ export default function HeroHeader({
       >
         <nav aria-label="Mobile navigation">
           <ul className="flex flex-col gap-[10px] list-none m-0 p-0">
-            {NAV_ITEMS.map(({ id, labels }) => {
+            {NAV_ITEMS.map((id) => {
               const isActive = activeNav === id;
               return (
                 <li key={id} data-drawer-item>
@@ -278,7 +268,7 @@ export default function HeroHeader({
                         className="w-[4px] h-[4px] rounded-full bg-white mr-[10px]"
                       />
                     )}
-                    {labels[language]}
+                    {t(`landing.nav.${id === 'price' ? 'pricing' : id}`)}
                   </button>
                 </li>
               );

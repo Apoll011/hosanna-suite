@@ -55,6 +55,11 @@ export const en: typeof import("./pt").pt = {
       contact: "Contact",
       tryFree: "Try for Free",
     },
+    newHero: {
+      line1: "We bring clarity",
+      line2: "to every",
+      line3: "worship set",
+    },
     hero: {
       badge: "ChordPro repertoire for worship teams",
       titleStart: "Your team's songbook,",

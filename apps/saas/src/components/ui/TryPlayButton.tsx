@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const SEG_EASE = 'cubic-bezier(0.77, 0, 0.175, 1)';
 const WARP = 0.6;

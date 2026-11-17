@@ -55,6 +55,11 @@ export const es: typeof import("./pt").pt = {
       contact: "Contacto",
       tryFree: "Probar Gratis",
     },
+    newHero: {
+      line1: "Traemos claridad",
+      line2: "a cada",
+      line3: "adoración",
+    },
     hero: {
       badge: "Repertorio ChordPro para equipos de alabanza",
       titleStart: "El repertorio del equipo,",

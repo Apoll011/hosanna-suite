@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { useCursor } from '../hooks/useCursor';
-import { liquidBgVertexShader, liquidBgFragmentShader } from '../shaders/liquidBg';
-import { lensTextVertexShader, lensTextFragmentShader } from '../shaders/lensText';
+import { useCursor } from '../../hooks/useCursor';
+import { liquidBgVertexShader, liquidBgFragmentShader } from '../../shaders/liquidBg';
+import { lensTextVertexShader, lensTextFragmentShader } from '../../shaders/lensText';
 
 export type HeadlineLines = [string, string, string];
 
@@ -721,7 +721,7 @@ export default function WebGLCanvas({
   return (
     <div
       ref={mountRef}
-      className="fixed inset-0 z-0 w-full h-full pointer-events-none"
+      className="absolute inset-0 z-0 h-full w-full pointer-events-none"
       aria-hidden="true"
     />
   );
