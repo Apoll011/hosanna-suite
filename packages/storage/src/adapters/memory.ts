@@ -9,7 +9,7 @@ type PendingUpload = { tenant: string; key: string; contentType?: string; metada
 export function createMemoryStorage(): ObjectStorage {
   const entries = new Map<string, Entry>();
   const pending = new Map<string, PendingUpload>();
-  const objectKey = (tenant: string, key: string) => `${tenant}/${key}`;
+  const objectKey = (tenant: string, key: string) => `${tenant}/${cleanKey(key)}`;
   const tenantApi = (tenant: string): TenantObjectStorage => {
     const scoped = (key: string) => objectKey(tenant, key);
     const get = (key: string) => {
@@ -31,7 +31,7 @@ export function createMemoryStorage(): ObjectStorage {
       async exists(key) { return entries.has(scoped(key)); },
       async head(key) { return entries.get(scoped(key))?.metadata ?? null; },
       async list(input: ListInput = {}): Promise<ListResult> {
-        const prefix = scoped(input.prefix ?? "");
+        const prefix = `${tenant}/${input.prefix ? `${cleanKey(input.prefix).replace(/\/$/, "")}/` : ""}`;
         const all = [...entries.entries()].filter(([key]) => key.startsWith(prefix)).sort(([a], [b]) => a.localeCompare(b));
         const after = input.cursor ? all.findIndex(([key]) => key === input.cursor) + 1 : 0;
         const limit = input.limit ?? 1000;
@@ -57,6 +57,7 @@ export function createMemoryStorage(): ObjectStorage {
       async createMultipartPartUrl(upload, partNumber) {
         const active = pending.get(upload.uploadId);
         if (!active || active.tenant !== tenant || active.key !== upload.key) throw new StorageError("UPLOAD_NOT_FOUND", "Multipart upload not found");
+        if (!Number.isInteger(partNumber) || partNumber < 1 || partNumber > 10000) throw new StorageError("INVALID_INPUT", "Part number must be between 1 and 10000");
         return { url: `memory://multipart/${upload.uploadId}/${partNumber}`, method: "PUT", headers: {}, expiresAt: new Date(Date.now() + 900_000) };
       },
       async completeMultipartUpload(upload, parts: MultipartPart[]) {
@@ -94,6 +95,12 @@ function concatenate(parts: Uint8Array[]): Uint8Array {
 
 function validateTenant(tenant: string) {
   if (!tenant.trim() || tenant.includes("/") || tenant === "." || tenant === "..") throw new StorageError("INVALID_INPUT", "Tenant id must be a non-empty path segment");
+}
+
+function cleanKey(key: string) {
+  const normalized = key.replace(/^\/+|\/+$/g, "");
+  if (!normalized || normalized.split("/").some((part) => part === ".." || part === ".") || normalized.includes("\0")) throw new StorageError("INVALID_INPUT", "Object key must be a non-empty relative path");
+  return normalized;
 }
 
 function memoryUrl(operation: string, key: string, method: "GET" | "PUT", options?: UrlOptions): PresignedUrl {

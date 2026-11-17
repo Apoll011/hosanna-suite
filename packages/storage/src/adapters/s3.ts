@@ -34,7 +34,8 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
       async upload(input) {
         return safe(async () => {
           const result = await new Upload({ client, params: { Bucket: config.bucket, Key: keyOf(input.key), Body: input.body, ...(input.contentType ? { ContentType: input.contentType } : {}), ...(input.metadata ? { Metadata: input.metadata } : {}) } }).done();
-          return parse(input.key, input.body instanceof Uint8Array ? input.body.byteLength : undefined, input.contentType, result.ETag, new Date(), input.metadata);
+          const size = input.size ?? (input.body instanceof Uint8Array ? input.body.byteLength : input.body instanceof Blob ? input.body.size : undefined);
+          return parse(input.key, size, input.contentType, result.ETag, new Date(), input.metadata);
         });
       },
       async download(key) {
@@ -53,7 +54,10 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
       },
       async delete(key) { await safe(() => client.send(new DeleteObjectCommand({ Bucket: config.bucket, Key: keyOf(key) })).then(() => undefined)); },
       async deleteMany(keys) {
-        for (let i = 0; i < keys.length; i += 1000) await safe(() => client.send(new DeleteObjectsCommand({ Bucket: config.bucket, Delete: { Objects: keys.slice(i, i + 1000).map((Key) => ({ Key: keyOf(Key) })) } })).then(() => undefined));
+        for (let i = 0; i < keys.length; i += 1000) await safe(async () => {
+          const result = await client.send(new DeleteObjectsCommand({ Bucket: config.bucket, Delete: { Objects: keys.slice(i, i + 1000).map((Key) => ({ Key: keyOf(Key) })) } }));
+          if (result.Errors?.length) throw new StorageError("PROVIDER_ERROR", "S3 could not delete one or more objects", result.Errors);
+        });
       },
       async exists(key) { return (await this.head(key)) !== null; },
       async head(key) {
@@ -65,7 +69,8 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
       async list(input: ListInput = {}): Promise<ListResult> {
         return safe(async () => {
           const { ListObjectsV2Command } = await import("@aws-sdk/client-s3");
-          const result = await client.send(new ListObjectsV2Command({ Bucket: config.bucket, Prefix: keyOf(input.prefix ?? ""), ContinuationToken: input.cursor, MaxKeys: input.limit ?? 1000 }));
+          const prefix = input.prefix ? `${tenant}/${cleanPrefix(input.prefix)}` : `${tenant}/`;
+          const result = await client.send(new ListObjectsV2Command({ Bucket: config.bucket, Prefix: prefix, ContinuationToken: input.cursor, MaxKeys: input.limit ?? 1000 }));
           const objects = (result.Contents ?? []).map((item) => parse(item.Key ?? "", item.Size, undefined, item.ETag, item.LastModified));
           return { objects, ...(result.NextContinuationToken ? { nextCursor: result.NextContinuationToken } : {}) };
         });
@@ -114,6 +119,7 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
       },
       async createMultipartPartUrl(upload: MultipartUpload, partNumber: number, options = {}) {
         if (!Number.isInteger(partNumber) || partNumber < 1 || partNumber > 10000) throw new StorageError("INVALID_INPUT", "Part number must be between 1 and 10000");
+        if (!Number.isInteger(partNumber) || partNumber < 1 || partNumber > 10000) throw new StorageError("INVALID_INPUT", "Part number must be between 1 and 10000");
         return safe(async () => ({ url: await getSignedUrl(client, new UploadPartCommand({ Bucket: config.bucket, Key: keyOf(upload.key), UploadId: upload.uploadId, PartNumber: partNumber }), { expiresIn: options.expiresInSeconds ?? config.uploadUrlExpiresInSeconds ?? 900 }), method: "PUT", headers: {}, expiresAt: new Date(Date.now() + (options.expiresInSeconds ?? config.uploadUrlExpiresInSeconds ?? 900) * 1000) }));
       },
       async completeMultipartUpload(upload: MultipartUpload, parts: MultipartPart[]) {
@@ -131,8 +137,12 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
 
 function cleanKey(key: string) {
   const normalized = key.replace(/^\/+|\/+$/g, "");
-  if (!normalized || normalized.split("/").some((part) => part === ".." || part === ".")) throw new StorageError("INVALID_INPUT", "Object key must be a non-empty relative path");
+  if (!normalized || normalized.includes("\0") || normalized.split("/").some((part) => part === ".." || part === ".")) throw new StorageError("INVALID_INPUT", "Object key must be a non-empty relative path");
   return normalized;
+}
+
+function cleanPrefix(prefix: string) {
+  return `${cleanKey(prefix).replace(/\/$/, "")}/`;
 }
 
 function validateTenant(tenant: string) {

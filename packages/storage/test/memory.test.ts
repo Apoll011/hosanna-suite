@@ -10,6 +10,11 @@ describe("memory storage", () => {
     await assert.rejects(createMemoryStorage().forTenant("tenant").download("missing"), { code: "NOT_FOUND" });
   });
 
+  it("rejects keys that escape the tenant namespace", async () => {
+    const tenant = createMemoryStorage().forTenant("tenant");
+    await assert.rejects(tenant.upload({ key: "../other/private", body: new Uint8Array([1]) }), { code: "INVALID_INPUT" });
+  });
+
   it("enforces multipart upload ownership and assembles parts in order", async () => {
     const storage = createMemoryStorage();
     const a = storage.forTenant("a");

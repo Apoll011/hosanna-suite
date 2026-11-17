@@ -5,6 +5,7 @@ export type ObjectBody = Uint8Array | Blob | ReadableStream<Uint8Array> | Readab
 export type UploadInput = {
   key: string;
   body: ObjectBody;
+  size?: number;
   contentType?: string;
   metadata?: Record<string, string>;
 };
