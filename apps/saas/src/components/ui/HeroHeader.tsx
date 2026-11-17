@@ -36,18 +36,49 @@ export default function HeroHeader({
   const botBarRef = useRef<HTMLSpanElement>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrolledPanelOpen, setScrolledPanelOpen] = useState(false);
+  const openScrollYRef = useRef<number>(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const threshold = Math.max(300, window.innerHeight - 80);
-      setScrolled(window.scrollY >= threshold);
+      const scrollY = window.scrollY;
+      const threshold = window.innerHeight * 0.75;
+      const pastHero = scrollY > threshold;
+
+      setIsScrolled(pastHero);
+
+      if (!pastHero) {
+        setScrolledPanelOpen(false);
+      } else if (openScrollYRef.current > 0 && Math.abs(scrollY - openScrollYRef.current) > 8) {
+        setScrolledPanelOpen(false);
+        openScrollYRef.current = 0;
+      }
     };
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setScrolledPanelOpen(false);
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const toggleScrolledPanel = () => {
+    setScrolledPanelOpen((prev) => {
+      const next = !prev;
+      openScrollYRef.current = next ? window.scrollY : 0;
+      return next;
+    });
+  };
 
   // Fast downward entrance animation for logo, nav links, language toggle, and Try button
   useEffect(() => {
@@ -79,7 +110,7 @@ export default function HeroHeader({
     };
   }, [ready]);
 
-  // GSAP hamburger -> X morph and mobile drawer animation
+  // GSAP hamburger -> X morph and mobile drawer animation for Hero section
   useEffect(() => {
     const topBar = topBarRef.current;
     const midBar = midBarRef.current;
@@ -135,12 +166,14 @@ export default function HeroHeader({
 
   return (
     <>
+      {/* 1. Standard Transparent Hero Navbar (Section 1 / Hero only) */}
       <header
         ref={headerRef}
-        className={`fixed top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 pointer-events-none px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 transition-all duration-300 ${
-          scrolled
-            ? "bg-[#021433]/85 backdrop-blur-md border-b border-white/15 shadow-sm"
-            : "bg-transparent border-b border-transparent"
+        aria-hidden={isScrolled}
+        className={`fixed top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 transition-all duration-300 pointer-events-none ${
+          isScrolled
+            ? "opacity-0 -translate-y-4 pointer-events-none"
+            : "opacity-100 translate-y-0"
         }`}
       >
         {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
@@ -193,7 +226,7 @@ export default function HeroHeader({
                   onMouseLeave={(e) => handleLinkHover(e, false)}
                   aria-current={isActive ? "page" : undefined}
                   className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-medium uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm text-white ${
-                    isActive || scrolled
+                    isActive
                       ? "opacity-100"
                       : "opacity-[0.72] hover:opacity-100"
                   }`}
@@ -222,8 +255,9 @@ export default function HeroHeader({
             language={language}
             onChangeLanguage={onChangeLanguage}
             size="responsive"
+            theme="dark"
           />
-          <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="md" />
+          <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="md" theme="dark" />
         </div>
 
         {/* Mobile actions (compact language toggle + Try button + hamburger) (< 768px) */}
@@ -231,8 +265,8 @@ export default function HeroHeader({
           data-header-item
           className="md:hidden flex items-center gap-1.5 opacity-0 pointer-events-auto"
         >
-          <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="sm" />
-          <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="sm" />
+          <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="sm" theme="dark" />
+          <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="sm" theme="dark" />
 
           <button
             type="button"
@@ -248,7 +282,162 @@ export default function HeroHeader({
         </div>
       </header>
 
-      {/* Mobile full-screen navigation drawer (z-30) */}
+      {/* 2. Floating Circular Ball (Section 2+ Scrolled State) */}
+      <button
+        type="button"
+        onClick={toggleScrolledPanel}
+        aria-label={scrolledPanelOpen ? "Close menu" : "Open menu"}
+        aria-expanded={scrolledPanelOpen}
+        className={`fixed top-5 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 ${
+          isScrolled
+            ? "opacity-100 scale-100 pointer-events-auto translate-y-0"
+            : "opacity-0 scale-75 pointer-events-none -translate-y-2"
+        } ${
+          scrolledPanelOpen
+            ? "bg-[#021433] hover:bg-[#03204e] text-white border border-[#021433]/30 shadow-xl"
+            : "bg-black/40 hover:bg-black/60 text-white backdrop-blur-md border border-white/25 shadow-lg"
+        }`}
+      >
+        <div className="relative w-4.5 h-4 flex flex-col items-center justify-center">
+          <span
+            className={`block w-4.5 h-[1.75px] bg-white rounded-full origin-center transition-all duration-300 ease-in-out ${
+              scrolledPanelOpen ? "translate-y-[2.5px] rotate-45" : "-translate-y-1.25"
+            }`}
+          />
+          <span
+            className={`block w-4.5 h-[1.75px] bg-white rounded-full origin-center transition-all duration-200 ease-in-out ${
+              scrolledPanelOpen ? "opacity-0 scale-x-0" : "opacity-100"
+            }`}
+          />
+          <span
+            className={`block w-4.5 h-[1.75px] bg-white rounded-full origin-center transition-all duration-300 ease-in-out ${
+              scrolledPanelOpen ? "-translate-y-[2.5px] -rotate-45" : "translate-y-1.25"
+            }`}
+          />
+        </div>
+      </button>
+
+      {/* 3. Pure-White Full-Width Top Navbar Drawer (Section 2+ Expanded State) */}
+      <div
+        aria-hidden={!scrolledPanelOpen || !isScrolled}
+        className={`fixed top-0 inset-x-0 z-40 bg-white border-b border-black/10 shadow-[0_12px_32px_-12px_rgba(2,20,51,0.18)] transition-transform duration-300 ease-out px-4 py-3.5 md:px-6 md:py-4 lg:px-9 lg:py-4.5 ${
+          scrolledPanelOpen && isScrolled
+            ? "translate-y-0 pointer-events-auto"
+            : "-translate-y-full pointer-events-none"
+        }`}
+      >
+        <div className="w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4">
+          {/* Left: Brand lockup with dark ink contrast on white */}
+          <div className="lg:justify-self-start shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                onLogoClick();
+                setScrolledPanelOpen(false);
+              }}
+              aria-label="Hosanna Studio home"
+              className="inline-flex items-center gap-1.5 md:gap-1.75 lg:gap-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#021433]/60 rounded-sm"
+            >
+              <img
+                src="/assets/logo_icon.png"
+                alt=""
+                aria-hidden="true"
+                className="h-4.5 md:h-5.5 lg:h-7 w-auto block shrink-0 select-none"
+                draggable={false}
+              />
+              <span
+                aria-hidden="true"
+                className="w-px h-2.5 md:h-3 lg:h-3.75 bg-[#021433]/30 shrink-0"
+              />
+              <img
+                src="/assets/wordmark_studio.svg"
+                alt="Hosanna Studio"
+                className="h-2.25 md:h-2.75 lg:h-3.5 w-auto block shrink-0 select-none brightness-0"
+                draggable={false}
+              />
+            </button>
+          </div>
+
+          {/* Center: Nav links in high-contrast dark blue (#021433) */}
+          <nav
+            aria-label="Scrolled drawer navigation"
+            className="hidden md:flex lg:justify-self-center items-center md:gap-3.5 lg:gap-7"
+          >
+            {NAV_ITEMS.map((id) => {
+              const isActive = activeNav === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => {
+                    onSelectNav(id);
+                    setScrolledPanelOpen(false);
+                  }}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-semibold uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#021433]/60 rounded-sm ${
+                    isActive
+                      ? "text-[#021433] opacity-100 font-bold"
+                      : "text-[#021433]/70 hover:text-[#021433] hover:opacity-100"
+                  }`}
+                >
+                  {isActive && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -bottom-px left-1/2 -translate-x-1/2 w-[3.5px] h-[3.5px] rounded-full bg-[#021433]"
+                    />
+                  )}
+                  <span>{t(`landing.nav.${id === "price" ? "pricing" : id}`)}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right: Language toggle + Try button with breathing room for the floating ball */}
+          <div className="flex items-center gap-2 lg:gap-2.5 lg:justify-self-end pr-14 md:pr-16 shrink-0">
+            <LanguageToggle
+              language={language}
+              onChangeLanguage={onChangeLanguage}
+              size="responsive"
+              theme="light"
+            />
+            <TryPlayButton
+              label={t("landing.nav.tryFree")}
+              onClick={() => {
+                onTryClick();
+                setScrolledPanelOpen(false);
+              }}
+              size="md"
+              theme="light"
+            />
+          </div>
+        </div>
+
+        {/* Compact mobile nav links sub-row */}
+        <div className="md:hidden flex items-center gap-1.5 overflow-x-auto pt-2.5 pb-0.5 border-t border-black/5 mt-2.5">
+          {NAV_ITEMS.map((id) => {
+            const isActive = activeNav === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  onSelectNav(id);
+                  setScrolledPanelOpen(false);
+                }}
+                className={`px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.06em] rounded-full shrink-0 transition-colors ${
+                  isActive
+                    ? "bg-[#021433] text-white"
+                    : "text-[#021433]/70 hover:text-[#021433] bg-[#021433]/5"
+                }`}
+              >
+                {t(`landing.nav.${id === "price" ? "pricing" : id}`)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mobile full-screen navigation drawer for Hero section */}
       <div
         ref={drawerRef}
         style={{ display: "none" }}
