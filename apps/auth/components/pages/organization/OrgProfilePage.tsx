@@ -108,7 +108,7 @@ export function OrgProfilePage() {
       await authClient.organization.update({
         data: {
           name: draftName.trim(),
-          logo: draftLogo || undefined,
+          logo: draftLogo,
           metadata: updatedMetadata,
         },
       });

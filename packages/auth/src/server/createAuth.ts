@@ -360,6 +360,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 }
               } catch (err) {
                 console.error("[auth databaseHook] avatar upload failed on create:", err);
+                throw err;
               }
             }
           },
@@ -377,7 +378,8 @@ function createFullAuth(options: CreateAuthFullOptions): any {
           before: async (user, context) => {
             if (user.image && typeof user.image === "string") {
               try {
-                const userId = (user as any).id ?? context?.context?.session?.user?.id ?? "unknown";
+                const userId = context?.context?.session?.user?.id;
+                if (!userId) throw new Error("Could not determine the avatar owner");
 
                 let publicUrl: string | undefined;
                 if (avatars.isBase64Image(user.image)) {
@@ -396,6 +398,16 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 }
               } catch (err) {
                 console.error("[auth databaseHook] avatar upload failed on update:", err);
+                throw err;
+              }
+            }
+          },
+          after: async (user) => {
+            if (!user.image) {
+              try {
+                await avatars.deleteAvatar(user.id);
+              } catch (error) {
+                console.error("[auth] avatar cleanup failed:", error);
               }
             }
           },
@@ -639,6 +651,26 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 },
               },
             };
+          },
+          beforeUpdateOrganization: async ({ organization }) => {
+            if (!organization.id || !organization.logo) return;
+            try {
+              let logo: string | undefined;
+              if (avatars.isBase64Image(organization.logo)) {
+                logo = await avatars.uploadOrganizationLogo(organization.id, organization.logo);
+              } else if (avatars.isExternalImageUrl(organization.logo)) {
+                logo = await avatars.uploadOrganizationLogo(organization.id, organization.logo);
+              }
+              if (logo) return { data: { ...organization, logo } };
+            } catch (error) {
+              console.error("[auth] organization logo upload failed:", error);
+              throw error;
+            }
+          },
+          afterUpdateOrganization: async ({ organization }) => {
+            if (organization && !organization.logo) {
+              await avatars.deleteOrganizationLogo(organization.id);
+            }
           },
 
           afterAddMember: async ({ member, user, organization }) => {
