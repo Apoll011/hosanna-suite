@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 
 import { router } from "./router";
 import "./styles.css";
+import { I18nProvider } from "./lib/i18n";
 
 const rootElement = document.getElementById("root");
 
@@ -13,6 +14,8 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <I18nProvider>
+      <RouterProvider router={router} />
+    </I18nProvider>
   </StrictMode>,
 );

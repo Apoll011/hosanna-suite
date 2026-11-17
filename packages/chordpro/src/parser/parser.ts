@@ -36,7 +36,7 @@ export interface SectionAST {
 export interface ChordProVersion {
   id: string;
   name: string;
-  metadata: Record<string, string>;
+  metadata: Record<string, string | string[]>;
   body: SectionAST[];
 }
 
@@ -72,9 +72,9 @@ export interface SongAST {
     /** Free-text note about key changes, from `{key_note: …}` (shown by the renderer). */
     keyNote?: string;
     /** Editor-only labels from `{tags: …}` (comma-joined; not rendered). */
-    tags?: string;
+    tags?: string[];
     arranger?: string;
-    [key: string]: string | undefined;
+    [key: string]: string | string[] | undefined;
   };
   sections: SectionAST[];
   default?: ChordProVersion;
@@ -169,7 +169,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
     isDefault: boolean;
     id: string;
     name: string;
-    metadata: Record<string, string>;
+    metadata: Record<string, string | string[]>;
     sections: SectionAST[];
     currentSection: SectionAST | null;
     isTab: boolean;
@@ -478,9 +478,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
             .map((tag) => tag.trim())
             .filter(Boolean);
           if (tags.length > 0) {
-            ctx.metadata["tags"] = ctx.metadata["tags"]
-              ? `${ctx.metadata["tags"]}, ${tags.join(", ")}`
-              : tags.join(", ");
+            ctx.metadata["tags"] = ctx.metadata["tags"] ? tags.concat(ctx.metadata["tags"]) : tags;
           }
           break;
         }

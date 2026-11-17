@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     "@hosanna/db",
     "@hosanna/i18n",
     "@hosanna/logos-ai",
+    "@hosanna/storage",
     "@hosanna/ui",
     "@hosanna/config",
   ],

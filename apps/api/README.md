@@ -85,7 +85,6 @@ See **`.env.example`** for the full list. Required at process start (`src/config
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`   | Google OAuth                              |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Org billing                               |
 | `TURNSTILE_SECRET_KEY`                        | Cloudflare Turnstile                      |
-| `SUPABASE_URL` / `SUPABASE_SECRET_KEY`        | Avatars + Supabase client                 |
 | `RESEND_API_KEY`                              | Transactional email                       |
 
 Important optional: `STUDIO_URL`, `MCP_RESOURCE_URL`, `CRON_SECRET`, `FCM_*`,

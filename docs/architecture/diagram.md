@@ -65,7 +65,7 @@ flowchart TB
 
   subgraph DATA["Data Plane"]
     PG[("PostgreSQL<br/>Supabase Pooler :6543<br/>Prisma models + soft-delete")]
-    SUPA_STOR["Supabase Storage<br/>avatars bucket"]
+    SUPA_STOR["Supabase Storage S3 API<br/>@hosanna/storage · avatars bucket"]
     FS[("Cloud Firestore<br/>notes ping · annotation docs")]
     IDB[("Studio IndexedDB<br/>local-first collections")]
     SQLITE[("Flutter Drift/SQLite<br/>songs · folders · collections · services")]
@@ -82,7 +82,6 @@ flowchart TB
     SCRAPE["Cifra Club / Ultimate Guitar"]
     META["MusicBrainz · DuckDuckGo"]
     POSTHOG["PostHog<br/>Studio analytics"]
-    VERCEL_A["Vercel Analytics<br/>Marketing"]
   end
 
   SAAS -->|"CTA → Studio signup"| STUDIO
@@ -143,7 +142,6 @@ flowchart TB
   CIFRA --> SCRAPE
 
   STUDIO --> POSTHOG
-  SAAS --> VERCEL_A
 ```
 
 ## Auth + sync sequence

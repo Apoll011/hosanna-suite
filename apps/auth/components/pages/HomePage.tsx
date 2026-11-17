@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuthUser } from "@/hooks/useAuthUser";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { useAuthUser } from "@/hooks/useAuthUser";
 import { useI18n } from "@/lib/ui/i18n";
 import type { AppSwitcherApp } from "@hosanna/ui";
 import {
@@ -245,11 +245,7 @@ export function HomePage() {
                       <div className="min-w-0 flex-1 space-y-1.5 pt-0.5">
                         <div className="flex flex-wrap items-center gap-2">
                           <h3 className="text-base font-semibold tracking-tight">{app.name}</h3>
-                          {openable ? (
-                            <span className="rounded-full bg-sky-500/12 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-sky-700 dark:text-sky-300">
-                              {t("home.openBadge")}
-                            </span>
-                          ) : (
+                          {!openable && (
                             <span className="rounded-full bg-m3-sidebar px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-m3-secondary">
                               {t("suite.comingSoon")}
                             </span>

@@ -5,7 +5,22 @@
 
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
+import { getPersonalSettings } from "@hosanna/auth";
 import { ConversionResult } from "@hosanna/chordpro";
+import {
+  AI_LIBRARY_CHANGED_EVENT,
+  AI_NAVIGATE_EVENT,
+  AI_OPEN_APP_EVENT,
+  AI_PRINT_EVENT,
+  AiChatDock,
+  aiContextBridge,
+  performOpenApp,
+  resolveHosannaAppOrigin,
+  warmHosannaAppOrigin,
+  type AiNavigateDetail,
+  type AiOpenAppDetail,
+  type AiPrintDetail,
+} from "@hosanna/logos-ai";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useRegisterSW } from "virtual:pwa-register/react";
@@ -33,24 +48,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { usePrint } from "../contexts/PrintContext";
 import { useSync } from "../contexts/SyncContext";
 import { getDatabase, purgeExpiredTrash } from "../db";
-import {
-  AI_LIBRARY_CHANGED_EVENT,
-  AI_NAVIGATE_EVENT,
-  AI_OPEN_APP_EVENT,
-  AI_PRINT_EVENT,
-  AiChatDock,
-  aiContextBridge,
-  performOpenApp,
-  resolveHosannaAppOrigin,
-  warmHosannaAppOrigin,
-  type AiNavigateDetail,
-  type AiOpenAppDetail,
-  type AiPrintDetail,
-} from "@hosanna/logos-ai";
-import { StudioLogosProvider } from "../logos/StudioLogosProvider";
-import { getAuthAppUrl, navigateToAuthAccount, prefetchAuthAccount } from "../lib/authUrl";
-import { getPersonalSettings } from "@hosanna/auth";
-import { writeThemeCookie } from "../lib/themeBoot";
 import { useAgenda } from "../hooks/useAgenda";
 import { useAppNavigate } from "../hooks/useAppNavigate";
 import { invalidateCollectionsCache, useCollections } from "../hooks/useCollections";
@@ -60,7 +57,10 @@ import { useServices } from "../hooks/useServices";
 import { useSongImportController } from "../hooks/useSongImportController";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
+import { getAuthAppUrl, navigateToAuthAccount, prefetchAuthAccount } from "../lib/authUrl";
+import { writeThemeCookie } from "../lib/themeBoot";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
+import { StudioLogosProvider } from "../logos/StudioLogosProvider";
 import { filterSearchableSongsWithLiqe } from "../utils";
 import { deriveView } from "./view";
 
@@ -1727,7 +1727,6 @@ export const MainLayout: React.FC = () => {
       <BatchActionFloatingBar
         selectedCount={totalSelectedCount}
         itemLabel={t("layout.items")}
-        onTag={selectedSongIds.size > 0 ? () => openModal("batch-tag") : undefined}
         onMove={
           selectedSongIds.size > 0 || selectedFolderIds.size > 0
             ? () => openModal("batch-move")
@@ -1798,10 +1797,6 @@ export const MainLayout: React.FC = () => {
         onMoveSong={(s) => {
           setMoveSongTarget(s);
           setTargetSongFolderId(s.folderId || null);
-        }}
-        onTagSong={(s) => {
-          setSelectedSongIds(new Set([s.id]));
-          openModal("batch-tag");
         }}
         onAddToCollection={(s) => setAddToCollectionTarget(s)}
         onDeleteSong={setDeleteSongTarget}

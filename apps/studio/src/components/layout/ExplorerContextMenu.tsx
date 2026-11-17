@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Badge, Can, CanAll } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
+import { Badge, Can, CanAll } from "@hosanna/ui";
 import {
   ArrowRightLeft,
   CheckSquare,
@@ -18,7 +18,6 @@ import {
   Plus,
   Printer,
   RotateCw,
-  Tag,
   Trash2,
   Upload,
   X,
@@ -54,7 +53,6 @@ export interface ExplorerContextMenuProps {
   onMoveFolder: (folder: Folder) => void;
   onDeleteFolder: (folder: Folder) => void;
   onMoveSong: (song: Song) => void;
-  onTagSong: (song: Song) => void;
   onAddToCollection?: (song: Song) => void;
   onDeleteSong: (song: Song) => void;
   onPrintSongs?: () => void;
@@ -91,7 +89,6 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
   onMoveFolder,
   onDeleteFolder,
   onMoveSong,
-  onTagSong,
   onAddToCollection,
   onDeleteSong,
   onPrintSongs,
@@ -193,20 +190,6 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
           {selectedSongIds.size > 0 && (
             <>
               <Can permission="song.update">
-                <button
-                  onClick={() => {
-                    onOpenModal("batch-tag");
-                    onClose();
-                  }}
-                  className={MENU_ITEM}
-                >
-                  <Tag className={MENU_ICON} />
-                  <span>
-                    {t("explorer.contextMenu.tagSongsCount", {
-                      count: selectedSongIds.size,
-                    })}
-                  </span>
-                </button>
                 <button
                   data-tour="ctx-add-to-collection"
                   onClick={() => {
@@ -429,17 +412,6 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
                     <span>{t("explorer.contextMenu.addToCollection")}</span>
                   </button>
                 )}
-
-                <button
-                  onClick={() => {
-                    onTagSong(contextMenu.item as Song);
-                    onClose();
-                  }}
-                  className={MENU_ITEM}
-                >
-                  <Tag className={MENU_ICON} />
-                  <span>{t("explorer.contextMenu.tagSong")}</span>
-                </button>
               </Can>
               <Can permission="export.pdf">
                 <button

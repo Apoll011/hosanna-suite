@@ -4,15 +4,15 @@ What to configure and verify after the architecture fixes in this folder. Treat 
 
 ## Surface → host map
 
-| Surface      | Repo               | Typical host                                            | Notes                                 |
-| ------------ | ------------------ | ------------------------------------------------------- | ------------------------------------- |
-| API          | `Hosanna-server`   | **Vercel** (`api.hosanna.live`)                         | Fluid / serverless Express            |
-| Studio       | `Hosana-dashboard` | **Vercel** and/or **Cloudflare Workers** assets         | SPA; `wrangler.jsonc` + `vercel.json` |
-| Marketing    | `hosanna-saas`     | **Vercel** (`hosanna.live`)                             | Static + prerender                    |
-| Blog         | `hosanna-blog`     | **Cloudflare Workers** (preferred) or Netlify           | `wrangler.jsonc` / `netlify.toml`     |
-| DB / storage | —                  | **Supabase**                                            | Postgres pooler + `avatars` bucket    |
-| Push / live  | —                  | **Firebase**                                            | FCM + Firestore rules                 |
-| Auth extras  | —                  | **Google OAuth**, **Turnstile**, **Stripe**, **Resend** |                                       |
+| Surface      | Repo               | Typical host                                            | Notes                                   |
+| ------------ | ------------------ | ------------------------------------------------------- | --------------------------------------- |
+| API          | `Hosanna-server`   | **Vercel** (`api.hosanna.live`)                         | Fluid / serverless Express              |
+| Studio       | `Hosana-dashboard` | **Vercel** and/or **Cloudflare Workers** assets         | SPA; `wrangler.jsonc` + `vercel.json`   |
+| Marketing    | `hosanna-saas`     | **Vercel** (`hosanna.live`)                             | Static + prerender                      |
+| Blog         | `hosanna-blog`     | **Cloudflare Workers** (preferred) or Netlify           | `wrangler.jsonc` / `netlify.toml`       |
+| DB / storage | —                  | **Supabase**                                            | Postgres pooler + S3-compatible Storage |
+| Push / live  | —                  | **Firebase**                                            | FCM + Firestore rules                   |
+| Auth extras  | —                  | **Google OAuth**, **Turnstile**, **Stripe**, **Resend** |                                         |
 
 ---
 
@@ -36,7 +36,6 @@ MCP_RESOURCE_URL=https://api.hosanna.live/mcp   # must match client URL exactly
 GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
 STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET
 TURNSTILE_SECRET_KEY
-SUPABASE_URL / SUPABASE_SECRET_KEY
 RESEND_API_KEY / EMAIL_FROM
 CRON_SECRET
 ```
@@ -96,7 +95,6 @@ cross-subdomain on `hosanna.live`.
 
 - `VITE_DASHBOARD_URL=https://studio.hosanna.live`
 - `VITE_API_URL=https://api.hosanna.live/api` (plan prices from `/billing/pricing`)
-- Vercel Analytics already in the app
 
 ---
 
@@ -117,11 +115,11 @@ cross-subdomain on `hosanna.live`.
 
 ---
 
-## 6. Supabase
+## 6. Supabase Postgres and Storage
 
 1. Run Prisma migrations against `DIRECT_URL`
-2. Ensure `avatars` bucket exists; service role = `SUPABASE_SECRET_KEY`
-3. Pooler URL for runtime; keep `DB_POOL_MAX` low on Vercel
+2. Use the Supabase pooler URL for runtime; keep `DB_POOL_MAX` low on Vercel
+3. Create the private `hosanna-assets` bucket and configure Auth to use it through the same Supabase Storage S3 endpoint; see [object storage](./storage.md)
 
 ---
 

@@ -7,9 +7,6 @@ import posthog from "posthog-js";
 const token = import.meta.env.VITE_PUBLIC_POSTHOG_KEY as string | undefined;
 const host = import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string | undefined;
 
-// Analytics is off outside production builds: a dev server pointed at the production
-// project reports hot-reload errors as production issues and pollutes the metrics.
-// Set VITE_PUBLIC_POSTHOG_DEV="true" (ideally with a development project token) to opt in locally.
 const enabled =
   import.meta.env.PROD ||
   (import.meta.env.VITE_PUBLIC_POSTHOG_DEV as string | undefined) === "true";

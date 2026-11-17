@@ -4,24 +4,31 @@
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChordProSettings";
-import { Button, Spinner, useCan, Can } from "@hosanna/ui";
 import { EditorSettingsPanel } from "@/src/components/EditorSettingsPanel";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useEditorSettings } from "@/src/hooks/useEditorSettings";
 import { usePreviewSettings } from "@/src/hooks/usePreviewSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { emitOnboardingEvent } from "@/src/lib/tour";
+import { Button, Can, Spinner, useCan } from "@hosanna/ui";
 
 import { Song } from "@/src/types";
 import {
   ChordProRenderer,
-  parseChordPro,
-  resolveChords,
-  parseCapoValue,
-  parseKeyShiftValue,
   instrumentRegistry,
+  parseCapoValue,
+  parseChordPro,
+  parseKeyShiftValue,
+  resolveChords,
 } from "@hosanna/chordpro";
 import { Editor } from "@hosanna/chordpro/editor";
+import {
+  DIFF_THEME_STYLE,
+  aiContextBridge,
+  aiProposals,
+  useDiffLabels,
+  useSongProposal,
+} from "@hosanna/logos-ai";
 import {
   ArrowLeft,
   Columns,
@@ -41,13 +48,6 @@ import { HelpModal } from "../../components/modals/HelpModal";
 import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useSync } from "../../contexts/SyncContext";
-import {
-  DIFF_THEME_STYLE,
-  aiContextBridge,
-  aiProposals,
-  useDiffLabels,
-  useSongProposal,
-} from "@hosanna/logos-ai";
 import { useSong, useSongs } from "../../hooks/useSongs";
 import { posthog } from "../../lib/posthog";
 
@@ -242,8 +242,11 @@ export const SongEditorPage: React.FC = () => {
 
         if (meta.title) updates.title = meta.title;
         if (meta.artist) updates.artist = meta.artist;
-        if (meta.songNumber && Number(meta.songNumber))
-          updates.song_number = Number(meta.songNumber);
+
+        updates.song_number =
+          meta.songNumber && Number(meta.songNumber) ? Number(meta.songNumber) : null;
+
+        updates.tags = meta.tags;
 
         const updated = await updateSong({ id: song.id, data: updates });
         if (updated?.updatedAt) {

@@ -69,9 +69,6 @@ export const env = {
   turnstileSecretKey: required("TURNSTILE_SECRET_KEY"),
   turnstileSiteKey: optional("NEXT_PUBLIC_TURNSTILE_SITE_KEY"),
 
-  supabaseUrl: required("SUPABASE_URL"),
-  supabaseSecretKey: required("SUPABASE_SECRET_KEY"),
-
   resendApiKey: required("RESEND_API_KEY"),
   emailFrom: process.env.EMAIL_FROM ?? "Hosanna <no-reply@hosanna.live>",
 

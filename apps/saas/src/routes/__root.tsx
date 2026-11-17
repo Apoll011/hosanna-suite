@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation, type ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { I18nProvider, useI18n } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { applyRouteMeta, getRouteMeta } from "@/lib/seo";
 
 function useRouteMetaUpdater() {
@@ -15,13 +15,7 @@ function useRouteMetaUpdater() {
 export function RootComponent() {
   useRouteMetaUpdater();
 
-  // Vercel Analytics (/_vercel/insights/script.js) 404s on Cloudflare Pages —
-  // keep analytics on the host (Cloudflare Web Analytics beacon in index.html).
-  return (
-    <I18nProvider>
-      <Outlet />
-    </I18nProvider>
-  );
+  return <Outlet />;
 }
 
 export function NotFoundComponent() {

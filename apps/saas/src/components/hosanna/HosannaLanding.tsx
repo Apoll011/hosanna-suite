@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { MigrationSection } from "../ui/MigrationSection";
+import { FancyHero } from "../ui/FancyHero";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
 import HeroDashboardMockup from "./HeroDashboardMockup";
@@ -59,11 +60,16 @@ function Logo({ className }: { className?: string }) {
 }
 
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
+const isNewLanding = () =>
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).get("new") === "true";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { t } = useI18n();
+
+  if (isNewLanding()) return null;
 
   const NAV = [
     { label: t("landing.nav.features"), href: "/#features", isInternal: false },
@@ -247,6 +253,8 @@ function DeferredHeroRays() {
 
 function Hero() {
   const { t } = useI18n();
+
+  if (isNewLanding()) return <FancyHero />;
 
   return (
     <section

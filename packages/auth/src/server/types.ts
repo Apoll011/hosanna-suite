@@ -127,6 +127,9 @@ export interface AuthAvatarHelpers {
   isExternalImageUrl: (value: string) => boolean;
   uploadBase64Avatar: (userId: string, base64: string) => Promise<string>;
   uploadUrlAvatar: (userId: string, imageUrl: string) => Promise<string>;
+  deleteAvatar: (userId: string) => Promise<void>;
+  uploadOrganizationLogo: (organizationId: string, image: string) => Promise<string>;
+  deleteOrganizationLogo: (organizationId: string) => Promise<void>;
 }
 
 /** Shared Redis secondary-storage adapter shape (Better Auth). */

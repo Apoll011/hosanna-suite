@@ -5,7 +5,6 @@
  * Root remains a convenience barrel for existing app imports.
  */
 
-export { cn, type ClassValue } from "./cn";
 export {
   AccountMenu,
   AccountMenuDivider,
@@ -17,13 +16,25 @@ export {
   type AccountMenuTheme,
   type AccountMenuUser,
 } from "./AccountMenu";
-export { MenuThemeToggle, type MenuThemeToggleProps, type MenuThemeValue } from "./MenuThemeToggle";
 export {
   AppSwitcher,
   type AppSwitcherApp,
   type AppSwitcherLabels,
   type AppSwitcherProps,
 } from "./AppSwitcher";
+export { Badge, type BadgeProps } from "./Badge";
+export { Button, type ButtonProps } from "./Button";
+export { cn, type ClassValue } from "./cn";
+export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
+export { EmptyState, type EmptyStateProps } from "./EmptyState";
+export { GoogleTextField, type GoogleTextFieldProps } from "./GoogleTextField";
+export { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "./icons/SocialIcons";
+export { Input, type InputProps } from "./Input";
+export { LoadingBar, type LoadingBarProps } from "./LoadingBar";
+export { MenuThemeToggle, type MenuThemeToggleProps, type MenuThemeValue } from "./MenuThemeToggle";
+export { Modal, type ModalProps } from "./Modal";
+export { PageHeader, type PageHeaderProps } from "./PageHeader";
+export { Spinner, type SpinnerProps } from "./Spinner";
 export { SuiteAppIcon, type SuiteAppIconProps } from "./SuiteAppIcon";
 export {
   loadSuiteApps,
@@ -38,17 +49,6 @@ export {
   type SuiteAppLabelField,
   type SuiteAppLocalizable,
 } from "./suiteLabels";
-export { Badge, type BadgeProps } from "./Badge";
-export { Button, type ButtonProps } from "./Button";
-export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
-export { EmptyState, type EmptyStateProps } from "./EmptyState";
-export { GoogleTextField, type GoogleTextFieldProps } from "./GoogleTextField";
-export { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "./icons/SocialIcons";
-export { Input, type InputProps } from "./Input";
-export { Modal, type ModalProps } from "./Modal";
-export { PageHeader, type PageHeaderProps } from "./PageHeader";
-export { Spinner, type SpinnerProps } from "./Spinner";
-export { LoadingBar, type LoadingBarProps } from "./LoadingBar";
 export { Surface, type SurfaceProps } from "./Surface";
 export { Tabs, type TabItem } from "./Tabs";
 
@@ -81,3 +81,5 @@ export {
   type PermissionsContextValue,
   type PermissionsProviderProps,
 } from "./permissions";
+
+import "./global.css";

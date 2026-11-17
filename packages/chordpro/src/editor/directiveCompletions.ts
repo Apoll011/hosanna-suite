@@ -5,6 +5,23 @@ export function normalizeCompletionWord(word: string): string {
   return word.trim().replace(/^\{+/, "").replace(/\}+$/, "").toLowerCase();
 }
 
+type AcePosition = { row: number; column: number };
+
+type AceSession = {
+  getLine(row: number): string;
+};
+
+/**
+ * True only when the cursor is inside a directive name,
+ * before the colon and before the closing brace.
+ */
+function isInsideDirectiveName(session: AceSession, pos: AcePosition): boolean {
+  const line = session.getLine(pos.row);
+  const beforeCursor = line.slice(0, pos.column);
+
+  return /\{[^{}:]*$/.test(beforeCursor);
+}
+
 /**
  * True when a local/document word is a ChordPro directive name (or long alias).
  * Short 1-char aliases (t, a, c, k, …) are left alone so lyric letters still complete.
@@ -45,15 +62,23 @@ export type AceCompletionCallback = (
 /** Suggest known directives as first-class completions (not document "local" words). */
 export function createDirectiveCompleter() {
   const names = directiveSuggestionNames();
+
   return {
     id: "chordproDirectiveCompleter",
+
     getCompletions(
       _editor: unknown,
-      _session: unknown,
-      _pos: unknown,
+      session: AceSession,
+      pos: AcePosition,
       _prefix: string,
       callback: AceCompletionCallback,
     ) {
+      // Only suggest directives inside { ... } before the colon.
+      if (!isInsideDirectiveName(session, pos)) {
+        callback(null, []);
+        return;
+      }
+
       callback(
         null,
         names.map((name) => ({

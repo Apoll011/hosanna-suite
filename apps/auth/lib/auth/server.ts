@@ -26,12 +26,7 @@ import {
   sendWelcomeEmail,
 } from "@/lib/services/email";
 import { DEFAULT_LOCALE, t } from "@/locales/server";
-import {
-  isBase64Image,
-  isExternalImageUrl,
-  uploadBase64Avatar,
-  uploadUrlAvatar,
-} from "@/lib/db/supabase";
+import { authImages } from "@/lib/storage/auth-images";
 
 export const stripeClient = new Stripe(env.stripeSecretKey, {
   // SDK types lag API versions; cast keeps a pinned Stripe API version.
@@ -93,12 +88,7 @@ export const auth = createAuth({
     }
   },
   onSessionRevoked: handleSessionRevoked,
-  avatars: {
-    isBase64Image,
-    isExternalImageUrl,
-    uploadBase64Avatar,
-    uploadUrlAvatar,
-  },
+  avatars: authImages,
   t: (locale, key, vars) => t(locale, key as any, vars),
   defaultLocale: DEFAULT_LOCALE,
 });
