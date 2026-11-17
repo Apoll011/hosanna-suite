@@ -39,20 +39,28 @@ export default function HeroHeader({
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrolledPanelOpen, setScrolledPanelOpen] = useState(false);
   const openScrollYRef = useRef<number>(0);
+  const menuOpenRef = useRef(menuOpen);
+  menuOpenRef.current = menuOpen;
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const threshold = window.innerHeight * 0.75;
-      const pastHero = scrollY > threshold;
+      const heroEl = headerRef.current?.closest("section") || document.getElementById("top");
+      const heroHeight = heroEl ? heroEl.offsetHeight : window.innerHeight;
+      const pastHero = scrollY >= heroHeight - 80;
 
       setIsScrolled(pastHero);
 
       if (!pastHero) {
         setScrolledPanelOpen(false);
-      } else if (openScrollYRef.current > 0 && Math.abs(scrollY - openScrollYRef.current) > 8) {
-        setScrolledPanelOpen(false);
-        openScrollYRef.current = 0;
+      } else {
+        if (menuOpenRef.current) {
+          setMenuOpen(false);
+        }
+        if (openScrollYRef.current > 0 && Math.abs(scrollY - openScrollYRef.current) > 8) {
+          setScrolledPanelOpen(false);
+          openScrollYRef.current = 0;
+        }
       }
     };
 
@@ -170,11 +178,7 @@ export default function HeroHeader({
       <header
         ref={headerRef}
         aria-hidden={isScrolled}
-        className={`fixed top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 transition-all duration-300 pointer-events-none ${
-          isScrolled
-            ? "opacity-0 -translate-y-4 pointer-events-none"
-            : "opacity-100 translate-y-0"
-        }`}
+        className="absolute top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 pointer-events-none"
       >
         {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
         <div

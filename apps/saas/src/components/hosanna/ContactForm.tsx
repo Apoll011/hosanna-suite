@@ -55,10 +55,7 @@ export function ContactForm() {
           <StaffLines className="bottom-12 opacity-20" />
         </div>
         <div className="container mx-auto px-6 max-w-7xl relative z-10 text-center">
-          <div className="flex justify-center items-center gap-3 mb-8">
-            <div className="reveal inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-blue-200 border border-white/10">
-              {t("contact.eyebrow")}
-            </div>
+          <div className="flex justify-center items-center mb-8">
             <LanguageSelector />
           </div>
           <h1 className="reveal text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">

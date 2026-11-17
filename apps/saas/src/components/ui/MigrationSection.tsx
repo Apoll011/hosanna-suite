@@ -47,12 +47,9 @@ export function MigrationSection() {
     <section id="features" className="relative bg-secondary py-16 md:py-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <div className={cn("reveal max-w-2xl", "mx-auto text-center")}>
-          <div className={cn("text-xs font-semibold uppercase tracking-[0.2em] text-primary-dark")}>
-            {t("migration.eyebrow")}
-          </div>
           <h2
             className={cn(
-              "mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl",
+              "font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl",
             )}
           >
             {t("migration.titleStart")}{" "}

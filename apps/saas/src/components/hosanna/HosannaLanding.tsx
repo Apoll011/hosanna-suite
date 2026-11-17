@@ -260,10 +260,7 @@ function Hero() {
       </div>
       <div className="relative z-10 mx-auto max-w-7xl px-5 pb-8 pt-26 md:px-8 md:pb-24 md:pt-8">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="reveal inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-white/90">
-            {t("landing.hero.badge")}
-          </div>
-          <h1 className="mt-8 font-display text-5xl leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl reveal">
+          <h1 className="font-display text-5xl leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl reveal">
             {t("landing.hero.titleStart")}{" "}
             <span className="text-sky-200">{t("landing.hero.titleHighlight")}</span>.
           </h1>
@@ -326,10 +323,6 @@ function Problem() {
         </div>
       </div>
       <div className="reveal mt-20 text-center">
-        <p className="mb-5 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          {t("landing.problem.verseEyebrow")}
-        </p>
-
         <blockquote className="mx-auto max-w-4xl">
           <p className="font-display text-3xl leading-tight italic text-primary md:text-5xl">
             {t("landing.problem.verse")}
@@ -360,14 +353,9 @@ function TwoApps() {
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
                 <Monitor className="h-5 w-5" />
               </div>
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-gold">
-                  {t("landing.twoApps.dashboardBadge")}
-                </div>
-                <h3 className="font-display text-2xl text-foreground">
-                  {t("landing.twoApps.dashboardTitle")}
-                </h3>
-              </div>
+              <h3 className="font-display text-2xl text-foreground">
+                {t("landing.twoApps.dashboardTitle")}
+              </h3>
             </div>
             <img
               src={dashboardImg}
@@ -393,14 +381,9 @@ function TwoApps() {
               <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
                 <Smartphone className="h-5 w-5" />
               </div>
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-gold">
-                  {t("landing.twoApps.mobileBadge")}
-                </div>
-                <h3 className="font-display text-2xl text-foreground">
-                  {t("landing.twoApps.mobileTitle")}
-                </h3>
-              </div>
+              <h3 className="font-display text-2xl text-foreground">
+                {t("landing.twoApps.mobileTitle")}
+              </h3>
             </div>
             <div className="mt-8 grid place-items-center rounded-xl bg-secondary/60 p-6">
               <img
@@ -523,10 +506,7 @@ function LiveWorship() {
     <section className="bg-background py-16 md:py-16">
       <div className="mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
         <div className="reveal">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-            {t("landing.liveWorship.eyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl">
             {t("landing.liveWorship.title")}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -603,10 +583,7 @@ function ExportSection() {
     <section className="bg-background py-16 md:py-16">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
         <div className="reveal">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-            {t("landing.export.eyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
             {t("landing.export.title")}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -719,10 +696,7 @@ function Pricing() {
               <StaffLines className="top-0" />
             </div>
             <div className="relative">
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-primary-foreground">
-                {t("landing.pricing.singlePlan")}
-              </span>
-              <div className="mt-5 font-display text-4xl font-semibold md:text-5xl">Hosanna</div>
+              <div className="font-display text-4xl font-semibold md:text-5xl">Hosanna</div>
               <p className="mt-2 text-primary-foreground/75">
                 {t("landing.pricing.singlePlanDesc")}
               </p>
@@ -791,9 +765,6 @@ function MobileApp() {
       <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 reveal">
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium">
-              {t("landing.mobileApp.badge")}
-            </div>
             <h2 className="text-4xl md:text-6xl font-display text-white leading-[1.1] tracking-tight">
               {t("landing.mobileApp.titleStart")}{" "}
               <span className="text-blue-200">{t("landing.mobileApp.titleHighlight")}</span>.
@@ -829,10 +800,7 @@ function Vision() {
   return (
     <section className="relative overflow-hidden bg-background py-16 md:py-16">
       <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
-        <div className="reveal text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-          {t("landing.vision.eyebrow")}
-        </div>
-        <p className="reveal mt-6 font-display text-3xl leading-snug text-foreground md:text-4xl lg:text-5xl">
+        <p className="reveal font-display text-3xl leading-snug text-foreground md:text-4xl lg:text-5xl">
           {t("landing.vision.quote1")}
         </p>
         <p className="reveal mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -856,10 +824,7 @@ function OpenSource() {
     <section id="open-source" className="bg-secondary py-16 md:py-16">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
         <div className="reveal">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-            {t("landing.openSource.eyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
             {t("landing.openSource.title")}
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">

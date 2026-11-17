@@ -286,11 +286,6 @@ function SectionHeader({
   return (
     <div className="space-y-6 reveal">
       <EyebrowIcon icon={icon} />
-      {eyebrow && (
-        <div className="text-xs font-semibold uppercase tracking-widest text-primary/60">
-          {eyebrow}
-        </div>
-      )}
       <h2 className="text-3xl md:text-4xl font-display font-bold text-primary tracking-tight">
         {title}
       </h2>
@@ -458,12 +453,6 @@ export function ChordProGuide() {
           <StaffLines className="bottom-12 opacity-20" />
         </div>
         <div className="container mx-auto px-6 max-w-5xl relative z-10 text-center">
-          <div className="flex justify-center items-center gap-3 mb-8">
-            <div className="reveal inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-blue-200 border border-white/10">
-              <BookMarked className="w-3.5 h-3.5" />
-              {t("chordproGuide.heroBadge")}
-            </div>
-          </div>
           <h1 className="reveal text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">
             {t("chordproGuide.heroTitleStart")}{" "}
             <span className="text-blue-300">{t("chordproGuide.heroTitleHighlight")}</span>

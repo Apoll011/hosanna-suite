@@ -49,10 +49,7 @@ export function AboutUs() {
           <StaffLines className="bottom-12 opacity-20" />
         </div>
         <div className="container mx-auto px-6 max-w-7xl relative z-10 text-center">
-          <div className="flex justify-center items-center gap-3 mb-8">
-            <div className="reveal inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-blue-200 border border-white/10">
-              {t("about.eyebrow")}
-            </div>
+          <div className="flex justify-center items-center mb-8">
             <LanguageSelector />
           </div>
           <h1 className="reveal text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">
@@ -68,10 +65,7 @@ export function AboutUs() {
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-3xl px-6">
           <div className="reveal text-center">
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              {t("about.storyEyebrow")}
-            </div>
-            <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-primary md:text-4xl">
+            <h2 className="font-display text-3xl leading-tight tracking-tight text-primary md:text-4xl">
               {t("about.storyTitle")}
             </h2>
           </div>
@@ -87,10 +81,7 @@ export function AboutUs() {
       <section className="bg-secondary py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-6">
           <div className="reveal text-center max-w-2xl mx-auto">
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-              {t("about.founderIntroEyebrow")}
-            </div>
-            <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+            <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
               {t("about.founderIntroTitle")}
             </h2>
           </div>
