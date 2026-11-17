@@ -91,11 +91,13 @@ export function OrgProfilePage() {
       showToast(t("settings.workspace.nameRequired"), "error");
       return;
     }
+    const organizationId = organization?.id;
+    if (!organizationId) return;
     setIsSaving(true);
     try {
       let logoForSave = draftLogo;
       if (draftLogo && draftLogo !== logo && draftLogo.startsWith("data:image/")) {
-        const response = await fetch(`/api/media/organization/${encodeURIComponent(organization.id)}/logo`, {
+        const response = await fetch(`/api/media/organization/${encodeURIComponent(organizationId)}/logo`, {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ image: draftLogo }),
