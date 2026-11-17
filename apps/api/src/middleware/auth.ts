@@ -8,6 +8,7 @@ import { getSession, type SessionResult } from "../lib/session.js";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
+import { recordAuthenticationDuration } from "../lib/requestMetrics.js";
 
 export interface DeniedResponse {
   status?: number;
@@ -309,7 +310,13 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
 
 export const authenticate = asyncHandler(
   async (req: Request, _res: Response, next: NextFunction) => {
-    const ctx = await resolveAuthContext(req);
+    const startedAt = performance.now();
+    let ctx: AuthContext;
+    try {
+      ctx = await resolveAuthContext(req);
+    } finally {
+      recordAuthenticationDuration(performance.now() - startedAt);
+    }
 
     req.locale = ctx.locale;
     req.orgId = ctx.workspaceId;

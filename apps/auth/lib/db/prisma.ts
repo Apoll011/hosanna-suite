@@ -1,7 +1,6 @@
 import { env } from "@/lib/config/env";
 import { PrismaClient } from "@hosanna/db";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 
 const globalForPrisma = globalThis as unknown as {
@@ -23,9 +22,40 @@ pool.on("error", (error) => {
   console.error("[Auth DB] Pool error:", error);
 });
 
-if (env.isVercel) {
-  attachDatabasePool(pool);
-}
+pool.on("connect", () => {
+  console.info(
+    JSON.stringify({
+      event: "auth.database.pool.connect",
+      totalCount: pool.totalCount,
+      idleCount: pool.idleCount,
+      waitingCount: pool.waitingCount,
+    }),
+  );
+});
+
+pool.on("acquire", () => {
+  if (pool.waitingCount > 0) {
+    console.warn(
+      JSON.stringify({
+        event: "auth.database.pool.waiting",
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount,
+      }),
+    );
+  }
+});
+
+pool.on("remove", () => {
+  console.info(
+    JSON.stringify({
+      event: "auth.database.pool.remove",
+      totalCount: pool.totalCount,
+      idleCount: pool.idleCount,
+      waitingCount: pool.waitingCount,
+    }),
+  );
+});
 
 const adapter = new PrismaPg(pool);
 

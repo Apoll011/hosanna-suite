@@ -3,6 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
+import { recordDatabaseDuration } from "../lib/requestMetrics.js";
 
 const pool = new Pool({
   connectionString: env.databaseUrl,
@@ -17,11 +18,38 @@ if (env.isVercel) {
 }
 
 pool.on("connect", () => {
-  console.log("[DB] Client connected");
+  console.info(
+    JSON.stringify({
+      event: "database.pool.connect",
+      totalCount: pool.totalCount,
+      idleCount: pool.idleCount,
+      waitingCount: pool.waitingCount,
+    }),
+  );
+});
+
+pool.on("acquire", () => {
+  if (pool.waitingCount > 0) {
+    console.warn(
+      JSON.stringify({
+        event: "database.pool.waiting",
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount,
+      }),
+    );
+  }
 });
 
 pool.on("remove", () => {
-  console.log("[DB] Client removed");
+  console.info(
+    JSON.stringify({
+      event: "database.pool.remove",
+      totalCount: pool.totalCount,
+      idleCount: pool.idleCount,
+      waitingCount: pool.waitingCount,
+    }),
+  );
 });
 
 pool.on("error", (error) => {
@@ -29,11 +57,25 @@ pool.on("error", (error) => {
 });
 
 pool.on("release", () => {
-  console.log("[DB] Client released");
+  if (pool.waitingCount > 0) {
+    console.warn(
+      JSON.stringify({
+        event: "database.pool.release_with_waiters",
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount,
+      }),
+    );
+  }
 });
 
 const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  adapter,
+  log: [{ emit: "event", level: "query" }],
+});
+
+prisma.$on("query", (event) => recordDatabaseDuration(event.duration));
 
 const ORG_SCOPED_MODELS = new Set([
   "Folder",
