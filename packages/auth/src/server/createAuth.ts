@@ -415,6 +415,11 @@ function createFullAuth(options: CreateAuthFullOptions): any {
         delete: {
           after: async (user) => {
             try {
+              await avatars.deleteAvatar(user.id);
+            } catch (err) {
+              console.error("[auth] avatar cleanup failed after user deletion:", err);
+            }
+            try {
               await emails.sendAccountDeletedEmail(user.email, {
                 first_name: user.name,
               });
