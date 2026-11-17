@@ -7,6 +7,14 @@ if (process.env.NODE_ENV === "production" && !isProductionBuild && provider !== 
   throw new Error("Set STORAGE_PROVIDER=s3 for the Auth app");
 }
 
+if (
+  provider === "s3" &&
+  !isProductionBuild &&
+  (!process.env.S3_ENDPOINT || !process.env.S3_ACCESS_KEY_ID || !process.env.S3_SECRET_ACCESS_KEY)
+) {
+  throw new Error("Supabase S3 endpoint and access keys are required when STORAGE_PROVIDER=s3");
+}
+
 export const storage =
   provider === "s3"
     ? createStorage({
