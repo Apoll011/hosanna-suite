@@ -1,6 +1,7 @@
 import type { ObjectStorage } from "@hosanna/storage";
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+const SUPPORTED_IMAGE_TYPES = new Set(["image/avif", "image/gif", "image/jpeg", "image/png", "image/webp"]);
 
 type ParsedImage = { contentType: string; bytes: Uint8Array };
 
@@ -66,6 +67,6 @@ async function fetchImage(url: string): Promise<ParsedImage> {
 }
 
 function validateImage(contentType: string, size: number) {
-  if (!contentType.startsWith("image/")) throw new Error("Unsupported image content type");
+  if (!SUPPORTED_IMAGE_TYPES.has(contentType)) throw new Error("Unsupported image content type");
   if (size === 0 || size > MAX_IMAGE_BYTES) throw new Error("Image must be between 1 byte and 10 MB");
 }
