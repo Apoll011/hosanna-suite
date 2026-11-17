@@ -119,7 +119,7 @@ cross-subdomain on `hosanna.live`.
 
 1. Run Prisma migrations against `DIRECT_URL`
 2. Use the Supabase pooler URL for runtime; keep `DB_POOL_MAX` low on Vercel
-3. Configure Auth to use the same Supabase Storage S3 endpoint and `avatars` bucket through `@hosanna/storage`; see [object storage](./storage.md)
+3. Create the private `hosanna-assets` bucket and configure Auth to use it through the same Supabase Storage S3 endpoint; see [object storage](./storage.md)
 
 ---
 

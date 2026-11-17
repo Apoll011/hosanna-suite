@@ -52,11 +52,11 @@ Provider errors become `StorageError` codes (`NOT_FOUND`, `ACCESS_DENIED`, `INVA
 
 Local development and tests default to the in-memory adapter. Auth production requires `STORAGE_PROVIDER` to be explicitly set, preventing a production instance from silently storing uploads in process memory.
 
-Auth uses the current Supabase Storage S3 endpoint and `avatars` bucket. Create an S3 access key pair in the Supabase Storage S3 settings; these credentials are server-only and have broad bucket access. Supabase's S3 endpoint uses the `project-ref.storage.supabase.co/storage/v1/s3` host, the project's region, and path-style access. Configure:
+Auth uses the current Supabase Storage S3 endpoint with a private `hosanna-assets` bucket. Create that bucket in the existing Supabase project, then create an S3 access key pair in the Supabase Storage S3 settings. These credentials are server-only and have broad bucket access. Supabase's S3 endpoint uses the `project-ref.storage.supabase.co/storage/v1/s3` host, the project's region, and path-style access. Configure:
 
 ```dotenv
 STORAGE_PROVIDER=s3
-S3_BUCKET=avatars
+S3_BUCKET=hosanna-assets
 S3_REGION=project-region
 S3_ENDPOINT=https://project-ref.storage.supabase.co/storage/v1/s3
 S3_ACCESS_KEY_ID=...
@@ -64,7 +64,7 @@ S3_SECRET_ACCESS_KEY=...
 S3_FORCE_PATH_STYLE=true
 ```
 
-`S3_ENDPOINT` and explicit credentials are optional for AWS S3 when the AWS credential provider chain is available. For MinIO, point `S3_ENDPOINT` to the local server and enable path-style access. The current Auth setup reuses the existing Supabase Storage project and `avatars` bucket; it removes the Supabase JavaScript storage client, not the Supabase storage service. Avoid putting S3 access secrets in `.env.example` or source control.
+`S3_ENDPOINT` and explicit credentials are optional for AWS S3 when the AWS credential provider chain is available. For MinIO, point `S3_ENDPOINT` to the local server and enable path-style access. Auth uses the existing Supabase Storage project but a new private bucket; existing avatar objects and URLs in the legacy `avatars` bucket are unchanged. Avoid putting S3 access secrets in `.env.example` or source control.
 
 The adapter defaults presigned URLs to 15 minutes. Set per-operation expiry where a shorter lifetime is appropriate. For S3-compatible services, confirm their endpoint, region, path-style behavior, and multipart limits with the provider. Supabase S3 access keys are server-side credentials and bypass Storage RLS; never send them to a browser.
 

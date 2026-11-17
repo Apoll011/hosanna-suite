@@ -105,7 +105,7 @@ Both accept GET and POST; auth is `Authorization: Bearer ${CRON_SECRET}`.
 src/
   config/          env
   database/        Prisma client
-  lib/             auth, fcm, firestore, resend, supabase, i18n, …
+  lib/             auth, fcm, firestore, resend, i18n, …
   middleware/
   mcp/             tools, resources, prompts, HTTP + stdio
   permissions/     statements + roles
