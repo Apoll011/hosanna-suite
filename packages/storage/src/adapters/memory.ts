@@ -62,7 +62,7 @@ export function createMemoryStorage(): ObjectStorage {
       async completeMultipartUpload(upload, parts: MultipartPart[]) {
         const active = pending.get(upload.uploadId);
         if (!active || active.tenant !== tenant || active.key !== upload.key) throw new StorageError("UPLOAD_NOT_FOUND", "Multipart upload not found");
-        const data = parts.map((part) => active.parts.get(part.partNumber));
+        const data = [...parts].sort((a, b) => a.partNumber - b.partNumber).map((part) => active.parts.get(part.partNumber));
         if (data.some((part) => !part)) throw new StorageError("INVALID_INPUT", "Multipart part is missing");
         const merged = concatenate(data as Uint8Array[]);
         pending.delete(upload.uploadId);
