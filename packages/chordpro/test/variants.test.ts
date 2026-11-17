@@ -178,10 +178,10 @@ That saved a [E]wretch like me
     assert.strictEqual(doc.variants[0].metadata.key, "G");
     assert.strictEqual(doc.variants[0].metadata.tempo, "72");
 
-    // Versão de Estúdio: key: G (inherited from Simplificada), tempo: 82 (overridden)
+    // Versão de Estúdio returns to the main key unless it declares its own.
     assert.strictEqual(doc.variants[1].metadata.title, "Amazing Grace");
     assert.strictEqual(doc.variants[1].metadata.artist, "John Newton");
-    assert.strictEqual(doc.variants[1].metadata.key, "G");
+    assert.strictEqual(doc.variants[1].metadata.key, "E");
     assert.strictEqual(doc.variants[1].metadata.tempo, "82");
   });
 
