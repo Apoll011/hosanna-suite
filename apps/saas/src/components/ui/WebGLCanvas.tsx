@@ -399,7 +399,8 @@ export default function WebGLCanvas({
   impulseTriggerRef,
 }: WebGLCanvasProps) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const { stepLerp, setTargetUV } = useCursor();
+  const { stepLerp, setTargetUV, targetRef } = useCursor();
+  const lensCurrentRef = useRef({ x: 0.5, y: 0.465 });
   const onFontsReadyRef = useRef(onFontsReady);
   onFontsReadyRef.current = onFontsReady;
 
@@ -669,8 +670,12 @@ export default function WebGLCanvas({
         const cursor = stepLerp(0.084, delta);
         bgUniforms.uMouse2D.value.set(cursor.x * 2.0 - 1.0, cursor.y * 2.0 - 1.0);
 
+        const lensFactor = 1.0 - Math.pow(1.0 - 0.38, Math.min(Math.max(delta, 0.001), 0.05) * 60.0);
+        lensCurrentRef.current.x += (targetRef.current.x - lensCurrentRef.current.x) * lensFactor;
+        lensCurrentRef.current.y += (targetRef.current.y - lensCurrentRef.current.y) * lensFactor;
+
         textUniforms.uTime.value = elapsed;
-        textUniforms.uMouse.value.set(cursor.x, cursor.y);
+        textUniforms.uMouse.value.set(lensCurrentRef.current.x, lensCurrentRef.current.y);
         textUniforms.uVelocity.value.set(cursor.vx, cursor.vy);
         textUniforms.uImpulse.value = impulseState.value;
       }

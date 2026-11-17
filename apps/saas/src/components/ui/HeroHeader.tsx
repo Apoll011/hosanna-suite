@@ -125,7 +125,7 @@ export default function HeroHeader({
     <>
       <header
         ref={headerRef}
-        className="w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 pointer-events-none"
+        className="fixed top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 pointer-events-none bg-white/[0.08] backdrop-blur-md border-b border-white/15 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7"
       >
         {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
         <div
