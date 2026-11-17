@@ -87,8 +87,8 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
         return safe(async () => {
           const expiresIn = options.expiresInSeconds ?? config.uploadUrlExpiresInSeconds ?? 900;
           if (options.maxSizeBytes !== undefined) {
-            const conditions = [{ "content-length-range": [0, options.maxSizeBytes] }, ...(options.contentType ? [{ "Content-Type": options.contentType }] : [])];
-            const post = await createPresignedPost(client, { Bucket: config.bucket, Key: keyOf(key), Expires: expiresIn, Conditions: conditions as never, Fields: { ...(options.contentType ? { "Content-Type": options.contentType } : {}), ...(options.contentDisposition ? { "Content-Disposition": options.contentDisposition } : {}) } });
+            const conditions: ( ["content-length-range", number, number] | ["eq", string, string])[] = [["content-length-range", 0, options.maxSizeBytes], ...(options.contentType ? [["eq", "$Content-Type", options.contentType] as ["eq", string, string]] : [])];
+            const post = await createPresignedPost(client, { Bucket: config.bucket, Key: keyOf(key), Expires: expiresIn, Conditions: conditions, Fields: { ...(options.contentType ? { "Content-Type": options.contentType } : {}), ...(options.contentDisposition ? { "Content-Disposition": options.contentDisposition } : {}) } });
             return { url: post.url, method: "POST", fields: post.fields, headers: {}, expiresAt: new Date(Date.now() + expiresIn * 1000) };
           }
           const command = new (await import("@aws-sdk/client-s3")).PutObjectCommand({ Bucket: config.bucket, Key: keyOf(key), ...(options.contentType ? { ContentType: options.contentType } : {}), ...(options.contentDisposition ? { ContentDisposition: options.contentDisposition } : {}) });
