@@ -16,6 +16,22 @@ if (env.isVercel) {
   attachDatabasePool(pool);
 }
 
+pool.on("connect", () => {
+  console.log("[DB] Client connected");
+});
+
+pool.on("remove", () => {
+  console.log("[DB] Client removed");
+});
+
+pool.on("error", (error) => {
+  console.error("[DB] Pool error:", error);
+});
+
+pool.on("release", () => {
+  console.log("[DB] Client released");
+});
+
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
