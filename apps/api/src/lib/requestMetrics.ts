@@ -7,6 +7,9 @@ type RequestMetrics = {
   startedAt: number;
   databaseQueryCount: number;
   databaseDurationMs: number;
+  databaseAcquireCount: number;
+  databaseAcquireDurationMs: number;
+  databaseAcquireMaxMs: number;
   authenticationDurationMs: number | null;
 };
 
@@ -18,6 +21,9 @@ export const requestMetricsMiddleware: RequestHandler = (req, res, next) => {
     startedAt: performance.now(),
     databaseQueryCount: 0,
     databaseDurationMs: 0,
+    databaseAcquireCount: 0,
+    databaseAcquireDurationMs: 0,
+    databaseAcquireMaxMs: 0,
     authenticationDurationMs: null,
   };
 
@@ -39,6 +45,9 @@ export const requestMetricsMiddleware: RequestHandler = (req, res, next) => {
           authenticationDurationMs: metrics.authenticationDurationMs,
           databaseQueryCount: metrics.databaseQueryCount,
           databaseDurationMs: Math.round(metrics.databaseDurationMs * 100) / 100,
+          databaseAcquireCount: metrics.databaseAcquireCount,
+          databaseAcquireDurationMs: Math.round(metrics.databaseAcquireDurationMs * 100) / 100,
+          databaseAcquireMaxMs: Math.round(metrics.databaseAcquireMaxMs * 100) / 100,
         }),
       );
     }
@@ -57,4 +66,12 @@ export function recordDatabaseDuration(durationMs: number): void {
   if (!metrics) return;
   metrics.databaseQueryCount += 1;
   metrics.databaseDurationMs += durationMs;
+}
+
+export function recordDatabaseAcquireDuration(durationMs: number): void {
+  const metrics = requestMetrics.getStore();
+  if (!metrics) return;
+  metrics.databaseAcquireCount += 1;
+  metrics.databaseAcquireDurationMs += durationMs;
+  metrics.databaseAcquireMaxMs = Math.max(metrics.databaseAcquireMaxMs, durationMs);
 }

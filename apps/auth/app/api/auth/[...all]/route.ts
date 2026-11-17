@@ -1,10 +1,11 @@
 import { withAuthCors, withOauthNavigationRedirect } from "@hosanna/auth/server";
 import { auth } from "@/lib/auth/server";
+import { withRequestMetrics } from "@/lib/performance/requestMetrics";
 
 const handler = withAuthCors(withOauthNavigationRedirect(auth.handler));
 
 async function handle(request: Request): Promise<Response> {
-  return handler(request);
+  return withRequestMetrics(request, "/api/auth/[...all]", () => handler(request));
 }
 
 export const GET = handle;

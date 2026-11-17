@@ -3,7 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
-import { recordDatabaseDuration } from "../lib/requestMetrics.js";
+import { recordDatabaseAcquireDuration, recordDatabaseDuration } from "../lib/requestMetrics.js";
 
 const pool = new Pool({
   connectionString: env.databaseUrl,
@@ -11,6 +11,26 @@ const pool = new Pool({
   idleTimeoutMillis: env.isVercel ? 5_000 : 30_000,
   connectionTimeoutMillis: 10_000,
   statement_timeout: 10_000,
+});
+
+const connect = pool.connect.bind(pool);
+pool.connect = new Proxy(connect, {
+  apply(target, thisArg, args) {
+    const startedAt = performance.now();
+    const result = Reflect.apply(target, thisArg, args);
+    if (!(result instanceof Promise)) return result;
+
+    return result.then(
+      (client) => {
+        recordDatabaseAcquireDuration(performance.now() - startedAt);
+        return client;
+      },
+      (error: unknown) => {
+        recordDatabaseAcquireDuration(performance.now() - startedAt);
+        throw error;
+      },
+    );
+  },
 });
 
 if (env.isVercel) {

@@ -1,7 +1,11 @@
 import { env } from "@/lib/config/env";
 import { PrismaClient } from "@hosanna/db";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { Pool, type PoolClient } from "pg";
+import {
+  recordDatabaseAcquireDuration,
+  recordDatabaseQueryDuration,
+} from "@/lib/performance/requestMetrics";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
@@ -18,6 +22,28 @@ const pool =
     statement_timeout: 10_000,
   });
 
+const connect = pool.connect.bind(pool);
+pool.connect = new Proxy(connect, {
+  apply(target, thisArg, args) {
+    const startedAt = performance.now();
+    const result = Reflect.apply(target, thisArg, args);
+    if (!(result instanceof Promise)) return result;
+
+    return result.then(
+      (client) => {
+        recordDatabaseAcquireDuration(performance.now() - startedAt);
+        return client;
+      },
+      (error: unknown) => {
+        recordDatabaseAcquireDuration(performance.now() - startedAt);
+        throw error;
+      },
+    );
+  },
+});
+
+const instrumentedClients = new WeakSet<PoolClient>();
+
 pool.on("error", (error) => {
   console.error("[Auth DB] Pool error:", error);
 });
@@ -33,7 +59,24 @@ pool.on("connect", () => {
   );
 });
 
-pool.on("acquire", () => {
+pool.on("acquire", (client) => {
+  if (client && !instrumentedClients.has(client)) {
+    instrumentedClients.add(client);
+    const query = client.query.bind(client);
+    client.query = new Proxy(query, {
+      apply(target, thisArg, args) {
+        const startedAt = performance.now();
+        const result = Reflect.apply(target, thisArg, args);
+        if (result instanceof Promise) {
+          return result.finally(() => {
+            recordDatabaseQueryDuration(performance.now() - startedAt);
+          });
+        }
+        return result;
+      },
+    });
+  }
+
   if (pool.waitingCount > 0) {
     console.warn(
       JSON.stringify({
