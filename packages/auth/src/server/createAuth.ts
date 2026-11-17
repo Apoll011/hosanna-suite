@@ -652,24 +652,13 @@ function createFullAuth(options: CreateAuthFullOptions): any {
               },
             };
           },
-          beforeUpdateOrganization: async ({ organization }) => {
-            if (!organization.id || !organization.logo) return;
-            try {
-              let logo: string | undefined;
-              if (avatars.isBase64Image(organization.logo)) {
-                logo = await avatars.uploadOrganizationLogo(organization.id, organization.logo);
-              } else if (avatars.isExternalImageUrl(organization.logo)) {
-                logo = await avatars.uploadOrganizationLogo(organization.id, organization.logo);
-              }
-              if (logo) return { data: { ...organization, logo } };
-            } catch (error) {
-              console.error("[auth] organization logo upload failed:", error);
-              throw error;
-            }
-          },
           afterUpdateOrganization: async ({ organization }) => {
             if (organization && !organization.logo) {
-              await avatars.deleteOrganizationLogo(organization.id);
+              try {
+                await avatars.deleteOrganizationLogo(organization.id);
+              } catch (error) {
+                console.error("[auth] organization logo cleanup failed:", error);
+              }
             }
           },
 
