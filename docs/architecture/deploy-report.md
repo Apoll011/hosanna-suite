@@ -36,7 +36,9 @@ MCP_RESOURCE_URL=https://api.hosanna.live/mcp   # must match client URL exactly
 GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
 STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET
 TURNSTILE_SECRET_KEY
-SUPABASE_URL / SUPABASE_SECRET_KEY
+STORAGE_PROVIDER=s3
+S3_BUCKET / S3_REGION / S3_ENDPOINT
+S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY
 RESEND_API_KEY / EMAIL_FROM
 CRON_SECRET
 ```
@@ -116,11 +118,11 @@ cross-subdomain on `hosanna.live`.
 
 ---
 
-## 6. Supabase
+## 6. Supabase Postgres and object storage
 
 1. Run Prisma migrations against `DIRECT_URL`
-2. Ensure `avatars` bucket exists; service role = `SUPABASE_SECRET_KEY`
-3. Pooler URL for runtime; keep `DB_POOL_MAX` low on Vercel
+2. Use the Supabase pooler URL for runtime; keep `DB_POOL_MAX` low on Vercel
+3. Configure the Auth app's S3-compatible bucket using `STORAGE_PROVIDER=s3` and the `S3_*` variables; see [object storage](./storage.md)
 
 ---
 

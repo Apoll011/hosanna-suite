@@ -28,7 +28,7 @@ Related (outside this folder):
 
 **Studio** and **Flutter** keep org song/folder/service/agenda data locally (IndexedDB / Drift). They push and pull against `/api/replication/*` on **Hosanna-server**. Auth and org membership are **Better Auth** (cookies or Bearer). Writes that need a paid plan go through a **Stripe** subscription gate. Live collaboration for service notes and song annotations uses **Firestore** signals on top of Postgres. **MCP** and **Logos AI** mutate the same server domain and then kick client sync. **@hosanna/chordpro** is the shared song format for Studio and the API; Flutter ports the same logic in Dart.
 
-Server-side object files use **@hosanna/storage** behind a tenant-scoped provider-independent API. S3 and S3-compatible buckets are configured at the adapter boundary; local tests and development can use its in-memory adapter. See [storage package docs](../../packages/storage/README.md).
+Server-side object files use **@hosanna/storage** behind a tenant-scoped provider-independent API. S3 and S3-compatible buckets are configured at the adapter boundary; local tests and development can use its in-memory adapter. See [object storage](./storage.md).
 
 ## Product surfaces
 

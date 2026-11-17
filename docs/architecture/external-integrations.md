@@ -7,7 +7,7 @@ Everything outside the Hosanna repos that the product depends on.
 | Service                      | Used for                                                                                | Config                                                                           |
 | ---------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | **Supabase Postgres**        | Primary DB via Prisma (`DATABASE_URL` pooler, `DIRECT_URL` migrations)                  | `.env`                                                                           |
-| **Supabase Storage**         | Avatar uploads (`avatars` bucket)                                                       | `SUPABASE_URL` + service client                                                  |
+| **S3-compatible object storage** | Auth profile avatars and church logos through `@hosanna/storage`                    | `STORAGE_PROVIDER` + `S3_*` on **auth**                                          |
 | **Firebase Cloud Messaging** | Push via auth-hosted dispatcher; tokens in `PushDevice` (session `fcm`/`notify` legacy) | `FCM_*` on **auth** Vercel                                                       |
 | **Cloud Firestore**          | Realtime signals: `services/{id}/realtime/notes`, `services/{id}/annotations/{songId}`  | Same Firebase project; see [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) |
 
@@ -71,7 +71,8 @@ Auth owns: Stripe webhooks (via Better Auth), Resend, FCM _send_ (unified notifi
 
 See `.env.example` for the full list. Groups:
 
-- Database + Supabase
+- Database connection
+- S3-compatible storage credentials (Auth)
 - Better Auth secret + Google OAuth
 - Stripe keys + webhook secret
 - Resend + `EMAIL_FROM`
