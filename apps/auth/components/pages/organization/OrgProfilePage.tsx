@@ -93,6 +93,19 @@ export function OrgProfilePage() {
     }
     setIsSaving(true);
     try {
+      let logoForSave = draftLogo;
+      if (draftLogo && draftLogo !== logo && draftLogo.startsWith("data:image/")) {
+        const response = await fetch(`/api/media/organization/${encodeURIComponent(organization.id)}/logo`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ image: draftLogo }),
+        });
+        const result: unknown = await response.json();
+        if (!response.ok || !result || typeof result !== "object" || !("logoUrl" in result) || typeof result.logoUrl !== "string") {
+          throw new Error("Could not upload the church logo");
+        }
+        logoForSave = result.logoUrl;
+      }
       const updatedMetadata = {
         ...metadata,
         description: draftDescription.trim() || undefined,
@@ -108,7 +121,7 @@ export function OrgProfilePage() {
       await authClient.organization.update({
         data: {
           name: draftName.trim(),
-          logo: draftLogo,
+          logo: logoForSave,
           metadata: updatedMetadata,
         },
       });
