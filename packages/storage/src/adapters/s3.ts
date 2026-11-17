@@ -20,6 +20,8 @@ export type S3StorageConfig = {
 export function createS3Storage(config: S3StorageConfig): ObjectStorage {
   const client = new S3Client({
     region: config.region,
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
     ...(config.endpoint ? { endpoint: config.endpoint } : {}),
     forcePathStyle: config.forcePathStyle ?? Boolean(config.endpoint),
     ...(config.accessKeyId && config.secretAccessKey ? { credentials: { accessKeyId: config.accessKeyId, secretAccessKey: config.secretAccessKey } } : {}),
@@ -87,6 +89,9 @@ export function createS3Storage(config: S3StorageConfig): ObjectStorage {
         return safe(async () => {
           const expiresIn = options.expiresInSeconds ?? config.uploadUrlExpiresInSeconds ?? 900;
           if (options.maxSizeBytes !== undefined) {
+            if (isSupabaseStorageEndpoint(config.endpoint)) {
+              throw new StorageError("INVALID_INPUT", "Supabase Storage S3 does not support presigned POST size policies");
+            }
             const conditions: ( ["content-length-range", number, number] | ["eq", string, string])[] = [["content-length-range", 0, options.maxSizeBytes], ...(options.contentType ? [["eq", "$Content-Type", options.contentType] as ["eq", string, string]] : [])];
             const post = await createPresignedPost(client, { Bucket: config.bucket, Key: keyOf(key), Expires: expiresIn, Conditions: conditions, Fields: { ...(options.contentType ? { "Content-Type": options.contentType } : {}), ...(options.contentDisposition ? { "Content-Disposition": options.contentDisposition } : {}) } });
             return { url: post.url, method: "POST", fields: post.fields, headers: {}, expiresAt: new Date(Date.now() + expiresIn * 1000) };
@@ -143,6 +148,16 @@ function cleanKey(key: string) {
 
 function cleanPrefix(prefix: string) {
   return `${cleanKey(prefix).replace(/\/$/, "")}/`;
+}
+
+function isSupabaseStorageEndpoint(endpoint: string | undefined) {
+  if (!endpoint) return false;
+  try {
+    const url = new URL(endpoint);
+    return url.hostname.endsWith(".storage.supabase.co") && url.pathname.includes("/storage/v1/s3");
+  } catch {
+    return false;
+  }
 }
 
 function validateTenant(tenant: string) {
