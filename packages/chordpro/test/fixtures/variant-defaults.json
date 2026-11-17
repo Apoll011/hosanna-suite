@@ -31,7 +31,7 @@
   },
   {
     "id": "variant-without-key-uses-main-key-and-capo",
-    "content": "{key: C}\n{keyshift: +2}\n{capo: 4}\n{start_of_version: No key}\n{end_of_version}",
+    "content": "{key: C}\n{keyshift: +2}\n{capo: 4}\n{start_of_version: Different}\n{key: D}\n{end_of_version}\n{start_of_version: No key}\n{end_of_version}",
     "variant": "no-key",
     "expected": { "keyShift": 0, "capo": 4 }
   },

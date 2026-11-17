@@ -290,7 +290,7 @@ export function parseChordProDocument(content: string): ChordProDocument {
 
         seenVariantIds.add(variantId);
 
-        // Previous resolved metadata
+        // Other metadata carries forward; key, capo, and keyshift resolve from the main chart.
         const previousMetadata =
           variants.length > 0 ? variants[variants.length - 1].metadata : defaultContext.metadata;
 
@@ -312,6 +312,8 @@ export function parseChordProDocument(content: string): ChordProDocument {
         } else {
           delete activeVariantContext.metadata.key;
         }
+        delete activeVariantContext.metadata.capo;
+        delete activeVariantContext.metadata.keyShift;
         continue;
       }
 
