@@ -74,8 +74,16 @@ export interface TenantObjectStorage {
   createUploadUrl(key: string, options?: UrlOptions): Promise<PresignedUrl>;
   createDownloadUrl(key: string, options?: UrlOptions): Promise<PresignedUrl>;
   createMultipartUpload(input: Omit<UploadInput, "body">): Promise<MultipartUpload>;
-  uploadMultipartPart(upload: MultipartUpload, partNumber: number, body: ObjectBody): Promise<MultipartPart>;
-  createMultipartPartUrl(upload: MultipartUpload, partNumber: number, options?: MultipartPartUrlOptions): Promise<PresignedUrl>;
+  uploadMultipartPart(
+    upload: MultipartUpload,
+    partNumber: number,
+    body: ObjectBody,
+  ): Promise<MultipartPart>;
+  createMultipartPartUrl(
+    upload: MultipartUpload,
+    partNumber: number,
+    options?: MultipartPartUrlOptions,
+  ): Promise<PresignedUrl>;
   completeMultipartUpload(upload: MultipartUpload, parts: MultipartPart[]): Promise<StoredObject>;
   abortMultipartUpload(upload: MultipartUpload): Promise<void>;
 }
@@ -84,7 +92,8 @@ export interface ObjectStorage {
   forTenant(tenantId: string): TenantObjectStorage;
 }
 
-export type StorageErrorCode = "NOT_FOUND" | "ACCESS_DENIED" | "INVALID_INPUT" | "PROVIDER_ERROR" | "UPLOAD_NOT_FOUND";
+export type StorageErrorCode =
+  "NOT_FOUND" | "ACCESS_DENIED" | "INVALID_INPUT" | "PROVIDER_ERROR" | "UPLOAD_NOT_FOUND";
 
 export class StorageError extends Error {
   readonly code: StorageErrorCode;

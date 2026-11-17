@@ -24,7 +24,8 @@ export async function GET(_request: Request, { params }: RouteContext) {
       },
     });
   } catch (error) {
-    if (error instanceof StorageError && error.code === "NOT_FOUND") return new Response(null, { status: 404 });
+    if (error instanceof StorageError && error.code === "NOT_FOUND")
+      return new Response(null, { status: 404 });
     throw error;
   }
 }

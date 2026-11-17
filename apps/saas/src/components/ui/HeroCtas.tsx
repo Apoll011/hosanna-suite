@@ -28,12 +28,12 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
     : { type: "spring" as const, stiffness: 420, damping: 26, mass: 0.7 };
 
   const sizeClasses =
-    "inline-flex items-center justify-center rounded-full h-[38px] md:h-[44px] px-6 md:px-12 min-w-[208px] md:min-w-[244px] gap-2 md:gap-2.5 text-[12px] md:text-[13px] font-semibold tracking-[0.01em] leading-none whitespace-nowrap shrink-0 cursor-pointer select-none";
+    "inline-flex items-center justify-center rounded-full h-9.5 md:h-11 px-6 md:px-12 min-w-52 md:min-w-61 gap-2 md:gap-2.5 text-[12px] md:text-[13px] font-semibold tracking-[0.01em] leading-none whitespace-nowrap shrink-0 cursor-pointer select-none";
 
   const primaryMotionTarget = primaryPressed ? tapScale : primaryHovered ? hoverScale : restScale;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+38px)] md:top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+68px)] flex justify-center px-[22px]">
+    <div className="pointer-events-none absolute inset-x-0 top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+38px)] md:top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+68px)] flex justify-center px-5.5">
       <div className="pointer-events-auto flex flex-col md:flex-row items-center justify-center gap-3.5 md:gap-4">
         {/* Primary CTA: White pill with mix-blend-screen negative-space text & arrow revealing live WebGL bg */}
         <div className="relative inline-flex">
@@ -73,7 +73,7 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
               viewBox="0 0 16 16"
               fill="none"
               aria-hidden="true"
-              className="w-[13px] h-[13px] md:w-[14px] md:h-[14px] shrink-0"
+              className="w-3.25 h-3.25 md:w-3.5 md:h-3.5 shrink-0"
             >
               <path
                 d="M3.25 8H12.75M12.75 8L8.75 4M12.75 8L8.75 12"
@@ -93,14 +93,14 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
           whileHover={hoverScale}
           whileTap={tapScale}
           transition={springTransition}
-          className={`${sizeClasses} bg-white/[0.1] border border-white/40 backdrop-blur-[6px] text-white shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)] transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
+          className={`${sizeClasses} bg-white/10 border border-white/40 backdrop-blur-[6px] text-white shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)] transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
         >
           <span>{copy.demo}</span>
           <svg
             viewBox="0 0 24 24"
             fill="currentColor"
             aria-hidden="true"
-            className="w-[11px] h-[11px] md:w-[12px] md:h-[12px] shrink-0"
+            className="w-2.75 h-2.75 md:w-3 md:h-3 shrink-0"
           >
             <path d="M7.2 5.45c0-1.08 1.18-1.74 2.1-1.18l10.2 6.2c.89.54.89 1.82 0 2.36l-10.2 6.2c-.92.56-2.1-.1-2.1-1.18V5.45z" />
           </svg>

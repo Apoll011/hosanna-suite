@@ -6,20 +6,20 @@ const WARP = 0.6;
 
 const SIZES = {
   sm: {
-    button: "h-[24px] px-[9px] text-[9px]",
-    iconWrap: "w-[9px] h-[9px]",
-    gapClass: "mr-[4px]",
-    shiftClass: "-translate-x-[13px]",
-    rightAnchor: "right-[9px]",
-    wave: "w-[8px] h-[8px]",
+    button: "h-6 px-2.25 text-[9px]",
+    iconWrap: "w-2.25 h-2.25",
+    gapClass: "mr-1",
+    shiftClass: "-translate-x-3.25",
+    rightAnchor: "right-2.25",
+    wave: "w-2 h-2",
   },
   md: {
-    button: "h-[28px] lg:h-[32px] px-[11px] lg:px-[15px] text-[9.5px] lg:text-[10.5px]",
-    iconWrap: "w-[10px] h-[10px] lg:w-[12px] lg:h-[12px]",
-    gapClass: "mr-[5px] lg:mr-[7px]",
-    shiftClass: "-translate-x-[15px] lg:-translate-x-[19px]",
-    rightAnchor: "right-[11px] lg:right-[15px]",
-    wave: "w-[9px] h-[9px] lg:w-[11px] lg:h-[11px]",
+    button: "h-7 lg:h-8 px-2.75 lg:px-3.75 text-[9.5px] lg:text-[10.5px]",
+    iconWrap: "w-2.5 h-2.5 lg:w-3 lg:h-3",
+    gapClass: "mr-1.25 lg:mr-1.75",
+    shiftClass: "-translate-x-3.75 lg:-translate-x-4.75",
+    rightAnchor: "right-2.75 lg:right-3.75",
+    wave: "w-2.25 h-2.25 lg:w-2.75 lg:h-2.75",
   },
 } as const;
 
@@ -169,7 +169,7 @@ export default function TryPlayButton({
         dims.button
       } ${
         hovered
-          ? "mix-blend-normal bg-white/[0.12] text-white border-white/40"
+          ? "mix-blend-normal bg-white/12 text-white border-white/40"
           : "mix-blend-screen bg-white text-black border-white"
       } ${className}`}
     >
@@ -235,7 +235,7 @@ export default function TryPlayButton({
               viewBox="0 0 14 14"
               strokeWidth="1.7"
               strokeLinecap="round"
-              className={`pointer-events-none absolute -top-[3px] right-[calc(100%-2px)] opacity-0 fill-none stroke-current origin-bottom-right ${dims.wave}`}
+              className={`pointer-events-none absolute -top-0.75 right-[calc(100%-2px)] opacity-0 fill-none stroke-current origin-bottom-right ${dims.wave}`}
             >
               <path d="M14 8a6 6 0 0 0-6 6" />
               <path d="M14 4A10 10 0 0 0 4 14" />
@@ -245,7 +245,7 @@ export default function TryPlayButton({
               viewBox="0 0 14 14"
               strokeWidth="1.7"
               strokeLinecap="round"
-              className={`pointer-events-none absolute -top-[3px] left-[calc(100%-2px)] opacity-0 fill-none stroke-current origin-bottom-left ${dims.wave}`}
+              className={`pointer-events-none absolute -top-0.75 left-[calc(100%-2px)] opacity-0 fill-none stroke-current origin-bottom-left ${dims.wave}`}
             >
               <path d="M0 8a6 6 0 0 1 6 6" />
               <path d="M0 4a10 10 0 0 1 10 10" />

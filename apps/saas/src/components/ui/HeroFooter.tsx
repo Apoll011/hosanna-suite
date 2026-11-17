@@ -157,9 +157,9 @@ export default function HeroFooter({ ready, language, onScrollClick }: HeroFoote
       {/* Mobile (< 768px): Bottom-left X-axis rotating loop across all 3 descriptor blocks */}
       <div
         data-footer-item
-        className="md:hidden opacity-0 pointer-events-auto [perspective:520px] min-h-[38px] flex items-end"
+        className="md:hidden opacity-0 pointer-events-auto perspective-[520px] min-h-9.5 flex items-end"
       >
-        <div ref={mobileCardRef} className="[transform-style:preserve-3d] will-change-transform">
+        <div ref={mobileCardRef} className="transform-3d will-change-transform">
           <p className="text-[13px] font-medium text-white leading-[1.35]">
             {currentMobileBlock.title}
           </p>
@@ -187,7 +187,7 @@ export default function HeroFooter({ ready, language, onScrollClick }: HeroFoote
           type="button"
           onClick={onScrollClick}
           aria-label="Send kinetic ripple across canvas"
-          className="flex items-end justify-center w-[28px] h-[44px] -mr-[6px] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+          className="flex items-end justify-center w-7 h-11 -mr-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
         >
           <svg
             ref={arrowRef}

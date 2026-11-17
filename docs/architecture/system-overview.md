@@ -63,15 +63,15 @@ Dev / staging variants (e.g. `dev-api.hosanna.live`) follow the same split.
 
 ## Deploy shape
 
-| Component           | Typical host                                                      |
-| ------------------- | ----------------------------------------------------------------- |
-| API                 | Vercel Fluid function                                             |
-| Studio              | Static SPA — Vercel rewrite or Cloudflare Workers assets          |
-| Marketing           | Vercel                                                            |
-| Blog                | Cloudflare Workers static **or** Netlify                          |
-| Database            | Supabase Postgres (pooler `:6543`, direct `:5432` for migrations) |
+| Component                | Typical host                                                                           |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| API                      | Vercel Fluid function                                                                  |
+| Studio                   | Static SPA — Vercel rewrite or Cloudflare Workers assets                               |
+| Marketing                | Vercel                                                                                 |
+| Blog                     | Cloudflare Workers static **or** Netlify                                               |
+| Database                 | Supabase Postgres (pooler `:6543`, direct `:5432` for migrations)                      |
 | Avatars and church logos | Supabase Storage private `hosanna-assets` bucket through `@hosanna/storage` S3 adapter |
-| Push / live signals | Firebase (FCM + Firestore)                                        |
+| Push / live signals      | Firebase (FCM + Firestore)                                                             |
 
 ## Version alignment
 

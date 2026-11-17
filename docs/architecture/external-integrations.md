@@ -4,12 +4,12 @@ Everything outside the Hosanna repos that the product depends on.
 
 ## Data and storage
 
-| Service                      | Used for                                                                                | Config                                                                           |
-| ---------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| **Supabase Postgres**        | Primary DB via Prisma (`DATABASE_URL` pooler, `DIRECT_URL` migrations)                  | `.env`                                                                           |
-| **Supabase Storage (S3 API)**  | Auth profile avatars and church logos through `@hosanna/storage`; private `hosanna-assets` bucket | `STORAGE_PROVIDER=s3` + S3 endpoint, region, and access keys on **auth** |
-| **Firebase Cloud Messaging** | Push via auth-hosted dispatcher; tokens in `PushDevice` (session `fcm`/`notify` legacy) | `FCM_*` on **auth** Vercel                                                       |
-| **Cloud Firestore**          | Realtime signals: `services/{id}/realtime/notes`, `services/{id}/annotations/{songId}`  | Same Firebase project; see [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) |
+| Service                       | Used for                                                                                          | Config                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Supabase Postgres**         | Primary DB via Prisma (`DATABASE_URL` pooler, `DIRECT_URL` migrations)                            | `.env`                                                                           |
+| **Supabase Storage (S3 API)** | Auth profile avatars and church logos through `@hosanna/storage`; private `hosanna-assets` bucket | `STORAGE_PROVIDER=s3` + S3 endpoint, region, and access keys on **auth**         |
+| **Firebase Cloud Messaging**  | Push via auth-hosted dispatcher; tokens in `PushDevice` (session `fcm`/`notify` legacy)           | `FCM_*` on **auth** Vercel                                                       |
+| **Cloud Firestore**           | Realtime signals: `services/{id}/realtime/notes`, `services/{id}/annotations/{songId}`            | Same Firebase project; see [ANNOTATIONS_FIREBASE.md](../ANNOTATIONS_FIREBASE.md) |
 
 For local development you can point `DATABASE_URL` / `DIRECT_URL` at any Postgres
 instance (local install or a Supabase project).

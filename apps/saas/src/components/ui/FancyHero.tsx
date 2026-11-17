@@ -51,7 +51,7 @@ export function FancyHero() {
   ] as [string, string, string];
 
   return (
-    <section className="relative h-screen min-h-[560px] w-full overflow-hidden bg-[#021433] text-white">
+    <section className="relative h-screen min-h-140 w-full overflow-hidden bg-[#021433] text-white">
       <h1 className="sr-only">{headlineLines.join(" ")}</h1>
       <WebGLCanvas
         headlineLines={headlineLines}
@@ -59,7 +59,7 @@ export function FancyHero() {
         impulseTriggerRef={impulseTriggerRef}
       />
       <HeroCtas language={language} onStartClick={handleStartClick} onDemoClick={handleDemoClick} />
-      <div className="pointer-events-none relative z-10 flex h-full w-full flex-col justify-between px-4 py-4 md:px-6 md:py-[22px] lg:px-9 lg:py-7">
+      <div className="pointer-events-none relative z-10 flex h-full w-full flex-col justify-between px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7">
         <HeroHeader
           activeNav={activeNav}
           onSelectNav={handleSelectNav}

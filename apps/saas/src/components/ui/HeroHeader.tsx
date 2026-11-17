@@ -139,23 +139,23 @@ export default function HeroHeader({
               setMenuOpen(false);
             }}
             aria-label="Hosanna Studio home"
-            className="inline-flex items-center gap-[6px] md:gap-[7px] lg:gap-[10px] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+            className="inline-flex items-center gap-1.5 md:gap-1.75 lg:gap-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
           >
             <img
               src="/assets/logo_icon.png"
               alt=""
               aria-hidden="true"
-              className="h-[18px] md:h-[22px] lg:h-[28px] w-auto block shrink-0 select-none"
+              className="h-4.5 md:h-5.5 lg:h-7 w-auto block shrink-0 select-none"
               draggable={false}
             />
             <span
               aria-hidden="true"
-              className="w-[1px] h-[10px] md:h-[12px] lg:h-[15px] bg-[rgba(255,255,255,0.5)] shrink-0"
+              className="w-px h-2.5 md:h-3 lg:h-3.75 bg-[rgba(255,255,255,0.5)] shrink-0"
             />
             <img
               src="/assets/wordmark_studio.svg"
               alt="Hosanna Studio"
-              className="h-[9px] md:h-[11px] lg:h-[14px] w-auto block shrink-0 select-none"
+              className="h-2.25 md:h-2.75 lg:h-3.5 w-auto block shrink-0 select-none"
               draggable={false}
             />
           </button>
@@ -185,7 +185,7 @@ export default function HeroHeader({
                   {isActive && (
                     <span
                       aria-hidden="true"
-                      className="absolute -bottom-[1px] left-1/2 -translate-x-1/2 w-[3.5px] h-[3.5px] rounded-full bg-white"
+                      className="absolute -bottom-px left-1/2 -translate-x-1/2 w-[3.5px] h-[3.5px] rounded-full bg-white"
                     />
                   )}
                   <span data-nav-label className="inline-block">
@@ -223,11 +223,11 @@ export default function HeroHeader({
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={menuOpen}
-            className="relative z-40 w-[32px] h-[36px] -mr-[6px] flex flex-col items-center justify-center gap-[3.5px] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+            className="relative z-40 w-8 h-9 -mr-1.5 flex flex-col items-center justify-center gap-[3.5px] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
           >
-            <span ref={topBarRef} className="block w-[16px] h-[1.5px] bg-white origin-center" />
-            <span ref={midBarRef} className="block w-[16px] h-[1.5px] bg-white origin-center" />
-            <span ref={botBarRef} className="block w-[16px] h-[1.5px] bg-white origin-center" />
+            <span ref={topBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
+            <span ref={midBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
+            <span ref={botBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
           </button>
         </div>
       </header>
@@ -237,10 +237,10 @@ export default function HeroHeader({
         ref={drawerRef}
         style={{ display: "none" }}
         aria-hidden={!menuOpen}
-        className="fixed inset-0 z-30 md:hidden flex-col justify-between bg-[rgba(4,11,20,0.95)] backdrop-blur-md px-[22px] pt-[92px] pb-[28px] pointer-events-auto"
+        className="fixed inset-0 z-30 md:hidden flex-col justify-between bg-[rgba(4,11,20,0.95)] backdrop-blur-md px-5.5 pt-23 pb-7 pointer-events-auto"
       >
         <nav aria-label="Mobile navigation">
-          <ul className="flex flex-col gap-[10px] list-none m-0 p-0">
+          <ul className="flex flex-col gap-2.5 list-none m-0 p-0">
             {NAV_ITEMS.map((id) => {
               const isActive = activeNav === id;
               return (
@@ -251,17 +251,14 @@ export default function HeroHeader({
                       onSelectNav(id);
                       setMenuOpen(false);
                     }}
-                    className={`relative flex items-center min-h-[44px] text-[18px] font-medium uppercase tracking-[0.08em] cursor-pointer transition-opacity duration-200 ${
+                    className={`relative flex items-center min-h-11 text-[18px] font-medium uppercase tracking-[0.08em] cursor-pointer transition-opacity duration-200 ${
                       isActive
                         ? "text-white opacity-100"
                         : "text-white opacity-65 hover:opacity-100"
                     }`}
                   >
                     {isActive && (
-                      <span
-                        aria-hidden="true"
-                        className="w-[4px] h-[4px] rounded-full bg-white mr-[10px]"
-                      />
+                      <span aria-hidden="true" className="w-1 h-1 rounded-full bg-white mr-2.5" />
                     )}
                     {t(`landing.nav.${id === "price" ? "pricing" : id}`)}
                   </button>
@@ -271,15 +268,15 @@ export default function HeroHeader({
           </ul>
         </nav>
 
-        <div className="flex flex-col gap-[20px]">
+        <div className="flex flex-col gap-5">
           <div
             data-drawer-item
-            className="flex items-center justify-between border-t border-white/15 pt-[16px]"
+            className="flex items-center justify-between border-t border-white/15 pt-4"
           >
             <span className="text-[10.5px] uppercase tracking-[0.08em] text-white/70">
               {language === "en" ? "Language" : "Idioma"}
             </span>
-            <div className="inline-flex items-center p-1 rounded-full border border-white/25 bg-white/[0.06] gap-0.5">
+            <div className="inline-flex items-center p-1 rounded-full border border-white/25 bg-white/6 gap-0.5">
               {LANGUAGE_OPTIONS.map((opt) => (
                 <button
                   key={opt.code}
@@ -291,14 +288,14 @@ export default function HeroHeader({
                       : "text-white/65 hover:text-white"
                   }`}
                 >
-                  <FlagIcon code={opt.code} className="w-[14px] h-[14px]" />
+                  <FlagIcon code={opt.code} className="w-3.5 h-3.5" />
                   <span>{opt.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div data-drawer-item className="grid grid-cols-1 gap-[12px] text-[12px] leading-[1.35]">
+          <div data-drawer-item className="grid grid-cols-1 gap-3 text-[12px] leading-[1.35]">
             <div>
               <p className="font-medium text-white">Smart Songbook</p>
               <p className="text-[rgba(255,255,255,0.78)]">

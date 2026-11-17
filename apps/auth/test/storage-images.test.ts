@@ -12,7 +12,10 @@ describe("auth image storage", () => {
 
     assert.equal(url, "https://auth.hosanna.live/api/media/user/user-1");
     assert.equal(images.isExternalImageUrl(url), false);
-    assert.equal((await storage.forTenant("user-user-1").head("avatar"))?.contentType, "image/jpeg");
+    assert.equal(
+      (await storage.forTenant("user-user-1").head("avatar"))?.contentType,
+      "image/jpeg",
+    );
   });
 
   it("stores church logos in the organization namespace and removes them", async () => {
@@ -20,8 +23,14 @@ describe("auth image storage", () => {
     const images = createAuthImageStorage(storage, "https://auth.hosanna.live");
     const data = `data:image/png;base64,${Buffer.from("logo-bytes").toString("base64")}`;
 
-    assert.equal(await images.uploadOrganizationLogo("org-1", data), "https://auth.hosanna.live/api/media/organization/org-1");
-    assert.equal((await storage.forTenant("organization-org-1").head("logo"))?.contentType, "image/png");
+    assert.equal(
+      await images.uploadOrganizationLogo("org-1", data),
+      "https://auth.hosanna.live/api/media/organization/org-1",
+    );
+    assert.equal(
+      (await storage.forTenant("organization-org-1").head("logo"))?.contentType,
+      "image/png",
+    );
     await images.deleteOrganizationLogo("org-1");
     assert.equal(await storage.forTenant("organization-org-1").head("logo"), null);
   });

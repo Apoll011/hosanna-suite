@@ -8,11 +8,11 @@ Local-only guidance for **any** coding agent working in this monorepo (`AGENTS.m
 
 ## 1. What this file is (and alternatives)
 
-| File | Best for |
-| --- | --- |
-| **`AGENTS.md` (this)** | Portable, cross-tool handbook (Cursor, Claude Code, Codex, …). **Use this.** |
-| `.cursor/rules/*.mdc` | Cursor-only, optional globs / `alwaysApply`, often **committed** for the whole team |
-| `CLAUDE.md` | Claude Code–specific shorthand |
+| File                   | Best for                                                                            |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| **`AGENTS.md` (this)** | Portable, cross-tool handbook (Cursor, Claude Code, Codex, …). **Use this.**        |
+| `.cursor/rules/*.mdc`  | Cursor-only, optional globs / `alwaysApply`, often **committed** for the whole team |
+| `CLAUDE.md`            | Claude Code–specific shorthand                                                      |
 
 Do **not** duplicate this handbook into committed rules unless asked. Per-app extras can live later as `apps/<app>/AGENTS.md` (also gitignore if personal) when a surface needs deeper local rules.
 
@@ -51,13 +51,13 @@ pnpm openapi:check                       # fail on stale spec/types (run in CI)
 
 ### Mandatory before non-trivial work (pick what matches the task)
 
-| Task | Read first |
-| --- | --- |
-| Anything cross-cutting / “where does X live?” | [`docs/architecture/README.md`](docs/architecture/README.md) |
-| Auth, sessions, RBAC, Stripe | [`docs/architecture/auth-and-billing.md`](docs/architecture/auth-and-billing.md) |
-| Home, App Switcher, AccountMenu, personal settings / app scopes | [`docs/architecture/suite-hub-and-preferences.md`](docs/architecture/suite-hub-and-preferences.md) |
-| UI / visual work | [`docs/hosanna-visual-language.md`](docs/hosanna-visual-language.md) **and** current tokens in `apps/studio/src/index.css` / `apps/auth/app/globals.css` / `packages/ui` |
-| Longer product direction | [`docs/FUTURE_DIRECTION.md`](docs/FUTURE_DIRECTION.md) (vision — do not treat unfinished ideas as shipped) |
+| Task                                                            | Read first                                                                                                                                                               |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Anything cross-cutting / “where does X live?”                   | [`docs/architecture/README.md`](docs/architecture/README.md)                                                                                                             |
+| Auth, sessions, RBAC, Stripe                                    | [`docs/architecture/auth-and-billing.md`](docs/architecture/auth-and-billing.md)                                                                                         |
+| Home, App Switcher, AccountMenu, personal settings / app scopes | [`docs/architecture/suite-hub-and-preferences.md`](docs/architecture/suite-hub-and-preferences.md)                                                                       |
+| UI / visual work                                                | [`docs/hosanna-visual-language.md`](docs/hosanna-visual-language.md) **and** current tokens in `apps/studio/src/index.css` / `apps/auth/app/globals.css` / `packages/ui` |
+| Longer product direction                                        | [`docs/FUTURE_DIRECTION.md`](docs/FUTURE_DIRECTION.md) (vision — do not treat unfinished ideas as shipped)                                                               |
 
 ### Optional / deeper (as needed)
 
@@ -147,6 +147,7 @@ When editing a file, **strip narrative comments you would not be allowed to add*
 ### API changes & OpenAPI contract (hard rule)
 
 Any change to API routes, query params, request bodies, or responses in `apps/api` or `apps/auth` **must** update the corresponding OpenAPI generator definitions.
+
 - Never edit `packages/types/openapi.yaml` directly by hand.
 - Run `pnpm openapi:generate` to regenerate the contract and TypeScript types.
 - Verify freshness with `pnpm openapi:check` before committing. CI fails on any uncommitted contract drift.

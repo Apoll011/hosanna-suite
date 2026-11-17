@@ -7,7 +7,12 @@ export function runStorageContract(name: string, create: () => ObjectStorage) {
     it("stores, reads, describes, copies, lists, and deletes tenant objects", async () => {
       const storage = create();
       const tenant = storage.forTenant(`contract-${crypto.randomUUID()}`);
-      const stored = await tenant.upload({ key: "songs/one.txt", body: new TextEncoder().encode("hello"), contentType: "text/plain", metadata: { origin: "contract" } });
+      const stored = await tenant.upload({
+        key: "songs/one.txt",
+        body: new TextEncoder().encode("hello"),
+        contentType: "text/plain",
+        metadata: { origin: "contract" },
+      });
       assert.equal(stored.size, 5);
       assert.equal(await tenant.exists("songs/one.txt"), true);
       assert.equal((await tenant.head("songs/one.txt"))?.contentType, "text/plain");
@@ -15,7 +20,10 @@ export function runStorageContract(name: string, create: () => ObjectStorage) {
       const copied = await tenant.copy("songs/one.txt", "songs/two.txt");
       assert.equal(copied.key, "songs/two.txt");
       const listed = await tenant.list({ prefix: "songs/" });
-      assert.deepEqual(listed.objects.map(({ key }) => key).sort(), ["songs/one.txt", "songs/two.txt"]);
+      assert.deepEqual(listed.objects.map(({ key }) => key).sort(), [
+        "songs/one.txt",
+        "songs/two.txt",
+      ]);
       await tenant.deleteMany(["songs/one.txt", "songs/two.txt"]);
       assert.equal(await tenant.exists("songs/one.txt"), false);
     });
@@ -32,7 +40,10 @@ export function runStorageContract(name: string, create: () => ObjectStorage) {
     it("creates and aborts multipart uploads", async () => {
       const storage = create();
       const tenant = storage.forTenant(`multipart-${crypto.randomUUID()}`);
-      const upload = await tenant.createMultipartUpload({ key: "large.bin", contentType: "application/octet-stream" });
+      const upload = await tenant.createMultipartUpload({
+        key: "large.bin",
+        contentType: "application/octet-stream",
+      });
       assert.equal(upload.key, "large.bin");
       assert.equal((await tenant.createMultipartPartUrl(upload, 1)).method, "PUT");
       const firstBytes = new Uint8Array(5 * 1024 * 1024).fill(1);
@@ -40,7 +51,9 @@ export function runStorageContract(name: string, create: () => ObjectStorage) {
       const first = await tenant.uploadMultipartPart(upload, 1, firstBytes);
       const second = await tenant.uploadMultipartPart(upload, 2, secondBytes);
       await tenant.completeMultipartUpload(upload, [first, second]);
-      const completed = new Uint8Array(await new Response(await tenant.download("large.bin")).arrayBuffer());
+      const completed = new Uint8Array(
+        await new Response(await tenant.download("large.bin")).arrayBuffer(),
+      );
       assert.equal(completed.byteLength, firstBytes.byteLength + secondBytes.byteLength);
       assert.equal(completed[0], 1);
       assert.equal(completed.at(-1), 2);

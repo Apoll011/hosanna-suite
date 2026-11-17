@@ -16,7 +16,7 @@ export const LANGUAGE_OPTIONS: LanguageOption[] = [
 
 export function FlagIcon({
   code,
-  className = "w-[16px] h-[16px]",
+  className = "w-4 h-4",
 }: {
   code: LanguageCode;
   className?: string;
@@ -87,31 +87,31 @@ export default function LanguageToggle({
 
   const triggerSizing =
     size === "sm"
-      ? "h-[24px] pl-1.5 pr-2 gap-1 text-[9px]"
+      ? "h-6 pl-1.5 pr-2 gap-1 text-[9px]"
       : size === "responsive"
-        ? "h-[28px] lg:h-[32px] pl-2 lg:pl-2.5 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]"
-        : "h-[32px] pl-2.5 pr-3 gap-2 text-[10.5px]";
+        ? "h-7 lg:h-8 pl-2 lg:pl-2.5 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]"
+        : "h-8 pl-2.5 pr-3 gap-2 text-[10.5px]";
 
   const flagSizing =
     size === "sm"
-      ? "w-[12px] h-[12px]"
+      ? "w-3 h-3"
       : size === "responsive"
-        ? "w-[13px] h-[13px] lg:w-[15px] lg:h-[15px]"
-        : "w-[15px] h-[15px]";
+        ? "w-3.25 h-3.25 lg:w-3.75 lg:h-3.75"
+        : "w-3.75 h-3.75";
 
   const chevronSizing =
     size === "sm"
-      ? "w-[8px] h-[8px]"
+      ? "w-2 h-2"
       : size === "responsive"
-        ? "w-[9px] h-[9px] lg:w-[10px] lg:h-[10px]"
-        : "w-[10px] h-[10px]";
+        ? "w-2.25 h-2.25 lg:w-2.5 lg:h-2.5"
+        : "w-2.5 h-2.5";
 
   const optionSizing =
     size === "sm"
-      ? "h-[24px] pl-1.5 pr-2 gap-1 text-[9px]"
+      ? "h-6 pl-1.5 pr-2 gap-1 text-[9px]"
       : size === "responsive"
-        ? "h-[26px] lg:h-[30px] pl-1.5 lg:pl-2 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]"
-        : "h-[30px] pl-2 pr-3 gap-2 text-[10.5px]";
+        ? "h-6.5 lg:h-7.5 pl-1.5 lg:pl-2 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]"
+        : "h-7.5 pl-2 pr-3 gap-2 text-[10.5px]";
 
   const currentOption =
     LANGUAGE_OPTIONS.find((opt) => opt.code === language) ?? LANGUAGE_OPTIONS[0];
@@ -148,7 +148,7 @@ export default function LanguageToggle({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Language: ${currentOption.name}`}
-        className={`inline-flex items-center rounded-full border border-white/25 bg-white/[0.08] hover:bg-white/[0.16] text-white font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap shrink-0 cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 ${triggerSizing}`}
+        className={`inline-flex items-center rounded-full border border-white/25 bg-white/8 hover:bg-white/16 text-white font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap shrink-0 cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 ${triggerSizing}`}
       >
         <FlagIcon code={currentOption.code} className={flagSizing} />
         <span>{currentOption.label}</span>
@@ -188,7 +188,7 @@ export default function LanguageToggle({
                 onChangeLanguage(opt.code);
                 setOpen(false);
               }}
-              className={`inline-flex items-center w-full rounded-full text-white/85 hover:text-white hover:bg-white/[0.15] font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 ${optionSizing}`}
+              className={`inline-flex items-center w-full rounded-full text-white/85 hover:text-white hover:bg-white/15 font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 ${optionSizing}`}
             >
               <FlagIcon code={opt.code} className={flagSizing} />
               <span>{opt.label}</span>
