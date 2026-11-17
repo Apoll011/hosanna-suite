@@ -36,6 +36,18 @@ export default function HeroHeader({
   const botBarRef = useRef<HTMLSpanElement>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const threshold = Math.max(300, window.innerHeight - 80);
+      setScrolled(window.scrollY >= threshold);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Fast downward entrance animation for logo, nav links, language toggle, and Try button
   useEffect(() => {
@@ -125,7 +137,11 @@ export default function HeroHeader({
     <>
       <header
         ref={headerRef}
-        className="fixed top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 pointer-events-none bg-white/[0.08] backdrop-blur-md border-b border-white/15 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7"
+        className={`fixed top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 pointer-events-none px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 transition-all duration-300 ${
+          scrolled
+            ? "bg-[#021433]/85 backdrop-blur-md border-b border-white/15 shadow-sm"
+            : "bg-transparent border-b border-transparent"
+        }`}
       >
         {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
         <div
@@ -176,10 +192,10 @@ export default function HeroHeader({
                   onMouseEnter={(e) => handleLinkHover(e, true)}
                   onMouseLeave={(e) => handleLinkHover(e, false)}
                   aria-current={isActive ? "page" : undefined}
-                  className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-medium uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm ${
-                    isActive
-                      ? "text-white opacity-100"
-                      : "text-white opacity-[0.72] hover:opacity-100"
+                  className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-medium uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm text-white ${
+                    isActive || scrolled
+                      ? "opacity-100"
+                      : "opacity-[0.72] hover:opacity-100"
                   }`}
                 >
                   {isActive && (

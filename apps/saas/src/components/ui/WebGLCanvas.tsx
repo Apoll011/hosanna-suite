@@ -273,12 +273,21 @@ interface PaintedHeadlineResult {
   lineBounds: THREE.Vector4;
 }
 
+function getPrimaryFontFamily(): string {
+  if (typeof window === "undefined" || !document.body) {
+    return '"Inter", -apple-system, BlinkMacSystemFont, sans-serif';
+  }
+  const computed = window.getComputedStyle(document.body).fontFamily;
+  return computed || '"Inter", -apple-system, BlinkMacSystemFont, sans-serif';
+}
+
 function paintHeadlineCanvases(
   width: number,
   height: number,
   dpr: number,
   headlineLines: HeadlineLines,
   symbolLines: [MusicalSymbol[], MusicalSymbol[], MusicalSymbol[]],
+  primaryFontFamily = getPrimaryFontFamily(),
 ): PaintedHeadlineResult {
   const cw = Math.max(1, Math.round(width * dpr));
   const ch = Math.max(1, Math.round(height * dpr));
@@ -310,7 +319,7 @@ function paintHeadlineCanvases(
   const y2 = centerY;
   const y3 = centerY + lineHeight;
 
-  enCtx.font = `400 ${fontSize}px "Inter", -apple-system, BlinkMacSystemFont, sans-serif`;
+  enCtx.font = `400 ${fontSize}px ${primaryFontFamily}`;
   enCtx.fillStyle = "#FFFFFF";
   enCtx.textBaseline = "middle";
 
@@ -610,9 +619,14 @@ export default function WebGLCanvas({
       onFontsReadyRef.current?.();
     };
 
+    const primaryFont = getPrimaryFontFamily();
+    const firstFontMatch = primaryFont.match(/^["']?([^"',]+)["']?/);
+    const firstFontName = firstFontMatch ? firstFontMatch[1].trim() : "Inter";
+
     Promise.all([
       document.fonts.ready,
-      document.fonts.load('400 72px "Inter"').catch(() => []),
+      document.fonts.load(`400 72px "${firstFontName}"`).catch(() => []),
+      document.fonts.load(`400 72px ${primaryFont}`).catch(() => []),
       document.fonts.load('400 64px "Noto Music"').catch(() => []),
     ]).then(() => {
       startEntrance();

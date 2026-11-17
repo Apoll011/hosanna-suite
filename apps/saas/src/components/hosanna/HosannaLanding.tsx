@@ -91,7 +91,7 @@ export function Nav() {
       <header
         className={cn(
           "transition-all duration-300",
-          scrolled ? "bg-background/85 backdrop-blur-md shadow-sm" : "bg-transparent",
+          scrolled ? "bg-[#021433]/85 backdrop-blur-md shadow-sm border-b border-white/15 text-white" : "bg-transparent",
         )}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8 md:grid md:grid-cols-3">
@@ -104,12 +104,7 @@ export function Nav() {
                 <Link
                   key={n.href}
                   to={n.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors",
-                    scrolled
-                      ? "text-foreground hover:text-foreground/80"
-                      : "text-white/90 hover:text-white",
-                  )}
+                  className="text-sm font-medium transition-colors text-white/90 hover:text-white"
                 >
                   {n.label}
                 </Link>
@@ -117,12 +112,7 @@ export function Nav() {
                 <a
                   key={n.href}
                   href={n.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors",
-                    scrolled
-                      ? "text-foreground hover:text-foreground/80"
-                      : "text-white/90 hover:text-white",
-                  )}
+                  className="text-sm font-medium transition-colors text-white/90 hover:text-white"
                 >
                   {n.label}
                 </a>
@@ -141,7 +131,7 @@ export function Nav() {
           <div className="flex items-center justify-end gap-2 md:hidden">
             <LanguageSelector />
             <button
-              className={cn("transition-colors p-1.5", scrolled ? "text-foreground" : "text-white")}
+              className="transition-colors p-1.5 text-white"
               onClick={() => setOpen((v) => !v)}
               aria-label="Menu"
             >

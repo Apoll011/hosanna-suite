@@ -3,6 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import HeroCtas from "./HeroCtas";
 import HeroFooter from "./HeroFooter";
 import HeroHeader, { type NavItem } from "./HeroHeader";
+import SplashScreen from "./SplashScreen";
 import WebGLCanvas from "./WebGLCanvas";
 
 const dashboardUrl = `${import.meta.env.VITE_DASHBOARD_URL}/new`;
@@ -11,7 +12,10 @@ export function FancyHero() {
   const { language, setLanguage, t } = useI18n();
   const [activeNav, setActiveNav] = useState<NavItem>("features");
   const [fontsReady, setFontsReady] = useState(false);
+  const [splashRevealed, setSplashRevealed] = useState(false);
   const impulseTriggerRef = useRef<((targetUv?: { x: number; y: number }) => void) | null>(null);
+
+  const heroReady = fontsReady && splashRevealed;
 
   const handleSelectNav = useCallback((item: NavItem) => {
     setActiveNav(item);
@@ -52,6 +56,7 @@ export function FancyHero() {
 
   return (
     <section className="relative h-screen min-h-140 w-full overflow-hidden bg-[#021433] text-white">
+      <SplashScreen onReveal={() => setSplashRevealed(true)} />
       <h1 className="sr-only">{headlineLines.join(" ")}</h1>
       <WebGLCanvas
         headlineLines={headlineLines}
@@ -66,10 +71,10 @@ export function FancyHero() {
         language={language}
         onChangeLanguage={setLanguage}
         onTryClick={handleStartClick}
-        ready={fontsReady}
+        ready={heroReady}
       />
       <div className="pointer-events-none relative z-10 flex h-full w-full flex-col justify-end px-4 pb-4 md:px-6 md:pb-5.5 lg:px-9 lg:pb-7">
-        <HeroFooter ready={fontsReady} language={language} onScrollClick={handleScrollClick} />
+        <HeroFooter ready={heroReady} language={language} onScrollClick={handleScrollClick} />
       </div>
     </section>
   );
