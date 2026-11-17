@@ -61,7 +61,8 @@ export interface ParsedSong extends Song {
     youtube?: string;
     ccli?: string;
     duration?: string;
-    [key: string]: string | undefined;
+    tags?: string[];
+    [key: string]: string | string[] | undefined;
   };
 }
 
