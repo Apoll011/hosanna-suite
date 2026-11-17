@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-export type LanguageCode = 'pt' | 'en' | 'es';
+export type LanguageCode = "pt" | "en" | "es";
 
 interface LanguageOption {
   code: LanguageCode;
@@ -9,13 +9,19 @@ interface LanguageOption {
 }
 
 export const LANGUAGE_OPTIONS: LanguageOption[] = [
-  { code: 'pt', label: 'PT', name: 'Português' },
-  { code: 'en', label: 'EN', name: 'English' },
-  { code: 'es', label: 'ES', name: 'Español' },
+  { code: "pt", label: "PT", name: "Português" },
+  { code: "en", label: "EN", name: "English" },
+  { code: "es", label: "ES", name: "Español" },
 ];
 
-export function FlagIcon({ code, className = 'w-[16px] h-[16px]' }: { code: LanguageCode; className?: string }) {
-  if (code === 'pt') {
+export function FlagIcon({
+  code,
+  className = "w-[16px] h-[16px]",
+}: {
+  code: LanguageCode;
+  className?: string;
+}) {
+  if (code === "pt") {
     return (
       <svg
         viewBox="0 0 24 24"
@@ -34,7 +40,7 @@ export function FlagIcon({ code, className = 'w-[16px] h-[16px]' }: { code: Lang
     );
   }
 
-  if (code === 'en') {
+  if (code === "en") {
     return (
       <svg
         viewBox="0 0 24 24"
@@ -68,44 +74,44 @@ export function FlagIcon({ code, className = 'w-[16px] h-[16px]' }: { code: Lang
 interface LanguageToggleProps {
   language: LanguageCode;
   onChangeLanguage: (lang: LanguageCode) => void;
-  size?: 'sm' | 'md' | 'responsive';
+  size?: "sm" | "md" | "responsive";
 }
 
 export default function LanguageToggle({
   language,
   onChangeLanguage,
-  size = 'md',
+  size = "md",
 }: LanguageToggleProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const triggerSizing =
-    size === 'sm'
-      ? 'h-[24px] pl-1.5 pr-2 gap-1 text-[9px]'
-      : size === 'responsive'
-        ? 'h-[28px] lg:h-[32px] pl-2 lg:pl-2.5 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]'
-        : 'h-[32px] pl-2.5 pr-3 gap-2 text-[10.5px]';
+    size === "sm"
+      ? "h-[24px] pl-1.5 pr-2 gap-1 text-[9px]"
+      : size === "responsive"
+        ? "h-[28px] lg:h-[32px] pl-2 lg:pl-2.5 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]"
+        : "h-[32px] pl-2.5 pr-3 gap-2 text-[10.5px]";
 
   const flagSizing =
-    size === 'sm'
-      ? 'w-[12px] h-[12px]'
-      : size === 'responsive'
-        ? 'w-[13px] h-[13px] lg:w-[15px] lg:h-[15px]'
-        : 'w-[15px] h-[15px]';
+    size === "sm"
+      ? "w-[12px] h-[12px]"
+      : size === "responsive"
+        ? "w-[13px] h-[13px] lg:w-[15px] lg:h-[15px]"
+        : "w-[15px] h-[15px]";
 
   const chevronSizing =
-    size === 'sm'
-      ? 'w-[8px] h-[8px]'
-      : size === 'responsive'
-        ? 'w-[9px] h-[9px] lg:w-[10px] lg:h-[10px]'
-        : 'w-[10px] h-[10px]';
+    size === "sm"
+      ? "w-[8px] h-[8px]"
+      : size === "responsive"
+        ? "w-[9px] h-[9px] lg:w-[10px] lg:h-[10px]"
+        : "w-[10px] h-[10px]";
 
   const optionSizing =
-    size === 'sm'
-      ? 'h-[24px] pl-1.5 pr-2 gap-1 text-[9px]'
-      : size === 'responsive'
-        ? 'h-[26px] lg:h-[30px] pl-1.5 lg:pl-2 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]'
-        : 'h-[30px] pl-2 pr-3 gap-2 text-[10.5px]';
+    size === "sm"
+      ? "h-[24px] pl-1.5 pr-2 gap-1 text-[9px]"
+      : size === "responsive"
+        ? "h-[26px] lg:h-[30px] pl-1.5 lg:pl-2 pr-2.5 lg:pr-3 gap-1.5 lg:gap-2 text-[9.5px] lg:text-[10.5px]"
+        : "h-[30px] pl-2 pr-3 gap-2 text-[10.5px]";
 
   const currentOption =
     LANGUAGE_OPTIONS.find((opt) => opt.code === language) ?? LANGUAGE_OPTIONS[0];
@@ -121,16 +127,16 @@ export default function LanguageToggle({
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setOpen(false);
       }
     };
 
-    window.addEventListener('mousedown', handlePointerDown);
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener('mousedown', handlePointerDown);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
 
@@ -151,7 +157,7 @@ export default function LanguageToggle({
           fill="none"
           aria-hidden="true"
           className={`${chevronSizing} text-white/75 transition-transform duration-200 ${
-            open ? 'rotate-180' : ''
+            open ? "rotate-180" : ""
           }`}
         >
           <path
@@ -169,7 +175,7 @@ export default function LanguageToggle({
           role="listbox"
           aria-label="Select language"
           className={`absolute right-0 mt-1.5 min-w-full border border-white/25 bg-[#040B14]/90 backdrop-blur-md p-1 shadow-xl z-50 flex flex-col gap-0.5 ${
-            size === 'sm' ? 'rounded-[14px]' : 'rounded-[18px]'
+            size === "sm" ? "rounded-[14px]" : "rounded-[18px]"
           }`}
         >
           {otherOptions.map((opt) => (

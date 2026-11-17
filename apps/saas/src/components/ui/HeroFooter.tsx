@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import type { LanguageCode } from './HeroHeader';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import type { LanguageCode } from "./HeroHeader";
 
 interface HeroFooterProps {
   ready: boolean;
@@ -10,36 +10,32 @@ interface HeroFooterProps {
 
 const FOOTER_BLOCKS: { title: string; subtitles: Record<LanguageCode, string> }[] = [
   {
-    title: 'Smart Songbook',
+    title: "Smart Songbook",
     subtitles: {
-      pt: 'Cifras ChordPro e tons instantâneos',
-      en: 'ChordPro charts & instant keys',
-      es: 'Cifrados ChordPro y tonos al instante',
+      pt: "Cifras ChordPro e tons instantâneos",
+      en: "ChordPro charts & instant keys",
+      es: "Cifrados ChordPro y tonos al instante",
     },
   },
   {
-    title: 'Service Flow',
+    title: "Service Flow",
     subtitles: {
-      pt: 'Escalas, equipes e deixas em um só lugar',
-      en: 'Schedules, teams & cues in one place',
-      es: 'Turnos, equipos y señales en un solo lugar',
+      pt: "Escalas, equipes e deixas em um só lugar",
+      en: "Schedules, teams & cues in one place",
+      es: "Turnos, equipos y señales en un solo lugar",
     },
   },
   {
-    title: 'Hosanna Studio',
+    title: "Hosanna Studio",
     subtitles: {
-      pt: 'Grátis para começar, feito para crescer',
-      en: 'Free to start, built to scale',
-      es: 'Gratis para empezar, hecho para crecer',
+      pt: "Grátis para começar, feito para crescer",
+      en: "Free to start, built to scale",
+      es: "Gratis para empezar, hecho para crecer",
     },
   },
 ];
 
-export default function HeroFooter({
-  ready,
-  language,
-  onScrollClick,
-}: HeroFooterProps) {
+export default function HeroFooter({ ready, language, onScrollClick }: HeroFooterProps) {
   const footerRef = useRef<HTMLElement>(null);
   const arrowRef = useRef<SVGSVGElement>(null);
   const mobileCardRef = useRef<HTMLDivElement>(null);
@@ -48,8 +44,8 @@ export default function HeroFooter({
   // Fast upward entrance animation (opposite of top header)
   useEffect(() => {
     if (!ready || !footerRef.current) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const items = footerRef.current.querySelectorAll('[data-footer-item]');
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const items = footerRef.current.querySelectorAll("[data-footer-item]");
 
     if (prefersReducedMotion) {
       gsap.set(items, { opacity: 1, y: 0 });
@@ -65,8 +61,8 @@ export default function HeroFooter({
         duration: 0.42,
         stagger: 0.03,
         delay: 0.04,
-        ease: 'power3.out',
-      }
+        ease: "power3.out",
+      },
     );
 
     return () => {
@@ -77,7 +73,7 @@ export default function HeroFooter({
   // Mobile 3-second looping X-axis rotation across the 3 footer text blocks
   useEffect(() => {
     if (!ready) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let activeTl: gsap.core.Timeline | null = null;
 
     const intervalId = window.setInterval(() => {
@@ -95,9 +91,9 @@ export default function HeroFooter({
           opacity: 0,
           y: -3,
           duration: 0.28,
-          ease: 'power2.in',
+          ease: "power2.in",
           transformPerspective: 520,
-          transformOrigin: '50% 50%',
+          transformOrigin: "50% 50%",
         })
         .call(() => {
           setMobileIndex((prev) => (prev + 1) % FOOTER_BLOCKS.length);
@@ -109,17 +105,17 @@ export default function HeroFooter({
             opacity: 0,
             y: 3,
             transformPerspective: 520,
-            transformOrigin: '50% 50%',
+            transformOrigin: "50% 50%",
           },
           {
             rotationX: 0,
             opacity: 1,
             y: 0,
             duration: 0.36,
-            ease: 'power3.out',
-            clearProps: 'transform',
+            ease: "power3.out",
+            clearProps: "transform",
           },
-          '+=0.02'
+          "+=0.02",
         );
     }, 3000);
 
@@ -132,13 +128,13 @@ export default function HeroFooter({
   // Continuous downward scroll arrow breathing loop
   useEffect(() => {
     if (!arrowRef.current) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
     const arrowTween = gsap.to(arrowRef.current, {
       y: 6,
       duration: 1.1,
-      ease: 'sine.inOut',
+      ease: "sine.inOut",
       repeat: -1,
       yoyo: true,
     });
@@ -177,9 +173,7 @@ export default function HeroFooter({
       <div className="hidden md:flex items-end justify-center md:gap-8 lg:gap-16 pointer-events-auto">
         {FOOTER_BLOCKS.map((block) => (
           <div key={block.title} data-footer-item className="opacity-0">
-            <p className="text-[13px] font-medium text-white leading-[1.35]">
-              {block.title}
-            </p>
+            <p className="text-[13px] font-medium text-white leading-[1.35]">{block.title}</p>
             <p className="text-[12px] font-normal text-[rgba(255,255,255,0.78)] leading-[1.35]">
               {block.subtitles[language]}
             </p>

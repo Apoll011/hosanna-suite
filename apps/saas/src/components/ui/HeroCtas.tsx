@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import type { LanguageCode } from './LanguageToggle';
+import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import type { LanguageCode } from "./LanguageToggle";
 
 interface HeroCtasProps {
   language: LanguageCode;
@@ -9,9 +9,9 @@ interface HeroCtasProps {
 }
 
 const CTA_COPY: Record<LanguageCode, { start: string; demo: string }> = {
-  pt: { start: 'Começar Agora', demo: 'Ver Demo' },
-  en: { start: 'Get Started', demo: 'Watch Demo' },
-  es: { start: 'Empezar Ahora', demo: 'Ver Demo' },
+  pt: { start: "Começar Agora", demo: "Ver Demo" },
+  en: { start: "Get Started", demo: "Watch Demo" },
+  es: { start: "Empezar Ahora", demo: "Ver Demo" },
 };
 
 export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCtasProps) {
@@ -25,16 +25,12 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
   const tapScale = reduceMotion ? {} : { scale: 0.985, y: 0 };
   const springTransition = reduceMotion
     ? { duration: 0.01 }
-    : { type: 'spring' as const, stiffness: 420, damping: 26, mass: 0.7 };
+    : { type: "spring" as const, stiffness: 420, damping: 26, mass: 0.7 };
 
   const sizeClasses =
-    'inline-flex items-center justify-center rounded-full h-[38px] md:h-[44px] px-6 md:px-12 min-w-[208px] md:min-w-[244px] gap-2 md:gap-2.5 text-[12px] md:text-[13px] font-semibold tracking-[0.01em] leading-none whitespace-nowrap shrink-0 cursor-pointer select-none';
+    "inline-flex items-center justify-center rounded-full h-[38px] md:h-[44px] px-6 md:px-12 min-w-[208px] md:min-w-[244px] gap-2 md:gap-2.5 text-[12px] md:text-[13px] font-semibold tracking-[0.01em] leading-none whitespace-nowrap shrink-0 cursor-pointer select-none";
 
-  const primaryMotionTarget = primaryPressed
-    ? tapScale
-    : primaryHovered
-      ? hoverScale
-      : restScale;
+  const primaryMotionTarget = primaryPressed ? tapScale : primaryHovered ? hoverScale : restScale;
 
   return (
     <div className="pointer-events-none absolute inset-x-0 top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+38px)] md:top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+68px)] flex justify-center px-[22px]">
@@ -48,8 +44,8 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
             transition={springTransition}
             className={`pointer-events-none absolute inset-0 rounded-full bg-transparent transition-shadow duration-200 ${
               primaryHovered
-                ? 'shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)]'
-                : 'shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)]'
+                ? "shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)]"
+                : "shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)]"
             }`}
           />
           <motion.button

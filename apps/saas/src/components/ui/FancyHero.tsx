@@ -58,11 +58,7 @@ export function FancyHero() {
         onFontsReady={() => setFontsReady(true)}
         impulseTriggerRef={impulseTriggerRef}
       />
-      <HeroCtas
-        language={language}
-        onStartClick={handleStartClick}
-        onDemoClick={handleDemoClick}
-      />
+      <HeroCtas language={language} onStartClick={handleStartClick} onDemoClick={handleDemoClick} />
       <div className="pointer-events-none relative z-10 flex h-full w-full flex-col justify-between px-4 py-4 md:px-6 md:py-[22px] lg:px-9 lg:py-7">
         <HeroHeader
           activeNav={activeNav}
@@ -73,11 +69,7 @@ export function FancyHero() {
           onTryClick={handleStartClick}
           ready={fontsReady}
         />
-        <HeroFooter
-          ready={fontsReady}
-          language={language}
-          onScrollClick={handleScrollClick}
-        />
+        <HeroFooter ready={fontsReady} language={language} onScrollClick={handleScrollClick} />
       </div>
     </section>
   );

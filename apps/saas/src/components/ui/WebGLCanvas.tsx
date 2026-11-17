@@ -1,19 +1,21 @@
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import gsap from 'gsap';
-import { useCursor } from '../../hooks/useCursor';
-import { liquidBgVertexShader, liquidBgFragmentShader } from '../../shaders/liquidBg';
-import { lensTextVertexShader, lensTextFragmentShader } from '../../shaders/lensText';
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+import gsap from "gsap";
+import { useCursor } from "../../hooks/useCursor";
+import { liquidBgVertexShader, liquidBgFragmentShader } from "../../shaders/liquidBg";
+import { lensTextVertexShader, lensTextFragmentShader } from "../../shaders/lensText";
 
 export type HeadlineLines = [string, string, string];
 
 interface WebGLCanvasProps {
   headlineLines?: HeadlineLines;
   onFontsReady?: () => void;
-  impulseTriggerRef?: React.MutableRefObject<((targetUv?: { x: number; y: number }) => void) | null>;
+  impulseTriggerRef?: React.MutableRefObject<
+    ((targetUv?: { x: number; y: number }) => void) | null
+  >;
 }
 
-const MUSICAL_SYMBOLS = ['𝅝', '𝅗𝅥', '♩', '♪', '𝅘𝅥𝅯', '𝅘𝅥𝅰', '𝅘𝅥𝅱', '♫', '♬'] as const;
+const MUSICAL_SYMBOLS = ["𝅝", "𝅗𝅥", "♩", "♪", "𝅘𝅥𝅯", "𝅘𝅥𝅰", "𝅘𝅥𝅱", "♫", "♬"] as const;
 type MusicalSymbol = (typeof MUSICAL_SYMBOLS)[number];
 
 function generateRandomSymbolLines(): [MusicalSymbol[], MusicalSymbol[], MusicalSymbol[]] {
@@ -33,13 +35,13 @@ function generateRandomSymbolLines(): [MusicalSymbol[], MusicalSymbol[], Musical
 
 const detectSoftwareWebGL = (): boolean => {
   try {
-    const probeCanvas = document.createElement('canvas');
-    const gl = probeCanvas.getContext('webgl2') || probeCanvas.getContext('webgl');
+    const probeCanvas = document.createElement("canvas");
+    const gl = probeCanvas.getContext("webgl2") || probeCanvas.getContext("webgl");
     if (!gl) return true;
-    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
     const param = ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER;
     const gpu = String(gl.getParameter(param));
-    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
     return /SwiftShader|llvmpipe|softpipe|Software|Basic Render/i.test(gpu);
   } catch {
     return false;
@@ -49,7 +51,7 @@ const detectSoftwareWebGL = (): boolean => {
 function measureTrackedTextWidth(
   ctx: CanvasRenderingContext2D,
   text: string,
-  trackingPx: number
+  trackingPx: number,
 ): number {
   const chars = Array.from(text);
   const widths = chars.map((ch) => ctx.measureText(ch).width);
@@ -62,15 +64,15 @@ function drawTrackedText(
   x: number,
   y: number,
   trackingPx: number,
-  align: 'left' | 'right'
+  align: "left" | "right",
 ): number {
   const chars = Array.from(text);
   const widths = chars.map((ch) => ctx.measureText(ch).width);
   const totalWidth =
     widths.reduce((sum, w) => sum + w, 0) + trackingPx * Math.max(0, chars.length - 1);
 
-  let cursorX = align === 'right' ? x - totalWidth : x;
-  ctx.textAlign = 'left';
+  let cursorX = align === "right" ? x - totalWidth : x;
+  ctx.textAlign = "left";
   for (let i = 0; i < chars.length; i++) {
     ctx.fillText(chars[i], cursorX, y);
     cursorX += widths[i] + trackingPx;
@@ -84,13 +86,13 @@ function drawVectorMusicalNote(
   sym: MusicalSymbol,
   cx: number,
   cy: number,
-  size: number
+  size: number,
 ) {
   ctx.save();
-  ctx.fillStyle = '#FFFFFF';
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
+  ctx.fillStyle = "#FFFFFF";
+  ctx.strokeStyle = "#FFFFFF";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
 
   const rx = size * 0.145;
   const ry = size * 0.105;
@@ -124,15 +126,15 @@ function drawVectorMusicalNote(
         xTop + size * 0.24,
         fy + size * 0.24,
         xTop + size * 0.11,
-        fy + size * 0.34
+        fy + size * 0.34,
       );
       ctx.stroke();
     }
   };
 
-  if (sym === '𝅝') {
+  if (sym === "𝅝") {
     drawHead(cx, cy + size * 0.12, true);
-  } else if (sym === '𝅗𝅥') {
+  } else if (sym === "𝅗𝅥") {
     const hx = cx - rx * 0.3;
     const hy = cy + size * 0.22;
     drawHead(hx, hy, true);
@@ -140,7 +142,7 @@ function drawVectorMusicalNote(
     ctx.moveTo(hx + rx * 0.85, hy);
     ctx.lineTo(hx + rx * 0.85, hy - stemH);
     ctx.stroke();
-  } else if (sym === '♩') {
+  } else if (sym === "♩") {
     const hx = cx - rx * 0.3;
     const hy = cy + size * 0.22;
     drawHead(hx, hy, false);
@@ -148,8 +150,8 @@ function drawVectorMusicalNote(
     ctx.moveTo(hx + rx * 0.85, hy);
     ctx.lineTo(hx + rx * 0.85, hy - stemH);
     ctx.stroke();
-  } else if (sym === '♪' || sym === '𝅘𝅥𝅯' || sym === '𝅘𝅥𝅰' || sym === '𝅘𝅥𝅱') {
-    const flagCount = sym === '♪' ? 1 : sym === '𝅘𝅥𝅯' ? 2 : sym === '𝅘𝅥𝅰' ? 3 : 4;
+  } else if (sym === "♪" || sym === "𝅘𝅥𝅯" || sym === "𝅘𝅥𝅰" || sym === "𝅘𝅥𝅱") {
+    const flagCount = sym === "♪" ? 1 : sym === "𝅘𝅥𝅯" ? 2 : sym === "𝅘𝅥𝅰" ? 3 : 4;
     const hx = cx - rx * 0.5;
     const hy = cy + size * 0.22;
     const sx = hx + rx * 0.85;
@@ -161,7 +163,7 @@ function drawVectorMusicalNote(
     drawFlags(sx, hy - stemH, flagCount);
   } else {
     // Beamed eighth (♫) or sixteenth (♬)
-    const beamCount = sym === '♬' ? 2 : 1;
+    const beamCount = sym === "♬" ? 2 : 1;
     const leftX = cx - size * 0.18;
     const rightX = cx + size * 0.16;
     const leftY = cy + size * 0.24;
@@ -192,25 +194,25 @@ function drawVectorMusicalNote(
 }
 
 function isGlyphRenderable(fontSpec: string, sym: string): boolean {
-  const probe = document.createElement('canvas');
+  const probe = document.createElement("canvas");
   probe.width = 48;
   probe.height = 48;
-  const pCtx = probe.getContext('2d');
+  const pCtx = probe.getContext("2d");
   if (!pCtx) return false;
   pCtx.font = fontSpec;
   const wSym = pCtx.measureText(sym).width;
-  const wNotdef = pCtx.measureText('\uFFFD').width;
-  const wTofu = pCtx.measureText('\u25A1').width;
+  const wNotdef = pCtx.measureText("\uFFFD").width;
+  const wTofu = pCtx.measureText("\u25A1").width;
   if (wSym <= 0) return false;
   // Detect fallback .notdef boxes via pixel fingerprint comparison against tofu
   pCtx.clearRect(0, 0, 48, 48);
-  pCtx.fillStyle = '#FFFFFF';
-  pCtx.textBaseline = 'middle';
+  pCtx.fillStyle = "#FFFFFF";
+  pCtx.textBaseline = "middle";
   pCtx.fillText(sym, 8, 24);
   const symData = pCtx.getImageData(0, 0, 48, 48).data;
 
   pCtx.clearRect(0, 0, 48, 48);
-  pCtx.fillText('\u25A1', 8, 24);
+  pCtx.fillText("\u25A1", 8, 24);
   const tofuData = pCtx.getImageData(0, 0, 48, 48).data;
 
   let diff = 0;
@@ -223,7 +225,7 @@ function isGlyphRenderable(fontSpec: string, sym: string): boolean {
   if (Math.abs(wSym - wTofu) < 0.5 && diff < 12) return false;
   if (Math.abs(wSym - wNotdef) < 0.5 && diff < 12) {
     pCtx.clearRect(0, 0, 48, 48);
-    pCtx.fillText('\uFFFD', 8, 24);
+    pCtx.fillText("\uFFFD", 8, 24);
     const notdefData = pCtx.getImageData(0, 0, 48, 48).data;
     let diff2 = 0;
     for (let i = 3; i < symData.length; i += 4) {
@@ -242,12 +244,12 @@ function drawSymbolRow(
   y: number,
   fontSize: number,
   fontSpec: string,
-  renderableMap: Map<string, boolean>
+  renderableMap: Map<string, boolean>,
 ) {
   ctx.font = fontSpec;
-  ctx.fillStyle = '#FFFFFF';
-  ctx.textBaseline = 'middle';
-  ctx.textAlign = 'center';
+  ctx.fillStyle = "#FFFFFF";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
 
   const count = symbols.length;
   const span = Math.max(fontSize, endX - startX);
@@ -276,20 +278,20 @@ function paintHeadlineCanvases(
   height: number,
   dpr: number,
   headlineLines: HeadlineLines,
-  symbolLines: [MusicalSymbol[], MusicalSymbol[], MusicalSymbol[]]
+  symbolLines: [MusicalSymbol[], MusicalSymbol[], MusicalSymbol[]],
 ): PaintedHeadlineResult {
   const cw = Math.max(1, Math.round(width * dpr));
   const ch = Math.max(1, Math.round(height * dpr));
 
-  const enCanvas = document.createElement('canvas');
+  const enCanvas = document.createElement("canvas");
   enCanvas.width = cw;
   enCanvas.height = ch;
-  const enCtx = enCanvas.getContext('2d')!;
+  const enCtx = enCanvas.getContext("2d")!;
 
-  const jpCanvas = document.createElement('canvas');
+  const jpCanvas = document.createElement("canvas");
   jpCanvas.width = cw;
   jpCanvas.height = ch;
-  const jpCtx = jpCanvas.getContext('2d')!;
+  const jpCtx = jpCanvas.getContext("2d")!;
 
   enCtx.scale(dpr, dpr);
   jpCtx.scale(dpr, dpr);
@@ -309,8 +311,8 @@ function paintHeadlineCanvases(
   const y3 = centerY + lineHeight;
 
   enCtx.font = `400 ${fontSize}px "Inter", -apple-system, BlinkMacSystemFont, sans-serif`;
-  enCtx.fillStyle = '#FFFFFF';
-  enCtx.textBaseline = 'middle';
+  enCtx.fillStyle = "#FFFFFF";
+  enCtx.textBaseline = "middle";
 
   const measuredLine1Width = measureTrackedTextWidth(enCtx, headlineLines[0], trackingPx);
 
@@ -331,9 +333,9 @@ function paintHeadlineCanvases(
     leftX3 = leftX + Math.min(measuredLine1Width * 0.14, Math.max(16, maxAvail * 0.08));
   }
 
-  const line1Width = drawTrackedText(enCtx, headlineLines[0], leftX, y1, trackingPx, 'left');
-  const line2Width = drawTrackedText(enCtx, headlineLines[1], rightX2, y2, trackingPx, 'right');
-  const line3Width = drawTrackedText(enCtx, headlineLines[2], leftX3, y3, trackingPx, 'left');
+  const line1Width = drawTrackedText(enCtx, headlineLines[0], leftX, y1, trackingPx, "left");
+  const line2Width = drawTrackedText(enCtx, headlineLines[1], rightX2, y2, trackingPx, "right");
+  const line3Width = drawTrackedText(enCtx, headlineLines[2], leftX3, y3, trackingPx, "left");
 
   // Paint randomized musical notation behind the glass lens matching each line's exact spatial footprint
   const symFontSpec = `400 ${symFontSize}px "Noto Music", "Noto Sans Symbols 2", "Apple Symbols", "Segoe UI Symbol", sans-serif`;
@@ -350,7 +352,7 @@ function paintHeadlineCanvases(
     y1,
     symFontSize,
     symFontSpec,
-    renderableMap
+    renderableMap,
   );
   drawSymbolRow(
     jpCtx,
@@ -360,7 +362,7 @@ function paintHeadlineCanvases(
     y2,
     symFontSize,
     symFontSpec,
-    renderableMap
+    renderableMap,
   );
   drawSymbolRow(
     jpCtx,
@@ -370,7 +372,7 @@ function paintHeadlineCanvases(
     y3,
     symFontSize,
     symFontSpec,
-    renderableMap
+    renderableMap,
   );
 
   // Compute WebGL UV Y-boundaries (0 = bottom, 1 = top)
@@ -383,13 +385,13 @@ function paintHeadlineCanvases(
     1.0 - top1 / height,
     1.0 - mid12 / height,
     1.0 - mid23 / height,
-    1.0 - bot3 / height
+    1.0 - bot3 / height,
   );
 
   return { enCanvas, jpCanvas, lineBounds };
 }
 
-const DEFAULT_HEADLINE: HeadlineLines = ['We bring clarity', 'to every', 'worship set'];
+const DEFAULT_HEADLINE: HeadlineLines = ["We bring clarity", "to every", "worship set"];
 
 export default function WebGLCanvas({
   headlineLines = DEFAULT_HEADLINE,
@@ -432,8 +434,8 @@ export default function WebGLCanvas({
 
     const isMobileOrTablet = (w: number) =>
       w < 1024 ||
-      (typeof window !== 'undefined' &&
-        window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+      (typeof window !== "undefined" &&
+        window.matchMedia("(hover: none) and (pointer: coarse)").matches);
 
     const getLensRadiusPx = (w: number) => (isMobileOrTablet(w) ? 0 : 92);
 
@@ -443,7 +445,7 @@ export default function WebGLCanvas({
     const renderer = new THREE.WebGLRenderer({
       antialias: !isSoftwareGl,
       alpha: false,
-      powerPreference: 'high-performance',
+      powerPreference: "high-performance",
     });
     renderer.setPixelRatio(dpr);
     renderer.setSize(initW, initH);
@@ -457,7 +459,7 @@ export default function WebGLCanvas({
 
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 
-    const emptyCanvas = document.createElement('canvas');
+    const emptyCanvas = document.createElement("canvas");
     emptyCanvas.width = 4;
     emptyCanvas.height = 4;
     let enTexture = new THREE.CanvasTexture(emptyCanvas);
@@ -479,8 +481,7 @@ export default function WebGLCanvas({
     const BASE_LINES_AMOUNT = 5.0;
     const getLinesAmount = (w: number) =>
       w >= TABLET_BREAKPOINT ? BASE_LINES_AMOUNT : BASE_LINES_AMOUNT * 3.8;
-    const getBackgroundScale = (w: number) =>
-      w >= TABLET_BREAKPOINT ? 1.0 : w * 0.001 * 1.45;
+    const getBackgroundScale = (w: number) => (w >= TABLET_BREAKPOINT ? 1.0 : w * 0.001 * 1.45);
 
     const bgUniforms = {
       uTime: { value: 0 },
@@ -546,7 +547,7 @@ export default function WebGLCanvas({
         height,
         dpr,
         headlineLinesRef.current,
-        symbolLinesRef.current
+        symbolLinesRef.current,
       );
 
       const nextEn = configureTextTexture(enCanvas);
@@ -580,7 +581,7 @@ export default function WebGLCanvas({
       rebuildTextTextures();
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     if (impulseTriggerRef) {
       impulseTriggerRef.current = (targetUv) => {
@@ -592,14 +593,14 @@ export default function WebGLCanvas({
         gsap.to(impulseState, {
           value: 0,
           duration: 1.4,
-          ease: 'power3.out',
+          ease: "power3.out",
         });
       };
     }
 
     const prefersReducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const startEntrance = () => {
       if (disposed) return;
@@ -620,7 +621,7 @@ export default function WebGLCanvas({
 
     const afterDraw = (cb: () => void) => {
       const gl = renderer.getContext() as WebGL2RenderingContext;
-      if (typeof gl.fenceSync === 'function') {
+      if (typeof gl.fenceSync === "function") {
         const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
         gl.flush();
         const poll = () => {
@@ -694,7 +695,7 @@ export default function WebGLCanvas({
       rebuildTexturesRef.current = null;
       cancelAnimationFrame(frameId);
       clearTimeout(frameId);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       gsap.killTweensOf(impulseState);
 
       if (impulseTriggerRef) {

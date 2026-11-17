@@ -61,7 +61,8 @@ function Logo({ className }: { className?: string }) {
 
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
 const isNewLanding = () =>
-  typeof window !== "undefined" && new URLSearchParams(window.location.search).get("new") === "true";
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).get("new") === "true";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
