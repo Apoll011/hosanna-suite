@@ -10,7 +10,7 @@ What to configure and verify after the architecture fixes in this folder. Treat 
 | Studio       | `Hosana-dashboard` | **Vercel** and/or **Cloudflare Workers** assets         | SPA; `wrangler.jsonc` + `vercel.json` |
 | Marketing    | `hosanna-saas`     | **Vercel** (`hosanna.live`)                             | Static + prerender                    |
 | Blog         | `hosanna-blog`     | **Cloudflare Workers** (preferred) or Netlify           | `wrangler.jsonc` / `netlify.toml`     |
-| DB / storage | —                  | **Supabase**                                            | Postgres pooler + `avatars` bucket    |
+| DB / storage | —                  | **Supabase**                                            | Postgres pooler + S3-compatible Storage |
 | Push / live  | —                  | **Firebase**                                            | FCM + Firestore rules                 |
 | Auth extras  | —                  | **Google OAuth**, **Turnstile**, **Stripe**, **Resend** |                                       |
 
@@ -36,9 +36,6 @@ MCP_RESOURCE_URL=https://api.hosanna.live/mcp   # must match client URL exactly
 GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
 STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET
 TURNSTILE_SECRET_KEY
-STORAGE_PROVIDER=s3
-S3_BUCKET / S3_REGION / S3_ENDPOINT
-S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY
 RESEND_API_KEY / EMAIL_FROM
 CRON_SECRET
 ```
@@ -118,11 +115,11 @@ cross-subdomain on `hosanna.live`.
 
 ---
 
-## 6. Supabase Postgres and object storage
+## 6. Supabase Postgres and Storage
 
 1. Run Prisma migrations against `DIRECT_URL`
 2. Use the Supabase pooler URL for runtime; keep `DB_POOL_MAX` low on Vercel
-3. Configure the Auth app's S3-compatible bucket using `STORAGE_PROVIDER=s3` and the `S3_*` variables; see [object storage](./storage.md)
+3. Configure Auth to use the same Supabase Storage S3 endpoint and `avatars` bucket through `@hosanna/storage`; see [object storage](./storage.md)
 
 ---
 

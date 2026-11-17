@@ -70,7 +70,7 @@ Dev / staging variants (e.g. `dev-api.hosanna.live`) follow the same split.
 | Marketing           | Vercel                                                            |
 | Blog                | Cloudflare Workers static **or** Netlify                          |
 | Database            | Supabase Postgres (pooler `:6543`, direct `:5432` for migrations) |
-| Avatars             | Supabase Storage bucket `avatars`                                 |
+| Avatars and church logos | Supabase Storage `avatars` bucket through `@hosanna/storage` S3 adapter |
 | Push / live signals | Firebase (FCM + Firestore)                                        |
 
 ## Version alignment
