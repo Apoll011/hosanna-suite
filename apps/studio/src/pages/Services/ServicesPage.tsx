@@ -37,7 +37,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useMarqueeSelection } from "../../hooks/useMarqueeSelection";
 import { useServices } from "../../hooks/useServices";
-import { posthog } from "../../lib/posthog";
+import { track } from "../../lib/posthog";
 
 interface ServicesPageProps {
   searchQuery?: string;
@@ -301,7 +301,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         notes: data.notes,
         elements: [],
       });
-      posthog.capture("service_created", { has_notes: !!data.notes });
+      track("service_created", { has_notes: !!data.notes });
       setIsCreateModalOpen(false);
       navigate(`${slugPrefix}/services/${newService.id}`);
     } catch {}
@@ -319,6 +319,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
           updatedAt: editTarget.updatedAt,
         },
       });
+      track("service_edited");
       setEditTarget(null);
     } catch {}
   };
@@ -336,6 +337,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         notes: service.notes || "",
         elements: fullElements || [],
       });
+      track("service_duplicated", { element_count: (fullElements ?? []).length });
     } catch {
       await createService({
         name: `${service.name}${t("common.copySuffix")}`,
@@ -349,7 +351,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
     await deleteService(deleteTarget.id);
-    posthog.capture("service_deleted", { count: 1 });
+    track("service_deleted", { count: 1 });
     setSelectedServiceIds((prev) => {
       const next = new Set(prev);
       next.delete(deleteTarget.id);
@@ -368,7 +370,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
           updatedAt: service.updatedAt,
         },
       });
-      posthog.capture("service_archived", { archived: nextArchived });
+      track("service_archived", { archived: nextArchived });
     } catch {}
     setArchiveTarget(null);
     setContextMenu(null);
@@ -377,7 +379,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
   const handleBatchDelete = async () => {
     const ids = Array.from(selectedServiceIds);
     await Promise.allSettled(ids.map((id) => deleteService(id)));
-    posthog.capture("service_deleted", { count: ids.length });
+    track("service_deleted", { count: ids.length });
     setSelectedServiceIds(new Set());
     setIsBatchDeleteOpen(false);
   };

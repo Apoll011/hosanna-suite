@@ -48,7 +48,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useSync } from "../../contexts/SyncContext";
 import { useSong, useSongs } from "../../hooks/useSongs";
-import { posthog } from "../../lib/posthog";
+import { track } from "../../lib/posthog";
 
 type LayoutMode = "editor" | "split" | "preview";
 
@@ -258,7 +258,7 @@ export const SongEditorPage: React.FC = () => {
         if (updated?.updatedAt) {
           appliedUpdatedAtRef.current = updated.updatedAt;
         }
-        posthog.capture("song_saved", { layout_mode: layoutMode });
+        track("song_saved", { layout_mode: layoutMode });
         setHasUnsavedChanges(false);
         emitOnboardingEvent("song-saved");
       } catch {

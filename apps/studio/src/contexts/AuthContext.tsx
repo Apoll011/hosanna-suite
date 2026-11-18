@@ -23,7 +23,7 @@ import {
   readCachedUserId,
 } from "../lib/authSessionCache";
 import { clearPermissionCache } from "@hosanna/ui";
-import { posthog } from "../lib/posthog";
+import { captureException, identify, posthog, track } from "../lib/posthog";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
 import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";
 
@@ -389,7 +389,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setUser(userToCache);
       syncSettingsFromMetadata(fullUser.metadata);
 
-      posthog.identify(fullUser.id, {
+      identify(fullUser.id, {
         name: fullUser.name,
         email: fullUser.email,
         role: userRole,
