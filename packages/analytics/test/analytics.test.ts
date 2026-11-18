@@ -15,10 +15,7 @@ import {
 
 describe("isAnalyticsEnabled", () => {
   it("is false in dev without opt-in env flags", () => {
-    assert.equal(
-      isAnalyticsEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: undefined }),
-      false,
-    );
+    assert.equal(isAnalyticsEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: undefined }), false);
     assert.equal(
       isAnalyticsEnabled({ NODE_ENV: "development", NEXT_PUBLIC_POSTHOG_DEV: undefined }),
       false,
@@ -31,10 +28,7 @@ describe("isAnalyticsEnabled", () => {
   });
 
   it("is true in dev when VITE_PUBLIC_POSTHOG_DEV is set", () => {
-    assert.equal(
-      isAnalyticsEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: "true" }),
-      true,
-    );
+    assert.equal(isAnalyticsEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: "true" }), true);
     assert.equal(isAnalyticsEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: true }), true);
   });
 

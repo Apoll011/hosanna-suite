@@ -220,7 +220,9 @@ export function createAnalyticsClient<TEventMap = Record<string, unknown>>(
 
 let globalClient: AnalyticsClient<any> | null = null;
 
-export function getGlobalAnalyticsClient<TEventMap = Record<string, unknown>>(): AnalyticsClient<TEventMap> | null {
+export function getGlobalAnalyticsClient<
+  TEventMap = Record<string, unknown>,
+>(): AnalyticsClient<TEventMap> | null {
   return globalClient as AnalyticsClient<TEventMap> | null;
 }
 

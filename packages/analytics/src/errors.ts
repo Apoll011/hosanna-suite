@@ -6,7 +6,10 @@ export interface FormattedErrorDetails {
   [key: string]: unknown;
 }
 
-export function formatError(error: unknown, extraProps?: Record<string, unknown>): {
+export function formatError(
+  error: unknown,
+  extraProps?: Record<string, unknown>,
+): {
   errorInstance: Error;
   properties: FormattedErrorDetails;
 } {
