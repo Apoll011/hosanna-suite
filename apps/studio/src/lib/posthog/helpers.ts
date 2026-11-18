@@ -26,9 +26,7 @@ export function isPostHogEnabled(env: PostHogEnv): boolean {
   return env.PROD || env.VITE_PUBLIC_POSTHOG_DEV === "true";
 }
 
-export function resolvePostHogConfig(
-  env: PostHogEnv,
-): { token: string; host: string } | null {
+export function resolvePostHogConfig(env: PostHogEnv): { token: string; host: string } | null {
   if (!isPostHogEnabled(env)) return null;
   const token = env.VITE_PUBLIC_POSTHOG_KEY;
   const host = env.VITE_PUBLIC_POSTHOG_HOST;

@@ -95,16 +95,13 @@ export const SongEditorPage: React.FC = () => {
 
   const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
 
-  const directiveDefaults = useMemo(
-    () => {
-      const variant = selectedVariant
-        ? parsedSong.variants?.find((item) => item.id === selectedVariant)
-        : undefined;
-      const defaults = resolveVariantDefaults(parsedSong.default!, variant);
-      return { transposeVal: defaults.keyShift, capoVal: defaults.capo };
-    },
-    [parsedSong, selectedVariant],
-  );
+  const directiveDefaults = useMemo(() => {
+    const variant = selectedVariant
+      ? parsedSong.variants?.find((item) => item.id === selectedVariant)
+      : undefined;
+    const defaults = resolveVariantDefaults(parsedSong.default!, variant);
+    return { transposeVal: defaults.keyShift, capoVal: defaults.capo };
+  }, [parsedSong, selectedVariant]);
 
   const { settings, updateSetting, resetSettings } = usePreviewSettings(
     song?.id,

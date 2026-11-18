@@ -1,15 +1,16 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { POSTHOG_INIT_OPTIONS, isPostHogEnabled, resolvePostHogConfig } from "../../src/lib/posthog/helpers";
+import {
+  POSTHOG_INIT_OPTIONS,
+  isPostHogEnabled,
+  resolvePostHogConfig,
+} from "../../src/lib/posthog/helpers";
 import { POSTHOG_EVENT_NAMES } from "../../src/lib/posthog/events";
 
 describe("isPostHogEnabled", () => {
   it("is false in dev without the opt-in env flag", () => {
-    assert.equal(
-      isPostHogEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: undefined }),
-      false,
-    );
+    assert.equal(isPostHogEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: undefined }), false);
   });
 
   it("is true in production", () => {
@@ -17,17 +18,18 @@ describe("isPostHogEnabled", () => {
   });
 
   it("is true in dev when VITE_PUBLIC_POSTHOG_DEV is set", () => {
-    assert.equal(
-      isPostHogEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: "true" }),
-      true,
-    );
+    assert.equal(isPostHogEnabled({ PROD: false, VITE_PUBLIC_POSTHOG_DEV: "true" }), true);
   });
 });
 
 describe("resolvePostHogConfig", () => {
   it("returns null when PostHog is disabled", () => {
     assert.equal(
-      resolvePostHogConfig({ PROD: false, VITE_PUBLIC_POSTHOG_KEY: "k", VITE_PUBLIC_POSTHOG_HOST: "h" }),
+      resolvePostHogConfig({
+        PROD: false,
+        VITE_PUBLIC_POSTHOG_KEY: "k",
+        VITE_PUBLIC_POSTHOG_HOST: "h",
+      }),
       null,
     );
   });
