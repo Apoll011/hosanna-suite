@@ -4,6 +4,7 @@ import { AuthLayout } from "@/components/AuthLayout";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/ui/i18n";
 import { navigateAfterOrgReady } from "@/lib/auth/redirect";
+import { onboardingNavLinks } from "@/lib/auth/onboarding-nav";
 import { resolveOrgTrialGate, type OrgTrialGate } from "@/lib/auth/trial-gate";
 import { Button, GoogleTextField, Spinner } from "@hosanna/ui";
 import {
@@ -14,11 +15,14 @@ import {
   CheckCircle2,
   ChevronDown,
   CreditCard,
+  House,
   LogOut,
   MailCheck,
   PlusCircle,
+  UserRound,
   XCircle,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 
@@ -678,7 +682,22 @@ export function OnboardingPage() {
             </button>
           </div>
 
-          <div className="pt-2 text-center">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            {!isLoadingOrgs &&
+              onboardingNavLinks(existingOrgs.length).map((link) => (
+                <Link
+                  key={link.id}
+                  href={link.href}
+                  className="inline-flex items-center text-xs sm:text-sm font-medium text-m3-secondary hover:text-m3-text transition-colors gap-1.5"
+                >
+                  {link.id === "home" ? (
+                    <House className="w-3.5 h-3.5" />
+                  ) : (
+                    <UserRound className="w-3.5 h-3.5" />
+                  )}
+                  <span>{t(link.labelKey)}</span>
+                </Link>
+              ))}
             <button
               type="button"
               onClick={() => void logout()}
