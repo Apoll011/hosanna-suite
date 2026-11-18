@@ -9,6 +9,7 @@ import {
   type SongImportSourceType,
 } from "@/src/api/songs";
 import { aiApi } from "@/src/api/ai";
+import { ApiError } from "@/src/api/client";
 import { SheetMusicImportModal } from "@/src/components/modals/SheetMusicImportModal";
 import { Song } from "@/src/types";
 import { renderImageFile, renderPdfPages } from "./pdfRenderer";
@@ -173,7 +174,12 @@ export class SheetMusicImportProvider implements SongImportProvider {
   }
 
   async isActive(): Promise<boolean> {
-    const settings = await aiApi.getSettings();
-    return settings.configured && settings.enabled;
+    try {
+      const settings = await aiApi.getSettings();
+      return settings.configured && settings.enabled;
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 403) return false;
+      throw error;
+    }
   }
 }

@@ -28,26 +28,33 @@ function fileExtension(file: File): string {
 export class SongImportRegistry {
   private readonly providers = new Map<string, SongImportProvider>();
   private readonly byId = new Map<string, SongImportProvider>();
-  private readonly registrations: Promise<void>[] = [];
+  private registered: SongImportProvider[] = [];
 
   register(provider: SongImportProvider) {
-    const registration = Promise.resolve()
-      .then(() => provider.isActive())
-      .then((active) => {
-        if (!active) return;
-        this.byId.set(provider.id, provider);
-        for (const ext of provider.supportedExtensions) {
-          this.providers.set(ext.toLowerCase(), provider);
-        }
-      })
-      .catch((error: unknown) => {
-        console.error(`Failed to activate import provider "${provider.id}".`, error);
-      });
-    this.registrations.push(registration);
+    this.registered.push(provider);
   }
 
-  private async waitForRegistrations(): Promise<void> {
-    await Promise.all(this.registrations);
+  /** Re-run isActive() for every registered provider and rebuild the active maps. */
+  async refresh(): Promise<void> {
+    const byId = new Map<string, SongImportProvider>();
+    const providers = new Map<string, SongImportProvider>();
+    for (const provider of this.registered) {
+      try {
+        const active = await provider.isActive();
+        if (!active) continue;
+      } catch (error: unknown) {
+        console.error(`Failed to activate import provider "${provider.id}".`, error);
+        continue;
+      }
+      byId.set(provider.id, provider);
+      for (const ext of provider.supportedExtensions) {
+        providers.set(ext.toLowerCase(), provider);
+      }
+    }
+    this.byId.clear();
+    byId.forEach((provider, id) => this.byId.set(id, provider));
+    this.providers.clear();
+    providers.forEach((provider, ext) => this.providers.set(ext, provider));
   }
 
   getProvider(extension: string) {
@@ -79,6 +86,7 @@ export class SongImportRegistry {
   }
 
   async matchInteractiveProvider(file: File): Promise<SongImportProvider | null> {
+    await this.refresh();
     for (const provider of this.getInteractiveProviders()) {
       if (provider.matchesFile) {
         if (await provider.matchesFile(file)) return provider;
@@ -93,7 +101,7 @@ export class SongImportRegistry {
     interactive: Array<{ provider: SongImportProvider; files: File[] }>;
     direct: File[];
   }> {
-    await this.waitForRegistrations();
+    await this.refresh();
     const interactiveMap = new Map<SongImportProvider, File[]>();
     const direct: File[] = [];
 
@@ -121,7 +129,7 @@ export class SongImportRegistry {
     files: readonly File[],
     songDataOrOptions: Partial<Song> | ImportFilesOptions = {},
   ): Promise<ImportResult> {
-    await this.waitForRegistrations();
+    await this.refresh();
     const options: ImportFilesOptions =
       "songData" in songDataOrOptions ||
       "sink" in songDataOrOptions ||
