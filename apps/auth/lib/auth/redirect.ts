@@ -135,9 +135,5 @@ export function resolveSocialCallbackURL(
   if (explicit) {
     return explicit.startsWith("http") ? explicit : `${window.location.origin}${explicit}`;
   }
-  const storedSlug = localStorage.getItem("active_org_slug");
-  if (storedSlug) {
-    return `${window.location.origin}${authHomePath()}`;
-  }
-  return `${window.location.origin}/onboarding`;
+  return `${window.location.origin}${authHomePath()}`;
 }

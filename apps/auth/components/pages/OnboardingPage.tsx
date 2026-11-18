@@ -3,7 +3,8 @@
 import { AuthLayout } from "@/components/AuthLayout";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/ui/i18n";
-import { getStudioUrl, navigateAfterOrgReady } from "@/lib/auth/redirect";
+import { navigateAfterOrgReady } from "@/lib/auth/redirect";
+import { resolveOrgTrialGate, type OrgTrialGate } from "@/lib/auth/trial-gate";
 import { Button, GoogleTextField, Spinner } from "@hosanna/ui";
 import {
   ArrowLeft,
@@ -52,7 +53,7 @@ export function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [newOrg, setNewOrg] = useState<{ id: string; slug: string } | null>(null);
+  const [trialOrg, setTrialOrg] = useState<{ id: string; slug: string } | null>(null);
   const [annual, setAnnual] = useState(false);
   const [planPricing, setPlanPricing] = useState(DEFAULT_PLAN_PRICING);
   const [invitations, setInvitations] = useState<UserInvitation[]>([]);
@@ -63,6 +64,7 @@ export function OnboardingPage() {
   const [isLoadingOrgs, setIsLoadingOrgs] = useState(true);
   const [isOrgSwitcherOpen, setIsOrgSwitcherOpen] = useState(false);
   const [switchingOrgId, setSwitchingOrgId] = useState<string | null>(null);
+  const [activeOrgGate, setActiveOrgGate] = useState<OrgTrialGate | "checking">("checking");
 
   useEffect(() => {
     void fetch("/api/billing/pricing", { credentials: "omit" })
@@ -172,6 +174,38 @@ export function OnboardingPage() {
     [existingOrgs, activeOrgId],
   );
   const hasMultipleOrgs = existingOrgs.length > 1;
+
+  useEffect(() => {
+    if (!activeOrgId) return;
+    let cancelled = false;
+    setActiveOrgGate("checking");
+
+    void (async () => {
+      try {
+        const [subsRes, roleRes] = await Promise.all([
+          authClient.subscription.list({
+            query: { referenceId: activeOrgId, customerType: "organization" },
+          }),
+          authClient.organization.getActiveMemberRole({
+            query: { organizationId: activeOrgId },
+          }),
+        ]);
+        if (cancelled) return;
+        if (subsRes.error) {
+          setActiveOrgGate("subscribed");
+          return;
+        }
+        const rows = (subsRes.data as unknown[] | null) ?? [];
+        setActiveOrgGate(resolveOrgTrialGate(rows.length, roleRes.data?.role ?? null));
+      } catch {
+        if (!cancelled) setActiveOrgGate("subscribed");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeOrgId]);
 
   useEffect(() => {
     const trimmed = orgSlug.trim();
@@ -284,39 +318,53 @@ export function OnboardingPage() {
 
     const orgId = (data as { id?: string } | null)?.id;
     if (orgId) {
-      setNewOrg({ id: orgId, slug });
+      setTrialOrg({ id: orgId, slug });
       setMode("trial");
     } else {
       goToStudio(slug);
     }
   };
 
+  const openTrialForActiveOrg = () => {
+    if (!activeOrg) return;
+    setErrorMsg("");
+    setTrialOrg({ id: activeOrg.id, slug: activeOrg.slug });
+    setMode("trial");
+  };
+
+  const goToSuiteHome = () => {
+    window.location.assign("/home");
+  };
+
   const handleStartTrial = async () => {
-    if (!newOrg) return;
+    if (!trialOrg) return;
     setErrorMsg("");
     setCheckoutLoading(true);
-    const studio = getStudioUrl();
-    const authOrigin =
-      (typeof window !== "undefined" && window.location.origin) ||
-      process.env.NEXT_PUBLIC_AUTH_URL ||
-      "";
+    const authOrigin = window.location.origin;
     try {
-      const { error } = await authClient.subscription.upgrade({
+      const { data, error } = await authClient.subscription.upgrade({
         plan: "cloud",
-        referenceId: newOrg.id,
+        referenceId: trialOrg.id,
         customerType: "organization",
         annual,
         locale,
         successUrl: `${authOrigin}/account/organization/billing?billing=success`,
-        cancelUrl: `${studio}/${newOrg.slug}`,
+        cancelUrl: `${authOrigin}/home`,
+        disableRedirect: true,
       });
       if (error) {
-        setErrorMsg(error.message || "Could not start checkout.");
+        setErrorMsg(error.message || t("settings.billing.checkoutError"));
         setCheckoutLoading(false);
+        return;
       }
-      // On success Better Auth redirects to Stripe.
+      if (!data?.url) {
+        setErrorMsg(t("settings.billing.checkoutError"));
+        setCheckoutLoading(false);
+        return;
+      }
+      window.location.assign(data.url);
     } catch (err: unknown) {
-      setErrorMsg((err as Error)?.message || "Could not start checkout.");
+      setErrorMsg((err as Error)?.message || t("settings.billing.checkoutError"));
       setCheckoutLoading(false);
     }
   };
@@ -344,7 +392,7 @@ export function OnboardingPage() {
       headerSubtitle={getHeaderSubtitle()}
       errorMsg={errorMsg}
     >
-      {mode === "trial" && newOrg && (
+      {mode === "trial" && trialOrg && (
         <div className="text-center space-y-5">
           <div className="bg-m3-sidebar/60 border border-m3-border/60 rounded-lg p-4 text-left space-y-2.5">
             {(
@@ -418,10 +466,11 @@ export function OnboardingPage() {
           <p className="text-xs text-m3-secondary">{t("onboarding.trial.note")}</p>
           <button
             type="button"
-            onClick={() => goToStudio(newOrg.slug)}
-            className="text-xs font-medium text-m3-primary hover:underline cursor-pointer"
+            onClick={goToSuiteHome}
+            disabled={checkoutLoading}
+            className="text-xs font-medium text-m3-primary hover:underline cursor-pointer disabled:opacity-50"
           >
-            Skip for now → Studio
+            {t("onboarding.trial.skip")}
           </button>
         </div>
       )}
@@ -450,18 +499,35 @@ export function OnboardingPage() {
                   </div>
                   <Check className="w-4 h-4 shrink-0 text-m3-primary" />
                 </div>
-                <Button
-                  variant="primary"
-                  className="w-full rounded-full"
-                  icon={<ArrowRight className="w-4 h-4" />}
-                  onClick={() => {
-                    void authClient.organization
-                      .setActive({ organizationSlug: activeOrg.slug })
-                      .finally(() => goToStudio(activeOrg.slug));
-                  }}
-                >
-                  {t("onboarding.continueToStudio")}
-                </Button>
+                {activeOrgGate === "trialAvailable" ? (
+                  <Button
+                    variant="primary"
+                    className="w-full rounded-full"
+                    icon={<CreditCard className="w-4 h-4" />}
+                    onClick={openTrialForActiveOrg}
+                  >
+                    {t("onboarding.trial.startBtn")}
+                  </Button>
+                ) : activeOrgGate === "ownerRequired" ? (
+                  <p className="text-xs text-m3-secondary text-center">
+                    {t("settings.billing.askOwner")}
+                  </p>
+                ) : (
+                  <Button
+                    variant="primary"
+                    className="w-full rounded-full"
+                    icon={<ArrowRight className="w-4 h-4" />}
+                    isLoading={activeOrgGate === "checking"}
+                    disabled={activeOrgGate === "checking"}
+                    onClick={() => {
+                      void authClient.organization
+                        .setActive({ organizationSlug: activeOrg.slug })
+                        .finally(() => goToStudio(activeOrg.slug));
+                    }}
+                  >
+                    {t("onboarding.continueToStudio")}
+                  </Button>
+                )}
               </div>
 
               {hasMultipleOrgs && (
