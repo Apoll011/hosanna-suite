@@ -181,7 +181,9 @@ export function MigrationSection() {
                       style={{ "--hm-delay": "1050ms" } as HmStyle}
                     >
                       <Music2 className="h-4 w-4 shrink-0 text-[#0284c7]" />
-                      <span className="text-sm font-semibold text-[#021433]">Praise You Anywere</span>
+                      <span className="text-sm font-semibold text-[#021433]">
+                        Praise You Anywere
+                      </span>
                       <span className="text-xs text-slate-400">Elevation Worship</span>
                       <span className="ml-auto rounded bg-sky-50 border border-sky-200 px-1.5 py-0.5 font-display text-[10px] font-bold text-[#0284c7]">
                         F#m

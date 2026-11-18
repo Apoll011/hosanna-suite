@@ -56,7 +56,10 @@ self.addEventListener("fetch", (event) => {
           if (cached) return cached;
           const fallback = await caches.match("/");
           if (fallback) return fallback;
-          return new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } });
+          return new Response("Offline", {
+            status: 503,
+            headers: { "Content-Type": "text/plain" },
+          });
         }),
     );
     return;

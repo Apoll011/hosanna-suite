@@ -72,10 +72,7 @@ export function CookieBanner() {
               >
                 {t("cookieConsent.title")}
               </h2>
-              <p
-                id="cookie-banner-desc"
-                className="mt-1 text-xs leading-relaxed text-slate-300"
-              >
+              <p id="cookie-banner-desc" className="mt-1 text-xs leading-relaxed text-slate-300">
                 {t("cookieConsent.description")}
               </p>
             </div>
@@ -92,17 +89,13 @@ export function CookieBanner() {
 
         <div className="mt-3.5 space-y-2 rounded-xl bg-white/6 border border-white/10 p-3 text-xs leading-normal">
           <div className="flex flex-col gap-0.5">
-            <span className="font-medium text-slate-100">
-              {t("cookieConsent.essentialTitle")}
-            </span>
+            <span className="font-medium text-slate-100">{t("cookieConsent.essentialTitle")}</span>
             <span className="text-slate-400 text-[11px] leading-snug">
               {t("cookieConsent.essentialDesc")}
             </span>
           </div>
           <div className="flex flex-col gap-0.5 pt-1 border-t border-white/5">
-            <span className="font-medium text-slate-100">
-              {t("cookieConsent.analyticsTitle")}
-            </span>
+            <span className="font-medium text-slate-100">{t("cookieConsent.analyticsTitle")}</span>
             <span className="text-slate-400 text-[11px] leading-snug">
               {t("cookieConsent.analyticsDesc")}
             </span>

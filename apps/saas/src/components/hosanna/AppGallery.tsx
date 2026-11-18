@@ -133,9 +133,7 @@ export default function AppGallery() {
 
           {/* Sticky Portrait Photo Frame */}
           <div className="lg:col-span-7 flex justify-center lg:justify-end items-center">
-            <div
-              className="relative z-10 w-70 sm:w-82.5 md:w-105 max-w-[85vw] aspect-3/4 md:aspect-4/5 max-h-[65vh] md:max-h-[75vh] overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none"
-            >
+            <div className="relative z-10 w-70 sm:w-82.5 md:w-105 max-w-[85vw] aspect-3/4 md:aspect-4/5 max-h-[65vh] md:max-h-[75vh] overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none">
               {galleryPhotos.map((photo, i) => {
                 let translateY = "0%";
                 if (i === 1) {

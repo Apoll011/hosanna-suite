@@ -17,10 +17,7 @@ const hasSeenSplash = () => {
   }
 };
 
-export default function SplashScreen({
-  onReveal,
-  durationMs = 3000,
-}: SplashScreenProps) {
+export default function SplashScreen({ onReveal, durationMs = 3000 }: SplashScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
   const [destroyed, setDestroyed] = useState(() => hasSeenSplash());

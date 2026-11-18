@@ -40,7 +40,10 @@ export function Component() {
       <WebGLCanvas showTextLayer={false} />
       <div className="min-h-screen bg-transparent font-sans text-white antialiased selection:bg-cyan-400/20 relative z-10">
         <Nav />
-        <section id="top" className="pt-52 md:pt-60 pb-12 text-white overflow-hidden relative bg-transparent">
+        <section
+          id="top"
+          className="pt-52 md:pt-60 pb-12 text-white overflow-hidden relative bg-transparent"
+        >
           <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
             <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
               {meta.heading}

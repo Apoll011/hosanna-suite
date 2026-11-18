@@ -239,9 +239,7 @@ function SectionHeader({
       <h2 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
         {title}
       </h2>
-      {lede && (
-        <p className="text-white/80 text-lg md:text-xl leading-relaxed max-w-3xl">{lede}</p>
-      )}
+      {lede && <p className="text-white/80 text-lg md:text-xl leading-relaxed max-w-3xl">{lede}</p>}
     </div>
   );
 }
@@ -302,9 +300,7 @@ function Callout({
           : "bg-amber-950/40 border-amber-500/30 text-white"
       }`}
     >
-      <Icon
-        className={`w-5 h-5 shrink-0 mt-0.5 ${isTip ? "text-cyan-300" : "text-amber-300"}`}
-      />
+      <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${isTip ? "text-cyan-300" : "text-amber-300"}`} />
       <div>
         <div className={`font-bold mb-1 ${isTip ? "text-cyan-200" : "text-amber-200"}`}>
           {title}
@@ -322,9 +318,7 @@ function DirectiveCard({ entry }: { entry: DirectiveEntry }) {
   return (
     <div className="p-6 border border-white/15 bg-slate-900/60 backdrop-blur-md rounded-2xl hover:border-cyan-400/40 transition-all text-white shadow-xl relative">
       <div className="flex items-start justify-between gap-3 mb-2">
-        <code className="text-cyan-300 font-bold text-lg block">
-          {`{${entry.directive}: ...}`}
-        </code>
+        <code className="text-cyan-300 font-bold text-lg block">{`{${entry.directive}: ...}`}</code>
         {entry.hosanna && <HosannaBadge />}
       </div>
       {entry.alias && (
@@ -696,17 +690,21 @@ export function ChordProGuide() {
                 <div className="mt-6 reveal">
                   <div className="p-6 border border-white/15 rounded-2xl shadow-xl bg-slate-900/60 backdrop-blur-md text-white">
                     <h4 className="font-bold text-white mb-2 flex items-center gap-2">
-                      <Grid3x3 className="w-4 h-4 text-cyan-300" /> {t("chordproGuide.barlinesTitle")}
+                      <Grid3x3 className="w-4 h-4 text-cyan-300" />{" "}
+                      {t("chordproGuide.barlinesTitle")}
                     </h4>
                     <ul className="space-y-2 text-sm text-white/80 mt-4">
                       <li>
-                        <code className="text-cyan-300">|</code> → {t("chordproGuide.barlinesNormal")}
+                        <code className="text-cyan-300">|</code> →{" "}
+                        {t("chordproGuide.barlinesNormal")}
                       </li>
                       <li>
-                        <code className="text-cyan-300">||</code> → {t("chordproGuide.barlinesSection")}
+                        <code className="text-cyan-300">||</code> →{" "}
+                        {t("chordproGuide.barlinesSection")}
                       </li>
                       <li>
-                        <code className="text-cyan-300">|:</code> {t("chordproGuide.barlinesRepeat")}{" "}
+                        <code className="text-cyan-300">|:</code>{" "}
+                        {t("chordproGuide.barlinesRepeat")}{" "}
                         <code className="text-cyan-300">:|</code>
                       </li>
                     </ul>

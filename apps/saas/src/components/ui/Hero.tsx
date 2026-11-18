@@ -30,19 +30,22 @@ export default function Hero() {
 
   const navigate = useNavigate();
 
-  const handleSelectNav = useCallback((item: NavItem) => {
-    setActiveNav(item);
-    if (item === "chordpro" || item === "about" || item === "contact") {
-      navigate({ to: `/${item}`, viewTransition: true });
-      return;
-    }
-    const targetId = item === "price" ? "pricing" : "features";
-    document.getElementById(targetId)?.scrollIntoView({
-      behavior: "smooth",
-    });
-    window.history.pushState(null, "", `/#${targetId}`);
-    impulseTriggerRef.current?.();
-  }, [navigate]);
+  const handleSelectNav = useCallback(
+    (item: NavItem) => {
+      setActiveNav(item);
+      if (item === "chordpro" || item === "about" || item === "contact") {
+        navigate({ to: `/${item}`, viewTransition: true });
+        return;
+      }
+      const targetId = item === "price" ? "pricing" : "features";
+      document.getElementById(targetId)?.scrollIntoView({
+        behavior: "smooth",
+      });
+      window.history.pushState(null, "", `/#${targetId}`);
+      impulseTriggerRef.current?.();
+    },
+    [navigate],
+  );
 
   const handleLogoClick = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

@@ -73,34 +73,40 @@ export default function HeroHeader({
   };
   const activeNav = propActiveNav !== undefined ? propActiveNav : localActiveNav;
 
-  const onSelectNav = propOnSelectNav || ((item: NavItem) => {
-    setLocalActiveNav(item);
-    if (item === "chordpro" || item === "about" || item === "contact") {
-      navigate({ to: `/${item}`, viewTransition: true });
-      return;
-    }
-    const targetId = item === "price" ? "pricing" : "features";
-    const target = document.getElementById(targetId);
-    if (target && location.pathname === "/") {
-      target.scrollIntoView({ behavior: "smooth" });
-      window.history.pushState(null, "", `/#${targetId}`);
-    } else {
-      navigate({ to: "/", hash: targetId, viewTransition: true });
-    }
-  });
+  const onSelectNav =
+    propOnSelectNav ||
+    ((item: NavItem) => {
+      setLocalActiveNav(item);
+      if (item === "chordpro" || item === "about" || item === "contact") {
+        navigate({ to: `/${item}`, viewTransition: true });
+        return;
+      }
+      const targetId = item === "price" ? "pricing" : "features";
+      const target = document.getElementById(targetId);
+      if (target && location.pathname === "/") {
+        target.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", `/#${targetId}`);
+      } else {
+        navigate({ to: "/", hash: targetId, viewTransition: true });
+      }
+    });
 
-  const onLogoClick = propOnLogoClick || (() => {
-    if (location.pathname === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      window.history.pushState(null, "", "/#top");
-    } else {
-      navigate({ to: "/", hash: "top", viewTransition: true });
-    }
-  });
+  const onLogoClick =
+    propOnLogoClick ||
+    (() => {
+      if (location.pathname === "/") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.history.pushState(null, "", "/#top");
+      } else {
+        navigate({ to: "/", hash: "top", viewTransition: true });
+      }
+    });
 
-  const onTryClick = propOnTryClick || (() => {
-    window.location.assign(dashboardUrl);
-  });
+  const onTryClick =
+    propOnTryClick ||
+    (() => {
+      window.location.assign(dashboardUrl);
+    });
   const headerRef = useRef<HTMLElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const topBarRef = useRef<HTMLSpanElement>(null);
@@ -339,9 +345,7 @@ export default function HeroHeader({
                       onMouseLeave={(e) => handleLinkHover(e, false)}
                       aria-current={isActive ? "page" : undefined}
                       className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-medium uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm text-white ${
-                        isActive
-                          ? "opacity-100"
-                          : "opacity-[0.72] hover:opacity-100"
+                        isActive ? "opacity-100" : "opacity-[0.72] hover:opacity-100"
                       }`}
                     >
                       {isActive && (
@@ -370,7 +374,12 @@ export default function HeroHeader({
                 size="responsive"
                 theme="dark"
               />
-              <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="md" theme="dark" />
+              <TryPlayButton
+                label={t("landing.nav.tryFree")}
+                onClick={onTryClick}
+                size="md"
+                theme="dark"
+              />
             </div>
 
             {/* Mobile actions (compact language toggle + Try button + hamburger) (< 768px) */}
@@ -378,8 +387,18 @@ export default function HeroHeader({
               data-header-item
               className="md:hidden flex items-center gap-1.5 opacity-0 pointer-events-auto"
             >
-              <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="sm" theme="dark" />
-              <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="sm" theme="dark" />
+              <LanguageToggle
+                language={language}
+                onChangeLanguage={onChangeLanguage}
+                size="sm"
+                theme="dark"
+              />
+              <TryPlayButton
+                label={t("landing.nav.tryFree")}
+                onClick={onTryClick}
+                size="sm"
+                theme="dark"
+              />
 
               <button
                 type="button"
@@ -434,7 +453,10 @@ export default function HeroHeader({
                         }`}
                       >
                         {isActive && (
-                          <span aria-hidden="true" className="w-1 h-1 rounded-full bg-white mr-2.5" />
+                          <span
+                            aria-hidden="true"
+                            className="w-1 h-1 rounded-full bg-white mr-2.5"
+                          />
                         )}
                         {t(`landing.nav.${id === "price" ? "pricing" : id}`)}
                       </Link>

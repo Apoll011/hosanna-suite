@@ -80,9 +80,7 @@ export function ContactForm() {
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1 text-white">
-                      {t("contact.emailTitle")}
-                    </h3>
+                    <h3 className="font-bold text-lg mb-1 text-white">{t("contact.emailTitle")}</h3>
                     <p className="text-cyan-300 text-base sm:text-lg break-all">
                       <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
                         {CONTACT_EMAIL}
@@ -207,7 +205,11 @@ export function ContactForm() {
                       className="w-full px-5 py-3 rounded-2xl bg-slate-900 border border-white/20 text-white focus:ring-2 focus:ring-cyan-400 outline-none transition-all appearance-none text-base"
                     >
                       {SUBJECT_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value} className="bg-slate-900 text-white">
+                        <option
+                          key={option.value}
+                          value={option.value}
+                          className="bg-slate-900 text-white"
+                        >
                           {t(option.labelKey)}
                         </option>
                       ))}

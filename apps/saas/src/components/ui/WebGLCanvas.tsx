@@ -383,33 +383,18 @@ function paintHeadlineCanvases(
   enCtx.fillStyle = "#FFFFFF";
   enCtx.textBaseline = "middle";
 
-  const w1 = measureSegmentsWidth(
-    enCtx,
-    segments1,
-    fontSize,
-    headlineFontFamily,
-    trackingPx,
-  );
-  const w2 = measureSegmentsWidth(
-    enCtx,
-    segments2,
-    fontSize,
-    headlineFontFamily,
-    trackingPx,
-  );
-  const w3 = measureSegmentsWidth(
-    enCtx,
-    segments3,
-    fontSize,
-    headlineFontFamily,
-    trackingPx,
-  );
+  const w1 = measureSegmentsWidth(enCtx, segments1, fontSize, headlineFontFamily, trackingPx);
+  const w2 = measureSegmentsWidth(enCtx, segments2, fontSize, headlineFontFamily, trackingPx);
+  const w3 = measureSegmentsWidth(enCtx, segments3, fontSize, headlineFontFamily, trackingPx);
 
   // Relative offsets for the abstract right-stepped staircase disposition
   const relStart1 = 0;
   const relStart3 = Math.max(fontSize * 0.55, Math.max(w1, w2, w3) * 0.14);
   const relStart2 = isDesktop
-    ? Math.max(relStart3 + fontSize * 0.65, Math.max(relStart3 + fontSize * 0.45, (Math.max(w1, w3) - w2) * 0.85))
+    ? Math.max(
+        relStart3 + fontSize * 0.65,
+        Math.max(relStart3 + fontSize * 0.45, (Math.max(w1, w3) - w2) * 0.85),
+      )
     : relStart3 + Math.max(fontSize * 0.45, (w1 - w2) * 0.5);
 
   const minX = Math.min(relStart1, relStart2, relStart3);
@@ -608,7 +593,7 @@ export default function WebGLCanvas({
 
     const heroColor1 = new THREE.Vector3(74 / 255, 137 / 255, 184 / 255); // #4A89B8
     const heroColor2 = new THREE.Vector3(20 / 255, 184 / 255, 196 / 255); // #14B8C4
-    const heroColor3 = new THREE.Vector3(2 / 255, 20 / 255, 51 / 255);   // #021433
+    const heroColor3 = new THREE.Vector3(2 / 255, 20 / 255, 51 / 255); // #021433
     const heroNoise = 0.075;
 
     document.documentElement.dataset.canvasTheme = "blue";
@@ -815,7 +800,8 @@ export default function WebGLCanvas({
         const cursor = stepLerp(0.084, delta);
         bgUniforms.uMouse2D.value.set(cursor.x * 2.0 - 1.0, cursor.y * 2.0 - 1.0);
 
-        const lensFactor = 1.0 - Math.pow(1.0 - 0.38, Math.min(Math.max(delta, 0.001), 0.05) * 60.0);
+        const lensFactor =
+          1.0 - Math.pow(1.0 - 0.38, Math.min(Math.max(delta, 0.001), 0.05) * 60.0);
         lensCurrentRef.current.x += (targetRef.current.x - lensCurrentRef.current.x) * lensFactor;
         lensCurrentRef.current.y += (targetRef.current.y - lensCurrentRef.current.y) * lensFactor;
 

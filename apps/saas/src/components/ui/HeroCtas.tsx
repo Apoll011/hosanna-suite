@@ -72,7 +72,8 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
           style={{
             transform: `translateX(${leftX}px)`,
             opacity: ctaOpacity,
-            transition: "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
+            transition:
+              "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
           }}
         >
           {/* Outer-only subtle floating drop shadow synced with button scale without isolating blend context */}
@@ -130,7 +131,8 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
           style={{
             transform: `translateX(${rightX}px)`,
             opacity: ctaOpacity,
-            transition: "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
+            transition:
+              "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
           }}
         >
           <motion.button
