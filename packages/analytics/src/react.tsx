@@ -9,8 +9,8 @@ import {
   type ErrorInfo,
   type ReactNode,
 } from "react";
-import { getGlobalAnalyticsClient } from "./client";
-import type { AnalyticsClient, EarlyAccessFeature } from "./types";
+import { getGlobalAnalyticsClient } from "./client.js";
+import type { AnalyticsClient, EarlyAccessFeature, EarlyAccessFeatureStage } from "./types.js";
 
 const AnalyticsContext = createContext<AnalyticsClient | null>(null);
 
@@ -49,7 +49,7 @@ export function useAnalytics<
       getFeatureFlagPayload: () => undefined,
       reloadFeatureFlags: () => {},
       onFeatureFlags: () => () => {},
-      getEarlyAccessFeatures: (_cb) => _cb([]),
+      getEarlyAccessFeatures: (cb: (features: EarlyAccessFeature[]) => void) => cb([]),
       updateEarlyAccessFeatureEnrollment: () => {},
       getPostHog: () => undefined,
     };
@@ -79,14 +79,16 @@ export function useFeatureFlag(flagKey: string): boolean | string | undefined {
   return flagValue;
 }
 
-export function useEarlyAccessFeatures(stages: string[] = ["concept", "alpha", "beta"]) {
+export function useEarlyAccessFeatures(
+  stages: EarlyAccessFeatureStage[] = ["concept", "alpha", "beta"],
+) {
   const client = useAnalytics();
   const [features, setFeatures] = useState<EarlyAccessFeature[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     client.getEarlyAccessFeatures(
-      (loadedFeatures) => {
+      (loadedFeatures: EarlyAccessFeature[]) => {
         setFeatures(loadedFeatures);
         setLoading(false);
       },

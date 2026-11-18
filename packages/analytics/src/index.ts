@@ -1,11 +1,11 @@
-import posthog from "posthog-js";
+import { posthog } from "posthog-js";
 
 export { posthog };
 
-export * from "./types";
-export * from "./env";
-export * from "./options";
-export * from "./events";
-export * from "./errors";
-export * from "./client";
-export * from "./react";
+export * from "./types.js";
+export * from "./env.js";
+export * from "./options.js";
+export * from "./events.js";
+export * from "./errors.js";
+export * from "./client.js";
+export * from "./react.js";

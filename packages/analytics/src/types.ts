@@ -1,6 +1,11 @@
-import type { EarlyAccessFeature, PostHog } from "posthog-js";
+import type {
+  EarlyAccessFeature,
+  EarlyAccessFeatureStage,
+  PostHog,
+  PostHogInterface,
+} from "posthog-js";
 
-export type { EarlyAccessFeature, PostHog };
+export type { EarlyAccessFeature, EarlyAccessFeatureStage, PostHog, PostHogInterface };
 
 export interface AnalyticsConfig {
   appName: string;
@@ -48,7 +53,7 @@ export interface AnalyticsClient<
   getEarlyAccessFeatures(
     callback: (features: EarlyAccessFeature[]) => void,
     forceReload?: boolean,
-    stages?: string[],
+    stages?: EarlyAccessFeatureStage[],
   ): void;
   updateEarlyAccessFeatureEnrollment(flagKey: string, isEnrolled: boolean): void;
   getPostHog(): PostHog | undefined;

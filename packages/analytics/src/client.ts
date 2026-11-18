@@ -1,7 +1,13 @@
-import posthog, { type EarlyAccessFeature, type PostHog } from "posthog-js";
-import { formatError } from "./errors";
-import { buildPostHogOptions } from "./options";
-import type { AnalyticsClient, AnalyticsConfig } from "./types";
+import {
+  posthog,
+  type EarlyAccessFeature,
+  type EarlyAccessFeatureStage,
+  type PostHog,
+  type PostHogInterface,
+} from "posthog-js";
+import { formatError } from "./errors.js";
+import { buildPostHogOptions } from "./options.js";
+import type { AnalyticsClient, AnalyticsConfig } from "./types.js";
 
 export function createAnalyticsClient<
   TEventMap extends Record<string, Record<string, unknown>> = Record<
@@ -19,7 +25,7 @@ export function createAnalyticsClient<
       posthog.init(config.apiKey, {
         api_host: config.apiHost,
         ...options,
-        loaded: (instance) => {
+        loaded: (instance: PostHogInterface) => {
           if (config.appName) {
             instance.register({
               app: config.appName,
@@ -185,7 +191,7 @@ export function createAnalyticsClient<
     getEarlyAccessFeatures(
       callback: (features: EarlyAccessFeature[]) => void,
       forceReload?: boolean,
-      stages?: string[],
+      stages?: EarlyAccessFeatureStage[],
     ): void {
       if (!isInitialized) {
         callback([]);

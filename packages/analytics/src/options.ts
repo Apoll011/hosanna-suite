@@ -1,4 +1,4 @@
-import type { AnalyticsConfig } from "./types";
+import type { AnalyticsConfig } from "./types.js";
 
 export const POSTHOG_INIT_OPTIONS = {
   defaults: "2026-08-29",
