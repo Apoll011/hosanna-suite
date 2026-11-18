@@ -636,4 +636,16 @@ export const pt = {
     ctaStart: "Começar Agora",
     ctaContact: "Fale connosco",
   },
+  cookieConsent: {
+    title: "Privacidade e Cookies",
+    description: "Utilizamos dois tipos de cookies neste website:",
+    essentialTitle: "Cookies essenciais",
+    essentialDesc: "Utilizados para autenticação e funcionamento seguro da plataforma. Estão sempre ativos e não podem ser desativados.",
+    analyticsTitle: "Cookie opcional",
+    analyticsDesc: "Um único cookie de métricas anónimas (PostHog) para nos ajudar a melhorar o Hosanna. Desativado por defeito.",
+    noSellNotice: "Nunca vendemos os seus dados para marketing nem para qualquer outro fim.",
+    acceptAnalytics: "Aceitar analítica",
+    essentialOnly: "Apenas essenciais",
+    cookieSettings: "Definições de cookies",
+  },
 };

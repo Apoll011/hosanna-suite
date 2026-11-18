@@ -629,4 +629,16 @@ export const en: typeof import("./pt").pt = {
     ctaStart: "Get Started",
     ctaContact: "Talk with us",
   },
+  cookieConsent: {
+    title: "Privacy and Cookies",
+    description: "There are two types of cookies on this website:",
+    essentialTitle: "Essential cookies",
+    essentialDesc: "Used for authentication and keeping your session secure. Always on, cannot be disabled.",
+    analyticsTitle: "Optional cookie",
+    analyticsDesc: "A single analytics cookie (PostHog) to help us improve Hosanna. Off by default.",
+    noSellNotice: "We never sell user data for marketing or anything else.",
+    acceptAnalytics: "Accept analytics",
+    essentialOnly: "Essential only",
+    cookieSettings: "Cookie settings",
+  },
 };

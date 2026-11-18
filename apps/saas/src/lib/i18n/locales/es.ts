@@ -638,4 +638,16 @@ export const es: typeof import("./pt").pt = {
     ctaStart: "Empezar Ahora",
     ctaContact: "Habla con nosotros",
   },
+  cookieConsent: {
+    title: "Privacidad y Cookies",
+    description: "Hay dos tipos de cookies en este sitio web:",
+    essentialTitle: "Cookies esenciales",
+    essentialDesc: "Se utilizan para la autenticación y la seguridad de la sesión. Siempre activas, no se pueden desactivar.",
+    analyticsTitle: "Cookie opcional",
+    analyticsDesc: "Una única cookie analítica (PostHog) para ayudarnos a mejorar Hosanna. Desactivada por defecto.",
+    noSellNotice: "Nunca vendemos los datos de los usuarios para marketing ni para ningún otro fin.",
+    acceptAnalytics: "Aceptar analítica",
+    essentialOnly: "Solo esenciales",
+    cookieSettings: "Configuración de cookies",
+  },
 };

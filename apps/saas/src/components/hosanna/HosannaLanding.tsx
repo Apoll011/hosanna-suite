@@ -43,6 +43,7 @@ import Hero from "../ui/Hero";
 import HeroHeader from "../ui/HeroHeader";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
+import { reopenCookieBanner } from "@/lib/consent";
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -826,6 +827,11 @@ export function Footer() {
         { label: t("landing.footer.termsOfService"), href: "/terms", isInternal: true },
         { label: t("landing.footer.privacyPolicy"), href: "/privacy", isInternal: true },
         { label: t("landing.footer.cookies"), href: "/privacy#cookies", isInternal: true },
+        {
+          label: t("cookieConsent.cookieSettings"),
+          onClick: () => reopenCookieBanner(),
+          isAction: true,
+        },
       ],
     },
   ];
@@ -845,22 +851,30 @@ export function Footer() {
               {col.title}
             </div>
             <ul className="mt-6 space-y-3 text-sm font-sans">
-              {col.links.map(({ label, href, isInternal }) => (
-                <li key={label}>
-                  {isInternal ? (
+              {col.links.map((link) => (
+                <li key={link.label}>
+                  {"isAction" in link && link.isAction ? (
+                    <button
+                      type="button"
+                      onClick={link.onClick}
+                      className="text-left text-muted-foreground transition-colors hover:text-primary cursor-pointer"
+                    >
+                      {link.label}
+                    </button>
+                  ) : link.isInternal ? (
                     <Link
-                      to={href}
+                      to={link.href || "/"}
                       className="text-muted-foreground transition-colors hover:text-primary"
                     >
-                      {label}
+                      {link.label}
                     </Link>
                   ) : (
                     <a
-                      href={href}
+                      href={link.href}
                       className="text-muted-foreground transition-colors hover:text-primary"
-                      {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
+                      {...(link.href?.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
                     >
-                      {label}
+                      {link.label}
                     </a>
                   )}
                 </li>

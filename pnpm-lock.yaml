@@ -415,6 +415,9 @@ importers:
       ogl:
         specifier: ^1.0.11
         version: 1.0.11
+      posthog-js:
+        specifier: ^1.447.3
+        version: 1.447.3(@types/react@19.3.0)(react@19.3.1)
       react:
         specifier: ^19.2.0
         version: 19.3.1
@@ -14022,6 +14025,24 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
       react: '@preact/compat@18.3.2(preact@10.29.8)'
+    transitivePeerDependencies:
+      - preact-render-to-string
+
+  posthog-js@1.447.3(@types/react@19.3.0)(react@19.3.1):
+    dependencies:
+      '@posthog/browser-common': 0.10.7
+      '@posthog/core': 1.64.1
+      '@posthog/types': 1.421.1
+      core-js: 3.51.0
+      dompurify: 3.4.17
+      fflate: 0.4.9
+      preact: 10.29.8
+      query-selector-shadow-dom: 1.0.1
+      web-vitals: 6.2.3
+      web-vitals-soft-navs: web-vitals@6.2.1
+    optionalDependencies:
+      '@types/react': 19.3.0
+      react: 19.3.1
     transitivePeerDependencies:
       - preact-render-to-string
 

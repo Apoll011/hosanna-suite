@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { useI18n } from "@/lib/i18n";
 import { applyRouteMeta, getRouteMeta } from "@/lib/seo";
+import { CookieBanner } from "@/components/ui/CookieBanner";
 
 function useRouteMetaUpdater() {
   const { pathname } = useLocation();
@@ -15,7 +16,12 @@ function useRouteMetaUpdater() {
 export function RootComponent() {
   useRouteMetaUpdater();
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <CookieBanner />
+    </>
+  );
 }
 
 export function NotFoundComponent() {
