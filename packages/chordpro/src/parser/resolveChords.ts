@@ -22,7 +22,8 @@ function normalizedKey(key: string | undefined): string | null {
   const match = key?.trim().match(/^([A-Ga-g])([#b]?)(m|minor|min)?$/i);
   if (!match) return null;
   const pitch: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
-  const semitone = (pitch[match[1].toUpperCase()] + (match[2] === "#" ? 1 : match[2] === "b" ? -1 : 0) + 12) % 12;
+  const semitone =
+    (pitch[match[1].toUpperCase()] + (match[2] === "#" ? 1 : match[2] === "b" ? -1 : 0) + 12) % 12;
   return `${semitone}:${match[3] ? "minor" : "major"}`;
 }
 
@@ -36,11 +37,14 @@ export function resolveVariantDefaults(main: ChordProVersion, variant?: ChordPro
   const directives = new Set(variant.declaredDirectives ?? []);
   const variantKey = variant.metadata.key;
   const mainKey = main.metadata.key;
-  const normalizedVariantKey = normalizedKey(typeof variantKey === "string" ? variantKey : undefined);
+  const normalizedVariantKey = normalizedKey(
+    typeof variantKey === "string" ? variantKey : undefined,
+  );
   const normalizedMainKey = normalizedKey(typeof mainKey === "string" ? mainKey : undefined);
-  const sameKey = normalizedMainKey !== null
-    ? normalizedVariantKey === normalizedMainKey
-    : mainKey === undefined && variantKey === undefined;
+  const sameKey =
+    normalizedMainKey !== null
+      ? normalizedVariantKey === normalizedMainKey
+      : mainKey === undefined && variantKey === undefined;
   return {
     keyShift: directives.has("key_shift")
       ? parseKeyShiftValue(variant.metadata.keyShift as string | undefined)

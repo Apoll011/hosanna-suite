@@ -8,6 +8,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo } fro
 import { useAuth } from "@/src/contexts/AuthContext";
 import { usePersonalSettings } from "@/src/hooks/usePersonalSettings";
 import { authClient } from "@/src/lib/authClient";
+import { track } from "@/src/lib/posthog";
 import { updatePersonalSettingsSafe } from "@hosanna/auth";
 import {
   DEFAULT_LANGUAGE,
@@ -84,6 +85,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   const setPersonalLanguage = useCallback((lang: PersonalLanguage) => {
+    track("language_changed", { language: lang });
     void updatePersonalSettingsSafe(
       { language: lang },
       {

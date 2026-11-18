@@ -162,6 +162,19 @@ export const sharedPt = {
       themeLight: "Usar tema claro",
       themeDark: "Usar tema escuro",
     },
+    inbox: {
+      title: "Notificações",
+      buttonTitle: "Inbox de notificações",
+      unreadCount: "{count} não lida(s)",
+      markAllRead: "Marcar todas como lidas",
+      readAll: "Ler todas",
+      all: "Todas ({count})",
+      unread: "Não lidas ({count})",
+      loading: "A carregar notificações…",
+      empty: "Nenhuma notificação encontrada",
+      loadMore: "Carregar mais",
+      close: "Fechar",
+    },
     apps: {
       auth: {
         name: "Account",

@@ -13,6 +13,7 @@ import {
 } from "@/src/hooks/usePersonalSettings";
 import { deriveView } from "@/src/layouts/view";
 import { useI18n } from "@/src/lib/i18n";
+import { track } from "@/src/lib/posthog";
 import { useActiveRole } from "@hosanna/ui";
 import {
   destroyProductTour,
@@ -52,6 +53,7 @@ export const ProductTourController: React.FC = () => {
   const markCompleted = useCallback(() => {
     updateSetting("productTourCompleted", true);
     updateSetting("productTourDismissedAt", null);
+    track("tour_completed");
   }, [updateSetting]);
 
   const markDismissed = useCallback(() => {
@@ -93,6 +95,10 @@ export const ProductTourController: React.FC = () => {
           onDismissed: markDismissed,
           onStartInteractive: launchInteractiveOnboarding,
         });
+
+        if (started) {
+          track("tour_started", { role });
+        }
 
         if (!started && opts?.force) {
           showToast({

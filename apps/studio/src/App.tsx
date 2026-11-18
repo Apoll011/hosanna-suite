@@ -13,7 +13,7 @@ import { StudioPermissionsProvider } from "./contexts/StudioPermissionsProvider"
 import { SyncProvider } from "./contexts/SyncContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { I18nProvider } from "./lib/i18n";
-import { posthog } from "./lib/posthog";
+import { trackPageview } from "./lib/posthog";
 import { AppRoutes } from "./routes/AppRoutes";
 
 configureApiClient(localStorage.getItem("server_url") || import.meta.env.VITE_API_URL || "/api");
@@ -21,7 +21,7 @@ configureApiClient(localStorage.getItem("server_url") || import.meta.env.VITE_AP
 function PageviewTracker() {
   const location = useLocation();
   useEffect(() => {
-    posthog.capture("$pageview", { $current_url: window.location.href });
+    trackPageview(window.location.href);
   }, [location.pathname, location.search]);
   return null;
 }

@@ -48,7 +48,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useSync } from "../../contexts/SyncContext";
 import { useSong, useSongs } from "../../hooks/useSongs";
-import { posthog } from "../../lib/posthog";
+import { track } from "../../lib/posthog";
 
 type LayoutMode = "editor" | "split" | "preview";
 
@@ -95,16 +95,13 @@ export const SongEditorPage: React.FC = () => {
 
   const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
 
-  const directiveDefaults = useMemo(
-    () => {
-      const variant = selectedVariant
-        ? parsedSong.variants?.find((item) => item.id === selectedVariant)
-        : undefined;
-      const defaults = resolveVariantDefaults(parsedSong.default!, variant);
-      return { transposeVal: defaults.keyShift, capoVal: defaults.capo };
-    },
-    [parsedSong, selectedVariant],
-  );
+  const directiveDefaults = useMemo(() => {
+    const variant = selectedVariant
+      ? parsedSong.variants?.find((item) => item.id === selectedVariant)
+      : undefined;
+    const defaults = resolveVariantDefaults(parsedSong.default!, variant);
+    return { transposeVal: defaults.keyShift, capoVal: defaults.capo };
+  }, [parsedSong, selectedVariant]);
 
   const { settings, updateSetting, resetSettings } = usePreviewSettings(
     song?.id,
@@ -258,7 +255,7 @@ export const SongEditorPage: React.FC = () => {
         if (updated?.updatedAt) {
           appliedUpdatedAtRef.current = updated.updatedAt;
         }
-        posthog.capture("song_saved", { layout_mode: layoutMode });
+        track("song_saved", { layout_mode: layoutMode });
         setHasUnsavedChanges(false);
         emitOnboardingEvent("song-saved");
       } catch {

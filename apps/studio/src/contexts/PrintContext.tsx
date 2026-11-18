@@ -14,6 +14,7 @@ import {
   Song,
 } from "@/src/types";
 import React, { createContext, useCallback, useContext, useState } from "react";
+import { track } from "@/src/lib/posthog";
 
 export interface PrintContextValue {
   isPrintModalOpen: boolean;
@@ -64,6 +65,10 @@ export const PrintProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [payload, setPayload] = useState<PrintPayload | null>(null);
 
   const openPrintModal = useCallback((newPayload: PrintPayload) => {
+    track("print_initiated", {
+      kind: newPayload.items[0]?.type ?? "service",
+      item_count: newPayload.items.length,
+    });
     setPayload(newPayload);
     setIsOpen(true);
   }, []);

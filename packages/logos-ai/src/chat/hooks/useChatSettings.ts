@@ -3,30 +3,48 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AI_SETTINGS_CHANGED_EVENT } from "../../core/bridge";
 import { useLogosHost } from "../../host";
 import type { AiSettingsPublic } from "../../types";
+import {
+  isAiChatEnabled,
+  readCachedSettings,
+  readCachedVisibility,
+  writeCachedSettings,
+} from "../settingsCache";
 
 export function useChatSettings() {
   const { api, canUseAi: canUse, scope } = useLogosHost();
-  const [settings, setSettings] = useState<AiSettingsPublic | null>(null);
+  const activeScope = canUse && scope ? scope : null;
+  const [settings, setSettings] = useState<AiSettingsPublic | null>(() =>
+    activeScope ? readCachedSettings(activeScope) : null,
+  );
+  const [cachedVisible, setCachedVisible] = useState<boolean | null>(() =>
+    activeScope ? readCachedVisibility(activeScope) : null,
+  );
+  const scopeRef = useRef(activeScope);
+  scopeRef.current = activeScope;
 
   const refreshSettings = useCallback(async () => {
-    if (!canUse || !scope) {
+    if (!activeScope) {
       setSettings(null);
       return;
     }
     try {
-      setSettings(await api.getSettings());
+      const next = await api.getSettings();
+      writeCachedSettings(activeScope, next);
+      if (scopeRef.current === activeScope) setSettings(next);
     } catch {
-      setSettings(null);
+      if (scopeRef.current === activeScope) setSettings(readCachedSettings(activeScope));
     }
-  }, [canUse, scope, api]);
+  }, [activeScope, api]);
 
   useEffect(() => {
+    setSettings(activeScope ? readCachedSettings(activeScope) : null);
+    setCachedVisible(activeScope ? readCachedVisibility(activeScope) : null);
     void refreshSettings();
-  }, [refreshSettings]);
+  }, [activeScope, refreshSettings]);
 
   useEffect(() => {
     const onChanged = () => void refreshSettings();
@@ -34,7 +52,7 @@ export function useChatSettings() {
     return () => window.removeEventListener(AI_SETTINGS_CHANGED_EVENT, onChanged);
   }, [refreshSettings]);
 
-  const visible = Boolean(canUse && settings?.configured && settings?.enabled);
+  const visible = Boolean(activeScope && (settings ? isAiChatEnabled(settings) : cachedVisible));
 
   return { settings, refreshSettings, canUse, visible };
 }

@@ -1,5 +1,6 @@
 import createClient, { type Client, type Middleware } from "openapi-fetch";
 import type { paths } from "@hosanna/types";
+import { captureException } from "../lib/posthog";
 
 export class ApiError extends Error {
   public status: number;
@@ -101,6 +102,19 @@ export class ApiClient {
         ) {
           this.onUnauthorizedCallback();
         }
+        if (response.status >= 500) {
+          captureException(new ApiError(`Server error (${response.status})`, response.status), {
+            status: response.status,
+            method: request.method,
+            path: request.url.slice(this.baseURL.length),
+          });
+        }
+      },
+      onError: ({ error, request, schemaPath }) => {
+        captureException(error, {
+          method: request.method,
+          path: schemaPath,
+        });
       },
     };
     client.use(unauthorizedMiddleware);
@@ -167,7 +181,14 @@ export class ApiClient {
       response = await fetch(url, config);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to connect to server";
-      throw new ApiError(`Network Error: ${message}`, 0);
+      const error = new ApiError(`Network Error: ${message}`, 0);
+      captureException(err, {
+        status: 0,
+        code: "network_error",
+        method: options.method ?? "GET",
+        path: endpoint,
+      });
+      throw error;
     }
 
     if (response.status === 401) {
@@ -182,6 +203,13 @@ export class ApiClient {
         errorData = await response.json();
       } catch {
         errorData = undefined;
+      }
+      if (response.status >= 500) {
+        captureException(new Error(`Server error (${response.status})`), {
+          status: response.status,
+          method: options.method ?? "GET",
+          path: endpoint,
+        });
       }
       throw apiErrorFromBody(errorData, response.status);
     }

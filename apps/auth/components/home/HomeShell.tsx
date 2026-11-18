@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthAccountMenu } from "@/components/account/AuthAccountMenu";
+import { AuthInboxButton } from "@/components/account/AuthInboxButton";
 import { NavigationProgress } from "@/components/account/NavigationProgress";
 import { BrandMark } from "@/components/BrandMark";
 import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
@@ -102,6 +103,7 @@ export function HomeShell({ children }: { children: ReactNode }) {
           )}
 
           <div className="flex h-9 items-center gap-0.5 sm:gap-1">
+            <AuthInboxButton />
             <AuthLogosToggle />
             <AuthAppSwitcher currentAppId="auth" />
             <AuthAccountMenu />

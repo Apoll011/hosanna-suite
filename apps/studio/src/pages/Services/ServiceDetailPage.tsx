@@ -72,6 +72,7 @@ import {
 import { useOrgSettings } from "../../hooks/useOrgSettings";
 import { useService, useServices } from "../../hooks/useServices";
 import { useSearchableSongs, useSong, useSongs } from "../../hooks/useSongs";
+import { track } from "../../lib/posthog";
 import { AnnouncementModal } from "./modals/Announcement";
 import { ScriptureModal } from "./modals/Bible";
 import { CustomModal } from "./modals/Custom";
@@ -1144,6 +1145,7 @@ export const ServiceDetailPage: React.FC = () => {
         },
       });
       showToast(t("serviceDetailPage.serviceSavedSuccess"), "success");
+      track("service_saved", { element_count: elementsRef.current.length });
     } catch (error) {
       showToast(
         t("serviceDetailPage.serviceSaveError", {
@@ -1158,6 +1160,7 @@ export const ServiceDetailPage: React.FC = () => {
 
   const handleRemoveElement = async (elementId: string) => {
     await syncElements(elementsRef.current.filter((e) => e.id !== elementId));
+    track("service_element_removed");
   };
 
   const handleMoveElement = async (elementId: string, direction: -1 | 1) => {
@@ -1167,6 +1170,7 @@ export const ServiceDetailPage: React.FC = () => {
     const newIndex = oldIndex + direction;
     if (newIndex < 0 || newIndex >= current.length) return;
     await syncElements(arrayMove(current, oldIndex, newIndex));
+    track("service_element_reordered");
   };
 
   const handleNoteChange = async (elementId: string, note: string) => {
@@ -1228,6 +1232,7 @@ export const ServiceDetailPage: React.FC = () => {
         nextElements.push(newElem);
       }
       await syncElements(nextElements, previousElements);
+      track("service_element_added", { element_type: "song" });
     } catch {
       showToast(t("serviceDetailPage.failedToLoadSong"), "error");
     } finally {
@@ -1279,6 +1284,7 @@ export const ServiceDetailPage: React.FC = () => {
     }
     try {
       await syncElements(nextElements, previousElements);
+      if (!editingElement) track("service_element_added", { element_type: type });
       setActiveModal(null);
       setEditingElement(null);
     } catch {
@@ -1351,6 +1357,7 @@ export const ServiceDetailPage: React.FC = () => {
               Math.max(0, Math.min(newIndex, currentElements.length - 1)),
             );
             await syncElementsRef.current(reordered);
+            track("service_element_reordered");
           }
           return;
         }

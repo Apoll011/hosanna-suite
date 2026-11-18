@@ -11,7 +11,7 @@
 - Organization settings: members, branding, notifications, billing, AI (“Logos”)
 - MCP OAuth consent page (`/oauth/consent`)
 - Demo mode (local-only DB, no replication)
-- PostHog analytics (prod); Cloudflare Turnstile on login
+- PostHog analytics (prod) with input-masked session replay, console/exception autocapture, performance + dead-click capture; ~49 custom events (`src/lib/posthog/events.ts`), source maps uploaded in CI; Cloudflare Turnstile on login
 
 **Local data**
 

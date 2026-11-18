@@ -58,6 +58,7 @@ import { useSongImportController } from "../hooks/useSongImportController";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
 import { getAuthAppUrl, navigateToAuthAccount, prefetchAuthAccount } from "../lib/authUrl";
+import { track } from "../lib/posthog";
 import { writeThemeCookie } from "../lib/themeBoot";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
 import { StudioLogosProvider } from "../logos/StudioLogosProvider";
@@ -216,6 +217,7 @@ export const MainLayout: React.FC = () => {
   const handleViewModeChange = useCallback(
     (mode: "grid" | "list") => {
       updateSetting("viewMode", mode);
+      track("explorer_view_changed", { mode });
       if (view === "settings" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }
@@ -227,6 +229,7 @@ export const MainLayout: React.FC = () => {
   const handleDensityChange = useCallback(
     (d: "comfortable" | "compact") => {
       updateSetting("explorerDensity", d);
+      track("explorer_density_changed", { density: d });
     },
     [updateSetting],
   );
@@ -256,6 +259,7 @@ export const MainLayout: React.FC = () => {
     (sb: "title" | "artist" | "updatedAt" | "number", so: "asc" | "desc") => {
       setSortBy(sb);
       setSortOrder(so);
+      track("explorer_sort_changed", { sort_by: sb, order: so });
       if (view === "settings" || view === "analytics") {
         navigate(`${slugPrefix}/folders`);
       }

@@ -1,6 +1,11 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { resolveChords, parseCapoValue, parseKeyShiftValue, resolveVariantDefaults } from "../src/parser/resolveChords";
+import {
+  resolveChords,
+  parseCapoValue,
+  parseKeyShiftValue,
+  resolveVariantDefaults,
+} from "../src/parser/resolveChords";
 import { parseChordProDocument } from "../src/parser/parser";
 import "../src/instruments";
 import fixtures from "./fixtures/resolve-chords.json" with { type: "json" };

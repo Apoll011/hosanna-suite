@@ -20,6 +20,7 @@ export type {
   InteractiveImportSession,
   InteractiveImportToastCopy,
   ProviderImportResult,
+  ProvidersMetadata,
   SongImportContext,
   SongImportProvider,
 } from "./types";

@@ -10,6 +10,7 @@ import { parsedSongToSearchableSong } from "@/src/utils";
 import { parseChordPro } from "@hosanna/chordpro";
 import { useCallback, useEffect, useState } from "react";
 import { useSync } from "../contexts/SyncContext";
+import { track } from "../lib/posthog";
 import {
   computeSongPath,
   getDatabase,
@@ -86,6 +87,10 @@ export function useSongMutations() {
         }
         invalidateSongsCache();
         const result = doc.toJSON() as Song;
+        track("song_created", {
+          folder_id: folderId,
+          has_collections: Array.isArray(data.collectionIds) && data.collectionIds.length > 0,
+        });
         showToast(t("hooks.songs.created"), "success");
         return result;
       } catch (err: unknown) {
@@ -254,6 +259,7 @@ export function useSongMutations() {
           invalidateSongsCache();
         }
         showToast(t("hooks.songs.deleted"), "info");
+        track("song_deleted");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(
@@ -309,6 +315,7 @@ export function useSongMutations() {
           invalidateSongsCache();
         }
         showToast(t("trashPage.restore"), "success");
+        track("song_restored");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(
@@ -363,6 +370,7 @@ export function useSongMutations() {
         invalidateSongsCache();
 
         showToast(t("hooks.songs.moved"), "success");
+        track("song_moved", { to_folder_id: targetFolderId });
         return songDoc.toJSON() as Song;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
@@ -418,6 +426,11 @@ export function useSongMutations() {
         }
 
         showToast(t("songsPage.movedToast", { count }), "success");
+        track("songs_batch_tagged", {
+          count,
+          mode: params.mode,
+          tag_count: params.tags.length,
+        });
         return { count };
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)

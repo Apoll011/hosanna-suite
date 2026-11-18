@@ -35,7 +35,7 @@ Post-login hub on the **auth** site (not a separate suite app):
 
 - URL: `auth.hosanna.live/home` (dev: auth app `/home`)
 - Default after login and for `/` when signed in (explicit redirect query params still win)
-- Header chrome: Logos AI → App Switcher → AccountMenu (org switching lives in the menu, not the header)
+- Header chrome: Inbox bell → Logos AI → App Switcher → AccountMenu (org switching lives in the menu, not the header)
 - Body: app grid from the suite catalog (live + coming soon), linking into each product
 
 Product copy for the grid / switcher lives in `@hosanna/i18n` under `suite.*`.
@@ -81,7 +81,7 @@ Shared account menu in `@hosanna/ui` (Auth wires it as `AuthAccountMenu`; Studio
 
 **Variants:** `popover` (circular avatar, Auth header) and `extended` (full-width sidebar footer row that expands upward; supports `collapsed` for the rail).
 
-**i18n:** chrome copy lives in `@hosanna/i18n` (`suite.accountMenu.*`, `suite.switcher.*`). Shared UI components resolve it themselves via `language` (or `document.documentElement.lang`). Do **not** duplicate those strings in app locales or pass them through a `labels={{…}}` bag unless the host truly needs different wording (rare override). Same rule for App Switcher.
+**i18n:** chrome copy lives in `@hosanna/i18n` (`suite.accountMenu.*`, `suite.switcher.*`, `suite.inbox.*`). Shared UI components resolve it themselves via `language` (or `document.documentElement.lang`). Do **not** duplicate those strings in app locales or pass them through a `labels={{…}}` bag unless the host truly needs different wording (rare override). Same rule for App Switcher and the inbox bell.
 
 Theme and language writes go through the **personal-settings** store (below), not ad-hoc `localStorage` keys.
 

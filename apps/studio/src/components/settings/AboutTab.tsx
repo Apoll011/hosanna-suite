@@ -4,7 +4,7 @@
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import { songImportRegistry } from "@/src/lib/import";
+import { songImportRegistry, type ProvidersMetadata } from "@/src/lib/import";
 import { useActiveRole } from "@hosanna/ui";
 import { startInteractiveOnboarding, startProductTour } from "@/src/lib/tour";
 import {
@@ -17,7 +17,7 @@ import {
   Heart,
   Info,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 
 export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
@@ -25,6 +25,18 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
   const { t } = useI18n();
   const { role } = useActiveRole();
   const [showLicenses, setShowLicenses] = useState(false);
+  const [providers, setProviders] = useState<ProvidersMetadata[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void songImportRegistry.refresh().then(() => {
+      if (cancelled) return;
+      setProviders(songImportRegistry.getProviders());
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [organization?.id]);
   const canRelaunchTour = role !== "guest";
 
   if (!active) return null;
@@ -167,7 +179,7 @@ export const AboutTab: React.FC<{ active: boolean }> = ({ active }) => {
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-          {songImportRegistry.getProviders().map((provider) => (
+          {providers.map((provider) => (
             <div
               key={provider.id}
               className="flex flex-col justify-between p-3.5 border border-m3-border rounded-xl bg-m3-sidebar/50 space-y-2"
