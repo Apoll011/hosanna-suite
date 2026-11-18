@@ -9,6 +9,7 @@ import type { ReplicationManager } from "../db";
 import { SyncStatus } from "../types";
 import { useAuth } from "./AuthContext";
 import { isDemoMode } from "../demo/index";
+import { captureException } from "../lib/posthog";
 
 export interface ToastAction {
   label: string;
@@ -197,6 +198,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         repl.start({ forceFullPull: scope.cleared });
       } catch (err) {
         console.error("[SyncContext] Failed to initialize DB / Replication:", err);
+        captureException(err, { kind: "sync_init" });
         if (isMounted) setSyncStatus("error" as SyncStatus);
       }
     }

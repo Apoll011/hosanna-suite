@@ -434,6 +434,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     } catch (error) {
       console.error("Failed to fetch session:", error);
+      captureException(error, { kind: "session_fetch" });
       const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
       if (cachedUserStr) {
         try {

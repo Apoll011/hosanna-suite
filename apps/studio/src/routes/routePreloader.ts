@@ -1,4 +1,5 @@
 import React, { lazy } from "react";
+import { captureException } from "../lib/posthog";
 
 export type LazyImportFn<T> = () => Promise<{
   default: React.ComponentType<T>;
@@ -36,6 +37,7 @@ export const lazyImport = <T>(componentImport: LazyImportFn<T>): LazyPreloadable
             window.location.reload();
             return new Promise<never>(() => {});
           }
+          captureException(error, { kind: "chunk_load" });
           throw error;
         }
       })();
