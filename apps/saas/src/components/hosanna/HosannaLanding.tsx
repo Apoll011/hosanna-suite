@@ -583,7 +583,7 @@ function OpenSource() {
             <Button
               asChild
               variant="outline"
-              className="rounded-full border-white/20 text-white hover:bg-white/10 px-6 font-semibold"
+              className="rounded-full border-white/20 text-black hover:bg-white/10 px-6 font-semibold"
             >
               <a href={githubStudioUrl} target="_blank" rel="noreferrer">
                 {t("landing.openSource.ctaStudio")}
