@@ -12,7 +12,17 @@ export default function Hero() {
   const { language, setLanguage, t } = useI18n();
   const [activeNav, setActiveNav] = useState<NavItem>("features");
   const [fontsReady, setFontsReady] = useState(false);
-  const [splashRevealed, setSplashRevealed] = useState(false);
+  const [splashRevealed, setSplashRevealed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return (
+        window.sessionStorage.getItem("hosanna_splash_seen") === "true" ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
+    } catch {
+      return false;
+    }
+  });
   const impulseTriggerRef = useRef<((targetUv?: { x: number; y: number }) => void) | null>(null);
 
   const heroReady = fontsReady && splashRevealed;

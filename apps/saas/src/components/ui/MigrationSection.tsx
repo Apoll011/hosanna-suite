@@ -3,6 +3,7 @@ import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Check, ListMusic, Music2 } from "lucide-react";
 import { useState, type CSSProperties } from "react";
+import { SectionLiquidBg } from "./SectionLiquidBg";
 
 type HmStyle = CSSProperties & {
   "--hm-delay"?: string;
@@ -44,8 +45,9 @@ export function MigrationSection() {
   const current = SOURCE_APPS.find((a) => a.id === selectedId) || SOURCE_APPS[0];
 
   return (
-    <section id="features" className="relative bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section id="features" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <div className={cn("reveal max-w-2xl", "mx-auto text-center")}>
           <h2
             className={cn(
@@ -79,19 +81,17 @@ export function MigrationSection() {
                       role="radio"
                       aria-checked={isSelected}
                       onClick={() => setSelectedId(app.id)}
-                      className={`group flex w-full items-center gap-3.5 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
-                        isSelected
+                      className={`group flex w-full items-center gap-3.5 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${isSelected
                           ? "border-primary/50 bg-white shadow-md shadow-primary/10"
                           : "border-border/70 bg-secondary/40 hover:border-border hover:bg-secondary/60"
-                      }`}
+                        }`}
                     >
                       <span
                         aria-hidden="true"
-                        className={`h-1.5 w-1.5 shrink-0 rounded-full transition-all duration-200 ${
-                          isSelected
+                        className={`h-1.5 w-1.5 shrink-0 rounded-full transition-all duration-200 ${isSelected
                             ? "bg-primary shadow-[0_0_8px_2px_rgba(37,99,235,0.35)]"
                             : "bg-blue-200"
-                        }`}
+                          }`}
                       />
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">

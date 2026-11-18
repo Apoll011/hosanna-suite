@@ -43,6 +43,7 @@ import Hero from "../ui/Hero";
 import HeroHeader from "../ui/HeroHeader";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
+import { SectionLiquidBg } from "../ui/SectionLiquidBg";
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -90,8 +91,9 @@ function Problem() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative bg-background py-16 md:py-16 font-sans">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative overflow-hidden bg-background py-16 md:py-16 font-sans">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.problem.eyebrow")} title={t("landing.problem.title")}>
           {t("landing.problem.description")}
         </SectionHeader>
@@ -99,7 +101,7 @@ function Problem() {
           {dict.landing.problem.cards.map((c: { title: string; body: string }) => (
             <div
               key={c.title}
-              className="rounded-3xl border border-blue-50 bg-white p-8 text-center transition-all hover:shadow-lg group shadow-sm"
+              className="rounded-3xl border border-blue-50 bg-white/90 backdrop-blur-xs p-8 text-center transition-all hover:shadow-lg group shadow-sm"
             >
               <h3 className="font-display text-2xl text-primary mb-3">{c.title}</h3>
               <p className="text-base leading-relaxed text-muted-foreground">{c.body}</p>
@@ -107,7 +109,7 @@ function Problem() {
           ))}
         </div>
       </div>
-      <div className="reveal mt-20 text-center">
+      <div className="relative z-10 reveal mt-20 text-center">
         <blockquote className="mx-auto max-w-4xl">
           <p className="font-display text-3xl leading-tight italic text-primary md:text-5xl">
             {t("landing.problem.verse")}
@@ -126,8 +128,9 @@ function TwoApps() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="features" className="relative bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section id="features" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.twoApps.eyebrow")} title={t("landing.twoApps.title")}>
           {t("landing.twoApps.description")}
         </SectionHeader>
@@ -200,8 +203,9 @@ function Organize() {
   const icons = [FolderTree, Search, Music];
 
   return (
-    <section className="bg-background py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.organize.eyebrow")} title={t("landing.organize.title")}>
           {t("landing.organize.description")}
         </SectionHeader>
@@ -241,11 +245,12 @@ function HowItWorks() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="how" className="relative bg-primary py-16 text-primary-foreground md:py-16">
-      <div className="absolute inset-0 text-gold/25">
+    <section id="how" className="relative overflow-hidden bg-[#021433] py-16 text-primary-foreground md:py-16">
+      <SectionLiquidBg variant="blue" />
+      <div className="pointer-events-none absolute inset-0 text-gold/25 z-0">
         <StaffLines className="top-16" />
       </div>
-      <div className="relative mx-auto max-w-6xl px-5 md:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader
           eyebrow={t("landing.howItWorks.eyebrow")}
           title={t("landing.howItWorks.title")}
@@ -288,8 +293,9 @@ function LiveWorship() {
   ];
 
   return (
-    <section className="bg-background py-16 md:py-16">
-      <div className="mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
+    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
         <div className="reveal">
           <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl">
             {t("landing.liveWorship.title")}
@@ -331,8 +337,9 @@ function AnySize() {
   const { t } = useI18n();
 
   return (
-    <section className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.anySize.eyebrow")} title={t("landing.anySize.title")}>
           {t("landing.anySize.description")}
         </SectionHeader>
@@ -365,8 +372,9 @@ function ExportSection() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="bg-background py-16 md:py-16">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
         <div className="reveal">
           <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
             {t("landing.export.title")}
@@ -437,8 +445,9 @@ function Pricing() {
   const unit = annual ? t("landing.pricing.perYearUnit") : t("landing.pricing.perMonthUnit");
 
   return (
-    <section id="pricing" className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section id="pricing" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.pricing.eyebrow")} title={t("landing.pricing.title")}>
           {t("landing.pricing.description")}
         </SectionHeader>
@@ -545,9 +554,10 @@ function MobileApp() {
   const { t } = useI18n();
 
   return (
-    <section id="mobile" className="py-16 bg-primary overflow-hidden relative font-sans">
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
-      <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-7xl">
+    <section id="mobile" className="relative overflow-hidden bg-[#021433] py-16 text-primary-foreground font-sans">
+      <SectionLiquidBg variant="blue" />
+      <div className="pointer-events-none absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)] z-0" />
+      <div className="container relative z-10 mx-auto px-5 md:px-8 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 reveal">
             <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium">
@@ -587,7 +597,8 @@ function Vision() {
 
   return (
     <section className="relative overflow-hidden bg-background py-16 md:py-16">
-      <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-3xl px-5 text-center md:px-8">
         <div className="reveal text-xs font-semibold uppercase tracking-[0.2em] text-gold">
           {t("landing.vision.eyebrow")}
         </div>
@@ -612,8 +623,9 @@ function OpenSource() {
   const { t } = useI18n();
 
   return (
-    <section id="open-source" className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
+    <section id="open-source" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
         <div className="reveal">
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
             {t("landing.openSource.eyebrow")}
@@ -656,8 +668,9 @@ function SupportTheMission() {
     "https://www.gofundme.com/f/ajudenos-a-levar-o-hosanna-a-igrejas-de-todo-o-mundo";
 
   return (
-    <section className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.support.eyebrow")} title={t("landing.support.title")}>
           {t("landing.support.description")}
         </SectionHeader>
@@ -682,8 +695,9 @@ function Roadmap() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="bg-background py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.roadmap.eyebrow")} title={t("landing.roadmap.title")}>
           {t("landing.roadmap.description")}
         </SectionHeader>
@@ -703,8 +717,9 @@ function FAQ() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="faq" className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-3xl px-5 md:px-8">
+    <section id="faq" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-3xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.faq.eyebrow")} title={t("landing.faq.title")}>
           {t("landing.faq.description")}
         </SectionHeader>
@@ -731,12 +746,13 @@ function FinalCTA() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-hero-gradient py-16 text-primary-foreground md:py-16">
-      <div className="absolute inset-0 text-gold/30">
+    <section className="relative overflow-hidden bg-[#021433] py-16 text-primary-foreground md:py-16">
+      <SectionLiquidBg variant="blue" />
+      <div className="pointer-events-none absolute inset-0 text-gold/30 z-0">
         <StaffLines className="top-10" />
         <StaffLines className="bottom-10" />
       </div>
-      <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
+      <div className="relative z-10 mx-auto max-w-3xl px-5 text-center md:px-8">
         <h2 className="reveal font-display text-4xl leading-tight tracking-tight md:text-6xl text-white">
           {t("landing.finalCta.title")}
         </h2>

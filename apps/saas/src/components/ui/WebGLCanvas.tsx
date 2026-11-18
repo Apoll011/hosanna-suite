@@ -641,6 +641,8 @@ export default function WebGLCanvas({
       uLineProgress: { value: new THREE.Vector3(1, 1, 1) },
       uLineBounds: { value: new THREE.Vector4(0.65, 0.55, 0.45, 0.35) },
       uImpulse: { value: 0 },
+      uScrollProgress: { value: 0 },
+      uReducedMotion: { value: prefersReducedMotion ? 1 : 0 },
     };
 
     const textGeometry = new THREE.PlaneGeometry(2, 2, 64, 48);
@@ -761,10 +763,19 @@ export default function WebGLCanvas({
       }
     };
 
+    let smoothedScroll = 0;
+
     const tick = () => {
       if (disposed) return;
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();
+
+      const scrollTarget = Math.min(
+        1.0,
+        Math.max(0.0, (window.scrollY || 0) / (Math.max(window.innerHeight, 400) * 0.55)),
+      );
+      smoothedScroll += (scrollTarget - smoothedScroll) * Math.min(1.0, delta * 12.0);
+      textUniforms.uScrollProgress.value = smoothedScroll;
 
       const isAutonomousMode = isMobileOrTablet(currentViewportWidth);
 

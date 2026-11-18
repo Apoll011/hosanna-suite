@@ -19,3 +19,11 @@ createRoot(rootElement).render(
     </I18nProvider>
   </StrictMode>,
 );
+
+if (typeof window !== "undefined" && "serviceWorker" in navigator && !import.meta.env.DEV) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .catch((err) => console.debug("SW registration skipped", err));
+  });
+}

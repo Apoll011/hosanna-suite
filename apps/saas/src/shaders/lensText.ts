@@ -47,6 +47,8 @@ export const lensTextFragmentShader = /* glsl */ `
   uniform float uTime;
   uniform vec3 uLineProgress;
   uniform vec4 uLineBounds; // (line1Top, line12Mid, line23Mid, line3Bot) in UV [0..1]
+  uniform float uScrollProgress;
+  uniform float uReducedMotion;
 
   vec4 sampleMaskedEnglish(vec2 uv) {
     float top1 = uLineBounds.x;
@@ -57,32 +59,42 @@ export const lensTextFragmentShader = /* glsl */ `
     float prog = 0.0;
     float bandMin = 0.0;
     float bandMax = 0.0;
+    float driftDir = 0.0;
 
     if (uv.y <= top1 && uv.y > mid12) {
       prog = uLineProgress.x;
       bandMin = mid12;
       bandMax = top1;
+      driftDir = 1.0;
     } else if (uv.y <= mid12 && uv.y > mid23) {
       prog = uLineProgress.y;
       bandMin = mid23;
       bandMax = mid12;
+      driftDir = -1.0;
     } else if (uv.y <= mid23 && uv.y >= bot3) {
       prog = uLineProgress.z;
       bandMin = bot3;
       bandMax = mid23;
+      driftDir = 1.0;
     } else {
       return vec4(0.0);
     }
 
     float bandH = bandMax - bandMin;
     float offsetY = (1.0 - prog) * bandH * 1.05;
-    vec2 shiftedUv = vec2(uv.x, uv.y - offsetY);
 
-    // Clip strictly inside the line's horizontal mask window
-    float mask = step(bandMin, shiftedUv.y) * step(shiftedUv.y, bandMax);
+    float peakOffset = 0.07;
+    float splitOffset = (uReducedMotion > 0.5) ? 0.0 : (driftDir * peakOffset * uScrollProgress);
+    float scrollAlpha = clamp(1.0 - uScrollProgress * 1.25, 0.0, 1.0);
+
+    vec2 shiftedUv = vec2(uv.x + splitOffset, uv.y - offsetY);
+
+    // Clip strictly inside the line's horizontal and vertical mask window
+    float vMask = step(bandMin, shiftedUv.y) * step(shiftedUv.y, bandMax);
+    float hMask = step(0.0, shiftedUv.x) * step(shiftedUv.x, 1.0);
     vec4 tex = texture2D(uEnglishTex, clamp(shiftedUv, 0.0, 1.0));
     float fade = smoothstep(0.0, 0.18, prog);
-    return vec4(tex.rgb, tex.a * mask * fade);
+    return vec4(tex.rgb, tex.a * vMask * hMask * fade * scrollAlpha);
   }
 
   vec4 sampleMaskedJapanese(vec2 uv) {
@@ -94,31 +106,41 @@ export const lensTextFragmentShader = /* glsl */ `
     float prog = 0.0;
     float bandMin = 0.0;
     float bandMax = 0.0;
+    float driftDir = 0.0;
 
     if (uv.y <= top1 && uv.y > mid12) {
       prog = uLineProgress.x;
       bandMin = mid12;
       bandMax = top1;
+      driftDir = 1.0;
     } else if (uv.y <= mid12 && uv.y > mid23) {
       prog = uLineProgress.y;
       bandMin = mid23;
       bandMax = mid12;
+      driftDir = -1.0;
     } else if (uv.y <= mid23 && uv.y >= bot3) {
       prog = uLineProgress.z;
       bandMin = bot3;
       bandMax = mid23;
+      driftDir = 1.0;
     } else {
       return vec4(0.0);
     }
 
     float bandH = bandMax - bandMin;
     float offsetY = (1.0 - prog) * bandH * 1.05;
-    vec2 shiftedUv = vec2(uv.x, uv.y - offsetY);
 
-    float mask = step(bandMin, shiftedUv.y) * step(shiftedUv.y, bandMax);
+    float peakOffset = 0.07;
+    float splitOffset = (uReducedMotion > 0.5) ? 0.0 : (driftDir * peakOffset * uScrollProgress);
+    float scrollAlpha = clamp(1.0 - uScrollProgress * 1.25, 0.0, 1.0);
+
+    vec2 shiftedUv = vec2(uv.x + splitOffset, uv.y - offsetY);
+
+    float vMask = step(bandMin, shiftedUv.y) * step(shiftedUv.y, bandMax);
+    float hMask = step(0.0, shiftedUv.x) * step(shiftedUv.x, 1.0);
     vec4 tex = texture2D(uJapaneseTex, clamp(shiftedUv, 0.0, 1.0));
     float fade = smoothstep(0.0, 0.18, prog);
-    return vec4(tex.rgb, tex.a * mask * fade);
+    return vec4(tex.rgb, tex.a * vMask * hMask * fade * scrollAlpha);
   }
 
   void main() {
@@ -203,7 +225,7 @@ export const lensTextFragmentShader = /* glsl */ `
         vec3(1.0, 1.0, 1.0),
         arcPrimary * 0.65
       );
-      glassAlpha = clamp(specIntensity, 0.0, 0.56);
+      glassAlpha = clamp(specIntensity, 0.0, 0.56) * clamp(1.0 - uScrollProgress * 1.25, 0.0, 1.0);
     }
 
     // Composite specular crescents cleanly over the cross-masked typography

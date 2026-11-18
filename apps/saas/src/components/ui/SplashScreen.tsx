@@ -6,13 +6,24 @@ interface SplashScreenProps {
   durationMs?: number;
 }
 
+const SESSION_KEY = "hosanna_splash_seen";
+
+const hasSeenSplash = () => {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.sessionStorage.getItem(SESSION_KEY) === "true";
+  } catch {
+    return false;
+  }
+};
+
 export default function SplashScreen({
   onReveal,
   durationMs = 3000,
 }: SplashScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
-  const [destroyed, setDestroyed] = useState(false);
+  const [destroyed, setDestroyed] = useState(() => hasSeenSplash());
   const onRevealRef = useRef(onReveal);
   onRevealRef.current = onReveal;
 
@@ -21,11 +32,15 @@ export default function SplashScreen({
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReducedMotion) {
+    if (hasSeenSplash() || prefersReducedMotion) {
       onRevealRef.current?.();
       setDestroyed(true);
       return;
     }
+
+    try {
+      window.sessionStorage.setItem(SESSION_KEY, "true");
+    } catch {}
 
     const container = containerRef.current;
     const brand = brandRef.current;
