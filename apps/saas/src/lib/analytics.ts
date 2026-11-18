@@ -1,70 +1,100 @@
-import type { PostHog } from "posthog-js";
+import {
+  createAnalyticsClient,
+  detectRuntimeEnv,
+  isAnalyticsEnabled,
+  posthog,
+  resolvePostHogConfig,
+  setGlobalAnalyticsClient,
+  type AnalyticsClient,
+} from "@hosanna/analytics";
 import { getStoredConsent } from "./consent";
 
-let posthogInstance: PostHog | null = null;
-let isInitializing = false;
+let currentClient: AnalyticsClient | null = null;
 
-export async function initAnalytics(): Promise<PostHog | null> {
+function hasAnalyticsConsent(): boolean {
+  if (typeof window === "undefined") return false;
+  const consent = getStoredConsent();
+  return consent?.choice === "all";
+}
+
+export function getSaasAnalytics(): AnalyticsClient {
+  if (currentClient) return currentClient;
+
+  const env = detectRuntimeEnv();
+  const consentAllowed = hasAnalyticsConsent();
+  const enabled = isAnalyticsEnabled(env) && consentAllowed;
+  const config = resolvePostHogConfig(env);
+
+  currentClient = createAnalyticsClient({
+    appName: "saas",
+    apiKey: config?.token,
+    apiHost: config?.host,
+    enabled: Boolean(config && consentAllowed),
+  });
+
+  setGlobalAnalyticsClient(currentClient);
+  return currentClient;
+}
+
+export function initAnalytics(): AnalyticsClient | null {
   if (typeof window === "undefined") return null;
 
-  const consent = getStoredConsent();
-  if (consent?.choice !== "all") {
+  if (!hasAnalyticsConsent()) {
+    optOutAnalytics();
     return null;
   }
 
-  const key = import.meta.env.VITE_PUBLIC_POSTHOG_KEY as string | undefined;
-  const host =
-    (import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string | undefined) ||
-    "https://eu.i.posthog.com";
-
-  if (!key) {
-    return null;
-  }
-
-  if (posthogInstance) {
+  const client = getSaasAnalytics();
+  const rawPh = client.getPostHog();
+  if (rawPh) {
     try {
-      posthogInstance.opt_in_capturing();
-    } catch {}
-    return posthogInstance;
+      rawPh.opt_in_capturing();
+    } catch {
+      /* ignore */
+    }
   }
 
-  if (isInitializing) return null;
-  isInitializing = true;
-
-  try {
-    const posthogModule = await import("posthog-js");
-    const ph = posthogModule.default;
-    ph.init(key, {
-      api_host: host,
-      capture_pageview: true,
-      capture_pageleave: true,
-      autocapture: false,
-      persistence: "localStorage+cookie",
-      respect_dnt: true,
-    });
-    posthogInstance = ph;
-    return ph;
-  } catch {
-    return null;
-  } finally {
-    isInitializing = false;
-  }
+  return client;
 }
 
 export function optOutAnalytics(): void {
-  if (!posthogInstance) return;
+  if (typeof window === "undefined") return;
+  const rawPh = currentClient?.getPostHog() ?? posthog;
   try {
-    posthogInstance.opt_out_capturing();
-    posthogInstance.reset();
-  } catch {}
+    rawPh?.opt_out_capturing();
+    rawPh?.reset();
+  } catch {
+    /* ignore */
+  }
 }
 
 export function syncAnalyticsWithConsent(): void {
   if (typeof window === "undefined") return;
-  const consent = getStoredConsent();
-  if (consent?.choice === "all") {
-    void initAnalytics();
+  if (hasAnalyticsConsent()) {
+    initAnalytics();
   } else {
     optOutAnalytics();
   }
 }
+
+export function track(name: string, props?: Record<string, unknown>): void {
+  getSaasAnalytics().trackCustom(name, props);
+}
+
+export function trackPageview(url?: string, props?: Record<string, unknown>): void {
+  getSaasAnalytics().trackPageview(url, props);
+}
+
+export function captureException(error: unknown, props?: Record<string, unknown>): void {
+  getSaasAnalytics().captureException(error, props);
+}
+
+export function identify(distinctId: string, props?: Record<string, unknown>): void {
+  getSaasAnalytics().identify(distinctId, props);
+}
+
+export function reset(): void {
+  getSaasAnalytics().reset();
+}
+
+export { posthog };

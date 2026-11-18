@@ -4,7 +4,10 @@ import { createRoot } from "react-dom/client";
 
 import { router } from "./router";
 import "./styles.css";
+import { syncAnalyticsWithConsent } from "./lib/analytics";
 import { I18nProvider } from "./lib/i18n";
+
+syncAnalyticsWithConsent();
 
 const rootElement = document.getElementById("root");
 

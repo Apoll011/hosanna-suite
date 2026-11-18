@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 import { useI18n } from "@/lib/i18n";
 import { applyRouteMeta, getRouteMeta } from "@/lib/seo";
+import { captureException, trackPageview } from "@/lib/analytics";
 import { CookieBanner } from "@/components/ui/CookieBanner";
 
 function useRouteMetaUpdater() {
@@ -10,6 +11,7 @@ function useRouteMetaUpdater() {
 
   useEffect(() => {
     applyRouteMeta(getRouteMeta(pathname));
+    trackPageview(pathname);
   }, [pathname]);
 }
 
@@ -51,6 +53,10 @@ export function NotFoundComponent() {
 export function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const { t } = useI18n();
+
+  useEffect(() => {
+    captureException(error);
+  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

@@ -307,6 +307,9 @@ importers:
 
   apps/saas:
     dependencies:
+      '@hosanna/analytics':
+        specifier: workspace:*
+        version: link:../../packages/analytics
       '@hosanna/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -420,7 +423,7 @@ importers:
         version: 1.0.11
       posthog-js:
         specifier: ^1.447.3
-        version: 1.447.3(@types/react@19.3.0)(react@19.3.1)
+        version: 1.450.1(@types/react@19.3.0)(react@19.3.1)
       react:
         specifier: ^19.2.0
         version: 19.3.1
