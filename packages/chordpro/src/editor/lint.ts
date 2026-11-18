@@ -1,11 +1,9 @@
-import { lintChordPro, type ChordProDiagnostic } from "../parser/linter";
+import { lintChordPro, type ChordProDiagnostic, type LintOptions } from "../parser/linter";
 
-export type { ChordProDiagnostic } from "../parser/linter";
+export type { ChordProDiagnostic, LintOptions, LintLanguage } from "../parser/linter";
 
 export interface LintController {
-  /** Re-runs validation (debounced) against the given ChordPro text. */
-  lint: (text: string) => void;
-  /** Clears markers/annotations and cancels any pending lint run. */
+  lint: (text: string, options?: LintOptions) => void;
   dispose: () => void;
 }
 
@@ -50,6 +48,7 @@ export function attachChordProLinter(
   editor: any,
   onDiagnostics?: (diagnostics: ChordProDiagnostic[]) => void,
   debounceMs = 250,
+  options?: LintOptions,
 ): LintController {
   const session = editor?.session;
   let markerIds: number[] = [];
@@ -95,7 +94,6 @@ export function attachChordProLinter(
           const id = session.addMarker(range, className, "text");
           markerIds.push(id);
         } catch {
-          // A stale range (e.g. line removed mid-edit) shouldn't break linting.
         }
       }
     }
@@ -103,12 +101,12 @@ export function attachChordProLinter(
     onDiagnostics?.(diagnostics);
   };
 
-  const lint = (text: string) => {
+  const lint = (text: string, overrideOptions?: LintOptions) => {
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       let diagnostics: ChordProDiagnostic[] = [];
       try {
-        diagnostics = lintChordPro(text);
+        diagnostics = lintChordPro(text, overrideOptions ?? options);
       } catch {
         diagnostics = [];
       }

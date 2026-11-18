@@ -497,6 +497,7 @@ export interface EditorProps {
   settings?: EditorSettings;
   mode?: string;
   readOnly?: boolean;
+  language?: string;
   fallback?: React.ReactNode;
   /** When set, replaces the text editor with an inline diff review. */
   proposal?: EditorProposal | null;
@@ -531,6 +532,7 @@ function TextEditor({
   settings,
   mode = "chordpro",
   readOnly = false,
+  language,
   fallback = null,
 }: EditorProps) {
   const activeSettings = {
@@ -567,12 +569,12 @@ function TextEditor({
     };
   }, []);
 
-  // Run linter whenever the text value changes
+  // Run linter whenever the text value or language changes
   useEffect(() => {
     if (linterRef.current) {
-      linterRef.current.lint(value);
+      linterRef.current.lint(value, language ? { language } : undefined);
     }
-  }, [value]);
+  }, [value, language]);
 
   const handleTransposeConfirm = useCallback(
     (newText: string, targetNote: string) => {
@@ -613,7 +615,13 @@ function TextEditor({
 
       const aceInstance = (window as any).ace;
       if (aceInstance && mode === "chordpro") {
-        linterRef.current = attachChordProLinter(aceInstance, editor, onDiagnostics);
+        linterRef.current = attachChordProLinter(
+          aceInstance,
+          editor,
+          onDiagnostics,
+          250,
+          language ? { language } : undefined,
+        );
         linterRef.current.lint(editor.getValue());
       }
 

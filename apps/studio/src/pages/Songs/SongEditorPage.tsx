@@ -55,7 +55,7 @@ type LayoutMode = "editor" | "split" | "preview";
 export const SongEditorPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { navigate } = useAppNavigate();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
 
@@ -452,6 +452,7 @@ export const SongEditorPage: React.FC = () => {
               onSave={handleSave}
               proposal={editorProposal}
               mode="chordpro"
+              language={language}
               fallback={
                 <div className="h-full w-full flex items-center justify-center">
                   <Spinner size="md" label={t("songEditor.loadingEditor")} />
