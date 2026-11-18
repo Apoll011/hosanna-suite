@@ -5,6 +5,7 @@
 
 import { useAuth } from "@/src/contexts/AuthContext";
 import { authClient } from "@/src/lib/authClient";
+import { track } from "@/src/lib/posthog";
 import { useCan } from "@hosanna/ui";
 import { useCallback, useMemo } from "react";
 import { resolveOrgPrintSettings, toOrgPrintSettings } from "./options";
@@ -45,6 +46,7 @@ export function usePrintDefaults(): {
         },
       });
       await refetch();
+      track("print_defaults_saved");
     },
     [organization, refetch],
   );
