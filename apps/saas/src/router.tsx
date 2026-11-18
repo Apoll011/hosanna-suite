@@ -65,10 +65,9 @@ const routeTree = rootRoute.addChildren([
 export const router = createRouter({
   routeTree,
   scrollRestoration: true,
-  // Preload a route's chunk as soon as the user is about to navigate to it
-  // (link hover / touch start).
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
+  defaultViewTransition: true,
 });
 
 declare module "@tanstack/react-router" {

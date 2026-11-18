@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
 import { useCallback, useRef, useState } from "react";
 import HeroCtas from "./HeroCtas";
@@ -27,17 +28,21 @@ export default function Hero() {
 
   const heroReady = fontsReady && splashRevealed;
 
+  const navigate = useNavigate();
+
   const handleSelectNav = useCallback((item: NavItem) => {
     setActiveNav(item);
     if (item === "chordpro" || item === "about" || item === "contact") {
-      window.location.assign(`/${item === "chordpro" ? "chordpro" : item}`);
+      navigate({ to: `/${item}`, viewTransition: true });
       return;
     }
-    document.getElementById(item === "price" ? "pricing" : "features")?.scrollIntoView({
+    const targetId = item === "price" ? "pricing" : "features";
+    document.getElementById(targetId)?.scrollIntoView({
       behavior: "smooth",
     });
+    window.history.pushState(null, "", `/#${targetId}`);
     impulseTriggerRef.current?.();
-  }, []);
+  }, [navigate]);
 
   const handleLogoClick = useCallback(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
