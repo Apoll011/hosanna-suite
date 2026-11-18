@@ -66,7 +66,7 @@ describe("POSTHOG_INIT_OPTIONS", () => {
       capture_unhandled_rejections: true,
       capture_console_errors: true,
     });
-    assert.deepEqual(POSTHOG_INIT_OPTIONS.session_recording, { maskAllInputs: true });
+    assert.equal(POSTHOG_INIT_OPTIONS.disable_session_recording, true);
   });
 });
 
