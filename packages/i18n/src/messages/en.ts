@@ -163,6 +163,19 @@ export const sharedEn: typeof sharedPt = {
       themeLight: "Switch to light theme",
       themeDark: "Switch to dark theme",
     },
+    inbox: {
+      title: "Notifications",
+      buttonTitle: "Notification inbox",
+      unreadCount: "{count} unread",
+      markAllRead: "Mark all as read",
+      readAll: "Read all",
+      all: "All ({count})",
+      unread: "Unread ({count})",
+      loading: "Loading notifications…",
+      empty: "No notifications found",
+      loadMore: "Load more",
+      close: "Close",
+    },
     apps: {
       auth: {
         name: "Account",

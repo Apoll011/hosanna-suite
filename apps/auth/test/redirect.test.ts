@@ -206,8 +206,8 @@ describe("resolveSocialCallbackURL", () => {
     assert.equal(resolveSocialCallbackURL(), "https://auth.hosanna.live/home");
   });
 
-  it("falls back to onboarding when no slug", () => {
+  it("falls back to suite /home when no slug is stored", () => {
     installDom("https://auth.hosanna.live");
-    assert.equal(resolveSocialCallbackURL(), "https://auth.hosanna.live/onboarding");
+    assert.equal(resolveSocialCallbackURL(), "https://auth.hosanna.live/home");
   });
 });

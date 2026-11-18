@@ -1619,18 +1619,6 @@ export const pt = {
         solarized_dark: "Solarized Dark (escuro)",
       },
     },
-    inbox: {
-      title: "Notificações",
-      unreadCount: "{count} não lida(s)",
-      markAllRead: "Marcar todas como lidas",
-      readAll: "Ler todas",
-      all: "Todas ({count})",
-      unread: "Não Lidas ({count})",
-      loading: "A carregar notificações...",
-      empty: "Nenhuma notificação encontrada",
-      loadMore: "Carregar mais",
-      buttonTitle: "Inbox de Notificações",
-    },
     syncStatus: {
       syncing: "A sincronizar...",
       syncingTooltip: "A sincronizar dados locais com o servidor...",

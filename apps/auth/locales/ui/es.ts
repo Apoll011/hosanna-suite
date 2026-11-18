@@ -149,6 +149,7 @@ export const es: typeof pt = {
       desc: "Desbloquea sincronización, impresión y copias de seguridad",
       startBtn: "Empezar prueba gratis",
       note: "Sin cargo hoy. Cancela cuando quieras durante la prueba.",
+      skip: "Ahora no",
       features: {
         sync: "Sincronización en la nube entre dispositivos",
         unlimited: "Canciones y cultos ilimitados",

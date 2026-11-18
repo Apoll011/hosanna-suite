@@ -28,6 +28,18 @@ export { cn, type ClassValue } from "./cn";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
 export { GoogleTextField, type GoogleTextFieldProps } from "./GoogleTextField";
+export {
+  InboxButton,
+  InboxPanel,
+  inboxBadgeLabel,
+  useInbox,
+  type InboxButtonProps,
+  type InboxFetchClient,
+  type InboxNotification,
+  type InboxPanelProps,
+  type UseInboxOptions,
+  type UseInboxReturn,
+} from "./Inbox";
 export { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "./icons/SocialIcons";
 export { Input, type InputProps } from "./Input";
 export { LoadingBar, type LoadingBarProps } from "./LoadingBar";

@@ -7,6 +7,7 @@ import { useLogosI18n } from "../../host";
 import React, { useId } from "react";
 import { useAiChatOptional } from "../context";
 import { useAiProposals } from "../../proposals/store";
+import { prefetchAiChatPanel } from "./panelChunk";
 
 /**
  * A four-point sparkle cluster. The two small stars twinkle on their own
@@ -65,6 +66,8 @@ export const AiChatToggle: React.FC = () => {
     <button
       type="button"
       onClick={chat.toggle}
+      onPointerEnter={prefetchAiChatPanel}
+      onFocus={prefetchAiChatPanel}
       title={`${label} (Ctrl+Shift+L)`}
       aria-label={label}
       aria-pressed={chat.open}

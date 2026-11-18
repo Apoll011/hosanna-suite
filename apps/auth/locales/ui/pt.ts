@@ -147,6 +147,7 @@ export const pt = {
       desc: "Ative sincronização, impressão e backups para a equipa",
       startBtn: "Começar grátis",
       note: "Sem cobrança hoje. Cancele a qualquer momento durante o trial.",
+      skip: "Agora não",
       features: {
         sync: "Sincronização na cloud",
         unlimited: "Músicas e cultos ilimitados",

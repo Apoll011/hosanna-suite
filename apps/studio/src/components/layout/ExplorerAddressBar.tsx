@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Button, Input, Can, CanAny } from "@hosanna/ui";
+import { Button, Input, Can, CanAny, InboxButton } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import {
@@ -35,7 +35,6 @@ import { authClient } from "../../lib/authClient";
 
 import { emitOnboardingEvent } from "../../lib/tour";
 import { AiChatToggle } from "@hosanna/logos-ai";
-import { InboxButton, InboxFetchClient } from "../Inbox";
 import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
 import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 import { SyncStatusBadge } from "../SyncStatusBadge";
@@ -82,7 +81,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
   navigate,
   onOpenModal,
 }) => {
-  const { t, locale } = useI18n();
+  const { t, locale, language } = useI18n();
   const isDriveRoot = view === "explorer" && currentFolderId === null;
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
   const [isSearchHelpOpen, setIsSearchHelpOpen] = useState(false);
@@ -422,7 +421,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
 
         <SyncStatusBadge className="shrink-0" showText={false} />
 
-        <InboxButton client={authClient as InboxFetchClient} className="shrink-0" />
+        <InboxButton client={authClient} language={language} className="shrink-0" />
 
         <AiChatToggle />
         <StudioAppSwitcher />
