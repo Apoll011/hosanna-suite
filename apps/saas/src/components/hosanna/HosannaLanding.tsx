@@ -91,17 +91,6 @@ function Problem() {
           ))}
         </div>
       </div>
-      <div className="reveal mt-20 text-center">
-        <blockquote className="mx-auto max-w-4xl">
-          <p className="font-display text-3xl leading-tight italic text-white md:text-5xl">
-            {t("landing.problem.verse")}
-          </p>
-
-          <footer className="mt-4 text-base font-medium text-white/60">
-            — {t("landing.problem.s1506")}
-          </footer>
-        </blockquote>
-      </div>
     </section>
   );
 }
