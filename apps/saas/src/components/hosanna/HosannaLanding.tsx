@@ -43,7 +43,6 @@ import Hero from "../ui/Hero";
 import HeroHeader from "../ui/HeroHeader";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
-import { SectionLiquidBg } from "../ui/SectionLiquidBg";
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -91,9 +90,8 @@ function Problem() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16 font-sans">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative bg-background py-16 md:py-16 font-sans">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.problem.eyebrow")} title={t("landing.problem.title")}>
           {t("landing.problem.description")}
         </SectionHeader>
@@ -101,21 +99,21 @@ function Problem() {
           {dict.landing.problem.cards.map((c: { title: string; body: string }) => (
             <div
               key={c.title}
-              className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 text-center transition-all hover:bg-white/10 hover:border-white/20 group shadow-lg"
+              className="rounded-3xl border border-blue-50 bg-white p-8 text-center transition-all hover:shadow-lg group shadow-sm"
             >
-              <h3 className="font-display text-2xl text-white mb-3">{c.title}</h3>
-              <p className="text-base leading-relaxed text-blue-100/75">{c.body}</p>
+              <h3 className="font-display text-2xl text-primary mb-3">{c.title}</h3>
+              <p className="text-base leading-relaxed text-muted-foreground">{c.body}</p>
             </div>
           ))}
         </div>
       </div>
-      <div className="relative z-10 reveal mt-20 text-center">
+      <div className="reveal mt-20 text-center">
         <blockquote className="mx-auto max-w-4xl">
-          <p className="font-display text-3xl leading-tight italic text-transparent bg-clip-text bg-linear-to-r from-blue-200 via-sky-300 to-white md:text-5xl">
+          <p className="font-display text-3xl leading-tight italic text-primary md:text-5xl">
             {t("landing.problem.verse")}
           </p>
 
-          <footer className="mt-4 text-base font-medium text-blue-200/60">
+          <footer className="mt-4 text-base font-medium text-muted-foreground">
             — {t("landing.problem.s1506")}
           </footer>
         </blockquote>
@@ -128,20 +126,19 @@ function TwoApps() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="features" className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section id="features" className="relative bg-secondary py-16 md:py-16">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.twoApps.eyebrow")} title={t("landing.twoApps.title")}>
           {t("landing.twoApps.description")}
         </SectionHeader>
 
         <div className="mt-16 grid gap-8 lg:grid-cols-2">
-          <div className="reveal group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 md:p-10">
+          <div className="reveal group relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-10">
             <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-sky-300">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
                 <Monitor className="h-5 w-5" />
               </div>
-              <h3 className="font-display text-2xl text-white">
+              <h3 className="font-display text-2xl text-foreground">
                 {t("landing.twoApps.dashboardTitle")}
               </h3>
             </div>
@@ -156,7 +153,7 @@ function TwoApps() {
             />
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {dict.landing.twoApps.dashboardFeatures.map((f: string) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-blue-100/90">
+                <li key={f} className="flex items-start gap-2 text-sm text-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <span>{f}</span>
                 </li>
@@ -164,16 +161,16 @@ function TwoApps() {
             </ul>
           </div>
 
-          <div className="reveal group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 md:p-10">
+          <div className="reveal group relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-10">
             <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-sky-300">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
                 <Smartphone className="h-5 w-5" />
               </div>
-              <h3 className="font-display text-2xl text-white">
+              <h3 className="font-display text-2xl text-foreground">
                 {t("landing.twoApps.mobileTitle")}
               </h3>
             </div>
-            <div className="mt-8 grid place-items-center rounded-xl bg-white/5 border border-white/5 p-6">
+            <div className="mt-8 grid place-items-center rounded-xl bg-secondary/60 p-6">
               <img
                 src={mobileImg}
                 alt="Mobile app preview"
@@ -185,7 +182,7 @@ function TwoApps() {
             </div>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {dict.landing.twoApps.mobileFeatures.map((f: string) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-blue-100/90">
+                <li key={f} className="flex items-start gap-2 text-sm text-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
                   <span>{f}</span>
                 </li>
@@ -203,9 +200,8 @@ function Organize() {
   const icons = [FolderTree, Search, Music];
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section className="bg-background py-16 md:py-16">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.organize.eyebrow")} title={t("landing.organize.title")}>
           {t("landing.organize.description")}
         </SectionHeader>
@@ -215,13 +211,13 @@ function Organize() {
             return (
               <div
                 key={card.title}
-                className="reveal rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-8 transition-all hover:-translate-y-1 hover:bg-white/10 hover:border-white/20"
+                className="reveal rounded-2xl border border-border bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-soft"
               >
-                <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-white/10 text-sky-300">
+                <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary-dark">
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-display text-xl font-semibold text-white">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-blue-100/75">{card.body}</p>
+                <h3 className="font-display text-xl font-semibold text-foreground">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
               </div>
             );
           })}
@@ -235,7 +231,7 @@ function AppGallery() {
   return (
     <LazySection
       load={() => import("./AppGallery")}
-      fallback={<section className="py-16 md:py-16" aria-hidden />}
+      fallback={<section className="bg-secondary py-16 md:py-16" aria-hidden />}
       rootMargin="500px"
     />
   );
@@ -245,12 +241,11 @@ function HowItWorks() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="how" className="relative overflow-hidden py-16 text-primary-foreground md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="pointer-events-none absolute inset-0 text-gold/25 z-0">
+    <section id="how" className="relative bg-primary py-16 text-primary-foreground md:py-16">
+      <div className="absolute inset-0 text-gold/25">
         <StaffLines className="top-16" />
       </div>
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+      <div className="relative mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader
           eyebrow={t("landing.howItWorks.eyebrow")}
           title={t("landing.howItWorks.title")}
@@ -293,32 +288,31 @@ function LiveWorship() {
   ];
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
+    <section className="bg-background py-16 md:py-16">
+      <div className="mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
         <div className="reveal">
-          <h2 className="font-display text-3xl leading-tight tracking-tight text-white md:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl">
             {t("landing.liveWorship.title")}
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-blue-100/75 md:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
             {t("landing.liveWorship.description")}
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {items.map(({ icon: Icon, label }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4"
+                className="flex items-center gap-3 rounded-xl border border-border bg-card p-4"
               >
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/10 text-sky-300">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary-dark">
                   <Icon className="h-4 w-4" />
                 </div>
-                <span className="text-sm font-medium text-white">{label}</span>
+                <span className="text-sm font-medium text-foreground">{label}</span>
               </div>
             ))}
           </div>
         </div>
         <div className="reveal relative">
-          <div className="absolute -inset-6 rounded-3xl bg-linear-to-br from-blue-400/20 via-transparent to-sky-400/10 blur-2xl" />
+          <div className="absolute -inset-6 rounded-3xl bg-linear-to-br from-gold/20 via-transparent to-primary/10 blur-2xl" />
           <img
             src={mobileImg}
             alt="Hosanna mobile live worship view"
@@ -337,28 +331,27 @@ function AnySize() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section className="bg-secondary py-16 md:py-16">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.anySize.eyebrow")} title={t("landing.anySize.title")}>
           {t("landing.anySize.description")}
         </SectionHeader>
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          <div className="reveal rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-8">
+          <div className="reveal rounded-2xl border border-border bg-card p-8">
             <ShieldCheck className="h-8 w-8 text-gold" />
-            <h3 className="mt-4 font-display text-xl font-semibold text-white">
+            <h3 className="mt-4 font-display text-xl font-semibold text-foreground">
               {t("landing.anySize.privateLibTitle")}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-blue-100/75">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {t("landing.anySize.privateLibBody")}
             </p>
           </div>
-          <div className="reveal rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-8">
+          <div className="reveal rounded-2xl border border-border bg-card p-8">
             <Users className="h-8 w-8 text-gold" />
-            <h3 className="mt-4 font-display text-xl font-semibold text-white">
+            <h3 className="mt-4 font-display text-xl font-semibold text-foreground">
               {t("landing.anySize.multiTeamTitle")}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-blue-100/75">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {t("landing.anySize.multiTeamBody")}
             </p>
           </div>
@@ -372,17 +365,16 @@ function ExportSection() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <section className="bg-background py-16 md:py-16">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
         <div className="reveal">
-          <h2 className="font-display text-3xl leading-tight tracking-tight text-white md:text-4xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
             {t("landing.export.title")}
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-blue-100/75 md:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
             {t("landing.export.description")}
           </p>
-          <ul className="mt-6 space-y-3 text-sm text-blue-100/90">
+          <ul className="mt-6 space-y-3 text-sm text-foreground">
             {dict.landing.export.bullets.map((b: string) => (
               <li key={b} className="flex items-start gap-2">
                 <Check className="mt-0.5 h-4 w-4 text-gold" /> {b}
@@ -391,21 +383,21 @@ function ExportSection() {
           </ul>
         </div>
         <div className="reveal">
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 shadow-soft">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-blue-200">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
               <FileDown className="h-4 w-4 text-gold" /> {t("landing.export.sampleServiceTitle")}
             </div>
             <div className="space-y-2 text-sm">
               {dict.landing.export.sampleItems.map((s: string, i: number) => (
                 <div
                   key={s}
-                  className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                  className="flex items-center justify-between rounded-lg border border-border/70 bg-secondary/40 px-3 py-2"
                 >
-                  <span className="font-medium text-white">
-                    <span className="mr-2 text-blue-200/60">{i + 1}.</span>
+                  <span className="font-medium text-foreground">
+                    <span className="mr-2 text-muted-foreground">{i + 1}.</span>
                     {s}
                   </span>
-                  <span className="text-xs text-blue-200/60">PDF</span>
+                  <span className="text-xs text-muted-foreground">PDF</span>
                 </div>
               ))}
             </div>
@@ -445,15 +437,14 @@ function Pricing() {
   const unit = annual ? t("landing.pricing.perYearUnit") : t("landing.pricing.perMonthUnit");
 
   return (
-    <section id="pricing" className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section id="pricing" className="bg-secondary py-16 md:py-16">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.pricing.eyebrow")} title={t("landing.pricing.title")}>
           {t("landing.pricing.description")}
         </SectionHeader>
 
         <div className="reveal mt-10 flex items-center justify-center">
-          <div className="relative flex w-full max-w-70 items-center rounded-2xl bg-white/10 border border-white/15 p-1.5 shadow-inner backdrop-blur-md">
+          <div className="relative flex w-full max-w-70 items-center rounded-2xl bg-secondary p-1.5 shadow-inner">
             <div
               className={cn(
                 "absolute inset-y-1.5 h-[calc(100%-12px)] w-[calc(50%-6px)] rounded-xl bg-white shadow-sm transition-all duration-300 ease-out",
@@ -464,7 +455,7 @@ function Pricing() {
               onClick={() => setAnnual(false)}
               className={cn(
                 "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
-                !annual ? "text-[#021433]" : "text-blue-100/75 hover:text-white",
+                !annual ? "text-primary" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {t("landing.pricing.monthly")}
@@ -473,7 +464,7 @@ function Pricing() {
               onClick={() => setAnnual(true)}
               className={cn(
                 "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
-                annual ? "text-[#021433]" : "text-blue-100/75 hover:text-white",
+                annual ? "text-primary" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {t("landing.pricing.annual")}
@@ -485,21 +476,21 @@ function Pricing() {
         </div>
 
         <div className="reveal mx-auto mt-12 max-w-2xl">
-          <div className="relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-8 text-primary-foreground shadow-2xl md:p-12">
+          <div className="relative overflow-hidden rounded-3xl border border-transparent bg-primary p-8 text-primary-foreground shadow-soft md:p-12">
             <div className="absolute inset-0 text-gold/20 pointer-events-none">
               <StaffLines className="top-0" />
             </div>
             <div className="relative">
-              <div className="font-display text-4xl font-semibold md:text-5xl text-white">Hosanna</div>
-              <p className="mt-2 text-blue-100/80">
+              <div className="font-display text-4xl font-semibold md:text-5xl">Hosanna</div>
+              <p className="mt-2 text-primary-foreground/75">
                 {t("landing.pricing.singlePlanDesc")}
               </p>
 
               <div className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-semibold md:text-7xl text-white">{price}€</span>
-                <span className="text-blue-100/70">{unit}</span>
+                <span className="font-display text-6xl font-semibold md:text-7xl">{price}€</span>
+                <span className="text-primary-foreground/70">{unit}</span>
               </div>
-              <p className="mt-1 text-xs text-blue-200/60">
+              <p className="mt-1 text-xs text-primary-foreground/60">
                 {annual
                   ? t("landing.pricing.annualBilledNote")
                   : t("landing.pricing.monthlyBilledNote")}
@@ -511,7 +502,7 @@ function Pricing() {
                 {dict.landing.pricing.features.map((f: string) => (
                   <li key={f} className="flex items-start gap-2 text-sm">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                    <span className="text-blue-50/90">{f}</span>
+                    <span className="text-primary-foreground/90">{f}</span>
                   </li>
                 ))}
               </ul>
@@ -525,20 +516,20 @@ function Pricing() {
                   {t("landing.pricing.ctaTry")} <ArrowRight className="ml-1 h-4 w-4" />
                 </a>
               </Button>
-              <p className="mt-3 text-center text-xs text-blue-200/60">
+              <p className="mt-3 text-center text-xs text-primary-foreground/60">
                 {t("landing.pricing.freeTrialDays")}
               </p>
             </div>
           </div>
 
-          <p className="reveal mt-6 text-center text-sm text-blue-200/70">
+          <p className="reveal mt-6 text-center text-sm text-muted-foreground">
             {t("landing.pricing.pricingClarification")}
           </p>
 
-          <div className="reveal mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md px-5 py-4 text-sm text-blue-100/80">
-            <Users className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" />
+          <div className="reveal mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-border bg-card px-5 py-4 text-sm text-muted-foreground">
+            <Users className="mt-0.5 h-4 w-4 shrink-0 text-primary-dark" />
             <p>
-              <span className="font-medium text-white">
+              <span className="font-medium text-foreground">
                 {t("landing.pricing.multiCampusLabel")}
               </span>{" "}
               {t("landing.pricing.multiCampusText")}
@@ -554,10 +545,9 @@ function MobileApp() {
   const { t } = useI18n();
 
   return (
-    <section id="mobile" className="relative overflow-hidden py-16 text-primary-foreground font-sans">
-      <SectionLiquidBg variant="blue" />
-      <div className="pointer-events-none absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)] z-0" />
-      <div className="container relative z-10 mx-auto px-5 md:px-8 max-w-7xl">
+    <section id="mobile" className="py-16 bg-primary overflow-hidden relative font-sans">
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
+      <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 reveal">
             <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium">
@@ -596,19 +586,18 @@ function Vision() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-3xl px-5 text-center md:px-8">
+    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+      <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
         <div className="reveal text-xs font-semibold uppercase tracking-[0.2em] text-gold">
           {t("landing.vision.eyebrow")}
         </div>
-        <p className="reveal mt-6 font-display text-3xl leading-snug text-white md:text-4xl lg:text-5xl">
+        <p className="reveal mt-6 font-display text-3xl leading-snug text-foreground md:text-4xl lg:text-5xl">
           {t("landing.vision.quote1")}
         </p>
-        <p className="reveal mt-6 text-base leading-relaxed text-blue-100/75 md:text-lg">
+        <p className="reveal mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
           {t("landing.vision.body")}
         </p>
-        <p className="reveal mt-8 font-display text-lg italic text-transparent bg-clip-text bg-linear-to-r from-blue-200 via-sky-300 to-white md:text-xl">
+        <p className="reveal mt-8 font-display text-lg italic text-primary-dark md:text-xl">
           {t("landing.vision.quote2")}
         </p>
       </div>
@@ -623,37 +612,36 @@ function OpenSource() {
   const { t } = useI18n();
 
   return (
-    <section id="open-source" className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
+    <section id="open-source" className="bg-secondary py-16 md:py-16">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
         <div className="reveal">
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
             {t("landing.openSource.eyebrow")}
           </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-white md:text-4xl">
+          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
             {t("landing.openSource.title")}
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-blue-100/75 md:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             {t("landing.openSource.body")}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild className="rounded-full bg-white text-primary-dark hover:bg-blue-50">
+            <Button asChild className="rounded-full">
               <a href={githubAppUrl} target="_blank" rel="noreferrer">
                 <Code2 className="mr-2 h-4 w-4" />
                 {t("landing.openSource.ctaApp")}
               </a>
             </Button>
-            <Button asChild variant="outline" className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10">
+            <Button asChild variant="outline" className="rounded-full">
               <a href={githubStudioUrl} target="_blank" rel="noreferrer">
                 {t("landing.openSource.ctaStudio")}
               </a>
             </Button>
           </div>
         </div>
-        <div className="reveal hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 text-sm text-blue-100/80 md:block">
-          <div className="font-mono text-xs text-white">Apache License 2.0</div>
-          <div className="mt-2 text-sky-300">github.com/Apoll011/Hosanna</div>
-          <div className="text-sky-300">github.com/Apoll011/hosanna-studio</div>
+        <div className="reveal hidden rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground md:block">
+          <div className="font-mono text-xs text-foreground">Apache License 2.0</div>
+          <div className="mt-2">github.com/Apoll011/Hosanna</div>
+          <div>github.com/Apoll011/hosanna-studio</div>
         </div>
       </div>
     </section>
@@ -668,9 +656,8 @@ function SupportTheMission() {
     "https://www.gofundme.com/f/ajudenos-a-levar-o-hosanna-a-igrejas-de-todo-o-mundo";
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section className="bg-secondary py-16 md:py-16">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.support.eyebrow")} title={t("landing.support.title")}>
           {t("landing.support.description")}
         </SectionHeader>
@@ -679,7 +666,7 @@ function SupportTheMission() {
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-white text-primary-dark hover:bg-blue-50 transition-all hover:scale-105 active:scale-95 shadow-lg"
+            className="rounded-full bg-primary-dark text-primary-foreground"
           >
             <a href={goFundMeUrl} target="_blank" rel="noopener noreferrer">
               {t("landing.support.cta")} <ArrowRight className="ml-2 h-5 w-5" />
@@ -695,16 +682,15 @@ function Roadmap() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
+    <section className="bg-background py-16 md:py-16">
+      <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.roadmap.eyebrow")} title={t("landing.roadmap.title")}>
           {t("landing.roadmap.description")}
         </SectionHeader>
         <div className="reveal mt-14 grid gap-x-12 sm:grid-cols-2">
           {dict.landing.roadmap.items.map((item: string) => (
-            <div key={item} className="flex items-center border-b border-white/10 py-5">
-              <span className="text-sm leading-relaxed text-white">{item}</span>
+            <div key={item} className="flex items-center border-b border-border py-5">
+              <span className="text-sm leading-relaxed text-foreground">{item}</span>
             </div>
           ))}
         </div>
@@ -717,20 +703,19 @@ function FAQ() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="faq" className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="relative z-10 mx-auto max-w-3xl px-5 md:px-8">
+    <section id="faq" className="bg-secondary py-16 md:py-16">
+      <div className="mx-auto max-w-3xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.faq.eyebrow")} title={t("landing.faq.title")}>
           {t("landing.faq.description")}
         </SectionHeader>
         <div className="reveal mt-12">
           <Accordion type="single" collapsible className="w-full">
             {dict.landing.faq.items.map((f: { q: string; a: string }, i: number) => (
-              <AccordionItem key={f.q} value={`item-${i}`} className="border-white/15">
-                <AccordionTrigger className="text-left font-display text-lg font-medium text-white hover:text-sky-300 hover:no-underline">
+              <AccordionItem key={f.q} value={`item-${i}`} className="border-border">
+                <AccordionTrigger className="text-left font-display text-lg font-medium text-foreground hover:no-underline">
                   {f.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-base leading-relaxed text-blue-100/75">
+                <AccordionContent className="text-base leading-relaxed text-muted-foreground">
                   {f.a}
                 </AccordionContent>
               </AccordionItem>
@@ -746,13 +731,12 @@ function FinalCTA() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden py-16 text-primary-foreground md:py-16">
-      <SectionLiquidBg variant="blue" />
-      <div className="pointer-events-none absolute inset-0 text-gold/30 z-0">
+    <section className="relative overflow-hidden bg-hero-gradient py-16 text-primary-foreground md:py-16">
+      <div className="absolute inset-0 text-gold/30">
         <StaffLines className="top-10" />
         <StaffLines className="bottom-10" />
       </div>
-      <div className="relative z-10 mx-auto max-w-3xl px-5 text-center md:px-8">
+      <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
         <h2 className="reveal font-display text-4xl leading-tight tracking-tight md:text-6xl text-white">
           {t("landing.finalCta.title")}
         </h2>
@@ -847,17 +831,17 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-[#010c1e] border-t border-white/10 text-white py-20">
+    <footer className="bg-secondary py-20">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-10 px-5 md:grid-cols-4 md:px-8">
         <div className="col-span-2 md:col-span-1">
           <Logo />
-          <p className="mt-4 text-sm text-blue-100/70 leading-relaxed">
+          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
             {t("landing.footer.tagline")}
           </p>
         </div>
         {footerCols.map((col) => (
           <div key={col.title}>
-            <div className="text-xs font-bold uppercase tracking-widest text-white/90 font-sans">
+            <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground font-sans">
               {col.title}
             </div>
             <ul className="mt-6 space-y-3 text-sm font-sans">
@@ -866,14 +850,14 @@ export function Footer() {
                   {isInternal ? (
                     <Link
                       to={href}
-                      className="text-blue-100/70 transition-colors hover:text-white"
+                      className="text-muted-foreground transition-colors hover:text-primary"
                     >
                       {label}
                     </Link>
                   ) : (
                     <a
                       href={href}
-                      className="text-blue-100/70 transition-colors hover:text-white"
+                      className="text-muted-foreground transition-colors hover:text-primary"
                       {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
                     >
                       {label}
@@ -885,14 +869,14 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="mx-auto mt-16 flex max-w-7xl flex-col items-center justify-between gap-6 border-t border-white/10 px-5 pt-8 text-xs text-blue-200/60 md:flex-row md:px-8">
+      <div className="mx-auto mt-16 flex max-w-7xl flex-col items-center justify-between gap-6 border-t border-border px-5 pt-8 text-xs text-muted-foreground md:flex-row md:px-8">
         <div>
           © {new Date().getFullYear()} Hosanna Studio. {t("landing.footer.copyright")}
         </div>
         <div className="flex gap-8">
           <a
             href="mailto:hosanna.songbook@gmail.com"
-            className="hover:text-white transition-colors flex items-center gap-2"
+            className="hover:text-primary transition-colors flex items-center gap-2"
           >
             <Mail className="w-3 h-3" />
             hosanna.songbook@gmail.com
@@ -907,7 +891,7 @@ export function HosannaLanding() {
   useReveal();
   const rootRef = useRef<HTMLDivElement>(null);
   return (
-    <div ref={rootRef} className="min-h-screen bg-[#021433] font-sans text-white antialiased selection:bg-sky-500/30 selection:text-white">
+    <div ref={rootRef} className="min-h-screen bg-background font-sans text-foreground antialiased">
       <main>
         <Hero />
         <Problem />

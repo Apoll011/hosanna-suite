@@ -80,12 +80,12 @@ export function InteractiveFolderGallery({
     >
       <div className="text-center mb-10 max-w-lg mx-auto px-4">
         {title && (
-          <h2 className="font-display text-3xl md:text-4xl text-white mb-3 font-medium tracking-tight">
+          <h2 className="font-display text-3xl md:text-4xl text-foreground mb-3 font-medium tracking-tight">
             {title}
           </h2>
         )}
         {description && (
-          <p className="text-sm md:text-base text-blue-100/80 leading-relaxed">
+          <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
             {description}
           </p>
         )}
@@ -116,7 +116,7 @@ export function InteractiveFolderGallery({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-4 text-[11px] font-medium uppercase tracking-widest text-blue-200/80 text-center h-4"
+            className="mt-4 text-[11px] font-medium uppercase tracking-widest text-muted-foreground text-center h-4"
           >
             {activePhoto.caption}
           </motion.p>
