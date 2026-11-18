@@ -53,7 +53,7 @@ export function CookieBanner() {
         aria-labelledby="cookie-banner-title"
         aria-describedby="cookie-banner-desc"
         className={cn(
-          "pointer-events-auto w-full md:w-[420px] max-w-full font-sans",
+          "pointer-events-auto w-full md:w-105 max-w-full font-sans",
           "rounded-2xl border border-white/15 bg-slate-900/95 backdrop-blur-md p-4 text-white shadow-2xl",
           "transition-all duration-200 ease-in-out motion-reduce:transition-none",
           "animate-in fade-in zoom-in-[0.98] duration-200 motion-reduce:animate-none",
@@ -90,7 +90,7 @@ export function CookieBanner() {
           </button>
         </div>
 
-        <div className="mt-3.5 space-y-2 rounded-xl bg-white/[0.06] border border-white/10 p-3 text-xs leading-normal">
+        <div className="mt-3.5 space-y-2 rounded-xl bg-white/6 border border-white/10 p-3 text-xs leading-normal">
           <div className="flex flex-col gap-0.5">
             <span className="font-medium text-slate-100">
               {t("cookieConsent.essentialTitle")}
