@@ -1,6 +1,7 @@
 import {
   createAnalyticsClient,
   detectRuntimeEnv,
+  getStoredConsent,
   isAnalyticsEnabled,
   posthog,
   resolvePostHogConfig,
@@ -11,6 +12,7 @@ import {
 const env = detectRuntimeEnv();
 const enabled = isAnalyticsEnabled(env);
 const config = resolvePostHogConfig(env);
+const hasConsent = typeof window !== "undefined" ? getStoredConsent()?.choice === "all" : true;
 
 if (!enabled && typeof window !== "undefined") {
   console.info(
@@ -29,10 +31,23 @@ export const authAnalytics = createAnalyticsClient<AuthEventMap>({
   appName: "auth",
   apiKey: config?.token,
   apiHost: config?.host,
-  enabled: Boolean(config),
+  enabled: Boolean(config) && hasConsent,
 });
 
 setGlobalAnalyticsClient(authAnalytics);
+
+if (typeof window !== "undefined") {
+  window.addEventListener("hosanna:cookie-consent-change", () => {
+    const consent = getStoredConsent();
+    const ph = authAnalytics.getPostHog();
+    if (!ph) return;
+    if (consent?.choice === "all") {
+      ph.opt_in_capturing();
+    } else {
+      ph.opt_out_capturing();
+    }
+  });
+}
 
 export function track<K extends keyof AuthEventMap>(name: K, props?: AuthEventMap[K]): void {
   authAnalytics.track(name, props);

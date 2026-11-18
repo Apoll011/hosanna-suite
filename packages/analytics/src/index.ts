@@ -9,3 +9,4 @@ export * from "./events.js";
 export * from "./errors.js";
 export * from "./client.js";
 export * from "./react.js";
+export * from "./consent.js";
