@@ -8,10 +8,10 @@ Local-only guidance for **any** coding agent working in this monorepo (`AGENTS.m
 
 ## 1. What this file is (and alternatives)
 
-| File                   | Best for                                                                            |
-| ---------------------- | ----------------------------------------------------------------------------------- |
-| **`AGENTS.md` (this)** | Portable, cross-tool handbook (Cursor, Claude Code, Codex, …). **Use this.**        |
-| `CLAUDE.md`            | Claude Code–specific shorthand                                                      |
+| File                   | Best for                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| **`AGENTS.md` (this)** | Portable, cross-tool handbook (Cursor, Claude Code, Codex, …). **Use this.** |
+| `CLAUDE.md`            | Claude Code–specific shorthand                                               |
 
 Do **not** duplicate this handbook into committed rules unless asked. Per-app extras can live later as `apps/<app>/AGENTS.md` (also gitignore if personal) when a surface needs deeper local rules.
 
