@@ -255,12 +255,12 @@ function LiveWorship() {
             {items.map(({ icon: Icon, label }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 rounded-xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-4 text-white shadow-sm"
+                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
               >
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#021433]/8 border border-[#0538A6]/20 text-[#0538A6]">
                   <Icon className="h-4 w-4" />
                 </div>
-                <span className="text-sm font-medium text-white">{label}</span>
+                <span className="text-sm font-medium text-[#021433]">{label}</span>
               </div>
             ))}
           </div>
@@ -337,22 +337,22 @@ function ExportSection() {
           </ul>
         </div>
         <div className="reveal">
-          <div className="rounded-2xl border border-white/15 bg-slate-900/70 backdrop-blur-md p-6 shadow-2xl text-white">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-cyan-300">
-              <FileDown className="h-4 w-4 text-cyan-300" />{" "}
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg text-[#021433]">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-[#0538A6]">
+              <FileDown className="h-4 w-4 text-[#0538A6]" />{" "}
               {t("landing.export.sampleServiceTitle")}
             </div>
             <div className="space-y-2 text-sm">
               {dict.landing.export.sampleItems.map((s: string, i: number) => (
                 <div
                   key={s}
-                  className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white"
+                  className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-[#021433]"
                 >
-                  <span className="font-medium text-white">
-                    <span className="mr-2 text-white/60">{i + 1}.</span>
+                  <span className="font-medium text-[#021433]">
+                    <span className="mr-2 text-slate-400">{i + 1}.</span>
                     {s}
                   </span>
-                  <span className="text-xs text-white/60">PDF</span>
+                  <span className="text-xs text-slate-400">PDF</span>
                 </div>
               ))}
             </div>
@@ -438,20 +438,20 @@ function Pricing() {
         </div>
 
         <div className="reveal mx-auto mt-12 max-w-2xl">
-          <div className="relative overflow-hidden rounded-3xl border border-white/20 bg-slate-900/75 backdrop-blur-xl p-8 text-white shadow-2xl md:p-12">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl md:p-12">
             <div className="relative">
-              <div className="font-display text-4xl font-semibold md:text-5xl text-white">
+              <div className="font-display text-4xl font-semibold md:text-5xl text-[#021433]">
                 Hosanna
               </div>
-              <p className="mt-2 text-white/75">{t("landing.pricing.singlePlanDesc")}</p>
+              <p className="mt-2 text-slate-500">{t("landing.pricing.singlePlanDesc")}</p>
 
               <div className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-semibold md:text-7xl text-cyan-300">
+                <span className="font-display text-6xl font-semibold md:text-7xl text-[#0538A6]">
                   {price}€
                 </span>
-                <span className="text-white/70">{unit}</span>
+                <span className="text-slate-500">{unit}</span>
               </div>
-              <p className="mt-1 text-xs text-white/60">
+              <p className="mt-1 text-xs text-slate-400">
                 {annual
                   ? t("landing.pricing.annualBilledNote")
                   : t("landing.pricing.monthlyBilledNote")}
@@ -461,8 +461,8 @@ function Pricing() {
 
               <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                 {dict.landing.pricing.features.map((f: string) => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-white/90">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                  <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#0538A6]" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -471,13 +471,13 @@ function Pricing() {
               <Button
                 asChild
                 size="lg"
-                className="mt-10 w-full rounded-full bg-cyan-400 text-slate-950 font-bold hover:bg-cyan-300 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
+                className="mt-10 w-full rounded-full bg-[#021433] text-white font-bold hover:bg-[#0538A6] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
               >
                 <a href={`${dashboardUrl}/?plan=base&payment=${annual ? "yearly" : "monthly"}`}>
                   {t("landing.pricing.ctaTry")} <ArrowRight className="ml-1 h-4 w-4" />
                 </a>
               </Button>
-              <p className="mt-3 text-center text-xs text-white/60">
+              <p className="mt-3 text-center text-xs text-slate-400">
                 {t("landing.pricing.freeTrialDays")}
               </p>
             </div>
@@ -596,10 +596,10 @@ function OpenSource() {
             </Button>
           </div>
         </div>
-        <div className="reveal hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-6 text-sm text-white/80 md:block">
-          <div className="font-mono text-xs text-cyan-300">Apache License 2.0</div>
-          <div className="mt-2 text-white/70">github.com/Apoll011/Hosanna</div>
-          <div className="text-white/70">github.com/Apoll011/hosanna-suite</div>
+        <div className="reveal hidden rounded-2xl border border-slate-200 bg-white p-6 text-sm shadow-lg md:block">
+          <div className="font-mono text-xs text-[#0538A6] font-bold">Apache License 2.0</div>
+          <div className="mt-2 text-slate-600">github.com/Apoll011/Hosanna</div>
+          <div className="text-slate-600">github.com/Apoll011/hosanna-suite</div>
         </div>
       </div>
     </section>
@@ -733,7 +733,6 @@ export function Footer() {
   const colSocial = [
     { label: "GitHub", href: githubAppUrl },
     { label: "Instagram", href: "https://www.instagram.com/hosanna.studio" },
-    { label: "YouTube", href: "https://www.youtube.com/@hosanna.studio" },
     { label: "Blog", href: "https://blog.hosanna.live" },
   ];
 

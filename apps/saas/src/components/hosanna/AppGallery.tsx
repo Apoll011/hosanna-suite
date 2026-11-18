@@ -60,10 +60,10 @@ export default function AppGallery() {
   return (
     <section
       ref={trackRef}
-      className="relative h-[400vh] w-full bg-transparent font-sans"
+      className="relative z-10 h-[400vh] w-full bg-transparent font-sans"
       aria-label={t("landing.gallery.title")}
     >
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-4 md:px-8">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center [overflow:clip] px-4 md:px-8">
         <div className="mx-auto max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           {/* Context text + 4-dot indicator */}
           <div className="lg:col-span-5 flex flex-col justify-center text-left z-10">
@@ -130,7 +130,7 @@ export default function AppGallery() {
 
           {/* Sticky Portrait Photo Frame */}
           <div className="lg:col-span-7 flex justify-center lg:justify-end items-center">
-            <div className="relative aspect-[3/4] md:aspect-[4/5] max-h-[52vh] sm:max-h-[64vh] md:max-h-[76vh] w-auto overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none">
+            <div className="relative z-10 aspect-[3/4] md:aspect-[4/5] max-h-[65vh] md:max-h-[75vh] w-auto overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none">
               {galleryPhotos.map((photo, i) => {
                 let translateY = "0%";
                 if (i === 1) {
