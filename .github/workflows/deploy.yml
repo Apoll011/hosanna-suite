@@ -108,12 +108,14 @@ jobs:
           VITE_PUBLIC_POSTHOG_HOST: ${{ vars.VITE_PUBLIC_POSTHOG_HOST }}
 
       - name: Upload source maps to PostHog (${{ matrix.id }})
-        if: matrix.package == '@hosanna/studio' && secrets.POSTHOG_API_KEY != ''
+        if: matrix.package == '@hosanna/studio' && env.POSTHOG_API_KEY != ''
+        env:
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
         uses: PostHog/upload-source-maps@v2
         with:
           directory: ${{ matrix.dir }}/dist
           project-id: 259262
-          api-key: ${{ secrets.POSTHOG_API_KEY }}
+          api-key: ${{ env.POSTHOG_API_KEY }}
           host: https://eu.posthog.com
           release-version: ${{ github.sha }}
           delete-after-upload: "true"
