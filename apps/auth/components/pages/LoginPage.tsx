@@ -26,18 +26,9 @@ export function LoginPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const captchaRef = useRef<TurnstileHandle>(null);
+  const submitPendingRef = useRef(false);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      setErrorMsg(t("auth.login.errorInvalidCredentials"));
-      return;
-    }
-    if (captchaRequired() && !captchaToken) {
-      setErrorMsg(t("auth.captcha.pending"));
-      captchaRef.current?.show();
-      return;
-    }
+  const submitSignIn = async (token: string) => {
     setErrorMsg("");
     setIsLoading(true);
 
@@ -45,7 +36,7 @@ export function LoginPage() {
       email: email.trim(),
       password,
       rememberMe,
-      fetchOptions: captchaFetchOptions(captchaToken),
+      fetchOptions: captchaFetchOptions(token),
     });
 
     setIsLoading(false);
@@ -55,6 +46,10 @@ export function LoginPage() {
     if (error) {
       if (error.code === "TWO_FACTOR_REQUIRED" || (error as { status?: number })?.status === 403) {
         window.location.assign("/two-factor");
+        return;
+      }
+      if (error.code === "POW_CHALLENGE_REQUIRED" || (error as { status?: number })?.status === 423) {
+        setErrorMsg(t("auth.captcha.powChallenge"));
         return;
       }
       setErrorMsg(error.message || t("auth.login.errorInvalidCredentials"));
@@ -67,6 +62,23 @@ export function LoginPage() {
     }
 
     await redirectAfterSuccessfulAuth(searchParams);
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (submitPendingRef.current) return;
+    if (!email.trim() || !password.trim()) {
+      setErrorMsg(t("auth.login.errorInvalidCredentials"));
+      return;
+    }
+    if (captchaRequired() && !captchaToken) {
+      submitPendingRef.current = true;
+      setErrorMsg(t("auth.captcha.pending"));
+      setIsLoading(true);
+      captchaRef.current?.show();
+      return;
+    }
+    await submitSignIn(captchaToken);
   };
 
   return (
@@ -132,9 +144,21 @@ export function LoginPage() {
           onVerify={(token) => {
             setCaptchaToken(token);
             setErrorMsg((msg) => (msg === t("auth.captcha.pending") ? "" : msg));
+            if (submitPendingRef.current) {
+              submitPendingRef.current = false;
+              void submitSignIn(token);
+            }
           }}
-          onExpire={() => setCaptchaToken("")}
-          onError={() => setErrorMsg(t("auth.captcha.failed"))}
+          onExpire={() => {
+            setCaptchaToken("");
+            submitPendingRef.current = false;
+            setIsLoading(false);
+          }}
+          onError={() => {
+            submitPendingRef.current = false;
+            setIsLoading(false);
+            setErrorMsg(t("auth.captcha.failed"));
+          }}
         />
 
         <div className="flex items-center justify-between gap-3 pt-2">

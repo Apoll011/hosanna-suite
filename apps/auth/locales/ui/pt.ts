@@ -108,6 +108,7 @@ export const pt = {
     captcha: {
       pending: "Conclua o captcha para continuar.",
       failed: "O captcha falhou. Tente novamente.",
+      powChallenge: "Conclua a verificação de segurança para continuar.",
     },
     error: {
       title: "Erro de autenticação",

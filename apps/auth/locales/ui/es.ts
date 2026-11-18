@@ -110,6 +110,7 @@ export const es: typeof pt = {
     captcha: {
       pending: "Completa el captcha para continuar.",
       failed: "El captcha falló. Inténtalo de nuevo.",
+      powChallenge: "Completa la verificación de seguridad para continuar.",
     },
     error: {
       title: "Error de autenticación",
