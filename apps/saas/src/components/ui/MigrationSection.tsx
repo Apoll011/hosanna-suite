@@ -81,15 +81,15 @@ export function MigrationSection() {
                       onClick={() => setSelectedId(app.id)}
                       className={`group flex w-full items-center gap-3.5 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
                         isSelected
-                          ? "border-[#0538A6]/40 bg-white shadow-lg shadow-blue-900/10 text-[#021433]"
-                          : "border-slate-200 bg-white hover:border-[#0538A6]/30 hover:shadow-sm text-slate-700"
+                          ? "border-[#0284c7]/50 bg-white shadow-lg shadow-sky-900/10 text-[#021433]"
+                          : "border-slate-200 bg-white hover:border-[#0284c7]/30 hover:shadow-sm text-slate-700"
                       }`}
                     >
                       <span
                         aria-hidden="true"
                         className={`h-2 w-2 shrink-0 rounded-full transition-all duration-200 ${
                           isSelected
-                            ? "bg-[#0538A6] shadow-[0_0_8px_2px_rgba(5,56,166,0.5)]"
+                            ? "bg-[#0284c7] shadow-[0_0_8px_2px_rgba(2,132,199,0.5)]"
                             : "bg-slate-300"
                         }`}
                       />
@@ -99,7 +99,7 @@ export function MigrationSection() {
                             {app.name}
                           </span>
                           {!app.available && (
-                            <span className="text-[10px] font-bold uppercase tracking-wide text-[#0538A6] bg-blue-50 border border-[#0538A6]/20 rounded-full px-2 py-0.5">
+                            <span className="text-[10px] font-bold uppercase tracking-wide text-[#0284c7] bg-sky-50 border border-sky-200 rounded-full px-2 py-0.5">
                               {t("common.comingSoon")}
                             </span>
                           )}
@@ -122,8 +122,8 @@ export function MigrationSection() {
                 style={{ "--hm-delay": "0ms" } as HmStyle}
               >
                 <div className="hm-float flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-xl -rotate-2 text-[#021433]">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 border border-[#0538A6]/20">
-                    <Music2 className="h-5 w-5 text-[#0538A6]" />
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 border border-sky-200">
+                    <Music2 className="h-5 w-5 text-[#0284c7]" />
                   </span>
                   <span className="min-w-0">
                     <span className="block truncate font-display text-sm font-bold text-[#021433]">
@@ -180,10 +180,10 @@ export function MigrationSection() {
                       className="hm-row flex items-center gap-2.5 rounded-lg bg-slate-50 border border-slate-100 px-3 py-2 text-[#021433]"
                       style={{ "--hm-delay": "1050ms" } as HmStyle}
                     >
-                      <Music2 className="h-4 w-4 shrink-0 text-[#0538A6]" />
+                      <Music2 className="h-4 w-4 shrink-0 text-[#0284c7]" />
                       <span className="text-sm font-semibold text-[#021433]">Praise You Anywere</span>
                       <span className="text-xs text-slate-400">Elevation Worship</span>
-                      <span className="ml-auto rounded bg-blue-50 border border-[#0538A6]/20 px-1.5 py-0.5 font-display text-[10px] font-bold text-[#0538A6]">
+                      <span className="ml-auto rounded bg-sky-50 border border-sky-200 px-1.5 py-0.5 font-display text-[10px] font-bold text-[#0284c7]">
                         F#m
                       </span>
                     </div>
@@ -191,7 +191,7 @@ export function MigrationSection() {
                       className="hm-row flex items-center gap-2.5 rounded-lg bg-slate-50 border border-slate-100 px-3 py-2"
                       style={{ "--hm-delay": "1200ms" } as HmStyle}
                     >
-                      <Music2 className="h-4 w-4 shrink-0 text-[#0538A6]" />
+                      <Music2 className="h-4 w-4 shrink-0 text-[#0284c7]" />
                       <span className="block h-2 w-24 rounded bg-slate-200" />
                       <span className="ml-auto block h-2 w-6 rounded bg-slate-200" />
                     </div>
@@ -199,16 +199,16 @@ export function MigrationSection() {
                       className="hm-row flex items-center gap-2.5 rounded-lg bg-slate-50 border border-slate-100 px-3 py-2"
                       style={{ "--hm-delay": "1350ms" } as HmStyle}
                     >
-                      <Music2 className="h-4 w-4 shrink-0 text-[#0538A6]" />
+                      <Music2 className="h-4 w-4 shrink-0 text-[#0284c7]" />
                       <span className="block h-2 w-16 rounded bg-slate-200" />
                       <span className="ml-auto block h-2 w-6 rounded bg-slate-200" />
                     </div>
                     <div
-                      className="hm-row self-start mt-0.5 flex items-center gap-1.5 rounded-full border border-[#0538A6]/20 bg-blue-50 px-3 py-1 text-[#0538A6]"
+                      className="hm-row self-start mt-0.5 flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[#0284c7]"
                       style={{ "--hm-delay": "1550ms" } as HmStyle}
                     >
-                      <ListMusic className="h-3.5 w-3.5 text-[#0538A6]" />
-                      <span className="text-xs font-semibold text-[#0538A6]">
+                      <ListMusic className="h-3.5 w-3.5 text-[#0284c7]" />
+                      <span className="text-xs font-semibold text-[#0284c7]">
                         {t("migration.serviceSetlist")}
                       </span>
                     </div>

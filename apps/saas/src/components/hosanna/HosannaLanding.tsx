@@ -204,11 +204,11 @@ function HowItWorks() {
           {dict.landing.howItWorks.steps.map((s: { n: string; title: string; body: string }) => (
             <div
               key={s.n}
-              className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-7 text-white transition-all hover:-translate-y-1 shadow-xl"
+              className="reveal rounded-2xl border border-slate-200 bg-white p-7 text-[#021433] transition-all hover:-translate-y-1 shadow-lg"
             >
-              <div className="font-display text-4xl text-cyan-400 font-bold">{s.n}</div>
-              <h3 className="mt-3 font-display text-xl font-semibold text-white">{s.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/75">{s.body}</p>
+              <div className="font-display text-4xl text-[#0284c7] font-bold">{s.n}</div>
+              <h3 className="mt-3 font-display text-xl font-semibold text-[#021433]">{s.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.body}</p>
             </div>
           ))}
         </div>
@@ -247,7 +247,7 @@ function LiveWorship() {
                 key={label}
                 className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
               >
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#021433]/8 border border-[#0538A6]/20 text-[#0538A6]">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sky-50 border border-sky-200 text-[#0284c7]">
                   <Icon className="h-4 w-4" />
                 </div>
                 <span className="text-sm font-medium text-[#021433]">{label}</span>
@@ -281,21 +281,21 @@ function AnySize() {
           {t("landing.anySize.description")}
         </SectionHeader>
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          <div className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 text-white shadow-xl">
-            <ShieldCheck className="h-8 w-8 text-cyan-300" />
-            <h3 className="mt-4 font-display text-xl font-semibold text-white">
+          <div className="reveal rounded-2xl border border-slate-200 bg-white p-8 text-[#021433] shadow-lg">
+            <ShieldCheck className="h-8 w-8 text-[#0284c7]" />
+            <h3 className="mt-4 font-display text-xl font-semibold text-[#021433]">
               {t("landing.anySize.privateLibTitle")}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/75">
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
               {t("landing.anySize.privateLibBody")}
             </p>
           </div>
-          <div className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 text-white shadow-xl">
-            <Users className="h-8 w-8 text-cyan-300" />
-            <h3 className="mt-4 font-display text-xl font-semibold text-white">
+          <div className="reveal rounded-2xl border border-slate-200 bg-white p-8 text-[#021433] shadow-lg">
+            <Users className="h-8 w-8 text-[#0284c7]" />
+            <h3 className="mt-4 font-display text-xl font-semibold text-[#021433]">
               {t("landing.anySize.multiTeamTitle")}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/75">
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
               {t("landing.anySize.multiTeamBody")}
             </p>
           </div>
@@ -328,8 +328,8 @@ function ExportSection() {
         </div>
         <div className="reveal">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg text-[#021433]">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-[#0538A6]">
-              <FileDown className="h-4 w-4 text-[#0538A6]" />{" "}
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-[#0284c7]">
+              <FileDown className="h-4 w-4 text-[#0284c7]" />{" "}
               {t("landing.export.sampleServiceTitle")}
             </div>
             <div className="space-y-2 text-sm">
@@ -389,7 +389,7 @@ function Pricing() {
         </SectionHeader>
 
         <div className="reveal mt-10 flex items-center justify-center">
-          <div className="relative flex w-full max-w-70 items-center rounded-2xl bg-slate-900/80 border border-white/15 p-1.5 shadow-inner">
+          <div className="relative flex w-full max-w-[400px] sm:max-w-[440px] items-center rounded-2xl bg-slate-900/80 border border-white/15 p-1.5 shadow-inner">
             <div
               className={cn(
                 "absolute inset-y-1.5 h-[calc(100%-12px)] w-[calc(50%-6px)] rounded-xl bg-cyan-400 shadow-md transition-all duration-300 ease-out",
@@ -397,25 +397,27 @@ function Pricing() {
               )}
             />
             <button
+              type="button"
               onClick={() => setAnnual(false)}
               className={cn(
-                "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
+                "relative z-10 flex-1 py-2.5 px-3 text-center text-sm font-semibold transition-colors duration-200 cursor-pointer whitespace-nowrap",
                 !annual ? "text-[#021433]" : "text-white/70 hover:text-white",
               )}
             >
               {t("landing.pricing.monthly")}
             </button>
             <button
+              type="button"
               onClick={() => setAnnual(true)}
               className={cn(
-                "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
+                "relative z-10 flex-1 py-2.5 px-3 text-center text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap",
                 annual ? "text-[#021433]" : "text-white/70 hover:text-white",
               )}
             >
-              {t("landing.pricing.annual")}
+              <span>{t("landing.pricing.annual")}</span>
               <span
                 className={cn(
-                  "ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+                  "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider shrink-0",
                   annual
                     ? "bg-[#021433]/15 text-[#021433]"
                     : "bg-cyan-950/80 text-cyan-300 border border-cyan-500/30",
@@ -436,7 +438,7 @@ function Pricing() {
               <p className="mt-2 text-slate-500">{t("landing.pricing.singlePlanDesc")}</p>
 
               <div className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-semibold md:text-7xl text-[#0538A6]">
+                <span className="font-display text-6xl font-semibold md:text-7xl text-[#0284c7]">
                   {price}€
                 </span>
                 <span className="text-slate-500">{unit}</span>
@@ -452,7 +454,7 @@ function Pricing() {
               <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                 {dict.landing.pricing.features.map((f: string) => (
                   <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#0538A6]" />
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#0284c7]" />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -461,7 +463,7 @@ function Pricing() {
               <Button
                 asChild
                 size="lg"
-                className="mt-10 w-full rounded-full bg-[#021433] text-white font-semibold hover:bg-[#0538A6] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
+                className="mt-10 w-full rounded-full bg-[#021433] text-white font-semibold hover:bg-[#0284c7] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
               >
                 <a href={`${dashboardUrl}/?plan=base&payment=${annual ? "yearly" : "monthly"}`}>
                   {t("landing.pricing.ctaTry")} <ArrowRight className="ml-1 h-4 w-4" />
@@ -477,10 +479,10 @@ function Pricing() {
             {t("landing.pricing.pricingClarification")}
           </p>
 
-          <div className="reveal mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-white/15 bg-slate-900/50 backdrop-blur-md px-5 py-4 text-sm text-white/80">
-            <Users className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+          <div className="reveal mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-700 shadow-lg">
+            <Users className="mt-0.5 h-4 w-4 shrink-0 text-[#0284c7]" />
             <p>
-              <span className="font-medium text-white">
+              <span className="font-semibold text-[#021433]">
                 {t("landing.pricing.multiCampusLabel")}
               </span>{" "}
               {t("landing.pricing.multiCampusText")}
@@ -590,7 +592,7 @@ function OpenSource() {
           </div>
         </div>
         <div className="reveal hidden rounded-2xl border border-slate-200 bg-white p-6 text-sm shadow-lg md:block">
-          <div className="font-mono text-xs text-[#0538A6] font-bold">Apache License 2.0</div>
+          <div className="font-mono text-xs text-[#0284c7] font-bold">Apache License 2.0</div>
           <div className="mt-2 text-slate-600">github.com/Apoll011/Hosanna</div>
           <div className="text-slate-600">github.com/Apoll011/hosanna-suite</div>
         </div>
@@ -725,7 +727,7 @@ export function Footer() {
 
   const colSocial = [
     { label: "GitHub", href: githubAppUrl },
-    { label: "Instagram", href: "https://www.instagram.com/hosanna.studio" },
+    { label: "Instagram", href: "https://www.instagram.com/hosanna.songbook" },
     { label: "Blog", href: "https://blog.hosanna.live" },
   ];
 
@@ -769,7 +771,7 @@ export function Footer() {
             </p>
             <a
               href="mailto:hosanna.songbook@gmail.com"
-              className="inline-flex items-center gap-2 mt-6 text-base font-semibold text-[#0284c7] hover:text-[#0538A6] transition-colors group"
+              className="inline-flex items-center gap-2 mt-6 text-base font-semibold text-[#0284c7] hover:text-[#0369a1] transition-colors group"
             >
               hosanna.songbook@gmail.com
               <span className="transition-transform group-hover:translate-x-1 font-bold">→</span>
@@ -787,14 +789,14 @@ export function Footer() {
                     {link.isInternal ? (
                       <Link
                         to={link.href}
-                        className="text-slate-600 transition-colors hover:text-[#0538A6] font-medium"
+                        className="text-slate-600 transition-colors hover:text-[#0284c7] font-medium"
                       >
                         {link.label}
                       </Link>
                     ) : (
                       <a
                         href={link.href}
-                        className="text-slate-600 transition-colors hover:text-[#0538A6] font-medium"
+                        className="text-slate-600 transition-colors hover:text-[#0284c7] font-medium"
                       >
                         {link.label}
                       </a>
@@ -815,10 +817,10 @@ export function Footer() {
                       href={item.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-[#0538A6] font-medium group"
+                      className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-[#0284c7] font-medium group"
                     >
                       {item.label}
-                      <span className="text-xs text-slate-400 group-hover:text-[#0538A6] transition-colors">
+                      <span className="text-xs text-slate-400 group-hover:text-[#0284c7] transition-colors">
                         ↗
                       </span>
                     </a>
@@ -840,7 +842,7 @@ export function Footer() {
                         <button
                           type="button"
                           onClick={link.onClick}
-                          className="text-left text-slate-600 transition-colors hover:text-[#0538A6] font-medium cursor-pointer"
+                          className="text-left text-slate-600 transition-colors hover:text-[#0284c7] font-medium cursor-pointer"
                         >
                           {link.label}
                         </button>
@@ -850,8 +852,8 @@ export function Footer() {
                           className={cn(
                             "flex items-center transition-colors font-medium",
                             isActive
-                              ? "text-[#0538A6] font-bold"
-                              : "text-slate-600 hover:text-[#0538A6]",
+                              ? "text-[#0284c7] font-bold"
+                              : "text-slate-600 hover:text-[#0284c7]",
                           )}
                         >
                           {isActive && (
