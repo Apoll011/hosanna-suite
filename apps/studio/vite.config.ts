@@ -106,6 +106,7 @@ export default defineConfig(() => {
     build: {
       outDir: "dist",
       emptyOutDir: true,
+      sourcemap: true,
     },
     define: {
       APP_VERSION: JSON.stringify(process.env.npm_package_version),

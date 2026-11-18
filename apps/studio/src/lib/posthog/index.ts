@@ -2,11 +2,12 @@ import posthog from "posthog-js";
 import type { PostHogEventMap, PostHogEventName } from "./events";
 import { isPostHogEnabled, POSTHOG_INIT_OPTIONS, resolvePostHogConfig } from "./helpers";
 
+const metaEnv = (import.meta as { env?: Record<string, string | boolean | undefined> }).env;
 const env = {
-  PROD: import.meta.env.PROD,
-  VITE_PUBLIC_POSTHOG_KEY: import.meta.env.VITE_PUBLIC_POSTHOG_KEY as string | undefined,
-  VITE_PUBLIC_POSTHOG_HOST: import.meta.env.VITE_PUBLIC_POSTHOG_HOST as string | undefined,
-  VITE_PUBLIC_POSTHOG_DEV: import.meta.env.VITE_PUBLIC_POSTHOG_DEV as string | undefined,
+  PROD: metaEnv?.PROD === true,
+  VITE_PUBLIC_POSTHOG_KEY: metaEnv?.VITE_PUBLIC_POSTHOG_KEY as string | undefined,
+  VITE_PUBLIC_POSTHOG_HOST: metaEnv?.VITE_PUBLIC_POSTHOG_HOST as string | undefined,
+  VITE_PUBLIC_POSTHOG_DEV: metaEnv?.VITE_PUBLIC_POSTHOG_DEV as string | undefined,
 };
 
 if (!isPostHogEnabled(env)) {
