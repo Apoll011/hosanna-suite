@@ -6,9 +6,10 @@
 import { useLogosI18n } from "../../host";
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useAiChat } from "../context";
+import { scheduleIdle } from "../idle";
+import { loadAiChatPanel, prefetchAiChatPanel } from "./panelChunk";
 
-// Heavy chat UI (markdown, mascot, history) loads only when first opened.
-const AiChatPanel = lazy(() => import("./Panel").then((m) => ({ default: m.AiChatPanel })));
+const AiChatPanel = lazy(() => loadAiChatPanel().then((m) => ({ default: m.AiChatPanel })));
 
 const WIDTH_KEY = "hosanna:ai-chat-width";
 const MIN_W = 340;
@@ -42,6 +43,11 @@ export const AiChatDock: React.FC = () => {
   useEffect(() => {
     if (open) setEverOpened(true);
   }, [open]);
+
+  useEffect(() => {
+    if (!visible) return;
+    return scheduleIdle(prefetchAiChatPanel);
+  }, [visible]);
 
   const persist = useCallback((w: number) => {
     try {
