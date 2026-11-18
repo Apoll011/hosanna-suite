@@ -37,7 +37,7 @@ export const PlayStoreButton: React.FC<PlayStoreButtonProps> = ({
         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 transition-colors group-hover:text-slate-400">
           {t("common.getItOn")}
         </span>
-        <span className="-mt-0.5 text-base font-bold leading-tight tracking-tight text-black">
+        <span className="-mt-0.5 text-base font-semibold leading-tight tracking-tight text-[#021433]">
           {t("common.googlePlay")}
         </span>
       </div>
@@ -71,7 +71,7 @@ export const GetAppButton: React.FC<PlayStoreButtonProps> = ({
         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 transition-colors group-hover:text-slate-400">
           {t("common.getApp")}
         </span>
-        <span className="-mt-0.5 text-base font-bold leading-tight tracking-tight text-black">
+        <span className="-mt-0.5 text-base font-semibold leading-tight tracking-tight text-[#021433]">
           {t("common.download")}
         </span>
       </div>

@@ -45,7 +45,7 @@ function PhotoLightbox({ photo, onClose }: { photo: GalleryPhoto | null; onClose
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute -top-4 -right-4 grid h-10 w-10 place-items-center rounded-full bg-white text-black shadow-lg transition-transform hover:scale-105 active:scale-95"
+              className="absolute -top-4 -right-4 grid h-10 w-10 place-items-center rounded-full bg-white text-[#021433] shadow-lg transition-transform hover:scale-105 active:scale-95"
             >
               <X className="h-5 w-5" />
             </button>

@@ -175,8 +175,8 @@ export default function TryPlayButton({
             ? "bg-transparent text-[#021433] border-[#021433]/40"
             : "bg-[#021433] text-white border-[#021433]"
           : hovered
-            ? "mix-blend-normal bg-white/12 text-white border-white/40"
-            : "mix-blend-screen bg-white text-black border-white"
+            ? "bg-white/15 text-white border-white/40"
+            : "bg-white text-[#021433] border-white hover:bg-white/95"
       } ${className}`}
     >
       {/* Resting left play triangle (slides out to left on hover) */}

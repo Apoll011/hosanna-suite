@@ -133,7 +133,7 @@ export function AboutUs() {
             <Button
               asChild
               size="lg"
-              className="rounded-full bg-cyan-400 px-10 text-lg font-bold text-slate-950 shadow-xl transition-all hover:scale-105 active:scale-95 hover:bg-cyan-300"
+              className="rounded-full bg-cyan-400 px-10 text-lg font-semibold text-[#021433] shadow-xl transition-all hover:scale-105 active:scale-95 hover:bg-cyan-300"
             >
               <a href={dashboardUrl}>
                 {t("about.ctaStart")} <ArrowRight className="ml-2 h-5 w-5" />

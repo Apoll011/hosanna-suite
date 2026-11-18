@@ -239,7 +239,7 @@ export function ContactForm() {
 
                 <Button
                   type="submit"
-                  className="w-full py-5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
+                  className="w-full py-5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-[#021433] font-semibold text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
                 >
                   {t("contact.sendButton")}
                   <Send className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

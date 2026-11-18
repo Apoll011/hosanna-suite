@@ -50,23 +50,25 @@ export default function AppGallery() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   const activeIndex =
-    scrollProgress < 0.25 ? 0 : scrollProgress < 0.5 ? 1 : scrollProgress < 0.75 ? 2 : 3;
+    scrollProgress < 0.28 ? 0 : scrollProgress < 0.58 ? 1 : scrollProgress < 0.85 ? 2 : 3;
 
   return (
-    // 400vh tall so there's enough scroll room for the sticky panel + 4 photo wipes.
-    // [overflow-x:clip] prevents lateral bleed without breaking position:sticky.
     <section
       ref={trackRef}
       className="relative z-10 h-[400vh] w-full bg-transparent font-sans [overflow-x:clip]"
       aria-label={t("landing.gallery.title")}
     >
       <div className="sticky top-0 h-screen w-full flex items-center justify-center px-4 md:px-8">
-        <div className="mx-auto max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+        <div className="mx-auto max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Context text + 4-dot indicator */}
           <div className="lg:col-span-5 flex flex-col justify-center text-left z-10">
             <div className="flex items-start gap-4 sm:gap-6">
@@ -129,25 +131,21 @@ export default function AppGallery() {
             </div>
           </div>
 
-          {/* Portrait photo frame.
-              On mobile: explicit width drives the aspect-ratio height.
-              On md+: explicit height drives the aspect-ratio width. */}
+          {/* Sticky Portrait Photo Frame */}
           <div className="lg:col-span-7 flex justify-center lg:justify-end items-center">
             <div
-              className="relative z-10 overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none
-                         w-[min(72vw,280px)] md:w-auto md:h-[min(72vh,560px)]"
-              style={{ aspectRatio: "3/4" }}
+              className="relative z-10 w-[280px] sm:w-[330px] md:w-[420px] max-w-[85vw] aspect-[3/4] md:aspect-[4/5] max-h-[65vh] md:max-h-[75vh] overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none"
             >
               {galleryPhotos.map((photo, i) => {
                 let translateY = "0%";
                 if (i === 1) {
-                  const factor = clamp((scrollProgress - 0.2) / 0.08, 0, 1);
+                  const factor = clamp((scrollProgress - 0.15) / 0.18, 0, 1);
                   translateY = `${(1 - factor) * 100}%`;
                 } else if (i === 2) {
-                  const factor = clamp((scrollProgress - 0.45) / 0.08, 0, 1);
+                  const factor = clamp((scrollProgress - 0.45) / 0.18, 0, 1);
                   translateY = `${(1 - factor) * 100}%`;
                 } else if (i === 3) {
-                  const factor = clamp((scrollProgress - 0.7) / 0.08, 0, 1);
+                  const factor = clamp((scrollProgress - 0.75) / 0.18, 0, 1);
                   translateY = `${(1 - factor) * 100}%`;
                 }
 

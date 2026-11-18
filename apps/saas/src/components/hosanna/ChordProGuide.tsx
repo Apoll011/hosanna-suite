@@ -924,7 +924,7 @@ export function ChordProGuide() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-lg shadow-xl hover:scale-105 active:scale-95 transition-all py-6 px-10"
+                className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-[#021433] font-semibold text-lg shadow-xl hover:scale-105 active:scale-95 transition-all py-6 px-10"
               >
                 {t("chordproGuide.ctaCreateSong")}
                 <ArrowRight className="w-5 h-5 ml-2" />

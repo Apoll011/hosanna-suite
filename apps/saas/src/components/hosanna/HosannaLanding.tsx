@@ -8,7 +8,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { LazySection } from "@/components/ui/LazySection";
 import { useReveal } from "@/hooks/useReveal";
 import { reopenCookieBanner } from "@/lib/consent";
 import { useI18n } from "@/lib/i18n";
@@ -39,6 +38,7 @@ import HeroHeader from "../ui/HeroHeader";
 import { MigrationSection } from "../ui/MigrationSection";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
+import AppGallery from "./AppGallery";
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -188,16 +188,6 @@ function Organize() {
         </div>
       </div>
     </section>
-  );
-}
-
-function AppGallery() {
-  return (
-    <LazySection
-      load={() => import("./AppGallery")}
-      fallback={<section className="bg-transparent py-16 md:py-16" aria-hidden />}
-      rootMargin="500px"
-    />
   );
 }
 
@@ -410,7 +400,7 @@ function Pricing() {
               onClick={() => setAnnual(false)}
               className={cn(
                 "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
-                !annual ? "text-slate-950 font-bold" : "text-white/70 hover:text-white",
+                !annual ? "text-[#021433]" : "text-white/70 hover:text-white",
               )}
             >
               {t("landing.pricing.monthly")}
@@ -419,15 +409,15 @@ function Pricing() {
               onClick={() => setAnnual(true)}
               className={cn(
                 "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
-                annual ? "text-slate-950 font-bold" : "text-white/70 hover:text-white",
+                annual ? "text-[#021433]" : "text-white/70 hover:text-white",
               )}
             >
               {t("landing.pricing.annual")}
               <span
                 className={cn(
-                  "ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                  "ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
                   annual
-                    ? "bg-slate-950/20 text-slate-950"
+                    ? "bg-[#021433]/15 text-[#021433]"
                     : "bg-cyan-950/80 text-cyan-300 border border-cyan-500/30",
                 )}
               >
@@ -471,7 +461,7 @@ function Pricing() {
               <Button
                 asChild
                 size="lg"
-                className="mt-10 w-full rounded-full bg-[#021433] text-white font-bold hover:bg-[#0538A6] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
+                className="mt-10 w-full rounded-full bg-[#021433] text-white font-semibold hover:bg-[#0538A6] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
               >
                 <a href={`${dashboardUrl}/?plan=base&payment=${annual ? "yearly" : "monthly"}`}>
                   {t("landing.pricing.ctaTry")} <ArrowRight className="ml-1 h-4 w-4" />
@@ -579,7 +569,10 @@ function OpenSource() {
             {t("landing.openSource.body")}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild className="rounded-full bg-cyan-400 hover:bg-cyan-300 font-bold px-6">
+            <Button
+              asChild
+              className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-[#021433] font-semibold px-6"
+            >
               <a href={githubAppUrl} target="_blank" rel="noreferrer">
                 <Code2 className="mr-2 h-4 w-4" />
                 {t("landing.openSource.ctaApp")}
@@ -588,7 +581,7 @@ function OpenSource() {
             <Button
               asChild
               variant="outline"
-              className="rounded-full border-white/20 text-slate-950  hover:bg-white/10 px-6"
+              className="rounded-full border-white/20 text-white hover:bg-white/10 px-6 font-semibold"
             >
               <a href={githubStudioUrl} target="_blank" rel="noreferrer">
                 {t("landing.openSource.ctaStudio")}
@@ -622,7 +615,7 @@ function SupportTheMission() {
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-8 shadow-xl"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-[#021433] font-semibold px-8 shadow-xl transition-all hover:scale-105 active:scale-95"
           >
             <a href={goFundMeUrl} target="_blank" rel="noopener noreferrer">
               {t("landing.support.cta")} <ArrowRight className="ml-2 h-5 w-5" />
@@ -697,7 +690,7 @@ function FinalCTA() {
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-10 text-lg shadow-xl transition-all hover:scale-105 active:scale-95 py-6"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-[#021433] font-semibold px-10 text-lg shadow-xl transition-all hover:scale-105 active:scale-95 py-6"
           >
             <a href={dashboardUrl}>
               {t("landing.finalCta.ctaStart")} <ArrowRight className="ml-2 h-5 w-5" />

@@ -104,7 +104,7 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
             onPointerCancel={() => setPrimaryPressed(false)}
             animate={primaryMotionTarget}
             transition={springTransition}
-            className={`${sizeClasses} relative mix-blend-screen bg-white text-black border border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
+            className={`${sizeClasses} relative bg-white text-[#021433] hover:bg-white/95 border border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
           >
             <span>{copy.start}</span>
             <svg
