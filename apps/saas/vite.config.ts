@@ -8,6 +8,14 @@ import { defineConfig } from "vite";
 // for per-route HTML shells).
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/api/billing": {
+        target: "https://auth.hosanna.live",
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

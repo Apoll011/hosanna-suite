@@ -425,7 +425,7 @@ function Pricing() {
   useEffect(() => {
     const auth =
       (import.meta.env.VITE_AUTH_URL as string | undefined)?.replace(/\/$/, "") ||
-      "https://auth.hosanna.live";
+      (import.meta.env.DEV ? "" : "https://auth.hosanna.live");
     void fetch(`${auth}/api/billing/pricing`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {

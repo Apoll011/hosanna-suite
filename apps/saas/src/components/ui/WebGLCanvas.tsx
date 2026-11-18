@@ -544,6 +544,10 @@ export default function WebGLCanvas({
     const isSoftwareGl = detectSoftwareWebGL();
     const dpr = isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const getViewportSize = () => ({
       width: window.innerWidth || 1440,
       height: window.innerHeight || 900,
@@ -716,10 +720,6 @@ export default function WebGLCanvas({
         });
       };
     }
-
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const startEntrance = () => {
       if (disposed) return;
