@@ -4,6 +4,7 @@ import {
   type GalleryPhoto,
 } from "@/components/ui/interactive-folder-gallery";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SectionLiquidBg } from "@/components/ui/SectionLiquidBg";
 import { useReveal } from "@/hooks/useReveal";
 import { useI18n } from "@/lib/i18n";
 import songLibraryImg from "@/assets/song_library.jpeg";
@@ -27,8 +28,9 @@ export default function AppGallery() {
   ];
 
   return (
-    <section className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
+    <section className="relative overflow-hidden py-16 md:py-16">
+      <SectionLiquidBg variant="white" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <div className="reveal mt-4 hidden md:block w-full">
           <InteractiveFolderGallery
             photos={galleryPhotos}

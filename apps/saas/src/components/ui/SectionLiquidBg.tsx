@@ -56,7 +56,11 @@ export function SectionLiquidBg({
     <div
       ref={containerRef}
       aria-hidden="true"
-      className={cn("absolute inset-0 z-0 pointer-events-none overflow-hidden", className)}
+      className={cn(
+        "absolute inset-0 z-0 pointer-events-none overflow-hidden",
+        variant === "blue" ? "bg-[#021433]" : "bg-white",
+        className,
+      )}
     >
       {inView && (
         <SectionLiquidCanvas
@@ -203,7 +207,12 @@ function SectionLiquidCanvas({
     };
   }, [variant, linesAmount, containerRef]);
 
-  return <canvas ref={canvasRef} className="w-full h-full block animate-in fade-in duration-500 pointer-events-none" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full block animate-in fade-in duration-500 pointer-events-none"
+    />
+  );
 }
 
 export default SectionLiquidBg;

@@ -45,7 +45,7 @@ export function MigrationSection() {
   const current = SOURCE_APPS.find((a) => a.id === selectedId) || SOURCE_APPS[0];
 
   return (
-    <section id="features" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section id="features" className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <div className={cn("reveal max-w-2xl", "mx-auto text-center")}>

@@ -91,7 +91,7 @@ function Problem() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16 font-sans">
+    <section className="relative overflow-hidden py-16 md:py-16 font-sans">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.problem.eyebrow")} title={t("landing.problem.title")}>
@@ -128,7 +128,7 @@ function TwoApps() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="features" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section id="features" className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.twoApps.eyebrow")} title={t("landing.twoApps.title")}>
@@ -203,7 +203,7 @@ function Organize() {
   const icons = [FolderTree, Search, Music];
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.organize.eyebrow")} title={t("landing.organize.title")}>
@@ -235,7 +235,7 @@ function AppGallery() {
   return (
     <LazySection
       load={() => import("./AppGallery")}
-      fallback={<section className="bg-secondary py-16 md:py-16" aria-hidden />}
+      fallback={<section className="py-16 md:py-16" aria-hidden />}
       rootMargin="500px"
     />
   );
@@ -245,7 +245,7 @@ function HowItWorks() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="how" className="relative overflow-hidden bg-[#021433] py-16 text-primary-foreground md:py-16">
+    <section id="how" className="relative overflow-hidden py-16 text-primary-foreground md:py-16">
       <SectionLiquidBg variant="blue" />
       <div className="pointer-events-none absolute inset-0 text-gold/25 z-0">
         <StaffLines className="top-16" />
@@ -293,7 +293,7 @@ function LiveWorship() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
         <div className="reveal">
@@ -337,7 +337,7 @@ function AnySize() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.anySize.eyebrow")} title={t("landing.anySize.title")}>
@@ -372,7 +372,7 @@ function ExportSection() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
         <div className="reveal">
@@ -445,7 +445,7 @@ function Pricing() {
   const unit = annual ? t("landing.pricing.perYearUnit") : t("landing.pricing.perMonthUnit");
 
   return (
-    <section id="pricing" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section id="pricing" className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.pricing.eyebrow")} title={t("landing.pricing.title")}>
@@ -554,7 +554,7 @@ function MobileApp() {
   const { t } = useI18n();
 
   return (
-    <section id="mobile" className="relative overflow-hidden bg-[#021433] py-16 text-primary-foreground font-sans">
+    <section id="mobile" className="relative overflow-hidden py-16 text-primary-foreground font-sans">
       <SectionLiquidBg variant="blue" />
       <div className="pointer-events-none absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)] z-0" />
       <div className="container relative z-10 mx-auto px-5 md:px-8 max-w-7xl">
@@ -596,7 +596,7 @@ function Vision() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-3xl px-5 text-center md:px-8">
         <div className="reveal text-xs font-semibold uppercase tracking-[0.2em] text-gold">
@@ -623,7 +623,7 @@ function OpenSource() {
   const { t } = useI18n();
 
   return (
-    <section id="open-source" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section id="open-source" className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
         <div className="reveal">
@@ -668,7 +668,7 @@ function SupportTheMission() {
     "https://www.gofundme.com/f/ajudenos-a-levar-o-hosanna-a-igrejas-de-todo-o-mundo";
 
   return (
-    <section className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.support.eyebrow")} title={t("landing.support.title")}>
@@ -695,7 +695,7 @@ function Roadmap() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+    <section className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.roadmap.eyebrow")} title={t("landing.roadmap.title")}>
@@ -717,7 +717,7 @@ function FAQ() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="faq" className="relative overflow-hidden bg-secondary py-16 md:py-16">
+    <section id="faq" className="relative overflow-hidden py-16 md:py-16">
       <SectionLiquidBg variant="white" />
       <div className="relative z-10 mx-auto max-w-3xl px-5 md:px-8">
         <SectionHeader eyebrow={t("landing.faq.eyebrow")} title={t("landing.faq.title")}>
@@ -746,7 +746,7 @@ function FinalCTA() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-[#021433] py-16 text-primary-foreground md:py-16">
+    <section className="relative overflow-hidden py-16 text-primary-foreground md:py-16">
       <SectionLiquidBg variant="blue" />
       <div className="pointer-events-none absolute inset-0 text-gold/30 z-0">
         <StaffLines className="top-10" />
@@ -907,7 +907,7 @@ export function HosannaLanding() {
   useReveal();
   const rootRef = useRef<HTMLDivElement>(null);
   return (
-    <div ref={rootRef} className="min-h-screen bg-background font-sans text-foreground antialiased">
+    <div ref={rootRef} className="min-h-screen bg-transparent font-sans text-foreground antialiased">
       <main>
         <Hero />
         <Problem />
