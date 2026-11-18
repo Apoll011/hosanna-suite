@@ -6,12 +6,12 @@ This is not a new brand brief. It records what already ships. Prefer tokens and 
 
 **Source of truth**
 
-| Layer             | Where                                                                                                                                               |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                |
-| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `SuiteAppIcon`, …) |
-| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                         |
-| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Logos → App Switcher → AccountMenu                                                     |
+| Layer             | Where                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                               |
+| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `InboxButton`, `SuiteAppIcon`, …) |
+| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                                        |
+| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Inbox → Logos → App Switcher → AccountMenu                                                            |
 
 When Studio and Auth disagree, **Studio tokens win** and Auth should catch up — except Auth has no lyric/score surface, so it may omit `--font-lyric`.
 
@@ -210,13 +210,13 @@ One title, one toolbar, then the work. No hero banners, gradient headers, or a c
 
 ### Auth vs Studio
 
-|        | Studio                   | Auth                                                              |
-| ------ | ------------------------ | ----------------------------------------------------------------- |
-| Tokens | Full set + lyric font    | Same m3 tokens; no lyric surface                                  |
-| Shell  | App sidebar + main stage | Home hub, account nav + scrolling content                         |
-| Header | Address bar: AI → grid   | Same order: Logos AI → App Switcher → AccountMenu                 |
-| Toasts | Product toasts           | Banner under header, **offset past the fixed sidebar** on desktop |
-| Login  | —                        | Quiet form chrome; brand present but not a marketing hero         |
+|        | Studio                         | Auth                                                              |
+| ------ | ------------------------------ | ----------------------------------------------------------------- |
+| Tokens | Full set + lyric font          | Same m3 tokens; no lyric surface                                  |
+| Shell  | App sidebar + main stage       | Home hub, account nav + scrolling content                         |
+| Header | Address bar: Inbox → AI → grid | Same order: Inbox → Logos AI → App Switcher → AccountMenu         |
+| Toasts | Product toasts                 | Banner under header, **offset past the fixed sidebar** on desktop |
+| Login  | —                              | Quiet form chrome; brand present but not a marketing hero         |
 
 Account settings pages should feel like Studio settings: `PageHeader`, `Surface` / bordered cards, `Tabs`, shared buttons — not a separate “admin theme.”
 
@@ -243,7 +243,7 @@ Shared across Auth and Studio via `@hosanna/ui` — one composition language, no
 - Variants: `popover` (Auth header avatar) and `extended` (Studio sidebar footer — expands upward; collapses with the rail).
 - Theme control is a compact 3-option radiogroup (system / light / dark) with Monitor / Sun / MoonStar; m3 tokens only.
 - Org rows use the same quiet avatar + label pattern as elsewhere; destructive actions stay monochrome-until-danger.
-- Chrome strings: `@hosanna/i18n` (`suite.accountMenu.*`). Pass `language`; do not re-translate the same chrome in each app.
+- Chrome strings: `@hosanna/i18n` (`suite.accountMenu.*`, `suite.inbox.*`). Pass `language`; do not re-translate the same chrome in each app.
 
 Theme and language persist through `@hosanna/auth` personal settings (cookie + metadata). Do not invent parallel `localStorage` theme keys on new surfaces.
 
