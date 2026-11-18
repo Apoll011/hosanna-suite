@@ -48,7 +48,10 @@ export function LoginPage() {
         window.location.assign("/two-factor");
         return;
       }
-      if (error.code === "POW_CHALLENGE_REQUIRED" || (error as { status?: number })?.status === 423) {
+      if (
+        error.code === "POW_CHALLENGE_REQUIRED" ||
+        (error as { status?: number })?.status === 423
+      ) {
         setErrorMsg(t("auth.captcha.powChallenge"));
         return;
       }
