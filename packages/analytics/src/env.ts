@@ -31,10 +31,14 @@ export function resolvePostHogConfig(env: AnalyticsEnv): { token: string; host: 
   const token =
     env.VITE_PUBLIC_POSTHOG_KEY || env.NEXT_PUBLIC_POSTHOG_KEY || env.POSTHOG_KEY || undefined;
 
-  const host =
+  let host =
     env.VITE_PUBLIC_POSTHOG_HOST || env.NEXT_PUBLIC_POSTHOG_HOST || env.POSTHOG_HOST || undefined;
 
   if (!token || !host) return null;
+
+  if (host.endsWith("/")) {
+    host = host.slice(0, -1);
+  }
 
   return { token, host };
 }

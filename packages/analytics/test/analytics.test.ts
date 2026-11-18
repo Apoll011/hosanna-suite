@@ -79,7 +79,7 @@ describe("resolvePostHogConfig", () => {
       resolvePostHogConfig({
         PROD: true,
         VITE_PUBLIC_POSTHOG_KEY: "k",
-        VITE_PUBLIC_POSTHOG_HOST: "https://eu.i.posthog.com",
+        VITE_PUBLIC_POSTHOG_HOST: "https://eu.i.posthog.com/",
       }),
       { token: "k", host: "https://eu.i.posthog.com" },
     );
