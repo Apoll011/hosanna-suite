@@ -11,7 +11,6 @@ Local-only guidance for **any** coding agent working in this monorepo (`AGENTS.m
 | File                   | Best for                                                                            |
 | ---------------------- | ----------------------------------------------------------------------------------- |
 | **`AGENTS.md` (this)** | Portable, cross-tool handbook (Cursor, Claude Code, Codex, …). **Use this.**        |
-| `.cursor/rules/*.mdc`  | Cursor-only, optional globs / `alwaysApply`, often **committed** for the whole team |
 | `CLAUDE.md`            | Claude Code–specific shorthand                                                      |
 
 Do **not** duplicate this handbook into committed rules unless asked. Per-app extras can live later as `apps/<app>/AGENTS.md` (also gitignore if personal) when a surface needs deeper local rules.
