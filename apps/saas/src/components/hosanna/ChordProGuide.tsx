@@ -20,7 +20,6 @@ import {
   Tags,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { StaffLines } from "./HosannaLanding";
 
 type DirectiveCategory = "metadata" | "comment" | "structure" | "notation";
 
@@ -121,7 +120,7 @@ const DIRECTIVES: DirectiveEntry[] = [
     alias: "c",
     category: "comment",
     descriptionKey: "comment",
-    example: "{c: Softly|warning}",
+    example: "{comment: Intro: piano only}",
   },
   {
     directive: "comment_italic",
@@ -136,31 +135,11 @@ const DIRECTIVES: DirectiveEntry[] = [
     descriptionKey: "comment_box",
   },
   {
-    directive: "repeat",
-    alias: "re",
-    category: "comment",
-    descriptionKey: "repeat",
-    hosanna: true,
-  },
-  {
-    directive: "start_of_version",
-    alias: "sov_ver",
-    category: "structure",
-    descriptionKey: "start_of_version",
-    example: "{start_of_version: Acoustic}",
-    hosanna: true,
-  },
-  {
-    directive: "end_of_version",
-    alias: "eov_ver",
-    category: "structure",
-    descriptionKey: "end_of_version",
-  },
-  {
     directive: "start_of_verse",
     alias: "sov",
     category: "structure",
     descriptionKey: "start_of_verse",
+    example: "{start_of_verse: Verse 1}",
   },
   {
     directive: "end_of_verse",
@@ -173,6 +152,7 @@ const DIRECTIVES: DirectiveEntry[] = [
     alias: "soc",
     category: "structure",
     descriptionKey: "start_of_chorus",
+    example: "{start_of_chorus: Refrão}",
   },
   {
     directive: "end_of_chorus",
@@ -185,6 +165,7 @@ const DIRECTIVES: DirectiveEntry[] = [
     alias: "sob",
     category: "structure",
     descriptionKey: "start_of_bridge",
+    example: "{start_of_bridge: Ponte}",
   },
   {
     directive: "end_of_bridge",
@@ -193,36 +174,18 @@ const DIRECTIVES: DirectiveEntry[] = [
     descriptionKey: "end_of_bridge",
   },
   {
-    directive: "verse",
-    alias: "v",
-    category: "structure",
-    descriptionKey: "verse",
-  },
-  {
-    directive: "bridge",
-    alias: "b",
-    category: "structure",
-    descriptionKey: "bridge",
-  },
-  {
     directive: "chorus",
-    alias: "ch",
     category: "structure",
-    descriptionKey: "chorus",
+    descriptionKey: "chorus_repeat",
     example: "{chorus}",
     hosanna: true,
-  },
-  {
-    directive: "new_song",
-    alias: "ns",
-    category: "structure",
-    descriptionKey: "new_song",
   },
   {
     directive: "start_of_tab",
     alias: "sot",
     category: "notation",
     descriptionKey: "start_of_tab",
+    example: "{start_of_tab: Guitar Riff}",
   },
   {
     directive: "end_of_tab",
@@ -235,6 +198,7 @@ const DIRECTIVES: DirectiveEntry[] = [
     alias: "sog",
     category: "notation",
     descriptionKey: "start_of_grid",
+    example: "{start_of_grid: Intro}",
   },
   {
     directive: "end_of_grid",
@@ -243,20 +207,8 @@ const DIRECTIVES: DirectiveEntry[] = [
     descriptionKey: "end_of_grid",
   },
   {
-    directive: "translator",
-    category: "metadata",
-    descriptionKey: "translator",
-  },
-  {
-    directive: "ccli_number",
-    alias: "ccli",
-    category: "metadata",
-    descriptionKey: "ccli",
-  },
-  {
     directive: "time_signature",
-    alias: "timesignature",
-    category: "metadata",
+    category: "notation",
     descriptionKey: "time_signature",
     example: "{time_signature: 4/4}",
   },
@@ -266,31 +218,29 @@ const ESSENTIAL_DIRECTIVES = ["title", "artist", "key", "duration", "youtube", "
 
 function EyebrowIcon({ icon: Icon }: { icon: React.ElementType }) {
   return (
-    <div className="inline-flex p-4 rounded-2xl bg-blue-50 text-primary shadow-sm border border-blue-100">
-      <Icon className="w-10 h-10" />
+    <div className="inline-flex p-3.5 rounded-2xl bg-cyan-950/60 text-cyan-300 border border-cyan-500/30 shadow-sm">
+      <Icon className="w-8 h-8" />
     </div>
   );
 }
 
 function SectionHeader({
   icon,
-  eyebrow,
   title,
   lede,
 }: {
   icon: React.ElementType;
-  eyebrow?: string;
   title: string;
   lede?: React.ReactNode;
 }) {
   return (
-    <div className="space-y-6 reveal">
+    <div className="space-y-4 reveal">
       <EyebrowIcon icon={icon} />
-      <h2 className="text-3xl md:text-4xl font-display font-bold text-primary tracking-tight">
+      <h2 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
         {title}
       </h2>
       {lede && (
-        <p className="text-muted-foreground text-lg md:text-xl leading-relaxed max-w-3xl">{lede}</p>
+        <p className="text-white/80 text-lg md:text-xl leading-relaxed max-w-3xl">{lede}</p>
       )}
     </div>
   );
@@ -299,7 +249,7 @@ function SectionHeader({
 function HosannaBadge() {
   const { t } = useI18n();
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-primary text-white px-2.5 py-1 rounded-full shrink-0">
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-cyan-400 text-slate-950 px-2.5 py-0.5 rounded-full shrink-0">
       {t("common.exclusiveHosanna")}
     </span>
   );
@@ -307,7 +257,7 @@ function HosannaBadge() {
 
 function Key({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="inline-flex items-center justify-center min-w-9 px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 shadow-[0_2px_0_0_rgba(15,23,42,0.12)] text-sm font-mono font-bold text-slate-700">
+    <kbd className="inline-flex items-center justify-center min-w-8 px-2.5 py-1 rounded-lg bg-slate-800 border border-white/20 text-xs font-mono font-bold text-white shadow-sm">
       {children}
     </kbd>
   );
@@ -315,18 +265,18 @@ function Key({ children }: { children: React.ReactNode }) {
 
 function CodeWindow({ filename, children }: { filename: string; children: React.ReactNode }) {
   return (
-    <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border-4 border-slate-800">
-      <div className="flex items-center justify-between px-8 py-5 bg-slate-800 border-b border-white/5">
+    <div className="bg-slate-950/90 rounded-2xl overflow-hidden shadow-2xl border border-white/15">
+      <div className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="flex gap-1.5">
             <div className="w-3 h-3 rounded-full bg-red-500/80" />
             <div className="w-3 h-3 rounded-full bg-amber-500/80" />
             <div className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
-          <span className="text-sm font-mono text-slate-400 ml-2">{filename}</span>
+          <span className="text-xs sm:text-sm font-mono text-cyan-200/80 ml-2">{filename}</span>
         </div>
       </div>
-      <div className="p-10 font-mono text-sm sm:text-base leading-relaxed text-blue-100 overflow-x-auto selection:bg-blue-500/30">
+      <div className="p-6 sm:p-8 font-mono text-sm leading-relaxed text-cyan-100 overflow-x-auto selection:bg-cyan-500/30">
         {children}
       </div>
     </div>
@@ -342,17 +292,24 @@ function Callout({
   title: string;
   children: React.ReactNode;
 }) {
-  const styles =
-    variant === "tip"
-      ? { wrap: "bg-blue-50/60 border-blue-100", icon: "text-primary", Icon: Lightbulb }
-      : { wrap: "bg-amber-50/70 border-amber-100", icon: "text-amber-600", Icon: AlertTriangle };
-  const Icon = styles.Icon;
+  const isTip = variant === "tip";
+  const Icon = isTip ? Lightbulb : AlertTriangle;
   return (
-    <div className={`rounded-2xl border p-6 flex gap-4 ${styles.wrap}`}>
-      <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${styles.icon}`} />
+    <div
+      className={`rounded-2xl border p-6 flex gap-4 ${
+        isTip
+          ? "bg-cyan-950/40 border-cyan-500/30 text-white"
+          : "bg-amber-950/40 border-amber-500/30 text-white"
+      }`}
+    >
+      <Icon
+        className={`w-5 h-5 shrink-0 mt-0.5 ${isTip ? "text-cyan-300" : "text-amber-300"}`}
+      />
       <div>
-        <div className="font-bold text-primary mb-1">{title}</div>
-        <div className="text-muted-foreground leading-relaxed">{children}</div>
+        <div className={`font-bold mb-1 ${isTip ? "text-cyan-200" : "text-amber-200"}`}>
+          {title}
+        </div>
+        <div className="text-white/80 leading-relaxed text-sm sm:text-base">{children}</div>
       </div>
     </div>
   );
@@ -363,20 +320,20 @@ function DirectiveCard({ entry }: { entry: DirectiveEntry }) {
   const desc = t(`directives.${entry.descriptionKey}` as TranslationKey);
 
   return (
-    <div className="p-6 border border-border rounded-2xl hover:border-primary/30 transition-all hover:bg-blue-50/10 group shadow-sm relative">
+    <div className="p-6 border border-white/15 bg-slate-900/60 backdrop-blur-md rounded-2xl hover:border-cyan-400/40 transition-all text-white shadow-xl relative">
       <div className="flex items-start justify-between gap-3 mb-2">
-        <code className="text-primary font-bold text-lg block group-hover:scale-105 transition-transform origin-left">
+        <code className="text-cyan-300 font-bold text-lg block">
           {`{${entry.directive}: ...}`}
         </code>
         {entry.hosanna && <HosannaBadge />}
       </div>
       {entry.alias && (
-        <div className="text-xs text-muted-foreground mb-2">
+        <div className="text-xs text-white/60 mb-2">
           {t("chordproGuide.shortcutLabel")}{" "}
-          <code className="font-mono font-semibold text-slate-500">{`${entry.alias} → Tab`}</code>
+          <code className="font-mono font-semibold text-cyan-200/90">{`${entry.alias} → Tab`}</code>
         </div>
       )}
-      <p className="text-muted-foreground leading-relaxed">{desc}</p>
+      <p className="text-white/80 leading-relaxed text-sm">{desc}</p>
     </div>
   );
 }
@@ -422,67 +379,66 @@ export function ChordProGuide() {
     metadata: {
       label: t("chordproGuide.categories.metadata"),
       icon: Tags,
-      chip: "bg-blue-50 text-primary border-blue-100",
-      dot: "bg-primary",
+      chip: "bg-cyan-950/60 text-cyan-300 border-cyan-500/30",
+      dot: "bg-cyan-400",
     },
     comment: {
       label: t("chordproGuide.categories.comment"),
       icon: ClipboardList,
-      chip: "bg-amber-50 text-amber-700 border-amber-100",
-      dot: "bg-amber-500",
+      chip: "bg-amber-950/60 text-amber-300 border-amber-500/30",
+      dot: "bg-amber-400",
     },
     structure: {
       label: t("chordproGuide.categories.structure"),
       icon: Layers,
-      chip: "bg-emerald-50 text-emerald-700 border-emerald-100",
-      dot: "bg-emerald-500",
+      chip: "bg-emerald-950/60 text-emerald-300 border-emerald-500/30",
+      dot: "bg-emerald-400",
     },
     notation: {
       label: t("chordproGuide.categories.notation"),
       icon: Grid3x3,
-      chip: "bg-violet-50 text-violet-700 border-violet-100",
-      dot: "bg-violet-500",
+      chip: "bg-violet-950/60 text-violet-300 border-violet-500/30",
+      dot: "bg-violet-400",
     },
   };
 
   return (
-    <div className="bg-white min-h-screen selection:bg-primary/10 font-sans">
-      <section className="bg-hero-gradient pt-40 pb-16 text-white relative overflow-hidden -mt-30">
-        <div className="absolute inset-0 text-white/10">
-          <StaffLines className="top-24 opacity-40" />
-          <StaffLines className="bottom-12 opacity-20" />
-        </div>
+    <div className="bg-transparent min-h-screen selection:bg-cyan-400/20 font-sans relative z-10 text-white">
+      <section
+        id="top"
+        className="pt-52 md:pt-64 pb-16 text-white relative overflow-hidden bg-transparent"
+      >
         <div className="container mx-auto px-6 max-w-5xl relative z-10 text-center">
-          <h1 className="reveal text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">
+          <h1 className="reveal text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">
             {t("chordproGuide.heroTitleStart")}{" "}
-            <span className="text-blue-300">{t("chordproGuide.heroTitleHighlight")}</span>
+            <span className="text-cyan-300">{t("chordproGuide.heroTitleHighlight")}</span>
           </h1>
-          <p className="reveal text-lg md:text-xl text-blue-50/80 leading-relaxed max-w-3xl mx-auto mb-14">
+          <p className="reveal text-base sm:text-lg md:text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-14">
             {t("chordproGuide.heroSubtitle")}
           </p>
 
-          <div className="reveal grid md:grid-cols-2 gap-4 text-left max-w-4xl mx-auto">
-            <div className="rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-blue-200/70 mb-4">
+          <div className="reveal grid md:grid-cols-2 gap-5 text-left max-w-4xl mx-auto">
+            <div className="rounded-2xl bg-slate-900/60 backdrop-blur-md border border-white/15 p-6 text-white">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-cyan-200/70 mb-4">
                 {t("chordproGuide.traditionalDoc")}
               </div>
-              <div className="font-mono text-sm text-blue-50/50 leading-loose whitespace-pre">
+              <div className="font-mono text-sm text-white/50 leading-loose whitespace-pre">
                 {"  A            D\nLord my God, when I in awesome wonder"}
               </div>
-              <div className="mt-5 flex items-center gap-2 text-xs font-medium text-amber-200/80">
+              <div className="mt-5 flex items-center gap-2 text-xs font-medium text-amber-300">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                 {t("chordproGuide.traditionalWarning")}
               </div>
             </div>
-            <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-blue-300/30 p-6">
-              <div className="text-[11px] font-bold uppercase tracking-widest text-blue-200 mb-4">
+            <div className="rounded-2xl bg-cyan-950/40 backdrop-blur-md border border-cyan-400/40 p-6 text-white">
+              <div className="text-[11px] font-bold uppercase tracking-widest text-cyan-300 mb-4">
                 {t("chordproGuide.chordproInHosanna")}
               </div>
               <div className="font-mono text-sm leading-loose">
-                Lord my <span className="text-blue-300 font-bold">[A]</span>God, when I in{" "}
-                <span className="text-blue-300 font-bold">[D]</span>awesome wonder
+                Lord my <span className="text-cyan-300 font-bold">[A]</span>God, when I in{" "}
+                <span className="text-cyan-300 font-bold">[D]</span>awesome wonder
               </div>
-              <div className="mt-5 flex items-center gap-2 text-xs font-medium text-blue-100">
+              <div className="mt-5 flex items-center gap-2 text-xs font-medium text-cyan-200">
                 <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                 {t("chordproGuide.chordproSuccess")}
               </div>
@@ -491,13 +447,13 @@ export function ChordProGuide() {
         </div>
       </section>
 
-      <div className="lg:hidden sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-border">
+      <div className="lg:hidden sticky top-0 z-20 bg-slate-950/85 backdrop-blur-md border-b border-white/10">
         <div className="flex gap-2 overflow-x-auto px-6 py-4 no-scrollbar">
           {TOC.map((item) => (
             <a
               key={item.id}
               href={`#${item.id}`}
-              className="shrink-0 text-sm font-medium text-muted-foreground hover:text-primary px-3.5 py-1.5 rounded-full border border-border hover:border-primary/30 transition-colors"
+              className="shrink-0 text-sm font-medium text-white/80 hover:text-cyan-300 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 transition-colors"
             >
               {item.label}
             </a>
@@ -505,14 +461,14 @@ export function ChordProGuide() {
         </div>
       </div>
 
-      <section className="py-16">
+      <section className="py-16 bg-transparent">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-16 items-start">
             <nav
               className="sticky top-[calc(var(--site-header,4rem)+2rem)] hidden space-y-1 lg:block"
               aria-label={t("chordproGuide.tocTitle")}
             >
-              <div className="mb-3 pl-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+              <div className="mb-3 pl-3 text-[11px] font-bold uppercase tracking-widest text-cyan-200/70">
                 {t("chordproGuide.tocTitle")}
               </div>
               {TOC.map((item, idx) => {
@@ -524,15 +480,15 @@ export function ChordProGuide() {
                     aria-current={active ? "location" : undefined}
                     className={
                       active
-                        ? "flex items-center gap-3 rounded-full bg-primary/10 px-3 py-2.5 text-sm font-medium text-foreground"
-                        : "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-surface hover:text-foreground"
+                        ? "flex items-center gap-3 rounded-full bg-cyan-500/20 text-cyan-300 border-l-2 border-cyan-400 px-3 py-2.5 text-sm font-semibold"
+                        : "flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white transition-colors"
                     }
                   >
                     <span
                       className={
                         active
-                          ? "w-4 font-mono text-xs text-primary"
-                          : "w-4 font-mono text-xs text-muted-foreground"
+                          ? "w-4 font-mono text-xs text-cyan-300"
+                          : "w-4 font-mono text-xs text-white/40"
                       }
                     >
                       {String(idx + 1).padStart(2, "0")}
@@ -550,17 +506,17 @@ export function ChordProGuide() {
                   title={t("chordproGuide.whatIsTitle")}
                   lede={t("chordproGuide.whatIsLede")}
                 />
-                <div className="prose prose-blue max-w-none text-muted-foreground text-lg leading-relaxed mt-8">
+                <div className="text-white/80 text-base sm:text-lg leading-relaxed mt-6">
                   <p>{t("chordproGuide.whatIsParagraph")}</p>
                 </div>
-                <ul className="grid sm:grid-cols-2 gap-4 mt-10 list-none p-0 reveal">
+                <ul className="grid sm:grid-cols-2 gap-4 mt-8 list-none p-0 reveal">
                   {dict.chordproGuide.benefits.map((text: string, idx: number) => (
                     <li
                       key={idx}
-                      className="flex items-center gap-3 bg-secondary p-4 rounded-2xl border border-blue-50/50 shadow-sm transition-transform hover:-translate-y-1"
+                      className="flex items-center gap-3 bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-white/15 shadow-sm text-white"
                     >
-                      <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                      <span className="font-medium text-primary text-sm sm:text-base leading-snug">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" />
+                      <span className="font-medium text-white text-sm sm:text-base leading-snug">
                         {text}
                       </span>
                     </li>
@@ -578,26 +534,26 @@ export function ChordProGuide() {
                   <CodeWindow filename="song-sample.chordpro">
                     <div className="text-slate-500 italic mb-2"># 1. Metadata</div>
                     <div>
-                      <span className="text-blue-400">{"{"}title:</span> How Great Thou Art
-                      <span className="text-blue-400">{"}"}</span>
+                      <span className="text-cyan-400">{"{"}title:</span> How Great Thou Art
+                      <span className="text-cyan-400">{"}"}</span>
                     </div>
                     <div>
-                      <span className="text-blue-400">{"{"}artist:</span> Classic Hymn
-                      <span className="text-blue-400">{"}"}</span>
+                      <span className="text-cyan-400">{"{"}artist:</span> Classic Hymn
+                      <span className="text-cyan-400">{"}"}</span>
                     </div>
                     <div>
-                      <span className="text-blue-400">{"{"}key:</span> A
-                      <span className="text-blue-400">{"}"}</span>
+                      <span className="text-cyan-400">{"{"}key:</span> A
+                      <span className="text-cyan-400">{"}"}</span>
                     </div>
                     <div>
-                      <span className="text-blue-400">{"{"}tempo:</span> 72
-                      <span className="text-blue-400">{"}"}</span>
+                      <span className="text-cyan-400">{"{"}tempo:</span> 72
+                      <span className="text-cyan-400">{"}"}</span>
                     </div>
                     <br />
                     <div className="text-slate-500 italic mb-2"># 2. Sections</div>
                     <div>
-                      <span className="text-blue-400">{"{"}start_of_verse:</span> Verse 1
-                      <span className="text-blue-400">{"}"}</span>
+                      <span className="text-cyan-400">{"{"}start_of_verse:</span> Verse 1
+                      <span className="text-cyan-400">{"}"}</span>
                     </div>
                     <div>
                       O Lord my <span className="text-amber-400 font-bold">[A]</span>God, when I in
@@ -610,7 +566,7 @@ export function ChordProGuide() {
                       <span className="text-amber-400 font-bold">[A]</span>made
                     </div>
                     <div>
-                      <span className="text-blue-400">
+                      <span className="text-cyan-400">
                         {"{"}end_of_verse{"}"}
                       </span>
                     </div>
@@ -661,47 +617,48 @@ export function ChordProGuide() {
                       desc: dict.chordproGuide.sections.bridge.desc,
                     },
                   ].map((item, idx) => (
-                    <div key={idx} className="p-6 border border-border rounded-2xl shadow-sm">
-                      <div className="font-bold text-primary text-lg mb-1">{item.label}</div>
-                      <code className="text-[11px] sm:text-xs text-muted-foreground font-mono bg-secondary px-1.5 py-1 rounded">
+                    <div
+                      key={idx}
+                      className="p-6 border border-white/15 bg-slate-900/60 backdrop-blur-md rounded-2xl shadow-xl text-white"
+                    >
+                      <div className="font-bold text-white text-lg mb-1">{item.label}</div>
+                      <code className="text-xs text-cyan-300 font-mono bg-white/10 px-2 py-0.5 rounded">
                         {`{start_of_${item.tag}}`}
                       </code>
-                      <p className="text-muted-foreground leading-relaxed mt-3 text-sm">
-                        {item.desc}
-                      </p>
+                      <p className="text-white/75 leading-relaxed mt-3 text-sm">{item.desc}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-10 grid md:grid-cols-[1fr_1.1fr] gap-0 rounded-2xl border border-border overflow-hidden shadow-sm reveal">
-                  <div className="p-8 bg-secondary">
-                    <div className="inline-flex p-3 rounded-xl bg-white text-primary shadow-sm mb-4">
+                <div className="mt-10 grid md:grid-cols-[1fr_1.1fr] gap-0 rounded-2xl border border-white/15 overflow-hidden shadow-2xl reveal">
+                  <div className="p-8 bg-slate-900/80 backdrop-blur-md text-white">
+                    <div className="inline-flex p-3 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 shadow-sm mb-4">
                       <Repeat className="w-6 h-6" />
                     </div>
                     <div className="flex items-center gap-2 mb-3">
-                      <code className="text-primary font-bold text-xl">{"{chorus}"}</code>
+                      <code className="text-cyan-300 font-bold text-xl">{"{chorus}"}</code>
                       <HosannaBadge />
                     </div>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-white/80 leading-relaxed text-sm">
                       {t("chordproGuide.chorusMagicDesc")}
                     </p>
                   </div>
-                  <div className="p-8 bg-slate-900 font-mono text-sm text-blue-100 leading-relaxed">
+                  <div className="p-8 bg-slate-950 font-mono text-sm text-cyan-100 leading-relaxed">
                     <div>
-                      <span className="text-blue-400">{"{start_of_chorus}"}</span>
+                      <span className="text-cyan-400">{"{start_of_chorus}"}</span>
                     </div>
                     <div>
                       Then sings my <span className="text-amber-400 font-bold">[E]</span>soul...
                     </div>
                     <div>
-                      <span className="text-blue-400">{"{end_of_chorus}"}</span>
+                      <span className="text-cyan-400">{"{end_of_chorus}"}</span>
                     </div>
                     <div className="text-slate-500 mt-5"># Verse 2 ...</div>
                     <div className="text-slate-500 mt-5">
                       # Instead of retyping the whole chorus:
                     </div>
-                    <div className="text-green-400 font-bold mt-1">{"{chorus}"}</div>
-                    <div className="text-slate-500/80 text-xs mt-1">
+                    <div className="text-emerald-400 font-bold mt-1">{"{chorus}"}</div>
+                    <div className="text-slate-400 text-xs mt-1">
                       {t("chordproGuide.chorusMagicAutoNote")}
                     </div>
                   </div>
@@ -711,7 +668,6 @@ export function ChordProGuide() {
               <div id="notas" className="scroll-mt-28">
                 <SectionHeader
                   icon={Grid3x3}
-                  eyebrow={t("chordproGuide.gridsEyebrow")}
                   title={t("chordproGuide.gridsTitle")}
                   lede={t("chordproGuide.gridsLede")}
                 />
@@ -720,7 +676,7 @@ export function ChordProGuide() {
                   <CodeWindow filename="instrumental.chordpro">
                     <div className="text-slate-500 italic mb-2"># Intro</div>
                     <div>
-                      <span className="text-blue-400">
+                      <span className="text-cyan-400">
                         {"{start_of_grid:"} Intro{"}"}
                       </span>
                     </div>
@@ -732,25 +688,26 @@ export function ChordProGuide() {
                       <span className="text-amber-400 font-bold">||</span>
                     </div>
                     <div>
-                      <span className="text-blue-400">{"{end_of_grid}"}</span>
+                      <span className="text-cyan-400">{"{end_of_grid}"}</span>
                     </div>
                   </CodeWindow>
                 </div>
 
                 <div className="mt-6 reveal">
-                  <div className="p-6 border border-border rounded-2xl shadow-sm bg-secondary/30">
-                    <h4 className="font-bold text-primary mb-2 flex items-center gap-2">
-                      <Grid3x3 className="w-4 h-4" /> {t("chordproGuide.barlinesTitle")}
+                  <div className="p-6 border border-white/15 rounded-2xl shadow-xl bg-slate-900/60 backdrop-blur-md text-white">
+                    <h4 className="font-bold text-white mb-2 flex items-center gap-2">
+                      <Grid3x3 className="w-4 h-4 text-cyan-300" /> {t("chordproGuide.barlinesTitle")}
                     </h4>
-                    <ul className="space-y-2 text-sm text-muted-foreground mt-4">
+                    <ul className="space-y-2 text-sm text-white/80 mt-4">
                       <li>
-                        <code>|</code> → {t("chordproGuide.barlinesNormal")}
+                        <code className="text-cyan-300">|</code> → {t("chordproGuide.barlinesNormal")}
                       </li>
                       <li>
-                        <code>||</code> → {t("chordproGuide.barlinesSection")}
+                        <code className="text-cyan-300">||</code> → {t("chordproGuide.barlinesSection")}
                       </li>
                       <li>
-                        <code>|:</code> {t("chordproGuide.barlinesRepeat")} <code>:|</code>
+                        <code className="text-cyan-300">|:</code> {t("chordproGuide.barlinesRepeat")}{" "}
+                        <code className="text-cyan-300">:|</code>
                       </li>
                     </ul>
                   </div>
@@ -760,23 +717,22 @@ export function ChordProGuide() {
               <div id="tablatura" className="scroll-mt-28">
                 <SectionHeader
                   icon={Music2}
-                  eyebrow={t("chordproGuide.tabEyebrow")}
                   title={t("chordproGuide.tabTitle")}
                   lede={t("chordproGuide.tabLede")}
                 />
                 <div className="mt-8">
                   <CodeWindow filename="riff-intro.chordpro">
                     <div>
-                      <span className="text-blue-400">{"{start_of_tab: Guitar Riff}"}</span>
+                      <span className="text-cyan-400">{"{start_of_tab: Guitar Riff}"}</span>
                     </div>
-                    <div className="text-blue-50/80">e|-----------------0--2--3-------|</div>
-                    <div className="text-blue-50/80">B|-------0--1--3-----------------|</div>
-                    <div className="text-blue-50/80">G|----0--------------------------|</div>
-                    <div className="text-blue-50/80">D|-------------------------------|</div>
-                    <div className="text-blue-50/80">A|-------------------------------|</div>
-                    <div className="text-blue-50/80">E|-------------------------------|</div>
+                    <div className="text-cyan-100/90">e|-----------------0--2--3-------|</div>
+                    <div className="text-cyan-100/90">B|-------0--1--3-----------------|</div>
+                    <div className="text-cyan-100/90">G|----0--------------------------|</div>
+                    <div className="text-cyan-100/90">D|-------------------------------|</div>
+                    <div className="text-cyan-100/90">A|-------------------------------|</div>
+                    <div className="text-cyan-100/90">E|-------------------------------|</div>
                     <div>
-                      <span className="text-blue-400">{"{end_of_tab}"}</span>
+                      <span className="text-cyan-400">{"{end_of_tab}"}</span>
                     </div>
                   </CodeWindow>
                 </div>
@@ -790,31 +746,30 @@ export function ChordProGuide() {
               <div id="atalhos" className="scroll-mt-28">
                 <SectionHeader
                   icon={Keyboard}
-                  eyebrow={t("chordproGuide.shortcutsEyebrow")}
                   title={t("chordproGuide.shortcutsTitle")}
                   lede={t("chordproGuide.shortcutsLede")}
                 />
 
                 <div className="mt-10 reveal">
                   <div className="flex items-center gap-3 mb-2">
-                    <Code2 className="w-6 h-6 text-primary" />
-                    <h3 className="text-2xl font-display font-bold text-primary">
+                    <Code2 className="w-6 h-6 text-cyan-300" />
+                    <h3 className="text-2xl font-display font-bold text-white">
                       {t("chordproGuide.autocompleteTitle")}
                     </h3>
                   </div>
-                  <p className="text-muted-foreground mb-6 leading-relaxed max-w-2xl">
+                  <p className="text-white/80 mb-6 leading-relaxed max-w-2xl text-sm sm:text-base">
                     {t("chordproGuide.autocompleteDesc")}
                   </p>
                 </div>
 
                 <div className="mt-14 reveal">
                   <div className="flex items-center gap-3 mb-2">
-                    <MousePointerClick className="w-6 h-6 text-primary" />
-                    <h3 className="text-2xl font-display font-bold text-primary">
+                    <MousePointerClick className="w-6 h-6 text-cyan-300" />
+                    <h3 className="text-2xl font-display font-bold text-white">
                       {t("chordproGuide.selectAndWrapTitle")}
                     </h3>
                   </div>
-                  <p className="text-muted-foreground mb-6 leading-relaxed max-w-2xl">
+                  <p className="text-white/80 mb-6 leading-relaxed max-w-2xl text-sm sm:text-base">
                     {t("chordproGuide.selectAndWrapDesc")}
                   </p>
                   <div className="grid sm:grid-cols-3 gap-4">
@@ -837,20 +792,20 @@ export function ChordProGuide() {
                     ].map((item, idx) => (
                       <div
                         key={idx}
-                        className="p-6 border border-border rounded-2xl shadow-sm bg-secondary/40"
+                        className="p-6 border border-white/15 rounded-2xl shadow-xl bg-slate-900/60 backdrop-blur-md text-white"
                       >
                         <div className="flex items-center gap-2 mb-4">
                           {item.keys.map((k, i) => (
                             <span key={i} className="flex items-center gap-2">
                               <Key>{k}</Key>
                               {i < item.keys.length - 1 && (
-                                <span className="text-muted-foreground text-sm">+</span>
+                                <span className="text-white/60 text-sm">+</span>
                               )}
                             </span>
                           ))}
                         </div>
-                        <div className="font-bold text-primary mb-1">{item.label}</div>
-                        <p className="text-muted-foreground text-xs">{item.desc}</p>
+                        <div className="font-bold text-white mb-1">{item.label}</div>
+                        <p className="text-white/70 text-xs leading-relaxed">{item.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -858,12 +813,12 @@ export function ChordProGuide() {
 
                 <div className="mt-14 reveal">
                   <div className="flex items-center gap-3 mb-2">
-                    <Lightbulb className="w-6 h-6 text-primary" />
-                    <h3 className="text-2xl font-display font-bold text-primary">
+                    <Lightbulb className="w-6 h-6 text-cyan-300" />
+                    <h3 className="text-2xl font-display font-bold text-white">
                       {t("chordproGuide.typeAndTabTitle")}
                     </h3>
                   </div>
-                  <p className="text-muted-foreground mb-6 leading-relaxed max-w-2xl">
+                  <p className="text-white/80 mb-6 leading-relaxed max-w-2xl text-sm sm:text-base">
                     {t("chordproGuide.typeAndTabDesc")}
                   </p>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -884,12 +839,12 @@ export function ChordProGuide() {
                     ].map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between gap-3 p-4 border border-border rounded-xl hover:border-primary/30 transition-all shadow-sm"
+                        className="flex items-center justify-between gap-3 p-4 border border-white/15 rounded-xl bg-slate-900/60 backdrop-blur-md hover:border-cyan-400/40 transition-all shadow-sm text-white"
                       >
-                        <code className="text-sm font-mono font-bold text-primary bg-blue-50 px-2.5 py-1.5 rounded-lg shrink-0">
+                        <code className="text-sm font-mono font-bold text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 px-2.5 py-1 rounded-lg shrink-0">
                           {item.trigger}
                         </code>
-                        <span className="text-muted-foreground text-xs text-right">
+                        <span className="text-white/70 text-xs text-right truncate">
                           {item.result}
                         </span>
                       </div>
@@ -901,7 +856,6 @@ export function ChordProGuide() {
               <div id="referencia" className="scroll-mt-28">
                 <SectionHeader
                   icon={BookMarked}
-                  eyebrow={t("chordproGuide.quickRefEyebrow")}
                   title={t("chordproGuide.quickRefTitle")}
                   lede={t("chordproGuide.quickRefLede")}
                 />
@@ -913,29 +867,31 @@ export function ChordProGuide() {
                     return (
                       <div key={cat}>
                         <div className="flex items-center gap-2 mb-4">
-                          <span className={`w-2 h-2 rounded-full ${meta.dot}`} />
-                          <h3 className="text-lg font-display font-bold text-primary">
+                          <span className={`w-2.5 h-2.5 rounded-full ${meta.dot}`} />
+                          <h3 className="text-lg font-display font-bold text-white">
                             {meta.label}
                           </h3>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-white/60">
                             {t("chordproGuide.directivesCount", { count: entries.length })}
                           </span>
                         </div>
-                        <div className="rounded-2xl border border-border overflow-hidden shadow-sm overflow-x-auto">
+                        <div className="rounded-2xl border border-white/15 overflow-hidden shadow-2xl bg-slate-900/60 backdrop-blur-md overflow-x-auto">
                           <table className="w-full text-sm min-w-150">
                             <tbody>
                               {entries.map((entry, idx) => (
                                 <tr
                                   key={entry.directive}
-                                  className={idx % 2 === 0 ? "bg-white" : "bg-secondary/40"}
+                                  className={`border-b border-white/10 ${
+                                    idx % 2 === 0 ? "bg-white/5" : "bg-transparent"
+                                  }`}
                                 >
-                                  <td className="px-5 py-3.5 font-mono font-bold text-primary whitespace-nowrap">
+                                  <td className="px-5 py-3.5 font-mono font-bold text-cyan-300 whitespace-nowrap">
                                     {`{${entry.directive}}`}
                                   </td>
-                                  <td className="px-5 py-3.5 font-mono text-muted-foreground whitespace-nowrap">
+                                  <td className="px-5 py-3.5 font-mono text-white/70 whitespace-nowrap">
                                     {entry.alias ? `{${entry.alias}}` : "—"}
                                   </td>
-                                  <td className="px-5 py-3.5 text-muted-foreground leading-relaxed w-full">
+                                  <td className="px-5 py-3.5 text-white/85 leading-relaxed w-full">
                                     {t(`directives.${entry.descriptionKey}` as TranslationKey)}
                                   </td>
                                   <td className="px-5 py-3.5 text-right">
@@ -956,30 +912,32 @@ export function ChordProGuide() {
         </div>
       </section>
 
-      <section className="bg-secondary py-16 font-sans">
+      <section className="py-20 font-sans bg-transparent">
         <div className="container mx-auto px-6 text-center max-w-3xl reveal">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-primary mb-8 tracking-tight">
-            {t("chordproGuide.ctaTitle")}
-          </h2>
-          <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
-            {t("chordproGuide.ctaDesc")}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Button
-              size="lg"
-              className="rounded-full bg-primary px-10 text-white font-bold text-lg shadow-xl hover:scale-105 active:scale-95 transition-all py-6"
-            >
-              {t("chordproGuide.ctaCreateSong")}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full px-10 text-lg font-medium py-6"
-              asChild
-            >
-              <Link to="/">{t("chordproGuide.ctaBackHome")}</Link>
-            </Button>
+          <div className="bg-slate-900/70 backdrop-blur-xl border border-white/15 rounded-3xl p-8 sm:p-12 md:p-16 text-white shadow-2xl">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-6 tracking-tight">
+              {t("chordproGuide.ctaTitle")}
+            </h2>
+            <p className="text-lg md:text-xl text-white/80 mb-10 leading-relaxed">
+              {t("chordproGuide.ctaDesc")}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-lg shadow-xl hover:scale-105 active:scale-95 transition-all py-6 px-10"
+              >
+                {t("chordproGuide.ctaCreateSong")}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="rounded-full border-white/25 bg-white/5 text-white hover:bg-white/10 text-lg font-medium py-6 px-10"
+                asChild
+              >
+                <Link to="/">{t("chordproGuide.ctaBackHome")}</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

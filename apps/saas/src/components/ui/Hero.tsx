@@ -65,7 +65,11 @@ export default function Hero() {
   ] as [string, string, string];
 
   return (
-    <section id="top" className="relative h-screen min-h-140 w-full overflow-hidden bg-[#021433] text-white font-sans">
+    <section
+      id="top"
+      data-bg-theme="blue"
+      className="relative h-screen min-h-140 w-full overflow-hidden bg-transparent text-white font-sans"
+    >
       <SplashScreen onReveal={() => setSplashRevealed(true)} />
       <h1 className="sr-only">{headlineLines.join(" ")}</h1>
       <WebGLCanvas

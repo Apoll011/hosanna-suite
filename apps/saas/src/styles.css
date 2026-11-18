@@ -198,6 +198,19 @@ html {
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+[data-canvas-theme="blue"],
+:root {
+  --foreground: #ffffff;
+  --muted-foreground: rgba(255, 255, 255, 0.78);
+}
+
+/* Ensure solid white footer retains high-contrast dark text */
+footer.bg-white,
+.bg-white {
+  --foreground: #021433;
+  --muted-foreground: #64748b;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

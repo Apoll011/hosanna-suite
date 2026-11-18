@@ -66,6 +66,7 @@ export const liquidBgFragmentShader = /* glsl */ `
   uniform float uLinesAmount;
   uniform float uBackgroundScale;
   uniform float uTime;
+  uniform float uLightBias;
 
   varying vec2 vUv;
 

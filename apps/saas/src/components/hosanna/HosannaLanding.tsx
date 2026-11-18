@@ -59,28 +59,11 @@ function Logo({ className }: { className?: string }) {
 
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
 export function Nav() {
-  return <HeroHeader mode="scrolled-only" />;
+  return <HeroHeader />;
 }
 
-export function StaffLines({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 1200 200"
-      className={cn("pointer-events-none absolute inset-x-0", className)}
-      preserveAspectRatio="none"
-    >
-      {[0, 1, 2, 3, 4].map((i) => (
-        <path
-          key={i}
-          d={`M0 ${40 + i * 25} Q 300 ${20 + i * 25} 600 ${40 + i * 25} T 1200 ${40 + i * 25}`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1"
-        />
-      ))}
-    </svg>
-  );
+export function StaffLines(_props: { className?: string }) {
+  return null;
 }
 
 
@@ -91,30 +74,30 @@ function Problem() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="relative bg-background py-16 md:py-16 font-sans">
+    <section className="relative bg-transparent py-16 md:py-16 font-sans">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.problem.eyebrow")} title={t("landing.problem.title")}>
+        <SectionHeader title={t("landing.problem.title")}>
           {t("landing.problem.description")}
         </SectionHeader>
         <div className="reveal mt-16 grid gap-8 md:grid-cols-3">
           {dict.landing.problem.cards.map((c: { title: string; body: string }) => (
             <div
               key={c.title}
-              className="rounded-3xl border border-blue-50 bg-white p-8 text-center transition-all hover:shadow-lg group shadow-sm"
+              className="rounded-3xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 text-center text-white transition-all hover:border-cyan-400/40 shadow-xl group"
             >
-              <h3 className="font-display text-2xl text-primary mb-3">{c.title}</h3>
-              <p className="text-base leading-relaxed text-muted-foreground">{c.body}</p>
+              <h3 className="font-display text-2xl text-cyan-300 mb-3">{c.title}</h3>
+              <p className="text-base leading-relaxed text-white/80">{c.body}</p>
             </div>
           ))}
         </div>
       </div>
       <div className="reveal mt-20 text-center">
         <blockquote className="mx-auto max-w-4xl">
-          <p className="font-display text-3xl leading-tight italic text-primary md:text-5xl">
+          <p className="font-display text-3xl leading-tight italic text-white md:text-5xl">
             {t("landing.problem.verse")}
           </p>
 
-          <footer className="mt-4 text-base font-medium text-muted-foreground">
+          <footer className="mt-4 text-base font-medium text-white/60">
             — {t("landing.problem.s1506")}
           </footer>
         </blockquote>
@@ -127,19 +110,19 @@ function TwoApps() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="features" className="relative bg-secondary py-16 md:py-16">
+    <section id="features" className="relative bg-transparent py-16 md:py-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.twoApps.eyebrow")} title={t("landing.twoApps.title")}>
+        <SectionHeader title={t("landing.twoApps.title")}>
           {t("landing.twoApps.description")}
         </SectionHeader>
 
         <div className="mt-16 grid gap-8 lg:grid-cols-2">
-          <div className="reveal group relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-10">
+          <div className="reveal group relative overflow-hidden rounded-3xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 md:p-10 shadow-2xl text-white">
             <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
                 <Monitor className="h-5 w-5" />
               </div>
-              <h3 className="font-display text-2xl text-foreground">
+              <h3 className="font-display text-2xl text-white">
                 {t("landing.twoApps.dashboardTitle")}
               </h3>
             </div>
@@ -150,28 +133,28 @@ function TwoApps() {
               width={1400}
               height={972}
               decoding="async"
-              className="mt-8 w-full rounded-xl"
+              className="mt-8 w-full rounded-xl border border-white/10"
             />
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {dict.landing.twoApps.dashboardFeatures.map((f: string) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-foreground">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                <li key={f} className="flex items-start gap-2 text-sm text-white/90">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
                   <span>{f}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="reveal group relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-10">
+          <div className="reveal group relative overflow-hidden rounded-3xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 md:p-10 shadow-2xl text-white">
             <div className="flex items-center gap-3">
-              <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
                 <Smartphone className="h-5 w-5" />
               </div>
-              <h3 className="font-display text-2xl text-foreground">
+              <h3 className="font-display text-2xl text-white">
                 {t("landing.twoApps.mobileTitle")}
               </h3>
             </div>
-            <div className="mt-8 grid place-items-center rounded-xl bg-secondary/60 p-6">
+            <div className="mt-8 grid place-items-center rounded-xl bg-slate-950/40 border border-white/10 p-6">
               <img
                 src={mobileImg}
                 alt="Mobile app preview"
@@ -183,8 +166,8 @@ function TwoApps() {
             </div>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {dict.landing.twoApps.mobileFeatures.map((f: string) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-foreground">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                <li key={f} className="flex items-start gap-2 text-sm text-white/90">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
                   <span>{f}</span>
                 </li>
               ))}
@@ -201,9 +184,9 @@ function Organize() {
   const icons = [FolderTree, Search, Music];
 
   return (
-    <section className="bg-background py-16 md:py-16">
+    <section className="bg-transparent py-16 md:py-16">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.organize.eyebrow")} title={t("landing.organize.title")}>
+        <SectionHeader title={t("landing.organize.title")}>
           {t("landing.organize.description")}
         </SectionHeader>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
@@ -212,13 +195,13 @@ function Organize() {
             return (
               <div
                 key={card.title}
-                className="reveal rounded-2xl border border-border bg-card p-8 transition-all hover:-translate-y-1 hover:shadow-soft"
+                className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 text-white transition-all hover:-translate-y-1 hover:border-cyan-400/40 shadow-xl"
               >
-                <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-primary/10 text-primary-dark">
+                <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-display text-xl font-semibold text-foreground">{card.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
+                <h3 className="font-display text-xl font-semibold text-white">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/75">{card.body}</p>
               </div>
             );
           })}
@@ -232,7 +215,7 @@ function AppGallery() {
   return (
     <LazySection
       load={() => import("./AppGallery")}
-      fallback={<section className="bg-secondary py-16 md:py-16" aria-hidden />}
+      fallback={<section className="bg-transparent py-16 md:py-16" aria-hidden />}
       rootMargin="500px"
     />
   );
@@ -242,30 +225,22 @@ function HowItWorks() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="how" className="relative bg-primary py-16 text-primary-foreground md:py-16">
-      <div className="absolute inset-0 text-gold/25">
-        <StaffLines className="top-16" />
-      </div>
+    <section id="how" className="relative bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="relative mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader
-          eyebrow={t("landing.howItWorks.eyebrow")}
-          title={t("landing.howItWorks.title")}
-          eyebrowClassName="!text-[color:var(--primary-light)]"
-          titleClassName="!text-primary-foreground"
-        >
-          <span className="text-primary-foreground/70">{t("landing.howItWorks.description")}</span>
+        <SectionHeader title={t("landing.howItWorks.title")}>
+          <span className="text-white/80">{t("landing.howItWorks.description")}</span>
         </SectionHeader>
         <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {dict.landing.howItWorks.steps.map((s: { n: string; title: string; body: string }) => (
             <div
               key={s.n}
-              className="reveal rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-7 backdrop-blur-sm transition-all hover:-translate-y-1"
+              className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-7 text-white transition-all hover:-translate-y-1 shadow-xl"
             >
-              <div className="font-display text-4xl text-gold-gradient">{s.n}</div>
-              <h3 className="mt-3 font-display text-xl font-semibold text-primary-foreground">
+              <div className="font-display text-4xl text-cyan-400 font-bold">{s.n}</div>
+              <h3 className="mt-3 font-display text-xl font-semibold text-white">
                 {s.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-primary-foreground/70">{s.body}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/75">{s.body}</p>
             </div>
           ))}
         </div>
@@ -289,31 +264,31 @@ function LiveWorship() {
   ];
 
   return (
-    <section className="bg-background py-16 md:py-16">
+    <section className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto grid max-w-6xl gap-14 px-5 md:px-8 lg:grid-cols-2 lg:items-center">
         <div className="reveal">
-          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-white md:text-4xl lg:text-5xl">
             {t("landing.liveWorship.title")}
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-white/80 md:text-lg">
             {t("landing.liveWorship.description")}
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {items.map(({ icon: Icon, label }) => (
               <div
                 key={label}
-                className="flex items-center gap-3 rounded-xl border border-border bg-card p-4"
+                className="flex items-center gap-3 rounded-xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-4 text-white shadow-sm"
               >
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary-dark">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
                   <Icon className="h-4 w-4" />
                 </div>
-                <span className="text-sm font-medium text-foreground">{label}</span>
+                <span className="text-sm font-medium text-white">{label}</span>
               </div>
             ))}
           </div>
         </div>
         <div className="reveal relative">
-          <div className="absolute -inset-6 rounded-3xl bg-linear-to-br from-gold/20 via-transparent to-primary/10 blur-2xl" />
+          <div className="absolute -inset-6 rounded-3xl bg-cyan-500/10 blur-2xl pointer-events-none" />
           <img
             src={mobileImg}
             alt="Hosanna mobile live worship view"
@@ -332,27 +307,27 @@ function AnySize() {
   const { t } = useI18n();
 
   return (
-    <section className="bg-secondary py-16 md:py-16">
+    <section className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.anySize.eyebrow")} title={t("landing.anySize.title")}>
+        <SectionHeader title={t("landing.anySize.title")}>
           {t("landing.anySize.description")}
         </SectionHeader>
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          <div className="reveal rounded-2xl border border-border bg-card p-8">
-            <ShieldCheck className="h-8 w-8 text-gold" />
-            <h3 className="mt-4 font-display text-xl font-semibold text-foreground">
+          <div className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 text-white shadow-xl">
+            <ShieldCheck className="h-8 w-8 text-cyan-300" />
+            <h3 className="mt-4 font-display text-xl font-semibold text-white">
               {t("landing.anySize.privateLibTitle")}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-sm leading-relaxed text-white/75">
               {t("landing.anySize.privateLibBody")}
             </p>
           </div>
-          <div className="reveal rounded-2xl border border-border bg-card p-8">
-            <Users className="h-8 w-8 text-gold" />
-            <h3 className="mt-4 font-display text-xl font-semibold text-foreground">
+          <div className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-8 text-white shadow-xl">
+            <Users className="h-8 w-8 text-cyan-300" />
+            <h3 className="mt-4 font-display text-xl font-semibold text-white">
               {t("landing.anySize.multiTeamTitle")}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-sm leading-relaxed text-white/75">
               {t("landing.anySize.multiTeamBody")}
             </p>
           </div>
@@ -366,39 +341,39 @@ function ExportSection() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="bg-background py-16 md:py-16">
+    <section className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1fr] lg:items-center">
         <div className="reveal">
-          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+          <h2 className="font-display text-3xl leading-tight tracking-tight text-white md:text-4xl">
             {t("landing.export.title")}
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-white/80 md:text-lg">
             {t("landing.export.description")}
           </p>
-          <ul className="mt-6 space-y-3 text-sm text-foreground">
+          <ul className="mt-6 space-y-3 text-sm text-white">
             {dict.landing.export.bullets.map((b: string) => (
               <li key={b} className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 text-gold" /> {b}
+                <Check className="mt-0.5 h-4 w-4 text-cyan-300" /> {b}
               </li>
             ))}
           </ul>
         </div>
         <div className="reveal">
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <FileDown className="h-4 w-4 text-gold" /> {t("landing.export.sampleServiceTitle")}
+          <div className="rounded-2xl border border-white/15 bg-slate-900/70 backdrop-blur-md p-6 shadow-2xl text-white">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-cyan-300">
+              <FileDown className="h-4 w-4 text-cyan-300" /> {t("landing.export.sampleServiceTitle")}
             </div>
             <div className="space-y-2 text-sm">
               {dict.landing.export.sampleItems.map((s: string, i: number) => (
                 <div
                   key={s}
-                  className="flex items-center justify-between rounded-lg border border-border/70 bg-secondary/40 px-3 py-2"
+                  className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white"
                 >
-                  <span className="font-medium text-foreground">
-                    <span className="mr-2 text-muted-foreground">{i + 1}.</span>
+                  <span className="font-medium text-white">
+                    <span className="mr-2 text-white/60">{i + 1}.</span>
                     {s}
                   </span>
-                  <span className="text-xs text-muted-foreground">PDF</span>
+                  <span className="text-xs text-white/60">PDF</span>
                 </div>
               ))}
             </div>
@@ -438,17 +413,17 @@ function Pricing() {
   const unit = annual ? t("landing.pricing.perYearUnit") : t("landing.pricing.perMonthUnit");
 
   return (
-    <section id="pricing" className="bg-secondary py-16 md:py-16">
+    <section id="pricing" className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.pricing.eyebrow")} title={t("landing.pricing.title")}>
+        <SectionHeader title={t("landing.pricing.title")}>
           {t("landing.pricing.description")}
         </SectionHeader>
 
         <div className="reveal mt-10 flex items-center justify-center">
-          <div className="relative flex w-full max-w-70 items-center rounded-2xl bg-secondary p-1.5 shadow-inner">
+          <div className="relative flex w-full max-w-70 items-center rounded-2xl bg-slate-900/80 border border-white/15 p-1.5 shadow-inner">
             <div
               className={cn(
-                "absolute inset-y-1.5 h-[calc(100%-12px)] w-[calc(50%-6px)] rounded-xl bg-white shadow-sm transition-all duration-300 ease-out",
+                "absolute inset-y-1.5 h-[calc(100%-12px)] w-[calc(50%-6px)] rounded-xl bg-cyan-400 shadow-md transition-all duration-300 ease-out",
                 annual ? "translate-x-[calc(100%+6px)]" : "translate-x-0",
               )}
             />
@@ -456,7 +431,7 @@ function Pricing() {
               onClick={() => setAnnual(false)}
               className={cn(
                 "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
-                !annual ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                !annual ? "text-slate-950 font-bold" : "text-white/70 hover:text-white",
               )}
             >
               {t("landing.pricing.monthly")}
@@ -465,11 +440,14 @@ function Pricing() {
               onClick={() => setAnnual(true)}
               className={cn(
                 "relative z-10 flex-1 py-2 text-sm font-semibold transition-colors duration-200",
-                annual ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                annual ? "text-slate-950 font-bold" : "text-white/70 hover:text-white",
               )}
             >
               {t("landing.pricing.annual")}
-              <span className="ml-1.5 inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700 uppercase tracking-wider">
+              <span className={cn(
+                "ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                annual ? "bg-slate-950/20 text-slate-950" : "bg-cyan-950/80 text-cyan-300 border border-cyan-500/30"
+              )}>
                 {t("landing.pricing.discountBadge")}
               </span>
             </button>
@@ -477,21 +455,18 @@ function Pricing() {
         </div>
 
         <div className="reveal mx-auto mt-12 max-w-2xl">
-          <div className="relative overflow-hidden rounded-3xl border border-transparent bg-primary p-8 text-primary-foreground shadow-soft md:p-12">
-            <div className="absolute inset-0 text-gold/20 pointer-events-none">
-              <StaffLines className="top-0" />
-            </div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/20 bg-slate-900/75 backdrop-blur-xl p-8 text-white shadow-2xl md:p-12">
             <div className="relative">
-              <div className="font-display text-4xl font-semibold md:text-5xl">Hosanna</div>
-              <p className="mt-2 text-primary-foreground/75">
+              <div className="font-display text-4xl font-semibold md:text-5xl text-white">Hosanna</div>
+              <p className="mt-2 text-white/75">
                 {t("landing.pricing.singlePlanDesc")}
               </p>
 
               <div className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-semibold md:text-7xl">{price}€</span>
-                <span className="text-primary-foreground/70">{unit}</span>
+                <span className="font-display text-6xl font-semibold md:text-7xl text-cyan-300">{price}€</span>
+                <span className="text-white/70">{unit}</span>
               </div>
-              <p className="mt-1 text-xs text-primary-foreground/60">
+              <p className="mt-1 text-xs text-white/60">
                 {annual
                   ? t("landing.pricing.annualBilledNote")
                   : t("landing.pricing.monthlyBilledNote")}
@@ -501,9 +476,9 @@ function Pricing() {
 
               <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                 {dict.landing.pricing.features.map((f: string) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                    <span className="text-primary-foreground/90">{f}</span>
+                  <li key={f} className="flex items-start gap-2 text-sm text-white/90">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                    <span>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -511,26 +486,26 @@ function Pricing() {
               <Button
                 asChild
                 size="lg"
-                className="mt-10 w-full rounded-full bg-white text-primary-dark hover:bg-blue-50 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg"
+                className="mt-10 w-full rounded-full bg-cyan-400 text-slate-950 font-bold hover:bg-cyan-300 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
               >
                 <a href={`${dashboardUrl}/?plan=base&payment=${annual ? "yearly" : "monthly"}`}>
                   {t("landing.pricing.ctaTry")} <ArrowRight className="ml-1 h-4 w-4" />
                 </a>
               </Button>
-              <p className="mt-3 text-center text-xs text-primary-foreground/60">
+              <p className="mt-3 text-center text-xs text-white/60">
                 {t("landing.pricing.freeTrialDays")}
               </p>
             </div>
           </div>
 
-          <p className="reveal mt-6 text-center text-sm text-muted-foreground">
+          <p className="reveal mt-6 text-center text-sm text-white/70">
             {t("landing.pricing.pricingClarification")}
           </p>
 
-          <div className="reveal mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-border bg-card px-5 py-4 text-sm text-muted-foreground">
-            <Users className="mt-0.5 h-4 w-4 shrink-0 text-primary-dark" />
+          <div className="reveal mx-auto mt-6 flex max-w-xl items-start gap-3 rounded-2xl border border-white/15 bg-slate-900/50 backdrop-blur-md px-5 py-4 text-sm text-white/80">
+            <Users className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
             <p>
-              <span className="font-medium text-foreground">
+              <span className="font-medium text-white">
                 {t("landing.pricing.multiCampusLabel")}
               </span>{" "}
               {t("landing.pricing.multiCampusText")}
@@ -546,19 +521,15 @@ function MobileApp() {
   const { t } = useI18n();
 
   return (
-    <section id="mobile" className="py-16 bg-primary overflow-hidden relative font-sans">
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
+    <section id="mobile" className="py-16 bg-transparent overflow-hidden relative font-sans text-white">
       <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 reveal">
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium">
-              {t("landing.mobileApp.badge")}
-            </div>
             <h2 className="text-4xl md:text-6xl font-display text-white leading-[1.1] tracking-tight">
               {t("landing.mobileApp.titleStart")}{" "}
-              <span className="text-blue-200">{t("landing.mobileApp.titleHighlight")}</span>.
+              <span className="text-cyan-300">{t("landing.mobileApp.titleHighlight")}</span>.
             </h2>
-            <p className="text-xl text-blue-50/80 leading-relaxed max-w-xl">
+            <p className="text-xl text-white/80 leading-relaxed max-w-xl">
               {t("landing.mobileApp.description")}
             </p>
             <div className="flex flex-wrap gap-5 pt-4">
@@ -566,7 +537,7 @@ function MobileApp() {
             </div>
           </div>
           <div className="relative reveal">
-            <div className="absolute -inset-10 bg-blue-400/20 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute -inset-10 bg-cyan-400/20 rounded-full blur-[100px] pointer-events-none" />
             <img
               src={mobileImg}
               alt="Hosanna Mobile App"
@@ -587,19 +558,16 @@ function Vision() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-16">
+    <section className="relative overflow-hidden bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
-        <div className="reveal text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-          {t("landing.vision.eyebrow")}
-        </div>
-        <p className="reveal mt-6 font-display text-3xl leading-snug text-foreground md:text-4xl lg:text-5xl">
+        <p className="reveal mt-6 font-display text-3xl leading-snug text-white md:text-4xl lg:text-5xl">
           {t("landing.vision.quote1")}
         </p>
-        <p className="reveal mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p className="reveal mt-6 text-base leading-relaxed text-white/80 md:text-lg">
           {t("landing.vision.body")}
         </p>
-        <p className="reveal mt-8 font-display text-lg italic text-primary-dark md:text-xl">
-          {t("landing.vision.quote2")}
+        <p className="reveal mt-8 font-display text-lg italic text-cyan-300 md:text-xl">
+          “{t("landing.vision.quote2")}”
         </p>
       </div>
     </section>
@@ -613,36 +581,33 @@ function OpenSource() {
   const { t } = useI18n();
 
   return (
-    <section id="open-source" className="bg-secondary py-16 md:py-16">
+    <section id="open-source" className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
         <div className="reveal">
-          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
-            {t("landing.openSource.eyebrow")}
-          </div>
-          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-white md:text-4xl">
             {t("landing.openSource.title")}
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
             {t("landing.openSource.body")}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild className="rounded-full">
+            <Button asChild className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6">
               <a href={githubAppUrl} target="_blank" rel="noreferrer">
                 <Code2 className="mr-2 h-4 w-4" />
                 {t("landing.openSource.ctaApp")}
               </a>
             </Button>
-            <Button asChild variant="outline" className="rounded-full">
+            <Button asChild variant="outline" className="rounded-full border-white/20 text-white hover:bg-white/10 px-6">
               <a href={githubStudioUrl} target="_blank" rel="noreferrer">
                 {t("landing.openSource.ctaStudio")}
               </a>
             </Button>
           </div>
         </div>
-        <div className="reveal hidden rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground md:block">
-          <div className="font-mono text-xs text-foreground">Apache License 2.0</div>
-          <div className="mt-2">github.com/Apoll011/Hosanna</div>
-          <div>github.com/Apoll011/hosanna-studio</div>
+        <div className="reveal hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-6 text-sm text-white/80 md:block">
+          <div className="font-mono text-xs text-cyan-300">Apache License 2.0</div>
+          <div className="mt-2 text-white/70">github.com/Apoll011/Hosanna</div>
+          <div className="text-white/70">github.com/Apoll011/hosanna-studio</div>
         </div>
       </div>
     </section>
@@ -651,15 +616,13 @@ function OpenSource() {
 
 function SupportTheMission() {
   const { t } = useI18n();
-  // Link out instead of embedding the GoFundMe widget — the iframe pulls ~1MB of
-  // third-party JS, trips CSP frame-ancestors reports, and 401s on api.gofundme.com.
   const goFundMeUrl =
     "https://www.gofundme.com/f/ajudenos-a-levar-o-hosanna-a-igrejas-de-todo-o-mundo";
 
   return (
-    <section className="bg-secondary py-16 md:py-16">
+    <section className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.support.eyebrow")} title={t("landing.support.title")}>
+        <SectionHeader title={t("landing.support.title")}>
           {t("landing.support.description")}
         </SectionHeader>
 
@@ -667,7 +630,7 @@ function SupportTheMission() {
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-primary-dark text-primary-foreground"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-8 shadow-xl"
           >
             <a href={goFundMeUrl} target="_blank" rel="noopener noreferrer">
               {t("landing.support.cta")} <ArrowRight className="ml-2 h-5 w-5" />
@@ -683,15 +646,15 @@ function Roadmap() {
   const { t, dict } = useI18n();
 
   return (
-    <section className="bg-background py-16 md:py-16">
+    <section className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.roadmap.eyebrow")} title={t("landing.roadmap.title")}>
+        <SectionHeader title={t("landing.roadmap.title")}>
           {t("landing.roadmap.description")}
         </SectionHeader>
         <div className="reveal mt-14 grid gap-x-12 sm:grid-cols-2">
           {dict.landing.roadmap.items.map((item: string) => (
-            <div key={item} className="flex items-center border-b border-border py-5">
-              <span className="text-sm leading-relaxed text-foreground">{item}</span>
+            <div key={item} className="flex items-center py-4 border-b border-white/10">
+              <span className="text-sm leading-relaxed text-white/85">{item}</span>
             </div>
           ))}
         </div>
@@ -704,19 +667,19 @@ function FAQ() {
   const { t, dict } = useI18n();
 
   return (
-    <section id="faq" className="bg-secondary py-16 md:py-16">
+    <section id="faq" className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-3xl px-5 md:px-8">
-        <SectionHeader eyebrow={t("landing.faq.eyebrow")} title={t("landing.faq.title")}>
+        <SectionHeader title={t("landing.faq.title")}>
           {t("landing.faq.description")}
         </SectionHeader>
         <div className="reveal mt-12">
           <Accordion type="single" collapsible className="w-full">
             {dict.landing.faq.items.map((f: { q: string; a: string }, i: number) => (
-              <AccordionItem key={f.q} value={`item-${i}`} className="border-border">
-                <AccordionTrigger className="text-left font-display text-lg font-medium text-foreground hover:no-underline">
+              <AccordionItem key={f.q} value={`item-${i}`} className="border-b border-white/15">
+                <AccordionTrigger className="text-left font-display text-lg font-medium text-white hover:text-cyan-300 hover:no-underline py-5">
                   {f.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-base leading-relaxed text-muted-foreground">
+                <AccordionContent className="text-base leading-relaxed text-white/80 pb-6">
                   {f.a}
                 </AccordionContent>
               </AccordionItem>
@@ -732,23 +695,19 @@ function FinalCTA() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-hero-gradient py-16 text-primary-foreground md:py-16">
-      <div className="absolute inset-0 text-gold/30">
-        <StaffLines className="top-10" />
-        <StaffLines className="bottom-10" />
-      </div>
+    <section className="relative overflow-hidden bg-transparent py-16 md:py-24 text-white font-sans">
       <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
         <h2 className="reveal font-display text-4xl leading-tight tracking-tight md:text-6xl text-white">
           {t("landing.finalCta.title")}
         </h2>
-        <p className="reveal mx-auto mt-6 max-w-xl text-blue-50/70 md:text-xl">
+        <p className="reveal mx-auto mt-6 max-w-xl text-white/80 md:text-xl">
           {t("landing.finalCta.subtitle")}
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row reveal">
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-white px-10 text-lg font-medium text-primary shadow-xl transition-all hover:scale-105 active:scale-95 hover:bg-blue-50"
+            className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-10 text-lg shadow-xl transition-all hover:scale-105 active:scale-95 py-6"
           >
             <a href={dashboardUrl}>
               {t("landing.finalCta.ctaStart")} <ArrowRight className="ml-2 h-5 w-5" />
@@ -758,7 +717,7 @@ function FinalCTA() {
             asChild
             size="lg"
             variant="outline"
-            className="rounded-full border-white/30 bg-white/5 px-10 text-lg font-medium text-white backdrop-blur-md transition-all hover:bg-white/10"
+            className="rounded-full border-white/25 bg-white/5 text-white hover:bg-white/10 px-10 text-lg font-medium backdrop-blur-md transition-all py-6"
           >
             <Link to="/contact">{t("landing.finalCta.ctaContact")}</Link>
           </Button>
@@ -770,131 +729,168 @@ function FinalCTA() {
 
 export function Footer() {
   const { t } = useI18n();
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
 
-  const footerCols = [
+  const colInfo = [
+    { label: t("landing.footer.features"), href: "/#features", isInternal: false },
+    { label: t("landing.footer.chordproGuide"), href: "/chordpro", isInternal: true },
+    { label: t("landing.footer.pricing"), href: "/#pricing", isInternal: false },
+    { label: t("landing.nav.about"), href: "/about", isInternal: true },
+    { label: t("landing.footer.downloadApp"), href: "/#mobile", isInternal: false },
+    { label: t("landing.footer.openSource"), href: "/#open-source", isInternal: false },
+  ];
+
+  const colSocial = [
+    { label: "GitHub", href: githubAppUrl },
+    { label: "Instagram", href: "https://www.instagram.com/hosanna.studio" },
+    { label: "YouTube", href: "https://www.youtube.com/@hosanna.studio" },
+    { label: "Blog", href: "https://blog.hosanna.live" },
+  ];
+
+  const colNav = [
+    { label: t("common.backToHome"), href: "/", isInternal: true },
+    { label: t("landing.nav.about"), href: "/about", isInternal: true },
+    { label: t("landing.footer.chordproGuide"), href: "/chordpro", isInternal: true },
+    { label: t("landing.footer.contact"), href: "/contact", isInternal: true },
+    { label: t("landing.footer.termsOfService"), href: "/terms", isInternal: true },
+    { label: t("landing.footer.privacyPolicy"), href: "/privacy", isInternal: true },
     {
-      title: t("landing.footer.colProduct"),
-      links: [
-        { label: t("landing.footer.features"), href: "/#features", isInternal: false },
-        { label: t("landing.footer.chordproGuide"), href: "/chordpro", isInternal: true },
-        { label: t("landing.footer.pricing"), href: "/#pricing", isInternal: false },
-        { label: t("landing.nav.about"), href: "/about", isInternal: true },
-        { label: t("landing.footer.downloadApp"), href: "/#mobile", isInternal: false },
-        { label: t("landing.footer.openSource"), href: "/#open-source", isInternal: false },
-        {
-          label: t("landing.footer.github"),
-          href: githubAppUrl,
-          isInternal: false,
-        },
-        {
-          label: t("landing.footer.blog"),
-          href: "https://blog.hosanna.live",
-          isInternal: false,
-        },
-      ],
-    },
-    {
-      title: t("landing.footer.colSupport"),
-      links: [
-        { label: t("landing.footer.contact"), href: "/contact", isInternal: true },
-        {
-          label: t("landing.footer.blogGuides"),
-          href: "https://blog.hosanna.live",
-          isInternal: false,
-        },
-        {
-          label: t("landing.footer.blogChordPro"),
-          href: "https://blog.hosanna.live/blog/chordpro-editor-guide",
-          isInternal: false,
-        },
-        {
-          label: t("landing.footer.blogOffline"),
-          href: "https://blog.hosanna.live/blog/offline-first-worship-software",
-          isInternal: false,
-        },
-        {
-          label: t("landing.footer.blogServices"),
-          href: "https://blog.hosanna.live/blog/planning-a-sunday-service",
-          isInternal: false,
-        },
-        { label: t("landing.footer.helpCenter"), href: "#", isInternal: false },
-        { label: t("landing.footer.serviceStatus"), href: "#", isInternal: false },
-      ],
-    },
-    {
-      title: t("landing.footer.colLegal"),
-      links: [
-        { label: t("landing.footer.termsOfService"), href: "/terms", isInternal: true },
-        { label: t("landing.footer.privacyPolicy"), href: "/privacy", isInternal: true },
-        { label: t("landing.footer.cookies"), href: "/privacy#cookies", isInternal: true },
-        {
-          label: t("cookieConsent.cookieSettings"),
-          onClick: () => reopenCookieBanner(),
-          isAction: true,
-        },
-      ],
+      label: t("cookieConsent.cookieSettings"),
+      onClick: () => reopenCookieBanner(),
+      isAction: true,
     },
   ];
 
   return (
-    <footer className="bg-secondary py-20">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-10 px-5 md:grid-cols-4 md:px-8">
-        <div className="col-span-2 md:col-span-1">
-          <Logo />
-          <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-            {t("landing.footer.tagline")}
-          </p>
-        </div>
-        {footerCols.map((col) => (
-          <div key={col.title}>
-            <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground font-sans">
-              {col.title}
-            </div>
-            <ul className="mt-6 space-y-3 text-sm font-sans">
-              {col.links.map((link) => (
-                <li key={link.label}>
-                  {"isAction" in link && link.isAction ? (
-                    <button
-                      type="button"
-                      onClick={link.onClick}
-                      className="text-left text-muted-foreground transition-colors hover:text-primary cursor-pointer"
-                    >
-                      {link.label}
-                    </button>
-                  ) : link.isInternal ? (
-                    <Link
-                      to={link.href || "/"}
-                      className="text-muted-foreground transition-colors hover:text-primary"
-                    >
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a
-                      href={link.href}
-                      className="text-muted-foreground transition-colors hover:text-primary"
-                      {...(link.href?.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-                    >
-                      {link.label}
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
+    <footer className="relative z-30 bg-white text-[#021433] pt-20 pb-12 shadow-[0_-25px_60px_rgba(0,0,0,0.35)] border-t border-slate-200/80">
+      <div className="mx-auto max-w-7xl px-6 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          <div className="lg:col-span-5 flex flex-col items-start">
+            <Link to="/" hash="top" className="inline-block transition-transform hover:scale-105 mb-6">
+              <img
+                src={logo}
+                alt="Hosanna Studio"
+                className="w-12 h-12 rounded-xl object-contain shadow-sm"
+              />
+            </Link>
+            <h3 className="font-display text-2xl sm:text-3xl font-bold text-[#021433] leading-snug tracking-tight">
+              Música para a igreja.
+              <br />
+              Simples, moderno e fiável.
+            </h3>
+            <p className="mt-3 text-sm sm:text-base text-slate-500 leading-relaxed max-w-sm">
+              {t("landing.footer.tagline")}
+            </p>
+            <a
+              href="mailto:hosanna.songbook@gmail.com"
+              className="inline-flex items-center gap-2 mt-6 text-base font-semibold text-[#0284c7] hover:text-[#0538A6] transition-colors group"
+            >
+              hosanna.songbook@gmail.com
+              <span className="transition-transform group-hover:translate-x-1 font-bold">→</span>
+            </a>
           </div>
-        ))}
-      </div>
-      <div className="mx-auto mt-16 flex max-w-7xl flex-col items-center justify-between gap-6 border-t border-border px-5 pt-8 text-xs text-muted-foreground md:flex-row md:px-8">
-        <div>
-          © {new Date().getFullYear()} Hosanna Studio. {t("landing.footer.copyright")}
+
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-10">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-400 font-sans">
+                {t("landing.footer.colProduct")}
+              </div>
+              <ul className="mt-6 space-y-3.5 text-sm font-sans">
+                {colInfo.map((link) => (
+                  <li key={link.label}>
+                    {link.isInternal ? (
+                      <Link
+                        to={link.href}
+                        className="text-slate-600 transition-colors hover:text-[#0538A6] font-medium"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-slate-600 transition-colors hover:text-[#0538A6] font-medium"
+                      >
+                        {link.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-400 font-sans">
+                {t("landing.footer.colSupport")}
+              </div>
+              <ul className="mt-6 space-y-3.5 text-sm font-sans">
+                {colSocial.map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-[#0538A6] font-medium group"
+                    >
+                      {item.label}
+                      <span className="text-xs text-slate-400 group-hover:text-[#0538A6] transition-colors">↗</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-400 font-sans">
+                Navegação
+              </div>
+              <ul className="mt-6 space-y-3.5 text-sm font-sans">
+                {colNav.map((link) => {
+                  const isActive = "href" in link && link.href === currentPath;
+                  return (
+                    <li key={link.label} className="relative flex items-center">
+                      {"isAction" in link && link.isAction ? (
+                        <button
+                          type="button"
+                          onClick={link.onClick}
+                          className="text-left text-slate-600 transition-colors hover:text-[#0538A6] font-medium cursor-pointer"
+                        >
+                          {link.label}
+                        </button>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          className={cn(
+                            "flex items-center transition-colors font-medium",
+                            isActive ? "text-[#0538A6] font-bold" : "text-slate-600 hover:text-[#0538A6]"
+                          )}
+                        >
+                          {isActive && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0284c7] inline-block mr-2 shrink-0 shadow-[0_0_6px_rgba(2,132,199,0.6)]" />
+                          )}
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-8">
-          <a
-            href="mailto:hosanna.songbook@gmail.com"
-            className="hover:text-primary transition-colors flex items-center gap-2"
+
+        <div className="mt-16 pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div>
+            © {new Date().getFullYear()} Hosanna Studio. {t("landing.footer.copyright")}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="inline-flex items-center justify-center px-4 py-2 rounded-full border border-slate-300 text-xs font-bold uppercase tracking-wider text-[#021433] hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-slate-50 transition-all cursor-pointer shadow-sm active:scale-95"
+            aria-label="Voltar ao topo"
           >
-            <Mail className="w-3 h-3" />
-            hosanna.songbook@gmail.com
-          </a>
+            TOP ↑
+          </button>
         </div>
       </div>
     </footer>
@@ -905,7 +901,7 @@ export function HosannaLanding() {
   useReveal();
   const rootRef = useRef<HTMLDivElement>(null);
   return (
-    <div ref={rootRef} className="min-h-screen bg-background font-sans text-foreground antialiased">
+    <div ref={rootRef} className="min-h-screen bg-transparent font-sans text-foreground antialiased relative z-10">
       <main>
         <Hero />
         <Problem />

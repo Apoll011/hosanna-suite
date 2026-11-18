@@ -9,6 +9,7 @@ export type HeadlineLines = [string, string, string];
 
 interface WebGLCanvasProps {
   headlineLines?: HeadlineLines;
+  showTextLayer?: boolean;
   onFontsReady?: () => void;
   impulseTriggerRef?: React.MutableRefObject<
     ((targetUv?: { x: number; y: number }) => void) | null
@@ -511,6 +512,7 @@ const DEFAULT_HEADLINE: HeadlineLines = ["We bring clarity", "to every", "worshi
 
 export default function WebGLCanvas({
   headlineLines = DEFAULT_HEADLINE,
+  showTextLayer = true,
   onFontsReady,
   impulseTriggerRef,
 }: WebGLCanvasProps) {
@@ -604,14 +606,22 @@ export default function WebGLCanvas({
       w >= TABLET_BREAKPOINT ? BASE_LINES_AMOUNT : BASE_LINES_AMOUNT * 3.8;
     const getBackgroundScale = (w: number) => (w >= TABLET_BREAKPOINT ? 1.0 : w * 0.001 * 1.45);
 
+    const heroColor1 = new THREE.Vector3(74 / 255, 137 / 255, 184 / 255); // #4A89B8
+    const heroColor2 = new THREE.Vector3(20 / 255, 184 / 255, 196 / 255); // #14B8C4
+    const heroColor3 = new THREE.Vector3(2 / 255, 20 / 255, 51 / 255);   // #021433
+    const heroNoise = 0.075;
+
+    document.documentElement.dataset.canvasTheme = "blue";
+
     const bgUniforms = {
       uTime: { value: 0 },
-      uColor1: { value: new THREE.Vector3(74 / 255, 137 / 255, 184 / 255) },
-      uColor2: { value: new THREE.Vector3(20 / 255, 184 / 255, 196 / 255) },
-      uColor3: { value: new THREE.Vector3(2 / 255, 20 / 255, 51 / 255) },
+      uColor1: { value: heroColor1 },
+      uColor2: { value: heroColor2 },
+      uColor3: { value: heroColor3 },
       uColorAccent: { value: new THREE.Color(0.0, 0.0, 0.0) },
       uLinesBlur: { value: 0.25 },
-      uNoise: { value: 0.075 },
+      uNoise: { value: heroNoise },
+      uLightBias: { value: 0.0 },
       uOffsetX: { value: 0.34 },
       uOffsetY: { value: 0.0 },
       uLinesAmount: { value: getLinesAmount(initW) },
@@ -660,7 +670,9 @@ export default function WebGLCanvas({
     });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
     textMesh.position.z = 0.2;
-    scene.add(textMesh);
+    if (showTextLayer) {
+      scene.add(textMesh);
+    }
 
     const rebuildTextTextures = () => {
       if (disposed || !symbolLinesRef.current) return;
@@ -777,6 +789,11 @@ export default function WebGLCanvas({
       smoothedScroll += (scrollTarget - smoothedScroll) * Math.min(1.0, delta * 12.0);
       textUniforms.uScrollProgress.value = smoothedScroll;
 
+      // Lens radius smoothly collapses to 0 after scrolling away from the hero
+      const heroVisibility = Math.max(0.0, 1.0 - smoothedScroll * 1.2);
+      const baseLensRadius = getLensRadiusPx(currentViewportWidth);
+      textUniforms.uLensRadiusPx.value = baseLensRadius * heroVisibility;
+
       const isAutonomousMode = isMobileOrTablet(currentViewportWidth);
 
       bgUniforms.uTime.value = prefersReducedMotion ? elapsed * 0.15 : elapsed;
@@ -855,7 +872,7 @@ export default function WebGLCanvas({
   return (
     <div
       ref={mountRef}
-      className="absolute inset-0 z-0 h-full w-full pointer-events-none"
+      className="fixed inset-0 z-0 h-full w-full pointer-events-none"
       aria-hidden="true"
     />
   );

@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { useReveal } from "@/hooks/useReveal";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { Link } from "@tanstack/react-router";
 import { Mail, MessageSquare, Send } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { StaffLines } from "./HosannaLanding";
 
 const CONTACT_EMAIL = "hosanna.songbook@gmail.com";
 
@@ -47,70 +45,65 @@ export function ContactForm() {
   };
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen selection:bg-primary/10 font-sans">
-      <section className="bg-hero-gradient pt-40 pb-12 text-white overflow-hidden relative -mt-30">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 text-white/10">
-          <StaffLines className="top-24 opacity-40" />
-          <StaffLines className="bottom-12 opacity-20" />
-        </div>
+    <div className="bg-transparent min-h-screen selection:bg-cyan-400/20 font-sans relative z-10 text-white">
+      <section
+        id="top"
+        className="pt-52 md:pt-64 pb-16 md:pb-24 text-white overflow-hidden relative bg-transparent"
+      >
         <div className="container mx-auto px-6 max-w-7xl relative z-10 text-center">
-          <div className="flex justify-center items-center mb-8">
-            <LanguageSelector />
-          </div>
-          <h1 className="reveal text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">
+          <h1 className="reveal text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display mb-8 tracking-tight">
             {t("contact.heroTitle")}{" "}
-            <span className="text-blue-300">{t("contact.heroTitleHighlight")}</span>
+            <span className="text-cyan-300">{t("contact.heroTitleHighlight")}</span>
           </h1>
-          <p className="reveal text-lg md:text-xl text-blue-50/80 leading-relaxed max-w-2xl mx-auto">
+          <p className="reveal text-base sm:text-lg md:text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
             {t("contact.heroSubtitle")}
           </p>
         </div>
       </section>
 
-      <section className="p-12 md:p-16 relative z-20">
+      <section className="p-8 sm:p-12 md:p-16 relative z-20 bg-transparent">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            <div className="space-y-10 reveal">
-              <div className="space-y-4">
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-primary tracking-tight">
+            <div className="space-y-8 reveal">
+              <div className="space-y-3">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight">
                   {t("contact.alwaysReadyTitle")}
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
+                <p className="text-base sm:text-lg text-white/80 leading-relaxed max-w-lg">
                   {t("contact.alwaysReadyDesc")}
                 </p>
               </div>
 
-              <div className="grid gap-8">
-                <div className="flex items-start gap-6">
-                  <div className="p-4 rounded-lg border border-border text-primary shrink-0">
-                    <Mail className="w-6 h-6" />
+              <div className="grid gap-6">
+                <div className="flex items-start gap-5 p-6 rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md">
+                  <div className="p-3.5 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 shrink-0">
+                    <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-xl mb-1 text-primary">
+                    <h3 className="font-bold text-lg mb-1 text-white">
                       {t("contact.emailTitle")}
                     </h3>
-                    <p className="text-muted-foreground text-lg break-all">
+                    <p className="text-cyan-300 text-base sm:text-lg break-all">
                       <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
                         {CONTACT_EMAIL}
                       </a>
                     </p>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-xs sm:text-sm text-white/60 mt-1">
                       {t("contact.emailResponseTime")}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-6">
-                  <div className="p-4 rounded-lg border border-border text-primary shrink-0">
-                    <MessageSquare className="w-6 h-6" />
+                <div className="flex items-start gap-5 p-6 rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md">
+                  <div className="p-3.5 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 shrink-0">
+                    <MessageSquare className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-xl mb-1 text-primary">
+                    <h3 className="font-bold text-lg mb-1 text-white">
                       {t("contact.socialTitle")}
                     </h3>
-                    <p className="text-muted-foreground text-lg">@hosanna.studio</p>
-                    <div className="flex gap-6 mt-3 text-base font-semibold text-primary">
+                    <p className="text-white/80 text-base">@hosanna.studio</p>
+                    <div className="flex gap-5 mt-3 text-sm font-semibold text-cyan-300">
                       <a
                         href="https://www.instagram.com/hosanna.studio"
                         target="_blank"
@@ -132,20 +125,21 @@ export function ContactForm() {
                 </div>
               </div>
 
-              <div className="p-8 border border-border rounded-lg">
-                <h4 className="font-display font-bold text-xl mb-4 text-primary">
+              <div className="p-6 border border-white/15 rounded-2xl bg-slate-900/40 backdrop-blur-md">
+                <h4 className="font-display font-bold text-lg mb-2 text-white">
                   {t("common.activeDevelopment")}
                 </h4>
-                <p className="text-muted-foreground leading-relaxed">{t("common.activeDevDesc")}</p>
+                <p className="text-white/75 text-sm leading-relaxed">{t("common.activeDevDesc")}</p>
               </div>
             </div>
-            <div className="bg-white p-8 md:p-10 lg:p-12 rounded-3xl shadow-soft border border-blue-50 reveal">
+
+            <div className="bg-slate-900/70 backdrop-blur-xl p-8 md:p-10 lg:p-12 rounded-3xl shadow-2xl border border-white/15 reveal text-white">
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <label
                       htmlFor="contact-name"
-                      className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                      className="text-xs font-bold uppercase tracking-wider text-cyan-200"
                     >
                       {t("contact.nameLabel")}
                     </label>
@@ -156,13 +150,13 @@ export function ContactForm() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={t("contact.namePlaceholder")}
-                      className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none text-lg"
+                      className="w-full px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:ring-2 focus:ring-cyan-400 outline-none transition-all text-base"
                     />
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <label
                       htmlFor="contact-church"
-                      className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                      className="text-xs font-bold uppercase tracking-wider text-cyan-200"
                     >
                       {t("contact.churchLabel")}
                     </label>
@@ -173,15 +167,15 @@ export function ContactForm() {
                       value={church}
                       onChange={(e) => setChurch(e.target.value)}
                       placeholder={t("contact.churchPlaceholder")}
-                      className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none text-lg"
+                      className="w-full px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:ring-2 focus:ring-cyan-400 outline-none transition-all text-base"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <label
                     htmlFor="contact-email"
-                    className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                    className="text-xs font-bold uppercase tracking-wider text-cyan-200"
                   >
                     {t("contact.emailLabel")}
                   </label>
@@ -193,14 +187,14 @@ export function ContactForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t("contact.emailPlaceholder")}
-                    className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none text-lg"
+                    className="w-full px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:ring-2 focus:ring-cyan-400 outline-none transition-all text-base"
                   />
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <label
                     htmlFor="contact-subject"
-                    className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                    className="text-xs font-bold uppercase tracking-wider text-cyan-200"
                   >
                     {t("contact.subjectLabel")}
                   </label>
@@ -210,24 +204,24 @@ export function ContactForm() {
                       name="subject"
                       value={subjectValue}
                       onChange={(e) => setSubjectValue(e.target.value)}
-                      className="w-full px-6 py-3 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none appearance-none text-lg"
+                      className="w-full px-5 py-3 rounded-2xl bg-slate-900 border border-white/20 text-white focus:ring-2 focus:ring-cyan-400 outline-none transition-all appearance-none text-base"
                     >
                       {SUBJECT_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
+                        <option key={option.value} value={option.value} className="bg-slate-900 text-white">
                           {t(option.labelKey)}
                         </option>
                       ))}
                     </select>
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-60 text-cyan-300">
                       <Send className="w-4 h-4 rotate-90" />
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <label
                     htmlFor="contact-message"
-                    className="text-sm font-bold ml-1 uppercase tracking-widest text-muted-foreground"
+                    className="text-xs font-bold uppercase tracking-wider text-cyan-200"
                   >
                     {t("contact.messageLabel")}
                   </label>
@@ -239,21 +233,21 @@ export function ContactForm() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={t("contact.messagePlaceholder")}
-                    className="w-full px-6 py-5 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary transition-all outline-none resize-none text-lg"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-white/10 border border-white/15 text-white placeholder:text-white/40 focus:ring-2 focus:ring-cyan-400 outline-none resize-none transition-all text-base"
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full py-6 rounded-2xl bg-primary text-white font-bold text-xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
+                  className="w-full py-5 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
                 >
                   {t("contact.sendButton")}
-                  <Send className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform" />
+                  <Send className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
-                <p className="text-center text-xs text-muted-foreground mt-2 leading-relaxed">
+                <p className="text-center text-xs text-white/60 mt-2 leading-relaxed">
                   {t("contact.termsConsent")}{" "}
-                  <Link to="/privacy" className="underline hover:text-foreground">
+                  <Link to="/privacy" className="underline hover:text-white text-cyan-200">
                     {t("common.privacyPolicy")}
                   </Link>
                   .

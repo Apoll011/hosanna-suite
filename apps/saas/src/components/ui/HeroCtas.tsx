@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import type { LanguageCode } from "./LanguageToggle";
 
@@ -17,8 +17,29 @@ const CTA_COPY: Record<LanguageCode, { start: string; demo: string }> = {
 export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCtasProps) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [primaryPressed, setPrimaryPressed] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const reduceMotion = useReducedMotion();
   const copy = CTA_COPY[language];
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sy = window.scrollY || 0;
+          const range = Math.max(window.innerHeight * 0.45, 200);
+          const prog = Math.min(1, Math.max(0, sy / range));
+          setScrollProgress(prog);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const hoverScale = reduceMotion ? {} : { scale: 1.045, y: -1.5 };
   const restScale = { scale: 1, y: 0 };
@@ -32,11 +53,28 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
 
   const primaryMotionTarget = primaryPressed ? tapScale : primaryHovered ? hoverScale : restScale;
 
+  // Scroll animations:
+  // Left CTA moves left and fades out
+  // Right CTA moves right and fades out
+  const leftX = reduceMotion ? 0 : -scrollProgress * 90;
+  const rightX = reduceMotion ? 0 : scrollProgress * 90;
+  const ctaOpacity = Math.max(0, 1 - scrollProgress * 1.35);
+
   return (
     <div className="pointer-events-none absolute inset-x-0 top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+38px)] md:top-[calc(43.5%+clamp(32px,6.1vw,98px)*1.62+68px)] flex justify-center px-5.5">
-      <div className="pointer-events-auto flex flex-col md:flex-row items-center justify-center gap-3.5 md:gap-4">
-        {/* Primary CTA: White pill with mix-blend-screen negative-space text & arrow revealing live WebGL bg */}
-        <div className="relative inline-flex">
+      <div
+        className="pointer-events-auto flex flex-col md:flex-row items-center justify-center gap-3.5 md:gap-4 transition-opacity duration-75"
+        style={{ pointerEvents: ctaOpacity < 0.05 ? "none" : "auto" }}
+      >
+        {/* Primary CTA (Left): Moves left & fades out on scroll */}
+        <div
+          className="relative inline-flex will-change-transform"
+          style={{
+            transform: `translateX(${leftX}px)`,
+            opacity: ctaOpacity,
+            transition: "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
+          }}
+        >
           {/* Outer-only subtle floating drop shadow synced with button scale without isolating blend context */}
           <motion.div
             aria-hidden="true"
@@ -86,25 +124,34 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
           </motion.button>
         </div>
 
-        {/* Secondary CTA: Transparent frosted pill with white text & sideways play triangle */}
-        <motion.button
-          type="button"
-          onClick={onDemoClick}
-          whileHover={hoverScale}
-          whileTap={tapScale}
-          transition={springTransition}
-          className={`${sizeClasses} bg-white/10 border border-white/40 backdrop-blur-[6px] text-white shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)] transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
+        {/* Secondary CTA (Right): Moves right & fades out on scroll */}
+        <div
+          className="will-change-transform"
+          style={{
+            transform: `translateX(${rightX}px)`,
+            opacity: ctaOpacity,
+            transition: "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
+          }}
         >
-          <span>{copy.demo}</span>
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-            className="w-2.75 h-2.75 md:w-3 md:h-3 shrink-0"
+          <motion.button
+            type="button"
+            onClick={onDemoClick}
+            whileHover={hoverScale}
+            whileTap={tapScale}
+            transition={springTransition}
+            className={`${sizeClasses} bg-white/10 border border-white/40 backdrop-blur-[6px] text-white shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)] transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
           >
-            <path d="M7.2 5.45c0-1.08 1.18-1.74 2.1-1.18l10.2 6.2c.89.54.89 1.82 0 2.36l-10.2 6.2c-.92.56-2.1-.1-2.1-1.18V5.45z" />
-          </svg>
-        </motion.button>
+            <span>{copy.demo}</span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+              className="w-2.75 h-2.75 md:w-3 md:h-3 shrink-0"
+            >
+              <path d="M7.2 5.45c0-1.08 1.18-1.74 2.1-1.18l10.2 6.2c.89.54.89 1.82 0 2.36l-10.2 6.2c-.92.56-2.1-.1-2.1-1.18V5.45z" />
+            </svg>
+          </motion.button>
+        </div>
       </div>
     </div>
   );
