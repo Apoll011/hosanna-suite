@@ -37,7 +37,9 @@ export default function SplashScreen({ onReveal, durationMs = 3000 }: SplashScre
 
     try {
       window.sessionStorage.setItem(SESSION_KEY, "true");
-    } catch {}
+    } catch {
+      /* ignore */
+    }
 
     const container = containerRef.current;
     const brand = brandRef.current;
