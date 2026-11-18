@@ -11,6 +11,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useSync } from "../contexts/SyncContext";
 import { AgendaEventDocType, getDatabase, getPurgeAt, validateAgendaEventRules } from "../db";
 import { useOrgSettings } from "./useOrgSettings";
+import { track } from "../lib/posthog";
 
 const DEFAULT_REMINDER: ReminderSettings = {
   enabled: false,
@@ -224,6 +225,7 @@ export function useAgenda() {
 
         await db.agendaEvents.insert(event);
         showToast(t("hooks.agenda.created"), "success");
+        track("agenda_event_created");
         return event.id;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
@@ -278,6 +280,7 @@ export function useAgenda() {
 
         await doc.patch(next);
         showToast(t("hooks.agenda.updated"), "success");
+        track("agenda_event_updated");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           const msg = (err as Error).message;
@@ -305,6 +308,7 @@ export function useAgenda() {
           });
         }
         showToast(t("hooks.agenda.deleted"), "info");
+        track("agenda_event_deleted");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(
@@ -335,6 +339,7 @@ export function useAgenda() {
           });
         }
         showToast(t("hooks.agenda.restored"), "success");
+        track("agenda_event_restored");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(
@@ -395,6 +400,7 @@ export function useAgenda() {
           responsibilities: [...doc.responsibilities, responsibility],
           updatedAt: new Date().toISOString(),
         });
+        track("agenda_responsibility_added", { assignee_count: assignees.length });
         return id;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
@@ -422,14 +428,13 @@ export function useAgenda() {
             r.id === respId
               ? {
                   ...r,
-                  // Stayers keep their notification state; anyone newly
-                  // assigned starts at `notified: false` again.
                   assignees: mergeAssigneeNotificationState(previous, assignees),
                 }
               : r,
           ),
           updatedAt: new Date().toISOString(),
         });
+        track("agenda_responsibility_assignees_changed", { assignee_count: assignees.length });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(
@@ -454,6 +459,7 @@ export function useAgenda() {
           responsibilities: doc.responsibilities.filter((r) => r.id !== respId),
           updatedAt: new Date().toISOString(),
         });
+        track("agenda_responsibility_removed");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(

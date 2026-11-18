@@ -108,6 +108,7 @@ export const pt = {
     captcha: {
       pending: "Conclua o captcha para continuar.",
       failed: "O captcha falhou. Tente novamente.",
+      powChallenge: "Conclua a verificação de segurança para continuar.",
     },
     error: {
       title: "Erro de autenticação",
@@ -146,6 +147,7 @@ export const pt = {
       desc: "Ative sincronização, impressão e backups para a equipa",
       startBtn: "Começar grátis",
       note: "Sem cobrança hoje. Cancele a qualquer momento durante o trial.",
+      skip: "Agora não",
       features: {
         sync: "Sincronização na cloud",
         unlimited: "Músicas e cultos ilimitados",

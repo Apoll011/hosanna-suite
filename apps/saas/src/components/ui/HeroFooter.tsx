@@ -40,6 +40,27 @@ export default function HeroFooter({ ready, language, onScrollClick }: HeroFoote
   const arrowRef = useRef<SVGSVGElement>(null);
   const mobileCardRef = useRef<HTMLDivElement>(null);
   const [mobileIndex, setMobileIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const sy = window.scrollY || 0;
+          const range = Math.max(window.innerHeight * 0.45, 200);
+          const prog = Math.min(1, Math.max(0, sy / range));
+          setScrollProgress(prog);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Fast upward entrance animation (opposite of top header)
   useEffect(() => {
@@ -145,11 +166,18 @@ export default function HeroFooter({ ready, language, onScrollClick }: HeroFoote
   }, []);
 
   const currentMobileBlock = FOOTER_BLOCKS[mobileIndex];
+  const footerScrollY = -scrollProgress * 48;
+  const footerScrollOpacity = Math.max(0, 1 - scrollProgress * 1.35);
 
   return (
     <footer
       ref={footerRef}
-      className="w-full flex items-end justify-between md:grid md:grid-cols-[1fr_auto_1fr] md:items-end pointer-events-none"
+      style={{
+        transform: `translateY(${footerScrollY}px)`,
+        opacity: footerScrollOpacity,
+        transition: "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
+      }}
+      className="w-full flex items-end justify-between md:grid md:grid-cols-[1fr_auto_1fr] md:items-end font-sans pointer-events-none will-change-transform"
     >
       {/* Left spacer on desktop to keep the 3 descriptor blocks dead-center */}
       <div className="hidden md:block" aria-hidden="true" />

@@ -23,7 +23,7 @@ import {
   readCachedUserId,
 } from "../lib/authSessionCache";
 import { clearPermissionCache } from "@hosanna/ui";
-import { posthog } from "../lib/posthog";
+import { captureException, identify, posthog, track } from "../lib/posthog";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
 import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";
 
@@ -389,7 +389,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setUser(userToCache);
       syncSettingsFromMetadata(fullUser.metadata);
 
-      posthog.identify(fullUser.id, {
+      identify(fullUser.id, {
         name: fullUser.name,
         email: fullUser.email,
         role: userRole,
@@ -434,6 +434,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     } catch (error) {
       console.error("Failed to fetch session:", error);
+      captureException(error, { kind: "session_fetch" });
       const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
       if (cachedUserStr) {
         try {
@@ -502,6 +503,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const logout = useCallback(async () => {
     setIsLoading(true);
     await authClient.signOut({ fetchOptions: {} });
+    track("logout");
     posthog.reset();
     handleClearSession();
     clearPersonalSettingsCache();
@@ -571,6 +573,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.warn("[AuthContext] Failed to clear local data on org switch:", err);
       }
 
+      track("org_switched", { from_org_id: organization?.id ?? null, to_org_id: org.id });
       window.location.assign(`/${org.slug}/folders`);
     },
     [organization?.id],

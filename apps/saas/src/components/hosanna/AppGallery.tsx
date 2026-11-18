@@ -1,23 +1,25 @@
-import {
-  InteractiveFolderGallery,
-  MobileFolderGallery,
-  type GalleryPhoto,
-} from "@/components/ui/interactive-folder-gallery";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { useReveal } from "@/hooks/useReveal";
+import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 import songLibraryImg from "@/assets/song_library.jpeg";
 import serviceImg from "@/assets/service.jpeg";
 import chordsImg from "@/assets/chords.jpeg";
 import transposeImg from "@/assets/transpose.jpeg";
 
-/**
- * App gallery section. Kept in its own module (and loaded lazily from the
- * landing page) because it pulls in framer-motion.
- */
+export interface GalleryPhoto {
+  id: number;
+  image: string;
+  caption: string;
+}
+
+function clamp(val: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, val));
+}
+
 export default function AppGallery() {
-  useReveal();
   const { t } = useI18n();
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const galleryPhotos: GalleryPhoto[] = [
     { id: 1, image: songLibraryImg, caption: t("landing.gallery.captions.songLibrary") },
@@ -26,23 +28,144 @@ export default function AppGallery() {
     { id: 4, image: transposeImg, caption: t("landing.gallery.captions.transpose") },
   ];
 
-  return (
-    <section className="bg-secondary py-16 md:py-16">
-      <div className="mx-auto max-w-6xl px-5 md:px-8">
-        <div className="reveal mt-4 hidden md:block w-full">
-          <InteractiveFolderGallery
-            photos={galleryPhotos}
-            title={t("landing.gallery.title")}
-            description={t("landing.gallery.description")}
-          />
-        </div>
+  useEffect(() => {
+    let ticking = false;
 
-        <div className="reveal mt-8 max-w-sm mx-auto md:hidden">
-          <SectionHeader eyebrow={t("landing.gallery.eyebrow")} title={t("landing.gallery.title")}>
-            {t("landing.gallery.description")}
-          </SectionHeader>
-          <div className="mt-8">
-            <MobileFolderGallery photos={galleryPhotos} />
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (trackRef.current) {
+            const rect = trackRef.current.getBoundingClientRect();
+            const totalScrollable = rect.height - window.innerHeight;
+            if (totalScrollable > 0) {
+              const scrolled = -rect.top;
+              const p = clamp(scrolled / totalScrollable, 0, 1);
+              setScrollProgress(p);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
+  const activeIndex =
+    scrollProgress < 0.28 ? 0 : scrollProgress < 0.58 ? 1 : scrollProgress < 0.85 ? 2 : 3;
+
+  return (
+    <section
+      ref={trackRef}
+      className="relative z-10 h-[400vh] w-full bg-transparent font-sans overflow-x-clip"
+      aria-label={t("landing.gallery.title")}
+    >
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center px-4 md:px-8">
+        <div className="mx-auto max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Context text + 4-dot indicator */}
+          <div className="lg:col-span-5 flex flex-col justify-center text-left z-10">
+            <div className="flex items-start gap-4 sm:gap-6">
+              {/* 4-dot vertical progress indicator */}
+              <div
+                className="hidden sm:flex flex-col gap-2.5 pt-2 shrink-0"
+                aria-label="Gallery slide progress"
+              >
+                {[0, 1, 2, 3].map((idx) => {
+                  const isActive = activeIndex === idx;
+                  return (
+                    <div
+                      key={idx}
+                      className={cn(
+                        "rounded-full transition-all duration-300",
+                        isActive
+                          ? "w-2 h-7 bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]"
+                          : "w-2 h-2 bg-white/25",
+                      )}
+                    />
+                  );
+                })}
+              </div>
+
+              <div>
+                <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                  {t("landing.gallery.title")}
+                </h2>
+                <p className="mt-3 text-sm sm:text-base md:text-lg text-white/75 leading-relaxed max-w-md">
+                  {t("landing.gallery.description")}
+                </p>
+
+                <div className="mt-5 flex items-center gap-3">
+                  <span className="text-xs font-mono font-semibold tracking-widest text-cyan-300 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30">
+                    0{activeIndex + 1} / 04
+                  </span>
+                  <span className="text-sm sm:text-base font-medium text-white transition-opacity duration-300">
+                    {galleryPhotos[activeIndex].caption}
+                  </span>
+                </div>
+
+                {/* Mobile progress dots */}
+                <div className="flex sm:hidden gap-2 mt-4 items-center">
+                  {[0, 1, 2, 3].map((idx) => {
+                    const isActive = activeIndex === idx;
+                    return (
+                      <div
+                        key={idx}
+                        className={cn(
+                          "rounded-full transition-all duration-300",
+                          isActive
+                            ? "w-6 h-1.5 bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"
+                            : "w-1.5 h-1.5 bg-white/25",
+                        )}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sticky Portrait Photo Frame */}
+          <div className="lg:col-span-7 flex justify-center lg:justify-end items-center">
+            <div className="relative z-10 w-70 sm:w-82.5 md:w-105 max-w-[85vw] aspect-3/4 md:aspect-4/5 max-h-[65vh] md:max-h-[75vh] overflow-hidden rounded-3xl border border-white/20 bg-slate-950/40 backdrop-blur-md shadow-2xl pointer-events-none select-none">
+              {galleryPhotos.map((photo, i) => {
+                let translateY = "0%";
+                if (i === 1) {
+                  const factor = clamp((scrollProgress - 0.15) / 0.18, 0, 1);
+                  translateY = `${(1 - factor) * 100}%`;
+                } else if (i === 2) {
+                  const factor = clamp((scrollProgress - 0.45) / 0.18, 0, 1);
+                  translateY = `${(1 - factor) * 100}%`;
+                } else if (i === 3) {
+                  const factor = clamp((scrollProgress - 0.75) / 0.18, 0, 1);
+                  translateY = `${(1 - factor) * 100}%`;
+                }
+
+                return (
+                  <div
+                    key={photo.id}
+                    className="absolute inset-0 w-full h-full pointer-events-none will-change-transform"
+                    style={{
+                      transform: i === 0 ? "none" : `translateY(${translateY})`,
+                      zIndex: i + 1,
+                    }}
+                  >
+                    <img
+                      src={photo.image}
+                      alt={photo.caption}
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-slate-950/50 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PrintOptions } from "../components/print/types";
 import { usePrint } from "../contexts/PrintContext";
 import { useSync } from "../contexts/SyncContext";
+import { track } from "../lib/posthog";
 import { getDatabase, getPurgeAt, updateCollectionCounts, validateCollectionRules } from "../db";
 import { invalidateSongsCache } from "./useSongs";
 
@@ -133,6 +134,7 @@ export function useCollections() {
 
         invalidateCollectionsCache();
         showToast("Coleção criada com sucesso", "success");
+        track("collection_created", { song_count: songsList.length });
         return doc.toJSON() as Collection;
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
@@ -227,6 +229,16 @@ export function useCollections() {
         await updateCollectionCounts(db, id);
         invalidateCollectionsCache();
         showToast("Coleção atualizada", "success");
+        track("collection_updated", {
+          fields: [
+            name !== undefined && "name",
+            description !== undefined && "description",
+            color !== undefined && "color",
+            icon !== undefined && "icon",
+            image !== undefined && "image",
+            songIds !== undefined && "song_ids",
+          ].filter((f): f is string => Boolean(f)),
+        });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           showToast((err as Error).message || "Falha ao atualizar coleção", "error");
@@ -276,6 +288,7 @@ export function useCollections() {
           invalidateSongsCache();
         }
         showToast("Coleção enviada para a lixeira", "success");
+        track("collection_deleted");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           showToast((err as Error).message || "Falha ao excluir coleção", "error");
@@ -304,6 +317,7 @@ export function useCollections() {
           invalidateCollectionsCache();
         }
         showToast("Coleção restaurada", "success");
+        track("collection_restored");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           showToast((err as Error).message || "Falha ao restaurar coleção", "error");
@@ -358,6 +372,7 @@ export function useCollections() {
         invalidateCollectionsCache();
         invalidateSongsCache();
         showToast("Músicas adicionadas à coleção", "success");
+        track("songs_added_to_collection", { count: songIds.length });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           showToast((err as Error).message || "Falha ao adicionar músicas à coleção", "error");
@@ -404,6 +419,7 @@ export function useCollections() {
         invalidateCollectionsCache();
         invalidateSongsCache();
         showToast("Músicas removidas da coleção", "success");
+        track("songs_removed_from_collection", { count: songIds.length });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err) {
           showToast((err as Error).message || "Falha ao remover músicas da coleção", "error");

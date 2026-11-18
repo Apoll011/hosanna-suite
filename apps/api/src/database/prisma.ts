@@ -3,6 +3,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { attachDatabasePool } from "@vercel/functions";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
+import { recordDatabaseAcquireDuration, recordDatabaseDuration } from "../lib/requestMetrics.js";
 
 const pool = new Pool({
   connectionString: env.databaseUrl,
@@ -12,12 +13,89 @@ const pool = new Pool({
   statement_timeout: 10_000,
 });
 
+const connect = pool.connect.bind(pool);
+pool.connect = new Proxy(connect, {
+  apply(target, thisArg, args) {
+    const startedAt = performance.now();
+    const result = Reflect.apply(target, thisArg, args);
+    if (!(result instanceof Promise)) return result;
+
+    return result.then(
+      (client) => {
+        recordDatabaseAcquireDuration(performance.now() - startedAt);
+        return client;
+      },
+      (error: unknown) => {
+        recordDatabaseAcquireDuration(performance.now() - startedAt);
+        throw error;
+      },
+    );
+  },
+});
+
 if (env.isVercel) {
   attachDatabasePool(pool);
 }
 
+pool.on("connect", () => {
+  console.info(
+    JSON.stringify({
+      event: "database.pool.connect",
+      totalCount: pool.totalCount,
+      idleCount: pool.idleCount,
+      waitingCount: pool.waitingCount,
+    }),
+  );
+});
+
+pool.on("acquire", () => {
+  if (pool.waitingCount > 0) {
+    console.warn(
+      JSON.stringify({
+        event: "database.pool.waiting",
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount,
+      }),
+    );
+  }
+});
+
+pool.on("remove", () => {
+  console.info(
+    JSON.stringify({
+      event: "database.pool.remove",
+      totalCount: pool.totalCount,
+      idleCount: pool.idleCount,
+      waitingCount: pool.waitingCount,
+    }),
+  );
+});
+
+pool.on("error", (error) => {
+  console.error("[DB] Pool error:", error);
+});
+
+pool.on("release", () => {
+  if (pool.waitingCount > 0) {
+    console.warn(
+      JSON.stringify({
+        event: "database.pool.release_with_waiters",
+        totalCount: pool.totalCount,
+        idleCount: pool.idleCount,
+        waitingCount: pool.waitingCount,
+      }),
+    );
+  }
+});
+
 const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+  adapter,
+  log: [{ emit: "event", level: "query" }],
+});
+
+prisma.$on("query", (event) => recordDatabaseDuration(event.duration));
 
 const ORG_SCOPED_MODELS = new Set([
   "Folder",

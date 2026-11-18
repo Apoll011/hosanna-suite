@@ -110,6 +110,7 @@ export const en: typeof pt = {
     captcha: {
       pending: "Complete the captcha to continue.",
       failed: "Captcha failed. Try again.",
+      powChallenge: "Complete the security check to continue.",
     },
     error: {
       title: "Authentication error",
@@ -148,6 +149,7 @@ export const en: typeof pt = {
       desc: "Unlock sync, printing, and backups for your team",
       startBtn: "Start free trial",
       note: "No charge today. Cancel anytime during the trial.",
+      skip: "Skip for now",
       features: {
         sync: "Cloud sync across devices",
         unlimited: "Unlimited songs & services",

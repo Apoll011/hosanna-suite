@@ -163,6 +163,43 @@ html {
   scroll-behavior: smooth;
 }
 
+@keyframes saas-view-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes saas-view-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::view-transition-old(root) {
+  animation: 180ms cubic-bezier(0.4, 0, 1, 1) both saas-view-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 220ms cubic-bezier(0, 0, 0.2, 1) both saas-view-fade-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
 .dark {
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
@@ -196,6 +233,19 @@ html {
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+[data-canvas-theme="blue"],
+:root {
+  --foreground: #ffffff;
+  --muted-foreground: rgba(255, 255, 255, 0.78);
+}
+
+/* Ensure solid white footer retains high-contrast dark text */
+footer.bg-white,
+.bg-white {
+  --foreground: #021433;
+  --muted-foreground: #64748b;
 }
 
 @layer base {

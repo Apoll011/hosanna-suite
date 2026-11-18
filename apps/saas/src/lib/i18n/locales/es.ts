@@ -53,12 +53,12 @@ export const es: typeof import("./pt").pt = {
       pricing: "Precios",
       about: "Sobre",
       contact: "Contacto",
-      tryFree: "Probar Gratis",
+      tryFree: "Probar",
     },
     newHero: {
-      line1: "Traemos claridad",
-      line2: "a cada",
-      line3: "adoración",
+      line1: "Todo lo que",
+      line2: "respira alabe",
+      line3: "al SEÑOR",
     },
     hero: {
       badge: "Repertorio ChordPro para equipos de alabanza",
@@ -297,7 +297,7 @@ export const es: typeof import("./pt").pt = {
       title: "El código es público. Léelo, haz fork, contribuye.",
       body: "La app móvil y Studio de Hosanna son open source bajo la Apache License 2.0. Puedes auditar la sincronización, ChordPro y los permisos — o construir encima.",
       ctaApp: "App móvil en GitHub",
-      ctaStudio: "Studio en GitHub",
+      ctaStudio: "Suite en GitHub",
     },
     support: {
       eyebrow: "Apoya el proyecto",
@@ -560,9 +560,9 @@ export const es: typeof import("./pt").pt = {
     original_key: "Tono original, cuando difiere del que toca el equipo",
     tempo: "Pulsaciones por minuto (BPM), útil para metrónomos o claqueta",
     time: "Compás rítmico, ej: 4/4 o 6/8",
-    capo: "Traste inicial de cejilla (0–11) para instrumentos compatibles. Los acordes en el archivo son de tono real; la cejilla baja las formas mostradas.",
+    capo: "Traste inicial de cejilla (0–11). Una variante solo hereda la cejilla si su tono coincide con el tono principal, incluidos equivalentes enarmónicos; la cejilla escrita en la variante prevalece.",
     keyshift:
-      "Cambio inicial de tono en semitonos (ej.: -3, +2). Configura la transposición inicial de la barra para todos los instrumentos.",
+      "Cambio inicial en semitonos (ej.: -3, +2). Configura la transposición inicial de la canción principal; las variantes solo usan su propio keyshift.",
     duration: "Duración en mm:ss o segundos, para estimar tiempos del culto.",
     album: "Álbum o colección de origen",
     composer: "Compositor de la melodía",
@@ -579,7 +579,7 @@ export const es: typeof import("./pt").pt = {
     comment_box: "Comentario en caja, ideal para avisos destacados en pantalla",
     repeat: "Marca una sección a repetir (ej: 2x, o según guía del líder)",
     start_of_version:
-      "Inicia una variante/arreglo con nombre (Acústico, Capo 2…). Hereda metadatos; seleccionable en la vista previa",
+      "Inicia una variante/arreglo. El keyshift nunca se hereda. La cejilla solo se hereda si el tono coincide con el principal; sin directiva de tono, usa el tono principal. Al cambiar de variante, la barra vuelve a los valores predeterminados de esa variante.",
     end_of_version: "Finaliza la variante/arreglo con nombre actual",
     start_of_verse: "Inicia un verso",
     end_of_verse: "Finaliza el verso actual",
@@ -637,5 +637,20 @@ export const es: typeof import("./pt").pt = {
       "Hosanna está construido por dos personas que lo usan cada domingo. Ven a formar parte de la historia.",
     ctaStart: "Empezar Ahora",
     ctaContact: "Habla con nosotros",
+  },
+  cookieConsent: {
+    title: "Privacidad y Cookies",
+    description: "Hay dos tipos de cookies en este sitio web:",
+    essentialTitle: "Cookies esenciales",
+    essentialDesc:
+      "Se utilizan para la autenticación y la seguridad de la sesión. Siempre activas, no se pueden desactivar.",
+    analyticsTitle: "Cookie opcional",
+    analyticsDesc:
+      "Una única cookie analítica (PostHog) para ayudarnos a mejorar Hosanna. Desactivada por defecto.",
+    noSellNotice:
+      "Nunca vendemos los datos de los usuarios para marketing ni para ningún otro fin.",
+    acceptAnalytics: "Aceptar analítica",
+    essentialOnly: "Solo esenciales",
+    cookieSettings: "Configuración de cookies",
   },
 };

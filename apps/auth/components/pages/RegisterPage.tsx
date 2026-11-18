@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
+import { track } from "@/lib/analytics";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
@@ -22,6 +23,7 @@ export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
   const captchaRef = useRef<TurnstileHandle>(null);
+  const submitPendingRef = useRef(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -29,8 +31,41 @@ export function RegisterPage() {
 
   const passwordMismatch = confirmPassword.length > 0 && password !== confirmPassword;
 
+  const submitSignUp = async (token: string) => {
+    setIsLoading(true);
+    track("auth_signup_attempted", { provider: "email", email: email.trim() });
+
+    const { error } = await authClient.signUp.email({
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      fetchOptions: captchaFetchOptions(token),
+    });
+    setIsLoading(false);
+
+    captchaRef.current?.reset();
+    setCaptchaToken("");
+
+    if (error) {
+      track("auth_signup_failed", { provider: "email", reason: error.code || error.message });
+      if (
+        error.code === "POW_CHALLENGE_REQUIRED" ||
+        (error as { status?: number })?.status === 423
+      ) {
+        setErrorMsg(t("auth.captcha.powChallenge"));
+        return;
+      }
+      setErrorMsg(error.message || "Registration failed.");
+      return;
+    }
+
+    track("auth_signup_succeeded", { provider: "email" });
+    setSuccessState(true);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (submitPendingRef.current) return;
     setErrorMsg("");
 
     if (!name.trim() || !email.trim() || !password.trim()) {
@@ -46,30 +81,13 @@ export function RegisterPage() {
       return;
     }
     if (captchaRequired() && !captchaToken) {
+      submitPendingRef.current = true;
       setErrorMsg(t("auth.captcha.pending"));
+      setIsLoading(true);
       captchaRef.current?.show();
       return;
     }
-
-    setIsLoading(true);
-
-    const { error } = await authClient.signUp.email({
-      name: name.trim(),
-      email: email.trim(),
-      password,
-      fetchOptions: captchaFetchOptions(captchaToken),
-    });
-    setIsLoading(false);
-
-    captchaRef.current?.reset();
-    setCaptchaToken("");
-
-    if (error) {
-      setErrorMsg(error.message || "Registration failed.");
-      return;
-    }
-
-    setSuccessState(true);
+    await submitSignUp(captchaToken);
   };
 
   if (successState) {
@@ -158,9 +176,21 @@ export function RegisterPage() {
           onVerify={(token) => {
             setCaptchaToken(token);
             setErrorMsg((msg) => (msg === t("auth.captcha.pending") ? "" : msg));
+            if (submitPendingRef.current) {
+              submitPendingRef.current = false;
+              void submitSignUp(token);
+            }
           }}
-          onExpire={() => setCaptchaToken("")}
-          onError={() => setErrorMsg(t("auth.captcha.failed"))}
+          onExpire={() => {
+            setCaptchaToken("");
+            submitPendingRef.current = false;
+            setIsLoading(false);
+          }}
+          onError={() => {
+            submitPendingRef.current = false;
+            setIsLoading(false);
+            setErrorMsg(t("auth.captcha.failed"));
+          }}
         />
 
         <div className="flex items-center justify-between gap-3 pt-2">

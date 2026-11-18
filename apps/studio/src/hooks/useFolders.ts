@@ -6,6 +6,7 @@
 import { Folder } from "@/src/types";
 import { useCallback, useEffect, useState } from "react";
 import { useSync } from "../contexts/SyncContext";
+import { track } from "../lib/posthog";
 import {
   computeFolderSongPaths,
   computeSongPath,
@@ -111,6 +112,7 @@ export function useFolders() {
           await updateFolderCounts(db, parent);
         }
         const result = doc.toJSON() as Folder;
+        track("folder_created", { parent_id: parent });
         showToast(`Folder "${result.name}" created`, "success");
         return result;
       } catch (err: unknown) {
@@ -145,6 +147,7 @@ export function useFolders() {
         }
 
         showToast("Folder renamed", "success");
+        track("folder_renamed");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast((err as Error).message || "Failed to rename folder", "error");
@@ -178,6 +181,10 @@ export function useFolders() {
           });
         }
         showToast("Pasta personalizada com sucesso", "success");
+        track("folder_customized", {
+          has_color: color !== undefined,
+          has_icon: icon !== undefined,
+        });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast((err as Error).message || "Falha ao personalizar pasta", "error");
@@ -227,6 +234,7 @@ export function useFolders() {
           }
         }
         showToast("Folder moved", "success");
+        track("folder_moved", { parent_id: parentId ?? null });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast((err as Error).message || "Failed to move folder", "error");
@@ -305,6 +313,7 @@ export function useFolders() {
         }
 
         showToast("Folder deleted", "info");
+        track("folder_deleted", { action });
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(err.message || "Failed to delete folder", "error");
@@ -345,6 +354,7 @@ export function useFolders() {
           }
         }
         showToast("Folder restored", "success");
+        track("folder_restored");
       } catch (err: unknown) {
         if (err && typeof err === "object" && "message" in err)
           showToast(err.message || "Failed to restore folder", "error");

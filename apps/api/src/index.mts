@@ -9,6 +9,7 @@ import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { mcpRouter } from "./mcp/http.js";
 import { sendOauthProtectedResourceMetadata } from "./mcp/oauthProtectedResource.js";
 import { apiRouter } from "./routes/index.js";
+import { requestMetricsMiddleware } from "./lib/requestMetrics.js";
 
 /**
  * Vercel's Node builder typechecks Helmet's CommonJS file. That file's
@@ -33,6 +34,7 @@ const app = express();
 app.disable("x-powered-by");
 app.disable("etag");
 app.set("trust proxy", 1);
+app.use(requestMetricsMiddleware);
 
 // Vercel terminates TLS at the edge; redirecting here wastes cold-start CPU
 // and can fight the platform's own HTTPS enforcement.

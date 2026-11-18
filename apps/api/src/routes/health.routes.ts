@@ -9,6 +9,6 @@ healthRouter.get(
   "/",
   asyncHandler(async (_req, res) => {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
+    res.json({ status: "ok", name: "hosanna", timestamp: new Date().toISOString() });
   }),
 );

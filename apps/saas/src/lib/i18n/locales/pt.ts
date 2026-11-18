@@ -53,12 +53,12 @@ export const pt = {
       pricing: "Preço",
       about: "About",
       contact: "Contacto",
-      tryFree: "Experimentar Grátis",
+      tryFree: "Teste",
     },
     newHero: {
-      line1: "Trazemos clareza",
-      line2: "a cada",
-      line3: "adoração",
+      line1: "Todo ser que",
+      line2: "respira, louve",
+      line3: "ao SENHOR",
     },
     hero: {
       badge: "Repertório ChordPro para equipas de louvor",
@@ -296,7 +296,7 @@ export const pt = {
       title: "O código é público. Lê, faz fork, contribui.",
       body: "A app móvel e o Studio do Hosanna são open source sob a Apache License 2.0. Podes auditar a sincronização, o ChordPro e as permissões — ou construir em cima deles.",
       ctaApp: "App móvel no GitHub",
-      ctaStudio: "Studio no GitHub",
+      ctaStudio: "Suite no GitHub",
     },
     support: {
       eyebrow: "Apoie o projeto",
@@ -557,9 +557,9 @@ export const pt = {
     original_key: "Tom original, quando diferente do tom em que a equipa toca",
     tempo: "Batidas por minuto (BPM), útil para o metrónomo ou guias",
     time: "Compasso rítmico, ex: 4/4 ou 6/8",
-    capo: "Casa inicial do capotraste (0–11) para instrumentos compatíveis. Os acordes no ficheiro são reais (som ouvido); o capo desce os formatos exibidos.",
+    capo: "Casa inicial do capotraste (0–11). Uma variante só herda o capo da música quando o tom corresponde ao tom principal, incluindo equivalentes enarmónicos; o capo escrito na variante prevalece.",
     keyshift:
-      "Desvio inicial de tom em semitons (ex.: -3, +2). Define a transposição inicial da barra para todos os instrumentos.",
+      "Desvio inicial de tom em semitons (ex.: -3, +2). Define a transposição inicial da música principal; variantes só usam o seu próprio keyshift.",
     duration:
       "Duração em mm:ss ou segundos, Nos cultos é usada para ter uma estimativa da sua duração.",
     album: "Álbum ou coletânea de origem",
@@ -577,7 +577,7 @@ export const pt = {
     comment_box: "Comentário em caixa, ideal para avisos importantes no ecrã",
     repeat: "Marca um trecho a repetir (ex: 2x, ou até sinal do líder)",
     start_of_version:
-      "Inicia uma variação/arranjo nomeado (Acústico, Capo 2…). Herda metadados; selecionável na pré-visualização",
+      "Inicia uma variante/arranjo. O keyshift nunca é herdado. O capo só é herdado quando o tom da variante corresponde ao tom principal; sem diretiva de tom, usa o tom principal. Os valores da barra voltam às predefinições da variante ao mudar de variante.",
     end_of_version: "Termina a variação/arranjo nomeado atual",
     start_of_verse: "Inicia um verso",
     end_of_verse: "Termina o verso atual",
@@ -635,5 +635,19 @@ export const pt = {
       "O Hosanna é construído por duas pessoas que o usam todos os domingos. Venha fazer parte da história.",
     ctaStart: "Começar Agora",
     ctaContact: "Fale connosco",
+  },
+  cookieConsent: {
+    title: "Privacidade e Cookies",
+    description: "Utilizamos dois tipos de cookies neste website:",
+    essentialTitle: "Cookies essenciais",
+    essentialDesc:
+      "Utilizados para autenticação e funcionamento seguro da plataforma. Estão sempre ativos e não podem ser desativados.",
+    analyticsTitle: "Cookie opcional",
+    analyticsDesc:
+      "Um único cookie de métricas anónimas (PostHog) para nos ajudar a melhorar o Hosanna. Desativado por defeito.",
+    noSellNotice: "Nunca vendemos os seus dados para marketing nem para qualquer outro fim.",
+    acceptAnalytics: "Aceitar analítica",
+    essentialOnly: "Apenas essenciais",
+    cookieSettings: "Definições de cookies",
   },
 };

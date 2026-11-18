@@ -164,6 +164,19 @@ export const sharedEs: typeof sharedPt = {
       themeLight: "Usar tema claro",
       themeDark: "Usar tema oscuro",
     },
+    inbox: {
+      title: "Notificaciones",
+      buttonTitle: "Buzón de notificaciones",
+      unreadCount: "{count} no leída(s)",
+      markAllRead: "Marcar todas como leídas",
+      readAll: "Leer todas",
+      all: "Todas ({count})",
+      unread: "No leídas ({count})",
+      loading: "Cargando notificaciones…",
+      empty: "No se encontraron notificaciones",
+      loadMore: "Cargar más",
+      close: "Cerrar",
+    },
     apps: {
       auth: {
         name: "Cuenta",

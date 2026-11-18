@@ -1,21 +1,67 @@
-import { Link, Outlet, useLocation, type ErrorComponentProps } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useRouter,
+  type ErrorComponentProps,
+} from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { useI18n } from "@/lib/i18n";
 import { applyRouteMeta, getRouteMeta } from "@/lib/seo";
+import { captureException, trackPageview } from "@/lib/analytics";
+import { CookieBanner } from "@/components/ui/CookieBanner";
+
+const PRELOAD_ROUTES = ["/", "/about", "/chordpro", "/contact", "/privacy", "/terms"] as const;
 
 function useRouteMetaUpdater() {
   const { pathname } = useLocation();
 
   useEffect(() => {
     applyRouteMeta(getRouteMeta(pathname));
+    trackPageview(pathname);
   }, [pathname]);
+}
+
+function useRoutePreloader() {
+  const router = useRouter();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const preloadAll = () => {
+      for (const to of PRELOAD_ROUTES) {
+        if (to !== pathname) {
+          router.preloadRoute({ to }).catch(() => {});
+        }
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      const win = window as Window & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        cancelIdleCallback?: (id: number) => void;
+      };
+
+      if (typeof win.requestIdleCallback === "function") {
+        const id = win.requestIdleCallback(preloadAll, { timeout: 1500 });
+        return () => win.cancelIdleCallback?.(id);
+      }
+      const timer = setTimeout(preloadAll, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [router, pathname]);
 }
 
 export function RootComponent() {
   useRouteMetaUpdater();
+  useRoutePreloader();
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <CookieBanner />
+    </>
+  );
 }
 
 export function NotFoundComponent() {
@@ -45,6 +91,10 @@ export function NotFoundComponent() {
 export function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const { t } = useI18n();
+
+  useEffect(() => {
+    captureException(error);
+  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

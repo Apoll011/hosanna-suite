@@ -4,7 +4,10 @@ import { createRoot } from "react-dom/client";
 
 import { router } from "./router";
 import "./styles.css";
+import { syncAnalyticsWithConsent } from "./lib/analytics";
 import { I18nProvider } from "./lib/i18n";
+
+syncAnalyticsWithConsent();
 
 const rootElement = document.getElementById("root");
 
@@ -19,3 +22,11 @@ createRoot(rootElement).render(
     </I18nProvider>
   </StrictMode>,
 );
+
+if (typeof window !== "undefined" && "serviceWorker" in navigator && !import.meta.env.DEV) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .catch((err) => console.debug("SW registration skipped", err));
+  });
+}

@@ -9,6 +9,7 @@ export type HeadlineLines = [string, string, string];
 
 interface WebGLCanvasProps {
   headlineLines?: HeadlineLines;
+  showTextLayer?: boolean;
   onFontsReady?: () => void;
   impulseTriggerRef?: React.MutableRefObject<
     ((targetUv?: { x: number; y: number }) => void) | null
@@ -273,12 +274,77 @@ interface PaintedHeadlineResult {
   lineBounds: THREE.Vector4;
 }
 
+function getHeadlineFontFamily(): string {
+  return '"Fraunces", Georgia, serif';
+}
+
+interface TextSegment {
+  text: string;
+  italic?: boolean;
+}
+
+function splitHeadlineSegments(line: string, isLine3: boolean): TextSegment[] {
+  if (!isLine3) {
+    return [{ text: line, italic: false }];
+  }
+  const lastSpaceIdx = line.lastIndexOf(" ");
+  if (lastSpaceIdx === -1) {
+    return [{ text: line, italic: true }];
+  }
+  const prefix = line.slice(0, lastSpaceIdx + 1);
+  const lastWord = line.slice(lastSpaceIdx + 1);
+  return [
+    { text: prefix, italic: false },
+    { text: lastWord, italic: true },
+  ];
+}
+
+function measureSegmentsWidth(
+  ctx: CanvasRenderingContext2D,
+  segments: TextSegment[],
+  fontSize: number,
+  fontFamily: string,
+  trackingPx: number,
+): number {
+  let total = 0;
+  for (const seg of segments) {
+    ctx.font = `${seg.italic ? "italic 400" : "400"} ${fontSize}px ${fontFamily}`;
+    const chars = Array.from(seg.text);
+    const widths = chars.map((ch) => ctx.measureText(ch).width);
+    total += widths.reduce((sum, w) => sum + w, 0) + trackingPx * chars.length;
+  }
+  return total - trackingPx;
+}
+
+function drawSegments(
+  ctx: CanvasRenderingContext2D,
+  segments: TextSegment[],
+  startX: number,
+  y: number,
+  fontSize: number,
+  fontFamily: string,
+  trackingPx: number,
+): number {
+  let cursorX = startX;
+  ctx.textAlign = "left";
+  for (const seg of segments) {
+    ctx.font = `${seg.italic ? "italic 400" : "400"} ${fontSize}px ${fontFamily}`;
+    const chars = Array.from(seg.text);
+    for (let i = 0; i < chars.length; i++) {
+      ctx.fillText(chars[i], cursorX, y);
+      cursorX += ctx.measureText(chars[i]).width + trackingPx;
+    }
+  }
+  return cursorX - startX - trackingPx;
+}
+
 function paintHeadlineCanvases(
   width: number,
   height: number,
   dpr: number,
   headlineLines: HeadlineLines,
   symbolLines: [MusicalSymbol[], MusicalSymbol[], MusicalSymbol[]],
+  headlineFontFamily = getHeadlineFontFamily(),
 ): PaintedHeadlineResult {
   const cw = Math.max(1, Math.round(width * dpr));
   const ch = Math.max(1, Math.round(height * dpr));
@@ -310,32 +376,68 @@ function paintHeadlineCanvases(
   const y2 = centerY;
   const y3 = centerY + lineHeight;
 
-  enCtx.font = `400 ${fontSize}px "Inter", -apple-system, BlinkMacSystemFont, sans-serif`;
+  const segments1 = splitHeadlineSegments(headlineLines[0], false);
+  const segments2 = splitHeadlineSegments(headlineLines[1], false);
+  const segments3 = splitHeadlineSegments(headlineLines[2], true);
+
   enCtx.fillStyle = "#FFFFFF";
   enCtx.textBaseline = "middle";
 
-  const measuredLine1Width = measureTrackedTextWidth(enCtx, headlineLines[0], trackingPx);
+  const w1 = measureSegmentsWidth(enCtx, segments1, fontSize, headlineFontFamily, trackingPx);
+  const w2 = measureSegmentsWidth(enCtx, segments2, fontSize, headlineFontFamily, trackingPx);
+  const w3 = measureSegmentsWidth(enCtx, segments3, fontSize, headlineFontFamily, trackingPx);
 
-  let leftX: number;
-  let rightX2: number;
-  let leftX3: number;
+  // Relative offsets for the abstract right-stepped staircase disposition
+  const relStart1 = 0;
+  const relStart3 = Math.max(fontSize * 0.55, Math.max(w1, w2, w3) * 0.14);
+  const relStart2 = isDesktop
+    ? Math.max(
+        relStart3 + fontSize * 0.65,
+        Math.max(relStart3 + fontSize * 0.45, (Math.max(w1, w3) - w2) * 0.85),
+      )
+    : relStart3 + Math.max(fontSize * 0.45, (w1 - w2) * 0.5);
 
-  if (isDesktop) {
-    leftX = padX + (width - padX * 2) * 0.255;
-    rightX2 = Math.min(width - padX, leftX + measuredLine1Width * 0.72);
-    leftX3 = leftX + measuredLine1Width * 0.14;
-  } else {
-    // Center the overall staggered envelope on mobile while keeping each line distinctly stepped
-    const maxAvail = width - padX * 2;
-    const blockSpan = Math.min(maxAvail, measuredLine1Width);
-    leftX = Math.max(padX, (width - blockSpan) * 0.5);
-    rightX2 = Math.min(width - padX, leftX + blockSpan * 0.74);
-    leftX3 = leftX + Math.min(measuredLine1Width * 0.14, Math.max(16, maxAvail * 0.08));
-  }
+  const minX = Math.min(relStart1, relStart2, relStart3);
+  const maxX = Math.max(relStart1 + w1, relStart2 + w2, relStart3 + w3);
+  const totalWidth = maxX - minX;
 
-  const line1Width = drawTrackedText(enCtx, headlineLines[0], leftX, y1, trackingPx, "left");
-  const line2Width = drawTrackedText(enCtx, headlineLines[1], rightX2, y2, trackingPx, "right");
-  const line3Width = drawTrackedText(enCtx, headlineLines[2], leftX3, y3, trackingPx, "left");
+  const maxAvail = width - padX * 2;
+  const scale = totalWidth > maxAvail && maxAvail > 0 ? maxAvail / totalWidth : 1;
+
+  const effectiveTotalWidth = totalWidth * scale;
+  const originX = (width - effectiveTotalWidth) * 0.5 - minX * scale;
+
+  const startX1 = originX + relStart1 * scale;
+  const startX2 = originX + relStart2 * scale;
+  const startX3 = originX + relStart3 * scale;
+
+  const line1Width = drawSegments(
+    enCtx,
+    segments1,
+    startX1,
+    y1,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
+  const line2Width = drawSegments(
+    enCtx,
+    segments2,
+    startX2,
+    y2,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
+  const line3Width = drawSegments(
+    enCtx,
+    segments3,
+    startX3,
+    y3,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
 
   // Paint randomized musical notation behind the glass lens matching each line's exact spatial footprint
   const symFontSpec = `400 ${symFontSize}px "Noto Music", "Noto Sans Symbols 2", "Apple Symbols", "Segoe UI Symbol", sans-serif`;
@@ -347,8 +449,8 @@ function paintHeadlineCanvases(
   drawSymbolRow(
     jpCtx,
     symbolLines[0],
-    leftX,
-    leftX + line1Width,
+    startX1,
+    startX1 + line1Width,
     y1,
     symFontSize,
     symFontSpec,
@@ -357,8 +459,8 @@ function paintHeadlineCanvases(
   drawSymbolRow(
     jpCtx,
     symbolLines[1],
-    rightX2 - Math.max(line2Width, fontSize * 2.5),
-    rightX2,
+    startX2,
+    startX2 + line2Width,
     y2,
     symFontSize,
     symFontSpec,
@@ -367,8 +469,8 @@ function paintHeadlineCanvases(
   drawSymbolRow(
     jpCtx,
     symbolLines[2],
-    leftX3,
-    leftX3 + line3Width,
+    startX3,
+    startX3 + line3Width,
     y3,
     symFontSize,
     symFontSpec,
@@ -395,11 +497,13 @@ const DEFAULT_HEADLINE: HeadlineLines = ["We bring clarity", "to every", "worshi
 
 export default function WebGLCanvas({
   headlineLines = DEFAULT_HEADLINE,
+  showTextLayer = true,
   onFontsReady,
   impulseTriggerRef,
 }: WebGLCanvasProps) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const { stepLerp, setTargetUV } = useCursor();
+  const { stepLerp, setTargetUV, targetRef } = useCursor();
+  const lensCurrentRef = useRef({ x: 0.5, y: 0.465 });
   const onFontsReadyRef = useRef(onFontsReady);
   onFontsReadyRef.current = onFontsReady;
 
@@ -426,6 +530,10 @@ export default function WebGLCanvas({
 
     const isSoftwareGl = detectSoftwareWebGL();
     const dpr = isSoftwareGl ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const getViewportSize = () => ({
       width: window.innerWidth || 1440,
@@ -483,14 +591,22 @@ export default function WebGLCanvas({
       w >= TABLET_BREAKPOINT ? BASE_LINES_AMOUNT : BASE_LINES_AMOUNT * 3.8;
     const getBackgroundScale = (w: number) => (w >= TABLET_BREAKPOINT ? 1.0 : w * 0.001 * 1.45);
 
+    const heroColor1 = new THREE.Vector3(74 / 255, 137 / 255, 184 / 255); // #4A89B8
+    const heroColor2 = new THREE.Vector3(20 / 255, 184 / 255, 196 / 255); // #14B8C4
+    const heroColor3 = new THREE.Vector3(2 / 255, 20 / 255, 51 / 255); // #021433
+    const heroNoise = 0.075;
+
+    document.documentElement.dataset.canvasTheme = "blue";
+
     const bgUniforms = {
       uTime: { value: 0 },
-      uColor1: { value: new THREE.Vector3(74 / 255, 137 / 255, 184 / 255) },
-      uColor2: { value: new THREE.Vector3(20 / 255, 184 / 255, 196 / 255) },
-      uColor3: { value: new THREE.Vector3(2 / 255, 20 / 255, 51 / 255) },
+      uColor1: { value: heroColor1 },
+      uColor2: { value: heroColor2 },
+      uColor3: { value: heroColor3 },
       uColorAccent: { value: new THREE.Color(0.0, 0.0, 0.0) },
       uLinesBlur: { value: 0.25 },
-      uNoise: { value: 0.075 },
+      uNoise: { value: heroNoise },
+      uLightBias: { value: 0.0 },
       uOffsetX: { value: 0.34 },
       uOffsetY: { value: 0.0 },
       uLinesAmount: { value: getLinesAmount(initW) },
@@ -524,6 +640,8 @@ export default function WebGLCanvas({
       uLineProgress: { value: new THREE.Vector3(1, 1, 1) },
       uLineBounds: { value: new THREE.Vector4(0.65, 0.55, 0.45, 0.35) },
       uImpulse: { value: 0 },
+      uScrollProgress: { value: 0 },
+      uReducedMotion: { value: prefersReducedMotion ? 1 : 0 },
     };
 
     const textGeometry = new THREE.PlaneGeometry(2, 2, 64, 48);
@@ -537,7 +655,9 @@ export default function WebGLCanvas({
     });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
     textMesh.position.z = 0.2;
-    scene.add(textMesh);
+    if (showTextLayer) {
+      scene.add(textMesh);
+    }
 
     const rebuildTextTextures = () => {
       if (disposed || !symbolLinesRef.current) return;
@@ -598,10 +718,6 @@ export default function WebGLCanvas({
       };
     }
 
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const startEntrance = () => {
       if (disposed) return;
       rebuildTextTextures();
@@ -611,7 +727,8 @@ export default function WebGLCanvas({
 
     Promise.all([
       document.fonts.ready,
-      document.fonts.load('400 72px "Inter"').catch(() => []),
+      document.fonts.load('400 72px "Fraunces"').catch(() => []),
+      document.fonts.load('italic 400 72px "Fraunces"').catch(() => []),
       document.fonts.load('400 64px "Noto Music"').catch(() => []),
     ]).then(() => {
       startEntrance();
@@ -643,10 +760,24 @@ export default function WebGLCanvas({
       }
     };
 
+    let smoothedScroll = 0;
+
     const tick = () => {
       if (disposed) return;
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();
+
+      const scrollTarget = Math.min(
+        1.0,
+        Math.max(0.0, (window.scrollY || 0) / (Math.max(window.innerHeight, 400) * 0.55)),
+      );
+      smoothedScroll += (scrollTarget - smoothedScroll) * Math.min(1.0, delta * 12.0);
+      textUniforms.uScrollProgress.value = smoothedScroll;
+
+      // Lens radius smoothly collapses to 0 after scrolling away from the hero
+      const heroVisibility = Math.max(0.0, 1.0 - smoothedScroll * 1.2);
+      const baseLensRadius = getLensRadiusPx(currentViewportWidth);
+      textUniforms.uLensRadiusPx.value = baseLensRadius * heroVisibility;
 
       const isAutonomousMode = isMobileOrTablet(currentViewportWidth);
 
@@ -669,8 +800,13 @@ export default function WebGLCanvas({
         const cursor = stepLerp(0.084, delta);
         bgUniforms.uMouse2D.value.set(cursor.x * 2.0 - 1.0, cursor.y * 2.0 - 1.0);
 
+        const lensFactor =
+          1.0 - Math.pow(1.0 - 0.38, Math.min(Math.max(delta, 0.001), 0.05) * 60.0);
+        lensCurrentRef.current.x += (targetRef.current.x - lensCurrentRef.current.x) * lensFactor;
+        lensCurrentRef.current.y += (targetRef.current.y - lensCurrentRef.current.y) * lensFactor;
+
         textUniforms.uTime.value = elapsed;
-        textUniforms.uMouse.value.set(cursor.x, cursor.y);
+        textUniforms.uMouse.value.set(lensCurrentRef.current.x, lensCurrentRef.current.y);
         textUniforms.uVelocity.value.set(cursor.vx, cursor.vy);
         textUniforms.uImpulse.value = impulseState.value;
       }
@@ -722,7 +858,7 @@ export default function WebGLCanvas({
   return (
     <div
       ref={mountRef}
-      className="absolute inset-0 z-0 h-full w-full pointer-events-none"
+      className="fixed inset-0 z-0 h-full w-full pointer-events-none"
       aria-hidden="true"
     />
   );

@@ -12,7 +12,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { isDemoMode } from "../demo/index";
 import { MainLayout } from "../layouts/MainLayout";
 
-import { posthog } from "../lib/posthog";
+import { captureException } from "../lib/posthog";
 import { ExternalAuthRedirect } from "../components/ExternalAuthRedirect";
 import { ProtectedRoute } from "./ProtectedRoute";
 
@@ -152,7 +152,7 @@ export const AppRoutes: React.FC = () => {
       FallbackComponent={ErrorFallback}
       onError={(error) => {
         console.error("[AppRoutes] ErrorBoundary caught:", error);
-        posthog?.captureException?.(error);
+        captureException(error);
       }}
     >
       <Suspense fallback={<PageLoader />}>
@@ -190,7 +190,7 @@ export const AppRoutes: React.FC = () => {
                     <ErrorBoundary
                       FallbackComponent={RouteErrorFallback}
                       onError={(error) => {
-                        posthog?.captureException?.(error);
+                        captureException(error);
                       }}
                     >
                       <FoldersPage />

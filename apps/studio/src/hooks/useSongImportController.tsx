@@ -15,6 +15,7 @@ import {
   type ProviderImportResult,
   type SongImportProvider,
 } from "@/src/lib/import";
+import { track } from "@/src/lib/posthog";
 import React, { useCallback, useMemo, useState } from "react";
 
 interface ActiveInteractiveSession {
@@ -133,8 +134,15 @@ export function useSongImportController(options: {
         setSession(null);
         setProgress(null);
         await options.onImported?.();
+        track("import_completed", {
+          provider_id: provider.id,
+          created: result.created,
+          failed: result.failed,
+          ignored: result.ignored,
+        });
       } catch (err) {
         removeToast(progressToastId);
+        track("import_failed", { provider_id: provider.id });
         showToast(
           provider.getErrorMessage?.(err, t) ??
             (err instanceof Error ? err.message : t("layout.uploadErrorGeneric")),
@@ -166,6 +174,10 @@ export function useSongImportController(options: {
         const bucket = interactive[0];
         if (bucket && isInteractiveImportProvider(bucket.provider)) {
           const provider = bucket.provider;
+          track("import_started", {
+            provider_id: provider.id,
+            file_count: bucket.files.length,
+          });
           updateToast(progressToastId, {
             title: provider.getPrepareProgressTitle?.(t) ?? t("layout.importProgressTitle"),
             description: t("layout.importProgressReading", {
@@ -198,6 +210,7 @@ export function useSongImportController(options: {
           } catch (err) {
             removeToast(progressToastId);
             progressToastAlive = false;
+            track("import_failed", { provider_id: provider.id });
             showToast(
               provider.getErrorMessage?.(err, t) ??
                 (err instanceof Error ? err.message : t("layout.uploadErrorGeneric")),
@@ -207,6 +220,8 @@ export function useSongImportController(options: {
         }
 
         if (direct.length === 0) return;
+
+        track("import_started", { provider_id: "direct", file_count: direct.length });
 
         setIsUploading(true);
         let activeToastId = progressToastId;
@@ -238,11 +253,20 @@ export function useSongImportController(options: {
           },
         });
         removeToast(activeToastId);
-        result.results.forEach((r) => showToastImportResult(r));
+        result.results.forEach((r) => {
+          showToastImportResult(r);
+          track("import_completed", {
+            provider_id: r.providerId,
+            created: r.created,
+            failed: r.failed,
+            ignored: r.ignored,
+          });
+        });
         await options.onImported?.();
         setIsUploading(false);
       } catch (err) {
         removeToast(progressToastId);
+        track("import_failed", { provider_id: "direct" });
         showToast(err instanceof Error ? err.message : t("layout.uploadErrorGeneric"), "error");
         setIsUploading(false);
       }

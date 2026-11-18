@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
 export function SectionHeader({
-  eyebrow,
+  eyebrow: _eyebrow,
   title,
   children,
   center = true,
-  eyebrowClassName,
+  eyebrowClassName: _eyebrowClassName,
   titleClassName,
 }: {
   eyebrow?: string;
@@ -17,19 +17,9 @@ export function SectionHeader({
 }) {
   return (
     <div className={cn("reveal max-w-2xl", center && "mx-auto text-center")}>
-      {eyebrow && (
-        <div
-          className={cn(
-            "text-xs font-semibold uppercase tracking-[0.2em] text-primary-dark",
-            eyebrowClassName,
-          )}
-        >
-          {eyebrow}
-        </div>
-      )}
       <h2
         className={cn(
-          "mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl",
+          "font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl",
           titleClassName,
         )}
       >

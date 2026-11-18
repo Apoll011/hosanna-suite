@@ -75,12 +75,14 @@ interface LanguageToggleProps {
   language: LanguageCode;
   onChangeLanguage: (lang: LanguageCode) => void;
   size?: "sm" | "md" | "responsive";
+  theme?: "dark" | "light";
 }
 
 export default function LanguageToggle({
   language,
   onChangeLanguage,
   size = "md",
+  theme = "dark",
 }: LanguageToggleProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -148,7 +150,11 @@ export default function LanguageToggle({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Language: ${currentOption.name}`}
-        className={`inline-flex items-center rounded-full border border-white/25 bg-white/8 hover:bg-white/16 text-white font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap shrink-0 cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 ${triggerSizing}`}
+        className={`inline-flex items-center rounded-full font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap shrink-0 cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 ${triggerSizing} ${
+          theme === "light"
+            ? "border border-[#021433]/20 bg-[#021433]/6 hover:bg-[#021433]/12 text-[#021433] focus-visible:ring-[#021433]/60"
+            : "border border-white/25 bg-white/8 hover:bg-white/16 text-white focus-visible:ring-white/80"
+        }`}
       >
         <FlagIcon code={currentOption.code} className={flagSizing} />
         <span>{currentOption.label}</span>
@@ -156,9 +162,9 @@ export default function LanguageToggle({
           viewBox="0 0 12 12"
           fill="none"
           aria-hidden="true"
-          className={`${chevronSizing} text-white/75 transition-transform duration-200 ${
+          className={`${chevronSizing} transition-transform duration-200 ${
             open ? "rotate-180" : ""
-          }`}
+          } ${theme === "light" ? "text-[#021433]/60" : "text-white/75"}`}
         >
           <path
             d="M3 4.5L6 7.5L9 4.5"
@@ -174,8 +180,12 @@ export default function LanguageToggle({
         <div
           role="listbox"
           aria-label="Select language"
-          className={`absolute right-0 mt-1.5 min-w-full border border-white/25 bg-[#040B14]/90 backdrop-blur-md p-1 shadow-xl z-50 flex flex-col gap-0.5 ${
+          className={`absolute right-0 mt-1.5 min-w-full backdrop-blur-md p-1 shadow-xl z-50 flex flex-col gap-0.5 ${
             size === "sm" ? "rounded-[14px]" : "rounded-[18px]"
+          } ${
+            theme === "light"
+              ? "border border-black/10 bg-white/95 text-[#021433]"
+              : "border border-white/25 bg-[#040B14]/90 text-white"
           }`}
         >
           {otherOptions.map((opt) => (
@@ -188,7 +198,11 @@ export default function LanguageToggle({
                 onChangeLanguage(opt.code);
                 setOpen(false);
               }}
-              className={`inline-flex items-center w-full rounded-full text-white/85 hover:text-white hover:bg-white/15 font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 ${optionSizing}`}
+              className={`inline-flex items-center w-full rounded-full font-medium uppercase tracking-[0.08em] leading-none whitespace-nowrap cursor-pointer transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 ${optionSizing} ${
+                theme === "light"
+                  ? "text-[#021433]/85 hover:text-[#021433] hover:bg-[#021433]/8 focus-visible:ring-[#021433]/50"
+                  : "text-white/85 hover:text-white hover:bg-white/15 focus-visible:ring-white/80"
+              }`}
             >
               <FlagIcon code={opt.code} className={flagSizing} />
               <span>{opt.label}</span>

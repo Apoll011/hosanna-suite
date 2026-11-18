@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/studio",
-  "version": "2.25.1",
+  "version": "2.25.2",
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
@@ -24,6 +24,7 @@
     "@better-auth/i18n": "^1.7.18",
     "@better-auth/infra": "^0.4.27",
     "@better-auth/stripe": "^1.7.18",
+    "@hosanna/analytics": "workspace:*",
     "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/i18n": "workspace:*",
@@ -41,7 +42,8 @@
     "liqe": "^3.8.7",
     "lucide-react": "^0.546.0",
     "openapi-fetch": "^0.17.0",
-    "posthog-js": "^1.421.2",
+    "pdfjs-dist": "^4.10.38",
+    "posthog-js": "^1.450.1",
     "preact": "^10.29.8",
     "qrcode.react": "^4.2.0",
     "react": "npm:@preact/compat@^18.3.2",
@@ -50,8 +52,7 @@
     "react-error-boundary": "^6.1.2",
     "react-hook-form": "^7.82.0",
     "react-router-dom": "^7.11.0",
-    "vite": "^6.2.3",
-    "pdfjs-dist": "^4.10.38"
+    "vite": "^6.2.3"
   },
   "devDependencies": {
     "@hosanna/config": "workspace:*",

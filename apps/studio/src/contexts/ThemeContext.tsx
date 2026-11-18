@@ -23,6 +23,7 @@ import {
 } from "@hosanna/auth";
 import { usePersonalSettings } from "../hooks/usePersonalSettings";
 import { authClient } from "../lib/authClient";
+import { track } from "../lib/posthog";
 import { applyDocumentTheme, writeThemeCookie } from "../lib/themeBoot";
 
 export type Theme = PersonalTheme;
@@ -84,6 +85,7 @@ export const ThemeProvider: React.FC<{
 
   const setTheme = useCallback((next: Theme) => {
     if (getPersonalSettings().theme === next) return;
+    track("theme_changed", { theme: next });
     writeThemeCookie(next);
     void updatePersonalSettingsSafe(
       { theme: next },

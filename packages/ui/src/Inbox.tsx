@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useI18n } from "@/src/lib/i18n";
 import { Bell, Building2, CheckCheck, CreditCard, Info, Shield, Users, X } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { sharedUiT, type Language } from "./sharedT";
 
 export type InboxNotification = {
   id: string;
@@ -178,8 +178,13 @@ export function useInbox(client: InboxFetchClient, options: UseInboxOptions = {}
 
 export type UseInboxReturn = ReturnType<typeof useInbox>;
 
+export function inboxBadgeLabel(unreadCount: number): string {
+  return unreadCount > 9 ? "9+" : String(unreadCount);
+}
+
 export interface InboxPanelProps {
   inbox: UseInboxReturn;
+  language?: Language;
   onNavigate?: (notif: InboxNotification) => void;
   renderItem?: (notif: InboxNotification) => React.ReactNode;
   onClose?: () => void;
@@ -187,11 +192,12 @@ export interface InboxPanelProps {
 
 export const InboxPanel: React.FC<InboxPanelProps> = ({
   inbox,
+  language,
   onNavigate,
   renderItem,
   onClose,
 }) => {
-  const { t } = useI18n();
+  const t = sharedUiT(language);
   const [filter, setFilter] = useState<"all" | "unread">("all");
   const [selectedNotif, setSelectedNotif] = useState<InboxNotification | null>(null);
 
@@ -233,16 +239,15 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
 
   return (
     <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-130 animate-in fade-in zoom-in-95 duration-200">
-      {/* Header */}
       <div className="p-4 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center font-bold">
             <Bell className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-m3-text">{t("misc.inbox.title")}</h3>
+            <h3 className="text-sm font-bold text-m3-text">{t("suite.inbox.title")}</h3>
             <p className="text-[11px] text-m3-secondary">
-              {t("misc.inbox.unreadCount", { count: inbox.unreadCount })}
+              {t("suite.inbox.unreadCount", { count: inbox.unreadCount })}
             </p>
           </div>
         </div>
@@ -251,11 +256,11 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
           {inbox.unreadCount > 0 && (
             <button
               onClick={inbox.markAllRead}
-              title={t("misc.inbox.markAllRead")}
+              title={t("suite.inbox.markAllRead")}
               className="p-1.5 text-xs text-m3-primary hover:bg-m3-primary/10 rounded-lg transition-colors flex items-center gap-1 font-semibold cursor-pointer"
             >
               <CheckCheck className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t("misc.inbox.readAll")}</span>
+              <span className="hidden sm:inline">{t("suite.inbox.readAll")}</span>
             </button>
           )}
           {onClose && (
@@ -278,7 +283,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
               : "border-transparent text-m3-secondary hover:text-m3-text"
           }`}
         >
-          {t("misc.inbox.all", { count: inbox.notifications.length })}
+          {t("suite.inbox.all", { count: inbox.notifications.length })}
         </button>
         <button
           onClick={() => setFilter("unread")}
@@ -288,18 +293,18 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
               : "border-transparent text-m3-secondary hover:text-m3-text"
           }`}
         >
-          {t("misc.inbox.unread", { count: inbox.unreadCount })}
+          {t("suite.inbox.unread", { count: inbox.unreadCount })}
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto divide-y divide-m3-border/60 custom-scrollbar">
         {inbox.isLoading && inbox.notifications.length === 0 ? (
           <div className="p-8 text-center text-m3-secondary">
-            <p className="text-xs font-semibold animate-pulse">{t("misc.inbox.loading")}</p>
+            <p className="text-xs font-semibold animate-pulse">{t("suite.inbox.loading")}</p>
           </div>
         ) : filteredNotifications.length === 0 ? (
           <div className="p-8 text-center text-m3-secondary">
-            <p className="text-xs font-semibold">{t("misc.inbox.empty")}</p>
+            <p className="text-xs font-semibold">{t("suite.inbox.empty")}</p>
           </div>
         ) : (
           <>
@@ -349,7 +354,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
                   onClick={inbox.loadMore}
                   className="text-xs font-semibold text-m3-primary hover:underline cursor-pointer"
                 >
-                  {t("misc.inbox.loadMore")}
+                  {t("suite.inbox.loadMore")}
                 </button>
               </div>
             )}
@@ -368,7 +373,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
               onClick={() => setSelectedNotif(null)}
               className="text-xs text-m3-secondary hover:text-m3-secondary cursor-pointer"
             >
-              {t("common.close")}
+              {t("suite.inbox.close")}
             </button>
           </div>
           <h4 className="text-xs font-bold text-m3-text mb-1">{selectedNotif.title}</h4>
@@ -384,7 +389,8 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
 };
 
 export interface InboxButtonProps {
-  client?: InboxFetchClient;
+  client: InboxFetchClient;
+  language?: Language;
   onNavigate?: (notif: InboxNotification) => void;
   renderItem?: (notif: InboxNotification) => React.ReactNode;
   pollInterval?: number;
@@ -395,6 +401,7 @@ export interface InboxButtonProps {
 
 export const InboxButton: React.FC<InboxButtonProps> = ({
   client,
+  language,
   onNavigate,
   renderItem,
   pollInterval = 30000,
@@ -402,11 +409,11 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
   organizationId,
   className = "",
 }) => {
-  const { t } = useI18n();
+  const t = sharedUiT(language);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const inbox = useInbox(client!, { pollInterval, pageSize, organizationId });
+  const inbox = useInbox(client, { pollInterval, pageSize, organizationId });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -423,12 +430,13 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="relative p-2 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-xl transition-colors cursor-pointer focus:outline-none"
-        title={t("misc.inbox.buttonTitle")}
+        title={t("suite.inbox.buttonTitle")}
+        aria-label={t("suite.inbox.buttonTitle")}
       >
         <Bell className="w-5 h-5" />
         {inbox.unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-red-500 text-white text-[10px] font-semibold rounded-full flex items-center justify-center shadow-sm animate-pulse">
-            {inbox.unreadCount > 9 ? "9+" : inbox.unreadCount}
+            {inboxBadgeLabel(inbox.unreadCount)}
           </span>
         )}
       </button>
@@ -437,6 +445,7 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
         <div className="absolute right-0 top-12 z-50">
           <InboxPanel
             inbox={inbox}
+            language={language}
             onNavigate={onNavigate}
             renderItem={renderItem}
             onClose={() => setIsOpen(false)}

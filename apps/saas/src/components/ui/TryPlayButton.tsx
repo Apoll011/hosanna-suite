@@ -56,6 +56,7 @@ interface TryPlayButtonProps {
   label: string;
   onClick: () => void;
   size?: "sm" | "md";
+  theme?: "dark" | "light";
   ringAmplitude?: number;
   ringPasses?: number;
   ringDecay?: number;
@@ -76,6 +77,7 @@ export default function TryPlayButton({
   label,
   onClick,
   size = "md",
+  theme = "dark",
   ringAmplitude = 18,
   ringPasses = 5,
   ringDecay = 1,
@@ -165,12 +167,16 @@ export default function TryPlayButton({
       onPointerCancel={() => setPressed(false)}
       animate={{ scale: pressed && !reduceMotion ? 0.97 : 1 }}
       transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
-      className={`relative overflow-hidden inline-flex items-center rounded-full border font-semibold uppercase tracking-[0.08em] leading-none whitespace-nowrap shrink-0 cursor-pointer select-none touch-manipulation transition-[background-color,color,border-color] duration-200 ease-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white ${
-        dims.button
-      } ${
-        hovered
-          ? "mix-blend-normal bg-white/12 text-white border-white/40"
-          : "mix-blend-screen bg-white text-black border-white"
+      className={`relative overflow-hidden inline-flex items-center rounded-full border font-semibold uppercase tracking-[0.08em] leading-none whitespace-nowrap shrink-0 cursor-pointer select-none touch-manipulation transition-[background-color,color,border-color] duration-200 ease-out focus-visible:outline-none focus-visible:ring-1 ${
+        theme === "light" ? "focus-visible:ring-[#021433]" : "focus-visible:ring-white"
+      } ${dims.button} ${
+        theme === "light"
+          ? hovered
+            ? "bg-transparent text-[#021433] border-[#021433]/40"
+            : "bg-[#021433] text-white border-[#021433]"
+          : hovered
+            ? "bg-white/15 text-white border-white/40"
+            : "bg-white text-[#021433] border-white hover:bg-white/95"
       } ${className}`}
     >
       {/* Resting left play triangle (slides out to left on hover) */}

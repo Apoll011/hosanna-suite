@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/lib/analytics";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/ui/i18n";
 import { resolveSocialCallbackURL } from "@/lib/auth/redirect";
@@ -51,6 +52,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
   const handleSocialSignIn = async (providerId: SocialProviderId) => {
     setLoadingProvider(providerId);
     onError?.("");
+    track("auth_login_attempted", { provider: providerId });
 
     try {
       const fullCallbackUrl = resolveSocialCallbackURL(searchParams, callbackURL);
@@ -62,6 +64,7 @@ export const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({
       });
     } catch (err: unknown) {
       const message = (err as Error)?.message || t("auth.login.errorGeneric");
+      track("auth_login_failed", { provider: providerId, reason: message });
       onError?.(message);
       setLoadingProvider(null);
     }

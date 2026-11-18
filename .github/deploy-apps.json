@@ -26,7 +26,13 @@
       "id": "saas",
       "package": "@hosanna/saas",
       "dir": "apps/saas",
-      "buildEnv": ["VITE_AUTH_URL", "VITE_API_URL", "VITE_DASHBOARD_URL"],
+      "buildEnv": [
+        "VITE_AUTH_URL",
+        "VITE_API_URL",
+        "VITE_DASHBOARD_URL",
+        "VITE_PUBLIC_POSTHOG_KEY",
+        "VITE_PUBLIC_POSTHOG_HOST"
+      ],
       "targets": {
         "prod": {
           "url": "https://hosanna.live"

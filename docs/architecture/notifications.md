@@ -42,6 +42,8 @@ flowchart TB
 | **push**  | FCM HTTP v1 → **PushDevice** tokens      | Deduped by token; invalid tokens deleted                  |
 | **email** | Resend + Handlebars (auth email service) | Injected into the package as `sendEmail`                  |
 
+The bell is `InboxButton` / `useInbox` in `@hosanna/ui` (copy in `@hosanna/i18n` `suite.inbox.*`). Studio mounts it in the address bar and Auth mounts it as `AuthInboxButton` in the home and account headers, both just before the Logos AI toggle. Hosts pass their Better Auth client and `language`.
+
 Legacy request field `channel: "inbox" | "push" | "both"` is still accepted and mapped to the new `channels[]` array.
 
 ## Targeting

@@ -1628,18 +1628,6 @@ export const es: typeof pt = {
         solarized_dark: "Solarized Dark (oscuro)",
       },
     },
-    inbox: {
-      title: "Notificaciones",
-      unreadCount: "{count} no leída(s)",
-      markAllRead: "Marcar todas como leídas",
-      readAll: "Leer todas",
-      all: "Todas ({count})",
-      unread: "No Leídas ({count})",
-      loading: "Cargando notificaciones...",
-      empty: "No se encontraron notificaciones",
-      loadMore: "Cargar más",
-      buttonTitle: "Buzón de Notificaciones",
-    },
     syncStatus: {
       syncing: "Sincronizando...",
       syncingTooltip: "Sincronizando datos locales con el servidor...",
