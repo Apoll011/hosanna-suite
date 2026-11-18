@@ -503,6 +503,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const logout = useCallback(async () => {
     setIsLoading(true);
     await authClient.signOut({ fetchOptions: {} });
+    track("logout");
     posthog.reset();
     handleClearSession();
     clearPersonalSettingsCache();
@@ -572,6 +573,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.warn("[AuthContext] Failed to clear local data on org switch:", err);
       }
 
+      track("org_switched", { from_org_id: organization?.id ?? null, to_org_id: org.id });
       window.location.assign(`/${org.slug}/folders`);
     },
     [organization?.id],

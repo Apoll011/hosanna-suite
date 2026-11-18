@@ -9,7 +9,7 @@ import type { ReplicationManager } from "../db";
 import { SyncStatus } from "../types";
 import { useAuth } from "./AuthContext";
 import { isDemoMode } from "../demo/index";
-import { captureException } from "../lib/posthog";
+import { captureException, track } from "../lib/posthog";
 
 export interface ToastAction {
   label: string;
@@ -64,6 +64,7 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
   const replicationManagerRef = useRef<ReplicationManager | null>(null);
+  const lastStatusRef = useRef<SyncStatus | null>(null);
 
   const toastTimersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
@@ -189,7 +190,12 @@ export const SyncProvider: React.FC<{ children: React.ReactNode }> = ({ children
         replicationManagerRef.current = repl;
 
         sub = repl.status$.subscribe((st) => {
-          setSyncStatus(st as unknown as SyncStatus);
+          const next = st as unknown as SyncStatus;
+          if (next !== lastStatusRef.current) {
+            lastStatusRef.current = next;
+            track("sync_status_changed", { to: next });
+          }
+          setSyncStatus(next);
           if (st === "synced") {
             setLastSyncedAt(new Date());
           }
