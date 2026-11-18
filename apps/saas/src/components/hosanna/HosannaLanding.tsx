@@ -8,9 +8,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { LazySection } from "@/components/ui/LazySection";
 import { useReveal } from "@/hooks/useReveal";
+import { reopenCookieBanner } from "@/lib/consent";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
@@ -18,15 +18,12 @@ import {
   ArrowRight,
   Check,
   CircleDot,
-  FileDown,
   Code2,
+  FileDown,
   FolderTree,
   Gauge,
-  Mail,
-  Menu,
   Monitor,
   Music,
-  Play,
   Search,
   ShieldCheck,
   Sliders,
@@ -35,15 +32,13 @@ import {
   Timer,
   Users,
   WifiOff,
-  X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { MigrationSection } from "../ui/MigrationSection";
 import Hero from "../ui/Hero";
 import HeroHeader from "../ui/HeroHeader";
+import { MigrationSection } from "../ui/MigrationSection";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
-import { reopenCookieBanner } from "@/lib/consent";
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -65,10 +60,6 @@ export function Nav() {
 export function StaffLines(_props: { className?: string }) {
   return null;
 }
-
-
-
-
 
 function Problem() {
   const { t, dict } = useI18n();
@@ -226,9 +217,7 @@ function HowItWorks() {
               className="reveal rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-7 text-white transition-all hover:-translate-y-1 shadow-xl"
             >
               <div className="font-display text-4xl text-cyan-400 font-bold">{s.n}</div>
-              <h3 className="mt-3 font-display text-xl font-semibold text-white">
-                {s.title}
-              </h3>
+              <h3 className="mt-3 font-display text-xl font-semibold text-white">{s.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/75">{s.body}</p>
             </div>
           ))}
@@ -350,7 +339,8 @@ function ExportSection() {
         <div className="reveal">
           <div className="rounded-2xl border border-white/15 bg-slate-900/70 backdrop-blur-md p-6 shadow-2xl text-white">
             <div className="mb-4 flex items-center gap-2 text-sm font-medium text-cyan-300">
-              <FileDown className="h-4 w-4 text-cyan-300" /> {t("landing.export.sampleServiceTitle")}
+              <FileDown className="h-4 w-4 text-cyan-300" />{" "}
+              {t("landing.export.sampleServiceTitle")}
             </div>
             <div className="space-y-2 text-sm">
               {dict.landing.export.sampleItems.map((s: string, i: number) => (
@@ -433,10 +423,14 @@ function Pricing() {
               )}
             >
               {t("landing.pricing.annual")}
-              <span className={cn(
-                "ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                annual ? "bg-slate-950/20 text-slate-950" : "bg-cyan-950/80 text-cyan-300 border border-cyan-500/30"
-              )}>
+              <span
+                className={cn(
+                  "ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                  annual
+                    ? "bg-slate-950/20 text-slate-950"
+                    : "bg-cyan-950/80 text-cyan-300 border border-cyan-500/30",
+                )}
+              >
                 {t("landing.pricing.discountBadge")}
               </span>
             </button>
@@ -446,13 +440,15 @@ function Pricing() {
         <div className="reveal mx-auto mt-12 max-w-2xl">
           <div className="relative overflow-hidden rounded-3xl border border-white/20 bg-slate-900/75 backdrop-blur-xl p-8 text-white shadow-2xl md:p-12">
             <div className="relative">
-              <div className="font-display text-4xl font-semibold md:text-5xl text-white">Hosanna</div>
-              <p className="mt-2 text-white/75">
-                {t("landing.pricing.singlePlanDesc")}
-              </p>
+              <div className="font-display text-4xl font-semibold md:text-5xl text-white">
+                Hosanna
+              </div>
+              <p className="mt-2 text-white/75">{t("landing.pricing.singlePlanDesc")}</p>
 
               <div className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-semibold md:text-7xl text-cyan-300">{price}€</span>
+                <span className="font-display text-6xl font-semibold md:text-7xl text-cyan-300">
+                  {price}€
+                </span>
                 <span className="text-white/70">{unit}</span>
               </div>
               <p className="mt-1 text-xs text-white/60">
@@ -510,7 +506,10 @@ function MobileApp() {
   const { t } = useI18n();
 
   return (
-    <section id="mobile" className="py-16 bg-transparent overflow-hidden relative font-sans text-white">
+    <section
+      id="mobile"
+      className="py-16 bg-transparent overflow-hidden relative font-sans text-white"
+    >
       <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 reveal">
@@ -564,7 +563,7 @@ function Vision() {
 }
 
 const githubAppUrl = "https://github.com/Apoll011/Hosanna";
-const githubStudioUrl = "https://github.com/Apoll011/hosanna-studio";
+const githubStudioUrl = "https://github.com/Apoll011/hosanna-suite";
 
 function OpenSource() {
   const { t } = useI18n();
@@ -580,13 +579,17 @@ function OpenSource() {
             {t("landing.openSource.body")}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild className="rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6">
+            <Button asChild className="rounded-full bg-cyan-400 hover:bg-cyan-300 font-bold px-6">
               <a href={githubAppUrl} target="_blank" rel="noreferrer">
                 <Code2 className="mr-2 h-4 w-4" />
                 {t("landing.openSource.ctaApp")}
               </a>
             </Button>
-            <Button asChild variant="outline" className="rounded-full border-white/20 text-white hover:bg-white/10 px-6">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full border-white/20 text-slate-950  hover:bg-white/10 px-6"
+            >
               <a href={githubStudioUrl} target="_blank" rel="noreferrer">
                 {t("landing.openSource.ctaStudio")}
               </a>
@@ -596,7 +599,7 @@ function OpenSource() {
         <div className="reveal hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md p-6 text-sm text-white/80 md:block">
           <div className="font-mono text-xs text-cyan-300">Apache License 2.0</div>
           <div className="mt-2 text-white/70">github.com/Apoll011/Hosanna</div>
-          <div className="text-white/70">github.com/Apoll011/hosanna-studio</div>
+          <div className="text-white/70">github.com/Apoll011/hosanna-suite</div>
         </div>
       </div>
     </section>
@@ -658,9 +661,7 @@ function FAQ() {
   return (
     <section id="faq" className="bg-transparent py-16 md:py-16 text-white font-sans">
       <div className="mx-auto max-w-3xl px-5 md:px-8">
-        <SectionHeader title={t("landing.faq.title")}>
-          {t("landing.faq.description")}
-        </SectionHeader>
+        <SectionHeader title={t("landing.faq.title")}>{t("landing.faq.description")}</SectionHeader>
         <div className="reveal mt-12">
           <Accordion type="single" collapsible className="w-full">
             {dict.landing.faq.items.map((f: { q: string; a: string }, i: number) => (
@@ -755,7 +756,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-5 flex flex-col items-start">
-            <Link to="/" hash="top" className="inline-block transition-transform hover:scale-105 mb-6">
+            <Link
+              to="/"
+              hash="top"
+              className="inline-block transition-transform hover:scale-105 mb-6"
+            >
               <img
                 src={logo}
                 alt="Hosanna Studio"
@@ -821,7 +826,9 @@ export function Footer() {
                       className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-[#0538A6] font-medium group"
                     >
                       {item.label}
-                      <span className="text-xs text-slate-400 group-hover:text-[#0538A6] transition-colors">↗</span>
+                      <span className="text-xs text-slate-400 group-hover:text-[#0538A6] transition-colors">
+                        ↗
+                      </span>
                     </a>
                   </li>
                 ))}
@@ -850,7 +857,9 @@ export function Footer() {
                           to={link.href}
                           className={cn(
                             "flex items-center transition-colors font-medium",
-                            isActive ? "text-[#0538A6] font-bold" : "text-slate-600 hover:text-[#0538A6]"
+                            isActive
+                              ? "text-[#0538A6] font-bold"
+                              : "text-slate-600 hover:text-[#0538A6]",
                           )}
                         >
                           {isActive && (
@@ -890,7 +899,10 @@ export function HosannaLanding() {
   useReveal();
   const rootRef = useRef<HTMLDivElement>(null);
   return (
-    <div ref={rootRef} className="min-h-screen bg-transparent font-sans text-foreground antialiased relative z-10">
+    <div
+      ref={rootRef}
+      className="min-h-screen bg-transparent font-sans text-foreground antialiased relative z-10"
+    >
       <main>
         <Hero />
         <Problem />

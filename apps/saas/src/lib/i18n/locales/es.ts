@@ -297,7 +297,7 @@ export const es: typeof import("./pt").pt = {
       title: "El código es público. Léelo, haz fork, contribuye.",
       body: "La app móvil y Studio de Hosanna son open source bajo la Apache License 2.0. Puedes auditar la sincronización, ChordPro y los permisos — o construir encima.",
       ctaApp: "App móvil en GitHub",
-      ctaStudio: "Studio en GitHub",
+      ctaStudio: "Suite en GitHub",
     },
     support: {
       eyebrow: "Apoya el proyecto",
@@ -642,10 +642,13 @@ export const es: typeof import("./pt").pt = {
     title: "Privacidad y Cookies",
     description: "Hay dos tipos de cookies en este sitio web:",
     essentialTitle: "Cookies esenciales",
-    essentialDesc: "Se utilizan para la autenticación y la seguridad de la sesión. Siempre activas, no se pueden desactivar.",
+    essentialDesc:
+      "Se utilizan para la autenticación y la seguridad de la sesión. Siempre activas, no se pueden desactivar.",
     analyticsTitle: "Cookie opcional",
-    analyticsDesc: "Una única cookie analítica (PostHog) para ayudarnos a mejorar Hosanna. Desactivada por defecto.",
-    noSellNotice: "Nunca vendemos los datos de los usuarios para marketing ni para ningún otro fin.",
+    analyticsDesc:
+      "Una única cookie analítica (PostHog) para ayudarnos a mejorar Hosanna. Desactivada por defecto.",
+    noSellNotice:
+      "Nunca vendemos los datos de los usuarios para marketing ni para ningún otro fin.",
     acceptAnalytics: "Aceptar analítica",
     essentialOnly: "Solo esenciales",
     cookieSettings: "Configuración de cookies",
