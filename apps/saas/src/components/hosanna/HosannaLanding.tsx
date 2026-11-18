@@ -389,18 +389,18 @@ function Pricing() {
         </SectionHeader>
 
         <div className="reveal mt-10 flex items-center justify-center">
-          <div className="relative flex w-full max-w-[400px] sm:max-w-[440px] items-center rounded-2xl bg-slate-900/80 border border-white/15 p-1.5 shadow-inner">
+          <div className="relative flex w-full max-w-90 sm:max-w-100 items-center rounded-full bg-slate-900/80 border border-white/15 p-1 shadow-inner">
             <div
               className={cn(
-                "absolute inset-y-1.5 h-[calc(100%-12px)] w-[calc(50%-6px)] rounded-xl bg-cyan-400 shadow-md transition-all duration-300 ease-out",
-                annual ? "translate-x-[calc(100%+6px)]" : "translate-x-0",
+                "absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-cyan-400 shadow-md transition-transform duration-300 ease-out",
+                annual ? "translate-x-full" : "translate-x-0",
               )}
             />
             <button
               type="button"
               onClick={() => setAnnual(false)}
               className={cn(
-                "relative z-10 flex-1 py-2.5 px-3 text-center text-sm font-semibold transition-colors duration-200 cursor-pointer whitespace-nowrap",
+                "relative z-10 flex-1 py-2 px-3 text-center text-sm font-semibold transition-colors duration-200 cursor-pointer whitespace-nowrap rounded-full",
                 !annual ? "text-[#021433]" : "text-white/70 hover:text-white",
               )}
             >
@@ -410,7 +410,7 @@ function Pricing() {
               type="button"
               onClick={() => setAnnual(true)}
               className={cn(
-                "relative z-10 flex-1 py-2.5 px-3 text-center text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap",
+                "relative z-10 flex-1 py-2 px-3 text-center text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap rounded-full",
                 annual ? "text-[#021433]" : "text-white/70 hover:text-white",
               )}
             >
