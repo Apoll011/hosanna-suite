@@ -1,4 +1,7 @@
 import { analyzeChordSymbol } from "./chordDictionary";
+import { getChordProMessages, type LintLanguage } from "../i18n";
+
+export type { LintLanguage } from "../i18n";
 
 export type DiagnosticSeverity = "error" | "warning";
 
@@ -10,8 +13,6 @@ export interface ChordProDiagnostic {
   message: string;
   code: string;
 }
-
-export type LintLanguage = "pt" | "en" | "es";
 
 export interface LintOptions {
   language?: LintLanguage | string;
@@ -118,14 +119,6 @@ const COLOR_DIRECTIVES = new Set([
 const KEY_REGEX = /^(?:[A-G]|D[oó]|R[eé]|Mi|F[aá]|Sol|L[aá]|Si)[#b♯♭]?(?:\s*(?:m|min|minor|menor|maj|major|maior|M))?$/i;
 
 const VALID_DENOMINATORS = new Set([1, 2, 4, 8, 16, 32, 64]);
-
-function normalizeLang(lang?: string): LintLanguage {
-  if (!lang) return "pt";
-  const lower = lang.toLowerCase();
-  if (lower.startsWith("en")) return "en";
-  if (lower.startsWith("es")) return "es";
-  return "pt";
-}
 
 function resolveBlockStart(name: string): string | null {
   if (name in BLOCK_START_ALIASES) return BLOCK_START_ALIASES[name];
@@ -234,160 +227,15 @@ function getValueRange(line: string, colonIdx: number, trimmedValue: string): { 
   return { column: startCol, endColumn: endCol };
 }
 
-function getMessages(lang: LintLanguage) {
-  return {
-    emptyChord: {
-      pt: "Acorde vazio: '[]'.",
-      en: "Empty chord: '[]'.",
-      es: "Acorde vacío: '[]'.",
-    }[lang],
-    unknownChordRoot: (chord: string) => ({
-      pt: `Acorde não reconhecido: "${chord}".`,
-      en: `Unrecognized chord: "${chord}".`,
-      es: `Acorde no reconocido: "${chord}".`,
-    }[lang]),
-    unknownChordQuality: (chord: string) => ({
-      pt: `Qualidade de acorde não reconhecida em "${chord}" (assumida como maior).`,
-      en: `Unrecognized chord quality in "${chord}" (assumed major).`,
-      es: `Calidad de acorde no reconocida en "${chord}" (asumida como mayor).`,
-    }[lang]),
-    unmatchedBracketClose: {
-      pt: "']' de fecho sem '[' correspondente.",
-      en: "Closing ']' without a matching '['.",
-      es: "']' de cierre sin '[' correspondiente.",
-    }[lang],
-    unclosedBracket: {
-      pt: "Acorde não fechado — falta ']'.",
-      en: "Unclosed chord — missing ']'.",
-      es: "Acorde sin cerrar — falta ']'.",
-    }[lang],
-    unclosedDirective: {
-      pt: "Diretiva não fechada — falta '}'.",
-      en: "Unclosed directive — missing '}'.",
-      es: "Directiva sin cerrar — falta '}'.",
-    }[lang],
-    emptyDirective: {
-      pt: "Diretiva vazia '{}'.",
-      en: "Empty directive '{}'.",
-      es: "Directiva vacía '{}'.",
-    }[lang],
-    emptyDirectiveValue: (name: string) => ({
-      pt: `'{${name}}' precisa de um valor não vazio.`,
-      en: `'{${name}}' requires a non-empty value.`,
-      es: `'{${name}}' requiere un valor no vacío.`,
-    }[lang]),
-    missingColonSeparator: (directive: string) => ({
-      pt: `Possível diretiva malformada (falta separador ':'): "{${directive}}".`,
-      en: `Possible malformed directive (missing ':' separator): "{${directive}}".`,
-      es: `Posible directiva malformada (falta el separador ':'): "{${directive}}".`,
-    }[lang]),
-    chorusRecallWithoutChorus: {
-      pt: "'{chorus}' repete o refrão anterior, mas ainda não existe nenhum '{start_of_chorus}' antes.",
-      en: "'{chorus}' recalls the previous chorus, but no '{start_of_chorus}' precedes it.",
-      es: "'{chorus}' repite el estribillo anterior, pero no hay ningún '{start_of_chorus}' previo.",
-    }[lang],
-    nestedSection: (name: string, parentName: string, parentLine: number) => ({
-      pt: `A secção '${name}' foi aberta dentro de '${parentName}' (aberta na linha ${parentLine}) sem fechar a secção anterior.`,
-      en: `Section '${name}' was opened inside '${parentName}' (opened on line ${parentLine}) without closing the previous section.`,
-      es: `La sección '${name}' se abrió dentro de '${parentName}' (abierta en la línea ${parentLine}) sin cerrar la sección anterior.`,
-    }[lang]),
-    interlockedBlocks: (closingRaw: string, closingName: string, innerName: string, innerLine: number) => ({
-      pt: `Secção interligada incorretamente: '{${closingRaw}}' tenta fechar '${closingName}', mas a secção interior '${innerName}' (aberta na linha ${innerLine}) ainda está aberta.`,
-      en: `Improperly interlocked sections: '{${closingRaw}}' attempts to close '${closingName}', but inner section '${innerName}' (opened on line ${innerLine}) is still open.`,
-      es: `Secciones entrelazadas incorrectamente: '{${closingRaw}}' intenta cerrar '${closingName}', pero la sección interior '${innerName}' (abierta en la línea ${innerLine}) sigue abierta.`,
-    }[lang]),
-    unmatchedBlockEnd: (rawName: string, name: string) => ({
-      pt: `'{${rawName}}' sem uma secção '${name}' aberta correspondente.`,
-      en: `'{${rawName}}' without a matching open '${name}' section.`,
-      es: `'{${rawName}}' sin una sección '${name}' abierta correspondiente.`,
-    }[lang]),
-    mismatchedBlockEnd: (expected: string, line: number, found: string) => ({
-      pt: `Esperava-se o fecho de '${expected}' (aberta na linha ${line}), mas encontrou '{${found}}'.`,
-      en: `Expected closing of '${expected}' (opened on line ${line}), but found '{${found}}'.`,
-      es: `Se esperaba el cierre de '${expected}' (abierta en la línea ${line}), pero se encontró '{${found}}'.`,
-    }[lang]),
-    unclosedBlock: (name: string) => ({
-      pt: `Secção '${name}' aberta aqui nunca foi fechada (falta o directive de fecho correspondente).`,
-      en: `Section '${name}' opened here was never closed (missing matching closing directive).`,
-      es: `Sección '${name}' abierta aquí nunca se cerró (falta la directiva de cierre correspondiente).`,
-    }[lang]),
-    nonNumericValue: (name: string, value: string) => ({
-      pt: `Valor de '${name}' deveria ser numérico, encontrado "${value}".`,
-      en: `Value of '${name}' should be numeric, found "${value}".`,
-      es: `El valor de '${name}' debe ser numérico, encontrado "${value}".`,
-    }[lang]),
-    invalidTempoRange: (value: string) => ({
-      pt: `Valor de tempo deve estar entre 20 e 400 BPM, encontrado "${value}".`,
-      en: `Tempo value should be between 20 and 400 BPM, found "${value}".`,
-      es: `El valor de tempo debe estar entre 20 y 400 BPM, encontrado "${value}".`,
-    }[lang]),
-    invalidCapoRange: (value: string) => ({
-      pt: `Valor de capo deve ser um inteiro entre 0 e 11, encontrado "${value}".`,
-      en: `Capo value must be an integer between 0 and 11, found "${value}".`,
-      es: `El valor de capo debe ser un entero entre 0 y 11, encontrado "${value}".`,
-    }[lang]),
-    invalidKeyshiftValue: (value: string) => ({
-      pt: `Valor de keyshift deve ser um inteiro com sinal, encontrado "${value}".`,
-      en: `Keyshift value must be a signed integer, found "${value}".`,
-      es: `El valor de keyshift debe ser un entero con signo, encontrado "${value}".`,
-    }[lang]),
-    invalidTimeSignature: (value: string) => ({
-      pt: `Formato de compasso inválido: "${value}" — use numerador/denominador (ex.: 4/4, 6/8).`,
-      en: `Invalid time signature format: "${value}" — use numerator/denominator (e.g. 4/4, 6/8).`,
-      es: `Formato de compás no válido: "${value}" — use numerador/denominador (ej.: 4/4, 6/8).`,
-    }[lang]),
-    invalidKey: (value: string) => ({
-      pt: `Tom musical inválido: "${value}" — use uma nota válida (ex.: G, C#m, Bb, Dó menor).`,
-      en: `Invalid musical key: "${value}" — use a valid key notation (e.g. G, C#m, Bb, A minor).`,
-      es: `Tonalidad musical no válida: "${value}" — use una nota válida (ej.: G, C#m, Bb, Re menor).`,
-    }[lang]),
-    invalidYear: (value: string) => ({
-      pt: `Ano inválido: "${value}" — use um ano de 4 dígitos (ex.: 2024).`,
-      en: `Invalid year: "${value}" — use a 4-digit year (e.g. 2024).`,
-      es: `Año no válido: "${value}" — use un año de 4 dígitos (ej.: 2024).`,
-    }[lang]),
-    invalidDuration: (value: string) => ({
-      pt: `Formato de duração inválido: "${value}" — use mm:ss.`,
-      en: `Invalid duration format: "${value}" — use mm:ss.`,
-      es: `Formato de duración no válido: "${value}" — use mm:ss.`,
-    }[lang]),
-    invalidYoutube: (value: string) => ({
-      pt: `Link ou ID do YouTube inválido: "${value}".`,
-      en: `Invalid YouTube URL or video ID: "${value}".`,
-      es: `Enlace o ID de YouTube no válido: "${value}".`,
-    }[lang]),
-    invalidCcli: (value: string) => ({
-      pt: `Número CCLI deve ser numérico, encontrado "${value}".`,
-      en: `CCLI number must be numeric, found "${value}".`,
-      es: `El número CCLI debe ser numérico, encontrado "${value}".`,
-    }[lang]),
-    invalidRepeat: (value: string) => ({
-      pt: `Valor de repetição inválido: "${value}" — use um número positivo (ex.: 2 ou 2x).`,
-      en: `Invalid repeat value: "${value}" — use a positive number (e.g. 2 or 2x).`,
-      es: `Valor de repetición no válido: "${value}" — use un número positivo (ej.: 2 o 2x).`,
-    }[lang]),
-    invalidSize: (name: string, value: string) => ({
-      pt: `Tamanho inválido para '${name}': "${value}".`,
-      en: `Invalid size for '${name}': "${value}".`,
-      es: `Tamaño no válido para '${name}': "${value}".`,
-    }[lang]),
-    invalidColor: (name: string, value: string) => ({
-      pt: `Cor inválida para '${name}': "${value}".`,
-      en: `Invalid color for '${name}': "${value}".`,
-      es: `Color no válido para '${name}': "${value}".`,
-    }[lang]),
-  };
-}
-
 function analyzeBracketContent(
   content: string,
   lineIdx: number,
   startCol: number,
   endCol: number,
-  lang: LintLanguage,
+  lang?: string,
 ): ChordProDiagnostic[] {
   const trimmed = content.trim();
-  const msg = getMessages(lang);
+  const msg = getChordProMessages(lang);
 
   if (trimmed === "") {
     return [
@@ -429,9 +277,9 @@ function analyzeBracketContent(
   return diagnostics;
 }
 
-function findBracketDiagnostics(line: string, lineIdx: number, lang: LintLanguage): ChordProDiagnostic[] {
+function findBracketDiagnostics(line: string, lineIdx: number, lang?: string): ChordProDiagnostic[] {
   const diagnostics: ChordProDiagnostic[] = [];
-  const msg = getMessages(lang);
+  const msg = getChordProMessages(lang);
   let depth = 0;
   let openIdx = -1;
 
@@ -476,8 +324,7 @@ function findBracketDiagnostics(line: string, lineIdx: number, lang: LintLanguag
 }
 
 export function lintChordPro(content: string, options?: LintOptions): ChordProDiagnostic[] {
-  const lang = normalizeLang(options?.language);
-  const msg = getMessages(lang);
+  const msg = getChordProMessages(options?.language);
   const lines = content.split(/\r?\n/);
   const diagnostics: ChordProDiagnostic[] = [];
   const blockStack: { name: string; line: number; rawName: string }[] = [];
