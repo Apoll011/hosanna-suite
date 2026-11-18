@@ -29,7 +29,7 @@ export default function AppGallery() {
 
   return (
     <section className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="white" />
+      <SectionLiquidBg variant="blue" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <div className="reveal mt-4 hidden md:block w-full">
           <InteractiveFolderGallery

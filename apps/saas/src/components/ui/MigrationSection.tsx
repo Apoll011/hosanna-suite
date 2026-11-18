@@ -46,25 +46,25 @@ export function MigrationSection() {
 
   return (
     <section id="features" className="relative overflow-hidden py-16 md:py-16">
-      <SectionLiquidBg variant="white" />
+      <SectionLiquidBg variant="blue" />
       <div className="relative z-10 mx-auto max-w-6xl px-5 md:px-8">
         <div className={cn("reveal max-w-2xl", "mx-auto text-center")}>
           <h2
             className={cn(
-              "font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl",
+              "font-display text-3xl leading-tight tracking-tight text-white md:text-4xl lg:text-5xl",
             )}
           >
             {t("migration.titleStart")}{" "}
-            <span className="text-blue-400">{t("migration.titleHighlight")}</span>
+            <span className="text-sky-300">{t("migration.titleHighlight")}</span>
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-5 text-base leading-relaxed text-blue-100/80 md:text-lg">
             {t("migration.subtitle")}
           </p>
         </div>
         <div className="relative z-10 grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center mt-6">
           <div className="min-w-0">
             <div className="reveal mb-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground/70 mb-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-blue-200/70 mb-3">
                 {t("migration.whereFrom")}
               </p>
               <div
@@ -81,30 +81,32 @@ export function MigrationSection() {
                       role="radio"
                       aria-checked={isSelected}
                       onClick={() => setSelectedId(app.id)}
-                      className={`group flex w-full items-center gap-3.5 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${isSelected
-                          ? "border-primary/50 bg-white shadow-md shadow-primary/10"
-                          : "border-border/70 bg-secondary/40 hover:border-border hover:bg-secondary/60"
-                        }`}
+                      className={`group flex w-full items-center gap-3.5 rounded-xl border px-4 py-3 text-left transition-all duration-200 ${
+                        isSelected
+                          ? "border-sky-400/60 bg-white/15 shadow-lg shadow-sky-950/40 text-white"
+                          : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10 text-white"
+                      }`}
                     >
                       <span
                         aria-hidden="true"
-                        className={`h-1.5 w-1.5 shrink-0 rounded-full transition-all duration-200 ${isSelected
-                            ? "bg-primary shadow-[0_0_8px_2px_rgba(37,99,235,0.35)]"
-                            : "bg-blue-200"
-                          }`}
+                        className={`h-1.5 w-1.5 shrink-0 rounded-full transition-all duration-200 ${
+                          isSelected
+                            ? "bg-sky-300 shadow-[0_0_8px_2px_rgba(56,189,248,0.5)]"
+                            : "bg-blue-300/40"
+                        }`}
                       />
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">
-                          <span className="font-display font-bold text-sm text-primary">
+                          <span className="font-display font-bold text-sm text-white">
                             {app.name}
                           </span>
                           {!app.available && (
-                            <span className="text-[10px] font-bold uppercase tracking-wide text-blue-500 bg-blue-100 rounded-full px-2 py-0.5">
+                            <span className="text-[10px] font-bold uppercase tracking-wide text-sky-200 bg-white/15 rounded-full px-2 py-0.5">
                               {t("common.comingSoon")}
                             </span>
                           )}
                         </span>
-                        <span className="block text-xs leading-snug text-muted-foreground mt-0.5">
+                        <span className="block text-xs leading-snug text-blue-100/70 mt-0.5">
                           {app.description}
                         </span>
                       </span>
@@ -121,15 +123,15 @@ export function MigrationSection() {
                 className="hm-rise relative z-10 mx-auto w-72 max-w-full"
                 style={{ "--hm-delay": "0ms" } as HmStyle}
               >
-                <div className="hm-float flex items-center gap-3 rounded-2xl border border-blue-100 bg-white px-4 py-3 shadow-lg shadow-blue-900/5 -rotate-2">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100">
-                    <Music2 className="h-5 w-5 text-primary" />
+                <div className="hm-float flex items-center gap-3 rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md px-4 py-3 shadow-xl -rotate-2">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-sky-300">
+                    <Music2 className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
-                    <span className="block truncate font-display text-sm font-bold text-primary">
+                    <span className="block truncate font-display text-sm font-bold text-white">
                       {current.name.toLowerCase().replace(/\s+/g, "")}.backup
                     </span>
-                    <span className="block text-xs text-muted-foreground">
+                    <span className="block text-xs text-blue-100/70">
                       {current.name} · {t("migration.songsCount", { count: 128 })}
                     </span>
                   </span>
@@ -150,25 +152,25 @@ export function MigrationSection() {
                 </defs>
                 <path
                   d="M 128 2 C 128 40, 208 20, 208 66"
-                  stroke="#2563eb"
+                  stroke="#38bdf8"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeDasharray="0.5 7"
                   pathLength="100"
                   mask="url(#hm-path-reveal)"
                 />
-                <circle className="hm-arrival" cx="208" cy="66" r="4" fill="#2563eb" />
+                <circle className="hm-arrival" cx="208" cy="66" r="4" fill="#38bdf8" />
               </svg>
 
               <div className="hm-rise relative" style={{ "--hm-delay": "150ms" } as HmStyle}>
-                <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-2xl shadow-blue-900/10">
+                <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md shadow-2xl">
                   <div
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-16 right-0 h-40 w-40 rounded-full bg-primary/10 blur-3xl"
+                    className="pointer-events-none absolute -top-16 right-0 h-40 w-40 rounded-full bg-sky-400/10 blur-3xl"
                   />
-                  <div className="relative flex items-center gap-2 border-b border-blue-50 px-4 py-2.5">
-                    <span className="h-4 w-4 rounded-sm bg-primary" />
-                    <span className="font-display text-sm font-bold text-primary">Hosanna</span>
+                  <div className="relative flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+                    <span className="h-4 w-4 rounded-sm bg-sky-400" />
+                    <span className="font-display text-sm font-bold text-white">Hosanna</span>
                     <span className="hm-eq ml-auto" aria-hidden="true">
                       <span />
                       <span />
@@ -177,26 +179,26 @@ export function MigrationSection() {
                   </div>
                   <div className="relative flex flex-col gap-1.5 p-3">
                     <div
-                      className="hm-row flex items-center gap-2.5 rounded-lg bg-secondary/40 px-3 py-2"
+                      className="hm-row flex items-center gap-2.5 rounded-lg bg-white/5 border border-white/5 px-3 py-2"
                       style={{ "--hm-delay": "1050ms" } as HmStyle}
                     >
-                      <Music2 className="h-4 w-4 shrink-0 text-primary" />
-                      <span className="text-sm font-semibold text-primary">Praise You Anywere</span>
-                      <span className="text-xs text-muted-foreground">Elevation Worship</span>
-                      <span className="ml-auto rounded bg-blue-100 px-1.5 py-0.5 font-display text-[10px] font-bold text-primary">
+                      <Music2 className="h-4 w-4 shrink-0 text-sky-300" />
+                      <span className="text-sm font-semibold text-white">Praise You Anywere</span>
+                      <span className="text-xs text-blue-100/70">Elevation Worship</span>
+                      <span className="ml-auto rounded bg-white/15 px-1.5 py-0.5 font-display text-[10px] font-bold text-sky-200">
                         F#m
                       </span>
                     </div>
                     <div
-                      className="hm-row flex items-center gap-2.5 rounded-lg bg-secondary/40 px-3 py-2"
+                      className="hm-row flex items-center gap-2.5 rounded-lg bg-white/5 border border-white/5 px-3 py-2"
                       style={{ "--hm-delay": "1200ms" } as HmStyle}
                     >
-                      <Music2 className="h-4 w-4 shrink-0 text-primary" />
-                      <span className="block h-2 w-24 rounded bg-blue-100" />
-                      <span className="ml-auto block h-2 w-6 rounded bg-blue-100" />
+                      <Music2 className="h-4 w-4 shrink-0 text-sky-300" />
+                      <span className="block h-2 w-24 rounded bg-white/20" />
+                      <span className="ml-auto block h-2 w-6 rounded bg-white/20" />
                     </div>
                     <div
-                      className="hm-row flex items-center gap-2.5 rounded-lg bg-secondary/40 px-3 py-2"
+                      className="hm-row flex items-center gap-2.5 rounded-lg bg-white/5 border border-white/5 px-3 py-2"
                       style={{ "--hm-delay": "1350ms" } as HmStyle}
                     >
                       <Music2 className="h-4 w-4 shrink-0 text-primary" />

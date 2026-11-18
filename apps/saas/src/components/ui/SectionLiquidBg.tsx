@@ -18,16 +18,16 @@ const PRESETS = {
     clearColor: 0x021433,
   },
   white: {
-    color1: new THREE.Vector3(1.0, 1.0, 1.0),                  // #FFFFFF
-    color2: new THREE.Vector3(224 / 255, 242 / 255, 254 / 255),// #E0F2FE
-    color3: new THREE.Vector3(186 / 255, 230 / 255, 253 / 255),// #BAE6FD
-    noise: 0.025,                                              // Softened for light clarity
-    clearColor: 0xffffff,
+    color1: new THREE.Vector3(74 / 255, 137 / 255, 184 / 255), // #4A89B8
+    color2: new THREE.Vector3(20 / 255, 184 / 255, 196 / 255), // #14B8C4
+    color3: new THREE.Vector3(2 / 255, 20 / 255, 51 / 255),   // #021433
+    noise: 0.075,
+    clearColor: 0x021433,
   },
 };
 
 export function SectionLiquidBg({
-  variant = "white",
+  variant = "blue",
   className,
   linesAmount = 5.0,
 }: SectionLiquidBgProps) {
@@ -57,8 +57,7 @@ export function SectionLiquidBg({
       ref={containerRef}
       aria-hidden="true"
       className={cn(
-        "absolute inset-0 z-0 pointer-events-none overflow-hidden",
-        variant === "blue" ? "bg-[#021433]" : "bg-white",
+        "absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[#021433]",
         className,
       )}
     >

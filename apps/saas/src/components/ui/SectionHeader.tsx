@@ -19,14 +19,14 @@ export function SectionHeader({
     <div className={cn("reveal max-w-2xl", center && "mx-auto text-center")}>
       <h2
         className={cn(
-          "font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl lg:text-5xl",
+          "font-display text-3xl leading-tight tracking-tight text-white md:text-4xl lg:text-5xl",
           titleClassName,
         )}
       >
         {title}
       </h2>
       {children && (
-        <p className="mt-5 text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p className="mt-5 text-base leading-relaxed text-blue-100/80 md:text-lg">
           {children}
         </p>
       )}
