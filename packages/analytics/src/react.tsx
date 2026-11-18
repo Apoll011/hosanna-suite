@@ -12,10 +12,10 @@ import {
 import { getGlobalAnalyticsClient } from "./client.js";
 import type { AnalyticsClient, EarlyAccessFeature, EarlyAccessFeatureStage } from "./types.js";
 
-const AnalyticsContext = createContext<AnalyticsClient | null>(null);
+const AnalyticsContext = createContext<AnalyticsClient<any> | null>(null);
 
 export interface AnalyticsProviderProps {
-  client: AnalyticsClient;
+  client: AnalyticsClient<any>;
   children: ReactNode;
 }
 
@@ -23,12 +23,7 @@ export function AnalyticsProvider({ client, children }: AnalyticsProviderProps) 
   return <AnalyticsContext.Provider value={client}>{children}</AnalyticsContext.Provider>;
 }
 
-export function useAnalytics<
-  TEventMap extends Record<string, Record<string, unknown>> = Record<
-    string,
-    Record<string, unknown>
-  >,
->(): AnalyticsClient<TEventMap> {
+export function useAnalytics<TEventMap = Record<string, unknown>>(): AnalyticsClient<TEventMap> {
   const context = useContext(AnalyticsContext);
   const client = (context ?? getGlobalAnalyticsClient()) as AnalyticsClient<TEventMap> | null;
 
@@ -124,7 +119,7 @@ export function PageViewTracker({ currentUrl, properties }: PageViewTrackerProps
 export interface AnalyticsErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode | ((error: Error, reset: () => void) => ReactNode);
-  client?: AnalyticsClient;
+  client?: AnalyticsClient<any>;
 }
 
 interface AnalyticsErrorBoundaryState {

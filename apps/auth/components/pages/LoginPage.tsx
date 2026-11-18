@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
+import { track } from "@/lib/analytics";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth/client";
@@ -31,6 +32,7 @@ export function LoginPage() {
   const submitSignIn = async (token: string) => {
     setErrorMsg("");
     setIsLoading(true);
+    track("auth_login_attempted", { provider: "email", email: email.trim() });
 
     const { data, error } = await authClient.signIn.email({
       email: email.trim(),
@@ -44,6 +46,7 @@ export function LoginPage() {
     setCaptchaToken("");
 
     if (error) {
+      track("auth_login_failed", { provider: "email", reason: error.code || error.message });
       if (error.code === "TWO_FACTOR_REQUIRED" || (error as { status?: number })?.status === 403) {
         window.location.assign("/two-factor");
         return;
@@ -64,6 +67,7 @@ export function LoginPage() {
       return;
     }
 
+    track("auth_login_succeeded", { provider: "email" });
     await redirectAfterSuccessfulAuth(searchParams);
   };
 

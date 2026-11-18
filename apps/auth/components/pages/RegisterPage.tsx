@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
+import { track } from "@/lib/analytics";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
@@ -32,6 +33,7 @@ export function RegisterPage() {
 
   const submitSignUp = async (token: string) => {
     setIsLoading(true);
+    track("auth_signup_attempted", { provider: "email", email: email.trim() });
 
     const { error } = await authClient.signUp.email({
       name: name.trim(),
@@ -45,6 +47,7 @@ export function RegisterPage() {
     setCaptchaToken("");
 
     if (error) {
+      track("auth_signup_failed", { provider: "email", reason: error.code || error.message });
       if (
         error.code === "POW_CHALLENGE_REQUIRED" ||
         (error as { status?: number })?.status === 423
@@ -56,6 +59,7 @@ export function RegisterPage() {
       return;
     }
 
+    track("auth_signup_succeeded", { provider: "email" });
     setSuccessState(true);
   };
 

@@ -27,12 +27,7 @@ export interface AnalyticsConfig {
   onLoaded?: (client: AnalyticsClient) => void;
 }
 
-export interface AnalyticsClient<
-  TEventMap extends Record<string, Record<string, unknown>> = Record<
-    string,
-    Record<string, unknown>
-  >,
-> {
+export interface AnalyticsClient<TEventMap = Record<string, unknown>> {
   readonly appName: string;
   isReady(): boolean;
   isEnabled(): boolean;

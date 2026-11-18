@@ -1,5 +1,6 @@
 "use client";
 
+import { identify, reset } from "@/lib/analytics";
 import { authClient } from "@/lib/auth/client";
 import { clearCachedOrg } from "@/lib/organization/cache";
 import {
@@ -68,6 +69,7 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
   const clear = useCallback(() => {
     clearCachedUser();
     clearPersonalSettingsCache();
+    reset();
     setUser(null);
   }, []);
 
@@ -89,6 +91,7 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
         clearCachedUser();
         clearCachedOrg();
         clearPersonalSettingsCache();
+        reset();
         setUser(null);
         if (requireAuthRef.current && typeof window !== "undefined") {
           window.location.replace(loginRedirectRef.current);
@@ -119,6 +122,10 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
       syncSettingsFromMetadata(rawUser?.metadata ?? next.metadata);
 
       writeCachedUser(userToCache);
+      identify(userToCache.id, {
+        email: userToCache.email,
+        name: userToCache.name,
+      });
       setUser(userToCache);
       return userToCache;
     } catch (err) {

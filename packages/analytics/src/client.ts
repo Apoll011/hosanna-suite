@@ -9,12 +9,9 @@ import { formatError } from "./errors.js";
 import { buildPostHogOptions } from "./options.js";
 import type { AnalyticsClient, AnalyticsConfig } from "./types.js";
 
-export function createAnalyticsClient<
-  TEventMap extends Record<string, Record<string, unknown>> = Record<
-    string,
-    Record<string, unknown>
-  >,
->(config: AnalyticsConfig): AnalyticsClient<TEventMap> {
+export function createAnalyticsClient<TEventMap = Record<string, unknown>>(
+  config: AnalyticsConfig,
+): AnalyticsClient<TEventMap> {
   let isInitialized = false;
   const isBrowser = typeof window !== "undefined";
   const isEnabled = config.enabled ?? false;
@@ -33,7 +30,7 @@ export function createAnalyticsClient<
             });
           }
           void instance.reloadFeatureFlags();
-          config.onLoaded?.(client);
+          config.onLoaded?.(client as AnalyticsClient);
         },
       });
       isInitialized = true;
@@ -221,12 +218,12 @@ export function createAnalyticsClient<
   return client;
 }
 
-let globalClient: AnalyticsClient | null = null;
+let globalClient: AnalyticsClient<any> | null = null;
 
-export function getGlobalAnalyticsClient(): AnalyticsClient | null {
-  return globalClient;
+export function getGlobalAnalyticsClient<TEventMap = Record<string, unknown>>(): AnalyticsClient<TEventMap> | null {
+  return globalClient as AnalyticsClient<TEventMap> | null;
 }
 
-export function setGlobalAnalyticsClient(client: AnalyticsClient | null): void {
+export function setGlobalAnalyticsClient(client: AnalyticsClient<any> | null): void {
   globalClient = client;
 }
