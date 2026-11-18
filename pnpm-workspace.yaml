@@ -16,3 +16,6 @@ overrides:
 catalog:
   "@types/node": ^22.20.5
   typescript: ^5.9.3
+
+minimumReleaseAgeExclude:
+  - posthog-js@1.450.1
