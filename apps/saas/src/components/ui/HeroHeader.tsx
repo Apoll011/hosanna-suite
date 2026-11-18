@@ -10,25 +10,56 @@ export type NavItem = "features" | "chordpro" | "price" | "about" | "contact";
 const NAV_ITEMS: NavItem[] = ["features", "chordpro", "price", "about", "contact"];
 
 interface HeroHeaderProps {
-  activeNav: NavItem;
-  onSelectNav: (item: NavItem) => void;
-  onLogoClick: () => void;
-  language: LanguageCode;
-  onChangeLanguage: (lang: LanguageCode) => void;
-  onTryClick: () => void;
-  ready: boolean;
+  activeNav?: NavItem;
+  onSelectNav?: (item: NavItem) => void;
+  onLogoClick?: () => void;
+  language?: LanguageCode;
+  onChangeLanguage?: (lang: LanguageCode) => void;
+  onTryClick?: () => void;
+  ready?: boolean;
+  mode?: "hero" | "scrolled-only";
 }
 
+const dashboardUrl = `${import.meta.env.VITE_DASHBOARD_URL}/new`;
+
 export default function HeroHeader({
-  activeNav,
-  onSelectNav,
-  onLogoClick,
-  language,
-  onChangeLanguage,
-  onTryClick,
-  ready,
+  activeNav: propActiveNav,
+  onSelectNav: propOnSelectNav,
+  onLogoClick: propOnLogoClick,
+  language: propLanguage,
+  onChangeLanguage: propOnChangeLanguage,
+  onTryClick: propOnTryClick,
+  ready = true,
+  mode = "hero",
 }: HeroHeaderProps) {
-  const { t } = useI18n();
+  const { language: i18nLang, setLanguage: setI18nLang, t } = useI18n();
+  const language = propLanguage || (i18nLang as LanguageCode);
+  const onChangeLanguage = propOnChangeLanguage || setI18nLang;
+
+  const [localActiveNav, setLocalActiveNav] = useState<NavItem>("features");
+  const activeNav = propActiveNav !== undefined ? propActiveNav : localActiveNav;
+
+  const onSelectNav = propOnSelectNav || ((item: NavItem) => {
+    setLocalActiveNav(item);
+    if (item === "chordpro" || item === "about" || item === "contact") {
+      window.location.assign(`/${item === "chordpro" ? "chordpro" : item}`);
+      return;
+    }
+    const target = document.getElementById(item === "price" ? "pricing" : "features");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.location.assign(`/#${item === "price" ? "pricing" : "features"}`);
+    }
+  });
+
+  const onLogoClick = propOnLogoClick || (() => {
+    window.location.assign("/");
+  });
+
+  const onTryClick = propOnTryClick || (() => {
+    window.location.assign(dashboardUrl);
+  });
   const headerRef = useRef<HTMLElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const topBarRef = useRef<HTMLSpanElement>(null);
@@ -43,6 +74,19 @@ export default function HeroHeader({
   menuOpenRef.current = menuOpen;
 
   useEffect(() => {
+    if (mode === "scrolled-only") {
+      setIsScrolled(true);
+      const handleScrollOnly = () => {
+        const scrollY = window.scrollY;
+        if (openScrollYRef.current > 0 && Math.abs(scrollY - openScrollYRef.current) > 8) {
+          setScrolledPanelOpen(false);
+          openScrollYRef.current = 0;
+        }
+      };
+      window.addEventListener("scroll", handleScrollOnly, { passive: true });
+      return () => window.removeEventListener("scroll", handleScrollOnly);
+    }
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const heroEl = headerRef.current?.closest("section") || document.getElementById("top");
@@ -67,7 +111,7 @@ export default function HeroHeader({
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [mode]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -175,116 +219,118 @@ export default function HeroHeader({
   return (
     <>
       {/* 1. Standard Transparent Hero Navbar (Section 1 / Hero only) */}
-      <header
-        ref={headerRef}
-        aria-hidden={isScrolled}
-        className="absolute top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 pointer-events-none"
-      >
-        {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
-        <div
-          data-header-item
-          className="lg:justify-self-start opacity-0 pointer-events-auto shrink-0"
+      {mode !== "scrolled-only" && (
+        <header
+          ref={headerRef}
+          aria-hidden={isScrolled}
+          className="absolute top-0 inset-x-0 z-30 w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 font-sans pointer-events-none"
         >
-          <button
-            type="button"
-            onClick={() => {
-              onLogoClick();
-              setMenuOpen(false);
-            }}
-            aria-label="Hosanna Studio home"
-            className="inline-flex items-center gap-1.5 md:gap-1.75 lg:gap-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+          {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
+          <div
+            data-header-item
+            className="lg:justify-self-start opacity-0 pointer-events-auto shrink-0"
           >
-            <img
-              src="/assets/logo_icon.png"
-              alt=""
-              aria-hidden="true"
-              className="h-4.5 md:h-5.5 lg:h-7 w-auto block shrink-0 select-none"
-              draggable={false}
-            />
-            <span
-              aria-hidden="true"
-              className="w-px h-2.5 md:h-3 lg:h-3.75 bg-[rgba(255,255,255,0.5)] shrink-0"
-            />
-            <img
-              src="/assets/wordmark_studio.svg"
-              alt="Hosanna Studio"
-              className="h-2.25 md:h-2.75 lg:h-3.5 w-auto block shrink-0 select-none"
-              draggable={false}
-            />
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() => {
+                onLogoClick();
+                setMenuOpen(false);
+              }}
+              aria-label="Hosanna Studio home"
+              className="inline-flex items-center gap-1.5 md:gap-1.75 lg:gap-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+            >
+              <img
+                src="/assets/logo_icon.png"
+                alt=""
+                aria-hidden="true"
+                className="h-4.5 md:h-5.5 lg:h-7 w-auto block shrink-0 select-none"
+                draggable={false}
+              />
+              <span
+                aria-hidden="true"
+                className="w-px h-2.5 md:h-3 lg:h-3.75 bg-[rgba(255,255,255,0.5)] shrink-0"
+              />
+              <img
+                src="/assets/wordmark_studio.svg"
+                alt="Hosanna Studio"
+                className="h-2.25 md:h-2.75 lg:h-3.5 w-auto block shrink-0 select-none"
+                draggable={false}
+              />
+            </button>
+          </div>
 
-        {/* Center: Aligned horizontal navigation links */}
-        <nav
-          aria-label="Primary navigation"
-          className="hidden md:flex lg:justify-self-center items-center md:gap-3.5 lg:gap-7 pointer-events-auto"
-        >
-          {NAV_ITEMS.map((id) => {
-            const isActive = activeNav === id;
-            return (
-              <div key={id} data-header-item className="opacity-0">
-                <button
-                  type="button"
-                  onClick={() => onSelectNav(id)}
-                  onMouseEnter={(e) => handleLinkHover(e, true)}
-                  onMouseLeave={(e) => handleLinkHover(e, false)}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-medium uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm text-white ${
-                    isActive
-                      ? "opacity-100"
-                      : "opacity-[0.72] hover:opacity-100"
-                  }`}
-                >
-                  {isActive && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute -bottom-px left-1/2 -translate-x-1/2 w-[3.5px] h-[3.5px] rounded-full bg-white"
-                    />
-                  )}
-                  <span data-nav-label className="inline-block">
-                    {t(`landing.nav.${id === "price" ? "pricing" : id}`)}
-                  </span>
-                </button>
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Top-Right: Rounded language dropdown (PT/EN/ES) + Try button */}
-        <div
-          data-header-item
-          className="hidden md:flex lg:justify-self-end items-center md:gap-2 lg:gap-2.5 opacity-0 pointer-events-auto shrink-0"
-        >
-          <LanguageToggle
-            language={language}
-            onChangeLanguage={onChangeLanguage}
-            size="responsive"
-            theme="dark"
-          />
-          <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="md" theme="dark" />
-        </div>
-
-        {/* Mobile actions (compact language toggle + Try button + hamburger) (< 768px) */}
-        <div
-          data-header-item
-          className="md:hidden flex items-center gap-1.5 opacity-0 pointer-events-auto"
-        >
-          <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="sm" theme="dark" />
-          <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="sm" theme="dark" />
-
-          <button
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-            aria-expanded={menuOpen}
-            className="relative z-40 w-8 h-9 -mr-1.5 flex flex-col items-center justify-center gap-[3.5px] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+          {/* Center: Aligned horizontal navigation links */}
+          <nav
+            aria-label="Primary navigation"
+            className="hidden md:flex lg:justify-self-center items-center md:gap-3.5 lg:gap-7 pointer-events-auto"
           >
-            <span ref={topBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
-            <span ref={midBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
-            <span ref={botBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
-          </button>
-        </div>
-      </header>
+            {NAV_ITEMS.map((id) => {
+              const isActive = activeNav === id;
+              return (
+                <div key={id} data-header-item className="opacity-0">
+                  <button
+                    type="button"
+                    onClick={() => onSelectNav(id)}
+                    onMouseEnter={(e) => handleLinkHover(e, true)}
+                    onMouseLeave={(e) => handleLinkHover(e, false)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`relative flex items-center md:text-[9.5px] lg:text-[10.5px] font-medium uppercase md:tracking-[0.06em] lg:tracking-[0.08em] leading-none py-2 whitespace-nowrap shrink-0 cursor-pointer transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm text-white ${
+                      isActive
+                        ? "opacity-100"
+                        : "opacity-[0.72] hover:opacity-100"
+                    }`}
+                  >
+                    {isActive && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -bottom-px left-1/2 -translate-x-1/2 w-[3.5px] h-[3.5px] rounded-full bg-white"
+                      />
+                    )}
+                    <span data-nav-label className="inline-block">
+                      {t(`landing.nav.${id === "price" ? "pricing" : id}`)}
+                    </span>
+                  </button>
+                </div>
+              );
+            })}
+          </nav>
+
+          {/* Top-Right: Rounded language dropdown (PT/EN/ES) + Try button */}
+          <div
+            data-header-item
+            className="hidden md:flex lg:justify-self-end items-center md:gap-2 lg:gap-2.5 opacity-0 pointer-events-auto shrink-0"
+          >
+            <LanguageToggle
+              language={language}
+              onChangeLanguage={onChangeLanguage}
+              size="responsive"
+              theme="dark"
+            />
+            <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="md" theme="dark" />
+          </div>
+
+          {/* Mobile actions (compact language toggle + Try button + hamburger) (< 768px) */}
+          <div
+            data-header-item
+            className="md:hidden flex items-center gap-1.5 opacity-0 pointer-events-auto"
+          >
+            <LanguageToggle language={language} onChangeLanguage={onChangeLanguage} size="sm" theme="dark" />
+            <TryPlayButton label={t("landing.nav.tryFree")} onClick={onTryClick} size="sm" theme="dark" />
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={menuOpen}
+              className="relative z-40 w-8 h-9 -mr-1.5 flex flex-col items-center justify-center gap-[3.5px] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/80 rounded-sm"
+            >
+              <span ref={topBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
+              <span ref={midBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
+              <span ref={botBarRef} className="block w-4 h-[1.5px] bg-white origin-center" />
+            </button>
+          </div>
+        </header>
+      )}
 
       {/* 2. Floating Circular Ball (Section 2+ Scrolled State) */}
       <button
@@ -324,7 +370,7 @@ export default function HeroHeader({
       {/* 3. Pure-White Full-Width Top Navbar Drawer (Section 2+ Expanded State) */}
       <div
         aria-hidden={!scrolledPanelOpen || !isScrolled}
-        className={`fixed top-0 inset-x-0 z-40 bg-white border-b border-black/10 shadow-[0_12px_32px_-12px_rgba(2,20,51,0.18)] transition-transform duration-300 ease-out px-4 py-3.5 md:px-6 md:py-4 lg:px-9 lg:py-4.5 ${
+        className={`fixed top-0 inset-x-0 z-40 bg-white border-b border-black/10 shadow-[0_12px_32px_-12px_rgba(2,20,51,0.18)] transition-transform duration-300 ease-out px-4 py-3.5 md:px-6 md:py-4 lg:px-9 lg:py-4.5 font-sans ${
           scrolledPanelOpen && isScrolled
             ? "translate-y-0 pointer-events-auto"
             : "-translate-y-full pointer-events-none"
@@ -446,7 +492,7 @@ export default function HeroHeader({
         ref={drawerRef}
         style={{ display: "none" }}
         aria-hidden={!menuOpen}
-        className="fixed inset-0 z-30 md:hidden flex-col justify-between bg-[rgba(4,11,20,0.95)] backdrop-blur-md px-5.5 pt-23 pb-7 pointer-events-auto"
+        className="fixed inset-0 z-30 md:hidden flex-col justify-between bg-[rgba(4,11,20,0.95)] backdrop-blur-md px-5.5 pt-23 pb-7 font-sans pointer-events-auto"
       >
         <nav aria-label="Mobile navigation">
           <ul className="flex flex-col gap-2.5 list-none m-0 p-0">

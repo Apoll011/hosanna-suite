@@ -149,7 +149,7 @@ export default function HeroFooter({ ready, language, onScrollClick }: HeroFoote
   return (
     <footer
       ref={footerRef}
-      className="w-full flex items-end justify-between md:grid md:grid-cols-[1fr_auto_1fr] md:items-end pointer-events-none"
+      className="w-full flex items-end justify-between md:grid md:grid-cols-[1fr_auto_1fr] md:items-end font-sans pointer-events-none"
     >
       {/* Left spacer on desktop to keep the 3 descriptor blocks dead-center */}
       <div className="hidden md:block" aria-hidden="true" />

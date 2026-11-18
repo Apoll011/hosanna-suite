@@ -53,12 +53,12 @@ export const pt = {
       pricing: "Preço",
       about: "About",
       contact: "Contacto",
-      tryFree: "Experimentar Grátis",
+      tryFree: "Teste",
     },
     newHero: {
-      line1: "Trazemos clareza",
-      line2: "a cada",
-      line3: "adoração",
+      line1: "Todo ser que",
+      line2: "respira, louve",
+      line3: "ao SENHOR",
     },
     hero: {
       badge: "Repertório ChordPro para equipas de louvor",

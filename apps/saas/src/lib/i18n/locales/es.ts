@@ -53,12 +53,12 @@ export const es: typeof import("./pt").pt = {
       pricing: "Precios",
       about: "Sobre",
       contact: "Contacto",
-      tryFree: "Probar Gratis",
+      tryFree: "Probar",
     },
     newHero: {
-      line1: "Traemos claridad",
-      line2: "a cada",
-      line3: "adoración",
+      line1: "Todo lo que",
+      line2: "respira alabe",
+      line3: "al SEÑOR",
     },
     hero: {
       badge: "Repertorio ChordPro para equipos de alabanza",

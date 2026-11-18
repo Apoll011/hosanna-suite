@@ -273,12 +273,68 @@ interface PaintedHeadlineResult {
   lineBounds: THREE.Vector4;
 }
 
-function getPrimaryFontFamily(): string {
-  if (typeof window === "undefined" || !document.body) {
-    return '"Inter", -apple-system, BlinkMacSystemFont, sans-serif';
+function getHeadlineFontFamily(): string {
+  return '"Fraunces", Georgia, serif';
+}
+
+interface TextSegment {
+  text: string;
+  italic?: boolean;
+}
+
+function splitHeadlineSegments(line: string, isLine3: boolean): TextSegment[] {
+  if (!isLine3) {
+    return [{ text: line, italic: false }];
   }
-  const computed = window.getComputedStyle(document.body).fontFamily;
-  return computed || '"Inter", -apple-system, BlinkMacSystemFont, sans-serif';
+  const lastSpaceIdx = line.lastIndexOf(" ");
+  if (lastSpaceIdx === -1) {
+    return [{ text: line, italic: true }];
+  }
+  const prefix = line.slice(0, lastSpaceIdx + 1);
+  const lastWord = line.slice(lastSpaceIdx + 1);
+  return [
+    { text: prefix, italic: false },
+    { text: lastWord, italic: true },
+  ];
+}
+
+function measureSegmentsWidth(
+  ctx: CanvasRenderingContext2D,
+  segments: TextSegment[],
+  fontSize: number,
+  fontFamily: string,
+  trackingPx: number,
+): number {
+  let total = 0;
+  for (const seg of segments) {
+    ctx.font = `${seg.italic ? "italic 400" : "400"} ${fontSize}px ${fontFamily}`;
+    const chars = Array.from(seg.text);
+    const widths = chars.map((ch) => ctx.measureText(ch).width);
+    total += widths.reduce((sum, w) => sum + w, 0) + trackingPx * chars.length;
+  }
+  return total - trackingPx;
+}
+
+function drawSegments(
+  ctx: CanvasRenderingContext2D,
+  segments: TextSegment[],
+  startX: number,
+  y: number,
+  fontSize: number,
+  fontFamily: string,
+  trackingPx: number,
+): number {
+  let cursorX = startX;
+  ctx.textAlign = "left";
+  for (const seg of segments) {
+    ctx.font = `${seg.italic ? "italic 400" : "400"} ${fontSize}px ${fontFamily}`;
+    const chars = Array.from(seg.text);
+    for (let i = 0; i < chars.length; i++) {
+      ctx.fillText(chars[i], cursorX, y);
+      cursorX += ctx.measureText(chars[i]).width + trackingPx;
+    }
+  }
+  return cursorX - startX - trackingPx;
 }
 
 function paintHeadlineCanvases(
@@ -287,7 +343,7 @@ function paintHeadlineCanvases(
   dpr: number,
   headlineLines: HeadlineLines,
   symbolLines: [MusicalSymbol[], MusicalSymbol[], MusicalSymbol[]],
-  primaryFontFamily = getPrimaryFontFamily(),
+  headlineFontFamily = getHeadlineFontFamily(),
 ): PaintedHeadlineResult {
   const cw = Math.max(1, Math.round(width * dpr));
   const ch = Math.max(1, Math.round(height * dpr));
@@ -319,32 +375,83 @@ function paintHeadlineCanvases(
   const y2 = centerY;
   const y3 = centerY + lineHeight;
 
-  enCtx.font = `400 ${fontSize}px ${primaryFontFamily}`;
+  const segments1 = splitHeadlineSegments(headlineLines[0], false);
+  const segments2 = splitHeadlineSegments(headlineLines[1], false);
+  const segments3 = splitHeadlineSegments(headlineLines[2], true);
+
   enCtx.fillStyle = "#FFFFFF";
   enCtx.textBaseline = "middle";
 
-  const measuredLine1Width = measureTrackedTextWidth(enCtx, headlineLines[0], trackingPx);
+  const w1 = measureSegmentsWidth(
+    enCtx,
+    segments1,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
+  const w2 = measureSegmentsWidth(
+    enCtx,
+    segments2,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
+  const w3 = measureSegmentsWidth(
+    enCtx,
+    segments3,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
 
-  let leftX: number;
-  let rightX2: number;
-  let leftX3: number;
+  // Relative offsets for the abstract right-stepped staircase disposition
+  const relStart1 = 0;
+  const relStart3 = Math.max(fontSize * 0.55, Math.max(w1, w2, w3) * 0.14);
+  const relStart2 = isDesktop
+    ? Math.max(relStart3 + fontSize * 0.65, Math.max(relStart3 + fontSize * 0.45, (Math.max(w1, w3) - w2) * 0.85))
+    : relStart3 + Math.max(fontSize * 0.45, (w1 - w2) * 0.5);
 
-  if (isDesktop) {
-    leftX = padX + (width - padX * 2) * 0.255;
-    rightX2 = Math.min(width - padX, leftX + measuredLine1Width * 0.72);
-    leftX3 = leftX + measuredLine1Width * 0.14;
-  } else {
-    // Center the overall staggered envelope on mobile while keeping each line distinctly stepped
-    const maxAvail = width - padX * 2;
-    const blockSpan = Math.min(maxAvail, measuredLine1Width);
-    leftX = Math.max(padX, (width - blockSpan) * 0.5);
-    rightX2 = Math.min(width - padX, leftX + blockSpan * 0.74);
-    leftX3 = leftX + Math.min(measuredLine1Width * 0.14, Math.max(16, maxAvail * 0.08));
-  }
+  const minX = Math.min(relStart1, relStart2, relStart3);
+  const maxX = Math.max(relStart1 + w1, relStart2 + w2, relStart3 + w3);
+  const totalWidth = maxX - minX;
 
-  const line1Width = drawTrackedText(enCtx, headlineLines[0], leftX, y1, trackingPx, "left");
-  const line2Width = drawTrackedText(enCtx, headlineLines[1], rightX2, y2, trackingPx, "right");
-  const line3Width = drawTrackedText(enCtx, headlineLines[2], leftX3, y3, trackingPx, "left");
+  const maxAvail = width - padX * 2;
+  const scale = totalWidth > maxAvail && maxAvail > 0 ? maxAvail / totalWidth : 1;
+
+  const effectiveTotalWidth = totalWidth * scale;
+  const originX = (width - effectiveTotalWidth) * 0.5 - minX * scale;
+
+  const startX1 = originX + relStart1 * scale;
+  const startX2 = originX + relStart2 * scale;
+  const startX3 = originX + relStart3 * scale;
+
+  const line1Width = drawSegments(
+    enCtx,
+    segments1,
+    startX1,
+    y1,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
+  const line2Width = drawSegments(
+    enCtx,
+    segments2,
+    startX2,
+    y2,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
+  const line3Width = drawSegments(
+    enCtx,
+    segments3,
+    startX3,
+    y3,
+    fontSize,
+    headlineFontFamily,
+    trackingPx,
+  );
 
   // Paint randomized musical notation behind the glass lens matching each line's exact spatial footprint
   const symFontSpec = `400 ${symFontSize}px "Noto Music", "Noto Sans Symbols 2", "Apple Symbols", "Segoe UI Symbol", sans-serif`;
@@ -356,8 +463,8 @@ function paintHeadlineCanvases(
   drawSymbolRow(
     jpCtx,
     symbolLines[0],
-    leftX,
-    leftX + line1Width,
+    startX1,
+    startX1 + line1Width,
     y1,
     symFontSize,
     symFontSpec,
@@ -366,8 +473,8 @@ function paintHeadlineCanvases(
   drawSymbolRow(
     jpCtx,
     symbolLines[1],
-    rightX2 - Math.max(line2Width, fontSize * 2.5),
-    rightX2,
+    startX2,
+    startX2 + line2Width,
     y2,
     symFontSize,
     symFontSpec,
@@ -376,8 +483,8 @@ function paintHeadlineCanvases(
   drawSymbolRow(
     jpCtx,
     symbolLines[2],
-    leftX3,
-    leftX3 + line3Width,
+    startX3,
+    startX3 + line3Width,
     y3,
     symFontSize,
     symFontSpec,
@@ -619,14 +726,10 @@ export default function WebGLCanvas({
       onFontsReadyRef.current?.();
     };
 
-    const primaryFont = getPrimaryFontFamily();
-    const firstFontMatch = primaryFont.match(/^["']?([^"',]+)["']?/);
-    const firstFontName = firstFontMatch ? firstFontMatch[1].trim() : "Inter";
-
     Promise.all([
       document.fonts.ready,
-      document.fonts.load(`400 72px "${firstFontName}"`).catch(() => []),
-      document.fonts.load(`400 72px ${primaryFont}`).catch(() => []),
+      document.fonts.load('400 72px "Fraunces"').catch(() => []),
+      document.fonts.load('italic 400 72px "Fraunces"').catch(() => []),
       document.fonts.load('400 64px "Noto Music"').catch(() => []),
     ]).then(() => {
       startEntrance();

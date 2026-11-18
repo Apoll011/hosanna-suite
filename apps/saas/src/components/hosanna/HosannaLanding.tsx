@@ -37,15 +37,12 @@ import {
   WifiOff,
   X,
 } from "lucide-react";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MigrationSection } from "../ui/MigrationSection";
-import { FancyHero } from "../ui/FancyHero";
+import Hero from "../ui/Hero";
+import HeroHeader from "../ui/HeroHeader";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
-import HeroDashboardMockup from "./HeroDashboardMockup";
-
-// WebGL rays are expensive — defer until idle so they never block LCP.
-const LightRays = lazy(() => import("@/components/ui/Scanner"));
 
 function Logo({ className }: { className?: string }) {
   return (
@@ -60,123 +57,8 @@ function Logo({ className }: { className?: string }) {
 }
 
 const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL + "/new";
-const isNewLanding = () =>
-  typeof window !== "undefined" &&
-  new URLSearchParams(window.location.search).get("new") === "true";
-
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const { t } = useI18n();
-
-  if (isNewLanding()) return null;
-
-  const NAV = [
-    { label: t("landing.nav.features"), href: "/#features", isInternal: false },
-    { label: t("landing.nav.chordpro"), href: "/chordpro", isInternal: true },
-    { label: t("landing.nav.pricing"), href: "/#pricing", isInternal: false },
-    { label: t("landing.nav.about"), href: "/about", isInternal: true },
-    { label: t("landing.nav.contact"), href: "/contact", isInternal: true },
-  ];
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <div className="sticky top-0 z-50">
-      <header
-        className={cn(
-          "transition-all duration-300",
-          scrolled ? "bg-[#021433]/85 backdrop-blur-md shadow-sm border-b border-white/15 text-white" : "bg-transparent",
-        )}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8 md:grid md:grid-cols-3">
-          <div className="flex justify-start">
-            <Logo />
-          </div>
-          <nav className="hidden items-center justify-center gap-8 md:flex">
-            {NAV.map((n) =>
-              n.isInternal ? (
-                <Link
-                  key={n.href}
-                  to={n.href}
-                  className="text-sm font-medium transition-colors text-white/90 hover:text-white"
-                >
-                  {n.label}
-                </Link>
-              ) : (
-                <a
-                  key={n.href}
-                  href={n.href}
-                  className="text-sm font-medium transition-colors text-white/90 hover:text-white"
-                >
-                  {n.label}
-                </a>
-              ),
-            )}
-          </nav>
-          <div className="hidden items-center justify-end gap-4 md:flex">
-            <LanguageSelector />
-            <Button
-              asChild
-              className="rounded-full bg-primary-dark text-primary-foreground hover:bg-primary-dark/90 transition-all hover:scale-105 active:scale-95 shadow-lg"
-            >
-              <a href={dashboardUrl}>{t("landing.nav.tryFree")}</a>
-            </Button>
-          </div>
-          <div className="flex items-center justify-end gap-2 md:hidden">
-            <LanguageSelector />
-            <button
-              className="transition-colors p-1.5 text-white"
-              onClick={() => setOpen((v) => !v)}
-              aria-label="Menu"
-            >
-              {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-        {open && (
-          <div className="md:hidden border-t border-border/60 bg-background/95 backdrop-blur-md">
-            <div className="flex flex-col gap-1 px-5 py-4">
-              {NAV.map((n) =>
-                n.isInternal ? (
-                  <Link
-                    key={n.href}
-                    to={n.href}
-                    onClick={() => setOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-muted"
-                  >
-                    {n.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={n.href}
-                    href={n.href}
-                    onClick={() => setOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-muted"
-                  >
-                    {n.label}
-                  </a>
-                ),
-              )}
-              <Button
-                asChild
-                className="mt-2 rounded-full bg-primary-dark text-primary-foreground hover:bg-primary-dark/90"
-              >
-                <a href={dashboardUrl} onClick={() => setOpen(false)}>
-                  {t("landing.nav.tryFree")}
-                </a>
-              </Button>
-            </div>
-          </div>
-        )}
-      </header>
-    </div>
-  );
+  return <HeroHeader mode="scrolled-only" />;
 }
 
 export function StaffLines({ className }: { className?: string }) {
@@ -200,106 +82,9 @@ export function StaffLines({ className }: { className?: string }) {
   );
 }
 
-function DeferredHeroRays() {
-  const [ready, setReady] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let cancelled = false;
-    const timer = globalThis.setTimeout(() => {
-      if (!cancelled) setReady(true);
-    }, 1800);
 
-    return () => {
-      cancelled = true;
-      globalThis.clearTimeout(timer);
-    };
-  }, []);
-
-  if (!ready) return null;
-
-  return (
-    <Suspense fallback={null}>
-      <LightRays
-        raysOrigin="top-center"
-        raysColor="#ffffff"
-        raysSpeed={1}
-        lightSpread={1.5}
-        rayLength={4.5}
-        followMouse={true}
-        mouseInfluence={0.5}
-        noiseAmount={0}
-        distortion={0}
-        className="custom-rays"
-        pulsating={false}
-        fadeDistance={1}
-        saturation={1}
-      />
-    </Suspense>
-  );
-}
-
-function Hero() {
-  const { t } = useI18n();
-
-  if (isNewLanding()) return <FancyHero />;
-
-  return (
-    <section
-      id="top"
-      className="relative overflow-hidden bg-hero-gradient text-primary-foreground -mt-30 pt-30"
-    >
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <DeferredHeroRays />
-      </div>
-      <div className="absolute inset-0 text-gold/40 z-0">
-        <StaffLines className="top-24" />
-        <StaffLines className="bottom-24" />
-      </div>
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-8 pt-26 md:px-8 md:pb-24 md:pt-8">
-        <div className="mx-auto max-w-4xl text-center">
-          <h1 className="font-display text-5xl leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl reveal">
-            {t("landing.hero.titleStart")}{" "}
-            <span className="text-sky-200">{t("landing.hero.titleHighlight")}</span>.
-          </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-blue-50 md:text-xl reveal">
-            {t("landing.hero.subtitle")}
-          </p>
-          <div className="relative z-20 mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row reveal">
-            <Button
-              asChild
-              size="lg"
-              className="w-full sm:w-auto rounded-full bg-white px-10 text-lg font-semibold text-primary-dark shadow-xl transition-all hover:scale-105 active:scale-95 hover:bg-blue-50"
-            >
-              <a href={dashboardUrl}>
-                {t("landing.hero.ctaStart")} <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto rounded-full border-white/40 bg-white/10 px-10 text-lg text-white backdrop-blur-md transition-all hover:bg-white/15"
-            >
-              <a href="#how">
-                <Play className="mr-2 h-5 w-5 fill-current" />
-                {t("landing.hero.ctaDemo")}
-              </a>
-            </Button>
-          </div>
-        </div>
-
-        <div className="pointer-events-none relative z-0 mx-auto -mt-10 max-w-6xl">
-          <div className="relative aspect-1400/972">
-            <HeroDashboardMockup alt={t("landing.hero.dashboardAlt")} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function Problem() {
   const { t, dict } = useI18n();
@@ -765,6 +550,9 @@ function MobileApp() {
       <div className="container mx-auto px-5 md:px-8 relative z-10 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 reveal">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium">
+              {t("landing.mobileApp.badge")}
+            </div>
             <h2 className="text-4xl md:text-6xl font-display text-white leading-[1.1] tracking-tight">
               {t("landing.mobileApp.titleStart")}{" "}
               <span className="text-blue-200">{t("landing.mobileApp.titleHighlight")}</span>.
@@ -800,7 +588,10 @@ function Vision() {
   return (
     <section className="relative overflow-hidden bg-background py-16 md:py-16">
       <div className="mx-auto max-w-3xl px-5 text-center md:px-8">
-        <p className="reveal font-display text-3xl leading-snug text-foreground md:text-4xl lg:text-5xl">
+        <div className="reveal text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+          {t("landing.vision.eyebrow")}
+        </div>
+        <p className="reveal mt-6 font-display text-3xl leading-snug text-foreground md:text-4xl lg:text-5xl">
           {t("landing.vision.quote1")}
         </p>
         <p className="reveal mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -824,7 +615,10 @@ function OpenSource() {
     <section id="open-source" className="bg-secondary py-16 md:py-16">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 md:grid-cols-[1fr_auto] md:items-center md:px-8">
         <div className="reveal">
-          <h2 className="font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+          <div className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">
+            {t("landing.openSource.eyebrow")}
+          </div>
+          <h2 className="mt-3 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
             {t("landing.openSource.title")}
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
@@ -1098,7 +892,6 @@ export function HosannaLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
   return (
     <div ref={rootRef} className="min-h-screen bg-background font-sans text-foreground antialiased">
-      <Nav />
       <main>
         <Hero />
         <Problem />

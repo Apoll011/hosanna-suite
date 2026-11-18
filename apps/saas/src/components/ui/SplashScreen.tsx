@@ -8,7 +8,7 @@ interface SplashScreenProps {
 
 export default function SplashScreen({
   onReveal,
-  durationMs = 4000,
+  durationMs = 3000,
 }: SplashScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
@@ -80,23 +80,23 @@ export default function SplashScreen({
     >
       <div
         ref={brandRef}
-        className="inline-flex items-center gap-2.5 sm:gap-3.5 md:gap-4 lg:gap-5 will-change-transform"
+        className="inline-flex items-center gap-1.5 sm:gap-2 md:gap-2.5 lg:gap-3 will-change-transform"
       >
         <img
           src="/assets/logo_icon.png"
           alt=""
           aria-hidden="true"
-          className="h-7 sm:h-9 md:h-12 lg:h-14 w-auto block shrink-0 select-none"
+          className="h-3.5 sm:h-4.5 md:h-6 lg:h-7 w-auto block shrink-0 select-none"
           draggable={false}
         />
         <span
           aria-hidden="true"
-          className="w-px h-5 sm:h-6 md:h-8 lg:h-9 bg-white/50 shrink-0"
+          className="w-px h-2.5 sm:h-3 md:h-4 lg:h-4.5 bg-white/50 shrink-0"
         />
         <img
           src="/assets/wordmark_studio.svg"
           alt="Hosanna Studio"
-          className="h-3.5 sm:h-4.5 md:h-6 lg:h-7 w-auto block shrink-0 select-none"
+          className="h-1.75 sm:h-2.25 md:h-3 lg:h-3.5 w-auto block shrink-0 select-none"
           draggable={false}
         />
       </div>
