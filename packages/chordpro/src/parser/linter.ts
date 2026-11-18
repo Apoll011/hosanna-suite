@@ -806,7 +806,7 @@ export function lintChordPro(content: string, options?: LintOptions): ChordProDi
     if (trimmed.startsWith("#") && !inTab) continue;
     if (inTab) continue;
 
-    diagnostics.push(...findBracketDiagnostics(line, i, lang));
+    diagnostics.push(...findBracketDiagnostics(line, i, options?.language));
   }
 
   for (const open of blockStack) {
