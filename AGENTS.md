@@ -187,6 +187,7 @@ pnpm test:e2e:ui              # interactive
 - Suite chrome (home grid, App Switcher, AccountMenu, theme transitions) is part of the product language — keep Auth and Studio aligned.
 - **i18n:** strings shared across apps → `@hosanna/i18n` (`suite.*`, etc.). Strings only used inside one app → that app’s locale files.
 - **Shared components own their i18n:** any reusable UI in `packages/*` (not just AccountMenu / App Switcher) must keep default user-facing copy in `@hosanna/i18n` and resolve it inside the component (pass `language` when reactive). Hosts must **not** duplicate those strings in every app locale or pipe them through a `labels={{…}}` bag. Host `labels` / custom text only when the surface truly needs different wording (rare exception). Host-specific links/sections may still pass their own labels.
+- **Package-owned i18n:** when a package owns its own messages, diagnostics, or user copy (e.g. `@hosanna/chordpro`, `@hosanna/logos-ai`, `@hosanna/auth`), keep an `src/i18n/` folder inside that package with dedicated TypeScript files per language (`pt.ts`, `en.ts`, `es.ts`, and `index.ts`), following the pattern in `@hosanna/logos-ai`.
 - **After a substantial UI change:** run Playwright (§8) and fix/extend specs so they match the new UI.
 
 ---
