@@ -8,6 +8,7 @@
 
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import type { DomainId, PermissionString } from "@hosanna/auth";
+import type { LogosToolFactory } from "@hosanna/logos-ai";
 
 export type McpToolGate = {
   name: string;
@@ -31,6 +32,8 @@ export type DomainPack = {
   resources?: readonly string[];
   prompts?: readonly string[];
   skills?: readonly string[];
+  /** Shared Logos/MCP tool definitions. The factory is mounted once for both surfaces. */
+  toolFactory?: LogosToolFactory;
   /** Register MCP tools/resources for this pack. */
   register?: (server: McpServer, authInfo?: AuthInfo) => void;
 };

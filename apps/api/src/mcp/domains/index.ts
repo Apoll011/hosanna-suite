@@ -18,6 +18,7 @@ export {
 } from "./registry.js";
 export { DOMAIN_PACKS, ensureDomainPacksRegistered } from "./packs.js";
 export { wireHosannaDomainPacks } from "./wire.js";
+export { createSharedEmbeddedTools, mountSharedDomainTools } from "./toolFactory.js";
 export {
   summarizeDomainsForUser,
   toolAvailabilityForUser,

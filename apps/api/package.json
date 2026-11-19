@@ -29,6 +29,7 @@
     "@hosanna/cache": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/db": "workspace:*",
+    "@hosanna/logos-ai": "workspace:*",
     "@hosanna/notifications": "workspace:*",
     "@modelcontextprotocol/node": "^2.1.2",
     "@modelcontextprotocol/server": "^2.4.0",
