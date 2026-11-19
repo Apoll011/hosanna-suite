@@ -1,4 +1,4 @@
-/** Auth UI — English. */
+/** Auth UI, English. */
 import type { pt } from "./pt";
 
 export const en: typeof pt = {
@@ -520,14 +520,14 @@ export const en: typeof pt = {
     settings: {
       memberTitle: "Logos AI",
       memberDesc: "Organization memory (read-only) and your personal memory.",
-      memberOrgReadonly: "Organization notes are managed by admins — you can view them here.",
+      memberOrgReadonly: "Organization notes are managed by admins, you can view them here.",
       memberNotConfiguredTitle: "AI is not set up yet",
       memberNotConfiguredDesc: "Ask an organization owner or admin to connect a provider.",
       setup: {
         eyebrow: "Logos AI",
         title: "Bring an assistant into your worship planning",
         subtitle:
-          "Connect a provider once. Your team gets help with songs, ChordPro, and services — right inside Studio.",
+          "Connect a provider once. Your team gets help with songs, ChordPro, and services, right inside Studio.",
         cta: "Configure Logos AI",
         ctaHint: "You’ll choose a provider, model, and API key next.",
         features: {
@@ -545,7 +545,7 @@ export const en: typeof pt = {
           },
           memory: {
             title: "Org memory",
-            desc: "Remember preferences — keys, style, language — shared across the workspace.",
+            desc: "Remember preferences, keys, style, language, shared across the workspace.",
           },
         },
         providersNote:
@@ -575,7 +575,7 @@ export const en: typeof pt = {
     },
     notifications: {
       title: "Notification preferences",
-      description: "Choose how Hosanna reaches you — inbox, push, and email.",
+      description: "Choose how Hosanna reaches you, inbox, push, and email.",
       loading: "Loading preferences…",
       saved: "Notification preferences saved.",
       saveError: "Could not save preferences: {error}",

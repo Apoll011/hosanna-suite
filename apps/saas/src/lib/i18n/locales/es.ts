@@ -65,7 +65,7 @@ export const es: typeof import("./pt").pt = {
       titleStart: "El repertorio del equipo,",
       titleHighlight: "en ensayo y en directo",
       subtitle:
-        "Hosanna es una music songbook app para alabanza en vivo: biblioteca ChordPro compartida, cultos planificados, transposición por músico, metrónomo, auto-scroll y PDF — en la app móvil y en Studio. Offline cuando hace falta.",
+        "Hosanna es una music songbook app para alabanza en vivo: biblioteca ChordPro compartida, cultos planificados, transposición por músico, metrónomo, auto-scroll y PDF, en la app móvil y en Studio. Offline cuando hace falta.",
       ctaStart: "Empezar Ahora",
       ctaDemo: "Ver Demostración",
       dashboardAlt:
@@ -81,7 +81,7 @@ export const es: typeof import("./pt").pt = {
       cards: [
         {
           title: "Una biblioteca ChordPro",
-          body: "Canciones con acordes, tono, capo, BPM y número de himnario — buscables y compartidas con todo el equipo. Se acabó el final_v3.pdf.",
+          body: "Canciones con acordes, tono, capo, BPM y número de himnario, buscables y compartidas con todo el equipo. Se acabó el final_v3.pdf.",
         },
         {
           title: "Cultos con orden claro",
@@ -89,7 +89,7 @@ export const es: typeof import("./pt").pt = {
         },
         {
           title: "Herramientas de escenario en la app",
-          body: "Transposición, metrónomo, auto-scroll, diagramas y PDF en la misma pantalla donde lees la cifra — incluso sin internet.",
+          body: "Transposición, metrónomo, auto-scroll, diagramas y PDF en la misma pantalla donde lees la cifra, incluso sin internet.",
         },
       ],
       verse: "«¡Todo lo que respira alabe al Señor!»",
@@ -100,7 +100,7 @@ export const es: typeof import("./pt").pt = {
       eyebrow: "Dos apps, un solo flujo",
       title: "Studio para planificar. App para tocar.",
       description:
-        "Studio gestiona la biblioteca y los cultos. La app móvil es el repertorio de escenario: cifras ChordPro, metrónomo, auto-scroll y PDF — con vista personal por músico.",
+        "Studio gestiona la biblioteca y los cultos. La app móvil es el repertorio de escenario: cifras ChordPro, metrónomo, auto-scroll y PDF, con vista personal por músico.",
       dashboardBadge: "Studio (web)",
       dashboardTitle: "Para líderes y equipo",
       mobileBadge: "App móvil",
@@ -132,14 +132,14 @@ export const es: typeof import("./pt").pt = {
         "Importación con IA (foto, galería o PDF)",
         "Reproductor YouTube desde metadatos de la canción",
         "Pantalla encendida durante el culto; notas personales",
-        "Offline — sincroniza al recuperar la red",
+        "Offline, sincroniza al recuperar la red",
       ],
     },
     gallery: {
       eyebrow: "Míralo en acción",
       title: "Una mirada más de cerca a Hosanna",
       description:
-        "Echa un vistazo a la herramienta que tu equipo de alabanza realmente usará — desde la biblioteca de canciones hasta el escenario.",
+        "Echa un vistazo a la herramienta que tu equipo de alabanza realmente usará, desde la biblioteca de canciones hasta el escenario.",
       openHint: "Haz doble clic para abrir",
       dragHint: "Arrastra cualquier captura hacia abajo para cerrar",
       captions: {
@@ -153,11 +153,11 @@ export const es: typeof import("./pt").pt = {
       eyebrow: "Organiza tu música",
       title: "Una biblioteca que al fin se siente tuya.",
       description:
-        "Pon orden en años de canciones dispersas — sin obligar a tu equipo a aprender un sistema complicado.",
+        "Pon orden en años de canciones dispersas, sin obligar a tu equipo a aprender un sistema complicado.",
       cards: [
         {
           title: "Carpetas Familiares",
-          body: "Organiza canciones en carpetas como en tu ordenador — sin curva de aprendizaje.",
+          body: "Organiza canciones en carpetas como en tu ordenador, sin curva de aprendizaje.",
         },
         {
           title: "Búsqueda que lo encuentra todo",
@@ -177,7 +177,7 @@ export const es: typeof import("./pt").pt = {
         {
           n: "01",
           title: "Programa el Encuentro",
-          body: "Crea un nuevo servicio con título y fecha. Ya sea el domingo o una noche de oración — la preparación empieza aquí.",
+          body: "Crea un nuevo servicio con título y fecha. Ya sea el domingo o una noche de oración, la preparación empieza aquí.",
         },
         {
           n: "02",
@@ -187,7 +187,7 @@ export const es: typeof import("./pt").pt = {
         {
           n: "03",
           title: "Comunica la Visión",
-          body: "Añade notas para el equipo — detalles de transiciones, arreglos o momentos de oración específicos.",
+          body: "Añade notas para el equipo, detalles de transiciones, arreglos o momentos de oración específicos.",
         },
         {
           n: "04",
@@ -200,7 +200,7 @@ export const es: typeof import("./pt").pt = {
       eyebrow: "Hecho para el escenario",
       title: "Repertorio de escenario, no solo un lector de letras.",
       description:
-        "La misma canción en el mismo culto — cada músico con su tono, capo, acordes y tamaño de texto. Metrónomo y auto-scroll en la app. PDF cuando necesitas papel. Offline cuando cae la red.",
+        "La misma canción en el mismo culto, cada músico con su tono, capo, acordes y tamaño de texto. Metrónomo y auto-scroll en la app. PDF cuando necesitas papel. Offline cuando cae la red.",
       items: {
         transpose: "Transposición y capo por músico",
         textSize: "Tamaño de texto ajustable",
@@ -216,33 +216,33 @@ export const es: typeof import("./pt").pt = {
       eyebrow: "Cualquier iglesia, cualquier tamaño",
       title: "Desde reuniones en casa hasta ministerios multi-campus.",
       description:
-        "Cada iglesia tiene su biblioteca y cultos privados y seguros — con espacio para tantos equipos de alabanza como necesitéis.",
+        "Cada iglesia tiene su biblioteca y cultos privados y seguros, con espacio para tantos equipos de alabanza como necesitéis.",
       privateLibTitle: "Tu biblioteca, segura y privada",
       privateLibBody:
         "Cada iglesia tiene su propio espacio. Canciones, cultos y miembros permanecen dentro de vuestras puertas.",
       multiTeamTitle: "Varios equipos, una sola biblioteca",
       multiTeamBody:
-        "Domingo, entre semana, jóvenes, campus A, campus B — todos los equipos beben de la misma fuente.",
+        "Domingo, entre semana, jóvenes, campus A, campus B, todos los equipos beben de la misma fuente.",
     },
     export: {
       eyebrow: "Exportación y portabilidad",
       title: "ChordPro abierto. PDF cuando necesitas papel.",
       description:
-        "Importa y exporta ChordPro abierto — migra y respalda sin quedar atrapado. En la app móvil, exporta la canción en PDF con el tono, capo, acordes y diagramas actuales. En Studio, imprime canciones, colecciones, cultos completos y eventos de la agenda.",
+        "Importa y exporta ChordPro abierto, migra y respalda sin quedar atrapado. En la app móvil, exporta la canción en PDF con el tono, capo, acordes y diagramas actuales. En Studio, imprime canciones, colecciones, cultos completos y eventos de la agenda.",
       bullets: [
         "Importación y exportación ChordPro",
         "PDF de canción en la app móvil",
         "Impresión de culto / colección / evento en Studio",
         "Importación con IA desde foto o PDF en papel",
-        "Sin lock-in — la biblioteca siempre es tuya",
+        "Sin lock-in, la biblioteca siempre es tuya",
       ],
-      sampleServiceTitle: "Culto Dominical — 18 de mayo",
+      sampleServiceTitle: "Culto Dominical: 18 de mayo",
       sampleItems: [
         "Bienvenida y Anuncios",
-        "Great Are You Lord — All Sons & Daughters",
-        "Lectura Bíblica — Salmo 100",
-        "10,000 Reasons — Matt Redman",
-        "Mensaje — Pr. Juan",
+        "Great Are You Lord (All Sons & Daughters)",
+        "Lectura Bíblica, Salmo 100",
+        "10,000 Reasons, Matt Redman",
+        "Mensaje, Pr. Juan",
       ],
     },
     pricing: {
@@ -264,7 +264,7 @@ export const es: typeof import("./pt").pt = {
       freeTrialDays: "14 días de prueba gratis",
       ctaTry: "Probar Gratis",
       pricingClarification:
-        "Músicos y usuarios del panel ilimitados — la tarifa es por iglesia, sin importar el tamaño del equipo.",
+        "Músicos y usuarios del panel ilimitados, la tarifa es por iglesia, sin importar el tamaño del equipo.",
       multiCampusLabel: "Iglesias multi-campus:",
       multiCampusText:
         "+12€/mes por cada sede adicional. Acceso ilimitado de usuarios en todas las sedes.",
@@ -288,14 +288,14 @@ export const es: typeof import("./pt").pt = {
     vision: {
       eyebrow: "Nuestra visión",
       quote1: "«Creemos que la tecnología debe apoyar la alabanza, no complicarla.»",
-      body: "Hosanna derriba barreras innecesarias entre la preparación y la adoración — para que las iglesias pasen menos tiempo buscando canciones y organizando archivos, y más tiempo guiando al pueblo en alabanza.",
+      body: "Hosanna derriba barreras innecesarias entre la preparación y la adoración, para que las iglesias pasen menos tiempo buscando canciones y organizando archivos, y más tiempo guiando al pueblo en alabanza.",
       quote2:
         "«Que sea de gran bendición para tu iglesia, tu equipo de alabanza y todos los que sirven con la música.»",
     },
     openSource: {
       eyebrow: "Open source",
       title: "El código es público. Léelo, haz fork, contribuye.",
-      body: "La app móvil y Studio de Hosanna son open source bajo la Apache License 2.0. Puedes auditar la sincronización, ChordPro y los permisos — o construir encima.",
+      body: "La app móvil y Studio de Hosanna son open source bajo la Apache License 2.0. Puedes auditar la sincronización, ChordPro y los permisos, o construir encima.",
       ctaApp: "App móvil en GitHub",
       ctaStudio: "Suite en GitHub",
     },
@@ -329,11 +329,11 @@ export const es: typeof import("./pt").pt = {
       items: [
         {
           q: "¿Qué es la Hosanna music songbook app?",
-          a: "Hosanna es una music songbook app para alabanza en vivo y equipos de iglesia. Combina un repertorio ChordPro — el cancionero digital del equipo — (transposición, capo, diagramas, metrónomo, auto-scroll, PDF) con planificación de cultos en Studio y sincronización offline en el móvil o la tablet.",
+          a: "Hosanna es una music songbook app para alabanza en vivo y equipos de iglesia. Combina un repertorio ChordPro, el cancionero digital del equipo, (transposición, capo, diagramas, metrónomo, auto-scroll, PDF) con planificación de cultos en Studio y sincronización offline en el móvil o la tablet.",
         },
         {
           q: "¿Hosanna es un repertorio / cancionero digital / songbook app?",
-          a: "Sí. Es un repertorio ChordPro (cancionero digital) para iglesias: biblioteca compartida, cifras con transposición y capo, diagramas, metrónomo, auto-scroll, exportación PDF y cultos/setlists — en la app móvil y en Studio web.",
+          a: "Sí. Es un repertorio ChordPro (cancionero digital) para iglesias: biblioteca compartida, cifras con transposición y capo, diagramas, metrónomo, auto-scroll, exportación PDF y cultos/setlists, en la app móvil y en Studio web.",
         },
         {
           q: "¿Incluye metrónomo, auto-scroll y exportación PDF?",
@@ -345,7 +345,7 @@ export const es: typeof import("./pt").pt = {
         },
         {
           q: "¿En qué formato se guardan las canciones?",
-          a: "ChordPro — formato abierto en texto que mantiene acordes y letras juntos. Puedes importar y exportar para no quedar atrapado.",
+          a: "ChordPro, formato abierto en texto que mantiene acordes y letras juntos. Puedes importar y exportar para no quedar atrapado.",
         },
         {
           q: "¿Cada músico puede personalizar su vista?",
@@ -353,7 +353,7 @@ export const es: typeof import("./pt").pt = {
         },
         {
           q: "¿Existe un periodo de prueba gratuito?",
-          a: "Sí — 14 días. Regístrate, invita al equipo y pruébalo en un domingo real.",
+          a: "Sí, 14 días. Regístrate, invita al equipo y pruébalo en un domingo real.",
         },
         {
           q: "¿Varios equipos de alabanza pueden compartir una misma biblioteca?",
@@ -365,20 +365,20 @@ export const es: typeof import("./pt").pt = {
         },
         {
           q: "¿Hosanna es open source?",
-          a: "Sí. La app Flutter y Hosanna Studio están en GitHub bajo la Apache License 2.0. La nube alojada es opcional — el código del producto está abierto para inspeccionar y contribuir.",
+          a: "Sí. La app Flutter y Hosanna Studio están en GitHub bajo la Apache License 2.0. La nube alojada es opcional, el código del producto está abierto para inspeccionar y contribuir.",
         },
       ],
     },
     finalCta: {
       title: "¿Listo para el repertorio de tu equipo?",
       subtitle:
-        "Biblioteca ChordPro, cultos compartidos y herramientas de escenario — prueba 14 días gratis.",
+        "Biblioteca ChordPro, cultos compartidos y herramientas de escenario, prueba 14 días gratis.",
       ctaStart: "Empezar Ahora",
       ctaContact: "Habla con nosotros",
     },
     footer: {
       tagline:
-        "Repertorio ChordPro y planificación de alabanza para iglesias — Studio + app móvil.",
+        "Repertorio ChordPro y planificación de alabanza para iglesias, Studio + app móvil.",
       colProduct: "Producto",
       colSupport: "Soporte",
       colLegal: "Legal",
@@ -453,7 +453,7 @@ export const es: typeof import("./pt").pt = {
     heroTitleStart: "Domina",
     heroTitleHighlight: "ChordPro",
     heroSubtitle:
-      "La forma estándar e inteligente de escribir acordes. Todo lo que tu equipo necesita saber para organizar su repertorio en Hosanna — desde el primer acorde hasta el día del culto.",
+      "La forma estándar e inteligente de escribir acordes. Todo lo que tu equipo necesita saber para organizar su repertorio en Hosanna, desde el primer acorde hasta el día del culto.",
     traditionalDoc: "Documento Tradicional (Word)",
     traditionalWarning: "Se desalinea en móviles y obliga a crear archivos por cada tono.",
     chordproInHosanna: "ChordPro en Hosanna",
@@ -599,9 +599,9 @@ export const es: typeof import("./pt").pt = {
     ccli: "Número CCLI (Christian Copyright Licensing International)",
     time_signature: "Alternativa a {time} para definir compás (ej: 4/4)",
     define:
-      "Definiciones oficiales de acordes ChordPro — reconocidas por el formateador, pero no son de primera clase en Hosanna",
+      "Definiciones oficiales de acordes ChordPro, reconocidas por el formateador, pero no son de primera clase en Hosanna",
     new_page:
-      "Salto de página — reconocido por el formateador; no aplicado en el renderizado de Hosanna",
+      "Salto de página, reconocido por el formateador; no aplicado en el renderizado de Hosanna",
   },
   about: {
     eyebrow: "La Historia detrás de Hosanna",
@@ -614,21 +614,21 @@ export const es: typeof import("./pt").pt = {
     storyP1:
       "Tiago y Éber son primos. Crecieron juntos en Cabo Verde antes de mudarse a Portugal, donde terminaron sirviendo en el mismo equipo de alabanza en su iglesia local.",
     storyP2:
-      "La música corre en la familia por ambos lados. El padre de Tiago es pianista de iglesia, y Tiago siguió sus pasos en el teclado. El padre de Éber también toca guitarra — fue él quien puso un instrumento en las manos de Éber por primera vez.",
+      "La música corre en la familia por ambos lados. El padre de Tiago es pianista de iglesia, y Tiago siguió sus pasos en el teclado. El padre de Éber también toca guitarra, fue él quien puso un instrumento en las manos de Éber por primera vez.",
     storyP3:
-      "Cuando vieron a su propia iglesia luchar con cifrados dispersos, versiones desactualizadas y chats de grupo caóticos antes de cada ensayo, no esperaron a que alguien más lo resolviera. Siendo todavía estudiantes a tiempo completo, empezaron a construir Hosanna por las tardes — primero para su iglesia, y luego para cada iglesia como la suya.",
+      "Cuando vieron a su propia iglesia luchar con cifrados dispersos, versiones desactualizadas y chats de grupo caóticos antes de cada ensayo, no esperaron a que alguien más lo resolviera. Siendo todavía estudiantes a tiempo completo, empezaron a construir Hosanna por las tardes, primero para su iglesia, y luego para cada iglesia como la suya.",
     founderIntroEyebrow: "Conoce a los fundadores",
     founderIntroTitle: "Todavía estudiantes. Todavía construyendo.",
     tiagoName: "Tiago Inês",
     tiagoRole: "Cofundador y Desarrollador Principal",
     tiagoBio:
-      "18 años, estudiante de ingeniería informática, programando desde los 8 años. Pianista autodidacta que siguió a su padre hasta el escenario de la iglesia — y las manos detrás de cada línea de código de Hosanna.",
+      "18 años, estudiante de ingeniería informática, programando desde los 8 años. Pianista autodidacta que siguió a su padre hasta el escenario de la iglesia, y las manos detrás de cada línea de código de Hosanna.",
     tiagoQuote:
       "Solo quería que nuestro equipo de alabanza dejara de perder cifrados en chats de grupo.",
     eberName: "Éber Rodrigues",
     eberRole: "Cofundador, Diseño y Producto",
     eberBio:
-      "18 años, estudiante de gestión de la información, guitarrista autodidacta al que su propio padre introdujo en la música. Dio forma a la identidad visual de Hosanna — el logo, la marca, y los pequeños detalles que solo surgen al probar en un domingo real.",
+      "18 años, estudiante de gestión de la información, guitarrista autodidacta al que su propio padre introdujo en la música. Dio forma a la identidad visual de Hosanna, el logo, la marca, y los pequeños detalles que solo surgen al probar en un domingo real.",
     eberQuote: "Cada pantalla se ha probado en un domingo real, con una banda real.",
     pullQuote:
       "«No empezamos con la idea de crear una empresa. Solo queríamos que nuestra propia iglesia dejara de perder cifrados entre ensayos.»",

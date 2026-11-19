@@ -1,7 +1,7 @@
 import type { I18nKeys } from "./pt-PT";
 
 /**
- * es-ES — Spanish locale.
+ * es-ES: Spanish locale.
  */
 const es = {
   // ── errors / middleware ─────────────────────────────────────────────────
@@ -68,7 +68,7 @@ const es = {
     folder_deleted_title: "Carpeta eliminada con todo su contenido",
     folder_deleted_description:
       "{{songs}} canción(es) y {{folders}} subcarpeta(s) fueron eliminadas permanentemente.",
-    backup_restored_title: "Copia de seguridad restaurada — todos los datos reemplazados",
+    backup_restored_title: "Copia de seguridad restaurada: todos los datos reemplazados",
     backup_restored_description:
       "Una restauración completa importó {{folders}} carpeta(s), {{songs}} canción(es) y {{services}} culto(s).",
     trial_started_title: "Período de prueba iniciado",

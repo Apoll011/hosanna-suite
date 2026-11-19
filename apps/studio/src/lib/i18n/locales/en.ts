@@ -299,12 +299,12 @@ export const en: typeof pt = {
         restore: "Restore conversations",
         restoreDesc:
           "Enter your email to receive a link that restores your previous conversations on this browser.",
-        restoreSent: "Recovery link sent — check your email!",
+        restoreSent: "Recovery link sent, check your email!",
         emailPlaceholder: "your@email.com",
         sendLink: "Send link",
         loadError: "Something went wrong loading this.",
-        sendError: "Message couldn't be sent — try again.",
-        restoreRateLimited: "Too many requests — try again in a bit.",
+        sendError: "Message couldn't be sent, try again.",
+        restoreRateLimited: "Too many requests, try again in a bit.",
         restoreError: "Couldn't send the recovery email.",
         noMessagesYet: "No messages yet",
         messages: "messages",
@@ -729,7 +729,7 @@ export const en: typeof pt = {
       drive: {
         title: "Drive",
         description:
-          "This is your organization’s library — folders and songs, like a file explorer.",
+          "This is your organization’s library, folders and songs, like a file explorer.",
       },
       library: {
         title: "Library",
@@ -755,7 +755,7 @@ export const en: typeof pt = {
       create: {
         title: "Create",
         description:
-          "Use the + button to create songs, folders, services, and more — based on your permissions.",
+          "Use the + button to create songs, folders, services, and more, based on your permissions.",
       },
       settings: {
         title: "Account & settings",
@@ -797,7 +797,7 @@ export const en: typeof pt = {
         create: {
           title: "Create a folder",
           description:
-            "Create a new folder — pick “New Folder” in the menu (e.g. “Rehearsals”). The tour continues once it exists.",
+            "Create a new folder, pick “New Folder” in the menu (e.g. “Rehearsals”). The tour continues once it exists.",
         },
         drive: {
           title: "Drive",
@@ -819,12 +819,12 @@ export const en: typeof pt = {
         editor: {
           title: "ChordPro editor",
           description:
-            "This is the editor. On empty lines you can use shortcuts the editor expands for you — like smart snippets.",
+            "This is the editor. On empty lines you can use shortcuts the editor expands for you, like smart snippets.",
         },
         snippets: {
           title: "TAB completes directives",
           description:
-            "On an empty line type a (or artist) and press TAB — the editor fills {artist: …}. The placeholder is selected: type over it, then TAB again for the next field. Also try t (title) or ! for a full template.",
+            "On an empty line type a (or artist) and press TAB, the editor fills {artist: …}. The placeholder is selected: type over it, then TAB again for the next field. Also try t (title) or ! for a full template.",
         },
         chords: {
           title: "Chords with [ ]",
@@ -834,7 +834,7 @@ export const en: typeof pt = {
         preview: {
           title: "Preview",
           description:
-            "Watch the result on the right as you edit — great for rehearsal and printing.",
+            "Watch the result on the right as you edit, great for rehearsal and printing.",
         },
         save: {
           title: "Save your changes",
@@ -852,7 +852,7 @@ export const en: typeof pt = {
         },
         backToDrive: {
           title: "Back to Drive",
-          description: "Now go back to Drive — we’ll use the same shortcuts as a file explorer.",
+          description: "Now go back to Drive, we’ll use the same shortcuts as a file explorer.",
         },
         selection: {
           title: "Select like a file explorer",
@@ -890,7 +890,7 @@ export const en: typeof pt = {
         builder: {
           title: "Service builder",
           description:
-            "Open the service (double-click) to see the builder — songs, announcements, scripture, and more.",
+            "Open the service (double-click) to see the builder, songs, announcements, scripture, and more.",
         },
         elements: {
           title: "Service elements",
@@ -912,7 +912,7 @@ export const en: typeof pt = {
         done: {
           title: "Tour complete",
           description:
-            "Great work! You can close this tab and return to your organization — or keep exploring the demo.",
+            "Great work! You can close this tab and return to your organization, or keep exploring the demo.",
         },
       },
     },
@@ -1150,8 +1150,8 @@ export const en: typeof pt = {
       allNotified: "No assignments to notify about.",
       updateSection: "Event changes",
       noPendingChanges: "No changes to notify about.",
-      datePending: "Date changed — not yet notified.",
-      locationPending: "Location changed — not yet notified.",
+      datePending: "Date changed, not yet notified.",
+      locationPending: "Location changed, not yet notified.",
       dateBtn: "Notify date change",
       locationBtn: "Notify location change",
       bothBtn: "Notify users",
@@ -1185,7 +1185,7 @@ export const en: typeof pt = {
       },
       removeSummary: "Removing",
       notifyRemovalLabel: "Notify the user about the cancellation",
-      notifyRemovalHint: "Off by default — no notification is sent.",
+      notifyRemovalHint: "Off by default, no notification is sent.",
       notifyDeleteLabel: "Notify all assigned users",
       notifyDeleteHint: {
         one: "1 assigned user will be notified that the event was cancelled.",
@@ -1205,7 +1205,7 @@ export const en: typeof pt = {
     changeLinkedService: "Change linked service…",
     searchServiceToLink: "Search a service to link…",
     linkedServiceMissing:
-      "The linked service no longer exists — choose another one or remove the link.",
+      "The linked service no longer exists, choose another one or remove the link.",
     removeLink: "Remove link",
     noServicesToLink: "There are no services yet. Create one in Services to link it.",
     elementsCount: {
@@ -1226,7 +1226,7 @@ export const en: typeof pt = {
     deleteEventConfirmBody:
       "This will permanently remove the event and all of its responsibilities.",
     deleteEvent: "Delete",
-    printDayAgenda: "Agenda — {date}",
+    printDayAgenda: "Agenda: {date}",
     decreaseDuration: "Decrease duration",
     increaseDuration: "Increase duration",
     eventTypes: {
@@ -1246,8 +1246,8 @@ export const en: typeof pt = {
       one: "{count} person selected",
       other: "{count} people selected",
     },
-    assignOptional: "Optional — you can assign later.",
-    assigneesTitle: "Assignees — {category}",
+    assignOptional: "Optional, you can assign later.",
+    assigneesTitle: "Assignees: {category}",
     assignedAssignees: {
       one: "{count} person assigned",
       other: "{count} people assigned",

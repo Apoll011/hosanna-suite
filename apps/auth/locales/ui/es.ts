@@ -1,4 +1,4 @@
-/** Auth UI — Spanish. */
+/** Auth UI, Spanish. */
 import type { pt } from "./pt";
 
 export const es: typeof pt = {
@@ -520,14 +520,14 @@ export const es: typeof pt = {
       memberTitle: "Logos IA",
       memberDesc: "Memoria de la organización (solo lectura) y tu memoria personal.",
       memberOrgReadonly:
-        "Las notas de la organización las gestionan los admins — aquí solo puedes verlas.",
+        "Las notas de la organización las gestionan los admins, aquí solo puedes verlas.",
       memberNotConfiguredTitle: "La IA aún no está configurada",
       memberNotConfiguredDesc: "Pide a un propietario o administrador que conecte un proveedor.",
       setup: {
         eyebrow: "Logos IA",
         title: "Trae un asistente a la planificación del culto",
         subtitle:
-          "Conecta un proveedor una vez. Tu equipo obtiene ayuda con canciones, ChordPro y cultos — dentro de Studio.",
+          "Conecta un proveedor una vez. Tu equipo obtiene ayuda con canciones, ChordPro y cultos, dentro de Studio.",
         cta: "Configurar Logos IA",
         ctaHint: "A continuación eliges proveedor, modelo y clave de API.",
         features: {
@@ -545,7 +545,7 @@ export const es: typeof pt = {
           },
           memory: {
             title: "Memoria de la organización",
-            desc: "Recuerda preferencias — tonalidades, estilo, idioma — en todo el espacio.",
+            desc: "Recuerda preferencias, tonalidades, estilo, idioma, en todo el espacio.",
           },
         },
         providersNote:
@@ -575,7 +575,7 @@ export const es: typeof pt = {
     },
     notifications: {
       title: "Preferencias de notificación",
-      description: "Elige cómo te contacta Hosanna — buzón, push y email.",
+      description: "Elige cómo te contacta Hosanna, buzón, push y email.",
       loading: "Cargando preferencias…",
       saved: "Preferencias de notificación guardadas.",
       saveError: "No se pudieron guardar: {error}",

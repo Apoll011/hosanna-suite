@@ -301,12 +301,12 @@ export const es: typeof pt = {
         restore: "Restaurar conversaciones",
         restoreDesc:
           "Introduce tu correo para recibir un enlace que restaura tus conversaciones anteriores en este navegador.",
-        restoreSent: "Enlace de recuperación enviado — ¡revisa tu correo!",
+        restoreSent: "Enlace de recuperación enviado, ¡revisa tu correo!",
         emailPlaceholder: "tu@correo.com",
         sendLink: "Enviar enlace",
         loadError: "Algo salió mal al cargar esto.",
-        sendError: "No se pudo enviar el mensaje — inténtalo de nuevo.",
-        restoreRateLimited: "Demasiadas solicitudes — inténtalo de nuevo en un momento.",
+        sendError: "No se pudo enviar el mensaje, inténtalo de nuevo.",
+        restoreRateLimited: "Demasiadas solicitudes, inténtalo de nuevo en un momento.",
         restoreError: "No se pudo enviar el correo de recuperación.",
         noMessagesYet: "Aún no hay mensajes",
         messages: "mensajes",
@@ -803,7 +803,7 @@ export const es: typeof pt = {
         create: {
           title: "Crear una carpeta",
           description:
-            "Crea una carpeta nueva — elige “Nueva carpeta” en el menú (p. ej. “Ensayos”). El tour avanza cuando exista.",
+            "Crea una carpeta nueva, elige “Nueva carpeta” en el menú (p. ej. “Ensayos”). El tour avanza cuando exista.",
         },
         drive: {
           title: "Drive",
@@ -826,7 +826,7 @@ export const es: typeof pt = {
         editor: {
           title: "Editor ChordPro",
           description:
-            "Este es el editor. En líneas vacías puedes usar atajos que el editor completa solo — como snippets inteligentes.",
+            "Este es el editor. En líneas vacías puedes usar atajos que el editor completa solo, como snippets inteligentes.",
         },
         snippets: {
           title: "TAB completa directivas",
@@ -1166,8 +1166,8 @@ export const es: typeof pt = {
       allNotified: "Sin asignaciones por notificar.",
       updateSection: "Cambios del evento",
       noPendingChanges: "Sin cambios por notificar.",
-      datePending: "Fecha cambiada — aún por notificar.",
-      locationPending: "Ubicación cambiada — aún por notificar.",
+      datePending: "Fecha cambiada, aún por notificar.",
+      locationPending: "Ubicación cambiada, aún por notificar.",
       dateBtn: "Notificar cambio de fecha",
       locationBtn: "Notificar cambio de ubicación",
       bothBtn: "Notificar usuarios",
@@ -1242,7 +1242,7 @@ export const es: typeof pt = {
     deleteEventConfirmBody:
       "Esto eliminará permanentemente el evento y todas sus responsabilidades.",
     deleteEvent: "Eliminar",
-    printDayAgenda: "Agenda — {date}",
+    printDayAgenda: "Agenda: {date}",
     decreaseDuration: "Disminuir duración",
     increaseDuration: "Aumentar duración",
     eventTypes: {
@@ -1263,7 +1263,7 @@ export const es: typeof pt = {
       other: "{count} personas seleccionadas",
     },
     assignOptional: "Opcional: puedes asignar más tarde.",
-    assigneesTitle: "Asignados — {category}",
+    assigneesTitle: "Asignados: {category}",
     assignedAssignees: {
       one: "{count} persona asignada",
       other: "{count} personas asignadas",

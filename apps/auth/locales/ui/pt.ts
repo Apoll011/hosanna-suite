@@ -1,4 +1,4 @@
-/** Auth UI — Portuguese (canonical). */
+/** Auth UI, Portuguese (canonical). */
 export const pt = {
   common: {
     goHome: "Ir para o início",
@@ -516,14 +516,14 @@ export const pt = {
     settings: {
       memberTitle: "Logos IA",
       memberDesc: "Memória da organização (só de leitura) e a sua memória pessoal.",
-      memberOrgReadonly: "As notas da organização são geridas pelos admins — aqui só as pode ver.",
+      memberOrgReadonly: "As notas da organização são geridas pelos admins, aqui só as pode ver.",
       memberNotConfiguredTitle: "A IA ainda não está configurada",
       memberNotConfiguredDesc: "Peça a um proprietário ou administrador para ligar um fornecedor.",
       setup: {
         eyebrow: "Logos IA",
         title: "Traga um assistente para o planeamento de culto",
         subtitle:
-          "Ligue um fornecedor uma vez. A equipa ganha ajuda com músicas, ChordPro e cultos — dentro do Studio.",
+          "Ligue um fornecedor uma vez. A equipa ganha ajuda com músicas, ChordPro e cultos, dentro do Studio.",
         cta: "Configurar Logos IA",
         ctaHint: "A seguir escolhe fornecedor, modelo e chave de API.",
         features: {
@@ -541,7 +541,7 @@ export const pt = {
           },
           memory: {
             title: "Memória da organização",
-            desc: "Lembrar preferências — tonalidades, estilo, idioma — em todo o espaço.",
+            desc: "Lembrar preferências, tonalidades, estilo, idioma, em todo o espaço.",
           },
         },
         providersNote:
@@ -571,7 +571,7 @@ export const pt = {
     },
     notifications: {
       title: "Preferências de notificação",
-      description: "Escolha como a Hosanna o contacta — caixa de entrada, push e email.",
+      description: "Escolha como a Hosanna o contacta, caixa de entrada, push e email.",
       loading: "A carregar preferências…",
       saved: "Preferências de notificação guardadas.",
       saveError: "Não foi possível guardar: {error}",

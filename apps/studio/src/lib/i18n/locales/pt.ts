@@ -299,12 +299,12 @@ export const pt = {
         restore: "Restaurar conversas",
         restoreDesc:
           "Introduza o seu e-mail para receber um link que restaura as suas conversas anteriores neste browser.",
-        restoreSent: "Link de recuperação enviado — verifique o seu e-mail!",
+        restoreSent: "Link de recuperação enviado, verifique o seu e-mail!",
         emailPlaceholder: "o.seu@email.com",
         sendLink: "Enviar link",
         loadError: "Ocorreu um erro ao carregar isto.",
-        sendError: "Não foi possível enviar a mensagem — tente novamente.",
-        restoreRateLimited: "Demasiados pedidos — tente novamente daqui a pouco.",
+        sendError: "Não foi possível enviar a mensagem, tente novamente.",
+        restoreRateLimited: "Demasiados pedidos, tente novamente daqui a pouco.",
         restoreError: "Não foi possível enviar o e-mail de recuperação.",
         noMessagesYet: "Ainda sem mensagens",
         messages: "mensagens",
@@ -734,7 +734,7 @@ export const pt = {
       drive: {
         title: "Drive",
         description:
-          "Aqui vive a biblioteca da organização — pastas e cânticos, como um explorador de ficheiros.",
+          "Aqui vive a biblioteca da organização, pastas e cânticos, como um explorador de ficheiros.",
       },
       library: {
         title: "Biblioteca",
@@ -760,7 +760,7 @@ export const pt = {
       create: {
         title: "Criar",
         description:
-          "Use o botão + para criar cânticos, pastas, serviços e mais — conforme as suas permissões.",
+          "Use o botão + para criar cânticos, pastas, serviços e mais, conforme as suas permissões.",
       },
       settings: {
         title: "Conta e definições",
@@ -802,7 +802,7 @@ export const pt = {
         create: {
           title: "Criar uma pasta",
           description:
-            "Crie uma pasta nova — escolha “Nova Pasta” no menu (ex.: “Ensaios”). O tour avança quando a pasta existir.",
+            "Crie uma pasta nova, escolha “Nova Pasta” no menu (ex.: “Ensaios”). O tour avança quando a pasta existir.",
         },
         drive: {
           title: "A Drive",
@@ -825,12 +825,12 @@ export const pt = {
         editor: {
           title: "Editor ChordPro",
           description:
-            "Este é o editor. Em linhas vazias pode usar atalhos que o editor completa por si — como num snippet inteligente.",
+            "Este é o editor. Em linhas vazias pode usar atalhos que o editor completa por si, como num snippet inteligente.",
         },
         snippets: {
           title: "TAB completa diretivas",
           description:
-            "Numa linha vazia escreva a (ou artist) e prima TAB — o editor preenche {artist: …}. O texto fica selecionado: escreva por cima e prima TAB outra vez para o campo seguinte. Experimente também t (title) ou ! para um molde completo.",
+            "Numa linha vazia escreva a (ou artist) e prima TAB, o editor preenche {artist: …}. O texto fica selecionado: escreva por cima e prima TAB outra vez para o campo seguinte. Experimente também t (title) ou ! para um molde completo.",
         },
         chords: {
           title: "Acordes com [ ]",
@@ -839,7 +839,7 @@ export const pt = {
         },
         preview: {
           title: "Pré-visualização",
-          description: "Veja o resultado à direita enquanto edita — ideal para ensaiar e imprimir.",
+          description: "Veja o resultado à direita enquanto edita, ideal para ensaiar e imprimir.",
         },
         save: {
           title: "Guardar alterações",
@@ -859,7 +859,7 @@ export const pt = {
         backToDrive: {
           title: "Voltar à Drive",
           description:
-            "Agora volte à Drive — vamos usar os mesmos atalhos de um explorador de ficheiros.",
+            "Agora volte à Drive, vamos usar os mesmos atalhos de um explorador de ficheiros.",
         },
         selection: {
           title: "Selecionar como no explorador",
@@ -897,7 +897,7 @@ export const pt = {
         builder: {
           title: "Construtor do culto",
           description:
-            "Abra o serviço (duplo clique) para ver o construtor — canções, anúncios, escrituras e mais.",
+            "Abra o serviço (duplo clique) para ver o construtor, canções, anúncios, escrituras e mais.",
         },
         elements: {
           title: "Elementos do culto",
@@ -919,7 +919,7 @@ export const pt = {
         done: {
           title: "Tour concluído",
           description:
-            "Excelente! Pode fechar este separador e voltar à sua organização — ou continuar a explorar a demo.",
+            "Excelente! Pode fechar este separador e voltar à sua organização, ou continuar a explorar a demo.",
         },
       },
     },
@@ -1161,8 +1161,8 @@ export const pt = {
       allNotified: "Sem atribuições por notificar.",
       updateSection: "Alterações do evento",
       noPendingChanges: "Sem alterações por notificar.",
-      datePending: "Data alterada — ainda por notificar.",
-      locationPending: "Local alterado — ainda por notificar.",
+      datePending: "Data alterada, ainda por notificar.",
+      locationPending: "Local alterado, ainda por notificar.",
       dateBtn: "Notificar alteração de data",
       locationBtn: "Notificar alteração de local",
       bothBtn: "Notificar utilizadores",
@@ -1215,7 +1215,7 @@ export const pt = {
     loadingServices: "A carregar serviços…",
     changeLinkedService: "Alterar serviço ligado…",
     searchServiceToLink: "Procurar um serviço para ligar…",
-    linkedServiceMissing: "O serviço ligado já não existe — escolha outro ou remova a ligação.",
+    linkedServiceMissing: "O serviço ligado já não existe, escolha outro ou remova a ligação.",
     removeLink: "Remover ligação",
     noServicesToLink: "Ainda não há serviços. Crie um em Serviços para o poder ligar.",
     elementsCount: {
@@ -1236,7 +1236,7 @@ export const pt = {
     deleteEventConfirmBody:
       "Isto remove permanentemente o evento e todas as suas responsabilidades.",
     deleteEvent: "Eliminar",
-    printDayAgenda: "Agenda — {date}",
+    printDayAgenda: "Agenda: {date}",
     decreaseDuration: "Diminuir duração",
     increaseDuration: "Aumentar duração",
     eventTypes: {
@@ -1256,8 +1256,8 @@ export const pt = {
       one: "{count} pessoa selecionada",
       other: "{count} pessoas selecionadas",
     },
-    assignOptional: "Opcional — pode atribuir mais tarde.",
-    assigneesTitle: "Atribuídos — {category}",
+    assignOptional: "Opcional, pode atribuir mais tarde.",
+    assigneesTitle: "Atribuídos: {category}",
     assignedAssignees: {
       one: "{count} pessoa atribuída",
       other: "{count} pessoas atribuídas",

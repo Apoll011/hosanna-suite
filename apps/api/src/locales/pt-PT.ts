@@ -1,5 +1,5 @@
 /**
- * pt-PT — canonical locale (source of truth).
+ * pt-PT: canonical locale (source of truth).
  * All other locales must mirror this key structure exactly.
  */
 const ptPT = {
@@ -67,7 +67,7 @@ const ptPT = {
     folder_deleted_title: "Pasta eliminada com todo o seu conteúdo",
     folder_deleted_description:
       "{{songs}} música(s) e {{folders}} sub-pasta(s) foram removidas permanentemente.",
-    backup_restored_title: "Backup restaurado — todos os dados substituídos",
+    backup_restored_title: "Backup restaurado: todos os dados substituídos",
     backup_restored_description:
       "Uma restauração completa importou {{folders}} pasta(s), {{songs}} música(s) e {{services}} culto(s).",
     trial_started_title: "Período de avaliação iniciado",

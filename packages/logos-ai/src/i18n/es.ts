@@ -163,8 +163,8 @@ export const chat: typeof chatPt = {
     statusApplied: "Aplicada",
     statusDeclined: "Rechazada",
     statusStale: "Reemplazada",
-    inEditorNote: "La canción está abierta — revisa el diff en el editor.",
-    inEditorNoteService: "Este servicio está abierto — revisa el plan en el editor.",
+    inEditorNote: "La canción está abierta, revisa el diff en el editor.",
+    inEditorNoteService: "Este servicio está abierto, revisa el plan en el editor.",
     fullReview: "Revisión completa",
     applyFailed: "No se pudo aplicar esta propuesta. Inténtalo de nuevo.",
     moreItems: "+{count} más",
@@ -182,7 +182,7 @@ export const chat: typeof chatPt = {
     openDetail: "{kind}",
     printTitle: "Imprimir en {app}",
     printDetail: "{kind} · {count}",
-    optionalHint: "Opcional — puedes seguir trabajando aquí en el chat.",
+    optionalHint: "Opcional, puedes seguir trabajando aquí en el chat.",
     open: "Abrir en {app}",
     openToPrint: "Abrir en {app} para imprimir",
     opened: "Abriendo…",
@@ -193,7 +193,7 @@ export const chat: typeof chatPt = {
   confirmDone: "Enviado a la papelera",
   confirmDeclined: "Cancelado",
   confirmError: "No se pudo eliminar.",
-  confirmTrashHint: "Va a la papelera — puedes restaurarlo después.",
+  confirmTrashHint: "Va a la papelera, puedes restaurarlo después.",
   confirmDeleteSong: "¿Eliminar canción?",
   confirmDeleteService: "¿Eliminar servicio?",
   confirmDeleteFolder: "¿Eliminar carpeta?",
@@ -245,7 +245,7 @@ export const chat: typeof chatPt = {
     transpose:
       "Ayúdame a transponer esta canción. Pregunta el tono de destino si no está claro y luego propón el ChordPro transpuesto.",
     completeChords:
-      "Completar acordes: usa chordpro_propagate_chords en la canción actual. Copia los marcadores de acordes de la primera estrofa con acordes a las demás estrofas en los mismos puntos de la letra — NO inventes acordes nuevos. La herramienta devuelve un borrador: revisa cada línea marcada `check`, corrige tú mismo la posición de los acordes y luego propón el resultado corregido en el editor con songs_propose_edit; no guardes todavía.",
+      "Completar acordes: usa chordpro_propagate_chords en la canción actual. Copia los marcadores de acordes de la primera estrofa con acordes a las demás estrofas en los mismos puntos de la letra, NO inventes acordes nuevos. La herramienta devuelve un borrador: revisa cada línea marcada `check`, corrige tú mismo la posición de los acordes y luego propón el resultado corregido en el editor con songs_propose_edit; no guardes todavía.",
     completeMeta:
       "Completa los metadatos que faltan de la canción (título, artista, tono, tempo, etiquetas) según el contenido ChordPro. Solo propón ediciones.",
     explainSelection:
@@ -405,7 +405,7 @@ export const settings: typeof settingsPt = {
   memoryOrgDesc: "Notas compartidas por toda la organización.",
   memoryOrgPlaceholder: "p. ej. El equipo de alabanza prefiere Sol mayor.",
   memoryPersonalTitle: "Memoria individual",
-  memoryPersonalDesc: "Notas de tu cuenta — solo para ti, no se comparten con la organización.",
+  memoryPersonalDesc: "Notas de tu cuenta, solo para ti, no se comparten con la organización.",
   memoryPersonalPlaceholder: "p. ej. Prefiero setlists más cortos.",
   memoryEnabled: "Activar memoria",
   memoryEnabledDesc: "Incluye las notas en el contexto y permite actualizarlas.",
