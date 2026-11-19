@@ -8,7 +8,7 @@
 
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import type { DomainId, PermissionString } from "@hosanna/auth";
-import type { LogosToolFactory } from "@hosanna/logos-ai";
+import type { LogosToolFactory } from "@hosanna/logos-ai/tools";
 
 export type McpToolGate = {
   name: string;

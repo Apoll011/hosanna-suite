@@ -99,6 +99,7 @@ import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS, STUDIO_UI_CATALOG } from "../mcp/lib
 import { searchWeb } from "../mcp/lib/webSearch.js";
 import { searchYouTube } from "../mcp/lib/youtubeSearch.js";
 import { clockContextPromptBlock } from "../lib/clockContext.js";
+import { createSharedEmbeddedTools } from "../mcp/domains/toolFactory.js";
 import { AppError } from "../utils/errors.js";
 
 const folderIconSchema = z.enum(FOLDER_ICON_IDS);
@@ -2592,11 +2593,18 @@ export class AiChatService {
         ? await this.memory.listForChat(opts.orgId, chatUserId)
         : await this.memory.listOrg(opts.orgId)
       : [];
-    const tools = buildHosannaTools(opts.authInfo, {
-      nativeWebAuth,
-      memory: runtime.memoryEnabled ? this.memory : undefined,
-      rawMessages: opts.messages,
-    });
+    const tools = {
+      ...buildHosannaTools(opts.authInfo, {
+        nativeWebAuth,
+        memory: runtime.memoryEnabled ? this.memory : undefined,
+        rawMessages: opts.messages,
+      }),
+      ...createSharedEmbeddedTools(opts.authInfo, {
+        nativeWebAuth,
+        memory: runtime.memoryEnabled ? this.memory : undefined,
+        rawMessages: opts.messages,
+      }),
+    };
     const system =
       LOGOS_CHAT_SYSTEM +
       (runtime.memoryEnabled ? MEMORY_USAGE_PROMPT : "") +

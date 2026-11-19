@@ -238,9 +238,11 @@ Discovery (`hosanna_capabilities` / `hosanna_permissions`) picks up the pack aut
 3. Proposal card / extractProposal convention (same shape as song/service: tool returns `{ proposal: { … } }`).
 4. Thin Finance host: `createLogosHost` + catalog; Auth/Studio only get handlers if they should Accept funds too.
 
-### Step 6 — Embedded aiChat tools
+### Step 6 — Shared embedded/MCP tools
 
-The Studio/Auth assistant tool map lives in `aiChat.service.ts` and is **parallel** to MCP registration today. When you add MCP tools that Logos chat must call, also register the matching `tool({ … })` entries there (or a shared factory — prefer sharing when you touch this path). Studio-only UI tools stay here only.
+Add the domain's `toolFactory` to its `DomainPack`. The factory returns shared `LogosToolDefinition` entries and may set `surfaces: ["embedded"]` or `surfaces: ["mcp"]` when a tool belongs to one surface only.
+
+`createSharedEmbeddedTools` mounts the factory on the Studio/Auth embedded chat, while `mountSharedDomainTools` mounts it on external MCP. Studio-only UI tools such as `navigate`, `open_app`, and `studio_sync` stay in `aiChat.service.ts` and must not be included in the MCP surface.
 
 ### Step 7 — Tests
 

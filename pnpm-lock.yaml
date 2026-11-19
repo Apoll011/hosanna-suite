@@ -71,6 +71,9 @@ importers:
       '@hosanna/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@hosanna/logos-ai':
+        specifier: workspace:*
+        version: link:../../packages/logos-ai
       '@hosanna/notifications':
         specifier: workspace:*
         version: link:../../packages/notifications

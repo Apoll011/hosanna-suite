@@ -18,6 +18,7 @@ import { registerOrgTools } from "../tools/org.js";
 import { registerServiceTools } from "../tools/services.js";
 import { registerSongTools } from "../tools/songs.js";
 import { ensureDomainPacksRegistered } from "./packs.js";
+import { mountSharedDomainTools } from "./toolFactory.js";
 
 export function wireHosannaDomainPacks(server: McpServer, authInfo?: AuthInfo): void {
   ensureDomainPacksRegistered();
@@ -43,4 +44,6 @@ export function wireHosannaDomainPacks(server: McpServer, authInfo?: AuthInfo): 
 
   // library
   registerLibraryTools(server, authInfo);
+
+  mountSharedDomainTools(server, authInfo);
 }

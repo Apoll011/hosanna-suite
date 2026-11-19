@@ -25,6 +25,10 @@
       "types": "./src/proposals/index.ts",
       "default": "./src/proposals/index.ts"
     },
+    "./tools": {
+      "types": "./src/tools/index.ts",
+      "default": "./src/tools/index.ts"
+    },
     "./mascot": {
       "types": "./src/mascot/index.ts",
       "default": "./src/mascot/index.ts"

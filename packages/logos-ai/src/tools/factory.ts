@@ -10,7 +10,7 @@ export type LogosToolDefinition = {
   title?: string;
   description: string;
   inputSchema: unknown;
-  execute: (input: any) => unknown | Promise<unknown>;
+  execute: (input: unknown) => unknown | Promise<unknown>;
   surfaces?: readonly LogosToolSurface[];
 };
 
