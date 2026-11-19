@@ -1,8 +1,8 @@
-# Hosanna Suite — agent handbook
+# Hosanna Suite: agent handbook
 
 Local-only guidance for **any** coding agent working in this monorepo (`AGENTS.md` is gitignored). Prefer this file + `docs/` over inventing product or architecture context.
 
-**Owner:** Apoll0_11 (software engineer). Prefer asking questions over guessing. Tone: clear and direct, with enough explanation that the system change is understandable — not a dump of every file touched.
+**Owner:** Apoll0_11 (software engineer). Prefer asking questions over guessing. Tone: clear and direct, with enough explanation that the system change is understandable, not a dump of every file touched.
 
 ---
 
@@ -46,7 +46,7 @@ pnpm openapi:check                       # fail on stale spec/types (run in CI)
 
 ---
 
-## 3. Docs — when to read / update
+## 3. Docs: when to read / update
 
 ### Mandatory before non-trivial work (pick what matches the task)
 
@@ -56,7 +56,7 @@ pnpm openapi:check                       # fail on stale spec/types (run in CI)
 | Auth, sessions, RBAC, Stripe                                    | [`docs/architecture/auth-and-billing.md`](docs/architecture/auth-and-billing.md)                                                                                         |
 | Home, App Switcher, AccountMenu, personal settings / app scopes | [`docs/architecture/suite-hub-and-preferences.md`](docs/architecture/suite-hub-and-preferences.md)                                                                       |
 | UI / visual work                                                | [`docs/hosanna-visual-language.md`](docs/hosanna-visual-language.md) **and** current tokens in `apps/studio/src/index.css` / `apps/auth/app/globals.css` / `packages/ui` |
-| Longer product direction                                        | [`docs/FUTURE_DIRECTION.md`](docs/FUTURE_DIRECTION.md) (vision — do not treat unfinished ideas as shipped)                                                               |
+| Longer product direction                                        | [`docs/FUTURE_DIRECTION.md`](docs/FUTURE_DIRECTION.md) (vision; do not treat unfinished ideas as shipped)                                                               |
 
 ### Optional / deeper (as needed)
 
@@ -78,28 +78,55 @@ On **biggish** behavior or architecture changes, update the relevant `docs/` (an
 ## 4. How to work with the human
 
 1. **Ask questions** when requirements, tradeoffs, or docs/code conflicts are unclear. Prefer questions over inventing product decisions.
-2. **Creative control** only when explicitly given — otherwise propose options / ask.
+2. **Creative control** only when explicitly given; otherwise propose options / ask.
 3. Use **plan mode** for multi-file or architecture-shaped work.
 4. End of a meaningful change: explain **the system that was built or changed** (how it fits together), not only a file list.
 5. Skills: use project/global agent skills when relevant (see §12). Hosanna docs and this handbook beat generic skill advice when they conflict.
 
 ---
 
+## Writing and response style
+
+- Do not use em dashes in agent responses, comments, commit messages, or documentation. Use commas, parentheses, colons, or separate sentences instead.
+- Prefer concise, direct sentences.
+- Avoid filler such as “Sure,” “Absolutely,” or “Great question.”
+- Do not restate the user's request unless clarification is needed.
+- Use sentence case for headings.
+- Use ASCII punctuation by default.
+- Do not use emojis unless the user requests them or an existing output format requires them.
+- Explain decisions and tradeoffs briefly, not as long essays.
+- This style applies to agent communication and repository guidance, not intentional product copy or localization.
+
+## Ambiguity and decisions
+
+- Ask before making product, UX, schema, security, billing, destructive-data, or public API decisions.
+- Make a reasonable local implementation choice without asking when the existing pattern is clear, the behavior is backwards-compatible, and the change is easy to revise.
+- When asking a question, present the recommended option first and explain the consequence briefly.
+- Do not ask for confirmation of routine edits, formatting, targeted tests, or non-destructive inspection.
+
+## Existing changes
+
+- Inspect `git status` before editing.
+- Treat all pre-existing modifications as user-owned.
+- Never revert, overwrite, reformat, or include unrelated changes.
+- If a requested change overlaps a modified hunk, inspect it carefully and preserve the user's intent.
+- If the overlap makes the requested change unsafe, stop and ask.
+
 ## 5. Git and branches
 
 - Default branch for work: **`develop`**. Do not create feature branches unless explicitly told.
-- **Commit as you go** in small patches (conventional commits). One coherent patch → one commit → next patch → next commit.
+- **Commit as you go** in coherent batches (conventional commits). Each batch should contain related changes that form a reviewable unit.
 - Conventional commit style (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`). Focus the subject on **why**.
 - **Never co-author / co-sign commits** (no `Co-authored-by`, no amending authorship onto the human’s commits, no agent trailer that attributes the commit to the model).
 - Do not force-push, skip hooks, or rewrite shared history unless explicitly requested.
 - Do not push unless asked.
-- **Human commits during work:** If while working you notice the git tree is clean, files were committed, or new commits appeared, it was the human — adapt, verify context, and continue.
+- **Human commits during work:** If while working you notice the git tree is clean, files were committed, or new commits appeared, it was the human. Adapt, verify context, and continue.
 
 ---
 
 ## 6. Comments (hard rule)
 
-Comments are rare. Default is **no comment**. If the type, name, or call site already says it — **do not comment it**. Explaining a change, a race you fixed, or how two apps sync belongs in the **commit message / chat**, never above the code.
+Comments are rare. Default is **no comment**. If the type, name, or call site already says it, **do not comment it**. Explaining a change, a race you fixed, or how two apps sync belongs in the **commit message / chat**, never above the code.
 
 ### Forbidden (delete these; never add them)
 
@@ -109,7 +136,7 @@ Comments are rare. Default is **no comment**. If the type, name, or call site al
   `/** Absolute logo URL, or null when the app has no mark yet. */`  
   `/** When missing, shows the coming-soon clock. */`  
   `/** menu = compact code chips for AccountMenu */`
-- **Design / fix essays** — “why this exists”, “used so that…”, “prevents lagging X from reverting Y”, “Auth ↔ Studio update live”, multi-sentence JSDoc on a field whose name is already clear (`revisedAt`, `syncThemeFromSharedCookie`, …)
+- **Design / fix essays**: “why this exists”, “used so that…”, “prevents lagging X from reverting Y”, “Auth ↔ Studio update live”, multi-sentence JSDoc on a field whose name is already clear (`revisedAt`, `syncThemeFromSharedCookie`, …)
 - “Why we changed it” / history / “this used to” / “never do X” / “IMPORTANT” / “NOTE:”
 - Changelog-style blurbs above components whose classes already express the behavior
 - JSDoc on every export “for completeness”
@@ -121,7 +148,7 @@ Comments are rare. Default is **no comment**. If the type, name, or call site al
 
 - A non-obvious invariant or subtle bug trap that **code and names cannot express** (one short line, present tense, no history)
 - A required external constraint (protocol, vendor quirk) with no clearer name/API
-- Existing license headers already used by the repo — do not invent new banner noise
+- Existing license headers already used by the repo; do not invent new banner noise
 
 When editing a file, **strip narrative comments you would not be allowed to add** in the hunk you touch (don’t drive-by-delete unrelated docs, but don’t leave your own narration behind).
 
@@ -129,17 +156,17 @@ When editing a file, **strip narrative comments you would not be allowed to add*
 
 ## 7. TypeScript and code quality
 
-- Avoid `any`. Avoid needless `| undefined` / optional soup — model domain types so absence is explicit and intentional.
+- Avoid `any`. Avoid needless `| undefined` / optional soup; model domain types so absence is explicit and intentional.
 - Prefer existing package APIs over copying logic across apps.
 - Stay on task: no drive-by refactors unrelated to the request.
 - Match local style (imports, components, naming) in the files you touch.
 
 ### Suggested package boundaries
 
-- `@hosanna/auth` — shared auth factory helpers, suite registry, **personal-settings** store + scope registry. Apps configure a host (`configurePersonalSettings`); they do not reimplement the store.
-- `@hosanna/auth/server` — server-only Better Auth factory; do not import from Vite/Studio client bundles.
-- `@hosanna/ui` — shared chrome (App Switcher, AccountMenu, SuiteAppIcon, primitives). Prefer these over one-off copies.
-- `@hosanna/db` / Prisma — schema and migrations; treat destructive DB ops as forbidden (see §10).
+- `@hosanna/auth`: shared auth factory helpers, suite registry, **personal-settings** store + scope registry. Apps configure a host (`configurePersonalSettings`); they do not reimplement the store.
+- `@hosanna/auth/server`: server-only Better Auth factory; do not import from Vite/Studio client bundles.
+- `@hosanna/ui`: shared chrome (App Switcher, AccountMenu, SuiteAppIcon, primitives). Prefer these over one-off copies.
+- `@hosanna/db` / Prisma: schema and migrations; treat destructive DB ops as forbidden (see §10).
 - App-scoped prefs → `registerAppSettingsScope` / `apps.<id>` (see suite-hub doc). Do not dump app-only keys onto root personal settings.
 - Shared user-facing copy that crosses apps → `@hosanna/i18n`. Truly app-specific strings may live in that app’s locale files.
 
@@ -172,7 +199,7 @@ pnpm test:e2e --project=saas  # or auth / studio
 pnpm test:e2e:ui              # interactive
 ```
 
-**After big UI changes, run e2e before you call the work done** — do not wait to be asked. That includes layout/nav overhauls, auth/marketing page redesigns, shared `@hosanna/ui` chrome changes, demo/sidebar/toolbar flows, or anything that moves labels, routes, CTAs, or `data-tour` hooks the specs rely on.
+**After big UI changes, run e2e before you call the work done**; do not wait to be asked. That includes layout/nav overhauls, auth/marketing page redesigns, shared `@hosanna/ui` chrome changes, demo/sidebar/toolbar flows, or anything that moves labels, routes, CTAs, or `data-tour` hooks the specs rely on.
 
 - Update or add specs in `tests/saas/`, `tests/auth/`, `tests/studio/` when the UI contract changes (roles, labels, hrefs, `data-tour`).
 - Prefer stable locators (`getByRole`, `data-tour`) over brittle CSS/class chains.
@@ -184,7 +211,7 @@ pnpm test:e2e:ui              # interactive
 
 - Before UI work: read [`docs/hosanna-visual-language.md`](docs/hosanna-visual-language.md) **and** the live tokens/components. If the doc is behind the code, **update the doc** as part of the work.
 - Per-app accent from `SUITE_APP_REGISTRY` (`applySuiteAppAccent` / CSS vars); Figtree chrome; shared `@hosanna/ui`. No second unrelated brand system.
-- Suite chrome (home grid, App Switcher, AccountMenu, theme transitions) is part of the product language — keep Auth and Studio aligned.
+- Suite chrome (home grid, App Switcher, AccountMenu, theme transitions) is part of the product language; keep Auth and Studio aligned.
 - **i18n:** strings shared across apps → `@hosanna/i18n` (`suite.*`, etc.). Strings only used inside one app → that app’s locale files.
 - **Shared components own their i18n:** any reusable UI in `packages/*` (not just AccountMenu / App Switcher) must keep default user-facing copy in `@hosanna/i18n` and resolve it inside the component (pass `language` when reactive). Hosts must **not** duplicate those strings in every app locale or pipe them through a `labels={{…}}` bag. Host `labels` / custom text only when the surface truly needs different wording (rare exception). Host-specific links/sections may still pass their own labels.
 - **Package-owned i18n:** when a package owns its own messages, diagnostics, or user copy (e.g. `@hosanna/chordpro`, `@hosanna/logos-ai`, `@hosanna/auth`), keep an `src/i18n/` folder inside that package with dedicated TypeScript files per language (`pt.ts`, `en.ts`, `es.ts`, and `index.ts`), following the pattern in `@hosanna/logos-ai`.
@@ -199,9 +226,34 @@ This environment often uses **real production-like data** on local and hosted **
 - **Never** drop, wipe, truncate, or “reset” the database (or mass-delete org data) unless the human explicitly orders that exact operation.
 - Do not run destructive migration resets (`migrate reset`, `db push --force-reset`, etc.) unless explicitly requested.
 - Do not commit secrets. `.env` is local; examples stay in `.env.example` patterns already used by the repo.
-- Be careful with billing webhooks, auth session/cookie domains, and replication checkpoints — ask if a change could strand real users or data.
+- Be careful with billing webhooks, auth session/cookie domains, and replication checkpoints; ask if a change could strand real users or data.
 
 ---
+
+## Security and secrets
+
+- Never print, paste, commit, or transmit secrets, tokens, cookies, private keys, or production credentials.
+- Redact secrets from command output and final responses.
+- Do not add telemetry, external services, or network calls without explicit approval.
+- Treat authentication, authorization, billing, webhooks, file uploads, and user-controlled HTML as security-sensitive.
+- For security-sensitive changes, validate both allowed and denied paths.
+
+## Dependencies and generated files
+
+- Reuse existing dependencies and utilities before adding a package.
+- Do not add a dependency for functionality that can be implemented with existing platform APIs or repository helpers.
+- After dependency changes, update the lockfile and validate the affected package.
+- Do not manually edit generated files. Modify the generator or source definition instead.
+- Regenerate affected files and verify that the generated diff contains only expected changes.
+
+## Validation
+
+- Run the smallest relevant validation command first.
+- For TypeScript changes, run the affected package typecheck or test command.
+- For API contract changes, run both generation and freshness checks.
+- For UI changes, run the relevant browser test when routes, labels, accessibility roles, or interaction behavior changes.
+- Report the exact commands run and whether they passed.
+- Do not claim a change is tested if only static inspection was performed.
 
 ## 11. Personal settings & suite shell (pointer only)
 
@@ -222,7 +274,7 @@ Discover/install via [`npx skills`](https://skills.sh/) (`npx skills find …`, 
 
 Installed in this project’s `.agents/skills/` (gitignored). Re-run `npx skills list -p` to refresh.
 
-**Frontend / UI:** `frontend-design`, `vercel-react-best-practices`, `vercel-composition-patterns`, `web-design-guidelines`, `building-components` (from `vercel/components.build`), `vercel-react-view-transitions`, `tailwind-4-docs` — **defer to** `docs/hosanna-visual-language.md` when design skills conflict.
+**Frontend / UI:** `frontend-design`, `vercel-react-best-practices`, `vercel-composition-patterns`, `web-design-guidelines`, `building-components` (from `vercel/components.build`), `vercel-react-view-transitions`, `tailwind-4-docs`; **defer to** `docs/hosanna-visual-language.md` when design skills conflict.
 
 **Monorepo:** `turborepo`, `monorepo-management`
 
@@ -249,5 +301,5 @@ Search more with `npx skills find <query>` ([skills.sh](https://skills.sh/)).
 5. **API / route / validator changes:** update the OpenAPI generator definitions, run `pnpm openapi:check` clean, and commit the updated `packages/types/openapi.yaml` and `src/schema.ts`.
 6. **Big UI changes:** `pnpm test:e2e` (or the relevant `--project`) run green; Playwright specs updated if labels/routes/`data-tour` changed.
 7. Docs / visual-language updated on biggish or UI-direction changes.
-8. Conventional commit for the patch (no co-authors).
+8. Conventional commit for the completed batch (no co-authors).
 9. Short explanation of **what system now exists or how it changed**.
