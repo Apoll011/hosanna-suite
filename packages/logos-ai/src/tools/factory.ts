@@ -10,6 +10,10 @@ export type LogosToolDefinition = {
   title?: string;
   description: string;
   inputSchema: unknown;
+  /** Permission enforced (MCP + embedded) before execute, e.g. "fund.update". */
+  permission?: string;
+  /** Require an active/trialing subscription before execute. */
+  requiresEntitlement?: boolean;
   execute: (input: unknown) => unknown | Promise<unknown>;
   surfaces?: readonly LogosToolSurface[];
 };

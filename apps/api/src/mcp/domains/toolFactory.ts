@@ -1,63 +1,88 @@
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
-import type { LogosToolDefinition } from "@hosanna/logos-ai/tools";
+import type { PermissionString } from "@hosanna/auth";
+import type { LogosToolDefinition, LogosToolSurface } from "@hosanna/logos-ai/tools";
 import { tool, type ToolSet } from "ai";
-import { z } from "zod";
+import type { z } from "zod";
+import { requireMcpContext, requirePermission, requireWriteEntitlement } from "../context.js";
+import { ALL_MCP_TOOL_NAMES, STUDIO_ONLY_TOOLS } from "../lib/toolCatalog.js";
 import { ensureDomainPacksRegistered } from "./packs.js";
 import { listDomainPacks } from "./registry.js";
 
-function asText(value: unknown): unknown {
-  if (typeof value === "string") return value;
-  return JSON.stringify(value, null, 2);
+const STUDIO_ONLY = new Set<string>(STUDIO_ONLY_TOOLS);
+
+function asText(value: unknown): string {
+  return typeof value === "string" ? value : JSON.stringify(value, null, 2);
 }
 
-function zodSchema(definition: LogosToolDefinition): z.ZodTypeAny {
-  const schema = definition.inputSchema as z.ZodTypeAny;
-  return schema && typeof schema.safeParse === "function"
-    ? schema
-    : z.object({});
+function schemaOf(d: LogosToolDefinition): z.ZodTypeAny {
+  const s = d.inputSchema as z.ZodTypeAny | undefined;
+  if (!s || typeof s.safeParse !== "function") {
+    throw new Error(`Shared tool "${d.name}" needs a zod inputSchema`);
+  }
+  return s;
 }
 
+/** Enforces the definition's permission/entitlement so no surface can skip it. */
+function gated(d: LogosToolDefinition, authInfo?: AuthInfo) {
+  return async (input: unknown) => {
+    if (d.permission || d.requiresEntitlement) {
+      const ctx = requireMcpContext(authInfo);
+      if (d.permission) requirePermission(ctx, d.permission as PermissionString);
+      if (d.requiresEntitlement) requireWriteEntitlement(ctx);
+    }
+    return d.execute(input);
+  };
+}
+
+function collect(
+  surface: LogosToolSurface,
+  authInfo: AuthInfo | undefined,
+  context: Record<string, unknown>,
+  reserved: Iterable<string>,
+): LogosToolDefinition[] {
+  ensureDomainPacksRegistered();
+  const seen = new Set(reserved);
+  const out: LogosToolDefinition[] = [];
+  for (const pack of listDomainPacks()) {
+    if (!pack.toolFactory) continue;
+    for (const d of pack.toolFactory({ ...context, authInfo, surface })) {
+      if (d.surfaces && !d.surfaces.includes(surface)) continue;
+      if (surface === "mcp" && STUDIO_ONLY.has(d.name)) {
+        throw new Error(`Studio-only tool "${d.name}" must declare surfaces: ["embedded"]`);
+      }
+      if (seen.has(d.name)) throw new Error(`Duplicate tool name: ${d.name}`);
+      seen.add(d.name);
+      out.push({ ...d, inputSchema: schemaOf(d), execute: gated(d, authInfo) });
+    }
+  }
+  return out;
+}
+
+/** `reserved`: names already in the embedded tool set (collisions throw instead of overriding). */
 export function createSharedEmbeddedTools(
   authInfo: AuthInfo,
   context: Record<string, unknown> = {},
+  reserved: Iterable<string> = [],
 ): ToolSet {
-  ensureDomainPacksRegistered();
   const tools: ToolSet = {};
-
-  for (const pack of listDomainPacks()) {
-    if (!pack.toolFactory) continue;
-    for (const definition of pack.toolFactory({ ...context, authInfo, surface: "embedded" })) {
-      if (definition.surfaces && !definition.surfaces.includes("embedded")) continue;
-      const schema = zodSchema(definition);
-      tools[definition.name] = tool({
-        description: definition.description,
-        inputSchema: schema,
-        execute: async (input: unknown) => asText(await definition.execute(input)),
-      }) as ToolSet[string];
-    }
+  for (const d of collect("embedded", authInfo, context, reserved)) {
+    tools[d.name] = tool({
+      description: d.description,
+      inputSchema: schemaOf(d),
+      execute: async (input: unknown) => asText(await d.execute(input)),
+    }) as ToolSet[string];
   }
-
   return tools;
 }
 
 export function mountSharedDomainTools(server: McpServer, authInfo?: AuthInfo): void {
-  ensureDomainPacksRegistered();
-
-  for (const pack of listDomainPacks()) {
-    if (!pack.toolFactory) continue;
-    for (const definition of pack.toolFactory({ authInfo, surface: "mcp" })) {
-      if (definition.surfaces && !definition.surfaces.includes("mcp")) continue;
-      server.registerTool(
-        definition.name,
-        {
-          title: definition.title,
-          description: definition.description,
-          inputSchema: zodSchema(definition),
-        },
-        async (input) => ({
-          content: [{ type: "text" as const, text: String(asText(await definition.execute(input))) }],
-        }),
-      );
-    }
+  for (const d of collect("mcp", authInfo, {}, ALL_MCP_TOOL_NAMES)) {
+    server.registerTool(
+      d.name,
+      { title: d.title, description: d.description, inputSchema: schemaOf(d) },
+      async (input) => ({
+        content: [{ type: "text" as const, text: asText(await d.execute(input)) }],
+      }),
+    );
   }
 }

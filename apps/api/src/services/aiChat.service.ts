@@ -2593,17 +2593,15 @@ export class AiChatService {
         ? await this.memory.listForChat(opts.orgId, chatUserId)
         : await this.memory.listOrg(opts.orgId)
       : [];
+    const toolCtx = {
+      nativeWebAuth,
+      memory: runtime.memoryEnabled ? this.memory : undefined,
+      rawMessages: opts.messages,
+    };
+    const baseTools = buildHosannaTools(opts.authInfo, toolCtx);
     const tools = {
-      ...buildHosannaTools(opts.authInfo, {
-        nativeWebAuth,
-        memory: runtime.memoryEnabled ? this.memory : undefined,
-        rawMessages: opts.messages,
-      }),
-      ...createSharedEmbeddedTools(opts.authInfo, {
-        nativeWebAuth,
-        memory: runtime.memoryEnabled ? this.memory : undefined,
-        rawMessages: opts.messages,
-      }),
+      ...baseTools,
+      ...createSharedEmbeddedTools(opts.authInfo, toolCtx, Object.keys(baseTools)),
     };
     const system =
       LOGOS_CHAT_SYSTEM +
