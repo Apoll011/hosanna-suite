@@ -11,8 +11,9 @@ function asText(value: unknown): unknown {
 }
 
 function zodSchema(definition: LogosToolDefinition): z.ZodTypeAny {
-  return definition.inputSchema instanceof z.ZodType
-    ? definition.inputSchema
+  const schema = definition.inputSchema as z.ZodTypeAny;
+  return schema && typeof schema.safeParse === "function"
+    ? schema
     : z.object({});
 }
 
