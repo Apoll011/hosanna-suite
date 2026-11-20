@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ConfirmDialog, Spinner, EmptyState, useCan, Can } from "@hosanna/ui";
 import { Table } from "@/src/components/common";
-import type { CollectionToolbarActions } from "@/src/components/layout";
 import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFloatingBar";
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
+import type { CollectionToolbarActions } from "@/src/components/layout";
 import { AddSongsToCollectionModal } from "@/src/components/modals/AddSongsToCollectionModal";
 import { CreateCollectionModal } from "@/src/components/modals/CreateCollectionModal";
 import { useAuth } from "@/src/contexts/AuthContext";
@@ -16,17 +15,10 @@ import { useCollection, useCollections } from "@/src/hooks/useCollections";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
 import { useAllSongs } from "@/src/hooks/useSongs";
 import { useI18n } from "@/src/lib/i18n";
+import { Can, ConfirmDialog, EmptyState, Spinner, useCan } from "@hosanna/ui";
 
 import { Song } from "@/src/types";
-import {
-  CheckSquare,
-  ExternalLink,
-  FolderKanban,
-  MoreHorizontal,
-  Music2,
-  Trash2,
-  X,
-} from "lucide-react";
+import { CheckSquare, ExternalLink, FolderKanban, Music2, Trash2, X } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useOutletContext, useParams } from "react-router-dom";
@@ -444,12 +436,7 @@ export const CollectionDetailPage: React.FC = () => {
                   </div>
 
                   <div className="hidden sm:flex items-center gap-1.5 flex-wrap justify-end">
-                    {keyMatch && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
-                        {keyMatch}
-                      </span>
-                    )}
-                    {song.tags?.slice(0, 2).map((tag) => (
+                    {song.tags?.slice(0, 4).map((tag) => (
                       <span
                         key={tag}
                         className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border"
@@ -457,8 +444,15 @@ export const CollectionDetailPage: React.FC = () => {
                         {tag}
                       </span>
                     ))}
-                    {(song.tags?.length ?? 0) > 2 && (
-                      <span className="text-caption">+{(song.tags?.length ?? 0) - 2}</span>
+                    {(song.tags?.length ?? 0) > 4 && (
+                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-m3-sidebar text-m3-secondary border border-m3-border">
+                        +{(song.tags?.length ?? 0) - 4}
+                      </span>
+                    )}
+                    {keyMatch && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40">
+                        {keyMatch}
+                      </span>
                     )}
                   </div>
 
@@ -485,14 +479,6 @@ export const CollectionDetailPage: React.FC = () => {
                         <X className="w-3.5 h-3.5" />
                       </button>
                     </Can>
-                    <button
-                      type="button"
-                      onClick={(e) => openContextMenu(e, song)}
-                      className="p-1.5 rounded-md text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors cursor-pointer"
-                      title={t("explorer.moreOptions")}
-                    >
-                      <MoreHorizontal className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
               );
