@@ -37,6 +37,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useMarqueeSelection } from "../../hooks/useMarqueeSelection";
 import { useServices } from "../../hooks/useServices";
+import { useAllSongs } from "../../hooks/useSongs";
 import { track } from "../../lib/posthog";
 
 interface ServicesPageProps {
@@ -60,7 +61,9 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
     externalSearchQuery !== undefined ? externalSearchQuery : (context.searchQuery as string) || "";
 
   const { servicesQuery, createService, updateService, deleteService } = useServices();
+  const { songsQuery } = useAllSongs();
   const { printService, printServices } = usePrint();
+  const allSongs = songsQuery.data?.songs ?? [];
 
   const effectiveSortBy: ServiceSortBy = contextSortBy === "title" ? "name" : "date";
   const effectiveSortOrder: SortOrder = (contextSortOrder as SortOrder) ?? "desc";
@@ -629,7 +632,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
         onPrint={() => {
           const selected = allServices.filter((s) => selectedServiceIds.has(s.id));
           if (selected.length > 0) {
-            printServices(selected.map((s) => ({ service: s })));
+            printServices(selected.map((service) => ({ service, songs: allSongs })));
           }
         }}
         onArchive={() => setIsBatchArchiveOpen(true)}
@@ -688,7 +691,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
                 onClick={() => {
                   const selected = allServices.filter((s) => selectedServiceIds.has(s.id));
                   if (selected.length > 0) {
-                    printServices(selected.map((s) => ({ service: s })));
+                    printServices(selected.map((service) => ({ service, songs: allSongs })));
                   }
                   setContextMenu(null);
                 }}
@@ -783,7 +786,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ searchQuery: externa
               <button
                 onClick={() => {
                   if (contextMenu.service) {
-                    printService(contextMenu.service);
+                    printService(contextMenu.service, allSongs);
                   }
                   setContextMenu(null);
                 }}

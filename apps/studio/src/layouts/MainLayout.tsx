@@ -856,10 +856,10 @@ export const MainLayout: React.FC = () => {
               .filter(Boolean) as Service[];
             if (!matched.length) return;
             if (matched.length === 1) {
-              printService(matched[0], undefined, options);
+              printService(matched[0], songs, options);
             } else {
               printServices(
-                matched.map((service) => ({ service })),
+                matched.map((service) => ({ service, songs })),
                 detail.title,
                 options,
               );
