@@ -209,9 +209,8 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
   const wide = layout === "wide";
   // Song body options only matter when song charts will actually print.
   const showSongBodyOptions =
-    context.hasSongs && (!context.hasSongContainers || options.includeSongs);
-  const showPageBreak =
-    context.canPageBreak && (!context.hasSongContainers || options.includeSongs);
+    context.hasSongs && options.includeSongs;
+  const showPageBreak = context.canPageBreak && options.includeSongs;
 
   const selectTemplate = (family: PrintTemplateFamily) =>
     onChange({
