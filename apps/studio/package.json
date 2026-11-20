@@ -27,6 +27,7 @@
     "@hosanna/analytics": "workspace:*",
     "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
+    "@hosanna/calendar": "workspace:*",
     "@hosanna/i18n": "workspace:*",
     "@hosanna/logos-ai": "workspace:*",
     "@hosanna/replication": "workspace:*",

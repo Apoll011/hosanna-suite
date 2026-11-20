@@ -1620,22 +1620,24 @@ export const MainLayout: React.FC = () => {
               onOpenModal={openModal}
             />
 
-            <ExplorerToolbar
-              view={view}
-              activeFiltersCount={activeFiltersCount}
-              showArchived={showArchived}
-              setShowArchived={setShowArchived}
-              archivedServices={archivedServices}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              onSortChange={handleSortChange}
-              viewMode={viewMode}
-              onViewModeChange={handleViewModeChange}
-              density={density}
-              onDensityChange={handleDensityChange}
-              onOpenFilterPanel={() => openModal("filter")}
-              collectionActions={collectionToolbarActions}
-            />
+            {view !== "calendar" && (
+              <ExplorerToolbar
+                view={view}
+                activeFiltersCount={activeFiltersCount}
+                showArchived={showArchived}
+                setShowArchived={setShowArchived}
+                archivedServices={archivedServices}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange}
+                viewMode={viewMode}
+                onViewModeChange={handleViewModeChange}
+                density={density}
+                onDensityChange={handleDensityChange}
+                onOpenFilterPanel={() => openModal("filter")}
+                collectionActions={collectionToolbarActions}
+              />
+            )}
 
             <div className="flex-1 flex flex-col relative bg-m3-bg overflow-hidden">
               <Outlet

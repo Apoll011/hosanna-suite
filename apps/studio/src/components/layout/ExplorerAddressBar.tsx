@@ -306,6 +306,16 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             </>
           )}
 
+          {view === "calendar" && (
+            <>
+              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
+              <div className={crumbCurrent}>
+                <Calendar1 className="w-4 h-4" />
+                <span>Planning calendar</span>
+              </div>
+            </>
+          )}
+
           {view === "trash" && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />

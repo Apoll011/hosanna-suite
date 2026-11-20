@@ -524,6 +524,9 @@ importers:
       '@hosanna/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@hosanna/calendar':
+        specifier: workspace:*
+        version: link:../../packages/calendar
       '@hosanna/chordpro':
         specifier: workspace:*
         version: link:../../packages/chordpro

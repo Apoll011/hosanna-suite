@@ -54,6 +54,9 @@ export const lazyImport = <T>(componentImport: LazyImportFn<T>): LazyPreloadable
 export const AgendaPage = lazyImport(() =>
   import("../pages/AgendaPage").then((m) => ({ default: m.AgendaPage })),
 );
+export const CalendarPage = lazyImport(() =>
+  import("../pages/CalendarPage").then((m) => ({ default: m.CalendarPage })),
+);
 export const DemoPage = lazyImport(() =>
   import("../pages/DemoPage").then((m) => ({ default: m.DemoPage })),
 );
@@ -126,6 +129,7 @@ export const routePreloaders: Array<{
     preload: () => AnalyticsPage.preload(),
   },
   { pattern: /\/agenda(\/|\?|#|$)/, preload: () => AgendaPage.preload() },
+  { pattern: /\/calendar(\/|\?|#|$)/, preload: () => CalendarPage.preload() },
   { pattern: /\/demo(\/|\?|#|$)/, preload: () => DemoPage.preload() },
 ];
 

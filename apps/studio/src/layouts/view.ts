@@ -22,6 +22,7 @@ export type ViewName =
   | "settings"
   | "analytics"
   | "agenda"
+  | "calendar"
   | "trash";
 
 /**
@@ -43,6 +44,7 @@ export function deriveView(pathname: string, slugPrefix: string): ViewName {
   if (path.startsWith("/collections/")) return "collection-detail";
   if (path.includes("/teams")) return "teams";
   if (path.includes("/agenda")) return "agenda";
+  if (path === "/calendar") return "calendar";
   if (path.includes("/settings")) return "settings";
   if (path.includes("/analytics")) return "analytics";
   if (path.includes("/trash")) return "trash";

@@ -27,6 +27,7 @@ const PageLoader = () => {
 
 import {
   AgendaPage,
+  CalendarPage,
   AnalyticsPage,
   CollectionDetailPage,
   CollectionsPage,
@@ -205,6 +206,7 @@ export const AppRoutes: React.FC = () => {
                 <Route path="services/:id" element={<ServiceDetailPage />} />
                 <Route path="teams" element={<TeamsPage />} />
                 <Route path="agenda" element={<AgendaPage />} />
+                <Route path="calendar" element={<CalendarPage />} />
                 <Route path="trash" element={<TrashPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="organization" element={<OrganizationRedirect />} />
