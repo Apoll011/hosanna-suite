@@ -3,14 +3,7 @@ import type { TEventColor } from "./types";
 export type TEventId = string | number;
 
 export type ResponsibilityColor =
-  | "amber"
-  | "violet"
-  | "sky"
-  | "rose"
-  | "emerald"
-  | "cyan"
-  | "slate"
-  | "indigo";
+  "amber" | "violet" | "sky" | "rose" | "emerald" | "cyan" | "slate" | "indigo";
 
 export type ResponsibilityIconKey =
   | "mic"
@@ -28,7 +21,7 @@ export interface Assignee {
   id?: string;
   name: string;
   memberId?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   email?: string;
 }
 
