@@ -8,6 +8,7 @@ export * from "./types";
 
 export { CalendarAgendaView } from "./components/agenda-view/calendar-agenda-view";
 export { CalendarDayView } from "./components/week-and-day-view/calendar-day-view";
+export { SideMonthCalendar } from "./components/week-and-day-view/side-month-calendar";
 export { CalendarWeekView } from "./components/week-and-day-view/calendar-week-view";
 export { CalendarMonthView } from "./components/month-view/calendar-month-view";
 export { CalendarYearView } from "./components/year-view/calendar-year-view";

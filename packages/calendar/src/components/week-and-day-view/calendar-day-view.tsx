@@ -19,7 +19,7 @@ import { format, isSameDay, areIntervalsOverlapping } from "date-fns";
 
 import { useCalendar } from "../../contexts/calendar-context";
 
-import { Calendar } from "../../ui/calendar";
+import { SideMonthCalendar } from "./side-month-calendar";
 import { ScrollArea } from "../../ui/scroll-area";
 import { Button } from "../../ui/button";
 
@@ -277,14 +277,12 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
 
       {/* Right side: Mini calendar + Event Details */}
       <div className="w-full lg:w-84 xl:w-96 divide-y border-l bg-m3-card flex flex-col shrink-0 h-full overflow-hidden">
-        {/* Top: Small month calendar (Pinned / Sticky) */}
-        <div className="p-3 shrink-0 flex flex-col items-center border-b">
-          <Calendar
-            className="mx-auto w-fit"
-            mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
-            initialFocus
+        {/* Top: Small month calendar (Pinned / Sticky, full-width) */}
+        <div className="p-4 shrink-0 border-b">
+          <SideMonthCalendar
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            events={singleDayEvents}
           />
         </div>
 
