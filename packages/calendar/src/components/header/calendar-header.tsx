@@ -1,18 +1,16 @@
-import { Columns, Grid3x3, List, Plus, Grid2x2, CalendarRange } from "lucide-react";
+import { Columns, Grid3x3, List, Grid2x2, CalendarRange } from "lucide-react";
 
 import { Button } from "../../ui/button";
 
-import { UserSelect } from "./user-select";
 import { TodayButton } from "./today-button";
 import { DateNavigator } from "./date-navigator";
-import { AddEventDialog } from "../dialogs/add-event-dialog";
 
-import type { IEvent } from "../../interfaces";
+import type { IAgendaEvent } from "../../interfaces";
 import type { TCalendarView } from "../../types";
 
 interface IProps {
   view: TCalendarView;
-  events: IEvent[];
+  events: IAgendaEvent[];
   onViewChange?: (view: TCalendarView) => void;
 }
 
@@ -82,15 +80,8 @@ export function CalendarHeader({ view, events, onViewChange }: IProps) {
             </Button>
           </div>
 
-          <UserSelect />
         </div>
 
-        <AddEventDialog>
-          <Button className="w-full sm:w-auto">
-            <Plus />
-            Add Event
-          </Button>
-        </AddEventDialog>
       </div>
     </div>
   );

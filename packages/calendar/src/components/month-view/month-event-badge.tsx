@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
+import { parseISO } from "date-fns";
 
 import { useCalendar } from "../../contexts/calendar-context";
 
@@ -7,7 +7,7 @@ import { DraggableEvent } from "../dnd/draggable-event";
 
 import { cn } from "../../lib/cn";
 
-import type { IEvent } from "../../interfaces";
+import type { IAgendaEvent } from "../../interfaces";
 import type { VariantProps } from "class-variance-authority";
 
 const eventBadgeVariants = cva(
@@ -47,7 +47,7 @@ const eventBadgeVariants = cva(
 );
 
 interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" | "multiDayPosition"> {
-  event: IEvent;
+  event: IAgendaEvent;
   cellDate: Date;
   eventCurrentDay?: number;
   eventTotalDays?: number;
@@ -58,30 +58,16 @@ interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" |
 export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
   const { badgeVariant, clickEvent } = useCalendar();
 
-  const itemStart = startOfDay(parseISO(event.startDate));
-  const itemEnd = endOfDay(parseISO(event.endDate));
+  const eventDate = parseISO(`${event.date}T${event.time}:00`);
+  const cellKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, "0")}-${String(cellDate.getDate()).padStart(2, "0")}`;
 
-  if (cellDate < itemStart || cellDate > itemEnd) return null;
+  if (cellKey !== event.date) return null;
 
-  let position: "first" | "middle" | "last" | "none" | undefined;
-
-  if (propPosition) {
-    position = propPosition;
-  } else if (eventCurrentDay && eventTotalDays) {
-    position = "none";
-  } else if (isSameDay(itemStart, itemEnd)) {
-    position = "none";
-  } else if (isSameDay(cellDate, itemStart)) {
-    position = "first";
-  } else if (isSameDay(cellDate, itemEnd)) {
-    position = "last";
-  } else {
-    position = "middle";
-  }
+  const position: "none" = "none";
 
   const renderBadgeText = ["first", "none"].includes(position);
 
-  const color = (badgeVariant === "dot" ? `${event.color}-dot` : event.color) as VariantProps<typeof eventBadgeVariants>["color"];
+  const color = (badgeVariant === "dot" ? "blue-dot" : "blue") as VariantProps<typeof eventBadgeVariants>["color"];
 
   const eventBadgeClasses = cn(eventBadgeVariants({ color, multiDayPosition: position, className }));
 
@@ -120,7 +106,7 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
           )}
         </div>
 
-        {renderBadgeText && <span>{format(new Date(event.startDate), "h:mm a")}</span>}
+        {renderBadgeText && <span>{event.time}</span>}
       </div>
     </DraggableEvent>
   );

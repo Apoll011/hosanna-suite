@@ -10,11 +10,11 @@ import { MonthEventBadge } from "./month-event-badge";
 import { cn } from "../../lib/cn";
 import { getMonthCellEvents } from "../../helpers";
 
-import type { ICalendarCell, IEvent } from "../../interfaces";
+import type { IAgendaEvent, ICalendarCell } from "../../interfaces";
 
 interface IProps {
   cell: ICalendarCell;
-  events: IEvent[];
+  events: IAgendaEvent[];
   eventPositions: Record<string, number>;
   onDateClick?: (date: Date) => void;
 }
