@@ -101,6 +101,7 @@ export interface AgendaEventDocType {
   durationMinutes: number;
   location?: string | null;
   notes?: string | null;
+  color?: import("../types").TEventColor | null;
   /** Reminder settings — always present. */
   reminder: ReminderSettings;
   /** Optional FK to an order-of-worship `services` doc id. */

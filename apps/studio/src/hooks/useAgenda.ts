@@ -213,6 +213,7 @@ export function useAgenda() {
           durationMinutes: input.durationMinutes,
           location: input.location ?? null,
           notes: input.notes ?? null,
+          color: (input as any).color ?? "blue",
           reminder: input.reminder ?? DEFAULT_REMINDER,
           linkedServiceId: input.linkedServiceId ?? null,
           responsibilities: [],
@@ -273,6 +274,7 @@ export function useAgenda() {
         if (patch.durationMinutes !== undefined) next.durationMinutes = patch.durationMinutes;
         if (patch.location !== undefined) next.location = patch.location ?? null;
         if (patch.notes !== undefined) next.notes = patch.notes ?? null;
+        if (patch.color !== undefined) next.color = patch.color ?? null;
         if (patch.linkedServiceId !== undefined)
           next.linkedServiceId = patch.linkedServiceId ?? null;
         if (patch.reminder !== undefined) next.reminder = patch.reminder;

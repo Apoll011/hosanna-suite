@@ -15,6 +15,16 @@ interface DayAgendaListProps {
   onSelectEvent: (id: string) => void;
 }
 
+const COLOR_CLASSES: Record<string, string> = {
+  blue: "bg-blue-500",
+  green: "bg-emerald-500",
+  red: "bg-red-500",
+  yellow: "bg-amber-400",
+  purple: "bg-purple-500",
+  orange: "bg-orange-500",
+  gray: "bg-neutral-500",
+};
+
 export const DayAgendaList: React.FC<DayAgendaListProps> = ({
   events,
   selectedEventId,
@@ -52,9 +62,9 @@ export const DayAgendaList: React.FC<DayAgendaListProps> = ({
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 text-xs font-semibold text-m3-text">
                     <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        isSelected ? "bg-m3-primary" : "bg-m3-border"
-                      }`}
+                      className={`w-2 h-2 rounded-full shrink-0 ${
+                        COLOR_CLASSES[event.color ?? "blue"] ?? "bg-blue-500"
+                      } ${isSelected ? "ring-2 ring-m3-primary ring-offset-1" : ""}`}
                     />
                     {event.time}
                     <span className="font-bold truncate">{event.title}</span>

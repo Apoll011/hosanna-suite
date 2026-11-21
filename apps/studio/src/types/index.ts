@@ -205,6 +205,8 @@ export interface ReminderSettings {
   label: string;
 }
 
+export type TEventColor = "blue" | "green" | "red" | "yellow" | "purple" | "orange" | "gray";
+
 export interface AgendaEvent {
   id: string;
   date: string;
@@ -214,6 +216,7 @@ export interface AgendaEvent {
   durationMinutes: number;
   location?: string | null;
   notes?: string | null;
+  color?: TEventColor | null;
   reminder: ReminderSettings;
   linkedServiceId?: string | null;
   responsibilities: Responsibility[];
