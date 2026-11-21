@@ -2,23 +2,64 @@ import type { TEventColor } from "./types";
 
 export type TEventId = string | number;
 
+export interface Assignee {
+  name: string;
+  memberId?: string;
+  avatarUrl?: string;
+  email?: string;
+}
+
+export interface Responsibility {
+  id: string;
+  categoryId: string;
+  assignees: Assignee[];
+}
+
+export interface ResponsibilityCategory {
+  id: string;
+  label: string;
+  color?: string;
+}
+
+export interface ReminderSettings {
+  enabled: boolean;
+  label: string;
+}
+
 export interface IUser {
   id: string;
   name: string;
-  picturePath: string | null;
+  picturePath?: string | null;
+  avatarUrl?: string | null;
 }
 
-export interface IEvent {
-  id: TEventId;
-  startDate: string;
-  endDate: string;
+export interface AgendaEvent {
+  id: string;
+  date: string;
+  time: string;
+  durationMinutes: number;
   title: string;
-  color: TEventColor;
-  description: string;
-  user: IUser;
+  type: string;
+  location?: string | null;
+  notes?: string | null;
+  color?: TEventColor | null;
+  reminder?: ReminderSettings;
+  linkedServiceId?: string | null;
+  responsibilities: Responsibility[];
+  createdAt?: string;
+  updatedAt?: string;
+  isDeleted?: boolean;
+  purgeAt?: string | null;
+
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+  user?: IUser;
 }
 
-export type TEventDraft = Omit<IEvent, "id"> & { id?: TEventId };
+export type IEvent = AgendaEvent;
+
+export type TEventDraft = Partial<AgendaEvent>;
 
 export interface ICalendarCell {
   day: number;
