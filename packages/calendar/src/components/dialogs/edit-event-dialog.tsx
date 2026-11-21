@@ -40,9 +40,9 @@ export function EditEventDialog({ children, event }: IProps) {
   const form = useForm<TEventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
-      user: event.user.id,
+      user: event.user?.id ?? "",
       title: event.title,
-      description: event.description,
+      description: event.description ?? "",
       startDate: parseISO(event.startDate),
       startTime: { hour: parseISO(event.startDate).getHours(), minute: parseISO(event.startDate).getMinutes() },
       endDate: parseISO(event.endDate),
@@ -54,8 +54,6 @@ export function EditEventDialog({ children, event }: IProps) {
   const onSubmit = (values: TEventFormData) => {
     const user = users.find(user => user.id === values.user);
 
-    if (!user) throw new Error("User not found");
-
     const startDateTime = new Date(values.startDate);
     startDateTime.setHours(values.startTime.hour, values.startTime.minute);
 
@@ -64,7 +62,7 @@ export function EditEventDialog({ children, event }: IProps) {
 
     updateEvent({
       ...event,
-      user,
+      ...(user ? { user } : {}),
       title: values.title,
       color: values.color,
       description: values.description,

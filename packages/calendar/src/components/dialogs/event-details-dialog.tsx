@@ -33,7 +33,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
               <User className="mt-1 size-4 shrink-0" />
               <div>
                 <p className="text-sm font-medium">Responsible</p>
-                <p className="text-sm text-m3-secondary">{event.user.name}</p>
+                <p className="text-sm text-m3-secondary">{event.user?.name ?? "No responsible person"}</p>
               </div>
             </div>
 

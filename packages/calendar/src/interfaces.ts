@@ -14,8 +14,9 @@ export interface IEvent {
   endDate: string;
   title: string;
   color: TEventColor;
-  description: string;
-  user: IUser;
+  description?: string;
+  user?: IUser;
+  metadata?: Record<string, unknown>;
 }
 
 export type TEventDraft = Omit<IEvent, "id"> & { id?: TEventId };

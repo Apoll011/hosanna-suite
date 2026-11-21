@@ -14,6 +14,7 @@ export interface CalendarProviderProps {
   onDateChange?: (date: Date) => void;
   onEventCreate?: (event: IEvent) => void;
   onEventUpdate?: (event: IEvent) => void;
+  onEventClick?: (event: IEvent) => void;
 }
 
 interface ICalendarContext {
@@ -32,6 +33,7 @@ interface ICalendarContext {
   setLocalEvents: Dispatch<SetStateAction<IEvent[]>>;
   createEvent: (event: IEvent) => void;
   updateEvent: (event: IEvent) => void;
+  clickEvent?: (event: IEvent) => void;
 }
 
 const CalendarContext = createContext({} as ICalendarContext);
@@ -48,7 +50,7 @@ const WORKING_HOURS = {
 
 const VISIBLE_HOURS = { from: 7, to: 18 };
 
-export function CalendarProvider({ children, users = [], events = [], initialDate, onDateChange, onEventCreate, onEventUpdate }: CalendarProviderProps) {
+export function CalendarProvider({ children, users = [], events = [], initialDate, onDateChange, onEventCreate, onEventUpdate, onEventClick }: CalendarProviderProps) {
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>("colored");
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS);
   const [workingHours, setWorkingHours] = useState<TWorkingHours>(WORKING_HOURS);
@@ -97,6 +99,7 @@ export function CalendarProvider({ children, users = [], events = [], initialDat
         setLocalEvents,
         createEvent,
         updateEvent,
+        clickEvent: onEventClick,
       }}
     >
       {children}

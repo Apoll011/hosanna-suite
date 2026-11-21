@@ -25,6 +25,7 @@ export interface CalendarProps {
   onDateChange?: (date: Date) => void;
   onEventCreate?: (event: IEvent) => void;
   onEventUpdate?: (event: IEvent) => void;
+  onEventClick?: (event: IEvent) => void;
   className?: string;
 }
 
@@ -38,6 +39,7 @@ export function Calendar({
   onDateChange,
   onEventCreate,
   onEventUpdate,
+  onEventClick,
   className,
 }: CalendarProps) {
   const [uncontrolledView, setUncontrolledView] = useState(defaultView);
@@ -48,7 +50,7 @@ export function Calendar({
   };
 
   return (
-    <CalendarProvider users={users} events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate}>
+    <CalendarProvider users={users} events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate} onEventClick={onEventClick}>
       <CalendarContent view={view} onViewChange={handleViewChange} className={className} />
     </CalendarProvider>
   );
@@ -60,7 +62,7 @@ function CalendarContent({ view, onViewChange, className }: { view: TCalendarVie
     return events.filter(event => {
       const start = parseISO(event.startDate);
       const end = parseISO(event.endDate);
-      const userMatch = selectedUserId === "all" || event.user.id === selectedUserId;
+      const userMatch = selectedUserId === "all" || event.user?.id === selectedUserId;
       if (!userMatch) return false;
       if (view === "year") return start <= new Date(selectedDate.getFullYear(), 11, 31, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), 0, 1);
       if (view === "month" || view === "agenda") return start <= new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
@@ -83,7 +85,7 @@ function CalendarContent({ view, onViewChange, className }: { view: TCalendarVie
   const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
 
   return (
-    <div className={className ?? "overflow-hidden rounded-xl border border-m3-border"}>
+    <div className={className ?? "overflow-hidden rounded-lg border border-m3-border"}>
       <CalendarHeader view={view} events={filteredEvents} onViewChange={onViewChange} />
       <DndProviderWrapper>
         {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
