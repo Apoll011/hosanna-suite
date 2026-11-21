@@ -1,87 +1,407 @@
-import { Calendar as CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { Calendar, type IEvent, type IUser } from "@hosanna/calendar";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
-const users: IUser[] = [
-  { id: "ana", name: "Ana Martins", picturePath: null },
-  { id: "joao", name: "Joao Silva", picturePath: null },
-  { id: "marina", name: "Marina Costa", picturePath: null },
-];
+import { Calendar, type IUser } from "@hosanna/calendar";
+import "@hosanna/calendar/styles.css";
+import { PageHeader, Spinner, useCan, Can, Button } from "@hosanna/ui";
+import { CalendarPlus, Printer, Trash2 } from "lucide-react";
+import React, { useCallback, useMemo, useState } from "react";
 
-function at(dayOffset: number, hour: number, minute = 0): string {
-  const date = new Date();
-  date.setDate(date.getDate() + dayOffset);
-  date.setHours(hour, minute, 0, 0);
-  return date.toISOString();
-}
+import { DeleteEventModal } from "@/src/components/agenda/DeleteEventModal";
+import {
+  AddResponsibilityModal,
+  EditAssigneesModal,
+  EventFormModal,
+  EventFormValue,
+} from "@/src/components/agenda/EventModals";
+import { RemoveAssignmentModal } from "@/src/components/agenda/RemoveAssignmentModal";
+import { useAuth } from "@/src/contexts/AuthContext";
+import { usePrint } from "@/src/contexts/PrintContext";
+import { useAgenda } from "@/src/hooks/useAgenda";
+import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
+import { useI18n } from "@/src/lib/i18n";
+import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
+import { formatLongDate } from "@/src/utils/agendaDate";
+import { assigneeKey, collectEventMembers, groupAssignees } from "@/src/utils/agendaNotify";
 
-const initialEvents: IEvent[] = [
-  {
-    id: "worship-rehearsal",
-    title: "Worship rehearsal",
-    description: "Run through the Sunday set and transitions.",
-    color: "blue",
-    startDate: at(1, 18),
-    endDate: at(1, 19, 30),
-    user: users[0],
-  },
-  {
-    id: "team-prayer",
-    title: "Team prayer",
-    description: "A quiet start to the week with the service team.",
-    color: "purple",
-    startDate: at(2, 8, 30),
-    endDate: at(2, 9, 15),
-    user: users[1],
-  },
-  {
-    id: "setlist-review",
-    title: "Setlist review",
-    description: "Review keys, arrangements, and song transitions.",
-    color: "green",
-    startDate: at(3, 14),
-    endDate: at(3, 15),
-    user: users[2],
-  },
-  {
-    id: "sunday-service",
-    title: "Sunday service",
-    description: "Main gathering, volunteers arrive 45 minutes early.",
-    color: "orange",
-    startDate: at(5, 9),
-    endDate: at(5, 12),
-    user: users[0],
-  },
-  {
-    id: "new-songs",
-    title: "New song workshop",
-    description: "Learn two new songs for the next month.",
-    color: "red",
-    startDate: at(7, 19),
-    endDate: at(7, 20, 30),
-    user: users[1],
-  },
-];
+type PendingRemoval =
+  | { kind: "responsibility"; eventId: string; respId: string }
+  | {
+      kind: "assignees";
+      eventId: string;
+      respId: string;
+      next: Assignee[];
+      removed: Assignee[];
+    };
 
 export function CalendarPage() {
-  const [events, setEvents] = useState(initialEvents);
-  const handleCreate = (event: IEvent) => setEvents(previous => [...previous, event]);
-  const handleUpdate = (event: IEvent) => setEvents(previous => previous.map(current => (current.id === event.id ? event : current)));
+  const { t } = useI18n();
+  const { organization } = useAuth();
+  const store = useAgenda();
+  const { printEvent, printEvents } = usePrint();
+  const { granted: canCreateAgenda } = useCan("agenda.create");
+  const { granted: canUpdateAgenda } = useCan("agenda.update");
+  const { granted: canDeleteAgenda } = useCan("agenda.delete");
+
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [isNewEventOpen, setIsNewEventOpen] = useState(false);
+  const [isEditEventOpen, setIsEditEventOpen] = useState(false);
+  const [isAddResponsibilityOpen, setIsAddResponsibilityOpen] = useState(false);
+  const [pendingRemoval, setPendingRemoval] = useState<PendingRemoval | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [editingAssigneesFor, setEditingAssigneesFor] = useState<string | null>(null);
+  const [pendingDeleteEvent, setPendingDeleteEvent] = useState<AgendaEvent | null>(null);
+
+  const selectedEvent = useMemo(
+    () => store.events.find((ev) => ev.id === selectedEventId) ?? null,
+    [store.events, selectedEventId]
+  );
+
+  const categoriesById = useMemo(() => {
+    const map: Record<string, ResponsibilityCategory> = {};
+    for (const c of store.categories) map[c.id] = c;
+    return map;
+  }, [store.categories]);
+
+  const reachableMemberIds = useMemo(() => {
+    const set = new Set<string>();
+    for (const member of organization?.members ?? []) {
+      if (member.userId) set.add(member.id);
+    }
+    return set;
+  }, [organization?.members]);
+
+  const isReachable = useCallback(
+    (memberId: string) => reachableMemberIds.has(memberId),
+    [reachableMemberIds]
+  );
+
+  const memberUsers: IUser[] = useMemo(() => {
+    return (organization?.members ?? []).map((m) => ({
+      id: m.id,
+      name: m.user?.name || m.id,
+      picturePath: m.user?.avatarUrl ?? null,
+      avatarUrl: m.user?.avatarUrl ?? null,
+    }));
+  }, [organization?.members]);
+
+  const notifications = useAgendaNotifications({
+    event: selectedEvent ?? undefined,
+    store,
+    categoriesById,
+  });
+
+  const deleteAffectedCount = useMemo(
+    () => (pendingDeleteEvent ? collectEventMembers(pendingDeleteEvent, isReachable).length : 0),
+    [pendingDeleteEvent, isReachable]
+  );
+
+  const removalInfo = useMemo(() => {
+    if (!pendingRemoval) return null;
+    const target = store.events.find((e) => e.id === pendingRemoval.eventId);
+    const responsibility = target?.responsibilities.find((r) => r.id === pendingRemoval.respId);
+    const label = responsibility
+      ? (categoriesById[responsibility.categoryId]?.label ?? t("agenda.responsibility"))
+      : t("agenda.responsibility");
+    return pendingRemoval.kind === "responsibility"
+      ? {
+          title: t("agenda.removeResponsibility"),
+          summary: label,
+          count: responsibility?.assignees.length ?? 0,
+        }
+      : {
+          title: t("agenda.notify.removeAssigneesTitle"),
+          summary: pendingRemoval.removed.map((a) => a.name).join(", "),
+          count: pendingRemoval.removed.length,
+        };
+  }, [pendingRemoval, store.events, categoriesById, t]);
+
+  const handleConfirmRemoval = async (notifyUser: boolean) => {
+    if (!pendingRemoval || !removalInfo) return;
+    const { eventId, respId } = pendingRemoval;
+    const target = store.events.find((e) => e.id === eventId);
+    const responsibility = target?.responsibilities.find((r) => r.id === respId);
+    const label = responsibility
+      ? (categoriesById[responsibility.categoryId]?.label ?? t("agenda.responsibility"))
+      : t("agenda.responsibility");
+
+    setIsRemoving(true);
+    try {
+      if (pendingRemoval.kind === "responsibility") {
+        const affected = responsibility
+          ? groupAssignees(responsibility.assignees, label, isReachable)
+          : [];
+        await store.removeResponsibility(eventId, respId);
+        if (notifyUser && affected.length > 0) {
+          await notifications.notifyRemoval(affected);
+        }
+      } else {
+        const affected = groupAssignees(pendingRemoval.removed, label, isReachable);
+        await store.updateResponsibilityAssignees(eventId, respId, pendingRemoval.next);
+        if (notifyUser && affected.length > 0) {
+          await notifications.notifyRemoval(affected);
+        }
+      }
+      setPendingRemoval(null);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
+
+  const handleConfirmDelete = async (notifyUsers: boolean) => {
+    if (!pendingDeleteEvent) return;
+    const snapshot = pendingDeleteEvent;
+    const members = collectEventMembers(snapshot, isReachable);
+    const groups = members.map((memberId) => ({
+      memberId,
+      labels: [] as string[],
+    }));
+
+    try {
+      await store.deleteEvent(snapshot.id);
+      if (notifyUsers && groups.length > 0) {
+        await notifications.notifyEventCancelled(snapshot, groups);
+      }
+      setSelectedEventId(null);
+      setPendingDeleteEvent(null);
+    } catch {}
+  };
+
+  const editingAssigneesResp = useMemo(() => {
+    if (!editingAssigneesFor) return null;
+    for (const ev of store.events) {
+      const r = ev.responsibilities.find((x) => x.id === editingAssigneesFor);
+      if (r) return { eventId: ev.id, responsibility: r };
+    }
+    return null;
+  }, [store.events, editingAssigneesFor]);
+
+  const handleCreateEvent = async (value: EventFormValue) => {
+    const id = await store.addEvent(value);
+    setSelectedEventId(id);
+    setIsNewEventOpen(false);
+  };
+
+  const handleUpdateEvent = async (event: AgendaEvent) => {
+    await store.updateEvent(event.id, event);
+  };
+
+  const handleDeleteEvent = (event: AgendaEvent) => {
+    setPendingDeleteEvent(event);
+  };
+
+  const responsibilitiesForSelectedEvent = useMemo(
+    () => (selectedEventId ? store.getResponsibilitiesForEvent(selectedEventId) : []),
+    [store, selectedEventId]
+  );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-auto bg-m3-bg px-4 py-5 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-5">
-        <header className="flex items-end justify-between">
-          <div>
-            <h1 className="text-display text-m3-text">Calendar</h1>
-            <p className="mt-1 text-sm text-m3-secondary">Rehearsals, services, and the people making each gathering happen.</p>
-          </div>
-        </header>
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
+        <PageHeader
+          title={t("common.calendar") || "Calendar"}
+          description={t("agenda.subtitle")}
+          actions={
+            <>
+              {selectedEvent && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  icon={<Printer className="w-4 h-4" />}
+                  onClick={() => printEvent(selectedEvent, store.categories)}
+                  title={t("print.buttons.printEventTitle")}
+                >
+                  <span className="hidden sm:inline">{t("print.buttons.printEvent")}</span>
+                </Button>
+              )}
 
-        <section className="min-h-[680px] overflow-hidden rounded-lg border border-m3-border bg-m3-card">
-          <Calendar events={events} users={users} defaultView="month" onEventCreate={handleCreate} onEventUpdate={handleUpdate} />
-        </section>
+              {selectedEvent && canDeleteAgenda && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  icon={<Trash2 className="w-4 h-4" />}
+                  onClick={() => setPendingDeleteEvent(selectedEvent)}
+                  className="text-m3-danger hover:text-m3-danger hover:bg-m3-danger/10"
+                >
+                  {t("agenda.deleteEvent")}
+                </Button>
+              )}
+
+              <Can permission="agenda.create">
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  icon={<CalendarPlus className="w-4 h-4" />}
+                  onClick={() => setIsNewEventOpen(true)}
+                >
+                  {t("agenda.newEvent")}
+                </Button>
+              </Can>
+            </>
+          }
+        />
+
+        {store.isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <Spinner label={t("common.loading")} />
+          </div>
+        ) : (
+          <section className="min-h-[720px] overflow-hidden rounded-lg border border-m3-border bg-m3-card shadow-sm">
+            <Calendar
+              events={store.events}
+              categories={store.categories}
+              users={memberUsers}
+              defaultView="month"
+              workingHours={null}
+              canCreate={canCreateAgenda}
+              canUpdate={canUpdateAgenda}
+              canDelete={canDeleteAgenda}
+              onEventCreate={(ev) => store.addEvent(ev as unknown as EventFormValue)}
+              onEventUpdate={handleUpdateEvent}
+              onEventDelete={handleDeleteEvent}
+              onEventSelect={(ev) => setSelectedEventId(ev?.id ?? null)}
+              onAddResponsibility={(eventId) => {
+                setSelectedEventId(eventId);
+                setIsAddResponsibilityOpen(true);
+              }}
+              onEditAssignees={(eventId, respId) => {
+                setSelectedEventId(eventId);
+                setEditingAssigneesFor(respId);
+              }}
+              onRemoveResponsibility={(eventId, respId) => {
+                setPendingRemoval({
+                  kind: "responsibility",
+                  eventId,
+                  respId,
+                });
+              }}
+              onPrintEvent={(ev) => printEvent(ev, store.categories)}
+            />
+          </section>
+        )}
       </div>
+
+      <EventFormModal
+        isOpen={isNewEventOpen}
+        onClose={() => setIsNewEventOpen(false)}
+        onSubmit={handleCreateEvent}
+        title={t("agenda.newEvent")}
+        submitLabel={t("agenda.createEvent")}
+      />
+
+      {selectedEvent && (
+        <EventFormModal
+          isOpen={isEditEventOpen}
+          onClose={() => setIsEditEventOpen(false)}
+          onSubmit={(value) => {
+            store.updateEvent(selectedEvent.id, value);
+            const changes: { date?: boolean; location?: boolean } = {};
+            if (value.date !== selectedEvent.date || value.time !== selectedEvent.time) {
+              changes.date = true;
+            }
+            if ((value.location ?? "").trim() !== (selectedEvent.location ?? "").trim()) {
+              changes.location = true;
+            }
+            if (changes.date || changes.location) {
+              notifications.markChanged(selectedEvent.id, changes);
+            }
+            setIsEditEventOpen(false);
+          }}
+          onDelete={
+            canDeleteAgenda
+              ? () => {
+                  setIsEditEventOpen(false);
+                  setPendingDeleteEvent(selectedEvent);
+                }
+              : undefined
+          }
+          title={t("agenda.editEvent")}
+          submitLabel={t("common.save")}
+          initial={selectedEvent as unknown as EventFormValue}
+        />
+      )}
+
+      {selectedEvent && (
+        <AddResponsibilityModal
+          isOpen={isAddResponsibilityOpen}
+          onClose={() => setIsAddResponsibilityOpen(false)}
+          categories={store.categories}
+          existingCategoryIds={responsibilitiesForSelectedEvent.map((r) => r.categoryId)}
+          manualSuggestions={store.manualAssignees}
+          onSubmit={async (categoryId, assignees) => {
+            try {
+              await store.addResponsibility(selectedEvent.id, categoryId, assignees);
+              setIsAddResponsibilityOpen(false);
+            } catch {}
+          }}
+        />
+      )}
+
+      {editingAssigneesResp && (
+        <EditAssigneesModal
+          isOpen={!!editingAssigneesFor}
+          onClose={() => setEditingAssigneesFor(null)}
+          categoryLabel={
+            categoriesById[editingAssigneesResp.responsibility.categoryId]?.label ?? ""
+          }
+          assignees={editingAssigneesResp.responsibility.assignees}
+          manualSuggestions={store.manualAssignees}
+          onSubmit={async (assignees) => {
+            const previous = editingAssigneesResp.responsibility.assignees;
+            const removed = previous.filter(
+              (p) => !assignees.some((a) => assigneeKey(a) === assigneeKey(p))
+            );
+            if (removed.length > 0) {
+              setPendingRemoval({
+                kind: "assignees",
+                eventId: editingAssigneesResp.eventId,
+                respId: editingAssigneesResp.responsibility.id,
+                next: assignees,
+                removed,
+              });
+              setEditingAssigneesFor(null);
+              return;
+            }
+            try {
+              await store.updateResponsibilityAssignees(
+                editingAssigneesResp.eventId,
+                editingAssigneesResp.responsibility.id,
+                assignees
+              );
+              setEditingAssigneesFor(null);
+            } catch {}
+          }}
+        />
+      )}
+
+      {pendingRemoval && removalInfo && (
+        <RemoveAssignmentModal
+          isOpen={!!pendingRemoval}
+          onClose={() => setPendingRemoval(null)}
+          onConfirm={() => void handleConfirmRemoval(true)}
+          onConfirmSilent={() => void handleConfirmRemoval(false)}
+          title={removalInfo.title}
+          summary={removalInfo.summary}
+          affectedCount={removalInfo.count}
+          isRemoving={isRemoving}
+        />
+      )}
+
+      {pendingDeleteEvent && (
+        <DeleteEventModal
+          isOpen={!!pendingDeleteEvent}
+          onClose={() => setPendingDeleteEvent(null)}
+          onConfirm={handleConfirmDelete}
+          eventTitle={pendingDeleteEvent.title}
+          eventDate={formatLongDate(pendingDeleteEvent.date, t)}
+          affectedCount={deleteAffectedCount}
+        />
+      )}
     </div>
   );
 }
