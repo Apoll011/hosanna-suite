@@ -9,12 +9,12 @@ import { Button } from "../../ui/button";
 
 import { getEventsCount, navigateDate, rangeText } from "../../helpers";
 
-import type { IAgendaEvent } from "../../interfaces";
+import type { IEvent } from "../../interfaces";
 import type { TCalendarView } from "../../types";
 
 interface IProps {
   view: TCalendarView;
-  events: IAgendaEvent[];
+  events: IEvent[];
 }
 
 export function DateNavigator({ view, events }: IProps) {

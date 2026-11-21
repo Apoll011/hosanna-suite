@@ -6,6 +6,7 @@ import { Clock, Text, User } from "lucide-react";
 
 import { useCalendar } from "../../contexts/calendar-context";
 
+import { EventDetailsDialog } from "../dialogs/event-details-dialog";
 
 import type { IEvent } from "../../interfaces";
 import type { VariantProps } from "class-variance-authority";
@@ -47,7 +48,7 @@ interface IProps {
 }
 
 export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IProps) {
-  const { badgeVariant, clickEvent } = useCalendar();
+  const { badgeVariant } = useCalendar();
 
   const startDate = parseISO(event.startDate);
   const endDate = parseISO(event.endDate);
@@ -64,13 +65,8 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
   };
 
   return (
-      <div
-        role="button"
-        tabIndex={0}
-        className={agendaEventCardClasses}
-        onClick={() => clickEvent?.(event)}
-        onKeyDown={handleKeyDown}
-      >
+    <EventDetailsDialog event={event}>
+      <div role="button" tabIndex={0} className={agendaEventCardClasses} onKeyDown={handleKeyDown}>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-1.5">
             {["mixed", "dot"].includes(badgeVariant) && (
@@ -89,12 +85,10 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
             </p>
           </div>
 
-          {event.user && (
-            <div className="mt-1 flex items-center gap-1">
-              <User className="size-3 shrink-0" />
-              <p className="text-xs text-m3-text">{event.user.name}</p>
-            </div>
-          )}
+          <div className="mt-1 flex items-center gap-1">
+            <User className="size-3 shrink-0" />
+            <p className="text-xs text-m3-text">{event.user.name}</p>
+          </div>
 
           <div className="flex items-center gap-1">
             <Clock className="size-3 shrink-0" />
@@ -103,13 +97,12 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
             </p>
           </div>
 
-          {event.description && (
-            <div className="flex items-center gap-1">
-              <Text className="size-3 shrink-0" />
-              <p className="text-xs text-m3-text">{event.description}</p>
-            </div>
-          )}
+          <div className="flex items-center gap-1">
+            <Text className="size-3 shrink-0" />
+            <p className="text-xs text-m3-text">{event.description}</p>
+          </div>
         </div>
       </div>
+    </EventDetailsDialog>
   );
 }

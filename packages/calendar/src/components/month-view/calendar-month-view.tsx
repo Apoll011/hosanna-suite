@@ -6,11 +6,11 @@ import { DayCell } from "./day-cell";
 
 import { getCalendarCells, calculateMonthEventPositions } from "../../helpers";
 
-import type { IAgendaEvent } from "../../interfaces";
+import type { IEvent } from "../../interfaces";
 
 interface IProps {
-  singleDayEvents: IAgendaEvent[];
-  multiDayEvents: IAgendaEvent[];
+  singleDayEvents: IEvent[];
+  multiDayEvents: IEvent[];
   onDateClick?: (date: Date) => void;
 }
 
@@ -30,7 +30,7 @@ export function CalendarMonthView({ singleDayEvents, multiDayEvents, onDateClick
 
   return (
     <div>
-      <div className="grid grid-cols-7 divide-x divide-m3-border">
+      <div className="grid grid-cols-7 divide-x">
         {WEEK_DAYS.map(day => (
           <div key={day} className="flex items-center justify-center py-2">
             <span className="text-xs font-medium text-m3-secondary">{day}</span>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { isSameDay, parseISO } from "date-fns";
 
 import { CalendarProvider, useCalendar } from "../contexts/calendar-context";
 import { DndProviderWrapper } from "./dnd/dnd-provider";
@@ -11,24 +12,25 @@ import { CalendarAgendaView } from "./agenda-view/calendar-agenda-view";
 import { CalendarDayView } from "./week-and-day-view/calendar-day-view";
 import { CalendarWeekView } from "./week-and-day-view/calendar-week-view";
 
-import type { IAgendaEvent } from "../interfaces";
+import type { IEvent, IUser } from "../interfaces";
 import type { TCalendarView } from "../types";
 
 export interface CalendarProps {
-  events?: IAgendaEvent[];
+  events?: IEvent[];
+  users?: IUser[];
   view?: TCalendarView;
   defaultView?: TCalendarView;
   initialDate?: Date;
   onViewChange?: (view: TCalendarView) => void;
   onDateChange?: (date: Date) => void;
-  onEventCreate?: (event: IAgendaEvent) => void;
-  onEventUpdate?: (event: IAgendaEvent, patch: Partial<IAgendaEvent>) => void;
-  onEventClick?: (event: IAgendaEvent) => void;
+  onEventCreate?: (event: IEvent) => void;
+  onEventUpdate?: (event: IEvent) => void;
   className?: string;
 }
 
 export function Calendar({
   events = [],
+  users = [],
   view: controlledView,
   defaultView = "month",
   initialDate,
@@ -36,7 +38,6 @@ export function Calendar({
   onDateChange,
   onEventCreate,
   onEventUpdate,
-  onEventClick,
   className,
 }: CalendarProps) {
   const [uncontrolledView, setUncontrolledView] = useState(defaultView);
@@ -47,19 +48,20 @@ export function Calendar({
   };
 
   return (
-    <CalendarProvider events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate} onEventClick={onEventClick}>
+    <CalendarProvider users={users} events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate}>
       <CalendarContent view={view} onViewChange={handleViewChange} className={className} />
     </CalendarProvider>
   );
 }
 
 function CalendarContent({ view, onViewChange, className }: { view: TCalendarView; onViewChange: (view: TCalendarView) => void; className?: string }) {
-  const { selectedDate, events, setSelectedDate } = useCalendar();
+  const { selectedDate, selectedUserId, events, setSelectedDate } = useCalendar();
   const filteredEvents = useMemo(() => {
     return events.filter(event => {
-      const [hour = 0, minute = 0] = event.time.split(":").map(Number);
-      const start = new Date(`${event.date}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00`);
-      const end = new Date(start.getTime() + event.durationMinutes * 60_000);
+      const start = parseISO(event.startDate);
+      const end = parseISO(event.endDate);
+      const userMatch = selectedUserId === "all" || event.user.id === selectedUserId;
+      if (!userMatch) return false;
       if (view === "year") return start <= new Date(selectedDate.getFullYear(), 11, 31, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), 0, 1);
       if (view === "month" || view === "agenda") return start <= new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
       if (view === "week") {
@@ -75,13 +77,13 @@ function CalendarContent({ view, onViewChange, className }: { view: TCalendarVie
       const dayEnd = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59);
       return start <= dayEnd && end >= dayStart;
     });
-  }, [events, selectedDate, view]);
-  const singleDayEvents = filteredEvents;
-  const multiDayEvents: typeof filteredEvents = [];
-  const eventStartDates = filteredEvents;
+  }, [events, selectedDate, selectedUserId, view]);
+  const singleDayEvents = filteredEvents.filter(event => isSameDay(parseISO(event.startDate), parseISO(event.endDate)));
+  const multiDayEvents = filteredEvents.filter(event => !isSameDay(parseISO(event.startDate), parseISO(event.endDate)));
+  const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
 
   return (
-    <div className={className ?? "overflow-hidden rounded-lg border border-m3-border"}>
+    <div className={className ?? "overflow-hidden rounded-xl border border-m3-border"}>
       <CalendarHeader view={view} events={filteredEvents} onViewChange={onViewChange} />
       <DndProviderWrapper>
         {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}

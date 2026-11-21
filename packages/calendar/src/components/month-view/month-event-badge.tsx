@@ -1,22 +1,23 @@
 import { cva } from "class-variance-authority";
-import { parseISO } from "date-fns";
+import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
 
 import { useCalendar } from "../../contexts/calendar-context";
 
 import { DraggableEvent } from "../dnd/draggable-event";
+import { EventDetailsDialog } from "../dialogs/event-details-dialog";
 
 import { cn } from "../../lib/cn";
 
-import type { IAgendaEvent } from "../../interfaces";
+import type { IEvent } from "../../interfaces";
 import type { VariantProps } from "class-variance-authority";
 
 const eventBadgeVariants = cva(
-  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-m3-primary",
+  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-m3-primary",
   {
     variants: {
       color: {
         // Colored and mixed variants
-        blue: "bg-m3-primary/10 text-m3-primary dark:bg-m3-primary/15 [&_.event-dot]:fill-m3-primary",
+        blue: "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300 [&_.event-dot]:fill-blue-600",
         green: "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300 [&_.event-dot]:fill-green-600",
         red: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300 [&_.event-dot]:fill-red-600",
         yellow: "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 [&_.event-dot]:fill-yellow-600",
@@ -25,7 +26,7 @@ const eventBadgeVariants = cva(
         gray: "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 [&_.event-dot]:fill-neutral-600",
 
         // Dot variants
-        "blue-dot": "bg-m3-hover text-m3-text [&_.event-dot]:fill-m3-primary",
+        "blue-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-blue-600",
         "green-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-green-600",
         "red-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-red-600",
         "yellow-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-yellow-600",
@@ -47,7 +48,7 @@ const eventBadgeVariants = cva(
 );
 
 interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" | "multiDayPosition"> {
-  event: IAgendaEvent;
+  event: IEvent;
   cellDate: Date;
   eventCurrentDay?: number;
   eventTotalDays?: number;
@@ -56,18 +57,32 @@ interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" |
 }
 
 export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
-  const { badgeVariant, clickEvent } = useCalendar();
+  const { badgeVariant } = useCalendar();
 
-  const eventDate = parseISO(`${event.date}T${event.time}:00`);
-  const cellKey = `${cellDate.getFullYear()}-${String(cellDate.getMonth() + 1).padStart(2, "0")}-${String(cellDate.getDate()).padStart(2, "0")}`;
+  const itemStart = startOfDay(parseISO(event.startDate));
+  const itemEnd = endOfDay(parseISO(event.endDate));
 
-  if (cellKey !== event.date) return null;
+  if (cellDate < itemStart || cellDate > itemEnd) return null;
 
-  const position: "none" = "none";
+  let position: "first" | "middle" | "last" | "none" | undefined;
+
+  if (propPosition) {
+    position = propPosition;
+  } else if (eventCurrentDay && eventTotalDays) {
+    position = "none";
+  } else if (isSameDay(itemStart, itemEnd)) {
+    position = "none";
+  } else if (isSameDay(cellDate, itemStart)) {
+    position = "first";
+  } else if (isSameDay(cellDate, itemEnd)) {
+    position = "last";
+  } else {
+    position = "middle";
+  }
 
   const renderBadgeText = ["first", "none"].includes(position);
 
-  const color = (badgeVariant === "dot" ? "blue-dot" : "blue") as VariantProps<typeof eventBadgeVariants>["color"];
+  const color = (badgeVariant === "dot" ? `${event.color}-dot` : event.color) as VariantProps<typeof eventBadgeVariants>["color"];
 
   const eventBadgeClasses = cn(eventBadgeVariants({ color, multiDayPosition: position, className }));
 
@@ -80,34 +95,30 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
 
   return (
     <DraggableEvent event={event}>
-      <div
-        role="button"
-        tabIndex={0}
-        className={eventBadgeClasses}
-        onClick={() => clickEvent?.(event)}
-        onKeyDown={handleKeyDown}
-      >
-        <div className="flex items-center gap-1.5 truncate">
-          {!["middle", "last"].includes(position) && ["mixed", "dot"].includes(badgeVariant) && (
-            <svg width="8" height="8" viewBox="0 0 8 8" className="event-dot shrink-0">
-              <circle cx="4" cy="4" r="4" />
-            </svg>
-          )}
+      <EventDetailsDialog event={event}>
+        <div role="button" tabIndex={0} className={eventBadgeClasses} onKeyDown={handleKeyDown}>
+          <div className="flex items-center gap-1.5 truncate">
+            {!["middle", "last"].includes(position) && ["mixed", "dot"].includes(badgeVariant) && (
+              <svg width="8" height="8" viewBox="0 0 8 8" className="event-dot shrink-0">
+                <circle cx="4" cy="4" r="4" />
+              </svg>
+            )}
 
-          {renderBadgeText && (
-            <p className="flex-1 truncate font-semibold">
-              {eventCurrentDay && (
-                <span className="text-xs">
-                  Day {eventCurrentDay} of {eventTotalDays}
-                </span>
-              )}
-              {event.title}
-            </p>
-          )}
+            {renderBadgeText && (
+              <p className="flex-1 truncate font-semibold">
+                {eventCurrentDay && (
+                  <span className="text-xs">
+                    Day {eventCurrentDay} of {eventTotalDays} •{" "}
+                  </span>
+                )}
+                {event.title}
+              </p>
+            )}
+          </div>
+
+          {renderBadgeText && <span>{format(new Date(event.startDate), "h:mm a")}</span>}
         </div>
-
-        {renderBadgeText && <span>{event.time}</span>}
-      </div>
+      </EventDetailsDialog>
     </DraggableEvent>
   );
 }
