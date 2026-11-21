@@ -5,15 +5,11 @@
 
 import { Calendar, EventFormModal, type EventFormValue, type IUser } from "@hosanna/calendar";
 import "@hosanna/calendar/styles.css";
-import { PageHeader, Spinner, useCan, Can, Button } from "@hosanna/ui";
-import { CalendarPlus, Printer, Trash2 } from "lucide-react";
-import React, { useCallback, useMemo, useState } from "react";
+import { Spinner, useCan } from "@hosanna/ui";
+import { useCallback, useMemo, useState } from "react";
 
 import { DeleteEventModal } from "@/src/components/agenda/DeleteEventModal";
-import {
-  AddResponsibilityModal,
-  EditAssigneesModal,
-} from "@/src/components/agenda/EventModals";
+import { AddResponsibilityModal, EditAssigneesModal } from "@/src/components/agenda/EventModals";
 import { RemoveAssignmentModal } from "@/src/components/agenda/RemoveAssignmentModal";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { usePrint } from "@/src/contexts/PrintContext";
@@ -23,7 +19,6 @@ import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useServices } from "@/src/hooks/useServices";
 import { useI18n } from "@/src/lib/i18n";
 import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
-import { formatLongDate } from "@/src/utils/agendaDate";
 import { assigneeKey, collectEventMembers, groupAssignees } from "@/src/utils/agendaNotify";
 
 type PendingRemoval =
@@ -60,7 +55,7 @@ export function CalendarPage() {
 
   const selectedEvent = useMemo(
     () => store.events.find((ev) => ev.id === selectedEventId) ?? null,
-    [store.events, selectedEventId]
+    [store.events, selectedEventId],
   );
 
   const categoriesById = useMemo(() => {
@@ -79,7 +74,7 @@ export function CalendarPage() {
 
   const isReachable = useCallback(
     (memberId: string) => reachableMemberIds.has(memberId),
-    [reachableMemberIds]
+    [reachableMemberIds],
   );
 
   const memberUsers: IUser[] = useMemo(() => {
@@ -99,7 +94,7 @@ export function CalendarPage() {
 
   const deleteAffectedCount = useMemo(
     () => (pendingDeleteEvent ? collectEventMembers(pendingDeleteEvent, isReachable).length : 0),
-    [pendingDeleteEvent, isReachable]
+    [pendingDeleteEvent, isReachable],
   );
 
   const removalInfo = useMemo(() => {
@@ -198,61 +193,12 @@ export function CalendarPage() {
 
   const responsibilitiesForSelectedEvent = useMemo(
     () => (selectedEventId ? store.getResponsibilitiesForEvent(selectedEventId) : []),
-    [store, selectedEventId]
+    [store, selectedEventId],
   );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-auto bg-m3-bg px-4 py-5 sm:px-6 lg:px-8">
       <div className="flex w-full flex-col gap-5">
-        <PageHeader
-          title="Calendar"
-          description={t("agenda.subtitle")}
-          actions={
-            <>
-              {selectedEvent && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  icon={<Printer className="w-4 h-4" />}
-                  onClick={() => printEvent(selectedEvent, store.categories)}
-                  title={t("print.buttons.printEventTitle")}
-                >
-                  <span className="hidden sm:inline">{t("print.buttons.printEvent")}</span>
-                </Button>
-              )}
-
-              {selectedEvent && canDeleteAgenda && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  icon={<Trash2 className="w-4 h-4" />}
-                  onClick={() => setPendingDeleteEvent(selectedEvent)}
-                  className="text-m3-danger hover:text-m3-danger hover:bg-m3-danger/10"
-                >
-                  {t("agenda.deleteEvent")}
-                </Button>
-              )}
-
-              <Can permission="agenda.create">
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  icon={<CalendarPlus className="w-4 h-4" />}
-                  onClick={() => {
-                    setEventFormInitial({});
-                    setIsNewEventOpen(true);
-                  }}
-                >
-                  {t("agenda.newEvent")}
-                </Button>
-              </Can>
-            </>
-          }
-        />
-
         {store.isLoading ? (
           <div className="flex items-center justify-center py-24">
             <Spinner label={t("common.loading")} />
@@ -376,7 +322,7 @@ export function CalendarPage() {
           onSubmit={async (assignees) => {
             const previous = editingAssigneesResp.responsibility.assignees;
             const removed = previous.filter(
-              (p) => !assignees.some((a) => assigneeKey(a) === assigneeKey(p))
+              (p) => !assignees.some((a) => assigneeKey(a) === assigneeKey(p)),
             );
             if (removed.length > 0) {
               setPendingRemoval({
@@ -393,7 +339,7 @@ export function CalendarPage() {
               await store.updateResponsibilityAssignees(
                 editingAssigneesResp.eventId,
                 editingAssigneesResp.responsibility.id,
-                assignees
+                assignees,
               );
               setEditingAssigneesFor(null);
             } catch {}
