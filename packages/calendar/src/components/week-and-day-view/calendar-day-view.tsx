@@ -1,53 +1,57 @@
-import { useEffect, useState } from "react";
+import { areIntervalsOverlapping, format, isSameDay } from "date-fns";
 import {
+  Calendar as CalendarIcon,
   Clock,
-  MapPin,
-  Tag,
-  FileText,
-  Users,
-  Plus,
-  Pencil,
-  Trash2,
-  Printer,
-  X,
-  Link2,
   ExternalLink,
+  FileText,
+  Link2,
+  MapPin,
   MoreVertical,
-  UserPlus,
   PanelLeftClose,
   PanelLeftOpen,
   PanelRightClose,
-  Calendar as CalendarIcon,
+  Pencil,
+  Plus,
+  Printer,
+  Tag,
+  Trash2,
+  UserPlus,
+  Users,
 } from "lucide-react";
-import { format, isSameDay, areIntervalsOverlapping } from "date-fns";
+import { useEffect, useState } from "react";
 
 import { useCalendar } from "../../contexts/calendar-context";
 
-import { SideMonthCalendar } from "./side-month-calendar";
-import { ScrollArea } from "../../ui/scroll-area";
 import { Button } from "../../ui/button";
+import { ScrollArea } from "../../ui/scroll-area";
+import { SideMonthCalendar } from "./side-month-calendar";
 
+import { COLOR_MAP, ICON_MAP } from "../../utils/icon-map";
+import { AvatarStack } from "../common/avatar-stack";
 import { EventFormModal } from "../dialogs/event-form-modal";
-import { EventBlock } from "./event-block";
+import { serviceTotalMinutes } from "../dialogs/service-link-field";
 import { DroppableTimeBlock } from "../dnd/droppable-time-block";
 import { CalendarTimeline } from "./calendar-time-line";
 import { DayViewMultiDayEventsRow } from "./day-view-multi-day-events-row";
-import { AvatarStack } from "../common/avatar-stack";
-import { COLOR_MAP, ICON_MAP } from "../../utils/icon-map";
-import { serviceTotalMinutes } from "../dialogs/service-link-field";
+import { EventBlock } from "./event-block";
 
-import { cn } from "../../lib/cn";
 import {
-  groupEvents,
   getEventBlockStyle,
-  isWorkingHour,
-  getVisibleHours,
-  getEventStart,
-  getEventEnd,
   getEventColor,
+  getEventEnd,
+  getEventStart,
+  getVisibleHours,
+  groupEvents,
+  isWorkingHour,
 } from "../../helpers";
+import { cn } from "../../lib/cn";
 
-import type { AgendaEvent, EventFormValue, ResponsibilityColor, ResponsibilityIconKey } from "../../interfaces";
+import type {
+  AgendaEvent,
+  EventFormValue,
+  ResponsibilityColor,
+  ResponsibilityIconKey,
+} from "../../interfaces";
 
 interface IProps {
   singleDayEvents: AgendaEvent[];
@@ -102,19 +106,24 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
     return () => clearInterval(timer);
   }, []);
 
-  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);
+  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(
+    visibleHours,
+    singleDayEvents,
+  );
 
-  const dayEvents = singleDayEvents.filter(event => isSameDay(getEventStart(event), selectedDate));
+  const dayEvents = singleDayEvents.filter((event) =>
+    isSameDay(getEventStart(event), selectedDate),
+  );
   const groupedEvents = groupEvents(dayEvents);
 
-  const categoriesById = new Map(categories.map(c => [c.id, c]));
+  const categoriesById = new Map(categories.map((c) => [c.id, c]));
 
   const currentSelectedEvent =
     selectedEvent && isSameDay(getEventStart(selectedEvent), selectedDate) ? selectedEvent : null;
 
   const linkedService =
     currentSelectedEvent?.linkedServiceId && services
-      ? services.find(s => s.id === currentSelectedEvent.linkedServiceId) ?? null
+      ? (services.find((s) => s.id === currentSelectedEvent.linkedServiceId) ?? null)
       : null;
 
   const handleOpenCreateModal = (time?: string) => {
@@ -186,17 +195,6 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
               {dayEvents.length}
             </div>
           )}
-
-          {canCreate && (
-            <button
-              type="button"
-              onClick={() => handleOpenCreateModal()}
-              className="mt-auto p-2 rounded-lg text-m3-primary hover:bg-m3-primary/10 cursor-pointer transition-colors"
-              title="Add Event"
-            >
-              <Plus className="size-4" />
-            </button>
-          )}
         </div>
       ) : (
         /* Expanded Left Panel (~280px width: 75% of previous 384px) */
@@ -256,7 +254,7 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
               </div>
             ) : (
               <div className="space-y-1.5">
-                {dayEvents.map(event => {
+                {dayEvents.map((event) => {
                   const isSelected = currentSelectedEvent?.id === event.id;
                   const respCount = event.responsibilities?.length ?? 0;
                   return (
@@ -311,24 +309,13 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
           <div className="flex items-center justify-between px-4 py-2.5">
             <div className="flex items-center flex-1 min-w-0">
               <div className="w-18 shrink-0"></div>
-              <span className="flex-1 border-l pl-4 text-left text-sm font-semibold text-m3-text">
+              <span className="flex-1 pl-4 text-left text-sm font-semibold text-m3-text">
                 {format(selectedDate, "EEEE")},{" "}
-                <span className="text-m3-secondary font-normal">{format(selectedDate, "d MMMM yyyy")}</span>
+                <span className="text-m3-secondary font-normal">
+                  {format(selectedDate, "d MMMM yyyy")}
+                </span>
               </span>
             </div>
-
-            {canCreate && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-8 gap-1.5 text-xs font-semibold shrink-0 cursor-pointer"
-                onClick={() => handleOpenCreateModal()}
-              >
-                <Plus className="size-3.5" />
-                Add Event
-              </Button>
-            )}
           </div>
         </div>
 
@@ -362,22 +349,28 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                       className={cn(
                         "relative w-full",
                         isDisabled &&
-                          "bg-[repeating-linear-gradient(-60deg,var(--m3-border)_0_0.5px,transparent_0.5px_8px)]"
+                          "bg-[repeating-linear-gradient(-60deg,var(--m3-border)_0_0.5px,transparent_0.5px_8px)]",
                       )}
                       style={{ height: "96px" }}
                     >
-                      {index !== 0 && <div className="pointer-events-none absolute inset-x-0 top-0 border-b border-m3-border/40"></div>}
+                      {index !== 0 && (
+                        <div className="pointer-events-none absolute inset-x-0 top-0 border-b border-m3-border/40"></div>
+                      )}
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={0}>
                         <div
-                          onClick={() => handleOpenCreateModal(`${String(hour).padStart(2, "0")}:00`)}
+                          onClick={() =>
+                            handleOpenCreateModal(`${String(hour).padStart(2, "0")}:00`)
+                          }
                           className="absolute inset-x-0 top-0 h-[24px] cursor-pointer transition-colors hover:bg-m3-hover"
                         />
                       </DroppableTimeBlock>
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={15}>
                         <div
-                          onClick={() => handleOpenCreateModal(`${String(hour).padStart(2, "0")}:15`)}
+                          onClick={() =>
+                            handleOpenCreateModal(`${String(hour).padStart(2, "0")}:15`)
+                          }
                           className="absolute inset-x-0 top-[24px] h-[24px] cursor-pointer transition-colors hover:bg-m3-hover"
                         />
                       </DroppableTimeBlock>
@@ -386,14 +379,18 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={30}>
                         <div
-                          onClick={() => handleOpenCreateModal(`${String(hour).padStart(2, "0")}:30`)}
+                          onClick={() =>
+                            handleOpenCreateModal(`${String(hour).padStart(2, "0")}:30`)
+                          }
                           className="absolute inset-x-0 top-[48px] h-[24px] cursor-pointer transition-colors hover:bg-m3-hover"
                         />
                       </DroppableTimeBlock>
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={45}>
                         <div
-                          onClick={() => handleOpenCreateModal(`${String(hour).padStart(2, "0")}:45`)}
+                          onClick={() =>
+                            handleOpenCreateModal(`${String(hour).padStart(2, "0")}:45`)
+                          }
                           className="absolute inset-x-0 top-[72px] h-[24px] cursor-pointer transition-colors hover:bg-m3-hover"
                         />
                       </DroppableTimeBlock>
@@ -402,20 +399,26 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                 })}
 
                 {groupedEvents.map((group, groupIndex) =>
-                  group.map(event => {
-                    let style = getEventBlockStyle(event, selectedDate, groupIndex, groupedEvents.length, {
-                      from: earliestEventHour,
-                      to: latestEventHour,
-                    });
+                  group.map((event) => {
+                    let style = getEventBlockStyle(
+                      event,
+                      selectedDate,
+                      groupIndex,
+                      groupedEvents.length,
+                      {
+                        from: earliestEventHour,
+                        to: latestEventHour,
+                      },
+                    );
                     const hasOverlap = groupedEvents.some(
                       (otherGroup, otherIndex) =>
                         otherIndex !== groupIndex &&
-                        otherGroup.some(otherEvent =>
+                        otherGroup.some((otherEvent) =>
                           areIntervalsOverlapping(
                             { start: getEventStart(event), end: getEventEnd(event) },
-                            { start: getEventStart(otherEvent), end: getEventEnd(otherEvent) }
-                          )
-                        )
+                            { start: getEventStart(otherEvent), end: getEventEnd(otherEvent) },
+                          ),
+                        ),
                     );
 
                     if (!hasOverlap) style = { ...style, width: "100%", left: "0%" };
@@ -425,11 +428,14 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                         <EventBlock event={event} />
                       </div>
                     );
-                  })
+                  }),
                 )}
               </div>
 
-              <CalendarTimeline firstVisibleHour={earliestEventHour} lastVisibleHour={latestEventHour} />
+              <CalendarTimeline
+                firstVisibleHour={earliestEventHour}
+                lastVisibleHour={latestEventHour}
+              />
             </div>
           </div>
         </ScrollArea>
@@ -512,7 +518,9 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
               <Clock className="size-4 shrink-0 text-m3-primary" />
               <span>
                 {currentSelectedEvent.time || format(getEventStart(currentSelectedEvent), "HH:mm")}
-                {currentSelectedEvent.durationMinutes ? ` (${currentSelectedEvent.durationMinutes} min)` : ""}
+                {currentSelectedEvent.durationMinutes
+                  ? ` (${currentSelectedEvent.durationMinutes} min)`
+                  : ""}
               </span>
             </div>
 
@@ -550,7 +558,9 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                   </div>
                   <p className="text-[11px] text-m3-secondary mt-1">
                     {linkedService.date}
-                    {linkedService.elements?.length ? ` · ${serviceTotalMinutes(linkedService)} min` : ""}
+                    {linkedService.elements?.length
+                      ? ` · ${serviceTotalMinutes(linkedService)} min`
+                      : ""}
                   </p>
                 </div>
               </div>
@@ -591,13 +601,14 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                 )}
               </div>
 
-              {(!currentSelectedEvent.responsibilities || currentSelectedEvent.responsibilities.length === 0) ? (
+              {!currentSelectedEvent.responsibilities ||
+              currentSelectedEvent.responsibilities.length === 0 ? (
                 <p className="text-xs text-m3-secondary italic py-3 text-center">
                   No responsibilities assigned.
                 </p>
               ) : (
                 <div className="space-y-2">
-                  {currentSelectedEvent.responsibilities.map(r => {
+                  {currentSelectedEvent.responsibilities.map((r) => {
                     const cat = categoriesById.get(r.categoryId);
                     const iconKey = (cat?.icon ?? "custom") as ResponsibilityIconKey;
                     const IconComponent = ICON_MAP[iconKey] ?? ICON_MAP.custom;
