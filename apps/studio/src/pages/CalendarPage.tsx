@@ -2,11 +2,11 @@ import { EventFormModal, type EventFormValue } from "@/src/components/agenda/Eve
 import { useAgenda } from "@/src/hooks/useAgenda";
 import { useI18n } from "@/src/lib/i18n";
 import type { AgendaEvent } from "@/src/types";
-import { Calendar, type IEvent } from "@hosanna/calendar";
+import { Calendar } from "@hosanna/calendar";
 import { Button, PageHeader, Spinner } from "@hosanna/ui";
 import { Can } from "@hosanna/ui/permissions";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export function CalendarPage() {
   const { t } = useI18n();
@@ -16,40 +16,14 @@ export function CalendarPage() {
   const [isEditEventOpen, setIsEditEventOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().slice(0, 10));
 
-  const events = useMemo<IEvent[]>(
-    () =>
-      store.events.map((event: AgendaEvent) => {
-        const start = new Date(`${event.date}T${event.time}:00`);
-        const end = new Date(start.getTime() + event.durationMinutes * 60_000);
-        return {
-          id: event.id,
-          title: event.title,
-          description: event.notes ?? event.location ?? "",
-          color: "blue",
-          startDate: start.toISOString(),
-          endDate: end.toISOString(),
-          metadata: { agendaEvent: event },
-        };
-      }),
-    [store.events],
-  );
-
   const handleCreate = async (value: EventFormValue) => {
     await store.addEvent(value);
     setSelectedDate(value.date);
     setIsNewEventOpen(false);
   };
 
-  const handleUpdate = (event: IEvent) => {
-    const agendaEvent = event.metadata?.agendaEvent as AgendaEvent | undefined;
-    if (!agendaEvent) return;
-    const start = new Date(event.startDate);
-    const end = new Date(event.endDate);
-    void store.updateEvent(agendaEvent.id, {
-      date: start.toISOString().slice(0, 10),
-      time: `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")}`,
-      durationMinutes: Math.max(1, Math.round((end.getTime() - start.getTime()) / 60_000)),
-    });
+  const handleUpdate = (event: AgendaEvent, patch: Partial<AgendaEvent>) => {
+    void store.updateEvent(event.id, patch);
   };
 
   return (
@@ -79,16 +53,13 @@ export function CalendarPage() {
             </div>
           ) : (
             <Calendar
-              events={events}
-              users={[]}
+              events={store.events}
               defaultView="month"
               onEventCreate={() => setIsNewEventOpen(true)}
               onEventUpdate={handleUpdate}
               onEventClick={(event) => {
-                const agendaEvent = event.metadata?.agendaEvent as AgendaEvent | undefined;
-                if (!agendaEvent) return;
-                setSelectedEvent(agendaEvent);
-                setSelectedDate(agendaEvent.date);
+                setSelectedEvent(event);
+                setSelectedDate(event.date);
                 setIsEditEventOpen(true);
               }}
               className="overflow-hidden bg-m3-card"

@@ -3,37 +3,33 @@
 import { createContext, useContext, useState } from "react";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { IEvent, IUser } from "../interfaces";
+import type { IAgendaEvent } from "../interfaces";
 import type { TBadgeVariant, TVisibleHours, TWorkingHours } from "../types";
 
 export interface CalendarProviderProps {
   children: React.ReactNode;
-  users?: IUser[];
-  events?: IEvent[];
+  events?: IAgendaEvent[];
   initialDate?: Date;
   onDateChange?: (date: Date) => void;
-  onEventCreate?: (event: IEvent) => void;
-  onEventUpdate?: (event: IEvent) => void;
-  onEventClick?: (event: IEvent) => void;
+  onEventCreate?: (event: IAgendaEvent) => void;
+  onEventUpdate?: (event: IAgendaEvent, patch: Partial<IAgendaEvent>) => void;
+  onEventClick?: (event: IAgendaEvent) => void;
 }
 
 interface ICalendarContext {
   selectedDate: Date;
   setSelectedDate: (date: Date | undefined) => void;
-  selectedUserId: IUser["id"] | "all";
-  setSelectedUserId: (userId: IUser["id"] | "all") => void;
   badgeVariant: TBadgeVariant;
   setBadgeVariant: (variant: TBadgeVariant) => void;
-  users: IUser[];
   workingHours: TWorkingHours;
   setWorkingHours: Dispatch<SetStateAction<TWorkingHours>>;
   visibleHours: TVisibleHours;
   setVisibleHours: Dispatch<SetStateAction<TVisibleHours>>;
-  events: IEvent[];
-  setLocalEvents: Dispatch<SetStateAction<IEvent[]>>;
-  createEvent: (event: IEvent) => void;
-  updateEvent: (event: IEvent) => void;
-  clickEvent?: (event: IEvent) => void;
+  events: IAgendaEvent[];
+  setLocalEvents: Dispatch<SetStateAction<IAgendaEvent[]>>;
+  createEvent: (event: IAgendaEvent) => void;
+  updateEvent: (event: IAgendaEvent, patch: Partial<IAgendaEvent>) => void;
+  clickEvent?: (event: IAgendaEvent) => void;
 }
 
 const CalendarContext = createContext({} as ICalendarContext);
@@ -50,28 +46,26 @@ const WORKING_HOURS = {
 
 const VISIBLE_HOURS = { from: 7, to: 18 };
 
-export function CalendarProvider({ children, users = [], events = [], initialDate, onDateChange, onEventCreate, onEventUpdate, onEventClick }: CalendarProviderProps) {
+export function CalendarProvider({ children, events = [], initialDate, onDateChange, onEventCreate, onEventUpdate, onEventClick }: CalendarProviderProps) {
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>("colored");
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS);
   const [workingHours, setWorkingHours] = useState<TWorkingHours>(WORKING_HOURS);
 
   const [selectedDate, setSelectedDate] = useState(initialDate ?? new Date());
-  const [selectedUserId, setSelectedUserId] = useState<IUser["id"] | "all">("all");
-
   // This localEvents doesn't need to exists in a real scenario.
   // It's used here just to simulate the update of the events.
   // In a real scenario, the events would be updated in the backend
   // and the request that fetches the events should be refetched
-  const [localEvents, setLocalEvents] = useState<IEvent[]>(events);
+  const [localEvents, setLocalEvents] = useState<IAgendaEvent[]>(events);
 
-  const createEvent = (event: IEvent) => {
+  const createEvent = (event: IAgendaEvent) => {
     setLocalEvents(previous => [...previous, event]);
     onEventCreate?.(event);
   };
 
-  const updateEvent = (event: IEvent) => {
-    setLocalEvents(previous => previous.map(current => (current.id === event.id ? event : current)));
-    onEventUpdate?.(event);
+  const updateEvent = (event: IAgendaEvent, patch: Partial<IAgendaEvent>) => {
+    setLocalEvents(previous => previous.map(current => (current.id === event.id ? { ...current, ...patch } : current)));
+    onEventUpdate?.(event, patch);
   };
 
   const handleSelectDate = (date: Date | undefined) => {
@@ -85,11 +79,8 @@ export function CalendarProvider({ children, users = [], events = [], initialDat
       value={{
         selectedDate,
         setSelectedDate: handleSelectDate,
-        selectedUserId,
-        setSelectedUserId,
         badgeVariant,
         setBadgeVariant,
-        users,
         visibleHours,
         setVisibleHours,
         workingHours,

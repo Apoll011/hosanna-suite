@@ -12,26 +12,24 @@ import { CalendarAgendaView } from "./agenda-view/calendar-agenda-view";
 import { CalendarDayView } from "./week-and-day-view/calendar-day-view";
 import { CalendarWeekView } from "./week-and-day-view/calendar-week-view";
 
-import type { IEvent, IUser } from "../interfaces";
+import type { IAgendaEvent } from "../interfaces";
 import type { TCalendarView } from "../types";
 
 export interface CalendarProps {
-  events?: IEvent[];
-  users?: IUser[];
+  events?: IAgendaEvent[];
   view?: TCalendarView;
   defaultView?: TCalendarView;
   initialDate?: Date;
   onViewChange?: (view: TCalendarView) => void;
   onDateChange?: (date: Date) => void;
-  onEventCreate?: (event: IEvent) => void;
-  onEventUpdate?: (event: IEvent) => void;
-  onEventClick?: (event: IEvent) => void;
+  onEventCreate?: (event: IAgendaEvent) => void;
+  onEventUpdate?: (event: IAgendaEvent, patch: Partial<IAgendaEvent>) => void;
+  onEventClick?: (event: IAgendaEvent) => void;
   className?: string;
 }
 
 export function Calendar({
   events = [],
-  users = [],
   view: controlledView,
   defaultView = "month",
   initialDate,
@@ -50,7 +48,7 @@ export function Calendar({
   };
 
   return (
-    <CalendarProvider users={users} events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate} onEventClick={onEventClick}>
+    <CalendarProvider events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate} onEventClick={onEventClick}>
       <CalendarContent view={view} onViewChange={handleViewChange} className={className} />
     </CalendarProvider>
   );
