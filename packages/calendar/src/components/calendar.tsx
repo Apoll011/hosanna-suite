@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { isSameDay, parseISO } from "date-fns";
+import { useMemo } from "react";
+import { isSameDay } from "date-fns";
 
 import { CalendarProvider, useCalendar } from "../contexts/calendar-context";
 import { DndProviderWrapper } from "./dnd/dnd-provider";
@@ -11,59 +11,119 @@ import { CalendarMonthView } from "./month-view/calendar-month-view";
 import { CalendarAgendaView } from "./agenda-view/calendar-agenda-view";
 import { CalendarDayView } from "./week-and-day-view/calendar-day-view";
 import { CalendarWeekView } from "./week-and-day-view/calendar-week-view";
+import { getEventStart, getEventEnd } from "../helpers";
 
-import type { IEvent, IUser } from "../interfaces";
-import type { TCalendarView } from "../types";
+import type { AgendaEvent, IUser, ResponsibilityCategory } from "../interfaces";
+import type { TCalendarView, TVisibleHours, TWorkingHours } from "../types";
 
 export interface CalendarProps {
-  events?: IEvent[];
+  events?: AgendaEvent[];
   users?: IUser[];
+  categories?: ResponsibilityCategory[];
+  workingHours?: TWorkingHours | null;
+  visibleHours?: TVisibleHours;
   view?: TCalendarView;
   defaultView?: TCalendarView;
   initialDate?: Date;
+  initialEventId?: string | null;
   onViewChange?: (view: TCalendarView) => void;
   onDateChange?: (date: Date) => void;
-  onEventCreate?: (event: IEvent) => void;
-  onEventUpdate?: (event: IEvent) => void;
+  onEventCreate?: (event: AgendaEvent) => void;
+  onEventUpdate?: (event: AgendaEvent) => void;
+  onEventDelete?: (event: AgendaEvent) => void;
+  onEventSelect?: (event: AgendaEvent | null) => void;
+  onAddResponsibility?: (eventId: string) => void;
+  onEditAssignees?: (eventId: string, respId: string) => void;
+  onRemoveResponsibility?: (eventId: string, respId: string) => void;
+  onPrintEvent?: (event: AgendaEvent) => void;
+  canCreate?: boolean;
+  canUpdate?: boolean;
+  canDelete?: boolean;
   className?: string;
 }
 
 export function Calendar({
   events = [],
   users = [],
-  view: controlledView,
+  categories = [],
+  workingHours = null,
+  visibleHours,
+  view,
   defaultView = "month",
   initialDate,
+  initialEventId,
   onViewChange,
   onDateChange,
   onEventCreate,
   onEventUpdate,
+  onEventDelete,
+  onEventSelect,
+  onAddResponsibility,
+  onEditAssignees,
+  onRemoveResponsibility,
+  onPrintEvent,
+  canCreate = true,
+  canUpdate = true,
+  canDelete = true,
   className,
 }: CalendarProps) {
-  const [uncontrolledView, setUncontrolledView] = useState(defaultView);
-  const view = controlledView ?? uncontrolledView;
-  const handleViewChange = (nextView: TCalendarView) => {
-    if (controlledView === undefined) setUncontrolledView(nextView);
-    onViewChange?.(nextView);
-  };
-
   return (
-    <CalendarProvider users={users} events={events} initialDate={initialDate} onDateChange={onDateChange} onEventCreate={onEventCreate} onEventUpdate={onEventUpdate}>
-      <CalendarContent view={view} onViewChange={handleViewChange} className={className} />
+    <CalendarProvider
+      users={users}
+      events={events}
+      categories={categories}
+      workingHours={workingHours}
+      visibleHours={visibleHours}
+      initialDate={initialDate}
+      initialEventId={initialEventId}
+      view={view}
+      onViewChange={onViewChange}
+      onDateChange={onDateChange}
+      onEventCreate={onEventCreate}
+      onEventUpdate={onEventUpdate}
+      onEventDelete={onEventDelete}
+      onEventSelect={onEventSelect}
+      onAddResponsibility={onAddResponsibility}
+      onEditAssignees={onEditAssignees}
+      onRemoveResponsibility={onRemoveResponsibility}
+      onPrintEvent={onPrintEvent}
+      canCreate={canCreate}
+      canUpdate={canUpdate}
+      canDelete={canDelete}
+    >
+      <CalendarContent className={className} defaultView={defaultView} />
     </CalendarProvider>
   );
 }
 
-function CalendarContent({ view, onViewChange, className }: { view: TCalendarView; onViewChange: (view: TCalendarView) => void; className?: string }) {
-  const { selectedDate, selectedUserId, events, setSelectedDate } = useCalendar();
+function CalendarContent({ className }: { className?: string; defaultView?: TCalendarView }) {
+  const { view, setView, selectedDate, selectedUserId, events, setSelectedDate } = useCalendar();
+
   const filteredEvents = useMemo(() => {
     return events.filter(event => {
-      const start = parseISO(event.startDate);
-      const end = parseISO(event.endDate);
-      const userMatch = selectedUserId === "all" || event.user.id === selectedUserId;
+      const start = getEventStart(event);
+      const end = getEventEnd(event);
+      const userMatch =
+        selectedUserId === "all" ||
+        event.user?.id === selectedUserId ||
+        (event.responsibilities &&
+          event.responsibilities.some(r =>
+            r.assignees.some(a => a.memberId === selectedUserId || a.name.toLowerCase() === selectedUserId.toLowerCase())
+          ));
       if (!userMatch) return false;
-      if (view === "year") return start <= new Date(selectedDate.getFullYear(), 11, 31, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), 0, 1);
-      if (view === "month" || view === "agenda") return start <= new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+
+      if (view === "year") {
+        return (
+          start <= new Date(selectedDate.getFullYear(), 11, 31, 23, 59, 59) &&
+          end >= new Date(selectedDate.getFullYear(), 0, 1)
+        );
+      }
+      if (view === "month" || view === "agenda") {
+        return (
+          start <= new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) &&
+          end >= new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
+        );
+      }
       if (view === "week") {
         const weekStart = new Date(selectedDate);
         weekStart.setDate(selectedDate.getDate() - selectedDate.getDay());
@@ -78,18 +138,40 @@ function CalendarContent({ view, onViewChange, className }: { view: TCalendarVie
       return start <= dayEnd && end >= dayStart;
     });
   }, [events, selectedDate, selectedUserId, view]);
-  const singleDayEvents = filteredEvents.filter(event => isSameDay(parseISO(event.startDate), parseISO(event.endDate)));
-  const multiDayEvents = filteredEvents.filter(event => !isSameDay(parseISO(event.startDate), parseISO(event.endDate)));
+
+  const singleDayEvents = filteredEvents.filter(event => isSameDay(getEventStart(event), getEventEnd(event)));
+  const multiDayEvents = filteredEvents.filter(event => !isSameDay(getEventStart(event), getEventEnd(event)));
   const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
 
   return (
     <div className={className ?? "overflow-hidden rounded-lg border border-m3-border bg-m3-card"}>
-      <CalendarHeader view={view} events={filteredEvents} onViewChange={onViewChange} />
+      <CalendarHeader view={view} events={filteredEvents} onViewChange={setView} />
       <DndProviderWrapper>
         {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-        {view === "month" && <CalendarMonthView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} onDateClick={date => { setSelectedDate(date); onViewChange("day"); }} />}
+        {view === "month" && (
+          <CalendarMonthView
+            singleDayEvents={singleDayEvents}
+            multiDayEvents={multiDayEvents}
+            onDateClick={date => {
+              setSelectedDate(date);
+              setView("day");
+            }}
+          />
+        )}
         {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-        {view === "year" && <CalendarYearView allEvents={eventStartDates} onDateClick={date => { setSelectedDate(date); onViewChange("day"); }} onMonthClick={date => { setSelectedDate(date); onViewChange("month"); }} />}
+        {view === "year" && (
+          <CalendarYearView
+            allEvents={eventStartDates}
+            onDateClick={date => {
+              setSelectedDate(date);
+              setView("day");
+            }}
+            onMonthClick={date => {
+              setSelectedDate(date);
+              setView("month");
+            }}
+          />
+        )}
         {view === "agenda" && <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
       </DndProviderWrapper>
     </div>

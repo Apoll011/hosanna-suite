@@ -1,14 +1,15 @@
 "use client";
 
 import { useDrop } from "react-dnd";
-import { parseISO, differenceInMilliseconds } from "date-fns";
+import { format, differenceInMilliseconds } from "date-fns";
 
 import { useUpdateEvent } from "../../hooks/use-update-event";
+import { getEventStart, getEventEnd } from "../../helpers";
 
 import { cn } from "../../lib/cn";
 import { ItemTypes } from "./draggable-event";
 
-import type { IEvent, ICalendarCell } from "../../interfaces";
+import type { AgendaEvent, ICalendarCell } from "../../interfaces";
 
 interface DroppableDayCellProps {
   cell: ICalendarCell;
@@ -21,20 +22,26 @@ export function DroppableDayCell({ cell, children }: DroppableDayCellProps) {
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.EVENT,
-      drop: (item: { event: IEvent }) => {
+      drop: (item: { event: AgendaEvent }) => {
         const droppedEvent = item.event;
 
-        const eventStartDate = parseISO(droppedEvent.startDate);
-        const eventEndDate = parseISO(droppedEvent.endDate);
-
+        const eventStartDate = getEventStart(droppedEvent);
+        const eventEndDate = getEventEnd(droppedEvent);
         const eventDurationMs = differenceInMilliseconds(eventEndDate, eventStartDate);
 
         const newStartDate = new Date(cell.date);
-        newStartDate.setHours(eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds(), eventStartDate.getMilliseconds());
+        newStartDate.setHours(
+          eventStartDate.getHours(),
+          eventStartDate.getMinutes(),
+          eventStartDate.getSeconds(),
+          eventStartDate.getMilliseconds()
+        );
         const newEndDate = new Date(newStartDate.getTime() + eventDurationMs);
+        const newDate = format(newStartDate, "yyyy-MM-dd");
 
         updateEvent({
           ...droppedEvent,
+          date: newDate,
           startDate: newStartDate.toISOString(),
           endDate: newEndDate.toISOString(),
         });

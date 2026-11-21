@@ -6,14 +6,14 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 
 import { cn } from "../../lib/cn";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 
 export const ItemTypes = {
   EVENT: "event",
 };
 
 interface DraggableEventProps {
-  event: IEvent;
+  event: AgendaEvent;
   children: React.ReactNode;
 }
 

@@ -6,11 +6,11 @@ import { DayCell } from "./day-cell";
 
 import { getCalendarCells, calculateMonthEventPositions } from "../../helpers";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 
 interface IProps {
-  singleDayEvents: IEvent[];
-  multiDayEvents: IEvent[];
+  singleDayEvents: AgendaEvent[];
+  multiDayEvents: AgendaEvent[];
   onDateClick?: (date: Date) => void;
 }
 

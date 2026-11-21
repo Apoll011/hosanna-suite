@@ -6,17 +6,20 @@ import { UserSelect } from "./user-select";
 import { TodayButton } from "./today-button";
 import { DateNavigator } from "./date-navigator";
 import { AddEventDialog } from "../dialogs/add-event-dialog";
+import { useCalendar } from "../../contexts/calendar-context";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 import type { TCalendarView } from "../../types";
 
 interface IProps {
   view: TCalendarView;
-  events: IEvent[];
+  events: AgendaEvent[];
   onViewChange?: (view: TCalendarView) => void;
 }
 
 export function CalendarHeader({ view, events, onViewChange }: IProps) {
+  const { canCreate } = useCalendar();
+
   return (
     <div className="flex flex-col gap-3 border-b border-m3-border px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex items-center gap-3">
@@ -27,7 +30,13 @@ export function CalendarHeader({ view, events, onViewChange }: IProps) {
       <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:justify-between">
         <div className="flex w-full items-center gap-1.5">
           <div className="inline-flex items-center gap-1 rounded-lg bg-m3-sidebar p-1">
-            <Button asChild aria-label="View by day" size="icon" variant={view === "day" ? "default" : "outline"} className="rounded-md [&_svg]:size-5">
+            <Button
+              asChild
+              aria-label="View by day"
+              size="icon"
+              variant={view === "day" ? "default" : "outline"}
+              className="rounded-md [&_svg]:size-5"
+            >
               <button type="button" onClick={() => onViewChange?.("day")}>
                 <List strokeWidth={1.8} />
               </button>
@@ -85,12 +94,14 @@ export function CalendarHeader({ view, events, onViewChange }: IProps) {
           <UserSelect />
         </div>
 
-        <AddEventDialog>
-          <Button className="w-full sm:w-auto">
-            <Plus />
-            Add Event
-          </Button>
-        </AddEventDialog>
+        {canCreate && (
+          <AddEventDialog>
+            <Button className="w-full sm:w-auto">
+              <Plus />
+              Add Event
+            </Button>
+          </AddEventDialog>
+        )}
       </div>
     </div>
   );

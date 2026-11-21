@@ -1,14 +1,15 @@
 "use client";
 
 import { useDrop } from "react-dnd";
-import { parseISO, differenceInMilliseconds } from "date-fns";
+import { format, differenceInMilliseconds } from "date-fns";
 
 import { useUpdateEvent } from "../../hooks/use-update-event";
+import { getEventStart, getEventEnd } from "../../helpers";
 
 import { cn } from "../../lib/cn";
 import { ItemTypes } from "./draggable-event";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 
 interface DroppableTimeBlockProps {
   date: Date;
@@ -23,20 +24,23 @@ export function DroppableTimeBlock({ date, hour, minute, children }: DroppableTi
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.EVENT,
-      drop: (item: { event: IEvent }) => {
+      drop: (item: { event: AgendaEvent }) => {
         const droppedEvent = item.event;
 
-        const eventStartDate = parseISO(droppedEvent.startDate);
-        const eventEndDate = parseISO(droppedEvent.endDate);
-
+        const eventStartDate = getEventStart(droppedEvent);
+        const eventEndDate = getEventEnd(droppedEvent);
         const eventDurationMs = differenceInMilliseconds(eventEndDate, eventStartDate);
 
         const newStartDate = new Date(date);
         newStartDate.setHours(hour, minute, 0, 0);
         const newEndDate = new Date(newStartDate.getTime() + eventDurationMs);
+        const newDate = format(newStartDate, "yyyy-MM-dd");
+        const newTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 
         updateEvent({
           ...droppedEvent,
+          date: newDate,
+          time: newTime,
           startDate: newStartDate.toISOString(),
           endDate: newEndDate.toISOString(),
         });

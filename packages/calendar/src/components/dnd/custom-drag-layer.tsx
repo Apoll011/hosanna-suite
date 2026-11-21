@@ -2,10 +2,10 @@
 
 import { useDragLayer } from "react-dnd";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 
 interface IDragItem {
-  event: IEvent;
+  event: AgendaEvent;
   children: React.ReactNode;
   width: number;
   height: number;

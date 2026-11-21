@@ -8,7 +8,7 @@ import { DroppableDayCell } from "../dnd/droppable-day-cell";
 import { MonthEventBadge } from "./month-event-badge";
 
 import { cn } from "../../lib/cn";
-import { getMonthCellEvents } from "../../helpers";
+import { getMonthCellEvents, getEventColor } from "../../helpers";
 
 import type { ICalendarCell, IEvent } from "../../interfaces";
 
@@ -56,7 +56,7 @@ export function DayCell({ cell, events, eventPositions, onDateClick }: IProps) {
               <div key={eventKey} className="lg:flex-1">
                 {event && (
                   <>
-                    <EventBullet className="lg:hidden" color={event.color} />
+                    <EventBullet className="lg:hidden" color={getEventColor(event)} />
                     <MonthEventBadge className="hidden lg:flex" event={event} cellDate={startOfDay(date)} />
                   </>
                 )}

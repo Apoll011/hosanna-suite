@@ -5,10 +5,10 @@ import { useCalendar } from "../../contexts/calendar-context";
 
 import { YearViewMonth } from "./year-view-month";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 
 interface IProps {
-  allEvents: IEvent[];
+  allEvents: AgendaEvent[];
   onDateClick?: (date: Date) => void;
   onMonthClick?: (date: Date) => void;
 }

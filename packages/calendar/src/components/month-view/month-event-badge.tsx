@@ -1,22 +1,21 @@
 import { cva } from "class-variance-authority";
-import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
+import { endOfDay, format, isSameDay, startOfDay } from "date-fns";
+import { Users } from "lucide-react";
 
 import { useCalendar } from "../../contexts/calendar-context";
+import { getEventStart, getEventEnd, getEventColor } from "../../helpers";
 
 import { DraggableEvent } from "../dnd/draggable-event";
-import { EventDetailsDialog } from "../dialogs/event-details-dialog";
-
 import { cn } from "../../lib/cn";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 import type { VariantProps } from "class-variance-authority";
 
 const eventBadgeVariants = cva(
-  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-m3-primary",
+  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-m3-primary cursor-pointer transition-opacity hover:opacity-90",
   {
     variants: {
       color: {
-        // Colored and mixed variants
         blue: "bg-m3-primary/10 text-m3-primary [&_.event-dot]:fill-m3-primary",
         green: "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300 [&_.event-dot]:fill-green-600",
         red: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300 [&_.event-dot]:fill-red-600",
@@ -25,7 +24,6 @@ const eventBadgeVariants = cva(
         orange: "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300 [&_.event-dot]:fill-orange-600",
         gray: "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 [&_.event-dot]:fill-neutral-600",
 
-        // Dot variants
         "blue-dot": "bg-m3-hover text-m3-text [&_.event-dot]:fill-m3-primary",
         "green-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-green-600",
         "red-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-red-600",
@@ -48,7 +46,7 @@ const eventBadgeVariants = cva(
 );
 
 interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" | "multiDayPosition"> {
-  event: IEvent;
+  event: AgendaEvent;
   cellDate: Date;
   eventCurrentDay?: number;
   eventTotalDays?: number;
@@ -57,10 +55,12 @@ interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" |
 }
 
 export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
-  const { badgeVariant } = useCalendar();
+  const { badgeVariant, selectEvent, selectedEventId } = useCalendar();
 
-  const itemStart = startOfDay(parseISO(event.startDate));
-  const itemEnd = endOfDay(parseISO(event.endDate));
+  const startDate = getEventStart(event);
+  const endDate = getEventEnd(event);
+  const itemStart = startOfDay(startDate);
+  const itemEnd = endOfDay(endDate);
 
   if (cellDate < itemStart || cellDate > itemEnd) return null;
 
@@ -82,43 +82,67 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
 
   const renderBadgeText = ["first", "none"].includes(position);
 
-  const color = (badgeVariant === "dot" ? `${event.color}-dot` : event.color) as VariantProps<typeof eventBadgeVariants>["color"];
+  const eventColor = getEventColor(event);
+  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<typeof eventBadgeVariants>["color"];
 
-  const eventBadgeClasses = cn(eventBadgeVariants({ color, multiDayPosition: position, className }));
+  const isSelected = selectedEventId === event.id;
+  const eventBadgeClasses = cn(
+    eventBadgeVariants({ color, multiDayPosition: position, className }),
+    isSelected && "ring-2 ring-m3-primary ring-offset-1 font-bold"
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      if (e.currentTarget instanceof HTMLElement) e.currentTarget.click();
+      selectEvent(event);
     }
   };
 
+  const respCount = event.responsibilities?.length ?? 0;
+
   return (
     <DraggableEvent event={event}>
-      <EventDetailsDialog event={event}>
-        <div role="button" tabIndex={0} className={eventBadgeClasses} onKeyDown={handleKeyDown}>
-          <div className="flex items-center gap-1.5 truncate">
-            {!["middle", "last"].includes(position) && ["mixed", "dot"].includes(badgeVariant) && (
-              <svg width="8" height="8" viewBox="0 0 8 8" className="event-dot shrink-0">
-                <circle cx="4" cy="4" r="4" />
-              </svg>
-            )}
+      <div
+        role="button"
+        tabIndex={0}
+        className={eventBadgeClasses}
+        onClick={e => {
+          e.stopPropagation();
+          selectEvent(event);
+        }}
+        onKeyDown={handleKeyDown}
+      >
+        <div className="flex items-center gap-1.5 truncate">
+          {!["middle", "last"].includes(position) && ["mixed", "dot"].includes(badgeVariant) && (
+            <svg width="8" height="8" viewBox="0 0 8 8" className="event-dot shrink-0">
+              <circle cx="4" cy="4" r="4" />
+            </svg>
+          )}
 
-            {renderBadgeText && (
-              <p className="flex-1 truncate font-semibold">
-                {eventCurrentDay && (
-                  <span className="text-xs">
-                    Day {eventCurrentDay} of {eventTotalDays} •{" "}
-                  </span>
-                )}
-                {event.title}
-              </p>
-            )}
-          </div>
-
-          {renderBadgeText && <span>{format(new Date(event.startDate), "h:mm a")}</span>}
+          {renderBadgeText && (
+            <p className="flex-1 truncate font-semibold">
+              {eventCurrentDay && (
+                <span className="text-xs">
+                  Day {eventCurrentDay} of {eventTotalDays} •{" "}
+                </span>
+              )}
+              {event.title}
+            </p>
+          )}
         </div>
-      </EventDetailsDialog>
+
+        {renderBadgeText && (
+          <div className="flex items-center gap-1 text-[11px] opacity-80 shrink-0">
+            {respCount > 0 && (
+              <span className="inline-flex items-center gap-0.5" title={`${respCount} responsibilities`}>
+                <Users className="size-3" />
+                {respCount}
+              </span>
+            )}
+            <span>{event.time || format(startDate, "HH:mm")}</span>
+          </div>
+        )}
+      </div>
     </DraggableEvent>
   );
 }

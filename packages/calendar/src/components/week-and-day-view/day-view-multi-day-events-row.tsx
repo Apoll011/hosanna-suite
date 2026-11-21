@@ -1,12 +1,13 @@
-import { parseISO, isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
+import { isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
 
 import { MonthEventBadge } from "../month-view/month-event-badge";
+import { getEventStart, getEventEnd } from "../../helpers";
 
-import type { IEvent } from "../../interfaces";
+import type { AgendaEvent } from "../../interfaces";
 
 interface IProps {
   selectedDate: Date;
-  multiDayEvents: IEvent[];
+  multiDayEvents: AgendaEvent[];
 }
 
 export function DayViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IProps) {
@@ -15,8 +16,8 @@ export function DayViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IProp
 
   const multiDayEventsInDay = multiDayEvents
     .filter(event => {
-      const eventStart = parseISO(event.startDate);
-      const eventEnd = parseISO(event.endDate);
+      const eventStart = getEventStart(event);
+      const eventEnd = getEventEnd(event);
 
       const isOverlapping =
         isWithinInterval(dayStart, { start: eventStart, end: eventEnd }) ||
@@ -26,8 +27,8 @@ export function DayViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IProp
       return isOverlapping;
     })
     .sort((a, b) => {
-      const durationA = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
-      const durationB = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
+      const durationA = differenceInDays(getEventEnd(a), getEventStart(a));
+      const durationB = differenceInDays(getEventEnd(b), getEventStart(b));
       return durationB - durationA;
     });
 
@@ -38,8 +39,8 @@ export function DayViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IProp
       <div className="w-18"></div>
       <div className="flex flex-1 flex-col gap-1 border-l py-1">
         {multiDayEventsInDay.map(event => {
-          const eventStart = startOfDay(parseISO(event.startDate));
-          const eventEnd = startOfDay(parseISO(event.endDate));
+          const eventStart = startOfDay(getEventStart(event));
+          const eventEnd = startOfDay(getEventEnd(event));
           const currentDate = startOfDay(selectedDate);
 
           const eventTotalDays = differenceInDays(eventEnd, eventStart) + 1;
