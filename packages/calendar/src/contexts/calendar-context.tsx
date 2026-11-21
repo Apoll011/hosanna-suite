@@ -4,7 +4,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { getEventStart } from "../helpers";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { AgendaEvent, IUser, ResponsibilityCategory } from "../interfaces";
+import type { AgendaEvent, IUser, ResponsibilityCategory, Service } from "../interfaces";
 import type { TBadgeVariant, TCalendarView, TVisibleHours, TWorkingHours } from "../types";
 
 export interface CalendarProviderProps {
@@ -12,6 +12,7 @@ export interface CalendarProviderProps {
   users?: IUser[];
   events?: AgendaEvent[];
   categories?: ResponsibilityCategory[];
+  services?: Service[];
   workingHours?: TWorkingHours | null;
   visibleHours?: TVisibleHours;
   initialDate?: Date;
@@ -27,6 +28,9 @@ export interface CalendarProviderProps {
   onEditAssignees?: (eventId: string, respId: string) => void;
   onRemoveResponsibility?: (eventId: string, respId: string) => void;
   onPrintEvent?: (event: AgendaEvent) => void;
+  onOpenService?: (serviceId: string) => void;
+  onRequestCreateEvent?: (initial?: { date?: string; time?: string }) => void;
+  onRequestEditEvent?: (event: AgendaEvent) => void;
   canCreate?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
@@ -47,6 +51,7 @@ interface ICalendarContext {
   setBadgeVariant: (variant: TBadgeVariant) => void;
   users: IUser[];
   categories: ResponsibilityCategory[];
+  services: Service[];
   workingHours?: TWorkingHours | null;
   setWorkingHours: Dispatch<SetStateAction<TWorkingHours | null | undefined>>;
   visibleHours: TVisibleHours;
@@ -60,6 +65,9 @@ interface ICalendarContext {
   editAssignees?: (eventId: string, respId: string) => void;
   removeResponsibility?: (eventId: string, respId: string) => void;
   printEvent?: (event: AgendaEvent) => void;
+  onOpenService?: (serviceId: string) => void;
+  onRequestCreateEvent?: (initial?: { date?: string; time?: string }) => void;
+  onRequestEditEvent?: (event: AgendaEvent) => void;
   canCreate: boolean;
   canUpdate: boolean;
   canDelete: boolean;
@@ -74,6 +82,7 @@ export function CalendarProvider({
   users = [],
   events = [],
   categories = [],
+  services = [],
   workingHours: initialWorkingHours = null,
   visibleHours: initialVisibleHours = DEFAULT_VISIBLE_HOURS,
   initialDate,
@@ -89,6 +98,9 @@ export function CalendarProvider({
   onEditAssignees,
   onRemoveResponsibility,
   onPrintEvent,
+  onOpenService,
+  onRequestCreateEvent,
+  onRequestEditEvent,
   canCreate = true,
   canUpdate = true,
   canDelete = true,
@@ -174,6 +186,7 @@ export function CalendarProvider({
         setBadgeVariant,
         users,
         categories,
+        services,
         workingHours,
         setWorkingHours,
         visibleHours,
@@ -187,6 +200,9 @@ export function CalendarProvider({
         editAssignees: onEditAssignees,
         removeResponsibility: onRemoveResponsibility,
         printEvent: onPrintEvent,
+        onOpenService,
+        onRequestCreateEvent,
+        onRequestEditEvent,
         canCreate,
         canUpdate,
         canDelete,

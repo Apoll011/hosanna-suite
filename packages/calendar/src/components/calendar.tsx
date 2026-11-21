@@ -13,13 +13,14 @@ import { CalendarDayView } from "./week-and-day-view/calendar-day-view";
 import { CalendarWeekView } from "./week-and-day-view/calendar-week-view";
 import { getEventStart, getEventEnd } from "../helpers";
 
-import type { AgendaEvent, IUser, ResponsibilityCategory } from "../interfaces";
+import type { AgendaEvent, IUser, ResponsibilityCategory, Service } from "../interfaces";
 import type { TCalendarView, TVisibleHours, TWorkingHours } from "../types";
 
 export interface CalendarProps {
   events?: AgendaEvent[];
   users?: IUser[];
   categories?: ResponsibilityCategory[];
+  services?: Service[];
   workingHours?: TWorkingHours | null;
   visibleHours?: TVisibleHours;
   view?: TCalendarView;
@@ -36,6 +37,9 @@ export interface CalendarProps {
   onEditAssignees?: (eventId: string, respId: string) => void;
   onRemoveResponsibility?: (eventId: string, respId: string) => void;
   onPrintEvent?: (event: AgendaEvent) => void;
+  onOpenService?: (serviceId: string) => void;
+  onRequestCreateEvent?: (initial?: { date?: string; time?: string }) => void;
+  onRequestEditEvent?: (event: AgendaEvent) => void;
   canCreate?: boolean;
   canUpdate?: boolean;
   canDelete?: boolean;
@@ -46,6 +50,7 @@ export function Calendar({
   events = [],
   users = [],
   categories = [],
+  services = [],
   workingHours = null,
   visibleHours,
   view,
@@ -62,6 +67,9 @@ export function Calendar({
   onEditAssignees,
   onRemoveResponsibility,
   onPrintEvent,
+  onOpenService,
+  onRequestCreateEvent,
+  onRequestEditEvent,
   canCreate = true,
   canUpdate = true,
   canDelete = true,
@@ -72,6 +80,7 @@ export function Calendar({
       users={users}
       events={events}
       categories={categories}
+      services={services}
       workingHours={workingHours}
       visibleHours={visibleHours}
       initialDate={initialDate}
@@ -87,6 +96,9 @@ export function Calendar({
       onEditAssignees={onEditAssignees}
       onRemoveResponsibility={onRemoveResponsibility}
       onPrintEvent={onPrintEvent}
+      onOpenService={onOpenService}
+      onRequestCreateEvent={onRequestCreateEvent}
+      onRequestEditEvent={onRequestEditEvent}
       canCreate={canCreate}
       canUpdate={canUpdate}
       canDelete={canDelete}
@@ -144,7 +156,7 @@ function CalendarContent({ className }: { className?: string; defaultView?: TCal
   const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
 
   return (
-    <div className={className ?? "overflow-hidden rounded-lg border border-m3-border bg-m3-card"}>
+    <div className={className ?? "overflow-hidden rounded-lg border border-m3-border bg-m3-card w-full"}>
       <CalendarHeader view={view} events={filteredEvents} onViewChange={setView} />
       <DndProviderWrapper>
         {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}

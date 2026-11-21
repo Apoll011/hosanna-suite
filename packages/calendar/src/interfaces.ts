@@ -2,7 +2,30 @@ import type { TEventColor } from "./types";
 
 export type TEventId = string | number;
 
+export type ResponsibilityColor =
+  | "amber"
+  | "violet"
+  | "sky"
+  | "rose"
+  | "emerald"
+  | "cyan"
+  | "slate"
+  | "indigo";
+
+export type ResponsibilityIconKey =
+  | "mic"
+  | "music"
+  | "volume"
+  | "light"
+  | "monitor"
+  | "book"
+  | "heart"
+  | "users"
+  | "camera"
+  | "custom";
+
 export interface Assignee {
+  id?: string;
   name: string;
   memberId?: string;
   avatarUrl?: string;
@@ -19,6 +42,36 @@ export interface ResponsibilityCategory {
   id: string;
   label: string;
   color?: string;
+  icon?: string;
+  defaultAssignees?: string[];
+  position?: number;
+}
+
+export interface ServiceElement {
+  id?: string;
+  title?: string;
+  duration?: number;
+}
+
+export interface Service {
+  id: string;
+  name: string;
+  date: string;
+  archived?: boolean;
+  notes?: string | null;
+  elements?: ServiceElement[];
+}
+
+export interface EventFormValue {
+  title: string;
+  type: string;
+  date: string;
+  time: string;
+  durationMinutes: number;
+  location: string;
+  notes: string;
+  color?: TEventColor;
+  linkedServiceId: string | null;
 }
 
 export interface ReminderSettings {

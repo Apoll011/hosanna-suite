@@ -6,7 +6,7 @@
 "use client";
 
 import type { AppRole, PermissionString } from "@hosanna/auth";
-import React, { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 
 export interface PermissionsProviderProps {
   role: AppRole | null;

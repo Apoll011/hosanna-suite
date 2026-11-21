@@ -18,7 +18,7 @@ interface IProps {
 }
 
 export function CalendarHeader({ view, events, onViewChange }: IProps) {
-  const { canCreate } = useCalendar();
+  const { canCreate, onRequestCreateEvent } = useCalendar();
 
   return (
     <div className="flex flex-col gap-3 border-b border-m3-border px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
@@ -95,12 +95,19 @@ export function CalendarHeader({ view, events, onViewChange }: IProps) {
         </div>
 
         {canCreate && (
-          <AddEventDialog>
-            <Button className="w-full sm:w-auto">
+          onRequestCreateEvent ? (
+            <Button className="w-full sm:w-auto" onClick={() => onRequestCreateEvent()}>
               <Plus />
               Add Event
             </Button>
-          </AddEventDialog>
+          ) : (
+            <AddEventDialog>
+              <Button className="w-full sm:w-auto">
+                <Plus />
+                Add Event
+              </Button>
+            </AddEventDialog>
+          )
         )}
       </div>
     </div>

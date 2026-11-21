@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Calendar, type IUser } from "@hosanna/calendar";
+import { Calendar, EventFormModal, type EventFormValue, type IUser } from "@hosanna/calendar";
 import "@hosanna/calendar/styles.css";
 import { PageHeader, Spinner, useCan, Can, Button } from "@hosanna/ui";
 import { CalendarPlus, Printer, Trash2 } from "lucide-react";
@@ -13,14 +13,14 @@ import { DeleteEventModal } from "@/src/components/agenda/DeleteEventModal";
 import {
   AddResponsibilityModal,
   EditAssigneesModal,
-  EventFormModal,
-  EventFormValue,
 } from "@/src/components/agenda/EventModals";
 import { RemoveAssignmentModal } from "@/src/components/agenda/RemoveAssignmentModal";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { usePrint } from "@/src/contexts/PrintContext";
 import { useAgenda } from "@/src/hooks/useAgenda";
 import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
+import { useAppNavigate } from "@/src/hooks/useAppNavigate";
+import { useServices } from "@/src/hooks/useServices";
 import { useI18n } from "@/src/lib/i18n";
 import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
 import { formatLongDate } from "@/src/utils/agendaDate";
@@ -39,15 +39,19 @@ type PendingRemoval =
 export function CalendarPage() {
   const { t } = useI18n();
   const { organization } = useAuth();
+  const { navigate } = useAppNavigate();
+  const { servicesQuery } = useServices();
   const store = useAgenda();
   const { printEvent, printEvents } = usePrint();
   const { granted: canCreateAgenda } = useCan("agenda.create");
   const { granted: canUpdateAgenda } = useCan("agenda.update");
   const { granted: canDeleteAgenda } = useCan("agenda.delete");
+  const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
 
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [isNewEventOpen, setIsNewEventOpen] = useState(false);
   const [isEditEventOpen, setIsEditEventOpen] = useState(false);
+  const [eventFormInitial, setEventFormInitial] = useState<Partial<EventFormValue>>({});
   const [isAddResponsibilityOpen, setIsAddResponsibilityOpen] = useState(false);
   const [pendingRemoval, setPendingRemoval] = useState<PendingRemoval | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -199,7 +203,7 @@ export function CalendarPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-auto bg-m3-bg px-4 py-5 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
+      <div className="flex w-full flex-col gap-5">
         <PageHeader
           title="Calendar"
           description={t("agenda.subtitle")}
@@ -237,7 +241,10 @@ export function CalendarPage() {
                   variant="primary"
                   size="sm"
                   icon={<CalendarPlus className="w-4 h-4" />}
-                  onClick={() => setIsNewEventOpen(true)}
+                  onClick={() => {
+                    setEventFormInitial({});
+                    setIsNewEventOpen(true);
+                  }}
                 >
                   {t("agenda.newEvent")}
                 </Button>
@@ -251,11 +258,12 @@ export function CalendarPage() {
             <Spinner label={t("common.loading")} />
           </div>
         ) : (
-          <section className="min-h-[720px] overflow-hidden rounded-lg border border-m3-border bg-m3-card shadow-sm">
+          <section className="overflow-hidden rounded-lg border border-m3-border bg-m3-card shadow-sm w-full">
             <Calendar
               events={store.events}
               categories={store.categories}
               users={memberUsers}
+              services={servicesQuery.data ?? []}
               defaultView="month"
               workingHours={null}
               canCreate={canCreateAgenda}
@@ -265,6 +273,15 @@ export function CalendarPage() {
               onEventUpdate={handleUpdateEvent}
               onEventDelete={handleDeleteEvent}
               onEventSelect={(ev) => setSelectedEventId(ev?.id ?? null)}
+              onOpenService={(serviceId) => navigate(`${slugPrefix}/services/${serviceId}`)}
+              onRequestCreateEvent={(init) => {
+                setEventFormInitial(init ?? {});
+                setIsNewEventOpen(true);
+              }}
+              onRequestEditEvent={(event) => {
+                setSelectedEventId(event.id);
+                setIsEditEventOpen(true);
+              }}
               onAddResponsibility={(eventId) => {
                 setSelectedEventId(eventId);
                 setIsAddResponsibilityOpen(true);
@@ -292,6 +309,9 @@ export function CalendarPage() {
         onSubmit={handleCreateEvent}
         title={t("agenda.newEvent")}
         submitLabel={t("agenda.createEvent")}
+        services={servicesQuery.data ?? []}
+        servicesLoading={servicesQuery.isLoading}
+        initial={eventFormInitial}
       />
 
       {selectedEvent && (
@@ -322,6 +342,8 @@ export function CalendarPage() {
           }
           title={t("agenda.editEvent")}
           submitLabel={t("common.save")}
+          services={servicesQuery.data ?? []}
+          servicesLoading={servicesQuery.isLoading}
           initial={selectedEvent as unknown as EventFormValue}
         />
       )}
