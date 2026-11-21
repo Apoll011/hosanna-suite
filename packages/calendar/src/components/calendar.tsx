@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { isSameDay, parseISO } from "date-fns";
 
 import { CalendarProvider, useCalendar } from "../contexts/calendar-context";
 import { DndProviderWrapper } from "./dnd/dnd-provider";
@@ -55,13 +54,12 @@ export function Calendar({
 }
 
 function CalendarContent({ view, onViewChange, className }: { view: TCalendarView; onViewChange: (view: TCalendarView) => void; className?: string }) {
-  const { selectedDate, selectedUserId, events, setSelectedDate } = useCalendar();
+  const { selectedDate, events, setSelectedDate } = useCalendar();
   const filteredEvents = useMemo(() => {
     return events.filter(event => {
-      const start = parseISO(event.startDate);
-      const end = parseISO(event.endDate);
-      const userMatch = selectedUserId === "all" || event.user?.id === selectedUserId;
-      if (!userMatch) return false;
+      const [hour = 0, minute = 0] = event.time.split(":").map(Number);
+      const start = new Date(`${event.date}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00`);
+      const end = new Date(start.getTime() + event.durationMinutes * 60_000);
       if (view === "year") return start <= new Date(selectedDate.getFullYear(), 11, 31, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), 0, 1);
       if (view === "month" || view === "agenda") return start <= new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) && end >= new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
       if (view === "week") {
@@ -77,10 +75,10 @@ function CalendarContent({ view, onViewChange, className }: { view: TCalendarVie
       const dayEnd = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59);
       return start <= dayEnd && end >= dayStart;
     });
-  }, [events, selectedDate, selectedUserId, view]);
-  const singleDayEvents = filteredEvents.filter(event => isSameDay(parseISO(event.startDate), parseISO(event.endDate)));
-  const multiDayEvents = filteredEvents.filter(event => !isSameDay(parseISO(event.startDate), parseISO(event.endDate)));
-  const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
+  }, [events, selectedDate, view]);
+  const singleDayEvents = filteredEvents;
+  const multiDayEvents: typeof filteredEvents = [];
+  const eventStartDates = filteredEvents;
 
   return (
     <div className={className ?? "overflow-hidden rounded-lg border border-m3-border"}>
