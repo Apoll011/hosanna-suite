@@ -36,7 +36,7 @@ export function DayCell({ cell, events, eventPositions, onDateClick }: IProps) {
 
   return (
     <DroppableDayCell cell={cell}>
-      <div className={cn("flex h-full flex-col gap-1 border-l border-t py-1.5 lg:pb-2 lg:pt-1", isSunday && "border-l-0")}>
+      <div className={cn("flex h-full flex-col gap-1 border-t border-m3-border py-1.5 lg:pb-2 lg:pt-1")}>
         <button
           onClick={handleClick}
           className={cn(

@@ -83,7 +83,7 @@ function CalendarContent({ view, onViewChange, className }: { view: TCalendarVie
   const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
 
   return (
-    <div className={className ?? "overflow-hidden rounded-xl border border-m3-border"}>
+    <div className={className ?? "overflow-hidden rounded-lg border border-m3-border bg-m3-card"}>
       <CalendarHeader view={view} events={filteredEvents} onViewChange={onViewChange} />
       <DndProviderWrapper>
         {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
