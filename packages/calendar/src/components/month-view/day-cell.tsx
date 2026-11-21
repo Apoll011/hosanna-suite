@@ -27,7 +27,6 @@ export function DayCell({ cell, events, eventPositions, onDateClick }: IProps) {
   const { day, currentMonth, date } = cell;
 
   const cellEvents = useMemo(() => getMonthCellEvents(date, events, eventPositions), [date, events, eventPositions]);
-  const isSunday = date.getDay() === 0;
 
   const handleClick = () => {
     setSelectedDate(date);
