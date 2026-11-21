@@ -377,8 +377,7 @@ export const es: typeof import("./pt").pt = {
       ctaContact: "Habla con nosotros",
     },
     footer: {
-      tagline:
-        "Repertorio ChordPro y planificación de alabanza para iglesias, Studio + app móvil.",
+      tagline: "Repertorio ChordPro y planificación de alabanza para iglesias, Studio + app móvil.",
       colProduct: "Producto",
       colSupport: "Soporte",
       colLegal: "Legal",

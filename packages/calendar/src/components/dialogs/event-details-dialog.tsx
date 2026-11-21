@@ -5,7 +5,14 @@ import { Calendar, Clock, Text, User } from "lucide-react";
 
 import { Button } from "../../ui/button";
 import { EditEventDialog } from "./edit-event-dialog";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../ui/dialog";
 import { getEventStart, getEventEnd } from "../../helpers";
 
 import type { AgendaEvent } from "../../interfaces";
@@ -19,7 +26,8 @@ export function EventDetailsDialog({ event, children }: IProps) {
   const startDate = getEventStart(event);
   const endDate = getEventEnd(event);
 
-  const userName = event.user?.name || (event.responsibilities?.[0]?.assignees?.[0]?.name ?? "No assignee");
+  const userName =
+    event.user?.name || (event.responsibilities?.[0]?.assignees?.[0]?.name ?? "No assignee");
 
   return (
     <Dialog>

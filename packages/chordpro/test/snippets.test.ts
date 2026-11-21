@@ -7,12 +7,10 @@ import { lintChordPro } from "../src/parser/linter";
  * would expand to after all placeholders are filled with their default values.
  */
 function expandSnippet(body: string): string {
-  return (
-    body
-      .replace(/\$\{(\d+):([^}]*)\}/g, "$2")
-      .replace(/\$\{(\d+)\}/g, "")
-      .replace(/\$\d+/g, "")
-  );
+  return body
+    .replace(/\$\{(\d+):([^}]*)\}/g, "$2")
+    .replace(/\$\{(\d+)\}/g, "")
+    .replace(/\$\d+/g, "");
 }
 
 function parseSnippets(snippetText: string): Map<string, string> {
@@ -53,7 +51,9 @@ before(async () => {
     _chordproSnippetsRegistered: false,
   };
 
-  await registerChordproSnippets(fakeAce as unknown as Parameters<typeof registerChordproSnippets>[0]);
+  await registerChordproSnippets(
+    fakeAce as unknown as Parameters<typeof registerChordproSnippets>[0],
+  );
   snippets = parseSnippets(capturedExports.snippetText ?? "");
 });
 
@@ -79,12 +79,34 @@ describe("snippets — template", () => {
 
 describe("snippets — metadata", () => {
   for (const trigger of [
-    "title", "t", "subtitle", "st",
-    "artist", "a", "composer", "lyricist", "arranger", "translator",
-    "album", "year", "copyright", "ccli",
-    "key", "k", "original_key", "capo", "keyshift",
-    "tempo", "time", "duration", "youtube",
-    "song_number", "number", "tags", "keynote", "meta",
+    "title",
+    "t",
+    "subtitle",
+    "st",
+    "artist",
+    "a",
+    "composer",
+    "lyricist",
+    "arranger",
+    "translator",
+    "album",
+    "year",
+    "copyright",
+    "ccli",
+    "key",
+    "k",
+    "original_key",
+    "capo",
+    "keyshift",
+    "tempo",
+    "time",
+    "duration",
+    "youtube",
+    "song_number",
+    "number",
+    "tags",
+    "keynote",
+    "meta",
   ]) {
     it(`${trigger} expands without lint errors`, () => assertClean(trigger));
   }
@@ -102,8 +124,18 @@ describe("snippets — comments", () => {
 
 describe("snippets — section blocks", () => {
   for (const trigger of [
-    "chorus", "verse", "bridge", "intro", "outro",
-    "lead", "refrain", "middle", "part", "version", "tab", "grid",
+    "chorus",
+    "verse",
+    "bridge",
+    "intro",
+    "outro",
+    "lead",
+    "refrain",
+    "middle",
+    "part",
+    "version",
+    "tab",
+    "grid",
   ]) {
     it(`${trigger} block expands without lint errors`, () => assertClean(trigger));
   }
@@ -113,9 +145,26 @@ describe("snippets — section blocks", () => {
 
 describe("snippets — block delimiters registered", () => {
   for (const trigger of [
-    "soc", "eoc", "sov", "eov", "sob", "eob",
-    "sot", "eot", "sog", "eog",
-    "sol", "eol", "sor", "eor", "som", "eom", "sop", "eop", "soe", "eoe",
+    "soc",
+    "eoc",
+    "sov",
+    "eov",
+    "sob",
+    "eob",
+    "sot",
+    "eot",
+    "sog",
+    "eog",
+    "sol",
+    "eol",
+    "sor",
+    "eor",
+    "som",
+    "eom",
+    "sop",
+    "eop",
+    "soe",
+    "eoe",
   ]) {
     it(`${trigger} is registered`, () => {
       assert.ok(snippets.has(trigger), `Snippet "${trigger}" not found`);
@@ -164,7 +213,14 @@ describe("snippets — layout", () => {
 // ─── Typography ───────────────────────────────────────────────────────────────
 
 describe("snippets — typography", () => {
-  for (const trigger of ["textsize", "chordsize", "tabsize", "gridsize", "textcolor", "chordcolor"]) {
+  for (const trigger of [
+    "textsize",
+    "chordsize",
+    "tabsize",
+    "gridsize",
+    "textcolor",
+    "chordcolor",
+  ]) {
     it(`${trigger} expands without lint errors`, () => assertClean(trigger));
   }
 });

@@ -94,8 +94,8 @@ export function CalendarHeader({ view, events, onViewChange }: IProps) {
           <UserSelect />
         </div>
 
-        {canCreate && (
-          onRequestCreateEvent ? (
+        {canCreate &&
+          (onRequestCreateEvent ? (
             <Button className="w-full sm:w-auto" onClick={() => onRequestCreateEvent()}>
               <Plus />
               Add Event
@@ -107,8 +107,7 @@ export function CalendarHeader({ view, events, onViewChange }: IProps) {
                 Add Event
               </Button>
             </AddEventDialog>
-          )
-        )}
+          ))}
       </div>
     </div>
   );

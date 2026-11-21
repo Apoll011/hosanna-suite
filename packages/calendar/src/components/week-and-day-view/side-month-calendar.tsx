@@ -63,9 +63,7 @@ export function SideMonthCalendar({
     <div className="w-full space-y-2">
       {/* Header: Month Year + Navigation */}
       <div className="flex items-center justify-between px-1">
-        <h4 className="text-xs font-bold text-m3-text">
-          {format(currentMonth, "MMMM yyyy")}
-        </h4>
+        <h4 className="text-xs font-bold text-m3-text">{format(currentMonth, "MMMM yyyy")}</h4>
         <div className="flex items-center gap-0.5">
           <button
             type="button"

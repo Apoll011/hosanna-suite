@@ -18,11 +18,15 @@ const calendarWeekEventCardVariants = cva(
     variants: {
       color: {
         blue: "bg-m3-primary/10 text-m3-primary border border-m3-primary/20 [&_.event-dot]:fill-m3-primary",
-        green: "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300 [&_.event-dot]:fill-green-600",
+        green:
+          "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300 [&_.event-dot]:fill-green-600",
         red: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300 [&_.event-dot]:fill-red-600",
-        yellow: "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 [&_.event-dot]:fill-yellow-600",
-        purple: "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300 [&_.event-dot]:fill-purple-600",
-        orange: "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300 [&_.event-dot]:fill-orange-600",
+        yellow:
+          "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 [&_.event-dot]:fill-yellow-600",
+        purple:
+          "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300 [&_.event-dot]:fill-purple-600",
+        orange:
+          "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300 [&_.event-dot]:fill-orange-600",
         gray: "border-neutral-200 bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 [&_.event-dot]:fill-neutral-600",
 
         "blue-dot": "bg-m3-hover text-m3-text [&_.event-dot]:fill-m3-primary",
@@ -37,10 +41,13 @@ const calendarWeekEventCardVariants = cva(
     defaultVariants: {
       color: "blue-dot",
     },
-  }
+  },
 );
 
-interface IProps extends HTMLAttributes<HTMLDivElement>, Omit<VariantProps<typeof calendarWeekEventCardVariants>, "color"> {
+interface IProps
+  extends
+    HTMLAttributes<HTMLDivElement>,
+    Omit<VariantProps<typeof calendarWeekEventCardVariants>, "color"> {
   event: AgendaEvent;
 }
 
@@ -53,13 +60,15 @@ export function EventBlock({ event, className }: IProps) {
   const heightInPixels = Math.max(22, (durationInMinutes / 60) * 96 - 8);
 
   const eventColor = getEventColor(event);
-  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<typeof calendarWeekEventCardVariants>["color"];
+  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<
+    typeof calendarWeekEventCardVariants
+  >["color"];
 
   const isSelected = selectedEventId === event.id;
   const calendarWeekEventCardClasses = cn(
     calendarWeekEventCardVariants({ color, className }),
     durationInMinutes < 35 && "py-0 justify-center",
-    isSelected && "ring-2 ring-m3-primary ring-offset-1 font-bold shadow-sm"
+    isSelected && "ring-2 ring-m3-primary ring-offset-1 font-bold shadow-sm",
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -78,7 +87,7 @@ export function EventBlock({ event, className }: IProps) {
         tabIndex={0}
         className={calendarWeekEventCardClasses}
         style={{ height: `${heightInPixels}px` }}
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
           selectEvent(event);
         }}

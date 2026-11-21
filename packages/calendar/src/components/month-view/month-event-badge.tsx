@@ -17,11 +17,15 @@ const eventBadgeVariants = cva(
     variants: {
       color: {
         blue: "bg-m3-primary/10 text-m3-primary [&_.event-dot]:fill-m3-primary",
-        green: "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300 [&_.event-dot]:fill-green-600",
+        green:
+          "border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-950 dark:text-green-300 [&_.event-dot]:fill-green-600",
         red: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300 [&_.event-dot]:fill-red-600",
-        yellow: "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 [&_.event-dot]:fill-yellow-600",
-        purple: "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300 [&_.event-dot]:fill-purple-600",
-        orange: "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300 [&_.event-dot]:fill-orange-600",
+        yellow:
+          "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-300 [&_.event-dot]:fill-yellow-600",
+        purple:
+          "border-purple-200 bg-purple-50 text-purple-700 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300 [&_.event-dot]:fill-purple-600",
+        orange:
+          "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-950 dark:text-orange-300 [&_.event-dot]:fill-orange-600",
         gray: "border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 [&_.event-dot]:fill-neutral-600",
 
         "blue-dot": "bg-m3-hover text-m3-text [&_.event-dot]:fill-m3-primary",
@@ -42,10 +46,13 @@ const eventBadgeVariants = cva(
     defaultVariants: {
       color: "blue-dot",
     },
-  }
+  },
 );
 
-interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" | "multiDayPosition"> {
+interface IProps extends Omit<
+  VariantProps<typeof eventBadgeVariants>,
+  "color" | "multiDayPosition"
+> {
   event: AgendaEvent;
   cellDate: Date;
   eventCurrentDay?: number;
@@ -54,7 +61,14 @@ interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" |
   position?: "first" | "middle" | "last" | "none";
 }
 
-export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
+export function MonthEventBadge({
+  event,
+  cellDate,
+  eventCurrentDay,
+  eventTotalDays,
+  className,
+  position: propPosition,
+}: IProps) {
   const { badgeVariant, selectEvent, selectedEventId } = useCalendar();
 
   const startDate = getEventStart(event);
@@ -83,12 +97,14 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
   const renderBadgeText = ["first", "none"].includes(position);
 
   const eventColor = getEventColor(event);
-  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<typeof eventBadgeVariants>["color"];
+  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<
+    typeof eventBadgeVariants
+  >["color"];
 
   const isSelected = selectedEventId === event.id;
   const eventBadgeClasses = cn(
     eventBadgeVariants({ color, multiDayPosition: position, className }),
-    isSelected && "ring-2 ring-m3-primary ring-offset-1 font-bold"
+    isSelected && "ring-2 ring-m3-primary ring-offset-1 font-bold",
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -106,7 +122,7 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
         role="button"
         tabIndex={0}
         className={eventBadgeClasses}
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
           selectEvent(event);
         }}
@@ -134,7 +150,10 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
         {renderBadgeText && (
           <div className="flex items-center gap-1 text-[11px] opacity-80 shrink-0">
             {respCount > 0 && (
-              <span className="inline-flex items-center gap-0.5" title={`${respCount} responsibilities`}>
+              <span
+                className="inline-flex items-center gap-0.5"
+                title={`${respCount} responsibilities`}
+              >
                 <Users className="size-3" />
                 {respCount}
               </span>

@@ -34,7 +34,7 @@ export function DroppableDayCell({ cell, children }: DroppableDayCellProps) {
           eventStartDate.getHours(),
           eventStartDate.getMinutes(),
           eventStartDate.getSeconds(),
-          eventStartDate.getMilliseconds()
+          eventStartDate.getMilliseconds(),
         );
         const newEndDate = new Date(newStartDate.getTime() + eventDurationMs);
         const newDate = format(newStartDate, "yyyy-MM-dd");
@@ -48,16 +48,19 @@ export function DroppableDayCell({ cell, children }: DroppableDayCellProps) {
 
         return { moved: true };
       },
-      collect: monitor => ({
+      collect: (monitor) => ({
         isOver: monitor.isOver(),
         canDrop: monitor.canDrop(),
       }),
     }),
-    [cell.date, updateEvent]
+    [cell.date, updateEvent],
   );
 
   return (
-    <div ref={drop as unknown as React.RefObject<HTMLDivElement>} className={cn(isOver && canDrop && "bg-m3-hover/50")}>
+    <div
+      ref={drop as unknown as React.RefObject<HTMLDivElement>}
+      className={cn(isOver && canDrop && "bg-m3-hover/50")}
+    >
       {children}
     </div>
   );

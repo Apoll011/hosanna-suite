@@ -12,8 +12,8 @@ export function Schedule({ events }: { events: IEvent[] }) {
       events={events}
       users={[]}
       defaultView="month"
-      onEventCreate={event => saveEvent(event)}
-      onEventUpdate={event => saveEvent(event)}
+      onEventCreate={(event) => saveEvent(event)}
+      onEventUpdate={(event) => saveEvent(event)}
     />
   );
 }

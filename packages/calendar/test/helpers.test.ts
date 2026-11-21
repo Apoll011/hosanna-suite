@@ -15,7 +15,7 @@ import type { AgendaEvent } from "../src/interfaces";
 test("creates a complete month grid", () => {
   const cells = getCalendarCells(new Date(2026, 1, 15));
   assert.equal(cells.length % 7, 0);
-  assert.ok(cells.some(cell => cell.currentMonth && cell.day === 15));
+  assert.ok(cells.some((cell) => cell.currentMonth && cell.day === 15));
 });
 
 test("navigates dates by calendar view", () => {

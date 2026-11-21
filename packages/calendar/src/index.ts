@@ -1,5 +1,9 @@
 export { Calendar, type CalendarProps } from "./components/calendar";
-export { CalendarProvider, useCalendar, type CalendarProviderProps } from "./contexts/calendar-context";
+export {
+  CalendarProvider,
+  useCalendar,
+  type CalendarProviderProps,
+} from "./contexts/calendar-context";
 export { useUpdateEvent } from "./hooks/use-update-event";
 export { eventSchema, type TEventFormData } from "./schemas";
 export * from "./helpers";

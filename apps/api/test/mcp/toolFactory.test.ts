@@ -7,9 +7,19 @@ import { createSharedEmbeddedTools } from "../../src/mcp/domains/toolFactory.js"
 
 const auth = {} as AuthInfo;
 const pack = (defs: unknown[]) =>
-  registerDomainPack({ id: "test.shared", title: "t", permissions: [], tools: [], toolFactory: () => defs as never });
+  registerDomainPack({
+    id: "test.shared",
+    title: "t",
+    permissions: [],
+    tools: [],
+    toolFactory: () => defs as never,
+  });
 const def = (over: object = {}) => ({
-  name: "funds_search", description: "d", inputSchema: z.object({}), execute: () => ({ ok: 1 }), ...over,
+  name: "funds_search",
+  description: "d",
+  inputSchema: z.object({}),
+  execute: () => ({ ok: 1 }),
+  ...over,
 });
 
 describe("shared tool factory", () => {
@@ -29,7 +39,9 @@ describe("shared tool factory", () => {
   });
   it("enforces permission before execute", async () => {
     pack([def({ permission: "fund.update" })]);
-    const t = createSharedEmbeddedTools(auth)["funds_search"] as { execute: (i: unknown, o: unknown) => Promise<unknown> };
+    const t = createSharedEmbeddedTools(auth)["funds_search"] as {
+      execute: (i: unknown, o: unknown) => Promise<unknown>;
+    };
     await assert.rejects(() => t.execute({}, {}), /Authentication required/);
   });
 });

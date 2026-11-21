@@ -289,7 +289,7 @@ type DomainPack = {
   resources?: readonly string[];
   prompts?: readonly string[];
   skills?: readonly string[];
-  toolFactory?: LogosToolFactory;          // shared embedded + MCP tools (Step 6)
+  toolFactory?: LogosToolFactory; // shared embedded + MCP tools (Step 6)
   register?: (server, authInfo?) => void; // optional; mounting is in wire.ts
 };
 ```

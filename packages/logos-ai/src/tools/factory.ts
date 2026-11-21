@@ -23,9 +23,7 @@ export type LogosToolFactoryContext = {
   [key: string]: unknown;
 };
 
-export type LogosToolFactory = (
-  context: LogosToolFactoryContext,
-) => readonly LogosToolDefinition[];
+export type LogosToolFactory = (context: LogosToolFactoryContext) => readonly LogosToolDefinition[];
 
 const toolFactories = new Map<string, LogosToolFactory>();
 
@@ -52,8 +50,6 @@ export function createLogosDomainTools(
   );
 }
 
-export function createLogosToolFactory(
-  factories: readonly LogosToolFactory[],
-): LogosToolFactory {
+export function createLogosToolFactory(factories: readonly LogosToolFactory[]): LogosToolFactory {
   return (context) => factories.flatMap((factory) => [...factory(context)]);
 }

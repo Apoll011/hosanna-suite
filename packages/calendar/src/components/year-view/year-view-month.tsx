@@ -61,9 +61,20 @@ export function YearViewMonth({ month, events, onDateClick, onMonthClick }: IPro
             if (day === null) return <div key={`blank-${index}`} className="h-10" />;
 
             const date = new Date(month.getFullYear(), month.getMonth(), day);
-            const dayEvents = events.filter(event => isSameDay(getEventStart(event), date) || isSameDay(getEventEnd(event), date));
+            const dayEvents = events.filter(
+              (event) =>
+                isSameDay(getEventStart(event), date) || isSameDay(getEventEnd(event), date),
+            );
 
-            return <YearViewDayCell key={`day-${day}`} day={day} date={date} events={dayEvents} onDateClick={onDateClick} />;
+            return (
+              <YearViewDayCell
+                key={`day-${day}`}
+                day={day}
+                date={date}
+                events={dayEvents}
+                onDateClick={onDateClick}
+              />
+            );
           })}
         </div>
       </div>

@@ -83,7 +83,11 @@ export function rangeText(view: TCalendarView, date: Date) {
   return `${format(start, formatString)} - ${format(end, formatString)}`;
 }
 
-export function navigateDate(date: Date, view: TCalendarView, direction: "previous" | "next"): Date {
+export function navigateDate(
+  date: Date,
+  view: TCalendarView,
+  direction: "previous" | "next",
+): Date {
   const operations = {
     agenda: direction === "next" ? addMonths : subMonths,
     year: direction === "next" ? addYears : subYears,
@@ -104,18 +108,22 @@ export function getEventsCount(events: AgendaEvent[], date: Date, view: TCalenda
     month: isSameMonth,
   };
 
-  return events.filter(event => compareFns[view](getEventStart(event), date)).length;
+  return events.filter((event) => compareFns[view](getEventStart(event), date)).length;
 }
 
 // ================ Week and day view helper functions ================ //
 
 export function getCurrentEvents(events: AgendaEvent[]) {
   const now = new Date();
-  return events.filter(event => isWithinInterval(now, { start: getEventStart(event), end: getEventEnd(event) }));
+  return events.filter((event) =>
+    isWithinInterval(now, { start: getEventStart(event), end: getEventEnd(event) }),
+  );
 }
 
 export function groupEvents(dayEvents: AgendaEvent[]) {
-  const sortedEvents = [...dayEvents].sort((a, b) => getEventStart(a).getTime() - getEventStart(b).getTime());
+  const sortedEvents = [...dayEvents].sort(
+    (a, b) => getEventStart(a).getTime() - getEventStart(b).getTime(),
+  );
   const groups: AgendaEvent[][] = [];
 
   for (const event of sortedEvents) {
@@ -139,7 +147,13 @@ export function groupEvents(dayEvents: AgendaEvent[]) {
   return groups;
 }
 
-export function getEventBlockStyle(event: AgendaEvent, day: Date, groupIndex: number, groupSize: number, visibleHoursRange?: { from: number; to: number }) {
+export function getEventBlockStyle(
+  event: AgendaEvent,
+  day: Date,
+  groupIndex: number,
+  groupSize: number,
+  visibleHoursRange?: { from: number; to: number },
+) {
   const startDate = getEventStart(event);
   const dayStart = new Date(day);
   dayStart.setHours(0, 0, 0, 0);
@@ -176,7 +190,7 @@ export function getVisibleHours(visibleHours: TVisibleHours, singleDayEvents: Ag
   let earliestEventHour = visibleHours.from;
   let latestEventHour = visibleHours.to;
 
-  singleDayEvents.forEach(event => {
+  singleDayEvents.forEach((event) => {
     const startHour = getEventStart(event).getHours();
     const endTime = getEventEnd(event);
     const endHour = endTime.getHours() + (endTime.getMinutes() > 0 ? 1 : 0);
@@ -187,7 +201,10 @@ export function getVisibleHours(visibleHours: TVisibleHours, singleDayEvents: Ag
   earliestEventHour = Math.max(0, Math.min(earliestEventHour, 23));
   latestEventHour = Math.min(Math.max(latestEventHour, earliestEventHour + 1), 24);
 
-  const hours = Array.from({ length: latestEventHour - earliestEventHour }, (_, i) => i + earliestEventHour);
+  const hours = Array.from(
+    { length: latestEventHour - earliestEventHour },
+    (_, i) => i + earliestEventHour,
+  );
 
   return { hours, earliestEventHour, latestEventHour };
 }
@@ -227,14 +244,18 @@ export function getCalendarCells(selectedDate: Date): ICalendarCell[] {
   return [...prevMonthCells, ...currentMonthCells, ...nextMonthCells];
 }
 
-export function calculateMonthEventPositions(multiDayEvents: AgendaEvent[], singleDayEvents: AgendaEvent[], selectedDate: Date) {
+export function calculateMonthEventPositions(
+  multiDayEvents: AgendaEvent[],
+  singleDayEvents: AgendaEvent[],
+  selectedDate: Date,
+) {
   const monthStart = startOfMonth(selectedDate);
   const monthEnd = endOfMonth(selectedDate);
 
   const eventPositions: { [key: string]: number } = {};
   const occupiedPositions: { [key: string]: boolean[] } = {};
 
-  eachDayOfInterval({ start: monthStart, end: monthEnd }).forEach(day => {
+  eachDayOfInterval({ start: monthStart, end: monthEnd }).forEach((day) => {
     occupiedPositions[day.toISOString()] = [false, false, false];
   });
 
@@ -247,7 +268,7 @@ export function calculateMonthEventPositions(multiDayEvents: AgendaEvent[], sing
     ...singleDayEvents.sort((a, b) => getEventStart(a).getTime() - getEventStart(b).getTime()),
   ];
 
-  sortedEvents.forEach(event => {
+  sortedEvents.forEach((event) => {
     const eventStart = getEventStart(event);
     const eventEnd = getEventEnd(event);
     const eventDays = eachDayOfInterval({
@@ -259,7 +280,7 @@ export function calculateMonthEventPositions(multiDayEvents: AgendaEvent[], sing
 
     for (let i = 0; i < 3; i++) {
       if (
-        eventDays.every(day => {
+        eventDays.every((day) => {
           const dayPositions = occupiedPositions[startOfDay(day).toISOString()];
           return dayPositions && !dayPositions[i];
         })
@@ -270,7 +291,7 @@ export function calculateMonthEventPositions(multiDayEvents: AgendaEvent[], sing
     }
 
     if (position !== -1) {
-      eventDays.forEach(day => {
+      eventDays.forEach((day) => {
         const dayKey = startOfDay(day).toISOString();
         if (occupiedPositions[dayKey]) {
           occupiedPositions[dayKey][position] = true;
@@ -283,11 +304,15 @@ export function calculateMonthEventPositions(multiDayEvents: AgendaEvent[], sing
   return eventPositions;
 }
 
-export function getMonthCellEvents(date: Date, events: AgendaEvent[], eventPositions: Record<string, number>) {
+export function getMonthCellEvents(
+  date: Date,
+  events: AgendaEvent[],
+  eventPositions: Record<string, number>,
+) {
   const cellStart = startOfDay(date);
   const cellEnd = endOfDay(date);
 
-  const eventsForDate = events.filter(event => {
+  const eventsForDate = events.filter((event) => {
     const eventStart = getEventStart(event);
     const eventEnd = getEventEnd(event);
     return (
@@ -299,7 +324,7 @@ export function getMonthCellEvents(date: Date, events: AgendaEvent[], eventPosit
   });
 
   return eventsForDate
-    .map(event => ({
+    .map((event) => ({
       ...event,
       position: eventPositions[event.id] ?? -1,
       isMultiDay: !isSameDay(getEventStart(event), getEventEnd(event)),

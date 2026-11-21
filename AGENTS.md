@@ -56,7 +56,7 @@ pnpm openapi:check                       # fail on stale spec/types (run in CI)
 | Auth, sessions, RBAC, Stripe                                    | [`docs/architecture/auth-and-billing.md`](docs/architecture/auth-and-billing.md)                                                                                         |
 | Home, App Switcher, AccountMenu, personal settings / app scopes | [`docs/architecture/suite-hub-and-preferences.md`](docs/architecture/suite-hub-and-preferences.md)                                                                       |
 | UI / visual work                                                | [`docs/hosanna-visual-language.md`](docs/hosanna-visual-language.md) **and** current tokens in `apps/studio/src/index.css` / `apps/auth/app/globals.css` / `packages/ui` |
-| Longer product direction                                        | [`docs/FUTURE_DIRECTION.md`](docs/FUTURE_DIRECTION.md) (vision; do not treat unfinished ideas as shipped)                                                               |
+| Longer product direction                                        | [`docs/FUTURE_DIRECTION.md`](docs/FUTURE_DIRECTION.md) (vision; do not treat unfinished ideas as shipped)                                                                |
 
 ### Optional / deeper (as needed)
 

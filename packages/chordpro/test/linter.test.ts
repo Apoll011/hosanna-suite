@@ -140,14 +140,16 @@ describe("ChordPro linter — section interlocking and nesting", () => {
 
 describe("ChordPro linter — metadata directives validation", () => {
   it("validates text directives (non-empty)", () => {
-    const invalidSong = "{title: }\n{subtitle}\n{artist:    }\n{composer:}\n{lyricist: }\n{album:}\n{copyright: }\n{song_number: }";
+    const invalidSong =
+      "{title: }\n{subtitle}\n{artist:    }\n{composer:}\n{lyricist: }\n{album:}\n{copyright: }\n{song_number: }";
     const d = lintChordPro(invalidSong);
     const emptyCount = d.filter((x) => x.code === "empty-directive-value").length;
     assert.equal(emptyCount, 8);
   });
 
   it("accepts valid text directives", () => {
-    const validSong = "{title: Amazing Grace}\n{subtitle: Traditional}\n{artist: John Newton}\n{composer: John Newton}\n{lyricist: John Newton}\n{album: Hymns}\n{copyright: Public Domain}\n{song_number: 101}\n[G]Amazing";
+    const validSong =
+      "{title: Amazing Grace}\n{subtitle: Traditional}\n{artist: John Newton}\n{composer: John Newton}\n{lyricist: John Newton}\n{album: Hymns}\n{copyright: Public Domain}\n{song_number: 101}\n[G]Amazing";
     const d = lintChordPro(validSong);
     assert.equal(d.length, 0);
   });
@@ -226,10 +228,18 @@ describe("ChordPro linter — metadata directives validation", () => {
     assert.ok(lintChordPro("{youtube: dQw4w9WgXcQ}").length === 0);
     assert.ok(lintChordPro("{youtube: https://www.youtube.com/watch?v=dQw4w9WgXcQ}").length === 0);
     assert.ok(lintChordPro("{youtube: https://youtu.be/dQw4w9WgXcQ}").length === 0);
-    assert.ok(lintChordPro("{youtube: https://music.youtube.com/watch?v=dQw4w9WgXcQ}").length === 0);
+    assert.ok(
+      lintChordPro("{youtube: https://music.youtube.com/watch?v=dQw4w9WgXcQ}").length === 0,
+    );
 
-    assert.ok(lintChordPro("{youtube: not-a-video-id}").some((x) => x.code === "invalid-youtube-value"));
-    assert.ok(lintChordPro("{youtube: https://vimeo.com/12345}").some((x) => x.code === "invalid-youtube-value"));
+    assert.ok(
+      lintChordPro("{youtube: not-a-video-id}").some((x) => x.code === "invalid-youtube-value"),
+    );
+    assert.ok(
+      lintChordPro("{youtube: https://vimeo.com/12345}").some(
+        (x) => x.code === "invalid-youtube-value",
+      ),
+    );
     assert.ok(lintChordPro("{youtube: }").some((x) => x.code === "empty-directive-value"));
   });
 

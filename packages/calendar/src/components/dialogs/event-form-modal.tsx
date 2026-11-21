@@ -130,9 +130,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
   servicesLoading = false,
   usualStartTime = "10:00",
 }) => {
-  const [form, setForm] = useState<EventFormValue>(() =>
-    emptyEventForm(initial, usualStartTime),
-  );
+  const [form, setForm] = useState<EventFormValue>(() => emptyEventForm(initial, usualStartTime));
   const [titleTouched, setTitleTouched] = useState(false);
 
   useEffect(() => {
@@ -158,7 +156,9 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
     setForm((f) => {
       const nextTitle = f.title.trim().length === 0 ? service.name : f.title;
       const nextDate = service.date ? service.date.slice(0, 10) : f.date;
-      const nextDuration = service.elements?.length ? serviceTotalMinutes(service) : f.durationMinutes;
+      const nextDuration = service.elements?.length
+        ? serviceTotalMinutes(service)
+        : f.durationMinutes;
       return {
         ...f,
         linkedServiceId: serviceId,
@@ -212,10 +212,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
         {/* Basic Information */}
         <section className="space-y-2.5">
-          <SectionHeader
-            icon={<FileText className="w-3.5 h-3.5" />}
-            title="Information"
-          />
+          <SectionHeader icon={<FileText className="w-3.5 h-3.5" />} title="Information" />
           <div>
             <Input
               label="Title"
@@ -269,7 +266,9 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                     className={`size-6 rounded-full transition-transform cursor-pointer ${
                       EVENT_COLOR_CLASSES[c]
                     } ${
-                      isSelected ? "ring-2 ring-offset-2 ring-m3-primary scale-110" : "hover:scale-105 opacity-80 hover:opacity-100"
+                      isSelected
+                        ? "ring-2 ring-offset-2 ring-m3-primary scale-110"
+                        : "hover:scale-105 opacity-80 hover:opacity-100"
                     }`}
                     title={c}
                   />
@@ -281,10 +280,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
         {/* Date and Time */}
         <section className="space-y-2.5">
-          <SectionHeader
-            icon={<Clock className="w-3.5 h-3.5" />}
-            title="Date & Time"
-          />
+          <SectionHeader icon={<Clock className="w-3.5 h-3.5" />} title="Date & Time" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <FieldLabel>Date</FieldLabel>
@@ -382,10 +378,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
 
         {/* Location & Notes */}
         <section className="space-y-2.5">
-          <SectionHeader
-            icon={<MapPin className="w-3.5 h-3.5" />}
-            title="Location & Notes"
-          />
+          <SectionHeader icon={<MapPin className="w-3.5 h-3.5" />} title="Location & Notes" />
           <div>
             <FieldLabel>Location</FieldLabel>
             <div className="relative">

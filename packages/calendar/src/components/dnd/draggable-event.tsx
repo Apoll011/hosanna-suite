@@ -27,7 +27,7 @@ export function DraggableEvent({ event, children }: DraggableEventProps) {
       const height = ref.current?.offsetHeight || 0;
       return { event, children, width, height };
     },
-    collect: monitor => ({ isDragging: monitor.isDragging() }),
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   }));
 
   // Hide the default drag preview

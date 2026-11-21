@@ -32,9 +32,14 @@ export function CalendarTimeline({ firstVisibleHour, lastVisibleHour }: IProps) 
   if (currentHour < firstVisibleHour || currentHour >= lastVisibleHour) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 z-50 border-t border-m3-primary" style={{ top: `${getCurrentTimePosition()}%` }}>
+    <div
+      className="pointer-events-none absolute inset-x-0 z-50 border-t border-m3-primary"
+      style={{ top: `${getCurrentTimePosition()}%` }}
+    >
       <div className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-m3-primary"></div>
-      <div className="absolute -left-18 flex w-16 -translate-y-1/2 justify-end bg-m3-card pr-1 text-xs font-medium text-m3-primary">{formatCurrentTime()}</div>
+      <div className="absolute -left-18 flex w-16 -translate-y-1/2 justify-end bg-m3-card pr-1 text-xs font-medium text-m3-primary">
+        {formatCurrentTime()}
+      </div>
     </div>
   );
 }

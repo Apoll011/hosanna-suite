@@ -25,13 +25,13 @@ export function CalendarMonthView({ singleDayEvents, multiDayEvents, onDateClick
 
   const eventPositions = useMemo(
     () => calculateMonthEventPositions(multiDayEvents, singleDayEvents, selectedDate),
-    [multiDayEvents, singleDayEvents, selectedDate]
+    [multiDayEvents, singleDayEvents, selectedDate],
   );
 
   return (
     <div>
       <div className="grid grid-cols-7 divide-x divide-m3-border">
-        {WEEK_DAYS.map(day => (
+        {WEEK_DAYS.map((day) => (
           <div key={day} className="flex items-center justify-center py-2">
             <span className="text-xs font-medium text-m3-secondary">{day}</span>
           </div>
@@ -39,8 +39,14 @@ export function CalendarMonthView({ singleDayEvents, multiDayEvents, onDateClick
       </div>
 
       <div className="grid grid-cols-7 overflow-hidden">
-        {cells.map(cell => (
-          <DayCell key={cell.date.toISOString()} cell={cell} events={allEvents} eventPositions={eventPositions} onDateClick={onDateClick} />
+        {cells.map((cell) => (
+          <DayCell
+            key={cell.date.toISOString()}
+            cell={cell}
+            events={allEvents}
+            eventPositions={eventPositions}
+            onDateClick={onDateClick}
+          />
         ))}
       </div>
     </div>

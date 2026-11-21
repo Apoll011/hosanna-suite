@@ -107,7 +107,9 @@ export function CalendarProvider({
 }: CalendarProviderProps) {
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>("colored");
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(initialVisibleHours);
-  const [workingHours, setWorkingHours] = useState<TWorkingHours | null | undefined>(initialWorkingHours);
+  const [workingHours, setWorkingHours] = useState<TWorkingHours | null | undefined>(
+    initialWorkingHours,
+  );
 
   const [uncontrolledView, setUncontrolledView] = useState<TCalendarView>("month");
   const view = controlledView ?? uncontrolledView;
@@ -125,7 +127,7 @@ export function CalendarProvider({
 
   const selectedEvent = useMemo(() => {
     if (!selectedEventId) return null;
-    return allEvents.find(e => e.id === selectedEventId) ?? null;
+    return allEvents.find((e) => e.id === selectedEventId) ?? null;
   }, [allEvents, selectedEventId]);
 
   const setSelectedDate = (date: Date | undefined) => {
@@ -136,7 +138,7 @@ export function CalendarProvider({
 
   const setSelectedEventId = (id: string | null) => {
     setSelectedEventIdState(id);
-    const found = id ? allEvents.find(e => e.id === id) ?? null : null;
+    const found = id ? (allEvents.find((e) => e.id === id) ?? null) : null;
     onEventSelect?.(found);
   };
 
@@ -153,17 +155,17 @@ export function CalendarProvider({
 
   const createEvent = (event: AgendaEvent) => {
     onEventCreate?.(event);
-    setLocalEvents(prev => [...prev, event]);
+    setLocalEvents((prev) => [...prev, event]);
   };
 
   const updateEvent = (event: AgendaEvent) => {
     onEventUpdate?.(event);
-    setLocalEvents(prev => prev.map(current => (current.id === event.id ? event : current)));
+    setLocalEvents((prev) => prev.map((current) => (current.id === event.id ? event : current)));
   };
 
   const deleteEvent = (event: AgendaEvent) => {
     onEventDelete?.(event);
-    setLocalEvents(prev => prev.filter(current => current.id !== event.id));
+    setLocalEvents((prev) => prev.filter((current) => current.id !== event.id));
     if (selectedEventId === event.id) {
       setSelectedEventId(null);
     }

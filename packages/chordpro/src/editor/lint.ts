@@ -93,8 +93,7 @@ export function attachChordProLinter(
         try {
           const id = session.addMarker(range, className, "text");
           markerIds.push(id);
-        } catch {
-        }
+        } catch {}
       }
     }
 

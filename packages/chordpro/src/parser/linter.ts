@@ -68,7 +68,16 @@ const BLOCK_END_ALIASES: Record<string, string> = {
   end_of_version: "version",
 };
 
-const MAJOR_SECTIONS = new Set(["verse", "chorus", "bridge", "version", "part", "refrain", "lead", "outro"]);
+const MAJOR_SECTIONS = new Set([
+  "verse",
+  "chorus",
+  "bridge",
+  "version",
+  "part",
+  "refrain",
+  "lead",
+  "outro",
+]);
 
 const TEXT_METADATA_DIRECTIVES = new Set([
   "title",
@@ -93,30 +102,14 @@ const TEXT_METADATA_DIRECTIVES = new Set([
   "sov_ver",
 ]);
 
-const COMMENT_DIRECTIVES = new Set([
-  "comment",
-  "c",
-  "comment_italic",
-  "ci",
-  "comment_box",
-  "cb",
-]);
+const COMMENT_DIRECTIVES = new Set(["comment", "c", "comment_italic", "ci", "comment_box", "cb"]);
 
-const SIZE_DIRECTIVES = new Set([
-  "textsize",
-  "chordsize",
-  "tabsize",
-  "gridsize",
-]);
+const SIZE_DIRECTIVES = new Set(["textsize", "chordsize", "tabsize", "gridsize"]);
 
-const COLOR_DIRECTIVES = new Set([
-  "textcolor",
-  "textcolour",
-  "chordcolor",
-  "chordcolour",
-]);
+const COLOR_DIRECTIVES = new Set(["textcolor", "textcolour", "chordcolor", "chordcolour"]);
 
-const KEY_REGEX = /^(?:[A-G]|D[oó]|R[eé]|Mi|F[aá]|Sol|L[aá]|Si)[#b♯♭]?(?:\s*(?:m|min|minor|menor|maj|major|maior|M))?$/i;
+const KEY_REGEX =
+  /^(?:[A-G]|D[oó]|R[eé]|Mi|F[aá]|Sol|L[aá]|Si)[#b♯♭]?(?:\s*(?:m|min|minor|menor|maj|major|maior|M))?$/i;
 
 const VALID_DENOMINATORS = new Set([1, 2, 4, 8, 16, 32, 64]);
 
@@ -213,7 +206,11 @@ export function isValidRepeat(value: string): boolean {
   return /^([1-9]\d*)\s*(?:x|vezes)?$/i.test(trimmed);
 }
 
-function getValueRange(line: string, colonIdx: number, trimmedValue: string): { column: number; endColumn: number } {
+function getValueRange(
+  line: string,
+  colonIdx: number,
+  trimmedValue: string,
+): { column: number; endColumn: number } {
   if (!trimmedValue) {
     return {
       column: line.indexOf("{"),
@@ -277,7 +274,11 @@ function analyzeBracketContent(
   return diagnostics;
 }
 
-function findBracketDiagnostics(line: string, lineIdx: number, lang?: string): ChordProDiagnostic[] {
+function findBracketDiagnostics(
+  line: string,
+  lineIdx: number,
+  lang?: string,
+): ChordProDiagnostic[] {
   const diagnostics: ChordProDiagnostic[] = [];
   const msg = getChordProMessages(lang);
   let depth = 0;
@@ -565,7 +566,12 @@ export function lintChordPro(content: string, options?: LintOptions): ChordProDi
         continue;
       }
 
-      if (lowerName === "key" || lowerName === "k" || lowerName === "original_key" || lowerName === "originalkey") {
+      if (
+        lowerName === "key" ||
+        lowerName === "k" ||
+        lowerName === "original_key" ||
+        lowerName === "originalkey"
+      ) {
         if (!value) {
           diagnostics.push({
             line: i,

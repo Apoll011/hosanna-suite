@@ -598,8 +598,7 @@ export const pt = {
     time_signature: "Alternativa à diretiva {time} para definir o compasso (ex: 4/4)",
     define:
       "Definições oficiais de acordes ChordPro, reconhecidas pelo formatador, mas não são de primeira classe no Hosanna",
-    new_page:
-      "Quebra de página, reconhecida pelo formatador; não aplicada na renderização Hosanna",
+    new_page: "Quebra de página, reconhecida pelo formatador; não aplicada na renderização Hosanna",
   },
   about: {
     eyebrow: "A História por trás do Hosanna",

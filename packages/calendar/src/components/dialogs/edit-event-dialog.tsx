@@ -9,7 +9,15 @@ import { useCalendar } from "../../contexts/calendar-context";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Textarea } from "../../ui/textarea";
-import { Dialog, DialogHeader, DialogContent, DialogTrigger, DialogTitle, DialogFooter, DialogClose } from "../../ui/dialog";
+import {
+  Dialog,
+  DialogHeader,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "../../ui/dialog";
 
 import type { AgendaEvent } from "../../interfaces";
 import type { TEventColor } from "../../types";
@@ -42,7 +50,12 @@ const PRESET_TYPES = [
 
 const DURATION_PRESETS = [30, 45, 60, 90, 120];
 
-export function EditEventDialog({ children, event, open: controlledOpen, onOpenChange: controlledOnOpenChange }: IProps) {
+export function EditEventDialog({
+  children,
+  event,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+}: IProps) {
   const { updateEvent, deleteEvent, canDelete } = useCalendar();
   const disclosure = useDisclosure();
 
@@ -103,13 +116,13 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
           <div>
             <label className="block text-xs font-semibold text-m3-text mb-1">Title</label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} required />
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
 
           <div>
             <label className="block text-xs font-semibold text-m3-text mb-1.5">Color</label>
             <div className="flex items-center gap-2">
-              {COLOR_OPTIONS.map(opt => {
+              {COLOR_OPTIONS.map((opt) => {
                 const isSelected = color === opt.color;
                 return (
                   <button
@@ -136,10 +149,10 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
             <label className="block text-xs font-semibold text-m3-text mb-1">Type</label>
             <div className="relative">
               <Tag className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
-              <Input value={type} onChange={e => setType(e.target.value)} className="pl-9" />
+              <Input value={type} onChange={(e) => setType(e.target.value)} className="pl-9" />
             </div>
             <div className="flex flex-wrap gap-1.5 mt-1.5">
-              {PRESET_TYPES.map(preset => (
+              {PRESET_TYPES.map((preset) => (
                 <button
                   key={preset}
                   type="button"
@@ -161,7 +174,13 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
               <label className="block text-xs font-semibold text-m3-text mb-1">Date</label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
-                <Input type="date" value={date} onChange={e => setDate(e.target.value)} className="pl-9" required />
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="pl-9"
+                  required
+                />
               </div>
             </div>
 
@@ -169,7 +188,13 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
               <label className="block text-xs font-semibold text-m3-text mb-1">Start Time</label>
               <div className="relative">
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
-                <Input type="time" value={time} onChange={e => setTime(e.target.value)} className="pl-9" required />
+                <Input
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="pl-9"
+                  required
+                />
               </div>
             </div>
           </div>
@@ -180,7 +205,7 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
               <span className="text-xs font-medium text-m3-secondary">{durationMinutes} min</span>
             </div>
             <div className="flex items-center gap-1.5">
-              {DURATION_PRESETS.map(d => (
+              {DURATION_PRESETS.map((d) => (
                 <button
                   key={d}
                   type="button"
@@ -198,12 +223,14 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-m3-text mb-1">Location (optional)</label>
+            <label className="block text-xs font-semibold text-m3-text mb-1">
+              Location (optional)
+            </label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
               <Input
                 value={location}
-                onChange={e => setLocation(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
                 placeholder="Main Auditorium, Room 201, etc."
                 className="pl-9"
               />
@@ -211,12 +238,14 @@ export function EditEventDialog({ children, event, open: controlledOpen, onOpenC
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-m3-text mb-1">Notes (optional)</label>
+            <label className="block text-xs font-semibold text-m3-text mb-1">
+              Notes (optional)
+            </label>
             <div className="relative">
               <FileText className="absolute left-3 top-3 size-4 text-m3-secondary pointer-events-none" />
               <Textarea
                 value={notes}
-                onChange={e => setNotes(e.target.value)}
+                onChange={(e) => setNotes(e.target.value)}
                 placeholder="Additional instructions or notes..."
                 rows={2}
                 className="pl-9 resize-none"

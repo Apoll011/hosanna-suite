@@ -17,7 +17,7 @@ export function WeekViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IPro
 
   const processedEvents = useMemo(() => {
     return multiDayEvents
-      .map(event => {
+      .map((event) => {
         const start = getEventStart(event);
         const end = getEventEnd(event);
         const adjustedStart = isBefore(start, weekStart) ? weekStart : start;
@@ -43,8 +43,10 @@ export function WeekViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IPro
   const eventRows = useMemo(() => {
     const rows: (typeof processedEvents)[] = [];
 
-    processedEvents.forEach(event => {
-      let rowIndex = rows.findIndex(row => row.every(e => e.endIndex < event.startIndex || e.startIndex > event.endIndex));
+    processedEvents.forEach((event) => {
+      let rowIndex = rows.findIndex((row) =>
+        row.every((e) => e.endIndex < event.startIndex || e.startIndex > event.endIndex),
+      );
 
       if (rowIndex === -1) {
         rowIndex = rows.length;
@@ -58,7 +60,7 @@ export function WeekViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IPro
   }, [processedEvents]);
 
   const hasEventsInWeek = useMemo(() => {
-    return processedEvents.some(event => event.startIndex < 7 && event.endIndex >= 0);
+    return processedEvents.some((event) => event.startIndex < 7 && event.endIndex >= 0);
   }, [processedEvents]);
 
   if (!hasEventsInWeek) return null;
@@ -69,7 +71,7 @@ export function WeekViewMultiDayEventsRow({ selectedDate, multiDayEvents }: IPro
       <div className="flex flex-1 flex-col gap-1 border-l py-1">
         {eventRows.map((row, rowIndex) => (
           <div key={rowIndex} className="grid grid-cols-7 gap-1">
-            {row.map(event => {
+            {row.map((event) => {
               const span = event.endIndex - event.startIndex + 1;
               const colStart = event.startIndex + 1;
 

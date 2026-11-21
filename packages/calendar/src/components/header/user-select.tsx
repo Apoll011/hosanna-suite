@@ -19,12 +19,14 @@ export function UserSelect() {
         <SelectItem value="all">
           <div className="flex items-center gap-1.5">
             <AvatarGroup max={2}>
-              {users.map(user => {
+              {users.map((user) => {
                 const avatar = user.avatarUrl ?? user.picturePath ?? undefined;
                 return (
                   <Avatar key={user.id} className="size-5 text-[0.625rem]">
                     <AvatarImage src={avatar} alt={user.name} />
-                    <AvatarFallback className="text-[0.625rem]">{user.name[0] ?? "?"}</AvatarFallback>
+                    <AvatarFallback className="text-[0.625rem]">
+                      {user.name[0] ?? "?"}
+                    </AvatarFallback>
                   </Avatar>
                 );
               })}
@@ -33,7 +35,7 @@ export function UserSelect() {
           </div>
         </SelectItem>
 
-        {users.map(user => {
+        {users.map((user) => {
           const avatar = user.avatarUrl ?? user.picturePath ?? undefined;
           return (
             <SelectItem key={user.id} value={user.id} className="flex-1">

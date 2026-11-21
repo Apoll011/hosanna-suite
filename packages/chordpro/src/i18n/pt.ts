@@ -1,30 +1,50 @@
 export const chordProPt = {
   emptyChord: "Acorde vazio: '[]'.",
   unknownChordRoot: (chord: string) => `Acorde não reconhecido: "${chord}".`,
-  unknownChordQuality: (chord: string) => `Qualidade de acorde não reconhecida em "${chord}" (assumida como maior).`,
+  unknownChordQuality: (chord: string) =>
+    `Qualidade de acorde não reconhecida em "${chord}" (assumida como maior).`,
   unmatchedBracketClose: "']' de fecho sem '[' correspondente.",
   unclosedBracket: "Acorde não fechado: falta ']'.",
   unclosedDirective: "Diretiva não fechada: falta '}'.",
   emptyDirective: "Diretiva vazia '{}'.",
   emptyDirectiveValue: (name: string) => `'{${name}}' precisa de um valor não vazio.`,
-  missingColonSeparator: (directive: string) => `Possível diretiva malformada (falta separador ':'): "{${directive}}".`,
-  chorusRecallWithoutChorus: "'{chorus}' repete o refrão anterior, mas ainda não existe nenhum '{start_of_chorus}' antes.",
-  nestedSection: (name: string, parentName: string, parentLine: number) => `A secção '${name}' foi aberta dentro de '${parentName}' (aberta na linha ${parentLine}) sem fechar a secção anterior.`,
-  interlockedBlocks: (closingRaw: string, closingName: string, innerName: string, innerLine: number) => `Secção interligada incorretamente: '{${closingRaw}}' tenta fechar '${closingName}', mas a secção interior '${innerName}' (aberta na linha ${innerLine}) ainda está aberta.`,
-  unmatchedBlockEnd: (rawName: string, name: string) => `'{${rawName}}' sem uma secção '${name}' aberta correspondente.`,
-  mismatchedBlockEnd: (expected: string, line: number, found: string) => `Esperava-se o fecho de '${expected}' (aberta na linha ${line}), mas encontrou '{${found}}'.`,
-  unclosedBlock: (name: string) => `Secção '${name}' aberta aqui nunca foi fechada (falta o directive de fecho correspondente).`,
-  nonNumericValue: (name: string, value: string) => `Valor de '${name}' deveria ser numérico, encontrado "${value}".`,
-  invalidTempoRange: (value: string) => `Valor de tempo deve estar entre 20 e 400 BPM, encontrado "${value}".`,
-  invalidCapoRange: (value: string) => `Valor de capo deve ser um inteiro entre 0 e 11, encontrado "${value}".`,
-  invalidKeyshiftValue: (value: string) => `Valor de keyshift deve ser um inteiro com sinal, encontrado "${value}".`,
-  invalidTimeSignature: (value: string) => `Formato de compasso inválido: "${value}"; use numerador/denominador (ex.: 4/4, 6/8).`,
-  invalidKey: (value: string) => `Tom musical inválido: "${value}"; use uma nota válida (ex.: G, C#m, Bb, Dó menor).`,
+  missingColonSeparator: (directive: string) =>
+    `Possível diretiva malformada (falta separador ':'): "{${directive}}".`,
+  chorusRecallWithoutChorus:
+    "'{chorus}' repete o refrão anterior, mas ainda não existe nenhum '{start_of_chorus}' antes.",
+  nestedSection: (name: string, parentName: string, parentLine: number) =>
+    `A secção '${name}' foi aberta dentro de '${parentName}' (aberta na linha ${parentLine}) sem fechar a secção anterior.`,
+  interlockedBlocks: (
+    closingRaw: string,
+    closingName: string,
+    innerName: string,
+    innerLine: number,
+  ) =>
+    `Secção interligada incorretamente: '{${closingRaw}}' tenta fechar '${closingName}', mas a secção interior '${innerName}' (aberta na linha ${innerLine}) ainda está aberta.`,
+  unmatchedBlockEnd: (rawName: string, name: string) =>
+    `'{${rawName}}' sem uma secção '${name}' aberta correspondente.`,
+  mismatchedBlockEnd: (expected: string, line: number, found: string) =>
+    `Esperava-se o fecho de '${expected}' (aberta na linha ${line}), mas encontrou '{${found}}'.`,
+  unclosedBlock: (name: string) =>
+    `Secção '${name}' aberta aqui nunca foi fechada (falta o directive de fecho correspondente).`,
+  nonNumericValue: (name: string, value: string) =>
+    `Valor de '${name}' deveria ser numérico, encontrado "${value}".`,
+  invalidTempoRange: (value: string) =>
+    `Valor de tempo deve estar entre 20 e 400 BPM, encontrado "${value}".`,
+  invalidCapoRange: (value: string) =>
+    `Valor de capo deve ser um inteiro entre 0 e 11, encontrado "${value}".`,
+  invalidKeyshiftValue: (value: string) =>
+    `Valor de keyshift deve ser um inteiro com sinal, encontrado "${value}".`,
+  invalidTimeSignature: (value: string) =>
+    `Formato de compasso inválido: "${value}"; use numerador/denominador (ex.: 4/4, 6/8).`,
+  invalidKey: (value: string) =>
+    `Tom musical inválido: "${value}"; use uma nota válida (ex.: G, C#m, Bb, Dó menor).`,
   invalidYear: (value: string) => `Ano inválido: "${value}"; use um ano de 4 dígitos (ex.: 2024).`,
   invalidDuration: (value: string) => `Formato de duração inválido: "${value}"; use mm:ss.`,
   invalidYoutube: (value: string) => `Link ou ID do YouTube inválido: "${value}".`,
   invalidCcli: (value: string) => `Número CCLI deve ser numérico, encontrado "${value}".`,
-  invalidRepeat: (value: string) => `Valor de repetição inválido: "${value}"; use um número positivo (ex.: 2 ou 2x).`,
+  invalidRepeat: (value: string) =>
+    `Valor de repetição inválido: "${value}"; use um número positivo (ex.: 2 ou 2x).`,
   invalidSize: (name: string, value: string) => `Tamanho inválido para '${name}': "${value}".`,
   invalidColor: (name: string, value: string) => `Cor inválida para '${name}': "${value}".`,
 };

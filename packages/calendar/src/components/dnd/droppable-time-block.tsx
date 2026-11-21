@@ -47,16 +47,19 @@ export function DroppableTimeBlock({ date, hour, minute, children }: DroppableTi
 
         return { moved: true };
       },
-      collect: monitor => ({
+      collect: (monitor) => ({
         isOver: monitor.isOver(),
         canDrop: monitor.canDrop(),
       }),
     }),
-    [date, hour, minute, updateEvent]
+    [date, hour, minute, updateEvent],
   );
 
   return (
-    <div ref={drop as unknown as React.RefObject<HTMLDivElement>} className={cn("h-[24px]", isOver && canDrop && "bg-m3-hover/50")}>
+    <div
+      ref={drop as unknown as React.RefObject<HTMLDivElement>}
+      className={cn("h-[24px]", isOver && canDrop && "bg-m3-hover/50")}
+    >
       {children}
     </div>
   );

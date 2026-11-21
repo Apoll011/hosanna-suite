@@ -11,7 +11,13 @@ describe("Logos tool factory", () => {
     clearLogosToolFactories();
     registerLogosToolFactory("finance.fund", () => [
       { name: "funds_search", description: "Search funds", inputSchema: {}, execute: () => ({}) },
-      { name: "open_app", description: "Open app", inputSchema: {}, execute: () => ({}), surfaces: ["embedded"] },
+      {
+        name: "open_app",
+        description: "Open app",
+        inputSchema: {},
+        execute: () => ({}),
+        surfaces: ["embedded"],
+      },
     ]);
 
     assert.deepEqual(

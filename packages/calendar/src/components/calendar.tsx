@@ -112,15 +112,19 @@ function CalendarContent({ className }: { className?: string; defaultView?: TCal
   const { view, setView, selectedDate, selectedUserId, events, setSelectedDate } = useCalendar();
 
   const filteredEvents = useMemo(() => {
-    return events.filter(event => {
+    return events.filter((event) => {
       const start = getEventStart(event);
       const end = getEventEnd(event);
       const userMatch =
         selectedUserId === "all" ||
         event.user?.id === selectedUserId ||
         (event.responsibilities &&
-          event.responsibilities.some(r =>
-            r.assignees.some(a => a.memberId === selectedUserId || a.name.toLowerCase() === selectedUserId.toLowerCase())
+          event.responsibilities.some((r) =>
+            r.assignees.some(
+              (a) =>
+                a.memberId === selectedUserId ||
+                a.name.toLowerCase() === selectedUserId.toLowerCase(),
+            ),
           ));
       if (!userMatch) return false;
 
@@ -132,7 +136,8 @@ function CalendarContent({ className }: { className?: string; defaultView?: TCal
       }
       if (view === "month" || view === "agenda") {
         return (
-          start <= new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) &&
+          start <=
+            new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59) &&
           end >= new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
         );
       }
@@ -145,46 +150,71 @@ function CalendarContent({ className }: { className?: string; defaultView?: TCal
         weekEnd.setHours(23, 59, 59, 999);
         return start <= weekEnd && end >= weekStart;
       }
-      const dayStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-      const dayEnd = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59);
+      const dayStart = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+      );
+      const dayEnd = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+        23,
+        59,
+        59,
+      );
       return start <= dayEnd && end >= dayStart;
     });
   }, [events, selectedDate, selectedUserId, view]);
 
-  const singleDayEvents = filteredEvents.filter(event => isSameDay(getEventStart(event), getEventEnd(event)));
-  const multiDayEvents = filteredEvents.filter(event => !isSameDay(getEventStart(event), getEventEnd(event)));
-  const eventStartDates = filteredEvents.map(event => ({ ...event, endDate: event.startDate }));
+  const singleDayEvents = filteredEvents.filter((event) =>
+    isSameDay(getEventStart(event), getEventEnd(event)),
+  );
+  const multiDayEvents = filteredEvents.filter(
+    (event) => !isSameDay(getEventStart(event), getEventEnd(event)),
+  );
+  const eventStartDates = filteredEvents.map((event) => ({ ...event, endDate: event.startDate }));
 
   return (
-    <div className={className ?? "overflow-hidden rounded-lg border border-m3-border bg-m3-card w-full"}>
+    <div
+      className={
+        className ?? "overflow-hidden rounded-lg border border-m3-border bg-m3-card w-full"
+      }
+    >
       <CalendarHeader view={view} events={filteredEvents} onViewChange={setView} />
       <DndProviderWrapper>
-        {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {view === "day" && (
+          <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />
+        )}
         {view === "month" && (
           <CalendarMonthView
             singleDayEvents={singleDayEvents}
             multiDayEvents={multiDayEvents}
-            onDateClick={date => {
+            onDateClick={(date) => {
               setSelectedDate(date);
               setView("day");
             }}
           />
         )}
-        {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {view === "week" && (
+          <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />
+        )}
         {view === "year" && (
           <CalendarYearView
             allEvents={eventStartDates}
-            onDateClick={date => {
+            onDateClick={(date) => {
               setSelectedDate(date);
               setView("day");
             }}
-            onMonthClick={date => {
+            onMonthClick={(date) => {
               setSelectedDate(date);
               setView("month");
             }}
           />
         )}
-        {view === "agenda" && <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {view === "agenda" && (
+          <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />
+        )}
       </DndProviderWrapper>
     </div>
   );

@@ -14,11 +14,7 @@ export const AvatarStack: React.FC<AvatarStackProps> = ({ assignees, max = 4, si
   const overflow = assignees.length - visible.length;
 
   if (assignees.length === 0) {
-    return (
-      <span className="text-[11px] font-semibold text-m3-secondary italic">
-        Unassigned
-      </span>
-    );
+    return <span className="text-[11px] font-semibold text-m3-secondary italic">Unassigned</span>;
   }
 
   if (assignees.length === 1) {

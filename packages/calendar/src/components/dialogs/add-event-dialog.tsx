@@ -10,7 +10,15 @@ import { useCalendar } from "../../contexts/calendar-context";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Textarea } from "../../ui/textarea";
-import { Dialog, DialogHeader, DialogContent, DialogTrigger, DialogTitle, DialogFooter, DialogClose } from "../../ui/dialog";
+import {
+  Dialog,
+  DialogHeader,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "../../ui/dialog";
 
 import type { AgendaEvent } from "../../interfaces";
 import type { TEventColor } from "../../types";
@@ -44,7 +52,13 @@ const PRESET_TYPES = [
 
 const DURATION_PRESETS = [30, 45, 60, 90, 120];
 
-export function AddEventDialog({ children, startDate, startTime, open: controlledOpen, onOpenChange: controlledOnOpenChange }: IProps) {
+export function AddEventDialog({
+  children,
+  startDate,
+  startTime,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+}: IProps) {
   const { createEvent } = useCalendar();
   const disclosure = useDisclosure();
 
@@ -59,7 +73,9 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
     }
   };
 
-  const initialDateStr = startDate ? format(startDate, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd");
+  const initialDateStr = startDate
+    ? format(startDate, "yyyy-MM-dd")
+    : format(new Date(), "yyyy-MM-dd");
   const initialTimeStr = startTime
     ? `${String(startTime.hour).padStart(2, "0")}:${String(startTime.minute).padStart(2, "0")}`
     : "10:00";
@@ -76,7 +92,9 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
   useEffect(() => {
     if (startDate) setDate(format(startDate, "yyyy-MM-dd"));
     if (startTime) {
-      setTime(`${String(startTime.hour).padStart(2, "0")}:${String(startTime.minute).padStart(2, "0")}`);
+      setTime(
+        `${String(startTime.hour).padStart(2, "0")}:${String(startTime.minute).padStart(2, "0")}`,
+      );
     }
   }, [startDate, startTime]);
 
@@ -122,7 +140,7 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
             <label className="block text-xs font-semibold text-m3-text mb-1">Title</label>
             <Input
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Sunday Morning Service"
               required
               autoFocus
@@ -132,7 +150,7 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
           <div>
             <label className="block text-xs font-semibold text-m3-text mb-1.5">Color</label>
             <div className="flex items-center gap-2">
-              {COLOR_OPTIONS.map(opt => {
+              {COLOR_OPTIONS.map((opt) => {
                 const isSelected = color === opt.color;
                 return (
                   <button
@@ -161,13 +179,13 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
               <Tag className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
               <Input
                 value={type}
-                onChange={e => setType(e.target.value)}
+                onChange={(e) => setType(e.target.value)}
                 placeholder="e.g. Culto Dominical"
                 className="pl-9"
               />
             </div>
             <div className="flex flex-wrap gap-1.5 mt-1.5">
-              {PRESET_TYPES.map(preset => (
+              {PRESET_TYPES.map((preset) => (
                 <button
                   key={preset}
                   type="button"
@@ -189,7 +207,13 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
               <label className="block text-xs font-semibold text-m3-text mb-1">Date</label>
               <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
-                <Input type="date" value={date} onChange={e => setDate(e.target.value)} className="pl-9" required />
+                <Input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="pl-9"
+                  required
+                />
               </div>
             </div>
 
@@ -197,7 +221,13 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
               <label className="block text-xs font-semibold text-m3-text mb-1">Start Time</label>
               <div className="relative">
                 <Clock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
-                <Input type="time" value={time} onChange={e => setTime(e.target.value)} className="pl-9" required />
+                <Input
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="pl-9"
+                  required
+                />
               </div>
             </div>
           </div>
@@ -208,7 +238,7 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
               <span className="text-xs font-medium text-m3-secondary">{durationMinutes} min</span>
             </div>
             <div className="flex items-center gap-1.5">
-              {DURATION_PRESETS.map(d => (
+              {DURATION_PRESETS.map((d) => (
                 <button
                   key={d}
                   type="button"
@@ -226,12 +256,14 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-m3-text mb-1">Location (optional)</label>
+            <label className="block text-xs font-semibold text-m3-text mb-1">
+              Location (optional)
+            </label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-m3-secondary pointer-events-none" />
               <Input
                 value={location}
-                onChange={e => setLocation(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
                 placeholder="Main Auditorium, Room 201, etc."
                 className="pl-9"
               />
@@ -239,12 +271,14 @@ export function AddEventDialog({ children, startDate, startTime, open: controlle
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-m3-text mb-1">Notes (optional)</label>
+            <label className="block text-xs font-semibold text-m3-text mb-1">
+              Notes (optional)
+            </label>
             <div className="relative">
               <FileText className="absolute left-3 top-3 size-4 text-m3-secondary pointer-events-none" />
               <Textarea
                 value={notes}
-                onChange={e => setNotes(e.target.value)}
+                onChange={(e) => setNotes(e.target.value)}
                 placeholder="Additional instructions or notes..."
                 rows={2}
                 className="pl-9 resize-none"

@@ -36,7 +36,7 @@ const agendaEventCardVariants = cva(
     defaultVariants: {
       color: "blue-dot",
     },
-  }
+  },
 );
 
 interface IProps {
@@ -52,7 +52,9 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
   const endDate = getEventEnd(event);
 
   const eventColor = getEventColor(event);
-  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<typeof agendaEventCardVariants>["color"];
+  const color = (badgeVariant === "dot" ? `${eventColor}-dot` : eventColor) as VariantProps<
+    typeof agendaEventCardVariants
+  >["color"];
 
   const isSelected = selectedEventId === event.id;
   const agendaEventCardClasses = agendaEventCardVariants({ color });
@@ -64,8 +66,8 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
     }
   };
 
-  const categoriesById = new Map(categories.map(c => [c.id, c]));
-  const allAssignees = event.responsibilities?.flatMap(r => r.assignees) ?? [];
+  const categoriesById = new Map(categories.map((c) => [c.id, c]));
+  const allAssignees = event.responsibilities?.flatMap((r) => r.assignees) ?? [];
 
   return (
     <div
@@ -119,7 +121,8 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
             <div className="flex items-center gap-1">
               <Users className="size-3.5 shrink-0 text-m3-primary" />
               <span className="font-medium text-m3-primary">
-                {event.responsibilities.length} {event.responsibilities.length === 1 ? "responsibility" : "responsibilities"}
+                {event.responsibilities.length}{" "}
+                {event.responsibilities.length === 1 ? "responsibility" : "responsibilities"}
               </span>
             </div>
           )}
@@ -127,13 +130,16 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
 
         {event.responsibilities && event.responsibilities.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-1">
-            {event.responsibilities.map(r => {
+            {event.responsibilities.map((r) => {
               const cat = categoriesById.get(r.categoryId);
               return (
-                <div key={r.id} className="inline-flex items-center gap-1 rounded bg-m3-hover px-1.5 py-0.5 text-[11px]">
+                <div
+                  key={r.id}
+                  className="inline-flex items-center gap-1 rounded bg-m3-hover px-1.5 py-0.5 text-[11px]"
+                >
                   <span className="font-medium text-m3-text">{cat?.label ?? "Resp"}:</span>
                   <span className="text-m3-secondary">
-                    {r.assignees.length > 0 ? r.assignees.map(a => a.name).join(", ") : "No one"}
+                    {r.assignees.length > 0 ? r.assignees.map((a) => a.name).join(", ") : "No one"}
                   </span>
                 </div>
               );

@@ -16,7 +16,17 @@ type TTimeInputProps = Omit<TimeFieldProps<TimeValue>, "isDisabled" | "isInvalid
 };
 
 const TimeInput = forwardRef<TTimeInputRef, TTimeInputProps>(
-  ({ className, dateInputClassName, segmentClassName, disabled, "data-invalid": dataInvalid, ...props }, ref) => {
+  (
+    {
+      className,
+      dateInputClassName,
+      segmentClassName,
+      disabled,
+      "data-invalid": dataInvalid,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <TimeField
         ref={ref}
@@ -32,10 +42,10 @@ const TimeInput = forwardRef<TTimeInputRef, TTimeInputProps>(
             "peer inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-md border bg-m3-card px-3 py-2 text-sm",
             "data-[focus-within]:outline-none data-[focus-within]:ring-1 data-[focus-within]:ring-m3-primary",
             "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-            dateInputClassName
+            dateInputClassName,
           )}
         >
-          {segment => (
+          {(segment) => (
             <DateSegment
               segment={segment}
               className={cn(
@@ -43,14 +53,14 @@ const TimeInput = forwardRef<TTimeInputRef, TTimeInputProps>(
                 "data-[focused]:bg-foreground/10 data-[focused]:text-m3-text",
                 "data-[placeholder]:text-m3-secondary",
                 "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-                segmentClassName
+                segmentClassName,
               )}
             />
           )}
         </DateInput>
       </TimeField>
     );
-  }
+  },
 );
 
 TimeInput.displayName = "TimeInput";

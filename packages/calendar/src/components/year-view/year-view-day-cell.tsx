@@ -34,7 +34,7 @@ export function YearViewDayCell({ day, date, events, onDateClick }: IProps) {
       <div
         className={cn(
           "flex size-6 items-center justify-center rounded-full text-xs font-medium",
-          isToday(date) && "bg-m3-primary font-semibold text-white"
+          isToday(date) && "bg-m3-primary font-semibold text-white",
         )}
       >
         {day}
@@ -43,7 +43,7 @@ export function YearViewDayCell({ day, date, events, onDateClick }: IProps) {
       {eventCount > 0 && (
         <div className="mt-0.5 flex gap-0.5">
           {eventCount <= maxIndicators ? (
-            events.map(event => {
+            events.map((event) => {
               const eventColor = getEventColor(event);
               return (
                 <div
@@ -56,7 +56,7 @@ export function YearViewDayCell({ day, date, events, onDateClick }: IProps) {
                     eventColor === "yellow" && "bg-yellow-600",
                     eventColor === "purple" && "bg-purple-600",
                     eventColor === "orange" && "bg-orange-600",
-                    eventColor === "gray" && "bg-neutral-600"
+                    eventColor === "gray" && "bg-neutral-600",
                   )}
                 />
               );
@@ -72,7 +72,7 @@ export function YearViewDayCell({ day, date, events, onDateClick }: IProps) {
                   getEventColor(events[0]) === "yellow" && "bg-yellow-600",
                   getEventColor(events[0]) === "purple" && "bg-purple-600",
                   getEventColor(events[0]) === "orange" && "bg-orange-600",
-                  getEventColor(events[0]) === "gray" && "bg-neutral-600"
+                  getEventColor(events[0]) === "gray" && "bg-neutral-600",
                 )}
               />
               <span className="text-[7px] text-m3-secondary">+{eventCount - 1}</span>

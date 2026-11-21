@@ -13,7 +13,7 @@ interface IProps {
 
 export function AgendaDayGroup({ date, events, multiDayEvents }: IProps) {
   const sortedEvents = [...events].sort(
-    (a, b) => getEventStart(a).getTime() - getEventStart(b).getTime()
+    (a, b) => getEventStart(a).getTime() - getEventStart(b).getTime(),
   );
 
   return (
@@ -24,17 +24,25 @@ export function AgendaDayGroup({ date, events, multiDayEvents }: IProps) {
 
       <div className="space-y-2">
         {multiDayEvents.length > 0 &&
-          multiDayEvents.map(event => {
+          multiDayEvents.map((event) => {
             const eventStart = startOfDay(getEventStart(event));
             const eventEnd = startOfDay(getEventEnd(event));
             const currentDate = startOfDay(date);
 
             const eventTotalDays = differenceInDays(eventEnd, eventStart) + 1;
             const eventCurrentDay = differenceInDays(currentDate, eventStart) + 1;
-            return <AgendaEventCard key={event.id} event={event} eventCurrentDay={eventCurrentDay} eventTotalDays={eventTotalDays} />;
+            return (
+              <AgendaEventCard
+                key={event.id}
+                event={event}
+                eventCurrentDay={eventCurrentDay}
+                eventTotalDays={eventTotalDays}
+              />
+            );
           })}
 
-        {sortedEvents.length > 0 && sortedEvents.map(event => <AgendaEventCard key={event.id} event={event} />)}
+        {sortedEvents.length > 0 &&
+          sortedEvents.map((event) => <AgendaEventCard key={event.id} event={event} />)}
       </div>
     </div>
   );
