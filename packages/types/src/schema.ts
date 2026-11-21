@@ -1293,6 +1293,8 @@ export interface components {
       date: string;
       /** @description Event notes */
       notes?: string | null;
+      /** @description Event color theme */
+      color?: string | null;
       /**
        * @description Replication tombstone flag
        * @default false

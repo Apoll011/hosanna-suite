@@ -171,6 +171,8 @@ model AgendaEvent {
 
   responsibilities Json @default("[]")
 
+  color String?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   Boolean   @default(false) @map("_deleted")

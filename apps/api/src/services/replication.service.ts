@@ -204,6 +204,7 @@ function toWireAgendaEvent(doc: any): any {
     reminder: doc.reminder ?? DEFAULT_REMINDER,
     linkedServiceId: doc.linkedServiceId ?? null,
     responsibilities: doc.responsibilities ?? [],
+    color: doc.color ?? null,
     createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : doc.createdAt,
     updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt,
     purgeAt: doc.purgeAt instanceof Date ? doc.purgeAt.toISOString() : (doc.purgeAt ?? null),
@@ -1140,6 +1141,7 @@ async function pushAgendaEvents(
           eventData.durationMinutes = Number(doc.durationMinutes) || 0;
         if (doc.location !== undefined) eventData.location = doc.location;
         if (doc.notes !== undefined) eventData.notes = doc.notes;
+        if (doc.color !== undefined) eventData.color = doc.color ?? null;
         if (doc.reminder !== undefined) eventData.reminder = doc.reminder;
         if (doc.linkedServiceId !== undefined) eventData.linkedServiceId = doc.linkedServiceId;
         if (doc.responsibilities !== undefined && Array.isArray(doc.responsibilities)) {
@@ -1167,6 +1169,7 @@ async function pushAgendaEvents(
         durationMinutes: Number(doc.durationMinutes) || 0,
         location: doc.location ?? null,
         notes: doc.notes ?? null,
+        color: doc.color ?? null,
         reminder: doc.reminder ?? DEFAULT_REMINDER,
         linkedServiceId: doc.linkedServiceId ?? null,
         responsibilities: Array.isArray(doc.responsibilities) ? doc.responsibilities : [],

@@ -2467,6 +2467,11 @@ components:
           type:
             - string
             - "null"
+        color:
+          description: Event color theme
+          type:
+            - string
+            - "null"
         isDeleted:
           default: false
           description: Replication tombstone flag
