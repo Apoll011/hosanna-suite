@@ -323,7 +323,7 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
             </div>
           </div>
           <div>
-            <FieldLabel>{t("agenda.color") || "Color"}</FieldLabel>
+            <FieldLabel>Color</FieldLabel>
             <div className="flex items-center gap-2 mt-1">
               {EVENT_COLOR_OPTIONS.map((c) => {
                 const isSelected = (form.color ?? "blue") === c;

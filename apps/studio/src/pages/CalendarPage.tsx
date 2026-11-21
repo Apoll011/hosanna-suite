@@ -82,8 +82,8 @@ export function CalendarPage() {
     return (organization?.members ?? []).map((m) => ({
       id: m.id,
       name: m.user?.name || m.id,
-      picturePath: m.user?.avatarUrl ?? null,
-      avatarUrl: m.user?.avatarUrl ?? null,
+      picturePath: m.user?.image ?? null,
+      avatarUrl: m.user?.image ?? null,
     }));
   }, [organization?.members]);
 
@@ -201,7 +201,7 @@ export function CalendarPage() {
     <div className="flex min-h-0 flex-1 flex-col overflow-auto bg-m3-bg px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
         <PageHeader
-          title={t("common.calendar") || "Calendar"}
+          title="Calendar"
           description={t("agenda.subtitle")}
           actions={
             <>
@@ -280,7 +280,7 @@ export function CalendarPage() {
                   respId,
                 });
               }}
-              onPrintEvent={(ev) => printEvent(ev, store.categories)}
+              onPrintEvent={(ev) => printEvent(ev as unknown as AgendaEvent, store.categories)}
             />
           </section>
         )}
@@ -383,12 +383,11 @@ export function CalendarPage() {
         <RemoveAssignmentModal
           isOpen={!!pendingRemoval}
           onClose={() => setPendingRemoval(null)}
-          onConfirm={() => void handleConfirmRemoval(true)}
-          onConfirmSilent={() => void handleConfirmRemoval(false)}
+          onConfirm={handleConfirmRemoval}
           title={removalInfo.title}
           summary={removalInfo.summary}
           affectedCount={removalInfo.count}
-          isRemoving={isRemoving}
+          isBusy={isRemoving}
         />
       )}
 
@@ -398,8 +397,8 @@ export function CalendarPage() {
           onClose={() => setPendingDeleteEvent(null)}
           onConfirm={handleConfirmDelete}
           eventTitle={pendingDeleteEvent.title}
-          eventDate={formatLongDate(pendingDeleteEvent.date, t)}
           affectedCount={deleteAffectedCount}
+          canNotify={notifications.canNotify}
         />
       )}
     </div>
