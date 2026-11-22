@@ -189,14 +189,17 @@ export const SongEditorPage: React.FC = () => {
       songId: song.id,
       title: song.title,
       artist: song.artist,
-      content,
+      content: deferredContent,
       updatedAt: song.updatedAt,
       folderId: song.folderId ?? null,
     });
+  }, [song, deferredContent]);
+
+  useEffect(() => {
     return () => {
       aiContextBridge.setSong(null);
     };
-  }, [song, content]);
+  }, []);
 
   const acceptAiProposal = useCallback(
     (next: string) => {
@@ -227,6 +230,11 @@ export const SongEditorPage: React.FC = () => {
         : null,
     [aiProposal, diffLabels, acceptAiProposal, declineAiProposal, t],
   );
+
+  const handleEditorChange = useCallback((value: string) => {
+    setContent(value);
+    setHasUnsavedChanges(true);
+  }, []);
 
   const handleSave = useCallback(
     async (updatedContent: string) => {
@@ -443,10 +451,7 @@ export const SongEditorPage: React.FC = () => {
           <div className="flex-1 overflow-hidden relative">
             <Editor
               value={content}
-              onChange={(val) => {
-                setContent(val);
-                setHasUnsavedChanges(true);
-              }}
+              onChange={handleEditorChange}
               settings={editorSettings}
               readOnly={!canUpdateSong}
               onSave={handleSave}
