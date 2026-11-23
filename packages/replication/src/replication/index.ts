@@ -19,6 +19,7 @@ export type {
 } from "./types";
 
 export { makeStatusSubject } from "./status";
+export { isTransientNetworkError } from "./network";
 
 export {
   VOLATILE_FIELDS,

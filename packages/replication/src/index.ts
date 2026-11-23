@@ -51,6 +51,7 @@ export {
   stripNonReplicatedFields,
   omitVolatile,
   isSpuriousConflict,
+  isTransientNetworkError,
   type ReplicationSyncState,
   type StatusSubject,
   type ReplicationManager,
