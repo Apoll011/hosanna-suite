@@ -5,7 +5,15 @@
 
 import { ResponsibilityCategory } from "@/src/types";
 import { InvitationStatus } from "better-auth/plugins/organization";
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { getDemoOrganization, getDemoUser } from "../demo/demoAuth";
 import { clearDemoData, isDemoMode } from "../demo/index";
 import {
@@ -23,7 +31,9 @@ import {
   readCachedUserId,
 } from "../lib/authSessionCache";
 import { clearPermissionCache } from "@hosanna/ui";
+import { isTransientNetworkError } from "@hosanna/replication/replication";
 import { captureException, identify, posthog, track } from "../lib/posthog";
+import { createResumeRefetchGate } from "../lib/resumeRefetch";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
 import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";
 
@@ -200,6 +210,8 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return null;
     }
   });
+
+  const resumeRefetchGate = useRef(createResumeRefetchGate());
 
   const handleClearSession = useCallback(() => {
     setUser(null);
@@ -433,8 +445,12 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return;
       }
     } catch (error) {
-      console.error("Failed to fetch session:", error);
-      captureException(error, { kind: "session_fetch" });
+      if (isTransientNetworkError(error)) {
+        console.warn("Session refetch failed while the network was unavailable:", error);
+      } else {
+        console.error("Failed to fetch session:", error);
+        captureException(error, { kind: "session_fetch" });
+      }
       const cachedUserStr = localStorage.getItem(CACHED_USER_KEY);
       if (cachedUserStr) {
         try {
@@ -490,6 +506,7 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     const refreshIfVisible = () => {
       if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+      if (!resumeRefetchGate.current()) return;
       void fetchSession();
     };
     window.addEventListener("focus", refreshIfVisible);
