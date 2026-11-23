@@ -67,7 +67,7 @@ export async function registerChordproMode(aceInstance?: any): Promise<void> {
             },
             {
               token: ["punctuation.tag", "markup.bold", "punctuation.tag"],
-              regex: rStart + "(start_of_[a-z_]+|so(c|v|b|t|l|g|r|m|p|e))" + rEnd,
+              regex: rStart + "(start_of_[a-z_]+|so(?:c|v|b|t|l|g|r|m|p|e))" + rEnd,
               caseInsensitive: true,
             },
 
