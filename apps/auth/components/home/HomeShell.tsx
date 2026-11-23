@@ -7,22 +7,21 @@ import { BrandMark } from "@/components/BrandMark";
 import { AuthLogosToggle } from "@/components/logos/AuthLogosProvider";
 import { AuthAppSwitcher } from "@/components/suite/AuthAppSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { useBrowserSearch } from "@/hooks/useBrowserSearch";
 import { readRedirectParam } from "@/lib/auth/redirect";
 import { useI18n } from "@/lib/ui/i18n";
 import { LoadingBar } from "@hosanna/ui";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useMemo, type ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 
 /** Header-only chrome for `/home` (no account sidebar). */
 export function HomeShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
   const { isRefreshing } = useActiveOrganization();
-  const returnUrl = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    return readRedirectParam(new URLSearchParams(window.location.search));
-  }, []);
+  const search = useBrowserSearch();
+  const returnUrl = search ? readRedirectParam(new URLSearchParams(search)) : null;
   const canGoBack = Boolean(returnUrl);
 
   const brandPillClass =

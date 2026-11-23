@@ -3,16 +3,14 @@
 import { AccountShell } from "@/components/AccountShell";
 import { AccountNav } from "@/components/account/AccountNav";
 import { AccountToastProvider, useAccountToast } from "@/components/account/AccountToast";
+import { useBrowserSearch } from "@/hooks/useBrowserSearch";
 import { readRedirectParam } from "@/lib/auth/redirect";
 import type { ReactNode } from "react";
-import { useMemo } from "react";
 
 function AccountLayoutInner({ children }: { children: ReactNode }) {
   const { toast } = useAccountToast();
-  const returnUrl = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    return readRedirectParam(new URLSearchParams(window.location.search));
-  }, []);
+  const search = useBrowserSearch();
+  const returnUrl = search ? readRedirectParam(new URLSearchParams(search)) : null;
 
   return (
     <AccountShell toast={toast} returnUrl={returnUrl}>

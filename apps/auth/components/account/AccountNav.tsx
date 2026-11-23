@@ -2,6 +2,7 @@
 
 import { OrgSwitcher } from "@/components/account/OrgSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { useBrowserSearch } from "@/hooks/useBrowserSearch";
 import type { TranslationKey } from "@/lib/ui/i18n";
 import { useI18n } from "@/lib/ui/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
@@ -19,7 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, type ComponentType, type MouseEvent, type ReactNode } from "react";
+import { type ComponentType, type MouseEvent, type ReactNode } from "react";
 
 type NavItem = {
   href: string;
@@ -81,10 +82,7 @@ const ORG_ITEMS: OrgNavItem[] = [
 ];
 
 function usePreservedSearch() {
-  return useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return window.location.search || "";
-  }, []);
+  return useBrowserSearch() ?? "";
 }
 
 function isActivePath(pathname: string, item: NavItem) {
