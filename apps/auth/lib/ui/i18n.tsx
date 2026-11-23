@@ -1,6 +1,7 @@
 "use client";
 
 import { readCachedActiveOrg } from "@/lib/organization/cache";
+import { resolveUiLanguage } from "@/lib/ui/language";
 import { MESSAGES } from "@/locales/ui";
 import {
   DEFAULT_PERSONAL_SETTINGS,
@@ -12,7 +13,6 @@ import {
 import {
   DEFAULT_LANGUAGE,
   LANGUAGE_LOCALE,
-  resolveLanguage,
   resolveString,
   type Interpolation,
   type Language,
@@ -24,7 +24,9 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
@@ -78,11 +80,24 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     () => DEFAULT_PERSONAL_SETTINGS.language,
   );
 
-  const language = useMemo<Language>(() => {
-    const browser =
-      typeof navigator !== "undefined" ? (navigator.languages ?? navigator.language) : undefined;
-    return resolveLanguage(personalLanguage, readOrgLocale(), browser);
-  }, [personalLanguage]);
+  const [hydrated, setHydrated] = useState(false);
+  useLayoutEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const language = useMemo<Language>(
+    () =>
+      resolveUiLanguage({
+        hydrated,
+        personalLanguage,
+        orgLocale: hydrated ? readOrgLocale() : null,
+        browserLocales:
+          hydrated && typeof navigator !== "undefined"
+            ? (navigator.languages ?? navigator.language)
+            : null,
+      }),
+    [hydrated, personalLanguage],
+  );
 
   const setPersonalLanguage = useCallback((lang: PersonalLanguage) => {
     void updatePersonalSettingsSafe(
