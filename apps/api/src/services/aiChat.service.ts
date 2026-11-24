@@ -16,14 +16,11 @@ import { z } from "zod";
 import { clockContextPromptBlock } from "../lib/clockContext.js";
 import { getMcpContext, requireMcpContext, requirePermission } from "../mcp/context.js";
 import { createSharedEmbeddedTools } from "../mcp/domains/toolFactory.js";
-import { createFolder, updateCollection, updateFolder } from "../mcp/lib/libraryCrud.js";
 import {
   nativeWebAuthFromRuntime,
   providerSupportsNativeFetch,
   type NativeWebAuth,
 } from "../mcp/lib/nativeWeb.js";
-import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS } from "../mcp/lib/studioUi.js";
-import { MAX_BATCH, runBatch } from "../mcp/lib/runBatch.js";
 import { AppError } from "../utils/errors.js";
 import {
   AI_LIMITS,
@@ -37,9 +34,6 @@ import { AiMemoryService } from "./aiMemory.service.js";
 import type { AiProvider } from "./orgAiConfig.service.js";
 import { AI_PROVIDER_DEFAULT_BASE_URL, OrgAiConfigService } from "./orgAiConfig.service.js";
 import { SongImportService } from "./songImport.service.js";
-
-const folderIconSchema = z.enum(FOLDER_ICON_IDS);
-const folderColorSchema = z.enum(FOLDER_COLOR_IDS);
 
 export type ChatPageContext = {
   kind?:
@@ -270,71 +264,6 @@ function buildHosannaTools(
     : {};
   return {
     ...memoryTools,
-
-    folders_create_many: tool({
-      description: `Create up to ${MAX_BATCH} folders in ONE call (prefer this over repeated folders_create). Same color/icon rules as folders_create. Per-item results; Studio refreshes automatically.`,
-      inputSchema: z.object({
-        folders: z
-          .array(
-            z.object({
-              name: z.string().min(1),
-              parentId: z.string().nullable().optional(),
-              color: folderColorSchema.optional(),
-              icon: folderIconSchema.optional(),
-            }),
-          )
-          .min(1)
-          .max(MAX_BATCH),
-      }),
-      execute: async ({ folders }) => {
-        const ctx = requireMcpContext(authInfo);
-        return textResult(await runBatch(folders, (f) => createFolder(ctx, f)));
-      },
-    }),
-    folders_update_many: tool({
-      description: `Rename/move/recolor up to ${MAX_BATCH} folders in ONE call (prefer this over repeated folders_update when changing several folders). Each item needs folderId + updatedAt (from folders_list). Per-item results; Studio refreshes automatically.`,
-      inputSchema: z.object({
-        updates: z
-          .array(
-            z.object({
-              folderId: z.string(),
-              updatedAt: z.string(),
-              name: z.string().min(1).optional(),
-              parentId: z.string().nullable().optional(),
-              color: folderColorSchema.optional(),
-              icon: folderIconSchema.optional(),
-            }),
-          )
-          .min(1)
-          .max(MAX_BATCH),
-      }),
-      execute: async ({ updates }) => {
-        const ctx = requireMcpContext(authInfo);
-        return textResult(await runBatch(updates, (u) => updateFolder(ctx, u)));
-      },
-    }),
-    collections_update_many: tool({
-      description: `Update metadata (name/description/color/icon) of up to ${MAX_BATCH} collections in ONE call. Each item needs collectionId + updatedAt. Per-item results; Studio refreshes automatically.`,
-      inputSchema: z.object({
-        updates: z
-          .array(
-            z.object({
-              collectionId: z.string(),
-              updatedAt: z.string(),
-              name: z.string().min(1).optional(),
-              description: z.string().nullable().optional(),
-              color: folderColorSchema.optional(),
-              icon: folderIconSchema.optional(),
-            }),
-          )
-          .min(1)
-          .max(MAX_BATCH),
-      }),
-      execute: async ({ updates }) => {
-        const ctx = requireMcpContext(authInfo);
-        return textResult(await runBatch(updates, (u) => updateCollection(ctx, u)));
-      },
-    }),
 
     ...(nativeWebAuth && providerSupportsNativeFetch(nativeWebAuth.provider) ? {} : {}),
 

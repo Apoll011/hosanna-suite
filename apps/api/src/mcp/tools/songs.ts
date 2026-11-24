@@ -31,7 +31,7 @@ function extractKeyDirective(content: string): string | null {
   return m?.[1]?.trim() ?? null;
 }
 
-function serializeSong(song: {
+export function serializeSong(song: {
   id: string;
   title: string;
   artist: string;

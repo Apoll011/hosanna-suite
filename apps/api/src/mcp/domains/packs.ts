@@ -17,21 +17,29 @@ import { registerSongTools } from "../tools/songs.js";
 import { captureMcpTools } from "./captureTools.js";
 import { embeddedUiToolFactory } from "./embeddedUiTools.js";
 import { libraryBatchToolFactory } from "./libraryBatchTools.js";
+import { songBatchToolFactory } from "./songBatchTools.js";
 import { registerDomainPack } from "./registry.js";
 import type { DomainPack, McpToolGate } from "./types.js";
 
 const discoveryFactory = captureMcpTools(registerDiscoveryTools, "suite");
 const orgFactory = captureMcpTools(registerOrgTools, "suite");
 const chordProFactory = captureMcpTools(registerChordProTools, "suite");
-const songFactory = captureMcpTools(registerSongTools, "music");
+const songFactory = createLogosToolFactory([
+  captureMcpTools(registerSongTools, "music"),
+  songBatchToolFactory,
+]);
 const serviceFactory = captureMcpTools(registerServiceTools, "planning");
 const libraryFactory = createLogosToolFactory([
-  captureMcpTools(registerLibraryTools, (name) => (name.startsWith("agenda_") ? "planning" : "music")),
+  captureMcpTools(registerLibraryTools, (name) =>
+    name.startsWith("agenda_") ? "planning" : "music",
+  ),
   libraryBatchToolFactory,
 ]);
 const platformFactory = createLogosToolFactory([discoveryFactory, embeddedUiToolFactory]);
 
-function toolNames(factory: (context: { surface: "mcp" }) => readonly { name: string }[]): string[] {
+function toolNames(
+  factory: (context: { surface: "mcp" }) => readonly { name: string }[],
+): string[] {
   return factory({ surface: "mcp" }).map((definition) => definition.name);
 }
 
@@ -63,6 +71,7 @@ function songToolGates(): McpToolGate[] {
     "songs_propose_fix",
     "songs_propose_transpose",
     "songs_draft_propagate_chords",
+    "songs_move_many",
     "songs_save",
     "songs_move",
     "songs_restore",
