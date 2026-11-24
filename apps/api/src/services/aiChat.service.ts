@@ -1,8 +1,6 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import { formatChordPro } from "@hosanna/chordpro/formatter";
-import { convertToChordProDetailed, lintChordPro, parseChordPro } from "@hosanna/chordpro/parser";
 import type { AuthInfo } from "@modelcontextprotocol/server";
 import {
   APICallError,
@@ -14,8 +12,19 @@ import {
   type ToolSet,
   type UIMessage,
 } from "ai";
-import { randomUUID } from "node:crypto";
 import { z } from "zod";
+import { clockContextPromptBlock } from "../lib/clockContext.js";
+import { getMcpContext, requireMcpContext, requirePermission } from "../mcp/context.js";
+import { createSharedEmbeddedTools } from "../mcp/domains/toolFactory.js";
+import { createFolder, updateCollection, updateFolder } from "../mcp/lib/libraryCrud.js";
+import {
+  nativeWebAuthFromRuntime,
+  providerSupportsNativeFetch,
+  type NativeWebAuth,
+} from "../mcp/lib/nativeWeb.js";
+import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS } from "../mcp/lib/studioUi.js";
+import { mapToolError } from "../mcp/lib/toolErrors.js";
+import { AppError } from "../utils/errors.js";
 import {
   AI_LIMITS,
   customInstructionsPromptBlock,
@@ -25,88 +34,12 @@ import {
   type ToolBudgetState,
 } from "./aiBehavior.js";
 import { AiMemoryService } from "./aiMemory.service.js";
-import {
-  folders as folderService,
-  getMcpContext,
-  requireMcpContext,
-  requirePermission,
-  requireWriteEntitlement,
-  services as serviceService,
-  songs as songService,
-} from "../mcp/context.js";
-import { explainChordProDirective, getChordProCapabilities } from "../mcp/lib/capabilities.js";
-import {
-  DOC_RESOURCES,
-  docsAccessReport,
-  listResources,
-  listSkills,
-  readDoc,
-  readSkill,
-  SKILL_NAMES,
-} from "../mcp/lib/docsAccess.js";
-import {
-  durationSecondsFromChordPro,
-  metadataFromChordPro,
-  mirroredMetadataWarnings,
-  validateChordProContent,
-} from "../mcp/lib/chordproGate.js";
-import { clipContent, FULL_CONTENT_MAX, SEARCH_CONTENT_MAX } from "../mcp/lib/contentClip.js";
-import { summarizeDiff } from "../mcp/lib/diff.js";
-import { withClientRequestId } from "../mcp/lib/idempotency.js";
-import {
-  collectionAddSongs,
-  collectionRemoveSongs,
-  createAgendaEvent,
-  createCollection,
-  createFolder,
-  getAgendaEvent,
-  getCollection,
-  listAgenda,
-  listCollections,
-  listFolders,
-  updateAgendaEvent,
-  updateCollection,
-  updateFolder,
-} from "../mcp/lib/libraryCrud.js";
-import { FOLDER_SONGS_MAX_LIMIT, listSongsInFolder } from "../mcp/lib/folderSongs.js";
-import { searchMusicBrainzRecordings } from "../mcp/lib/musicbrainz.js";
-import { propagateVerseChords } from "../mcp/lib/propagateChords.js";
-import { serviceElementsSchema, validateServicePlan } from "../mcp/lib/serviceElements.js";
-import { mapToolError } from "../mcp/lib/toolErrors.js";
-import { transposeChordProSource } from "../mcp/lib/transposeSource.js";
-import {
-  nativeWebAuthFromRuntime,
-  nativeWebFetch,
-  type NativeWebAuth,
-  NATIVE_WEB_CAPABILITIES,
-  providerSupportsNativeFetch,
-} from "../mcp/lib/nativeWeb.js";
-import {
-  getMe,
-  getMember,
-  getOrganization,
-  listMembers,
-  resolveMembers,
-} from "../mcp/lib/orgDirectory.js";
-import {
-  STUDIO_NAVIGATE_KINDS,
-  STUDIO_PRINT_KINDS,
-  studioNavigateDirective,
-  studioPrintDirective,
-} from "../mcp/lib/studioActions.js";
-import { OPEN_APP_TARGETS, openAppDirective } from "../mcp/lib/openApp.js";
-import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS, STUDIO_UI_CATALOG } from "../mcp/lib/studioUi.js";
-import { searchWeb } from "../mcp/lib/webSearch.js";
-import { searchYouTube } from "../mcp/lib/youtubeSearch.js";
-import { clockContextPromptBlock } from "../lib/clockContext.js";
-import { createSharedEmbeddedTools } from "../mcp/domains/toolFactory.js";
-import { AppError } from "../utils/errors.js";
-
-const folderIconSchema = z.enum(FOLDER_ICON_IDS);
-const folderColorSchema = z.enum(FOLDER_COLOR_IDS);
 import type { AiProvider } from "./orgAiConfig.service.js";
 import { AI_PROVIDER_DEFAULT_BASE_URL, OrgAiConfigService } from "./orgAiConfig.service.js";
 import { SongImportService } from "./songImport.service.js";
+
+const folderIconSchema = z.enum(FOLDER_ICON_IDS);
+const folderColorSchema = z.enum(FOLDER_COLOR_IDS);
 
 export type ChatPageContext = {
   kind?:
