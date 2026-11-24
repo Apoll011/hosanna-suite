@@ -252,6 +252,33 @@ const ptPT = {
       body2:
         "O acesso continuará disponível até ao fim do período faturado. Se mudares de ideias, podes reativar a subscrição a qualquer momento.",
     },
+    deletion_otp: {
+      subject: "Código de confirmação de eliminação — Hosanna",
+      heading: "Confirma a eliminação da tua conta",
+      body1:
+        "Recebemos um pedido para eliminar permanentemente a tua conta Hosanna. Usa o código abaixo para confirmar.",
+      body2:
+        "Se não pediste a eliminação da conta, ignora este e-mail e a tua conta continuará ativa.",
+      expiry: "O código expira em {{expiry_time}} minutos.",
+    },
+    org_deletion_otp: {
+      subject: "Código de confirmação de eliminação da organização — Hosanna",
+      heading: "Confirma a eliminação de {{church_name}}",
+      body1:
+        "Recebemos um pedido para eliminar permanentemente a organização {{church_name}} do Hosanna. Usa o código abaixo para confirmar.",
+      body2:
+        "Esta ação é irreversível. Todos os dados da organização serão removidos dos sistemas ativos.",
+      expiry: "O código expira em {{expiry_time}} minutos.",
+    },
+    org_deleted: {
+      subject: "A organização {{church_name}} foi eliminada — Hosanna",
+      heading: "Organização eliminada",
+      salutation: "Olá{{#if first_name}} {{first_name}}{{/if}},",
+      body1:
+        "Confirmamos que a organização {{church_name}} foi eliminada permanentemente. Todos os dados associados foram removidos dos nossos sistemas ativos.",
+      body2:
+        "Os backups encriptados dos fornecedores podem reter cópias por até 30 dias antes de serem sobrescritos.",
+    },
   },
 } as const;
 
