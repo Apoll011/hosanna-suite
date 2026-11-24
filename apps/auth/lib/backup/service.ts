@@ -5,7 +5,7 @@ import { AuthHttpError } from "@/lib/notifications/session";
 import { DEFAULT_LOCALE, t } from "@/locales/server";
 import { isLiveRow, sortFoldersParentsFirst } from "./helpers";
 
-const BACKUP_VERSION = "2.2";
+const BACKUP_VERSION = "3.0";
 
 export { isLiveRow, sortFoldersParentsFirst } from "./helpers";
 
@@ -17,7 +17,63 @@ export class BackupService {
   ) {}
 
   async export() {
-    const [folders, songs, services, collections, agendaEvents] = await Promise.all([
+    const [organization, aiSettings, aiMemory, members, teams, invitations, folders, songs, services, collections, agendaEvents, notes, annotations] = await Promise.all([
+      this.db.organization.findUnique({
+        where: { id: this.orgId },
+        select: { id: true, name: true, slug: true, logo: true, createdAt: true, metadata: true },
+      }),
+      this.db.orgAiConfig.findUnique({
+        where: { orgId: this.orgId },
+        select: {
+          provider: true,
+          model: true,
+          enabled: true,
+          baseUrl: true,
+          maxToolCalls: true,
+          temperature: true,
+          maxOutputTokens: true,
+          instructions: true,
+          memoryEnabled: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+      this.db.orgAiMemory.findMany({
+        where: { orgId: this.orgId },
+        select: { id: true, content: true, source: true, createdBy: true, createdAt: true },
+      }),
+      this.db.member.findMany({
+        where: { organizationId: this.orgId },
+        select: {
+          id: true,
+          role: true,
+          createdAt: true,
+          user: { select: { id: true, name: true, email: true, image: true, createdAt: true } },
+        },
+      }),
+      this.db.team.findMany({
+        where: { organizationId: this.orgId },
+        select: {
+          id: true,
+          name: true,
+          createdAt: true,
+          updatedAt: true,
+          teammembers: { select: { id: true, userId: true, createdAt: true } },
+        },
+      }),
+      this.db.invitation.findMany({
+        where: { organizationId: this.orgId },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          teamId: true,
+          status: true,
+          expiresAt: true,
+          createdAt: true,
+          inviterId: true,
+        },
+      }),
       this.db.folder.findMany({ where: { deleted: false } }),
       this.db.song.findMany({
         where: { deleted: false },
@@ -29,11 +85,42 @@ export class BackupService {
         include: { songs: { select: { id: true } } },
       }),
       this.db.agendaEvent.findMany({ where: { deleted: false } }),
+      this.db.serviceNote.findMany({
+        where: { orgId: this.orgId, private: false },
+        select: {
+          id: true,
+          serviceId: true,
+          elementId: true,
+          body: true,
+          private: true,
+          authorId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+      this.db.serviceSongAnnotation.findMany({
+        where: { orgId: this.orgId },
+        select: {
+          id: true,
+          serviceId: true,
+          songId: true,
+          canvasData: true,
+          updatedById: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
     ]);
 
     return {
       version: BACKUP_VERSION,
       exportedAt: new Date().toISOString(),
+      organization,
+      settings: { ai: aiSettings },
+      aiMemory,
+      members,
+      teams,
+      invitations,
       folders,
       songs: songs.map(({ collections: cols, ...song }) => ({
         ...song,
@@ -45,6 +132,11 @@ export class BackupService {
         songIds: songLinks.map((s) => s.id),
       })),
       agendaEvents,
+      notes,
+      annotations: annotations.map(({ canvasData, ...annotation }) => ({
+        ...annotation,
+        canvasData: Buffer.from(canvasData).toString("base64"),
+      })),
     };
   }
 

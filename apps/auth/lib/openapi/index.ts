@@ -93,7 +93,7 @@ export function getAuthPaths(): Record<string, any> {
         operationId: "exportBackup",
         security: sessionAuth,
         description:
-          "Export entire organization library (songs, folders, services) as a standalone JSON backup archive.",
+          "Export organization content, settings, members, invitations, and non-private service notes as JSON. Available in read-only billing mode.",
         responses: {
           200: {
             description: "OK",
