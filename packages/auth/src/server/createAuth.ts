@@ -29,6 +29,7 @@ import type {
   CreateAuthOptions,
   CreateAuthSlimOptions,
 } from "./types.js";
+import { Stripe } from "stripe";
 
 export type {
   CreateAuthOptions,
