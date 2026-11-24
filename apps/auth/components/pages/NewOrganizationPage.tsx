@@ -269,11 +269,17 @@ export function NewOrganizationPage() {
                     className="text-xs sm:text-sm text-m3-secondary leading-snug cursor-pointer select-none"
                   >
                     {t("auth.register.termsPrefix")}{" "}
-                    <Link href="https://hosanna.live/terms" className="text-m3-primary hover:underline">
+                    <Link
+                      href="https://hosanna.live/terms"
+                      className="text-m3-primary hover:underline"
+                    >
                       {t("auth.register.termsLink")}
                     </Link>{" "}
                     {t("auth.register.termsAnd")}{" "}
-                    <Link href="https://hosanna.live/privacy" className="text-m3-primary hover:underline">
+                    <Link
+                      href="https://hosanna.live/privacy"
+                      className="text-m3-primary hover:underline"
+                    >
                       {t("auth.register.privacyLink")}
                     </Link>
                   </label>

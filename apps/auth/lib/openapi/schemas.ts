@@ -35,10 +35,7 @@ export const BackupDocumentSchema = z
       .nullable()
       .optional()
       .describe("Organization profile"),
-    settings: z
-      .record(z.string(), z.any())
-      .optional()
-      .describe("Exportable organization settings"),
+    settings: z.record(z.string(), z.any()).optional().describe("Exportable organization settings"),
     aiMemory: z.array(z.record(z.string(), z.any())).optional().describe("Organization AI memory"),
     members: z.array(z.record(z.string(), z.any())).optional().describe("Organization members"),
     teams: z
@@ -60,10 +57,7 @@ export const BackupDocumentSchema = z
       .array(z.record(z.string(), z.any()))
       .optional()
       .describe("Exported calendar agenda events"),
-    notes: z
-      .array(z.record(z.string(), z.any()))
-      .optional()
-      .describe("Non-private service notes"),
+    notes: z.array(z.record(z.string(), z.any())).optional().describe("Non-private service notes"),
     annotations: z
       .array(z.record(z.string(), z.any()))
       .optional()

@@ -17,7 +17,11 @@ export async function GET() {
     }
     assertPermission(ctx, "backup.export");
     await requireExportRateLimit(ctx.userId, "organization");
-    const service = new BackupService(forOrganization(ctx.organizationId), ctx.organizationId, ctx.locale);
+    const service = new BackupService(
+      forOrganization(ctx.organizationId),
+      ctx.organizationId,
+      ctx.locale,
+    );
     return Response.json(await service.export(), {
       headers: {
         "Cache-Control": "private, no-store",

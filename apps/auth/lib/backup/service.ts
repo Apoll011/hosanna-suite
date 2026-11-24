@@ -17,7 +17,21 @@ export class BackupService {
   ) {}
 
   async export() {
-    const [organization, aiSettings, aiMemory, members, teams, invitations, folders, songs, services, collections, agendaEvents, notes, annotations] = await Promise.all([
+    const [
+      organization,
+      aiSettings,
+      aiMemory,
+      members,
+      teams,
+      invitations,
+      folders,
+      songs,
+      services,
+      collections,
+      agendaEvents,
+      notes,
+      annotations,
+    ] = await Promise.all([
       this.db.organization.findUnique({
         where: { id: this.orgId },
         select: { id: true, name: true, slug: true, logo: true, createdAt: true, metadata: true },

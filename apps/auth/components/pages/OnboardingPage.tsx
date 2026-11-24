@@ -793,8 +793,11 @@ export function OnboardingPage() {
               type="submit"
               size="md"
               disabled={
-                isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"
-                || !acceptedTerms
+                isLoading ||
+                !orgName.trim() ||
+                !orgSlug.trim() ||
+                slugStatus !== "available" ||
+                !acceptedTerms
               }
               isLoading={isLoading}
               className="rounded-full"

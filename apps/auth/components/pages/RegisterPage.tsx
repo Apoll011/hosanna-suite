@@ -117,7 +117,6 @@ export function RegisterPage() {
             {t("auth.register.loginLink")}
           </Link>
         </div>
-
       </AuthLayout>
     );
   }
@@ -239,7 +238,10 @@ export function RegisterPage() {
         </div>
       </form>
 
-      <SocialAuthButtons onError={(err) => setErrorMsg(err)} disabled={isLoading || !acceptedTerms} />
+      <SocialAuthButtons
+        onError={(err) => setErrorMsg(err)}
+        disabled={isLoading || !acceptedTerms}
+      />
     </AuthLayout>
   );
 }
