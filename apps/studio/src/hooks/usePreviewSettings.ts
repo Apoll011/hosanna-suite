@@ -135,7 +135,13 @@ export function usePreviewSettings(
         capoVal: directiveDefaults.capoVal,
       }));
     }
-  }, [songId, variantId, directiveDefaults?.transposeVal, directiveDefaults?.capoVal]);
+  }, [
+    songId,
+    variantId,
+    directiveDefaults,
+    directiveDefaults?.transposeVal,
+    directiveDefaults?.capoVal,
+  ]);
 
   const updateSetting = useCallback(
     <K extends keyof PreviewSettings>(key: K, value: PreviewSettings[K]) => {

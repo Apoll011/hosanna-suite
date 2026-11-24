@@ -10,8 +10,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useSync } from "../contexts/SyncContext";
 import { AgendaEventDocType, getDatabase, getPurgeAt, validateAgendaEventRules } from "../db";
-import { useOrgSettings } from "./useOrgSettings";
 import { track } from "../lib/posthog";
+import { useOrgSettings } from "./useOrgSettings";
 
 const DEFAULT_REMINDER: ReminderSettings = {
   enabled: false,
@@ -213,7 +213,7 @@ export function useAgenda() {
           durationMinutes: input.durationMinutes,
           location: input.location ?? null,
           notes: input.notes ?? null,
-          color: (input as any).color ?? "blue",
+          color: input.color ?? "blue",
           reminder: input.reminder ?? DEFAULT_REMINDER,
           linkedServiceId: input.linkedServiceId ?? null,
           responsibilities: [],

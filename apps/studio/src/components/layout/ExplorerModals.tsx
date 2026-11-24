@@ -570,7 +570,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
   onBatchMoveConfirm,
   selectedFolderObjects,
   onBatchDeleteConfirm,
-  onBatchTagConfirm,
   currentQuery,
   onApplyQuery,
   availableTags,

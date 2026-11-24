@@ -2,9 +2,9 @@
  * @license
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, Input, Can, CanAny, InboxButton } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
+import { Button, Can, CanAny, InboxButton, Input } from "@hosanna/ui";
 import {
   BarChart3,
   Calendar,
@@ -26,15 +26,14 @@ import {
   Search,
   Settings,
   Trash2Icon,
-  Users,
   X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
 import { authClient } from "../../lib/authClient";
 
-import { emitOnboardingEvent } from "../../lib/tour";
 import { AiChatToggle } from "@hosanna/logos-ai";
+import { emitOnboardingEvent } from "../../lib/tour";
 import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
 import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 import { SyncStatusBadge } from "../SyncStatusBadge";

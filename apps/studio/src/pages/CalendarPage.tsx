@@ -37,7 +37,7 @@ export function CalendarPage() {
   const { navigate } = useAppNavigate();
   const { servicesQuery } = useServices();
   const store = useAgenda();
-  const { printEvent, printEvents } = usePrint();
+  const { printEvent } = usePrint();
   const { granted: canCreateAgenda } = useCan("agenda.create");
   const { granted: canUpdateAgenda } = useCan("agenda.update");
   const { granted: canDeleteAgenda } = useCan("agenda.delete");
