@@ -27,12 +27,27 @@ describe("MCP domain packs", () => {
   it("filters shared tools for Auth, Music, Planning, and unknown hosts", () => {
     const authInfo = {} as AuthInfo;
     const auth = createSharedEmbeddedTools(authInfo, { appId: "auth" });
-    const music = createSharedEmbeddedTools(authInfo, { appId: "music" });
-    const planning = createSharedEmbeddedTools(authInfo, { appId: "planning" });
+    const hostCapabilities = [
+      "catalog.songs",
+      "catalog.services",
+      "editor.songs",
+      "editor.services",
+      "navigate.local",
+      "print",
+      "library.sync",
+    ];
+    const music = createSharedEmbeddedTools(authInfo, { appId: "music", capabilities: hostCapabilities });
+    const planning = createSharedEmbeddedTools(authInfo, { appId: "planning", capabilities: hostCapabilities });
     const unknown = createSharedEmbeddedTools(authInfo, { appId: "unrecognized" });
     const allMusicAndPlanning = new Set([...Object.keys(music), ...Object.keys(planning)]);
 
     assert.ok(MCP_TOOL_GROUPS.discovery.every((name) => name in auth));
+    assert.ok("open_app" in auth);
+    assert.ok(!("studio_navigate" in auth));
+    assert.ok("studio_navigate" in music);
+    assert.ok("studio_generate_pdf" in planning);
+    assert.ok("studio_sync" in music);
+    assert.ok(!("studio_search" in unknown));
     assert.ok(ALL_MCP_TOOL_NAMES.every((name) => allMusicAndPlanning.has(name)));
     assert.ok(!("songs_search" in auth));
     assert.ok("songs_search" in music);
