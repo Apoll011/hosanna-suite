@@ -5,6 +5,7 @@
 
 export type LogosToolSurface = "embedded" | "mcp";
 import type { SuiteAppId } from "@hosanna/auth";
+import type { LogosCapability } from "../kernel/capabilities.js";
 
 export type { SuiteAppId } from "@hosanna/auth";
 
@@ -21,12 +22,14 @@ export type LogosToolDefinition = {
   surfaces?: readonly LogosToolSurface[];
   apps?: readonly SuiteAppId[] | "suite";
   ui?: true;
+  requiresCapabilities?: readonly LogosCapability[];
 };
 
 export type LogosToolFactoryContext = {
   surface: LogosToolSurface;
   appId?: SuiteAppId;
   owningApp?: SuiteAppId;
+  capabilities?: readonly LogosCapability[];
   [key: string]: unknown;
 };
 
@@ -55,6 +58,13 @@ export function createLogosDomainTools(
   return factory({ ...context, surface }).filter((definition) => {
     if (definition.ui && surface !== "embedded") return false;
     if (definition.surfaces && !definition.surfaces.includes(surface)) return false;
+    if (
+      definition.requiresCapabilities?.some(
+        (capability) => !context.capabilities?.includes(capability),
+      )
+    ) {
+      return false;
+    }
     if (surface === "embedded") {
       const apps = definition.apps ?? context.owningApp;
       const allowed =

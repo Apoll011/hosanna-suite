@@ -5,12 +5,14 @@ function names(packId: string): string[] {
 }
 
 export const STUDIO_ONLY_TOOLS = [
-  "studio_sync",
-  "studio_navigate",
-  "studio_generate_pdf",
-  "studio_search",
-  "open_app",
-] as const;
+  ...DOMAIN_PACKS.flatMap(
+    (pack) =>
+      pack
+        .toolFactory?.({ surface: "embedded", owningApp: pack.app })
+        .filter((tool) => tool.ui)
+        .map((tool) => tool.name) ?? [],
+  ),
+];
 
 export const MCP_TOOL_GROUPS = {
   discovery: [...names("platform.discovery"), ...names("platform.org")],

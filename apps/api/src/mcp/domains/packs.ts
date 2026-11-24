@@ -7,6 +7,7 @@
  */
 
 import { permissionsForDomain } from "@hosanna/auth";
+import { createLogosToolFactory } from "@hosanna/logos-ai/tools";
 import { registerChordProTools } from "../tools/chordpro.js";
 import { registerDiscoveryTools } from "../tools/discovery.js";
 import { registerLibraryTools } from "../tools/library.js";
@@ -14,6 +15,7 @@ import { registerOrgTools } from "../tools/org.js";
 import { registerServiceTools } from "../tools/services.js";
 import { registerSongTools } from "../tools/songs.js";
 import { captureMcpTools } from "./captureTools.js";
+import { embeddedUiToolFactory } from "./embeddedUiTools.js";
 import { registerDomainPack } from "./registry.js";
 import type { DomainPack, McpToolGate } from "./types.js";
 
@@ -25,6 +27,7 @@ const serviceFactory = captureMcpTools(registerServiceTools, "planning");
 const libraryFactory = captureMcpTools(registerLibraryTools, (name) =>
   name.startsWith("agenda_") ? "planning" : "music",
 );
+const platformFactory = createLogosToolFactory([discoveryFactory, embeddedUiToolFactory]);
 
 function toolNames(factory: ReturnType<typeof captureMcpTools>): string[] {
   return factory({ surface: "mcp" }).map((definition) => definition.name);
@@ -144,7 +147,7 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     prompts: ["hosanna_system"],
     skills: ["hosanna://skills/hosanna-safe-data"],
     app: "platform",
-    toolFactory: discoveryFactory,
+    toolFactory: platformFactory,
   },
   {
     id: "platform.org",

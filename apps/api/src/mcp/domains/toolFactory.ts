@@ -63,6 +63,14 @@ function collect(
     for (const d of pack.toolFactory({ ...context, owningApp: pack.app, authInfo, surface })) {
       if (d.surfaces && !d.surfaces.includes(surface)) continue;
       if (d.ui && surface !== "embedded") continue;
+      if (
+        d.requiresCapabilities?.some(
+          (capability) =>
+            !Array.isArray(context.capabilities) || !context.capabilities.includes(capability),
+        )
+      ) {
+        continue;
+      }
       if (surface === "embedded") {
         const apps = d.apps ?? pack.app;
         const appId = suiteAppId(context.appId);
