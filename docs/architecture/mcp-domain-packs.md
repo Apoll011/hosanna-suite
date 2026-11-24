@@ -207,7 +207,7 @@ Use this when adding a real domain (example names: `fund`, domain id `finance.fu
 
 ### Step 3 — Tool catalog + Domain Pack
 
-1. Add tool names to `MCP_TOOL_GROUPS` in `lib/toolCatalog.ts` (contract tests assert uniqueness / coverage).
+1. Define the tool registrations once and expose them through the pack's `toolFactory`. Pack gates, `MCP_TOOL_GROUPS`, `ALL_MCP_TOOL_NAMES`, and embedded UI tool names are derived from those definitions.
 2. In `domains/packs.ts`, append a pack:
 
 ```ts
@@ -243,7 +243,7 @@ Discovery (`hosanna_capabilities` / `hosanna_permissions`) picks up the pack aut
 
 ### Step 6 — Shared embedded/MCP tools
 
-Add a `toolFactory` to the domain's `DomainPack` (`apps/api/src/mcp/domains/toolFactory.ts` mounts it). It returns `LogosToolDefinition` entries (`@hosanna/logos-ai/tools`):
+Add a `toolFactory` to the domain's `DomainPack` (`apps/api/src/mcp/domains/toolFactory.ts` mounts it). Existing MCP registrations are captured as factory definitions, so the same handler serves both surfaces. A factory returns `LogosToolDefinition` entries (`@hosanna/logos-ai/tools`):
 
 ```ts
 toolFactory: () => [
@@ -254,15 +254,18 @@ toolFactory: () => [
     permission: "fund.access",                // enforced before execute, both surfaces
     requiresEntitlement: false,               // true for writes
     execute: async (input) => { /* … */ },
+    apps: ["finance"],                        // omit = owning app; "suite" = every embedded app
     // surfaces: ["embedded"] | ["mcp"]       // omit = both
+    // ui: true                                // host directive, always embedded-only
   },
 ],
 ```
 
-- `createSharedEmbeddedTools` mounts it on Studio/Auth chat (`aiChat.service.ts`); `mountSharedDomainTools` mounts it on external MCP (`wire.ts`).
-- **Guards (throw at startup/build of the tool set):** duplicate tool names (including collisions with built-in embedded tools and `ALL_MCP_TOOL_NAMES`), non-zod `inputSchema`, and any `STUDIO_ONLY_TOOLS` name exposed on MCP.
-- Studio-only UI tools (`studio_navigate`, `open_app`, `studio_sync`, …) stay in `aiChat.service.ts`. If one is ever defined in a factory it **must** set `surfaces: ["embedded"]`.
-- Still add the tool names to the pack's `tools` gates (`packs.ts`) so discovery reports them.
+- `/ai/chat` carries the host `appId` and Logos host capabilities. Embedded factories filter by both before exposing tools. `apps: "suite"` makes a tool available in every embedded app. Without `apps`, the pack's owning app is used.
+- `createSharedEmbeddedTools` mounts the definitions on embedded chat; `mountSharedDomainTools` mounts only non-UI definitions on MCP.
+- **Guards:** duplicate names, non-zod `inputSchema`, permissions and entitlements declared by the definition, and UI directives excluded from MCP.
+- Host-executed directives such as navigation, sync, print, and `open_app` set `ui: true`. UI tool names and MCP tool catalogs are derived from definitions.
+- Pack `tools` gates carry permission metadata for discovery. Their names are generated from factory definitions.
 
 ### Step 7 — Tests
 
@@ -337,7 +340,7 @@ Proposal convention: tools return a `proposal` object; Logos `extractProposal` p
 - Do **not** add finance/fund logic inside Auth or Studio Logos providers — use catalog + resource registry.
 - Do **not** duplicate permission allowlists inside `hosanna_permissions`; use packs + `permissionsReportForUser`.
 - Do **not** register Studio-only tools on the external MCP server (the shared factory throws if you try).
-- Do **not** skip `toolCatalog.ts` when adding tools — contract tests depend on it.
+- Do **not** manually maintain tool-name arrays. `toolCatalog.ts` is derived from pack factories and contract tests check it.
 - Do **not** invent a parallel permission string format; keep `resource.action`.
 
 ---
