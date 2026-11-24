@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #!/usr/bin/env node
 /**
  * Run tailwint (official Tailwind language-server fixer) in each app that uses Tailwind.

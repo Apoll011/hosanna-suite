@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Execute actions against the current host.
  * Thin hosts: propose/confirm stay in chat; navigate/print are NO-OPs here

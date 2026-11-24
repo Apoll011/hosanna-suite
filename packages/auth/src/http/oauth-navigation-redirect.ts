@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Better Auth oauth-provider returns JSON { redirect, url } for fetch callers
  * and a real 302 for top-level navigations. MCP hosts open oauth2/authorize

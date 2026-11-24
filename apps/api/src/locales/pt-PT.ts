@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * pt-PT: canonical locale (source of truth).
  * All other locales must mirror this key structure exactly.

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Studio-scoped personal settings (`apps.studio`) — registered on the shared
  * `@hosanna/auth` personal-settings store.

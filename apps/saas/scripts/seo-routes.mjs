@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Single source of route SEO for prerender (sitemap + static HTML shells).
  * Keep in sync with src/lib/seo.ts (client-side navigation meta).

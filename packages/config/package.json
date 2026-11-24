@@ -2,7 +2,7 @@
   "name": "@hosanna/config",
   "version": "1.0.1",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Shared TypeScript and Prettier configuration for Hosanna workspaces",
   "files": [
     "tsconfig",

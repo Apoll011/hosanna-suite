@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { get } from "@vercel/global-config";
 
 /** Stable period ids — clients map these through shared i18n (`billing.period.*`). */

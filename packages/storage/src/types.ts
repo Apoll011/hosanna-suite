@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { Readable } from "node:stream";
 
 export type ObjectBody = Uint8Array | Blob | ReadableStream<Uint8Array> | Readable;

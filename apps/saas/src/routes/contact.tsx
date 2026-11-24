@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { ContactForm } from "@/components/hosanna/ContactForm";
 import { Footer, Nav } from "@/components/hosanna/HosannaLanding";
 import WebGLCanvas from "@/components/ui/WebGLCanvas";

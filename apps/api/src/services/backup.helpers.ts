@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Soft-deleted / tombstoned rows are skipped on backup restore. */
 export function isLiveRow(row: { deleted?: boolean; _deleted?: boolean } | null | undefined) {
   if (!row || typeof row !== "object") return false;

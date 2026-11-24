@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { ObjectStorage } from "@hosanna/storage";
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;

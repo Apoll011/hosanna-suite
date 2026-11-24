@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { AnalyticsConfig } from "./types.js";
 
 export const POSTHOG_INIT_OPTIONS = {

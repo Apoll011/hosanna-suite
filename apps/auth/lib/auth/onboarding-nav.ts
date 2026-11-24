@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export type OnboardingNavLink =
   | { id: "home"; href: "/home"; labelKey: "common.goHome" }
   | { id: "account"; href: "/account"; labelKey: "home.nav.account" };

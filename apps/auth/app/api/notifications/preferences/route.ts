@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { NOTIFICATION_TYPES } from "@hosanna/notifications";
 import { listPreferences, upsertPreference } from "@hosanna/notifications";
 import { z } from "zod";

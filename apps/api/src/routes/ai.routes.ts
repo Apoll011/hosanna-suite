@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Router } from "express";
 import { APICallError, type UIMessage } from "ai";
 import { requirePermission } from "../middleware/auth.js";

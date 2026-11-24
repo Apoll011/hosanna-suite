@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useI18n } from "@/src/lib/i18n";
 import { AlertCircle, Cloud, CloudOff, RefreshCw } from "lucide-react";
 import React from "react";

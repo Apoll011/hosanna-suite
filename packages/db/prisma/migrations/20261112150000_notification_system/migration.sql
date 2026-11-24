@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- Unified notification system: PushDevice registry, preferences, delivery log.
 
 CREATE TABLE "push_device" (

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Imperative API so Settings / command palette can relaunch the product tour
  * without tight coupling to the React controller.

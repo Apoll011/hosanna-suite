@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { TranslationKey, useI18n } from "@/src/lib/i18n";
 import { RotateCcw, X } from "lucide-react";
 import React from "react";

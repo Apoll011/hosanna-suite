@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsparser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";

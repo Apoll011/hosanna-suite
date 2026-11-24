@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { chordProEn } from "./en";
 import { chordProEs } from "./es";
 import { chordProPt } from "./pt";

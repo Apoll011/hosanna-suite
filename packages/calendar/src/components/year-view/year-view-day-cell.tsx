@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { isToday } from "date-fns";
 
 import { useCalendar } from "../../contexts/calendar-context";

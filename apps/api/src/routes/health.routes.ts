@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Router } from "express";
 import { prisma } from "../database/prisma.js";
 import { asyncHandler } from "../utils/asyncHandler.js";

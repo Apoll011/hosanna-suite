@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Studio UI constants the AI must know (folder icons/colors, etc.).
  * Keep in sync with Hosana-dashboard/src/utils/folderCustomization.ts.

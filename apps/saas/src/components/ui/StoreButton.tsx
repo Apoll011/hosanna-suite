@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import logo from "@/assets/playstore.svg";
 import { useI18n } from "@/lib/i18n";
 import { Download } from "lucide-react";

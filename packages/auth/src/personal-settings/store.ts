@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Cached personal settings store — localStorage + Better Auth user.metadata.
  * App-specific prefs live under `apps.<scopeId>` (see scopes.ts).

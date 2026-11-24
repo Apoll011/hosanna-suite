@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import React from "react";
 import type { Assignee } from "../../interfaces";
 import { getAvatarGradient, getInitials } from "../../utils/icon-map";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export { DEFAULT_LANGUAGE, getLanguageMeta, LANGUAGES, type LanguageMeta } from "./languages";
 export { deepMerge } from "./merge";
 export { sharedMessages, sharedEn, sharedEs, sharedPt } from "./messages";

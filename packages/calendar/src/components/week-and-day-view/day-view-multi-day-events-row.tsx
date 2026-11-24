@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
 
 import { MonthEventBadge } from "../month-view/month-event-badge";

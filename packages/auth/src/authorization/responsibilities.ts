@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const RESPONSIBILITIES = {
   "pt-PT": [
     { id: "leader", label: "Líder do Culto", icon: "mic", color: "amber" },

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { ArrowRightLeft, Music } from "lucide-react";
 import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import type { IAceEditorProps } from "react-ace";

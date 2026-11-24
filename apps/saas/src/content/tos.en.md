@@ -80,7 +80,7 @@ If a charge fails, the billing service will retry. After grace periods expire, t
 Source code for Hosanna's server, Studio, Mobile App, and packages is released under the Apache License 2.0.
 
 **9.2. Cloud Service Distinction (Hosanna Cloud)**  
-While code is under Apache 2.0, use of our managed hosted platform ("Hosanna Cloud") is governed by these Terms of Service.
+The source code is distributed under AGPL-3.0-only. Use of our managed hosted platform ("Hosanna Cloud") is governed by these Terms of Service.
 
 **9.3. Self-Hosting**  
 Users hosting Hosanna on their own servers do so at their sole discretion and responsibility. Hosanna is not liable for infrastructure, updates, security, or data compliance on third-party self-hosted environments.

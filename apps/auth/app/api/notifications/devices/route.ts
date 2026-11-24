@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { disablePushDevice, registerPushDevice } from "@hosanna/notifications";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";

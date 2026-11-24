@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { auth } from "@/lib/auth/server";
 import { authImages } from "@/lib/storage/auth-images";
 

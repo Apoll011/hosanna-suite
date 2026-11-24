@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { NextFunction, Request, Response } from "express";
 
 type Handler = (req: Request, res: Response, next: NextFunction) => Promise<unknown>;

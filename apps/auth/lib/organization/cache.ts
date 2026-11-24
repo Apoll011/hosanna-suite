@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Persist active org + org list so account pages paint instantly while network refreshes.
  */

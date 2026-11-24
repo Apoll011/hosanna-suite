@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Session-scoped suite catalog cache: paint from cache, refresh once per
  * page load, share one in-flight fetch across AppSwitcher + home.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Lightweight MusicBrainz lookup for song metadata (title/artist/key hints).
  * Serializes requests (~1 req/s) and retries 503s — parallel bursts trip MB.

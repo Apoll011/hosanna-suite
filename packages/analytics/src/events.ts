@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export interface StudioEventMap {
   logout: Record<string, never>;
   org_switched: { from_org_id?: string | null; to_org_id: string };

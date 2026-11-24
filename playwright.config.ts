@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { defineConfig, devices } from "@playwright/test";
 
 import { AUTH_URL, SAAS_URL, STUDIO_URL } from "./tests/helpers/urls";

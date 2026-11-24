@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import logo from "@/assets/hosanna_logo.webp";
 import dashboardImg from "@/assets/main_mockup.webp";
 import mobileImg from "@/assets/mobile-view.webp";

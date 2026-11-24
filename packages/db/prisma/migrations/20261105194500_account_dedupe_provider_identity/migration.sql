@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- Remove duplicate (providerId, accountId) rows that can appear after partial
 -- Better Auth account.create failures. Keep the oldest row per identity key.
 DELETE FROM "account" a

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { adminAc, ownerAc } from "better-auth/plugins/organization/access";
 import { ac } from "./permission.js";
 

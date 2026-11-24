@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Configurable HTTP replication manager.
  * Collections / storage keys / HTTP client are injected by the host app.

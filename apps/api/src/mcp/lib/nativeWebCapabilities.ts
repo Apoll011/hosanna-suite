@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Which Studio AI providers expose REST Search/Fetch Hosanna can call with BYOK.
  * (Separate from nativeWeb.ts to avoid circular imports with orgAiConfig.)

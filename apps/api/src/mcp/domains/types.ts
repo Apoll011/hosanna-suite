@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * A Domain Pack is how MCP (and Logos) learn about a product surface.
  * Register tools/resources/permissions once — discovery and server wiring follow.

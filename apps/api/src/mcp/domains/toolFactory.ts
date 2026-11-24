@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { isCallToolResult, type AuthInfo, type McpServer } from "@modelcontextprotocol/server";
 import type { PermissionString, SuiteAppId } from "@hosanna/auth";
 import type { LogosToolDefinition, LogosToolSurface } from "@hosanna/logos-ai/tools";

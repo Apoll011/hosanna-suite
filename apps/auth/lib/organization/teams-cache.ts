@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { canUseStorage, readJson, removeKey, writeJson } from "@/lib/utils/local-storage";
 
 export type TeamCacheMember = {

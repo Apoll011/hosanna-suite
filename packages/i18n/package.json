@@ -2,7 +2,7 @@
   "name": "@hosanna/i18n",
   "version": "1.0.4",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Hosanna UI language model: supported languages, locale resolution, and typed dictionary helpers",
   "type": "module",
   "sideEffects": false,

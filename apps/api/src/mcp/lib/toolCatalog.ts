@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { DOMAIN_PACKS } from "../domains/packs.js";
 
 function names(packId: string): string[] {

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import type { pt } from "./pt";
@@ -692,7 +692,7 @@ export const en: typeof pt = {
     about: {
       title: "About Hosanna Studio",
       controlPanel: "Control Panel",
-      copyright: "© {year} Embrace & Tiago Inês. Code under Apache 2.0 license.",
+      copyright: "© {year} Embrace & Tiago Inês. Code under AGPL-3.0-only license.",
       studioVersion: "Studio Version",
       openSourceBanner:
         "This project is <strong>open-source</strong>! We believe in free software to equip and support communities.",

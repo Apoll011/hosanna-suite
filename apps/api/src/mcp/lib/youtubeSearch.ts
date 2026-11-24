@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * YouTube video search for populating ChordPro `{youtube: ...}` directives.
  * Prefers YouTube Data API v3 when YOUTUBE_API_KEY is set; otherwise falls

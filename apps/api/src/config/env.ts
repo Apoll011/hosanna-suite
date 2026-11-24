@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { withRelatedProject } from "@vercel/related-projects";
 import "dotenv/config";
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { op, jsonResp, OpenApiOperation } from "../builder.js";
 
 export function getHealthPaths(): Record<string, Record<string, OpenApiOperation>> {

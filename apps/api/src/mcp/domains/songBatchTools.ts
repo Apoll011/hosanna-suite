@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { AuthInfo } from "@modelcontextprotocol/server";
 import type { LogosToolFactory } from "@hosanna/logos-ai/tools";
 import { z } from "zod";

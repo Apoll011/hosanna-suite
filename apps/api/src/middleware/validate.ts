@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { NextFunction, Request, Response } from "express";
 import { ZodError, ZodTypeAny } from "zod";
 import { DEFAULT_LOCALE, t } from "../lib/i18n.js";

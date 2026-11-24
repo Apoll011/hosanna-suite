@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 

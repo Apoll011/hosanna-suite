@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Max ChordPro body returned when includeContent is true on search/list. */
 export const SEARCH_CONTENT_MAX = 8_000;
 /** Max body returned from get/get_many full content. */

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Browser localStorage helpers shared by account/org client caches.
  */

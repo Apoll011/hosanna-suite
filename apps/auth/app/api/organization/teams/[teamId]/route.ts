@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { canManageTeam } from "@hosanna/auth";
 import { withAuthCors } from "@hosanna/auth/server";
 import { z } from "zod";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { FormatWarning } from "./types";
 
 /** Map from alias/short-form to canonical long-form directive name. */

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { SongScoreLayout } from "@/src/lib/studioSettings";
 import React from "react";
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * ChordPro-aware lyric search helpers.
  * Strip chord markers and most directives so queries like

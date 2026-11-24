@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { env } from "@/lib/config/env";
 import { runAgendaReminders } from "@/lib/cron/agendaReminder.service";
 

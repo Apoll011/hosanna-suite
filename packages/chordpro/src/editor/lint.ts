@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { lintChordPro, type ChordProDiagnostic, type LintOptions } from "../parser/linter";
 
 export type { ChordProDiagnostic, LintOptions, LintLanguage } from "../parser/linter";

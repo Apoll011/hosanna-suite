@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- CreateTable
 CREATE TABLE "org_ai_config" (
     "orgId" TEXT NOT NULL,

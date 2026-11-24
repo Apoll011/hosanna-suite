@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Preload for `tsx --test`: load local `.env` when present, then fill any
  * required `env.ts` keys so unit tests can import modules in CI.

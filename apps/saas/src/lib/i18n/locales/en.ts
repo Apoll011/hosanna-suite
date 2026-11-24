@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const en: typeof import("./pt").pt = {
   common: {
     getItOn: "Get it on",

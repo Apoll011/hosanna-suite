@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Chord propagation: reuse chords from a chorded block on later blocks of the
  * same song. Never invents chords.

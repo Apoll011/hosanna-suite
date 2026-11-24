@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { isAiCryptoConfigured } from "../../lib/aiCrypto.js";
 import { OrgAiConfigService, type AiProvider } from "../orgAiConfig.service.js";
 import { fetchDeepSeekBalance } from "./deepseekBalance.js";

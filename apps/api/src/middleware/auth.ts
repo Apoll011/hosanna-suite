@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
 import { createCache } from "@hosanna/cache";
 import type { NextFunction, Request, Response } from "express";

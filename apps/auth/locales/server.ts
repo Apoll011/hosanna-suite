@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Server-side i18n for transactional email templates.
  * Dictionaries live under `./email`.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * In-process ring buffer of recent tool timings (observability / debugging).
  * Not durable across instances — useful for hosanna_capabilities samples.

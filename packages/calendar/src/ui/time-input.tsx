@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { forwardRef } from "react";
 import { DateInput, DateSegment, TimeField } from "react-aria-components";
 

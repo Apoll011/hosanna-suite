@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { cva } from "class-variance-authority";
 import { endOfDay, format, isSameDay, startOfDay } from "date-fns";
 import { Users } from "lucide-react";

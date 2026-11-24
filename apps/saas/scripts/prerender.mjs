@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 // Generates the static SEO artifacts from the built index.html:
 //   - per-route HTML shells (dist/<route>/index.html) with swapped meta tags
 //   - a BreadcrumbList JSON-LD block per route

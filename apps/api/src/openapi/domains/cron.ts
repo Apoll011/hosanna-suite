@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { op, jsonResp, cronAuth, OpenApiOperation } from "../builder.js";
 
 export function getCronPaths(): Record<string, Record<string, OpenApiOperation>> {

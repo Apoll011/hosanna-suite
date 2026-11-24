@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { PERSONAL_SETTINGS_KEY, THEME_COOKIE, type PersonalTheme } from "./types.js";

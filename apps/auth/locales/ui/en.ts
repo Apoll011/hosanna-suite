@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Auth UI, English. */
 import type { pt } from "./pt";
 

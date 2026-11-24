@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Google-style account menu: avatar trigger, profile block, optional org
  * switcher, theme / language slots, links, custom sections, sign out.

@@ -2,7 +2,7 @@
   "name": "@hosanna/logos-ai",
   "version": "1.2.0",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Logos AI chat UI for Hosanna",
   "type": "module",
   "sideEffects": [

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { env } from "../config/env.js";
 import { attachTrustedOidcHeader } from "./vercelOidc.js";
 

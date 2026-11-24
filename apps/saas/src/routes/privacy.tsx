@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import ReactMarkdown from "react-markdown";
 
 import ppContentEn from "@/content/pp.en.md?raw";

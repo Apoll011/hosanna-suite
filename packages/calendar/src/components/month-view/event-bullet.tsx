@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { cva } from "class-variance-authority";
 
 import { cn } from "../../lib/cn";

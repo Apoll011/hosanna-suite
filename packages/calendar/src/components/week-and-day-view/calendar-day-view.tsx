@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { areIntervalsOverlapping, format, isSameDay } from "date-fns";
 import {
   Calendar as CalendarIcon,

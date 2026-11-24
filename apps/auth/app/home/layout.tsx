@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { HomeProviders } from "@/components/home/HomeProviders";
 import type { ReactNode } from "react";
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Demo Mode — central flag helpers + safe demo storage wipe.
  *

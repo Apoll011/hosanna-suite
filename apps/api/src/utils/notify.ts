@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { createNotificationService, type DispatchInput } from "@hosanna/notifications";
 import { roles } from "@hosanna/auth";
 import { prisma } from "../database/prisma.js";

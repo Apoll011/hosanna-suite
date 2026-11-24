@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { createStorage } from "@hosanna/storage";
 
 const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";

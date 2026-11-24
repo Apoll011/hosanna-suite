@@ -77,7 +77,7 @@ Si el cobro falla, la pasarela reintentará el pago. Tras el periodo de regulari
 ## 9. Código Abierto y Self-Hosting
 
 **9.1. Licencia Open Source**  
-El código fuente de Hosanna (servidor, Studio, App Móvil y paquetes) se distribuye bajo la licencia Apache 2.0.
+El código fuente de Hosanna (servidor, Studio, App Móvil y paquetes) se distribuye bajo la licencia AGPL-3.0-only.
 
 **9.2. Distinción del Servicio en la Nube (Hosanna Cloud)**  
 El uso de nuestra plataforma alojada ("Hosanna Cloud") se rige por estos Términos de Servicio independientes de la licencia del código.

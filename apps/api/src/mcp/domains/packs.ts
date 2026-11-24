@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Canonical MCP domain pack metadata. Tool mounting lives in `wire.ts`
  * (static imports) so discovery can read packs without a module cycle.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Router } from "express";
 import { assertUser } from "../middleware/auth.js";
 import { ServiceSongAnnotationService } from "../services/serviceSongAnnotation.service.js";

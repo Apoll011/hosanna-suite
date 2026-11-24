@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { jsonBody, jsonResp, op, OpenApiOperation, sessionAuth } from "../builder.js";
 
 export function getReplicationPaths(): Record<string, Record<string, OpenApiOperation>> {

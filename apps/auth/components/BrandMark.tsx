@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export function BrandMark({
   className = "h-6 w-6",
   alt = "",

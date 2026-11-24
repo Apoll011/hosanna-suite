@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export async function registerChordproMode(aceInstance?: any): Promise<void> {
   let ace = aceInstance;
   if (!ace) {

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { transposeChord } from "./transpose";
 import { instrumentRegistry } from "../instruments/registry";
 import type { ChordProVersion } from "./parser";

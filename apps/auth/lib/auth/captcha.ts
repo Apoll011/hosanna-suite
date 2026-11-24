@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { isTurnstileConfigured } from "@/components/TurnstileWidget";
 
 /** Build captcha fetch options; omit header when Turnstile is not configured. */

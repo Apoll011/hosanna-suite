@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { Bell, Building2, CheckCheck, CreditCard, Info, Shield, Users, X } from "lucide-react";

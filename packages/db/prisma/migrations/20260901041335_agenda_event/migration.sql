@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- CreateTable
 CREATE TABLE "agenda_events" (
     "id" TEXT NOT NULL,

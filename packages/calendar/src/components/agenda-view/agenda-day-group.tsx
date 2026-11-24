@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { differenceInDays, format, startOfDay } from "date-fns";
 
 import { AgendaEventCard } from "./agenda-event-card";

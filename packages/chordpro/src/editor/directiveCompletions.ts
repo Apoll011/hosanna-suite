@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { DIRECTIVE_ALIAS_MAP, KNOWN_DIRECTIVES } from "../formatter/directives";
 
 /** Strip incidental braces Ace may include when tokenizing `{start_of_verse}`. */

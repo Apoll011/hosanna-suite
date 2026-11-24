@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { configureApiClient } from "@/src/api";
 import { prefetchAuthAccount } from "@/src/lib/authUrl";
 import { preloadEditor } from "@hosanna/chordpro/editor";

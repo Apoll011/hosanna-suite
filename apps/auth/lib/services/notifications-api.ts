@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { AppRole } from "@hosanna/auth";
 import { localApiFetch } from "@/lib/services/local-api";
 

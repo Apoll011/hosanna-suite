@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { TEventColor } from "./types";
 
 export type TEventId = string | number;

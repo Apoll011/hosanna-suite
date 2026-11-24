@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Resend } from "resend";
 import { env } from "@/lib/config/env";
 

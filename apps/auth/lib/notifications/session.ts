@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { PermissionString } from "@hosanna/auth";
 import { roles, toPermissionRequest, type AppRole } from "@hosanna/auth";
 import { headers } from "next/headers";

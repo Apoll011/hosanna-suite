@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { AuthInfo, CallToolResult, McpServer } from "@modelcontextprotocol/server";
 import type { SuiteAppId } from "@hosanna/auth";
 import type {

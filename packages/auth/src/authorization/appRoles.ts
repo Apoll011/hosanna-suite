@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Per-app role scaffold (FUTURE_DIRECTION). Org roles (owner/admin/…) stay in
  * `roles.ts`. App roles grant extra domain permissions when assigned on invite.

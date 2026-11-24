@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { getAuthAppUrl } from "../lib/authUrl";
 
 /** Base URL for identity-hosted APIs (notifications, backup, billing probes). */

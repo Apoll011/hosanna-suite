@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "user_ai_memory" (
     "id" TEXT NOT NULL,

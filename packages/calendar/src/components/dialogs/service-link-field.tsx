@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link2, Search, X } from "lucide-react";
 import type { Service } from "../../interfaces";

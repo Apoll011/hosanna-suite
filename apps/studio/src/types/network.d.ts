@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 type ConnectionType =
   "bluetooth" | "cellular" | "ethernet" | "mixed" | "none" | "other" | "unknown" | "wifi" | "wimax";
 type EffectiveConnectionType = "2g" | "3g" | "4g" | "slow-2g";

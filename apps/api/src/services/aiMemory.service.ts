@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { prisma } from "../database/prisma.js";
 import { AppError } from "../utils/errors.js";
 import { AI_LIMITS, normalizeMemoryContent, type AiMemoryEntry } from "./aiBehavior.js";

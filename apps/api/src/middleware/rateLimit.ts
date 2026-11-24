@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 // Vercel's Node builder resolves this package's CommonJS entry. A default
 // import there is the module namespace (TS2349). The named export is the
 // middleware function in both the CJS and ESM type entries.

@@ -4,7 +4,7 @@
 
 **Production:** [hosanna.live](https://hosanna.live) — Cloudflare Worker `saas`, deployed from `main`/`master` via `.github/workflows/deploy.yml` (config: `.github/deploy-apps.json`, GitHub Environment `Production`).
 
-Marketing site for **Hosanna** — a ChordPro **songbook** and **worship planning** platform for churches (open source: Apache 2.0).
+Marketing site for **Hosanna** — a ChordPro **songbook** and **worship planning** platform for churches (open source: AGPL-3.0-only).
 
 Musicians get a mobile songbook with transpose, capo, chord diagrams, metronome, auto-scroll, PDF export, AI chart import, and offline sync. Leaders get **Hosanna Studio** to manage the library, plan services, and run the team.
 

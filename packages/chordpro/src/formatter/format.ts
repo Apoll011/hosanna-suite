@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { FormatChange, FormatOptions, FormatResult, FormatWarning } from "./types";
 import { normalizeLine } from "./normalize";
 

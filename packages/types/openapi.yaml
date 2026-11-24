@@ -11,7 +11,7 @@ info:
     `/api/backup*`, `/api/cron/agenda-reminders`. This API keeps domain music routes and
     `/api/cron/purge-trash`.
   license:
-    name: Apache-2.0
+    name: AGPL-3.0-only
 servers:
   - url: https://api.hosanna.live/api
     description: Production API (domain data)

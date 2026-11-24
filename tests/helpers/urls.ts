@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Base URLs for each app under test. Override via env in CI or local. */
 
 export const SAAS_URL = process.env.PLAYWRIGHT_SAAS_URL ?? "http://127.0.0.1:8080";

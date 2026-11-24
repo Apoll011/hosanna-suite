@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
 import React from "react";
 

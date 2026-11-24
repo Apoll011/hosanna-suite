@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export type { $defs, components, operations, paths, webhooks } from "./schema";
 
 import type { components, operations, paths } from "./schema";

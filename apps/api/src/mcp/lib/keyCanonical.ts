@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { getNoteValue } from "@hosanna/chordpro/parser";
 
 /** Common enharmonic / preferred spellings for worship keys. */

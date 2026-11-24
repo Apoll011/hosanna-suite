@@ -2,7 +2,7 @@
   "name": "@hosanna/storage",
   "version": "1.0.0",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Provider-independent multi-tenant object storage for Hosanna",
   "type": "module",
   "sideEffects": false,

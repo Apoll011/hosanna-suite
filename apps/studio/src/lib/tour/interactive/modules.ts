@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Interactive onboarding modules — permission-gated, wait-for-action steps.
  */

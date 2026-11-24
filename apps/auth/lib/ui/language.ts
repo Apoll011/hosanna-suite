@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { PersonalLanguage } from "@hosanna/auth";
 import { resolveLanguage, type Language } from "@hosanna/i18n";
 

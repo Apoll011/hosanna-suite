@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { getApiComponentSchemas } from "./schemas.js";
 import { getCronPaths } from "./domains/cron.js";
 import { getFolderPaths } from "./domains/folders.js";

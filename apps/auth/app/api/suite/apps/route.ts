@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { prisma } from "@/lib/db/prisma";
 import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
 import { listAuthSuiteApps } from "@/lib/suite/apps";

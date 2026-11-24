@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { getAuthComponentSchemas } from "./schemas";
 
 const sessionAuth = [{ cookieAuth: [] }, { bearerAuth: [] }];

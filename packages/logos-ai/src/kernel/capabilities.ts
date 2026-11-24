@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * What a mounting app can do locally. Everything else stays in chat
  * (proposals/confirms) or becomes an optional open card.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * ChordPro Formatter — Public Types
  * Pure TypeScript, no UI dependencies.

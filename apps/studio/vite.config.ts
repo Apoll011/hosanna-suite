@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
 import { createRequire } from "node:module";

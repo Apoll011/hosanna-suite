@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Studio AI client surface used by Logos chat. Org AI admin (keys, memory,
  * billing) lives on auth-app — those APIs are not called from Studio UI.

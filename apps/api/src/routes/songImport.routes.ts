@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Router } from "express";
 import { requirePermission } from "../middleware/auth.js";
 import { validate } from "../middleware/validate.js";

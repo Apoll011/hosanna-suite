@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Same-origin API helpers for routes hosted on the auth app
  * (notifications, backup, billing probes).

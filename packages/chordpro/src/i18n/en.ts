@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const chordProEn = {
   emptyChord: "Empty chord: '[]'.",
   unknownChordRoot: (chord: string) => `Unrecognized chord: "${chord}".`,

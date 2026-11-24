@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- AlterTable
 ALTER TABLE "folders" ADD COLUMN     "_deleted" BOOLEAN NOT NULL DEFAULT false;
 

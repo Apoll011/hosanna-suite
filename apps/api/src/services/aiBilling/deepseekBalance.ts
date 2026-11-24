@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { AppError } from "../../utils/errors.js";
 import type { AiBalanceInfo, AiBillingSupported } from "./types.js";
 

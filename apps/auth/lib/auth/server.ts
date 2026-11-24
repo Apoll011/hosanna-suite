@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { createAuth } from "@hosanna/auth/server";
 import Stripe from "stripe";
 import { env } from "@/lib/config/env";

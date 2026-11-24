@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { format } from "date-fns";
 
 import { useDisclosure } from "../hooks/use-disclosure";

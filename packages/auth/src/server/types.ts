@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { PrismaClient } from "@hosanna/db";
 import type Stripe from "stripe";
 

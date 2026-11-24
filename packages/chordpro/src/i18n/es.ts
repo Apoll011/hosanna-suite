@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const chordProEs = {
   emptyChord: "Acorde vacío: '[]'.",
   unknownChordRoot: (chord: string) => `Acorde no reconocido: "${chord}".`,

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useMemo } from "react";
 import { CalendarX2 } from "lucide-react";
 import { format, endOfDay, startOfDay, isSameMonth } from "date-fns";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { lyricsMatchQuery, normalizeLyricQuery } from "../../lib/lyricSearch.js";
 
 export type SongMatchField = "title" | "artist" | "lyrics" | "tag";

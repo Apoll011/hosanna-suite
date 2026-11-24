@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 export const pt = {
@@ -697,7 +697,7 @@ export const pt = {
     about: {
       title: "Sobre o Hosanna Studio",
       controlPanel: "Painel de Controlo",
-      copyright: "© {year} Embrace & Tiago Inês. Código sob licença Apache 2.0.",
+      copyright: "© {year} Embrace & Tiago Inês. Código sob licença AGPL-3.0-only.",
       studioVersion: "Versão do Studio",
       openSourceBanner:
         "Este projeto é <strong>open-source</strong>! Acreditamos no software livre para equipar e apoiar comunidades.",

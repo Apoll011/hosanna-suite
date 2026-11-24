@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { roles, type AppRole } from "./roles.js";
 import { toPermissionRequest, type PermissionString } from "./permission.js";
 

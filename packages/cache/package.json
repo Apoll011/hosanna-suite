@@ -2,7 +2,7 @@
   "name": "@hosanna/cache",
   "version": "1.0.1",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Namespaced Keyv cache — memory by default, Redis via REDIS_URL",
   "type": "module",
   "sideEffects": false,

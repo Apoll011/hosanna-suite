@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const pluginLocaleOverrides = {
   en: {
     ORGANIZATION_NOT_FOUND: "Organization not found",

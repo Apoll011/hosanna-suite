@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: AGPL-3.0-only
 -- Better Auth ≥1.7.3 identifies accounts by (providerId, accountId).
 -- Drop the 1.7.0–1.7.2 issuer uniqueness requirement and relax the column.
 -- See https://better-auth.com/docs/guides/1-7-upgrade-guide

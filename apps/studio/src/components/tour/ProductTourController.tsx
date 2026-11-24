@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Owns auto-start, missed-tour toast, and relaunch registration for the
  * permission-composed product tour.

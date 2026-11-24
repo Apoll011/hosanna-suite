@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Content-only skeleton — chrome stays mounted in the account layout. */
 export default function AccountLoading() {
   return (

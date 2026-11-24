@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export { ac, statement, toPermissionRequest } from "./authorization/permission.js";
 export type {
   ActionFor,

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import { formatChordPro } from "@hosanna/chordpro/formatter";
 import { z } from "zod";

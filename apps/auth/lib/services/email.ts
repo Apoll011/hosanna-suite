@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import Handlebars from "handlebars";
 import { env } from "@/lib/config/env";
 import { DEFAULT_LOCALE, t } from "@/locales/server";

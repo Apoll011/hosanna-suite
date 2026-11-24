@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { TranslationKey } from "../i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
 

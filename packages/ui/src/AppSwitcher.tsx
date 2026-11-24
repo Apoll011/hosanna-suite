@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Google-style waffle App Switcher: grid button opens a popover with
  * greeting, suite catalog, and a link back to the auth home hub.

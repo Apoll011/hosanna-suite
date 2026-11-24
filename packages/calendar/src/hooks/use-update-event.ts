@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useCalendar } from "../contexts/calendar-context";
 import { getEventStart, getEventEnd } from "../helpers";
 

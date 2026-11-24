@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Auth-app environment. Mirrors auth-related vars from `@hosanna/api`
  * plus `AUTH_URL` (this app's public origin).

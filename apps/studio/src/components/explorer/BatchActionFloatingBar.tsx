@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useI18n } from "@/src/lib/i18n";
 import { Button } from "@hosanna/ui";
 import { Archive, FolderInput, Printer, Trash2, X } from "lucide-react";

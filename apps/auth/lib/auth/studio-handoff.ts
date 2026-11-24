@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Auth → Studio handoff (mirror of Studio's authAccountHandoff).
  * Warm TLS early, sync theme cookie, then assign — no overlay/flash path.

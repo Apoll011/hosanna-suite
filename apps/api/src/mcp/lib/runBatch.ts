@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { mapToolError } from "./toolErrors.js";
 
 export const MAX_BATCH = 25;

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Keyv } from "keyv";
 
 export type CacheBackend = "memory" | "redis";

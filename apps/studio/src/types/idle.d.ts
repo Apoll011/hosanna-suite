@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 interface IdleDeadline {
   readonly didTimeout: boolean;
   timeRemaining(): DOMHighResTimeStamp;

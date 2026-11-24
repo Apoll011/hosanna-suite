@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useMemo } from "react";
 import { addMonths, startOfYear } from "date-fns";
 

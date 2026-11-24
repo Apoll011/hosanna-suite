@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { analyzeChordSymbol } from "./chordDictionary";
 import { getChordProMessages, type LintLanguage } from "../i18n";
 

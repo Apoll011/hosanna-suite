@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { type ComponentType, type ReactNode, useEffect, useRef, useState } from "react";
 
 import { useInView } from "@/hooks/useInView";

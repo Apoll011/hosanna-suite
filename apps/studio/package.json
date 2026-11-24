@@ -2,7 +2,7 @@
   "name": "@hosanna/studio",
   "version": "2.25.3",
   "type": "module",
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

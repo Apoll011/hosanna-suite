@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const liquidBgVertexShader = /* glsl */ `
   float PI = 3.1415926535897932384626433832795;
 

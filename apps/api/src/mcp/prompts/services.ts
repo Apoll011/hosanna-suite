@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 

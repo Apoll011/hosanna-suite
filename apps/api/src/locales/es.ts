@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { I18nKeys } from "./pt-PT.js";
 
 /**

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import {
   POSTHOG_INIT_OPTIONS,
   isAnalyticsEnabled,
