@@ -91,7 +91,9 @@ export const aiChatBodySchema = z
   .object({
     messages: z.array(z.any()).min(1).max(AI_CHAT_MAX_MESSAGES),
     context: aiChatContextSchema,
-    appId: z.enum(["auth", "music", "planning", "finance", "presenter", "community", "platform"]).optional(),
+    appId: z
+      .enum(["auth", "music", "planning", "finance", "presenter", "community", "platform"])
+      .optional(),
     /** Studio UI language so the model replies in it. */
     locale: z.enum(["pt", "en", "es"]).optional(),
   })

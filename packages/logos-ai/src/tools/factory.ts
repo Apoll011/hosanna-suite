@@ -59,11 +59,7 @@ export function createLogosDomainTools(
     if (definition.ui && surface !== "embedded") return false;
     if (definition.surfaces && !definition.surfaces.includes(surface)) return false;
     const capabilities = Array.isArray(context.capabilities) ? context.capabilities : [];
-    if (
-      definition.requiresCapabilities?.some(
-        (capability) => !capabilities.includes(capability),
-      )
-    ) {
+    if (definition.requiresCapabilities?.some((capability) => !capabilities.includes(capability))) {
       return false;
     }
     if (surface === "embedded") {

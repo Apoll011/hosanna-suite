@@ -26,11 +26,17 @@ describe("Logos tool factory", () => {
       ["funds_search"],
     );
     assert.deepEqual(
-      createLogosDomainTools("finance.fund", "embedded", { appId: "finance", owningApp: "finance" }).map((tool) => tool.name),
+      createLogosDomainTools("finance.fund", "embedded", {
+        appId: "finance",
+        owningApp: "finance",
+      }).map((tool) => tool.name),
       ["funds_search", "open_app"],
     );
     assert.deepEqual(
-      createLogosDomainTools("finance.fund", "embedded", { appId: "auth", owningApp: "finance" }).map((tool) => tool.name),
+      createLogosDomainTools("finance.fund", "embedded", {
+        appId: "auth",
+        owningApp: "finance",
+      }).map((tool) => tool.name),
       ["open_app"],
     );
   });
