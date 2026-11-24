@@ -18,15 +18,32 @@ import { OPEN_APP_TARGETS, openAppDirective } from "../lib/openApp.js";
 
 const MUSIC_PLANNING: readonly SuiteAppId[] = ["music", "planning"];
 
-function uiDefinition(
-  definition: Omit<LogosToolDefinition, "ui"> & { apps: readonly SuiteAppId[] | "suite" },
+type ParsedTool<Schema extends z.ZodTypeAny> = Omit<
+  LogosToolDefinition,
+  "execute" | "inputSchema" | "ui"
+> & {
+  inputSchema: Schema;
+  execute: (input: z.infer<Schema>) => unknown | Promise<unknown>;
+};
+
+function parsedDefinition<Schema extends z.ZodTypeAny>(
+  definition: ParsedTool<Schema>,
 ): LogosToolDefinition {
-  return { ...definition, ui: true };
+  return {
+    ...definition,
+    execute: (input) => definition.execute(definition.inputSchema.parse(input)),
+  };
+}
+
+function uiDefinition<Schema extends z.ZodTypeAny>(
+  definition: ParsedTool<Schema> & { apps: readonly SuiteAppId[] | "suite" },
+): LogosToolDefinition {
+  return { ...parsedDefinition(definition), ui: true };
 }
 
 export const embeddedUiToolFactory: LogosToolFactory = (context) => {
   return [
-    {
+    parsedDefinition({
       name: "suggest_followups",
       description:
         "Show short clickable follow-up prompts under the final answer when a natural next step exists.",
@@ -35,8 +52,8 @@ export const embeddedUiToolFactory: LogosToolFactory = (context) => {
       }),
       apps: "suite",
       surfaces: ["embedded"],
-      execute: (input: { options: string[] }) => ({ shown: input.options.length }),
-    },
+      execute: (input) => ({ shown: input.options.length }),
+    }),
     uiDefinition({
       name: "studio_sync",
       description:
@@ -44,7 +61,7 @@ export const embeddedUiToolFactory: LogosToolFactory = (context) => {
       inputSchema: z.object({ reason: z.string().optional() }),
       apps: "suite",
       requiresCapabilities: ["library.sync"],
-      execute: ({ reason }: { reason?: string }) => ({
+      execute: ({ reason }) => ({
         studioSync: true,
         reason: reason ?? "refresh",
         note: "Studio will run triggerSyncCheck + refetch. Tell the user the UI should update shortly.",
@@ -61,12 +78,7 @@ export const embeddedUiToolFactory: LogosToolFactory = (context) => {
       }),
       apps: MUSIC_PLANNING,
       requiresCapabilities: ["navigate.local"],
-      execute: (input: {
-        kind: (typeof STUDIO_NAVIGATE_KINDS)[number];
-        id?: string;
-        route?: string;
-        reason?: string;
-      }) => studioNavigateDirective(input),
+      execute: (input) => studioNavigateDirective(input),
     }),
     uiDefinition({
       name: "open_app",
@@ -79,12 +91,7 @@ export const embeddedUiToolFactory: LogosToolFactory = (context) => {
         reason: z.string().optional(),
       }),
       apps: "suite",
-      execute: (input: {
-        app: string;
-        path?: string;
-        openIn?: (typeof OPEN_APP_TARGETS)[number];
-        reason?: string;
-      }) => openAppDirective(input),
+      execute: (input) => openAppDirective(input),
     }),
     uiDefinition({
       name: "studio_generate_pdf",
@@ -111,13 +118,7 @@ export const embeddedUiToolFactory: LogosToolFactory = (context) => {
       }),
       apps: MUSIC_PLANNING,
       requiresCapabilities: ["print"],
-      execute: (input: {
-        kind: (typeof STUDIO_PRINT_KINDS)[number];
-        ids: string[];
-        title?: string;
-        options?: Record<string, boolean | number | undefined>;
-        reason?: string;
-      }) => studioPrintDirective(input),
+      execute: (input) => studioPrintDirective(input),
     }),
     uiDefinition({
       name: "studio_search",
@@ -131,12 +132,7 @@ export const embeddedUiToolFactory: LogosToolFactory = (context) => {
       }),
       apps: MUSIC_PLANNING,
       requiresCapabilities: ["catalog.songs"],
-      execute: async (input: {
-        query: string;
-        types?: Array<"song" | "service" | "folder" | "collection" | "agenda">;
-        includeArchivedServices?: boolean;
-        limitPerType?: number;
-      }) => {
+      execute: async (input) => {
         const authInfo = context.authInfo as AuthInfo | undefined;
         const auth = getMcpContext(authInfo);
         if (!auth) throw new Error("Authentication required");
