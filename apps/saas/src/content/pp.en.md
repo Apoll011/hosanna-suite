@@ -15,6 +15,8 @@ For the purposes of data protection regulations such as the General Data Protect
 - **Hosanna acts as Data Controller:** In relation to your personal account data, authentication details, billing information, security settings, and data required to fulfill our legal obligations.
 - **Hosanna acts as Data Processor:** In relation to operational and member data managed by the organization (service content, repertoire, team rosters), where the Organization acts as Data Controller.
 
+Organization content and member lists may reveal religious or philosophical beliefs, which are special-category data under GDPR Article 9. The organization is responsible for identifying and documenting its lawful basis and an applicable Article 9 condition, informing its members, and giving Hosanna documented instructions. Hosanna processes this organization data on the organization's instructions and does not determine the church's legal basis.
+
 ## 3. Categories of Personal Data Processed
 
 We may collect, or process on behalf of our customers and users, the following categories of personal data when you use or interact with our products and services:
@@ -25,6 +27,7 @@ We may collect, or process on behalf of our customers and users, the following c
 - **Organization & Worship Content:** Content created or submitted by churches, including song chord charts in ChordPro format, service setlists, folders, planning notes, and team invitations.
 - **Billing Information:** Payment metadata and subscription status processed via our PCI-compliant payment processor (Stripe). Hosanna does not store raw credit card numbers.
 - **Technical and Diagnostic Data:** Performance metrics, crash logs, and diagnostic information necessary to ensure application stability and reliability. This data is never used to profile musical content for marketing purposes.
+- **Organization member and activity data:** Team membership, roles, invitations, service notes and annotations, including the identity of the person who created or changed them. Push notification tokens may be processed to deliver notifications to devices.
 
 ## 4. How We Use Your Data (Including Google User Data)
 
@@ -77,14 +80,16 @@ We store your personal information for a period of time that is consistent with 
 - **Data Deletion:** When the data retention period expires for a given type of data, or when an account/organization is terminated, we will delete or destroy it securely.
 - **How to Request Deletion:** You may delete your personal Hosanna account at any time directly through account settings, or request full deletion of your personal data and Google user data by contacting us at **[hosanna.songbook@gmail.com](mailto:hosanna.songbook@gmail.com)**. Upon receiving your request, we will delete or anonymize your personal data within statutory timeframes, except where retention is legally required.
 - **Backups:** Residual data contained in secure system backups is overwritten or destroyed in accordance with our standard backup retention cycles.
+- **Trash:** Songs, folders, collections, services and agenda events deleted through Studio or the API are retained in trash for 30 days before scheduled permanent deletion. This period does not describe database backups or other records subject to legal retention.
 
 ## 8. Cookie and Local Storage Policy
 
-Hosanna uses strictly necessary storage technologies:
+Hosanna uses necessary storage technologies for authentication and offline operation. Optional analytics is enabled only where a visitor has accepted analytics cookies:
 
 - **Session Cookies:** Used to maintain secure user authentication sessions.
 - **Local Storage / IndexedDB:** Used in the Mobile App and Studio to store local preferences and maintain a local offline cache of songs and services so you can lead worship even without an internet connection.
-- **No Advertising Trackers:** Hosanna does not deploy third-party advertising, marketing, or behavioral tracking cookies.
+- **Optional analytics:** PostHog analytics in Hosanna Cloud applications and the marketing site is disabled until consent is given. Visitors can change their choice using Cookie settings on the marketing site.
+- **No Advertising Trackers:** Hosanna does not sell personal data or use advertising cookies.
 
 ## 9. Data Processing Agreement (DPA)
 
@@ -107,6 +112,7 @@ Depending on your jurisdiction (such as under GDPR or applicable privacy laws), 
 - Request data portability in a structured, commonly used format.
 
 To exercise any of these rights, contact us at **[hosanna.songbook@gmail.com](mailto:hosanna.songbook@gmail.com)**.
+You may also lodge a complaint with the Portuguese supervisory authority, [Comissão Nacional de Proteção de Dados (CNPD)](https://www.cnpd.pt/).
 
 ## 11. Legal Information & Contact
 

@@ -77,10 +77,10 @@ If a charge fails, the billing service will retry. After grace periods expire, t
 ## 9. Open Source and Self-Hosting
 
 **9.1. Open Source License**  
-Source code for Hosanna's server, Studio, Mobile App, and packages is released under the Apache License 2.0.
+The Hosanna source code is licensed under the GNU Affero General Public License, version 3 only (AGPL-3.0-only). Refer to the license text and source repository for the terms that govern copying, modification, and distribution.
 
 **9.2. Cloud Service Distinction (Hosanna Cloud)**  
-The source code is distributed under AGPL-3.0-only. Use of our managed hosted platform ("Hosanna Cloud") is governed by these Terms of Service.
+Use of our managed hosted platform ("Hosanna Cloud") is governed by these Terms of Service, separately from the source code license.
 
 **9.3. Self-Hosting**  
 Users hosting Hosanna on their own servers do so at their sole discretion and responsibility. Hosanna is not liable for infrastructure, updates, security, or data compliance on third-party self-hosted environments.

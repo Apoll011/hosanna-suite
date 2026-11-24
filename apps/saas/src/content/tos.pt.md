@@ -77,10 +77,10 @@ Se a cobrança falhar, o serviço de faturação tentará novamente. Findo o per
 ## 9. Open Source e Self-Hosting
 
 **9.1. Licença Open Source**  
-O código-fonte do servidor, do Studio, da App Mobile e dos pacotes partilhados do Hosanna é disponibilizado ao abrigo da Apache License 2.0. Os utilizadores e a comunidade são livres de inspecionar, modificar e redistribuir o código fonte sujeito aos termos dessa licença.
+O código-fonte do Hosanna é licenciado ao abrigo da GNU Affero General Public License, versão 3 apenas (AGPL-3.0-only). Consulte o texto da licença e o repositório do código-fonte para conhecer os termos aplicáveis à cópia, modificação e distribuição.
 
 **9.2. Distinção do Serviço na Nuvem (Hosanna Cloud)**  
-O código fonte é distribuído sob a licença AGPL-3.0-only. A utilização da nossa plataforma gerida na nuvem ("Hosanna Cloud") rege-se pelos presentes Termos de Serviço. A subscrição da Hosanna Cloud não confere a titularidade do software, sendo apenas a prestação de um serviço.
+A utilização da nossa plataforma gerida na nuvem ("Hosanna Cloud") rege-se pelos presentes Termos de Serviço, separadamente da licença do código-fonte. A subscrição da Hosanna Cloud não confere a titularidade do software, sendo apenas a prestação de um serviço.
 
 **9.3. Instalações Próprias (Self-Hosting)**  
 Quem optar por alojar o Hosanna nos seus próprios servidores (Self-Hosting) fá-lo sob a sua total responsabilidade. O Hosanna não é responsável pela infraestrutura, disponibilidade, segurança, atualizações, backups ou conformidade legal em matéria de proteção de dados de instalações geridas por terceiros.

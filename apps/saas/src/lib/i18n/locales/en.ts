@@ -291,7 +291,7 @@ export const en: typeof import("./pt").pt = {
     openSource: {
       eyebrow: "Open source",
       title: "The code is public. Fork it, read it, contribute.",
-      body: "Hosanna’s mobile app and Studio are open source under the Apache License 2.0. You can audit how sync, ChordPro, and permissions work, or build on top of them.",
+      body: "Hosanna's source code is licensed under AGPL-3.0-only. You can inspect, modify, and redistribute it under the license terms.",
       ctaApp: "Mobile app on GitHub",
       ctaStudio: "Suite on GitHub",
     },
@@ -361,7 +361,7 @@ export const en: typeof import("./pt").pt = {
         },
         {
           q: "Is Hosanna open source?",
-          a: "Yes. The Flutter mobile app and Hosanna Studio are published on GitHub under the Apache License 2.0. Hosted cloud billing is optional, the product code is open to inspect and contribute to.",
+          a: "Yes. Hosanna's source code is published on GitHub under AGPL-3.0-only. Hosanna Cloud is a separately managed service.",
         },
       ],
     },

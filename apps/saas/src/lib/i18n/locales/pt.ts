@@ -295,7 +295,7 @@ export const pt = {
     openSource: {
       eyebrow: "Open source",
       title: "O código é público. Lê, faz fork, contribui.",
-      body: "A app móvel e o Studio do Hosanna são open source sob a Apache License 2.0. Podes auditar a sincronização, o ChordPro e as permissões, ou construir em cima deles.",
+      body: "O código-fonte do Hosanna é licenciado sob AGPL-3.0-only. Podes consultá-lo, modificá-lo e redistribuí-lo nos termos da licença.",
       ctaApp: "App móvel no GitHub",
       ctaStudio: "Suite no GitHub",
     },
@@ -365,7 +365,7 @@ export const pt = {
         },
         {
           q: "O Hosanna é open source?",
-          a: "Sim. A app Flutter e o Hosanna Studio estão no GitHub sob a Apache License 2.0. A cloud alojada é opcional, o código do produto está aberto para inspecionar e contribuir.",
+          a: "Sim. O código-fonte do Hosanna está publicado no GitHub sob AGPL-3.0-only. O Hosanna Cloud é um serviço gerido em separado.",
         },
       ],
     },
