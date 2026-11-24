@@ -1,5 +1,5 @@
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
-import type { PermissionString } from "@hosanna/auth";
+import type { PermissionString, SuiteAppId } from "@hosanna/auth";
 import type { LogosToolDefinition, LogosToolSurface } from "@hosanna/logos-ai/tools";
 import { tool, type ToolSet } from "ai";
 import type { z } from "zod";
@@ -9,6 +9,13 @@ import { ensureDomainPacksRegistered } from "./packs.js";
 import { listDomainPacks } from "./registry.js";
 
 const STUDIO_ONLY = new Set<string>(STUDIO_ONLY_TOOLS);
+const SUITE_APP_IDS = new Set<SuiteAppId>(["auth", "music", "planning", "finance", "presenter", "community", "platform"]);
+
+function suiteAppId(value: unknown): SuiteAppId | undefined {
+  return typeof value === "string" && SUITE_APP_IDS.has(value as SuiteAppId)
+    ? (value as SuiteAppId)
+    : undefined;
+}
 
 function asText(value: unknown): string {
   return typeof value === "string" ? value : JSON.stringify(value, null, 2);
@@ -45,8 +52,14 @@ function collect(
   const out: LogosToolDefinition[] = [];
   for (const pack of listDomainPacks()) {
     if (!pack.toolFactory) continue;
-    for (const d of pack.toolFactory({ ...context, authInfo, surface })) {
+    for (const d of pack.toolFactory({ ...context, owningApp: pack.app, authInfo, surface })) {
       if (d.surfaces && !d.surfaces.includes(surface)) continue;
+      if (d.ui && surface !== "embedded") continue;
+      if (surface === "embedded") {
+        const apps = d.apps ?? pack.app;
+        const appId = suiteAppId(context.appId);
+        if (apps !== "suite" && (!apps || !appId || !apps.includes(appId))) continue;
+      }
       if (surface === "mcp" && STUDIO_ONLY.has(d.name)) {
         throw new Error(`Studio-only tool "${d.name}" must declare surfaces: ["embedded"]`);
       }

@@ -4,6 +4,9 @@
  */
 
 export type LogosToolSurface = "embedded" | "mcp";
+import type { SuiteAppId } from "@hosanna/auth";
+
+export type { SuiteAppId } from "@hosanna/auth";
 
 export type LogosToolDefinition = {
   name: string;
@@ -16,10 +19,14 @@ export type LogosToolDefinition = {
   requiresEntitlement?: boolean;
   execute: (input: unknown) => unknown | Promise<unknown>;
   surfaces?: readonly LogosToolSurface[];
+  apps?: readonly SuiteAppId[] | "suite";
+  ui?: true;
 };
 
 export type LogosToolFactoryContext = {
   surface: LogosToolSurface;
+  appId?: SuiteAppId;
+  owningApp?: SuiteAppId;
   [key: string]: unknown;
 };
 
@@ -45,9 +52,15 @@ export function createLogosDomainTools(
 ): LogosToolDefinition[] {
   const factory = toolFactories.get(domainId);
   if (!factory) return [];
-  return factory({ ...context, surface }).filter(
-    (definition) => !definition.surfaces || definition.surfaces.includes(surface),
-  );
+  return factory({ ...context, surface }).filter((definition) => {
+    if (definition.ui && surface !== "embedded") return false;
+    if (definition.surfaces && !definition.surfaces.includes(surface)) return false;
+    if (surface === "embedded") {
+      const apps = definition.apps ?? context.owningApp;
+      if (apps !== "suite" && (!apps || !context.appId || !apps.includes(context.appId))) return false;
+    }
+    return true;
+  });
 }
 
 export function createLogosToolFactory(factories: readonly LogosToolFactory[]): LogosToolFactory {

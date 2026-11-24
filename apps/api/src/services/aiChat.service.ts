@@ -2581,6 +2581,7 @@ export class AiChatService {
     authInfo: AuthInfo;
     messages: UIMessage[];
     pageContext?: ChatPageContext;
+    appId?: import("@hosanna/auth").SuiteAppId;
     locale?: string;
     abortSignal?: AbortSignal;
   }) {
@@ -2601,7 +2602,7 @@ export class AiChatService {
     const baseTools = buildHosannaTools(opts.authInfo, toolCtx);
     const tools = {
       ...baseTools,
-      ...createSharedEmbeddedTools(opts.authInfo, toolCtx, Object.keys(baseTools)),
+      ...createSharedEmbeddedTools(opts.authInfo, { ...toolCtx, appId: opts.appId }, Object.keys(baseTools)),
     };
     const system =
       LOGOS_CHAT_SYSTEM +

@@ -44,6 +44,7 @@
     "test": "tsx --test \"test/**/*.test.ts\""
   },
   "dependencies": {
+    "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/i18n": "workspace:*",
     "@hosanna/ui": "workspace:*",

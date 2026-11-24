@@ -230,6 +230,7 @@ aiRouter.post(
       authInfo,
       messages,
       pageContext: req.body.context,
+      appId: req.body.appId,
       locale: req.body.locale,
       abortSignal: abort.signal,
     });

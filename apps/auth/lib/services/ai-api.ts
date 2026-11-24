@@ -226,6 +226,7 @@ export const aiApi = {
   streamChat: async (
     body: {
       messages: AiUiMessage[];
+      appId?: "auth";
       context?: AiChatContext;
       locale?: string;
       signal?: AbortSignal;
@@ -242,6 +243,7 @@ export const aiApi = {
       },
       body: JSON.stringify({
         messages: body.messages,
+        appId: body.appId ?? "auth",
         context: body.context,
         locale: body.locale,
       }),

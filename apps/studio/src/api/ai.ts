@@ -99,6 +99,7 @@ export const aiApi = {
 
   streamChat: async (body: {
     messages: AiUiMessage[];
+    appId?: "music";
     context?: AiChatContext;
     locale?: string;
     signal?: AbortSignal;
@@ -106,6 +107,7 @@ export const aiApi = {
     const { data, error, response } = await getApiClient().openapi.POST("/ai/chat", {
       body: {
         messages: body.messages as { [key: string]: unknown }[],
+        appId: body.appId ?? "music",
         context: body.context as { [key: string]: unknown } | undefined,
         locale: body.locale as "pt" | "en" | "es" | undefined,
       },

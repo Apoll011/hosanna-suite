@@ -29,6 +29,19 @@ describe("shared tool factory", () => {
     pack([def()]);
     assert.ok("funds_search" in createSharedEmbeddedTools(auth));
   });
+  it("limits embedded tools to the hosting app and suite-wide tools", () => {
+    pack([
+      def({ name: "suite_tool", apps: "suite" }),
+      def({ name: "music_tool", apps: ["music"] }),
+    ]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "auth" })), ["suite_tool"]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "music" })), ["suite_tool", "music_tool"]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "unknown" })), ["suite_tool"]);
+  });
+  it("never exposes UI directives on MCP", () => {
+    pack([def({ name: "host_directive", ui: true })]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "auth" })), []);
+  });
   it("rejects a non-zod schema instead of silently accepting no params", () => {
     pack([def({ inputSchema: {} })]);
     assert.throws(() => createSharedEmbeddedTools(auth), /zod inputSchema/);

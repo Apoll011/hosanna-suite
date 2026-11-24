@@ -86,7 +86,9 @@ createHosannaMcpServer(authInfo)
                  └─ same requirePermission + services as aiChat
 ```
 
-Studio-only tools (`studio_navigate`, `open_app`, …) are **not** on the MCP server — they exist only on the embedded assistant tool set in `aiChat.service`.
+Host-executed directives (`studio_navigate`, `open_app`, …) are marked `ui: true` and are **not** on the MCP server. They are filtered for the hosting suite app before being added to embedded chat.
+
+Shared tool definitions may set `apps: "suite"` for every embedded host or `apps: ["music"]` for one or more app hosts. When omitted, the pack's owning app is used. MCP exposes domain data tools from those definitions regardless of embedded app scope. Set `ui: true` for navigation, sync, print, and other directives that the host executes; these always stay embedded-only.
 
 ### External AI + propose — no Logos provider
 

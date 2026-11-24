@@ -947,6 +947,9 @@ importers:
 
   packages/logos-ai:
     dependencies:
+      '@hosanna/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@hosanna/chordpro':
         specifier: workspace:*
         version: link:../chordpro

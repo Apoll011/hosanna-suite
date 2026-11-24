@@ -7,4 +7,5 @@ export {
   type LogosToolFactory,
   type LogosToolFactoryContext,
   type LogosToolSurface,
+  type SuiteAppId,
 } from "./factory.js";

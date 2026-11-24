@@ -136,7 +136,7 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
         catalog,
         chat: {
           getSettings: () => aiApi.getSettings(),
-          streamChat: (body) => aiApi.streamChat(body),
+          streamChat: (body) => aiApi.streamChat({ ...body, appId: "music" }),
           confirmAction: (body) => aiApi.confirmAction(body),
         },
         t: t as Parameters<typeof createLogosHost>[0]["t"],

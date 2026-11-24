@@ -187,6 +187,7 @@ export function getAiPaths(): Record<string, Record<string, OpenApiOperation>> {
               items: { type: "object", additionalProperties: true },
             },
             context: { type: "object", additionalProperties: true },
+            appId: { type: "string", enum: ["auth", "music", "planning", "finance", "presenter", "community", "platform"] },
             locale: { type: "string", enum: ["pt", "en", "es"] },
           },
         }),
