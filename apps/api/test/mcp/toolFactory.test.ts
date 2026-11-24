@@ -10,6 +10,7 @@ const pack = (defs: unknown[]) =>
   registerDomainPack({
     id: "test.shared",
     title: "t",
+    app: "music",
     permissions: [],
     tools: [],
     toolFactory: () => defs as never,
@@ -27,7 +28,7 @@ describe("shared tool factory", () => {
 
   it("exposes a pack tool on the embedded surface", () => {
     pack([def()]);
-    assert.ok("funds_search" in createSharedEmbeddedTools(auth));
+    assert.ok("funds_search" in createSharedEmbeddedTools(auth, { appId: "music" }));
   });
   it("limits embedded tools to the hosting app and suite-wide tools", () => {
     pack([
@@ -44,15 +45,15 @@ describe("shared tool factory", () => {
   });
   it("rejects a non-zod schema instead of silently accepting no params", () => {
     pack([def({ inputSchema: {} })]);
-    assert.throws(() => createSharedEmbeddedTools(auth), /zod inputSchema/);
+    assert.throws(() => createSharedEmbeddedTools(auth, { appId: "music" }), /zod inputSchema/);
   });
   it("rejects name collisions with existing tools", () => {
     pack([def()]);
-    assert.throws(() => createSharedEmbeddedTools(auth, {}, ["funds_search"]), /Duplicate/);
+    assert.throws(() => createSharedEmbeddedTools(auth, { appId: "music" }, ["funds_search"]), /Duplicate/);
   });
   it("enforces permission before execute", async () => {
     pack([def({ permission: "fund.update" })]);
-    const t = createSharedEmbeddedTools(auth)["funds_search"] as {
+    const t = createSharedEmbeddedTools(auth, { appId: "music" })["funds_search"] as {
       execute: (i: unknown, o: unknown) => Promise<unknown>;
     };
     await assert.rejects(() => t.execute({}, {}), /Authentication required/);
