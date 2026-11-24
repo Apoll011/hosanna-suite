@@ -22,11 +22,11 @@ import {
   serviceElementTypeSchema,
 } from "../../validators/serviceElement.validators.js";
 import {
-  allPackToolNames,
   permissionsReportForUser,
   summarizeDomainsForUser,
   toolGroupsFromPacks,
 } from "../domains/discovery.js";
+import { allPackToolNames } from "../domains/registry.js";
 
 function zToRoughJson(schema: { description?: string; _def?: unknown }) {
   return {
