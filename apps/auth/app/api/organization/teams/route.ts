@@ -66,7 +66,7 @@ async function createTeam(req: Request) {
         createdAt: new Date(),
       },
     });
-    if (ctx.role === "teamLeader") {
+    if (ctx.role.toLowerCase().replaceAll(/[_-]/g, "") === "teamleader") {
       await prisma.teamMember.create({
         data: {
           id: crypto.randomUUID(),
