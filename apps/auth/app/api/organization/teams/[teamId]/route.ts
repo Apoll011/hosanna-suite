@@ -66,12 +66,7 @@ async function deleteTeam(_req: Request, context: RouteContext) {
   }
 }
 
-export async function PATCH(req: Request, context: RouteContext) {
-  return updateTeam(req, context);
-}
-
-export async function DELETE(req: Request, context: RouteContext) {
-  return deleteTeam(req, context);
-}
+export const PATCH = updateTeam;
+export const DELETE = deleteTeam;
 
 export const OPTIONS = withAuthCors(() => Promise.resolve(Response.json({ ok: true })));

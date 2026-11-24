@@ -1,7 +1,7 @@
 "use client";
 
 import { AccountCenter } from "@/components/account/AccountCenter";
-import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { useActiveOrganization, type OrgMember } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth/client";
 import {
   readCachedTeams,
@@ -13,12 +13,6 @@ import { canManageTeam } from "@hosanna/auth";
 import { Button, ConfirmDialog, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { Check, Crown, Plus, Search, Shield, UserMinus, UserPlus, Users } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-
-type OrgMember = NonNullable<
-  ReturnType<typeof useActiveOrganization>["organization"]
->["members"] extends (infer M)[]
-  ? M
-  : never;
 
 export function OrgTeamsPage() {
   const { t, locale } = useI18n();

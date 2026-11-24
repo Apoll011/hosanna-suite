@@ -51,7 +51,12 @@ async function createTeam(req: Request) {
       throw new AuthHttpError(400, parsed.error.issues[0]?.message ?? "Invalid team name");
 
     const team = await prisma.team.create({
-      data: { id: crypto.randomUUID(), name: parsed.data.name, organizationId: ctx.organizationId },
+      data: {
+        id: crypto.randomUUID(),
+        name: parsed.data.name,
+        organizationId: ctx.organizationId,
+        createdAt: new Date(),
+      },
     });
     if (ctx.role === "teamLeader") {
       await prisma.teamMember.create({

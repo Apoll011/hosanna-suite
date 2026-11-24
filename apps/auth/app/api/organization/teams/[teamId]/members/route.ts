@@ -84,6 +84,6 @@ async function removeMember(req: Request, context: RouteContext) {
   }
 }
 
-export const POST = withAuthCors(addMember);
-export const DELETE = withAuthCors(removeMember);
+export const POST = addMember;
+export const DELETE = removeMember;
 export const OPTIONS = withAuthCors(() => Promise.resolve(Response.json({ ok: true })));
