@@ -217,6 +217,24 @@ function buildTranslationVars(
     t_billing_canceled_heading: tc("email.billing_canceled.heading"),
     t_billing_canceled_body1: tc("email.billing_canceled.body1"),
     t_billing_canceled_body2: tc("email.billing_canceled.body2"),
+
+    t_deletion_otp_subject: tc("email.deletion_otp.subject"),
+    t_deletion_otp_heading: tc("email.deletion_otp.heading"),
+    t_deletion_otp_body1: tc("email.deletion_otp.body1"),
+    t_deletion_otp_body2: tc("email.deletion_otp.body2"),
+    t_deletion_otp_expiry: tc("email.deletion_otp.expiry"),
+
+    t_org_deletion_otp_subject: tc("email.org_deletion_otp.subject"),
+    t_org_deletion_otp_heading: tc("email.org_deletion_otp.heading"),
+    t_org_deletion_otp_body1: tc("email.org_deletion_otp.body1"),
+    t_org_deletion_otp_body2: tc("email.org_deletion_otp.body2"),
+    t_org_deletion_otp_expiry: tc("email.org_deletion_otp.expiry"),
+
+    t_org_deleted_subject: tc("email.org_deleted.subject"),
+    t_org_deleted_heading: tc("email.org_deleted.heading"),
+    t_org_deleted_salutation: tc("email.org_deleted.salutation"),
+    t_org_deleted_body1: tc("email.org_deleted.body1"),
+    t_org_deleted_body2: tc("email.org_deleted.body2"),
   };
 }
 
@@ -615,6 +633,63 @@ registerEmailTemplate(
     </div>
   `,
   { defaultSubject: "{{t_billing_canceled_subject}}" },
+);
+
+registerEmailTemplate(
+  "deletion-otp",
+  `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #ffffff; margin: 0; padding: 30px; color: #1d1b20; }
+    .code { font-size: 32px; font-weight: bold; color: #dc2626; letter-spacing: 4px; padding: 12px 0; }
+    .warn { font-size: 13px; color: #79747e; margin-top: 16px; padding: 10px; background: #fef2f2; border-radius: 6px; border: 1px solid #fecaca; }
+  </style>
+</head>
+<body>
+  <p>{{t_deletion_otp_heading}}</p>
+  <div class="code">{{2fa_code}}</div>
+  <p style="color: #79747e; font-size: 13px;">{{t_deletion_otp_expiry}}</p>
+  <p style="color: #79747e; font-size: 13px;">{{t_deletion_otp_body2}}</p>
+</body>
+</html>`,
+  { defaultSubject: "{{t_deletion_otp_subject}}", wrapWithLayout: false },
+);
+
+registerEmailTemplate(
+  "org-deletion-otp",
+  `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #ffffff; margin: 0; padding: 30px; color: #1d1b20; }
+    .code { font-size: 32px; font-weight: bold; color: #dc2626; letter-spacing: 4px; padding: 12px 0; }
+  </style>
+</head>
+<body>
+  <p>{{t_org_deletion_otp_heading}}</p>
+  <p style="font-size: 14px; color: #49454f;">{{t_org_deletion_otp_body1}}</p>
+  <div class="code">{{2fa_code}}</div>
+  <p style="color: #79747e; font-size: 13px;">{{t_org_deletion_otp_expiry}}</p>
+  <p style="color: #79747e; font-size: 13px;">{{t_org_deletion_otp_body2}}</p>
+</body>
+</html>`,
+  { defaultSubject: "{{t_org_deletion_otp_subject}}", wrapWithLayout: false },
+);
+
+registerEmailTemplate(
+  "org-deleted",
+  `
+    <div class="content">
+      <h3>{{t_org_deleted_heading}}</h3>
+      <p>{{t_org_deleted_salutation}}</p>
+      <p>{{t_org_deleted_body1}}</p>
+      <p>{{t_org_deleted_body2}}</p>
+    </div>
+  `,
+  { defaultSubject: "{{t_org_deleted_subject}}" },
 );
 
 export function renderEmailTemplate<T extends Record<string, any>>(
