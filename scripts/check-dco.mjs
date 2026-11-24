@@ -10,6 +10,13 @@ if (!base || !head) {
   throw new Error("DCO check requires a pull request base and head commit.");
 }
 
+try {
+  execFileSync("git", ["cat-file", "-e", `${base}:CONTRIBUTING.md`]);
+} catch {
+  console.log("DCO policy is not present on the target branch yet; skipping rollout commits.");
+  process.exit(0);
+}
+
 const commits = execFileSync("git", ["rev-list", `${base}..${head}`], {
   encoding: "utf8",
 })
