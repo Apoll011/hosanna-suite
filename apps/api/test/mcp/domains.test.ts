@@ -9,6 +9,7 @@ import { ALL_MCP_TOOL_NAMES } from "../../src/mcp/lib/toolCatalog.js";
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import { createSharedEmbeddedTools } from "../../src/mcp/domains/toolFactory.js";
 import { MCP_TOOL_GROUPS } from "../../src/mcp/lib/toolCatalog.js";
+import { AiMemoryService } from "../../src/services/aiMemory.service.js";
 import {
   assertPackToolsCoverCatalog,
   ensureDomainPacksRegistered,
@@ -27,6 +28,10 @@ describe("MCP domain packs", () => {
   it("filters shared tools for Auth, Music, Planning, and unknown hosts", () => {
     const authInfo = {} as AuthInfo;
     const auth = createSharedEmbeddedTools(authInfo, { appId: "auth" });
+    const authWithMemory = createSharedEmbeddedTools(authInfo, {
+      appId: "auth",
+      memory: new AiMemoryService(),
+    });
     const hostCapabilities = [
       "catalog.songs",
       "catalog.services",
@@ -49,6 +54,9 @@ describe("MCP domain packs", () => {
 
     assert.ok(MCP_TOOL_GROUPS.discovery.every((name) => name in auth));
     assert.ok("open_app" in auth);
+    assert.ok("memory_list" in authWithMemory);
+    assert.ok(!("memory_list" in auth));
+    assert.ok(!ALL_MCP_TOOL_NAMES.some((name) => name.startsWith("memory_")));
     assert.ok(!("studio_navigate" in auth));
     assert.ok("studio_navigate" in music);
     assert.ok("studio_generate_pdf" in planning);

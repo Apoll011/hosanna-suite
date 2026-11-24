@@ -265,6 +265,8 @@ toolFactory: () => [
 - `createSharedEmbeddedTools` mounts definitions on embedded chat; `mountSharedDomainTools` mounts non-UI definitions on MCP. Existing domains adapt their registered handlers through the factory until their implementations move beside the definitions.
 - **Guards:** duplicate names, non-zod `inputSchema`, permissions and entitlements declared by the definition, and UI directives excluded from MCP.
 - Host-executed directives such as navigation, sync, print, and `open_app` set `ui: true`. UI tool names and MCP tool catalogs are derived from definitions.
+- Context-dependent embedded definitions such as `memory_*` and `songs_import_sheet` use the embedded-only surface and receive their memory or attachment context from chat.
+- Bulk folder, collection, and song move operations use the same definition on MCP and embedded chat. Each item reports its own result.
 - Pack `tools` gates carry permission metadata for discovery. Their names are generated from factory definitions.
 
 ### Step 7 — Tests

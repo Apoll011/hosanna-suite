@@ -1,4 +1,4 @@
-import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
+import type { AuthInfo, CallToolResult, McpServer } from "@modelcontextprotocol/server";
 import type { SuiteAppId } from "@hosanna/auth";
 import type {
   LogosToolDefinition,
@@ -7,23 +7,13 @@ import type {
 } from "@hosanna/logos-ai/tools";
 import type { z } from "zod";
 
-type CapturedResult = { content?: readonly { type: string; text?: string }[] };
+type CapturedResult = CallToolResult;
 type CapturedHandler = (input: unknown) => CapturedResult | Promise<CapturedResult>;
 type CapturedRegistration = (
   name: string,
   config: { title?: string; description: string; inputSchema: z.ZodTypeAny },
   handler: CapturedHandler,
 ) => void;
-
-function resultValue(result: CapturedResult): unknown {
-  const text = result.content?.find((block) => block.type === "text")?.text;
-  if (text === undefined) return result;
-  try {
-    return JSON.parse(text) as unknown;
-  } catch {
-    return text;
-  }
-}
 
 export function captureMcpTools(
   register: (server: McpServer, authInfo?: AuthInfo) => void,
@@ -40,7 +30,7 @@ export function captureMcpTools(
         description: config.description,
         inputSchema: config.inputSchema,
         apps,
-        execute: async (input) => resultValue(await handler(input)),
+        execute: (input) => handler(input),
       });
     };
     const server = { registerTool } as unknown as McpServer;

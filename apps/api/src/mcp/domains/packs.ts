@@ -16,6 +16,7 @@ import { registerServiceTools } from "../tools/services.js";
 import { registerSongTools } from "../tools/songs.js";
 import { captureMcpTools } from "./captureTools.js";
 import { embeddedUiToolFactory } from "./embeddedUiTools.js";
+import { embeddedMemoryToolFactory } from "./embeddedMemoryTools.js";
 import { libraryBatchToolFactory } from "./libraryBatchTools.js";
 import { songBatchToolFactory } from "./songBatchTools.js";
 import { registerDomainPack } from "./registry.js";
@@ -35,7 +36,11 @@ const libraryFactory = createLogosToolFactory([
   ),
   libraryBatchToolFactory,
 ]);
-const platformFactory = createLogosToolFactory([discoveryFactory, embeddedUiToolFactory]);
+const platformFactory = createLogosToolFactory([
+  discoveryFactory,
+  embeddedUiToolFactory,
+  embeddedMemoryToolFactory,
+]);
 
 function toolNames(
   factory: (context: { surface: "mcp" }) => readonly { name: string }[],

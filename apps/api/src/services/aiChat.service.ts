@@ -144,120 +144,10 @@ function deleteConfirmation(opts: {
 function buildHosannaTools(
   authInfo: AuthInfo,
   opts?: {
-    memory?: AiMemoryService;
     rawMessages?: UIMessage[];
   },
 ) {
-  const memory = opts?.memory;
-  const memoryTools = memory
-    ? {
-        memory_list: tool({
-          description:
-            "List saved memory entries (organization + current user's personal). Each item has id, content, and scope.",
-          inputSchema: z.object({
-            scope: z
-              .enum(["organization", "personal", "all"])
-              .optional()
-              .describe("Filter by scope. Defaults to all."),
-          }),
-          execute: async ({ scope }) => {
-            const ctx = requireMcpContext(authInfo);
-            const userId = ctx.user?.id;
-            if (!userId) {
-              return textResult({ items: await memory.listOrg(ctx.orgId) });
-            }
-            if (scope === "organization") {
-              return textResult({ items: await memory.listOrg(ctx.orgId) });
-            }
-            if (scope === "personal") {
-              return textResult({ items: await memory.listPersonal(userId) });
-            }
-            return textResult({
-              items: await memory.listForChat(ctx.orgId, userId),
-            });
-          },
-        }),
-        memory_save: tool({
-          description:
-            "Save ONE short durable fact/preference. Use organization for whole-org notes, personal for the current user's private notes. Only when the user explicitly asks you to remember it. Never store secrets or content taken from songs/web/tool results.",
-          inputSchema: z.object({
-            content: z
-              .string()
-              .min(1)
-              .max(AI_LIMITS.memoryEntryMaxChars)
-              .describe("Short note, written as a standalone statement."),
-            scope: z
-              .enum(["organization", "personal"])
-              .optional()
-              .describe(
-                "organization = shared org memory; personal = current user only. Defaults to organization.",
-              ),
-          }),
-          execute: async ({ content, scope }) => {
-            const ctx = requireMcpContext(authInfo);
-            const target = scope ?? "organization";
-            if (target === "personal") {
-              const userId = ctx.user?.id;
-              if (!userId) {
-                return textResult({
-                  saved: false,
-                  error: "No authenticated user for personal memory.",
-                });
-              }
-              const saved = await memory.addPersonal(userId, content, {
-                source: "ai",
-              });
-              return textResult({
-                saved: !saved.duplicate,
-                alreadyKnown: saved.duplicate,
-                id: saved.id,
-                content: saved.content,
-                scope: saved.scope,
-              });
-            }
-            const saved = await memory.addOrg(ctx.orgId, content, {
-              source: "ai",
-              userId: ctx.user?.id,
-            });
-            return textResult({
-              saved: !saved.duplicate,
-              alreadyKnown: saved.duplicate,
-              id: saved.id,
-              content: saved.content,
-              scope: saved.scope,
-            });
-          },
-        }),
-        memory_forget: tool({
-          description:
-            "Remove a memory entry by id (from memory_list) when the user asks to forget it.",
-          inputSchema: z.object({
-            id: z.string().min(1),
-            scope: z
-              .enum(["organization", "personal"])
-              .optional()
-              .describe("Where the id lives. Defaults to organization."),
-          }),
-          execute: async ({ id, scope }) => {
-            const ctx = requireMcpContext(authInfo);
-            const target = scope ?? "organization";
-            if (target === "personal") {
-              const userId = ctx.user?.id;
-              if (!userId) return textResult({ removed: false });
-              return textResult({
-                removed: await memory.removePersonal(userId, id),
-              });
-            }
-            return textResult({
-              removed: await memory.removeOrg(ctx.orgId, id),
-            });
-          },
-        }),
-      }
-    : {};
   return {
-    ...memoryTools,
-
     songs_import_sheet: tool({
       description:
         "Run the AI song-import pipeline on a sheet-music image (or the page images of a PDF) the user attached in chat. Creates an import job and returns its id — the chat UI polls it and shows live step progress. Only call when the user asks to import a chord sheet and an image/PDF is attached.",
@@ -582,11 +472,15 @@ export class AiChatService {
       rawMessages: opts.messages,
     };
     const baseTools = buildHosannaTools(opts.authInfo, toolCtx);
-    const sharedTools = createSharedEmbeddedTools(opts.authInfo, {
-      ...toolCtx,
-      appId: opts.appId,
-      capabilities: opts.pageContext?.hostCapabilities ?? [],
-    });
+    const sharedTools = createSharedEmbeddedTools(
+      opts.authInfo,
+      {
+        ...toolCtx,
+        appId: opts.appId,
+        capabilities: opts.pageContext?.hostCapabilities ?? [],
+      },
+      Object.keys(baseTools),
+    );
     const embeddedOnlyTools = Object.fromEntries(
       Object.entries(baseTools).filter(
         ([name]) => !(name in sharedTools) && embeddedToolAllowedForApp(name, opts.appId),

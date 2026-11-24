@@ -59,6 +59,26 @@ describe("shared tool factory", () => {
     mountSharedDomainTools(server);
     assert.ok(!registered.includes("host_directive"));
   });
+  it("preserves the MCP result shape from the shared definition", async () => {
+    const result = {
+      content: [{ type: "text" as const, text: '{"ok":true}' }],
+      structuredContent: { ok: true },
+      isError: false,
+    };
+    pack([def({ name: "shared_result", execute: () => result })]);
+    const handlers = new Map<string, (input: unknown) => Promise<unknown>>();
+    const server = {
+      registerTool: (
+        name: string,
+        _config: unknown,
+        handler: (input: unknown) => Promise<unknown>,
+      ) => {
+        handlers.set(name, handler);
+      },
+    } as unknown as McpServer;
+    mountSharedDomainTools(server);
+    assert.deepEqual(await handlers.get("shared_result")?.({}), result);
+  });
   it("rejects a non-zod schema instead of silently accepting no params", () => {
     pack([def({ inputSchema: {} })]);
     assert.throws(() => createSharedEmbeddedTools(auth, { appId: "music" }), /zod inputSchema/);

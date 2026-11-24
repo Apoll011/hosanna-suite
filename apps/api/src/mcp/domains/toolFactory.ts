@@ -1,9 +1,14 @@
-import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
+import { isCallToolResult, type AuthInfo, type McpServer } from "@modelcontextprotocol/server";
 import type { PermissionString, SuiteAppId } from "@hosanna/auth";
 import type { LogosToolDefinition, LogosToolSurface } from "@hosanna/logos-ai/tools";
 import { tool, type ToolSet } from "ai";
 import type { z } from "zod";
-import { requireMcpContext, requirePermission, requireWriteEntitlement } from "../context.js";
+import {
+  errorResult,
+  requireMcpContext,
+  requirePermission,
+  requireWriteEntitlement,
+} from "../context.js";
 import { STUDIO_ONLY_TOOLS } from "../lib/toolCatalog.js";
 import { ensureDomainPacksRegistered } from "./packs.js";
 import { listDomainPacks } from "./registry.js";
@@ -27,6 +32,28 @@ function suiteAppId(value: unknown): SuiteAppId | undefined {
 
 function asText(value: unknown): string {
   return typeof value === "string" ? value : JSON.stringify(value, null, 2);
+}
+
+function embeddedValue(value: unknown): unknown {
+  if (!value || typeof value !== "object" || !("content" in value)) return value;
+  const content = value.content;
+  if (!Array.isArray(content)) return value;
+  const text = content.find((block): block is { type: "text"; text: string } =>
+    Boolean(
+      block &&
+      typeof block === "object" &&
+      "type" in block &&
+      block.type === "text" &&
+      "text" in block &&
+      typeof block.text === "string",
+    ),
+  )?.text;
+  if (text === undefined) return value;
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return text;
+  }
 }
 
 function schemaOf(d: LogosToolDefinition): z.ZodTypeAny {
@@ -108,7 +135,7 @@ export function createSharedEmbeddedTools(
     tools[d.name] = tool({
       description: d.description,
       inputSchema: schemaOf(d),
-      execute: async (input: unknown) => asText(await d.execute(input)),
+      execute: async (input: unknown) => asText(embeddedValue(await d.execute(input))),
     }) as ToolSet[string];
   }
   return tools;
@@ -119,9 +146,15 @@ export function mountSharedDomainTools(server: McpServer, authInfo?: AuthInfo): 
     server.registerTool(
       d.name,
       { title: d.title, description: d.description, inputSchema: schemaOf(d) },
-      async (input) => ({
-        content: [{ type: "text" as const, text: asText(await d.execute(input)) }],
-      }),
+      async (input) => {
+        try {
+          const result = await d.execute(input);
+          if (isCallToolResult(result)) return result;
+          return { content: [{ type: "text" as const, text: asText(result) }] };
+        } catch (error) {
+          return errorResult(error);
+        }
+      },
     );
   }
 }
