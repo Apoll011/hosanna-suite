@@ -865,8 +865,26 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             }
             return isOrgOwner(user.id, referenceId);
           },
-          onSubscriptionComplete: async ({ subscription, plan }) => {
+          onSubscriptionComplete: async ({ event, subscription, plan }) => {
             try {
+              if (event.type === "checkout.session.completed") {
+                const checkoutSession = event.data.object as Stripe.Checkout.Session;
+                if (checkoutSession.consent?.terms_of_service === "accepted") {
+                  const owner = await prisma.member.findFirst({
+                    where: { organizationId: subscription.referenceId, role: "owner" },
+                    select: { userId: true },
+                  });
+                  if (owner) {
+                    await prisma.user.update({
+                      where: { id: owner.userId },
+                      data: {
+                        termsAcceptedAt: new Date(checkoutSession.created * 1000),
+                        termsAcceptedVersion: CURRENT_TERMS_VERSION,
+                      },
+                    });
+                  }
+                }
+              }
               const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
                 subscription.referenceId,
                 ["owner", "admin"],
