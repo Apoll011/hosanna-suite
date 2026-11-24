@@ -807,9 +807,6 @@ export const MainLayout: React.FC = () => {
         case "trash":
           navigate(`${slugPrefix}/trash`);
           break;
-        case "teams":
-          navigate(`${slugPrefix}/teams`);
-          break;
         case "settings":
           navigate(`${slugPrefix}/settings`);
           break;

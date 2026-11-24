@@ -15,6 +15,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import { captureException } from "../lib/posthog";
 import { ExternalAuthRedirect } from "../components/ExternalAuthRedirect";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { getAuthUrl } from "../lib/authUrl";
 
 const PageLoader = () => {
   const { t } = useI18n();
@@ -38,7 +39,6 @@ import {
   SettingsPage,
   SongEditorPage,
   SongsPage,
-  TeamsPage,
   TrashPage,
   prefetchQueue,
 } from "./routePreloader";
@@ -204,7 +204,10 @@ export const AppRoutes: React.FC = () => {
                 <Route path="collections/:id" element={<CollectionDetailPage />} />
                 <Route path="services" element={<ServicesPage />} />
                 <Route path="services/:id" element={<ServiceDetailPage />} />
-                <Route path="teams" element={<TeamsPage />} />
+                <Route
+                  path="teams"
+                  element={<Navigate to={`${getAuthUrl()}/account/organization/teams`} replace />}
+                />
                 <Route path="agenda" element={<AgendaPage />} />
                 <Route path="calendar" element={<CalendarPage />} />
                 <Route path="trash" element={<TrashPage />} />

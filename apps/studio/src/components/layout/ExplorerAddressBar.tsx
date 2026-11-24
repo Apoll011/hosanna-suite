@@ -286,16 +286,6 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             </>
           )}
 
-          {view === "teams" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Users className="w-4 h-4" />
-                <span>{t("common.teams")}</span>
-              </div>
-            </>
-          )}
-
           {view === "agenda" && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />

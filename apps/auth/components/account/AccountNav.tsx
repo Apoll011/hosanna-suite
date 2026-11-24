@@ -43,6 +43,7 @@ const PERSONAL_ITEMS: NavItem[] = [
 const ORG_ITEMS: OrgNavItem[] = [
   { href: "/account/organization/profile", labelKey: "account.nav.profile", icon: Building2 },
   { href: "/account/organization/members", labelKey: "account.nav.members", icon: Users },
+  { href: "/account/organization/teams", labelKey: "account.nav.teams", icon: Users },
   {
     href: "/account/organization/billing",
     labelKey: "account.nav.billing",

@@ -1,5 +1,5 @@
-import { roles, toPermissionRequest, type AppRole } from "./roles.js";
-import type { PermissionString } from "./permission.js";
+import { roles, type AppRole } from "./roles.js";
+import { toPermissionRequest, type PermissionString } from "./permission.js";
 
 export type TeamAction = "create" | "update" | "delete";
 
