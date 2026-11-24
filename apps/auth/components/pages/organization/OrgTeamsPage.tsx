@@ -13,6 +13,27 @@ import { canManageTeam } from "@hosanna/auth";
 import { Button, ConfirmDialog, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
 import { Check, Plus, Search, Shield, UserMinus, UserPlus, Users } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { z } from "zod";
+
+const teamsResponseSchema = z.object({
+  teams: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      memberCount: z.number(),
+      createdAt: z.string(),
+      members: z.array(
+        z.object({
+          id: z.string(),
+          userId: z.string(),
+          name: z.string().nullable(),
+          email: z.string().nullable(),
+          image: z.string().nullable(),
+        }),
+      ),
+    }),
+  ),
+});
 
 export function OrgTeamsPage() {
   const { t, locale } = useI18n();
@@ -45,59 +66,11 @@ export function OrgTeamsPage() {
   const loadTeams = useCallback(async (orgId: string) => {
     const response = await fetch("/api/organization/teams", { cache: "no-store" });
     const payload: unknown = await response.json();
-    if (
-      !response.ok ||
-      !payload ||
-      typeof payload !== "object" ||
-      !("teams" in payload) ||
-      !Array.isArray(payload.teams)
-    ) {
+    const parsed = teamsResponseSchema.safeParse(payload);
+    if (!response.ok || !parsed.success) {
       throw new Error("teams could not be loaded");
     }
-    const next: TeamCacheItem[] = payload.teams.flatMap((value): TeamCacheItem[] => {
-      if (
-        !value ||
-        typeof value !== "object" ||
-        !("id" in value) ||
-        typeof value.id !== "string" ||
-        !("name" in value) ||
-        typeof value.name !== "string"
-      )
-        return [];
-      const members =
-        "members" in value && Array.isArray(value.members)
-          ? value.members.flatMap((item) =>
-              item &&
-              typeof item === "object" &&
-              "id" in item &&
-              typeof item.id === "string" &&
-              "userId" in item &&
-              typeof item.userId === "string"
-                ? [
-                    {
-                      id: item.id,
-                      userId: item.userId,
-                      name: "name" in item && typeof item.name === "string" ? item.name : null,
-                      email: "email" in item && typeof item.email === "string" ? item.email : null,
-                      image: "image" in item && typeof item.image === "string" ? item.image : null,
-                    },
-                  ]
-                : [],
-            )
-          : [];
-      return [
-        {
-          id: value.id,
-          name: value.name,
-          members,
-          memberCount: members.length,
-          createdAt:
-            "createdAt" in value && typeof value.createdAt === "string"
-              ? value.createdAt
-              : new Date().toISOString(),
-        },
-      ];
-    });
+    const next: TeamCacheItem[] = parsed.data.teams;
     writeCachedTeams(orgId, next);
     setTeams(next);
     setSelectedId((current) =>
