@@ -393,6 +393,7 @@ export const en: typeof import("./pt").pt = {
       serviceStatus: "System Status",
       termsOfService: "Terms of Service",
       privacyPolicy: "Privacy Policy",
+      subprocessors: "Subprocessors",
       cookies: "Cookies",
       copyright: "All rights reserved.",
     },

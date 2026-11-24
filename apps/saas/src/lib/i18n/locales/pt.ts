@@ -397,6 +397,7 @@ export const pt = {
       serviceStatus: "Estado do serviço",
       termsOfService: "Termos de Serviço",
       privacyPolicy: "Política de Privacidade",
+      subprocessors: "Subcontratantes",
       cookies: "Cookies",
       copyright: "Todos os direitos reservados.",
     },

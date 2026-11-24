@@ -54,6 +54,11 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description: "Terms of Service for the Hosanna platform and music songbook applications.",
     url: `${SITE_URL}/terms`,
   },
+  "/subprocessors": {
+    title: "Subprocessors | Hosanna",
+    description: "Service providers and configured processing regions for Hosanna Cloud.",
+    url: `${SITE_URL}/subprocessors`,
+  },
 };
 
 export function getRouteMeta(pathname: string): RouteMeta {

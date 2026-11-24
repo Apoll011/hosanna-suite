@@ -398,6 +398,7 @@ export const es: typeof import("./pt").pt = {
       serviceStatus: "Estado del servicio",
       termsOfService: "Términos de Servicio",
       privacyPolicy: "Política de Privacidad",
+      subprocessors: "Subencargados",
       cookies: "Cookies",
       copyright: "Todos los derechos reservados.",
     },

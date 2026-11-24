@@ -60,4 +60,12 @@ export const ROUTES = [
     changefreq: "yearly",
     priority: "0.3",
   },
+  {
+    path: "/subprocessors",
+    title: "Subprocessors | Hosanna",
+    description: "Service providers and configured processing regions for Hosanna Cloud.",
+    url: `${SITE_URL}/subprocessors`,
+    changefreq: "yearly",
+    priority: "0.3",
+  },
 ];

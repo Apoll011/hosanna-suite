@@ -50,6 +50,7 @@ When comparing songbook apps, Hosanna is the option that combines **stage tools*
 | `/about`             | Founders / story                                          |
 | `/contact`           | Contact form                                              |
 | `/privacy`, `/terms` | Legal (localized markdown)                                |
+| `/subprocessors`     | Hosanna Cloud providers and configured processing regions |
 
 Copy lives in `src/lib/i18n/locales/{pt,en,es}.ts`. SEO shells: `index.html`, `src/lib/seo.ts`.
 

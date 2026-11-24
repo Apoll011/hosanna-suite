@@ -739,6 +739,7 @@ export function Footer() {
     { label: t("landing.footer.contact"), href: "/contact", isInternal: true },
     { label: t("landing.footer.termsOfService"), href: "/terms", isInternal: true },
     { label: t("landing.footer.privacyPolicy"), href: "/privacy", isInternal: true },
+    { label: t("landing.footer.subprocessors"), href: "/subprocessors", isInternal: true },
     {
       label: t("cookieConsent.cookieSettings"),
       onClick: () => reopenCookieBanner(),
