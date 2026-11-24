@@ -788,13 +788,14 @@ model OrganizationAgreement {
   deletedOrgId     String?
   agreementType    String
   version          String
-  acceptedByUserId String
+  acceptedByUserId String?
   acceptedAt       DateTime      @default(now())
   ipAddress        String?
   userAgent        String?
   organization     Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
-  acceptedByUser   User          @relation(fields: [acceptedByUserId], references: [id], onDelete: Cascade)
+  acceptedByUser   User?         @relation(fields: [acceptedByUserId], references: [id], onDelete: SetNull)
 
+  @@unique([organizationId, agreementType, version])
   @@index([organizationId])
   @@index([deletedOrgId])
   @@index([acceptedByUserId])
