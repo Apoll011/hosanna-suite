@@ -98,7 +98,7 @@ Auth also hosts the post-login **home** (`/home`), session-gated **suite app cat
 
 See [suite-hub-and-preferences.md](./suite-hub-and-preferences.md) for App Switcher, AccountMenu, caching, and how to `registerAppSettingsScope` for a new suite app.
 
-Account and organization deletion state, intended full-erasure workflow, and store coverage are documented in [data-erasure.md](./data-erasure.md). The draft provider inventory is in [subprocessors-draft.md](../legal/subprocessors-draft.md); it is not the published production list until deployment regions and transfer safeguards are verified.
+Account and organization deletion state, intended full-erasure workflow, and store coverage are documented in [data-erasure.md](./data-erasure.md). The official Hosanna Cloud provider list and configured regions are in [subprocessors-draft.md](../legal/subprocessors-draft.md).
 
 Expected `hosanna-cloud` Global Config JSON:
 
