@@ -783,19 +783,20 @@ model OauthClientAssertion {
 }
 
 model OrganizationAgreement {
-  id               String       @id @default(cuid())
-  organizationId   String
+  id               String        @id @default(cuid())
+  organizationId   String?
+  deletedOrgId     String?
   agreementType    String
   version          String
   acceptedByUserId String
-  acceptedAt       DateTime     @default(now())
+  acceptedAt       DateTime      @default(now())
   ipAddress        String?
   userAgent        String?
-  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  acceptedByUser   User         @relation(fields: [acceptedByUserId], references: [id], onDelete: Cascade)
+  organization     Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  acceptedByUser   User          @relation(fields: [acceptedByUserId], references: [id], onDelete: Cascade)
 
-  @@unique([organizationId, agreementType, version])
   @@index([organizationId])
+  @@index([deletedOrgId])
   @@index([acceptedByUserId])
   @@map("organizationAgreement")
 }
