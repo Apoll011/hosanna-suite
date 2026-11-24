@@ -16,6 +16,7 @@ import { registerServiceTools } from "../tools/services.js";
 import { registerSongTools } from "../tools/songs.js";
 import { captureMcpTools } from "./captureTools.js";
 import { embeddedUiToolFactory } from "./embeddedUiTools.js";
+import { libraryBatchToolFactory } from "./libraryBatchTools.js";
 import { registerDomainPack } from "./registry.js";
 import type { DomainPack, McpToolGate } from "./types.js";
 
@@ -24,12 +25,13 @@ const orgFactory = captureMcpTools(registerOrgTools, "suite");
 const chordProFactory = captureMcpTools(registerChordProTools, "suite");
 const songFactory = captureMcpTools(registerSongTools, "music");
 const serviceFactory = captureMcpTools(registerServiceTools, "planning");
-const libraryFactory = captureMcpTools(registerLibraryTools, (name) =>
-  name.startsWith("agenda_") ? "planning" : "music",
-);
+const libraryFactory = createLogosToolFactory([
+  captureMcpTools(registerLibraryTools, (name) => (name.startsWith("agenda_") ? "planning" : "music")),
+  libraryBatchToolFactory,
+]);
 const platformFactory = createLogosToolFactory([discoveryFactory, embeddedUiToolFactory]);
 
-function toolNames(factory: ReturnType<typeof captureMcpTools>): string[] {
+function toolNames(factory: (context: { surface: "mcp" }) => readonly { name: string }[]): string[] {
   return factory({ surface: "mcp" }).map((definition) => definition.name);
 }
 
@@ -106,6 +108,8 @@ function libraryToolGates(): McpToolGate[] {
     if (name.startsWith("folders_")) {
       if (name === "folders_list") return { name, permission: "folder.access" };
       if (name === "folders_create")
+        return { name, permission: "folder.create", requiresEntitlement: true };
+      if (name === "folders_create_many")
         return { name, permission: "folder.create", requiresEntitlement: true };
       if (name === "folders_delete")
         return { name, permission: "folder.delete", requiresEntitlement: true };

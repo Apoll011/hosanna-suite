@@ -23,7 +23,7 @@ import {
   type NativeWebAuth,
 } from "../mcp/lib/nativeWeb.js";
 import { FOLDER_COLOR_IDS, FOLDER_ICON_IDS } from "../mcp/lib/studioUi.js";
-import { mapToolError } from "../mcp/lib/toolErrors.js";
+import { MAX_BATCH, runBatch } from "../mcp/lib/runBatch.js";
 import { AppError } from "../utils/errors.js";
 import {
   AI_LIMITS,
@@ -148,38 +148,6 @@ function deleteConfirmation(opts: {
       requiresUiConfirm: true,
       message: `Staged in Studio — the user must click Confirm to ${opts.action.replace(/_/g, " ")} "${opts.title}". Do NOT claim it is deleted until they confirm.`,
     },
-  };
-}
-
-const MAX_BATCH = 25;
-
-/**
- * Run many small mutations in one tool call (sequentially, so ordering and
- * per-item errors are predictable). One failing item never aborts the rest.
- */
-export async function runBatch<I>(
-  items: I[],
-  fn: (item: I) => Promise<object>,
-): Promise<{
-  total: number;
-  succeeded: number;
-  failed: number;
-  results: Array<Record<string, unknown>>;
-}> {
-  const results: Array<Record<string, unknown>> = [];
-  for (let index = 0; index < items.length; index++) {
-    try {
-      results.push({ index, ok: true, ...(await fn(items[index])) });
-    } catch (error) {
-      results.push({ index, ok: false, ...mapToolError(error) });
-    }
-  }
-  const failed = results.filter((r) => r.ok === false).length;
-  return {
-    total: items.length,
-    succeeded: items.length - failed,
-    failed,
-    results,
   };
 }
 
