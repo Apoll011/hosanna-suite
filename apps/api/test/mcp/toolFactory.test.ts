@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 import { z } from "zod";
 import type { AuthInfo } from "@modelcontextprotocol/server";
+import type { McpServer } from "@modelcontextprotocol/server";
 import { clearDomainPacks, registerDomainPack } from "../../src/mcp/domains/registry.js";
-import { createSharedEmbeddedTools } from "../../src/mcp/domains/toolFactory.js";
+import { createSharedEmbeddedTools, mountSharedDomainTools } from "../../src/mcp/domains/toolFactory.js";
 
 const auth = {} as AuthInfo;
 const pack = (defs: unknown[]) =>
@@ -41,7 +42,12 @@ describe("shared tool factory", () => {
   });
   it("never exposes UI directives on MCP", () => {
     pack([def({ name: "host_directive", ui: true })]);
-    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "auth" })), []);
+    const registered: string[] = [];
+    const server = {
+      registerTool: (name: string) => registered.push(name),
+    } as unknown as McpServer;
+    mountSharedDomainTools(server);
+    assert.ok(!registered.includes("host_directive"));
   });
   it("rejects a non-zod schema instead of silently accepting no params", () => {
     pack([def({ inputSchema: {} })]);

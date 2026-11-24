@@ -6,6 +6,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ALL_MCP_TOOL_NAMES } from "../../src/mcp/lib/toolCatalog.js";
+import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
+import { createSharedEmbeddedTools } from "../../src/mcp/domains/toolFactory.js";
+import { MCP_TOOL_GROUPS } from "../../src/mcp/lib/toolCatalog.js";
 import {
   assertPackToolsCoverCatalog,
   ensureDomainPacksRegistered,
@@ -19,6 +22,23 @@ describe("MCP domain packs", () => {
     ensureDomainPacksRegistered();
     const missing = assertPackToolsCoverCatalog(ALL_MCP_TOOL_NAMES);
     assert.deepEqual(missing, [], `packs missing tools: ${missing.join(", ")}`);
+  });
+
+  it("filters shared tools for Auth, Music, Planning, and unknown hosts", () => {
+    const authInfo = {} as AuthInfo;
+    const auth = createSharedEmbeddedTools(authInfo, { appId: "auth" });
+    const music = createSharedEmbeddedTools(authInfo, { appId: "music" });
+    const planning = createSharedEmbeddedTools(authInfo, { appId: "planning" });
+    const unknown = createSharedEmbeddedTools(authInfo, { appId: "unrecognized" });
+    const allMusicAndPlanning = new Set([...Object.keys(music), ...Object.keys(planning)]);
+
+    assert.ok(MCP_TOOL_GROUPS.discovery.every((name) => name in auth));
+    assert.ok(ALL_MCP_TOOL_NAMES.every((name) => allMusicAndPlanning.has(name)));
+    assert.ok(!("songs_search" in auth));
+    assert.ok("songs_search" in music);
+    assert.ok(!("services_search" in music));
+    assert.ok("services_search" in planning);
+    assert.deepEqual(Object.keys(unknown), Object.keys(auth));
   });
 
   it("exposes music.song and music.service with logosKind", () => {
