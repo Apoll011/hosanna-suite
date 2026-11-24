@@ -22,6 +22,9 @@ describe("auth OpenAPI schema builder", () => {
     assert.ok(paths.includes("/backup"));
     assert.ok(paths.includes("/backup/restore"));
     assert.ok(paths.includes("/notifications"));
+    assert.ok(paths.includes("/erasure/otp"));
+    assert.ok(paths.includes("/erasure/account"));
+    assert.ok(paths.includes("/erasure/organization"));
   });
 
   it("includes required component schemas", () => {

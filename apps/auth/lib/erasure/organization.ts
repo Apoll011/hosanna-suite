@@ -8,20 +8,28 @@ export interface OrgErasureResult {
   stripeNote: string;
 }
 
+export interface OrgErasureDeps {
+  db?: typeof prisma;
+  deleteLogo?: (orgId: string) => Promise<void>;
+}
+
 export async function eraseOrganization(
   orgId: string,
   stripeClient: Stripe,
+  deps: OrgErasureDeps = {},
 ): Promise<OrgErasureResult> {
-  const org = await prisma.organization.findUnique({
+  const db = deps.db ?? prisma;
+  const deleteLogo = deps.deleteLogo ?? ((id: string) => authImages.deleteOrganizationLogo(id));
+
+  const org = await db.organization.findUnique({
     where: { id: orgId },
     select: { id: true, logo: true },
   });
   if (!org) throw new Error("Organization not found");
 
-  // 1. Cancel Stripe subscription immediately.
-  const subscriptions = await prisma.subscription.findMany({
+  const subscriptions = await db.subscription.findMany({
     where: { referenceId: orgId },
-    select: { id: true, stripeSubscriptionId: true, stripeCustomerId: true },
+    select: { id: true, stripeSubscriptionId: true },
   });
 
   let stripeNote = "No active subscription found.";
@@ -38,22 +46,33 @@ export async function eraseOrganization(
     }
   }
 
-  // 2. Detach DPA records before cascade (retain for legal compliance).
-  await prisma.organizationAgreement.updateMany({
-    where: { organizationId: orgId },
-    data: { deletedOrgId: orgId, organizationId: null },
+  await db.$transaction(async (tx) => {
+    // Retain DPA records without a live organization FK.
+    await tx.organizationAgreement.updateMany({
+      where: { organizationId: orgId },
+      data: { deletedOrgId: orgId, organizationId: null },
+    });
+
+    // Clean org-scoped rows that have no Prisma FK relation to Organization.
+    await tx.subscription.deleteMany({ where: { referenceId: orgId } });
+    await tx.notification.deleteMany({ where: { organizationId: orgId } });
+    await tx.oauthAccessToken.deleteMany({ where: { referenceId: orgId } });
+    await tx.oauthRefreshToken.deleteMany({ where: { referenceId: orgId } });
+    await tx.oauthConsent.deleteMany({ where: { referenceId: orgId } });
+    await tx.oauthClient.deleteMany({ where: { referenceId: orgId } });
+    await tx.verification.deleteMany({
+      where: { identifier: { startsWith: `erasure:org:${orgId}:` } },
+    });
+
+    // Cascades wipe folders, collections, songs, services, agendaEvents,
+    // serviceNotes, serviceSongAnnotations, aiConfig, aiMemory, teams, members,
+    // and invitations.
+    await tx.organization.delete({ where: { id: orgId } });
   });
 
-  // 3. Delete Subscription rows explicitly (no FK to organization).
-  await prisma.subscription.deleteMany({ where: { referenceId: orgId } });
-
-  // 4. Delete the organization row; cascades wipe all related Postgres data.
-  await prisma.organization.delete({ where: { id: orgId } });
-
-  // 5. Delete org logo from Supabase Storage.
   if (org.logo) {
     try {
-      await authImages.deleteOrganizationLogo(orgId);
+      await deleteLogo(orgId);
     } catch (err) {
       console.error("[erasure] org logo delete failed:", err);
     }

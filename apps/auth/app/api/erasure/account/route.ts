@@ -1,14 +1,23 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { eraseAccount, findSoleOwnerOrgs } from "@/lib/erasure/account";
+import { verifyErasureOtp } from "@/lib/erasure/otp";
 import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
-import { eraseAccount } from "@/lib/erasure/account";
-import { auth } from "@/lib/auth/server";
-import { headers } from "next/headers";
 
 const schema = z.object({
   otp: z.string().min(4),
 });
+
+export async function GET() {
+  try {
+    const ctx = await requireAuthSession();
+    const soleOwnerOrgs = await findSoleOwnerOrgs(ctx.userId);
+    return NextResponse.json({ soleOwnerOrgs });
+  } catch (err) {
+    return jsonError(err);
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -20,18 +29,12 @@ export async function POST(req: Request) {
       throw new AuthHttpError(400, "otp is required.");
     }
 
-    const session = (await auth.api.getSession({ headers: await headers() }))!;
-
-    // Verify the deletion OTP.
-    const otpResult = await auth.api.verifyEmailOTP({
-      headers: await headers(),
-      body: {
-        email: session.user.email,
-        otp: parsed.data.otp,
-        type: "delete-account" as any,
-      },
+    const validOtp = await verifyErasureOtp({
+      kind: "account",
+      userId: ctx.userId,
+      otp: parsed.data.otp,
     });
-    if (!otpResult || (otpResult as any).error) {
+    if (!validOtp) {
       throw new AuthHttpError(401, "Invalid or expired verification code.");
     }
 

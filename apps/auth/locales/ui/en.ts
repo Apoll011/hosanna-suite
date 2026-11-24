@@ -524,6 +524,19 @@ export const en: typeof pt = {
       deleteConfirmText: 'Type "{name}" to confirm deletion.',
       deleteSuccess: "Organization deleted.",
       deleteError: "Could not delete: {error}",
+      exportRequiredTitle: "Export your data before deleting",
+      exportRequiredDesc:
+        "Download a complete backup of your organization's songs, folders, services, collections, and agenda first. Deletion is permanent and cannot be undone.",
+      exportCompleted: "Backup downloaded. You can now proceed with deletion.",
+      exportBtn: "Export and download backup",
+      otpTitle: "Verify your identity",
+      otpDesc: "We sent a 6-digit confirmation code to {email}. Enter it below to continue.",
+      otpLabel: "Verification code",
+      otpSendError: "Could not send verification code: {error}",
+      otpInvalid: "Invalid or expired verification code.",
+      backupRetentionNotice:
+        "Your data will be removed from active systems immediately. Encrypted provider backups may retain copies for up to 30 days.",
+      nextBtn: "Continue",
     },
   },
   oauth: {
@@ -583,6 +596,28 @@ export const en: typeof pt = {
     title: "Account",
     subtitle: "Manage your Hosanna profile, security, notifications, and sessions.",
     signOut: "Sign out",
+    danger: {
+      title: "Danger zone",
+      desc: "Permanently delete your personal Hosanna account and all associated data.",
+      deleteTitle: "Delete your account",
+      deleteDesc:
+        "Removes your profile, sessions, push registrations, preferences, and personal AI memory.",
+      deleteBtn: "Delete account",
+      soleOwnerTitle: "Ownership transfer required",
+      soleOwnerDesc:
+        "You are the sole owner of the following organization(s). Transfer ownership to another member or delete the organization before deleting your account:",
+      manageOrgLink: "Manage organization",
+      otpTitle: "Confirm account deletion",
+      otpDesc:
+        "We sent a 6-digit confirmation code to {email}. Enter it below to permanently delete your account.",
+      otpLabel: "Verification code",
+      sendOtpBtn: "Send verification code",
+      confirmBtn: "Permanently delete account",
+      backupRetentionNotice:
+        "Your data will be removed from active systems immediately. Encrypted provider backups may retain copies for up to 30 days.",
+      deleteSuccess: "Account deleted.",
+      deleteError: "Could not delete account: {error}",
+    },
     menu: {
       open: "Account menu",
       theme: "Theme",

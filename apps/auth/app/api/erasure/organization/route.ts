@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { NextResponse } from "next/server";
-import { z } from "zod";
-import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
-import { eraseOrganization } from "@/lib/erasure/organization";
-import { stripeClient } from "@/lib/auth/server";
-import { sendOrgDeletedEmail } from "@/lib/services/email";
-import { prisma } from "@/lib/db/prisma";
-import { auth } from "@/lib/auth/server";
 import { headers } from "next/headers";
+import { z } from "zod";
+import { auth, stripeClient } from "@/lib/auth/server";
+import { prisma } from "@/lib/db/prisma";
+import { eraseOrganization } from "@/lib/erasure/organization";
+import { verifyErasureOtp } from "@/lib/erasure/otp";
+import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
+import { sendOrgDeletedEmail } from "@/lib/services/email";
 
 const schema = z.object({
   otp: z.string().min(4),
@@ -31,37 +31,33 @@ export async function POST(req: Request) {
       throw new AuthHttpError(400, "otp and exportConfirmed are required.");
     }
 
-    // Verify the deletion OTP.
-    const otpResult = await auth.api.verifyEmailOTP({
-      headers: await headers(),
-      body: {
-        email: (await auth.api.getSession({ headers: await headers() }))!.user.email,
-        otp: parsed.data.otp,
-        type: "delete-organization" as any,
-      },
+    const validOtp = await verifyErasureOtp({
+      kind: "organization",
+      userId: ctx.userId,
+      orgId: ctx.organizationId,
+      otp: parsed.data.otp,
     });
-    if (!otpResult || (otpResult as any).error) {
+    if (!validOtp) {
       throw new AuthHttpError(401, "Invalid or expired verification code.");
     }
 
-    // Fetch org name before deletion for the confirmation email.
     const org = await prisma.organization.findUnique({
       where: { id: ctx.organizationId },
       select: { name: true },
     });
-
-    const user = (await auth.api.getSession({ headers: await headers() }))!.user;
+    const session = await auth.api.getSession({ headers: await headers() });
 
     const result = await eraseOrganization(ctx.organizationId, stripeClient);
 
-    // Send confirmation email to the owner.
-    try {
-      await sendOrgDeletedEmail(user.email, {
-        first_name: user.name,
-        church_name: org?.name ?? "",
-      });
-    } catch (err) {
-      console.error("[erasure] org deleted email failed:", err);
+    if (session?.user?.email) {
+      try {
+        await sendOrgDeletedEmail(session.user.email, {
+          first_name: session.user.name,
+          church_name: org?.name ?? "",
+        });
+      } catch (err) {
+        console.error("[erasure] org deleted email failed:", err);
+      }
     }
 
     return NextResponse.json(result);

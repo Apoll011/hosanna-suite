@@ -990,6 +990,69 @@ export async function sendAccountDeletedEmail(
   });
 }
 
+export async function sendDeletionOtpEmail(
+  to: string | string[],
+  data: {
+    "2fa_code"?: string;
+    otp?: string;
+    code?: string;
+    expiry_time?: number | string;
+    expireMinutes?: number | string;
+    first_name?: string;
+    name?: string;
+    locale?: string;
+  },
+) {
+  return sendTemplateEmail({
+    to,
+    template: "deletion-otp",
+    variables: data,
+    locale: data.locale,
+  });
+}
+
+export async function sendOrgDeletionOtpEmail(
+  to: string | string[],
+  data: {
+    "2fa_code"?: string;
+    otp?: string;
+    code?: string;
+    church_name: string;
+    churchName?: string;
+    expiry_time?: number | string;
+    expireMinutes?: number | string;
+    first_name?: string;
+    name?: string;
+    locale?: string;
+  },
+) {
+  return sendTemplateEmail({
+    to,
+    template: "org-deletion-otp",
+    variables: data,
+    locale: data.locale,
+  });
+}
+
+export async function sendOrgDeletedEmail(
+  to: string | string[],
+  data: {
+    first_name?: string;
+    firstName?: string;
+    name?: string;
+    church_name: string;
+    churchName?: string;
+    locale?: string;
+  },
+) {
+  return sendTemplateEmail({
+    to,
+    template: "org-deleted",
+    variables: data,
+    locale: data.locale,
+  });
+}
+
 export async function sendChurchInvitationEmail(
   to: string | string[],
   data: {
@@ -1267,6 +1330,9 @@ export const emailService = {
   sendChangeEmailVerificationEmail,
   sendEmailChangedSuccessEmail,
   sendAccountDeletedEmail,
+  sendDeletionOtpEmail,
+  sendOrgDeletionOtpEmail,
+  sendOrgDeletedEmail,
   sendChurchInvitationEmail,
   sendJoinRequestReceivedEmail,
   sendJoinRequestApprovedEmail,

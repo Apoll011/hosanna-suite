@@ -520,6 +520,19 @@ export const pt = {
       deleteConfirmText: 'Escreva "{name}" para confirmar a eliminação.',
       deleteSuccess: "Organização eliminada.",
       deleteError: "Não foi possível eliminar: {error}",
+      exportRequiredTitle: "Exporte os dados antes de eliminar",
+      exportRequiredDesc:
+        "Descarregue primeiro uma cópia de segurança das músicas, pastas, cultos, coleções e agenda. A eliminação é permanente e irreversível.",
+      exportCompleted: "Cópia de segurança descarregada. Pode agora avançar com a eliminação.",
+      exportBtn: "Exportar e descarregar cópia",
+      otpTitle: "Verificar a sua identidade",
+      otpDesc: "Enviámos um código de 6 dígitos para {email}. Introduza-o abaixo para continuar.",
+      otpLabel: "Código de verificação",
+      otpSendError: "Não foi possível enviar o código: {error}",
+      otpInvalid: "Código de verificação inválido ou expirado.",
+      backupRetentionNotice:
+        "Os seus dados serão removidos dos sistemas ativos imediatamente. Cópias de segurança encriptadas dos fornecedores podem reter cópias até 30 dias.",
+      nextBtn: "Continuar",
     },
   },
   oauth: {
@@ -579,6 +592,28 @@ export const pt = {
     title: "Conta",
     subtitle: "Gerir o seu perfil, segurança, notificações e sessões Hosanna.",
     signOut: "Terminar sessão",
+    danger: {
+      title: "Zona de perigo",
+      desc: "Eliminar permanentemente a sua conta pessoal Hosanna e todos os dados associados.",
+      deleteTitle: "Eliminar a sua conta",
+      deleteDesc:
+        "Remove o seu perfil, sessões, dispositivos push, preferências e memória pessoal de IA.",
+      deleteBtn: "Eliminar conta",
+      soleOwnerTitle: "Transferência de propriedade necessária",
+      soleOwnerDesc:
+        "É o único proprietário da(s) seguinte(s) organização(ões). Transfira a propriedade para outro membro ou elimine a organização antes de eliminar a sua conta:",
+      manageOrgLink: "Gerir organização",
+      otpTitle: "Confirmar eliminação da conta",
+      otpDesc:
+        "Enviámos um código de 6 dígitos para {email}. Introduza-o abaixo para eliminar permanentemente a sua conta.",
+      otpLabel: "Código de verificação",
+      sendOtpBtn: "Enviar código de verificação",
+      confirmBtn: "Eliminar conta permanentemente",
+      backupRetentionNotice:
+        "Os seus dados serão removidos dos sistemas ativos imediatamente. Cópias de segurança encriptadas dos fornecedores podem reter cópias até 30 dias.",
+      deleteSuccess: "Conta eliminada.",
+      deleteError: "Não foi possível eliminar a conta: {error}",
+    },
     menu: {
       open: "Menu da conta",
       theme: "Tema",

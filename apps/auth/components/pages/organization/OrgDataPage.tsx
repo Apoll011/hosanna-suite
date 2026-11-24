@@ -29,7 +29,11 @@ export function OrgDataPage() {
 
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteStep, setDeleteStep] = useState<"otp" | "confirm">("otp");
+  const [deleteOtp, setDeleteOtp] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [exportDownloaded, setExportDownloaded] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
   const [dangerBusy, setDangerBusy] = useState(false);
 
   const [dpaData, setDpaData] = useState<{
@@ -104,6 +108,7 @@ export function OrgDataPage() {
     setIsDownloading(true);
     try {
       await backupApi.downloadBackup({ organizationId: organization.id });
+      setExportDownloaded(true);
       showToast(t("settings.workspace.exportSuccess"), "success");
     } catch (err) {
       showToast((err as Error)?.message || t("settings.workspace.exportError"), "error");
@@ -172,11 +177,51 @@ export function OrgDataPage() {
     }
   };
 
+  const handleOpenDelete = async () => {
+    if (!organization || !exportDownloaded) return;
+    setSendingOtp(true);
+    setDeleteOtp("");
+    setDeleteConfirm("");
+    setDeleteStep("otp");
+    try {
+      const res = await fetch("/api/erasure/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "organization" }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to send verification code");
+      }
+      setDeleteOpen(true);
+    } catch (err) {
+      showToast(
+        t("org.danger.otpSendError", {
+          error: (err as Error)?.message || "",
+        }),
+        "error",
+      );
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
   const handleDelete = async () => {
-    if (!organization || deleteConfirm !== organization.name) return;
+    if (!organization || deleteConfirm !== organization.name || !deleteOtp.trim()) return;
     setDangerBusy(true);
     try {
-      await authClient.organization.delete({ organizationId: organization.id });
+      const res = await fetch("/api/erasure/organization", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          otp: deleteOtp.trim(),
+          exportConfirmed: true,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Delete failed");
+      }
       showToast(t("org.danger.deleteSuccess"), "success");
       localStorage.removeItem("active_org_slug");
       window.location.assign("/onboarding");
@@ -189,7 +234,6 @@ export function OrgDataPage() {
       );
     } finally {
       setDangerBusy(false);
-      setDeleteOpen(false);
     }
   };
 
@@ -366,16 +410,54 @@ export function OrgDataPage() {
             ) : null}
 
             {isOwner ? (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20">
-                <div>
-                  <p className="text-sm font-semibold text-m3-danger">
-                    {t("org.danger.deleteTitle")}
-                  </p>
-                  <p className="text-xs text-m3-secondary mt-0.5">{t("org.danger.deleteDesc")}</p>
+              <div className="space-y-3">
+                <div className="p-3 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-m3-text">
+                      {t("org.danger.exportRequiredTitle")}
+                    </p>
+                    <p className="text-xs text-m3-secondary mt-0.5">
+                      {exportDownloaded
+                        ? t("org.danger.exportCompleted")
+                        : t("org.danger.exportRequiredDesc")}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={isDownloading}
+                    isLoading={isDownloading}
+                    icon={
+                      exportDownloaded ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      ) : (
+                        <Download className="w-4 h-4" />
+                      )
+                    }
+                    onClick={() => void handleBackup()}
+                  >
+                    {t("org.danger.exportBtn")}
+                  </Button>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => setDeleteOpen(true)}>
-                  {t("org.danger.deleteBtn")}
-                </Button>
+
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20">
+                  <div>
+                    <p className="text-sm font-semibold text-m3-danger">
+                      {t("org.danger.deleteTitle")}
+                    </p>
+                    <p className="text-xs text-m3-secondary mt-0.5">{t("org.danger.deleteDesc")}</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!exportDownloaded || sendingOtp}
+                    isLoading={sendingOtp}
+                    onClick={() => void handleOpenDelete()}
+                  >
+                    {t("org.danger.deleteBtn")}
+                  </Button>
+                </div>
               </div>
             ) : null}
           </div>
@@ -472,40 +554,85 @@ export function OrgDataPage() {
           onClose={() => {
             setDeleteOpen(false);
             setDeleteConfirm("");
+            setDeleteOtp("");
+            setDeleteStep("otp");
           }}
-          title={t("org.danger.deleteConfirmTitle")}
+          title={
+            deleteStep === "otp"
+              ? t("org.danger.otpTitle")
+              : t("org.danger.deleteConfirmTitle")
+          }
         >
-          <div className="space-y-4 pt-2">
-            <p className="text-sm text-m3-secondary">
-              {t("org.danger.deleteConfirmText", { name: organization.name })}
-            </p>
-            <input
-              type="text"
-              value={deleteConfirm}
-              onChange={(e) => setDeleteConfirm(e.target.value)}
-              placeholder={organization.name}
-              className="w-full rounded-md border border-m3-border bg-m3-card px-3.5 py-2.5 text-sm text-m3-text"
-            />
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setDeleteOpen(false);
-                  setDeleteConfirm("");
-                }}
-              >
-                {t("common.cancel")}
-              </Button>
-              <Button
-                variant="primary"
-                disabled={deleteConfirm !== organization.name}
-                isLoading={dangerBusy}
-                onClick={() => void handleDelete()}
-              >
-                {t("org.danger.deleteBtn")}
-              </Button>
+          {deleteStep === "otp" ? (
+            <div className="space-y-4 pt-2">
+              <p className="text-sm text-m3-secondary">
+                {t("org.danger.otpDesc", { email: user?.email || "" })}
+              </p>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={deleteOtp}
+                onChange={(e) => setDeleteOtp(e.target.value)}
+                placeholder={t("org.danger.otpLabel")}
+                className="w-full rounded-md border border-m3-border bg-m3-card px-3.5 py-2.5 text-sm text-m3-text tracking-widest font-mono"
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setDeleteOpen(false);
+                    setDeleteOtp("");
+                  }}
+                >
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="primary"
+                  disabled={deleteOtp.trim().length < 4}
+                  onClick={() => setDeleteStep("confirm")}
+                >
+                  {t("org.danger.nextBtn")}
+                </Button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-4 pt-2">
+              <p className="text-sm text-m3-secondary">
+                {t("org.danger.deleteConfirmText", { name: organization.name })}
+              </p>
+              <p className="text-xs text-m3-secondary bg-m3-sidebar/60 p-3 rounded-lg border border-m3-border">
+                {t("org.danger.backupRetentionNotice")}
+              </p>
+              <input
+                type="text"
+                value={deleteConfirm}
+                onChange={(e) => setDeleteConfirm(e.target.value)}
+                placeholder={organization.name}
+                className="w-full rounded-md border border-m3-border bg-m3-card px-3.5 py-2.5 text-sm text-m3-text"
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setDeleteOpen(false);
+                    setDeleteConfirm("");
+                    setDeleteOtp("");
+                    setDeleteStep("otp");
+                  }}
+                >
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="primary"
+                  disabled={deleteConfirm !== organization.name}
+                  isLoading={dangerBusy}
+                  onClick={() => void handleDelete()}
+                >
+                  {t("org.danger.deleteBtn")}
+                </Button>
+              </div>
+            </div>
+          )}
         </Modal>
 
         <Modal
@@ -522,7 +649,8 @@ export function OrgDataPage() {
                 <p>
                   <strong className="text-m3-text">Accepted:</strong>{" "}
                   {new Date(dpaData.agreement.acceptedAt).toLocaleString()} by{" "}
-                  {dpaData.agreement.acceptedByUser.name} ({dpaData.agreement.acceptedByUser.email})
+                  {dpaData.agreement.acceptedByUser?.name || "Admin"} (
+                  {dpaData.agreement.acceptedByUser?.email || ""})
                 </p>
               ) : null}
             </div>

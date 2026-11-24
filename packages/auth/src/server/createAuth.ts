@@ -710,6 +710,17 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             }
           },
 
+          afterDeleteOrganization: async ({ organization }) => {
+            console.info(
+              JSON.stringify({
+                event: "org.deleted",
+                entityType: "organization",
+                entityId: organization.id,
+                timestamp: new Date().toISOString(),
+              }),
+            );
+          },
+
           afterAddMember: async ({ member, user, organization }) => {
             try {
               const locale = await getOrgLocale(organization.id);

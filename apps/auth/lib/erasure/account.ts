@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { prisma } from "@/lib/db/prisma";
-import { auth } from "@/lib/auth/server";
 import { headers } from "next/headers";
+import { auth } from "@/lib/auth/server";
+import { prisma } from "@/lib/db/prisma";
+import { sendAccountDeletedEmail } from "@/lib/services/email";
+import { authImages } from "@/lib/storage/auth-images";
 
 export interface SoleOwnerOrg {
   id: string;
@@ -21,8 +23,18 @@ export interface AccountErasureResult {
 
 export type AccountErasureOutcome = AccountErasureBlockedResult | AccountErasureResult;
 
-async function findSoleOwnerOrgs(userId: string): Promise<SoleOwnerOrg[]> {
-  const ownerships = await prisma.member.findMany({
+export interface AccountErasureDeps {
+  db?: typeof prisma;
+  revokeSessions?: (userId: string) => Promise<void>;
+  deleteAvatar?: (userId: string) => Promise<void>;
+  sendDeletedEmail?: (email: string, name: string) => Promise<unknown>;
+}
+
+export async function findSoleOwnerOrgs(
+  userId: string,
+  db: typeof prisma = prisma,
+): Promise<SoleOwnerOrg[]> {
+  const ownerships = await db.member.findMany({
     where: { userId, role: "owner" },
     select: { organizationId: true },
   });
@@ -30,11 +42,11 @@ async function findSoleOwnerOrgs(userId: string): Promise<SoleOwnerOrg[]> {
   const soleOwnerOrgs: SoleOwnerOrg[] = [];
 
   for (const { organizationId } of ownerships) {
-    const ownerCount = await prisma.member.count({
+    const ownerCount = await db.member.count({
       where: { organizationId, role: "owner" },
     });
     if (ownerCount === 1) {
-      const org = await prisma.organization.findUnique({
+      const org = await db.organization.findUnique({
         where: { id: organizationId },
         select: { id: true, name: true, slug: true },
       });
@@ -45,31 +57,69 @@ async function findSoleOwnerOrgs(userId: string): Promise<SoleOwnerOrg[]> {
   return soleOwnerOrgs;
 }
 
-export async function eraseAccount(userId: string): Promise<AccountErasureOutcome> {
-  // 1. Block if the user is the sole owner of any org.
-  const soleOwnerOrgs = await findSoleOwnerOrgs(userId);
+export async function eraseAccount(
+  userId: string,
+  deps: AccountErasureDeps = {},
+): Promise<AccountErasureOutcome> {
+  const db = deps.db ?? prisma;
+  const revokeSessions =
+    deps.revokeSessions ??
+    (async (id: string) => {
+      await auth.api.revokeUserSessions({
+        headers: await headers(),
+        body: { userId: id },
+      });
+    });
+  const deleteAvatar = deps.deleteAvatar ?? ((id: string) => authImages.deleteAvatar(id));
+  const sendDeletedEmail =
+    deps.sendDeletedEmail ??
+    ((email: string, name: string) => sendAccountDeletedEmail(email, { first_name: name }));
+
+  const soleOwnerOrgs = await findSoleOwnerOrgs(userId, db);
   if (soleOwnerOrgs.length > 0) {
     return { blocked: true, reason: "sole_owner", orgs: soleOwnerOrgs };
   }
 
-  // 2. Revoke all sessions (clears Redis + Postgres session rows).
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { id: true, email: true, name: true },
+  });
+  if (!user) throw new Error("User not found");
+
   try {
-    await auth.api.revokeUserSessions({
-      headers: await headers(),
-      body: { userId },
-    });
+    await revokeSessions(userId);
   } catch (err) {
     console.error("[erasure] session revocation failed:", err);
   }
 
-  // 3. Delete the user. Better Auth cascades sessions, accounts, 2FA, push
-  //    devices, notifications, AI memory, reminder dispatches. The
-  //    databaseHooks.user.delete.after hook fires: avatar is removed from
-  //    Supabase Storage and the account-deleted email is sent.
-  await auth.api.deleteUser({
-    headers: await headers(),
-    body: { userId },
+  await db.$transaction(async (tx) => {
+    await tx.oauthAccessToken.deleteMany({ where: { userId } });
+    await tx.oauthRefreshToken.deleteMany({ where: { userId } });
+    await tx.oauthConsent.deleteMany({ where: { userId } });
+    await tx.oauthClient.deleteMany({ where: { userId } });
+    await tx.verification.deleteMany({
+      where: {
+        OR: [
+          { identifier: `erasure:account:${userId}` },
+          { identifier: user.email },
+        ],
+      },
+    });
+
+    await tx.user.delete({ where: { id: userId } });
   });
+
+  try {
+    await deleteAvatar(userId);
+  } catch (err) {
+    console.error("[erasure] avatar cleanup failed after user deletion:", err);
+  }
+
+  try {
+    await sendDeletedEmail(user.email, user.name);
+  } catch (err) {
+    console.error("[erasure] failed to send account deleted email:", err);
+  }
 
   console.info(
     JSON.stringify({
