@@ -1,4 +1,3 @@
--- SPDX-License-Identifier: AGPL-3.0-only
 -- AlterTable: add purge_at to folders
 ALTER TABLE "folders" ADD COLUMN "purge_at" TIMESTAMP(3);
 

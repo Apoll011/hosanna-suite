@@ -1,4 +1,3 @@
--- SPDX-License-Identifier: AGPL-3.0-only
 -- CreateTable
 CREATE TABLE "agenda_reminder_dispatches" (
     "id" TEXT NOT NULL,

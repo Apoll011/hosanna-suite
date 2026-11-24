@@ -1,4 +1,3 @@
--- SPDX-License-Identifier: AGPL-3.0-only
 -- AlterTable
 ALTER TABLE "settings" ADD COLUMN     "folderTemplateConfig" JSONB NOT NULL DEFAULT '{}',
 ADD COLUMN     "folderTemplateId" TEXT NOT NULL DEFAULT 'folder-default',

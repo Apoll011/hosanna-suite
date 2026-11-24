@@ -1,4 +1,3 @@
--- SPDX-License-Identifier: AGPL-3.0-only
 -- Better Auth JWT keys + MCP OAuth 2.1 provider tables
 
 CREATE TABLE IF NOT EXISTS "jwks" (

@@ -1,4 +1,3 @@
--- SPDX-License-Identifier: AGPL-3.0-only
 -- CreateTable
 CREATE TABLE "service_song_annotations" (
     "id" TEXT NOT NULL,
