@@ -72,6 +72,11 @@ export const es: typeof pt = {
       successTitle: "Revisa tu correo",
       successDesc: "Enviamos un enlace de verificación para activar tu cuenta.",
       showPassword: "Mostrar contraseña",
+      termsRequired: "Acepta los Términos del Servicio y la Política de Privacidad para continuar.",
+      termsPrefix: "Al crear una cuenta, acepto los",
+      termsLink: "Términos del Servicio",
+      termsAnd: "y reconozco la",
+      privacyLink: "Política de Privacidad.",
     },
     forgotPassword: {
       title: "Restablecer contraseña",

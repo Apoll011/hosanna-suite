@@ -241,28 +241,28 @@ model Service {
 }
 
 model User {
-  id                     String                   @id
-  name                   String
-  email                  String
-  emailVerified          Boolean                  @default(false)
-  image                  String?
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
-  twoFactorEnabled       Boolean?                 @default(false)
-  sessions               Session[]
-  accounts               Account[]
-  notifications          Notification[]
-  pushDevices            PushDevice[]
+  id                      String                   @id
+  name                    String
+  email                   String
+  emailVerified           Boolean                  @default(false)
+  image                   String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  twoFactorEnabled        Boolean?                 @default(false)
+  sessions                Session[]
+  accounts                Account[]
+  notifications           Notification[]
+  pushDevices             PushDevice[]
   notificationPreferences NotificationPreference[]
-  notificationDeliveries NotificationDelivery[]
-  twofactors             TwoFactor[]
-  teammembers            TeamMember[]
-  members                Member[]
-  invitations            Invitation[]
-  serviceSongAnnotations ServiceSongAnnotation[]
-  serviceNotes           ServiceNote[]
-  reminderDispatches     AgendaReminderDispatch[]
-  aiMemory               UserAiMemory[]
+  notificationDeliveries  NotificationDelivery[]
+  twofactors              TwoFactor[]
+  teammembers             TeamMember[]
+  members                 Member[]
+  invitations             Invitation[]
+  serviceSongAnnotations  ServiceSongAnnotation[]
+  serviceNotes            ServiceNote[]
+  reminderDispatches      AgendaReminderDispatch[]
+  aiMemory                UserAiMemory[]
 
   stripeCustomerId String?
 
@@ -271,7 +271,9 @@ model User {
   banReason  String?
   banExpires DateTime?
 
-  metadata String?
+  metadata             String?
+  termsAcceptedAt      DateTime?
+  termsAcceptedVersion String?
 
   @@unique([email])
   @@map("user")
@@ -456,7 +458,6 @@ model Organization {
 
   stripeCustomerId String?
 
-
   @@unique([slug])
   @@map("organization")
 }
@@ -631,42 +632,42 @@ model Jwks {
 }
 
 model OauthClient {
-  id                                String    @id
-  clientId                          String    @unique
-  clientSecret                      String?
-  clientDiscoveryId                 String?
-  disabled                          Boolean?  @default(false)
-  skipConsent                       Boolean?
-  enableEndSession                  Boolean?
-  subjectType                       String?
-  scopes                            String[]  @default([])
-  clientCredentialsScopes           String[]  @default([])
-  userId                            String?
-  createdAt                         DateTime?
-  updatedAt                         DateTime?
-  name                              String?
-  uri                               String?
-  icon                              String?
-  contacts                          String[]  @default([])
-  tos                               String?
-  policy                            String?
-  softwareId                        String?
-  softwareVersion                   String?
-  softwareStatement                 String?
-  redirectUris                      String[]
-  postLogoutRedirectUris            String[]  @default([])
-  backchannelLogoutUri              String?
-  backchannelLogoutSessionRequired  Boolean?
-  tokenEndpointAuthMethod           String?
-  applicationType                   String?
-  jwks                              String?
-  jwksUri                           String?
-  grantTypes                        String[]  @default([])
-  responseTypes                     String[]  @default([])
-  requirePKCE                       Boolean?
-  dpopBoundAccessTokens              Boolean?  @default(false)
-  referenceId                       String?
-  metadata                          Json?
+  id                               String    @id
+  clientId                         String    @unique
+  clientSecret                     String?
+  clientDiscoveryId                String?
+  disabled                         Boolean?  @default(false)
+  skipConsent                      Boolean?
+  enableEndSession                 Boolean?
+  subjectType                      String?
+  scopes                           String[]  @default([])
+  clientCredentialsScopes          String[]  @default([])
+  userId                           String?
+  createdAt                        DateTime?
+  updatedAt                        DateTime?
+  name                             String?
+  uri                              String?
+  icon                             String?
+  contacts                         String[]  @default([])
+  tos                              String?
+  policy                           String?
+  softwareId                       String?
+  softwareVersion                  String?
+  softwareStatement                String?
+  redirectUris                     String[]
+  postLogoutRedirectUris           String[]  @default([])
+  backchannelLogoutUri             String?
+  backchannelLogoutSessionRequired Boolean?
+  tokenEndpointAuthMethod          String?
+  applicationType                  String?
+  jwks                             String?
+  jwksUri                          String?
+  grantTypes                       String[]  @default([])
+  responseTypes                    String[]  @default([])
+  requirePKCE                      Boolean?
+  dpopBoundAccessTokens            Boolean?  @default(false)
+  referenceId                      String?
+  metadata                         Json?
 
   @@index([userId])
   @@map("oauthClient")
@@ -682,7 +683,7 @@ model OauthResource {
   signingKeyId                  String?
   allowedScopes                 String[]  @default([])
   customClaims                  Json?
-  dpopBoundAccessTokensRequired  Boolean?  @default(false)
+  dpopBoundAccessTokensRequired Boolean?  @default(false)
   disabled                      Boolean?  @default(false)
   createdAt                     DateTime?
   updatedAt                     DateTime?

@@ -22,6 +22,7 @@ import { createSecondaryStorage } from "@hosanna/cache";
 import { roles } from "../authorization/roles.js";
 import { pluginLocaleOverrides } from "../i18n/plugin-locale-overrides.js";
 import { RESPONSIBILITIES } from "../authorization/responsibilities.js";
+import { CURRENT_TERMS_VERSION } from "../legal/terms.js";
 import type {
   AuthSecondaryStorage,
   CreateAuthFullOptions,
@@ -176,6 +177,17 @@ function createSlimAuth(options: CreateAuthSlimOptions): any {
         metadata: {
           type: "string",
           required: false,
+        },
+        termsAcceptedVersion: {
+          type: "string",
+          required: false,
+          input: true,
+        },
+        termsAcceptedAt: {
+          type: "date",
+          required: false,
+          input: false,
+          returned: false,
         },
       },
     },
@@ -356,6 +368,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                     data: {
                       ...user,
                       image: publicUrl,
+                      ...(user.termsAcceptedVersion === CURRENT_TERMS_VERSION
+                        ? { termsAcceptedAt: new Date() }
+                        : {}),
                     },
                   };
                 }
@@ -363,6 +378,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 console.error("[auth databaseHook] avatar upload failed on create:", err);
                 throw err;
               }
+            }
+            if (user.termsAcceptedVersion === CURRENT_TERMS_VERSION) {
+              return { data: { ...user, termsAcceptedAt: new Date() } };
             }
           },
           after: async (user) => {
@@ -394,6 +412,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                     data: {
                       ...user,
                       image: publicUrl,
+                      ...(user.termsAcceptedVersion === CURRENT_TERMS_VERSION
+                        ? { termsAcceptedAt: new Date() }
+                        : {}),
                     },
                   };
                 }
@@ -401,6 +422,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 console.error("[auth databaseHook] avatar upload failed on update:", err);
                 throw err;
               }
+            }
+            if (user.termsAcceptedVersion === CURRENT_TERMS_VERSION) {
+              return { data: { ...user, termsAcceptedAt: new Date() } };
             }
           },
           after: async (user) => {
@@ -931,6 +955,17 @@ function createFullAuth(options: CreateAuthFullOptions): any {
         metadata: {
           type: "string",
           required: false,
+        },
+        termsAcceptedVersion: {
+          type: "string",
+          required: false,
+          input: true,
+        },
+        termsAcceptedAt: {
+          type: "date",
+          required: false,
+          input: false,
+          returned: false,
         },
       },
     },

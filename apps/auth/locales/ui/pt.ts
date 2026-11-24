@@ -70,6 +70,11 @@ export const pt = {
       successTitle: "Verifique o seu e-mail",
       successDesc: "Enviámos um link de verificação para ativar a conta.",
       showPassword: "Mostrar palavra-passe",
+      termsRequired: "Aceite os Termos de Serviço e a Política de Privacidade para continuar.",
+      termsPrefix: "Ao criar uma conta, aceito os",
+      termsLink: "Termos de Serviço",
+      termsAnd: "e reconheço a",
+      privacyLink: "Política de Privacidade.",
     },
     forgotPassword: {
       title: "Recuperar palavra-passe",

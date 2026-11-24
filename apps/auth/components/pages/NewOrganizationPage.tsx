@@ -5,6 +5,7 @@ import { AuthLayout } from "@/components/AuthLayout";
 import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth/client";
+import { CURRENT_TERMS_VERSION } from "@hosanna/auth";
 import { captchaFetchOptions, captchaRequired } from "@/lib/auth/captcha";
 import { useI18n } from "@/lib/ui/i18n";
 import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
@@ -85,6 +86,7 @@ export function NewOrganizationPage() {
         name: adminName.trim(),
         email: adminEmail.trim(),
         password: adminPassword,
+        termsAcceptedVersion: CURRENT_TERMS_VERSION,
         fetchOptions: captchaFetchOptions(captchaToken),
       });
 
@@ -266,7 +268,14 @@ export function NewOrganizationPage() {
                     htmlFor="org-terms"
                     className="text-xs sm:text-sm text-m3-secondary leading-snug cursor-pointer select-none"
                   >
-                    I agree to the Terms of Service and Privacy Policy.
+                    {t("auth.register.termsPrefix")}{" "}
+                    <Link href="https://hosanna.live/terms" className="text-m3-primary hover:underline">
+                      {t("auth.register.termsLink")}
+                    </Link>{" "}
+                    {t("auth.register.termsAnd")}{" "}
+                    <Link href="https://hosanna.live/privacy" className="text-m3-primary hover:underline">
+                      {t("auth.register.privacyLink")}
+                    </Link>
                   </label>
                 </div>
               </div>
