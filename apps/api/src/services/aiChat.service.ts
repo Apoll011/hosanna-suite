@@ -768,6 +768,27 @@ function buildHosannaTools(
   };
 }
 
+function embeddedToolAllowedForApp(name: string, appId: string | undefined): boolean {
+  if (
+    name === "open_app" ||
+    name === "suggest_followups" ||
+    name === "studio_sync" ||
+    name.startsWith("memory_")
+  ) {
+    return true;
+  }
+  const musicAndPlanningTools = new Set([
+    "studio_navigate",
+    "studio_generate_pdf",
+    "studio_search",
+  ]);
+  if (musicAndPlanningTools.has(name)) return appId === "music" || appId === "planning";
+  if (name === "songs_import_sheet" || name.startsWith("folders_") || name.startsWith("collections_")) {
+    return appId === "music";
+  }
+  return false;
+}
+
 /**
  * Logos chat system — shared across Studio, Auth, and future suite apps.
  * Host-specific UX is driven by pageContext.hostApp / hostCapabilities.
@@ -984,7 +1005,9 @@ export class AiChatService {
     const baseTools = buildHosannaTools(opts.authInfo, toolCtx);
     const sharedTools = createSharedEmbeddedTools(opts.authInfo, { ...toolCtx, appId: opts.appId });
     const embeddedOnlyTools = Object.fromEntries(
-      Object.entries(baseTools).filter(([name]) => !(name in sharedTools)),
+      Object.entries(baseTools).filter(
+        ([name]) => !(name in sharedTools) && embeddedToolAllowedForApp(name, opts.appId),
+      ),
     );
     const tools = {
       ...embeddedOnlyTools,
