@@ -54,7 +54,8 @@ export type { SuiteAppBrandTokens } from "./suite/accent.js";
 
 export { pluginLocaleOverrides } from "./i18n/plugin-locale-overrides.js";
 export { RESPONSIBILITIES } from "./authorization/responsibilities.js";
-export { CURRENT_TERMS_VERSION } from "./legal/terms.js";
+export { CURRENT_DPA_VERSION, CURRENT_TERMS_VERSION } from "./legal/terms.js";
+
 
 export {
   CROSS_APP_KEYS,

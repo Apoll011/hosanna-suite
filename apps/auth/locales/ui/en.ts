@@ -497,6 +497,22 @@ export const en: typeof pt = {
     data: {
       noBackupAccess: "You don't have permission to export or restore backups.",
     },
+    dpa: {
+      title: "Data Processing Agreement (GDPR Art. 28)",
+      desc: "Governs personal data processed by Hosanna on behalf of the church as processor.",
+      statusAccepted: "Accepted on {date} by {name}",
+      statusPending: "Pending acceptance",
+      pendingWarning: "Your church has not accepted the Data Processing Agreement (DPA) yet. For GDPR compliance, an administrator should review and accept the agreement.",
+      reviewBtn: "Review & accept DPA",
+      viewBtn: "View full agreement",
+      printBtn: "Print / Save",
+      modalTitle: "Data Processing Agreement (DPA)",
+      churchLawfulBasis: "I confirm that I am authorized to represent the church and that the organization maintains a valid lawful basis under GDPR Article 9 (special category data revealing religious beliefs).",
+      acceptBtn: "Accept agreement",
+      acceptSuccess: "Data Processing Agreement accepted successfully.",
+      acceptError: "Failed to accept agreement: {error}",
+      subprocessorsNote: "Review the public sub-processors list at hosanna.live/legal/subprocessors.",
+    },
     danger: {
       title: "Danger zone",
       desc: "Irreversible actions for your membership or this workspace.",

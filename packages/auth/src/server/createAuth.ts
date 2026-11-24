@@ -22,7 +22,7 @@ import { createSecondaryStorage } from "@hosanna/cache";
 import { roles } from "../authorization/roles.js";
 import { pluginLocaleOverrides } from "../i18n/plugin-locale-overrides.js";
 import { RESPONSIBILITIES } from "../authorization/responsibilities.js";
-import { CURRENT_TERMS_VERSION } from "../legal/terms.js";
+import { CURRENT_DPA_VERSION, CURRENT_TERMS_VERSION } from "../legal/terms.js";
 import type {
   AuthSecondaryStorage,
   CreateAuthFullOptions,
@@ -683,6 +683,23 @@ function createFullAuth(options: CreateAuthFullOptions): any {
               },
             };
           },
+          afterCreateOrganization: async ({ organization, user }: any) => {
+            if (organization?.id && user?.id && prisma?.organizationAgreement) {
+              try {
+                await prisma.organizationAgreement.create({
+                  data: {
+                    organizationId: organization.id,
+                    agreementType: "dpa",
+                    version: CURRENT_DPA_VERSION,
+                    acceptedByUserId: user.id,
+                    acceptedAt: new Date(),
+                  },
+                });
+              } catch (err) {
+                console.error("[auth] Failed to record DPA agreement on organization creation:", err);
+              }
+            }
+          },
           afterUpdateOrganization: async ({ organization }) => {
             if (organization && !organization.logo) {
               try {
@@ -883,6 +900,28 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                         termsAcceptedVersion: CURRENT_TERMS_VERSION,
                       },
                     });
+                    if (prisma?.organizationAgreement) {
+                      await prisma.organizationAgreement.upsert({
+                        where: {
+                          organizationId_agreementType_version: {
+                            organizationId: subscription.referenceId,
+                            agreementType: "dpa",
+                            version: CURRENT_DPA_VERSION,
+                          },
+                        },
+                        update: {
+                          acceptedByUserId: owner.userId,
+                          acceptedAt: new Date(checkoutSession.created * 1000),
+                        },
+                        create: {
+                          organizationId: subscription.referenceId,
+                          agreementType: "dpa",
+                          version: CURRENT_DPA_VERSION,
+                          acceptedByUserId: owner.userId,
+                          acceptedAt: new Date(checkoutSession.created * 1000),
+                        },
+                      });
+                    }
                   }
                 }
               }

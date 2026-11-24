@@ -496,6 +496,22 @@ export const es: typeof pt = {
     data: {
       noBackupAccess: "No tienes permiso para exportar o restaurar copias.",
     },
+    dpa: {
+      title: "Acuerdo de Tratamiento de Datos (RGPD Art. 28)",
+      desc: "Regula el tratamiento de datos personales de la iglesia por parte de Hosanna como encargado del tratamiento.",
+      statusAccepted: "Aceptado el {date} por {name}",
+      statusPending: "Pendiente de aceptación",
+      pendingWarning: "Su iglesia aún no ha aceptado el Acuerdo de Tratamiento de Datos (DPA). Para cumplir con el RGPD, un administrador debe revisar y aceptar el acuerdo.",
+      reviewBtn: "Revisar y aceptar DPA",
+      viewBtn: "Ver acuerdo completo",
+      printBtn: "Imprimir / Guardar",
+      modalTitle: "Acuerdo de Tratamiento de Datos (DPA)",
+      churchLawfulBasis: "Confirmo que estoy autorizado para representar a la iglesia y que la organización mantiene una base legal válida según el Artículo 9 del RGPD (datos de categoría especial que revelan convicciones religiosas).",
+      acceptBtn: "Aceptar acuerdo",
+      acceptSuccess: "Acuerdo de Tratamiento de Datos aceptado con éxito.",
+      acceptError: "No se pudo aceptar el acuerdo: {error}",
+      subprocessorsNote: "Consulte la lista pública de subencargados en hosanna.live/legal/subprocessors.",
+    },
     danger: {
       title: "Zona de peligro",
       desc: "Acciones irreversibles sobre tu participación o el espacio.",
