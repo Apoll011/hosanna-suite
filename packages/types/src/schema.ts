@@ -3155,6 +3155,9 @@ export interface operations {
             [key: string]: unknown;
           };
           /** @enum {string} */
+          appId?:
+            "auth" | "music" | "planning" | "finance" | "presenter" | "community" | "platform";
+          /** @enum {string} */
           locale?: "pt" | "en" | "es";
         };
       };

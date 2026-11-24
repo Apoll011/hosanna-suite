@@ -1842,6 +1842,16 @@ paths:
                 context:
                   type: object
                   additionalProperties: true
+                appId:
+                  type: string
+                  enum:
+                    - auth
+                    - music
+                    - planning
+                    - finance
+                    - presenter
+                    - community
+                    - platform
                 locale:
                   type: string
                   enum:
