@@ -1,6 +1,10 @@
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import type { SuiteAppId } from "@hosanna/auth";
-import type { LogosToolDefinition, LogosToolFactory, LogosToolSurface } from "@hosanna/logos-ai/tools";
+import type {
+  LogosToolDefinition,
+  LogosToolFactory,
+  LogosToolSurface,
+} from "@hosanna/logos-ai/tools";
 import type { z } from "zod";
 
 type CapturedResult = { content?: readonly { type: string; text?: string }[] };
@@ -42,7 +46,10 @@ export function captureMcpTools(
     const server = { registerTool } as unknown as McpServer;
     register(server, context.authInfo as AuthInfo | undefined);
     return definitions.filter((definition) => {
-      if (definition.surfaces && !definition.surfaces.includes(context.surface as LogosToolSurface)) {
+      if (
+        definition.surfaces &&
+        !definition.surfaces.includes(context.surface as LogosToolSurface)
+      ) {
         return false;
       }
       return true;

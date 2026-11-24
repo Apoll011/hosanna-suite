@@ -9,7 +9,15 @@ import { ensureDomainPacksRegistered } from "./packs.js";
 import { listDomainPacks } from "./registry.js";
 
 const STUDIO_ONLY = new Set<string>(STUDIO_ONLY_TOOLS);
-const SUITE_APP_IDS = new Set<SuiteAppId>(["auth", "music", "planning", "finance", "presenter", "community", "platform"]);
+const SUITE_APP_IDS = new Set<SuiteAppId>([
+  "auth",
+  "music",
+  "planning",
+  "finance",
+  "presenter",
+  "community",
+  "platform",
+]);
 
 function suiteAppId(value: unknown): SuiteAppId | undefined {
   return typeof value === "string" && SUITE_APP_IDS.has(value as SuiteAppId)
@@ -71,7 +79,11 @@ function collect(
         permission: d.permission ?? gate?.permission,
         requiresEntitlement: d.requiresEntitlement ?? gate?.requiresEntitlement,
       };
-      out.push({ ...definition, inputSchema: schemaOf(definition), execute: gated(definition, authInfo) });
+      out.push({
+        ...definition,
+        inputSchema: schemaOf(definition),
+        execute: gated(definition, authInfo),
+      });
     }
   }
   return out;
