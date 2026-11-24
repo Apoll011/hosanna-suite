@@ -54,6 +54,8 @@ Customers and users retain all ownership rights to content they create or upload
 **7.2. Licensing Responsibility**  
 Organizations are solely responsible for ensuring they possess all necessary rights, permissions, or licenses (e.g., through CCLI) for all musical content stored, reproduced, or shared on the platform. Hosanna acts as an infrastructure provider and does not automatically audit licensing for each song.
 
+When importing content from CifraClub, Ultimate Guitar, or another source, you are responsible for having the right to import and use it, including any CCLI or other required licenses. Hosanna does not provide or license music.
+
 **7.3. Audio & YouTube Integration**  
 Hosanna does not host audio files or recordings. Metadata linking a song to YouTube videos merely references external content. Hosanna does not control external content, which remains subject to third-party terms.
 

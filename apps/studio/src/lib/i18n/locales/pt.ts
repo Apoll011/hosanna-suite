@@ -1350,6 +1350,8 @@ export const pt = {
     untitled: "Sem Título",
   },
   modals: {
+    importRightsNotice:
+      "Só importe conteúdo que tem direito de usar. É responsável pelas autorizações e licenças aplicáveis, incluindo CCLI. O Hosanna não fornece nem licencia música.",
     sheetMusicImport: {
       title: "Importar Partitura",
       progressTitle: "A ler partitura…",

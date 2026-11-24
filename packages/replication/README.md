@@ -45,3 +45,9 @@ Collections are never hard-coded in this package — the host app supplies wave-
 `{ start, stop, replicateNow, status$, getStatus }`
 
 Use `resetReplicationManager()` to tear down the singleton; `clearReplicationState(storage)` to wipe checkpoints / server-state cache / population epoch.
+
+## License
+
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](../../LICENSE.md)
+
+Licensed under AGPL-3.0-only. If a modified copy is used over a network, users must be offered its corresponding source code. See the [license](../../LICENSE.md) and [contribution guide](../../CONTRIBUTING.md).

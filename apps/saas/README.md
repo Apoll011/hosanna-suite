@@ -75,3 +75,9 @@ Requires Node.js + npm. Configure `VITE_DASHBOARD_URL` (and related vars) via `.
 | [Hosanna](https://github.com/Apoll011/Hosanna)               | Flutter musician app |
 | [hosanna-studio](https://github.com/Apoll011/hosanna-studio) | Studio dashboard     |
 | [Hosanna-server](https://github.com/Apoll011/Hosanna-server) | API                  |
+
+## License
+
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](../../LICENSE.md)
+
+Licensed under AGPL-3.0-only. If a modified copy is used over a network, users must be offered its corresponding source code. See the [license](../../LICENSE.md) and [contribution guide](../../CONTRIBUTING.md).

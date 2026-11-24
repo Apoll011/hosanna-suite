@@ -1340,6 +1340,8 @@ export const en: typeof pt = {
     untitled: "Untitled",
   },
   modals: {
+    importRightsNotice:
+      "Only import content you have the right to use. You are responsible for any required permissions and licences, including CCLI. Hosanna does not provide or license music.",
     sheetMusicImport: {
       title: "Import Sheet Music",
       progressTitle: "Reading sheet music…",

@@ -54,6 +54,8 @@ Os clientes e utilizadores mantêm todos os direitos de propriedade sobre o cont
 **7.2. Responsabilidade pelo Licenciamento**  
 As organizações são inteiramente responsáveis por garantir que possuem os direitos, autorizações ou licenças necessárias (por exemplo, através da CCLI) para todo o conteúdo musical que armazenam, reproduzem ou partilham na plataforma. O Hosanna atua como fornecedor de infraestrutura e não verifica automaticamente o licenciamento de cada música.
 
+Ao importar conteúdo do CifraClub, do Ultimate Guitar ou de outra fonte, é responsável por ter o direito de o importar e utilizar, incluindo quaisquer licenças CCLI ou outras licenças necessárias. O Hosanna não fornece nem licencia música.
+
 **7.3. Integração com Áudio/YouTube**  
 O Hosanna não aloja ficheiros de áudio ou gravações. Qualquer metadado que ligue uma música a vídeos no YouTube apenas referencia conteúdo externo. O Hosanna não controla esse conteúdo externo, estando este sujeito aos termos das plataformas de terceiros.
 

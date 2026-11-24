@@ -1356,6 +1356,8 @@ export const es: typeof pt = {
     untitled: "Sin Título",
   },
   modals: {
+    importRightsNotice:
+      "Importa solo contenido que tengas derecho a usar. Eres responsable de obtener los permisos y licencias aplicables, incluida CCLI. Hosanna no proporciona ni licencia música.",
     sheetMusicImport: {
       title: "Importar Partitura",
       progressTitle: "Leyendo partitura…",
