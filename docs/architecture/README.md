@@ -12,6 +12,7 @@ Hosanna is a **local-first worship planning platform**: churches organize songs 
 | [backend-internals.md](./backend-internals.md)                 | Express routes, services, middleware, Prisma                         |
 | [data-and-sync.md](./data-and-sync.md)                         | Local stores, RxDB-style replication, trash                          |
 | [auth-and-billing.md](./auth-and-billing.md)                   | Better Auth, RBAC, Stripe, entitlements                              |
+| [data-erasure.md](./data-erasure.md)                           | Current deletion paths and the planned account / organization erasure workflow |
 | [suite-hub-and-preferences.md](./suite-hub-and-preferences.md) | Auth home, App Switcher, catalog API, personal settings + app scopes |
 | [notifications.md](./notifications.md)                         | Unified inbox / push / email dispatcher (auth-hosted)                |
 | [external-integrations.md](./external-integrations.md)         | Supabase, Firebase, AI, YouTube, email, …                            |
