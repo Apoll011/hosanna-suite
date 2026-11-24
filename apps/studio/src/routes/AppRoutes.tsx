@@ -15,7 +15,6 @@ import { MainLayout } from "../layouts/MainLayout";
 import { captureException } from "../lib/posthog";
 import { ExternalAuthRedirect } from "../components/ExternalAuthRedirect";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { getAuthUrl } from "../lib/authUrl";
 
 const PageLoader = () => {
   const { t } = useI18n();
@@ -206,7 +205,7 @@ export const AppRoutes: React.FC = () => {
                 <Route path="services/:id" element={<ServiceDetailPage />} />
                 <Route
                   path="teams"
-                  element={<Navigate to={`${getAuthUrl()}/account/organization/teams`} replace />}
+                  element={<ExternalAuthRedirect path="/account/organization/teams" />}
                 />
                 <Route path="agenda" element={<AgendaPage />} />
                 <Route path="calendar" element={<CalendarPage />} />

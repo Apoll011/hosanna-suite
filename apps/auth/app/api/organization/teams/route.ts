@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db/prisma";
 import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
 
 const createSchema = z.object({ name: z.string().trim().min(1).max(80) });
+const MAXIMUM_TEAMS = 50;
 
 async function listTeams() {
   try {
@@ -49,6 +50,13 @@ async function createTeam(req: Request) {
     const parsed = createSchema.safeParse(await req.json());
     if (!parsed.success)
       throw new AuthHttpError(400, parsed.error.issues[0]?.message ?? "Invalid team name");
+
+    const existingCount = await prisma.team.count({
+      where: { organizationId: ctx.organizationId },
+    });
+    if (existingCount >= MAXIMUM_TEAMS) {
+      throw new AuthHttpError(400, "This organization has reached its team limit.");
+    }
 
     const team = await prisma.team.create({
       data: {

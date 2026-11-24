@@ -8,11 +8,15 @@ export function canManageTeam(opts: {
   action: TeamAction;
   isTeamMember?: boolean;
 }): boolean {
-  if (!opts.role || !(opts.role in roles)) return false;
-  const role = roles[opts.role as AppRole];
+  if (!opts.role) return false;
+  const normalizedRole = opts.role.toLowerCase().replaceAll(/[_-]/g, "");
+  const roleName = normalizedRole === "teamleader" ? "teamLeader" : normalizedRole;
+  if (!(roleName in roles)) return false;
+  const appRole = roleName as AppRole;
+  const role = roles[appRole];
   const permission = `team.${opts.action}` satisfies PermissionString;
   if (!role.authorize(toPermissionRequest(permission)).success) return false;
-  if (opts.role === "teamLeader" && opts.action !== "create") {
+  if (appRole === "teamLeader" && opts.action !== "create") {
     return opts.isTeamMember === true;
   }
   return true;

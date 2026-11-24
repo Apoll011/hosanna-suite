@@ -13,7 +13,9 @@ describe("canManageTeam", () => {
 
   it("allows team leaders to create teams and manage only teams they belong to", () => {
     assert.equal(canManageTeam({ role: "teamLeader", action: "create" }), true);
+    assert.equal(canManageTeam({ role: "teamleader", action: "create" }), true);
     assert.equal(canManageTeam({ role: "teamLeader", action: "update", isTeamMember: true }), true);
+    assert.equal(canManageTeam({ role: "teamleader", action: "update", isTeamMember: true }), true);
     assert.equal(
       canManageTeam({ role: "teamLeader", action: "update", isTeamMember: false }),
       false,

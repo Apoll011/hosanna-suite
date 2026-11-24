@@ -11,7 +11,7 @@ import {
 import { useI18n } from "@/lib/ui/i18n";
 import { canManageTeam } from "@hosanna/auth";
 import { Button, ConfirmDialog, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
-import { Check, Crown, Plus, Search, Shield, UserMinus, UserPlus, Users } from "lucide-react";
+import { Check, Plus, Search, Shield, UserMinus, UserPlus, Users } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 
 export function OrgTeamsPage() {
@@ -37,6 +37,7 @@ export function OrgTeamsPage() {
     | null
   >(null);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
+  const [teamsOrganizationId, setTeamsOrganizationId] = useState<string | null>(null);
 
   const selected = teams.find((team) => team.id === selectedId) ?? null;
   const role = organization?.members?.find((member) => member.userId === user?.id)?.role ?? null;
@@ -109,17 +110,21 @@ export function OrgTeamsPage() {
     const orgId = organization?.id;
     if (!orgId) return;
     const cached = readCachedTeams(orgId);
-    if (cached) {
-      setTeams(cached);
-      setSelectedId((current) => current ?? cached[0]?.id ?? null);
-      setLoading(false);
-    }
+    setTeamsOrganizationId(orgId);
+    setTeams(cached ?? []);
+    setSelectedId(cached?.[0]?.id ?? null);
+    setLoading(!cached);
+    setError(null);
     void loadTeams(orgId)
       .catch(() => {
         if (!cached) setError(t("teams.loadError"));
       })
       .finally(() => setLoading(false));
   }, [organization?.id, loadTeams, t]);
+
+  useEffect(() => {
+    if (selected) setRenameDraft(selected.name);
+  }, [selected?.id, selected?.name]);
 
   useEffect(() => {
     if (!organization?.id) return;
@@ -283,12 +288,26 @@ export function OrgTeamsPage() {
       member.userId && !selected?.members.some((teamMember) => teamMember.userId === member.userId),
   );
 
-  if (orgLoading || (loading && !teams.length)) {
+  if (
+    orgLoading ||
+    (organization && teamsOrganizationId !== organization.id) ||
+    (loading && !teams.length)
+  ) {
     return (
       <AccountCenter>
         <div className="flex justify-center py-16">
           <Spinner size="md" label={t("common.loading")} />
         </div>
+      </AccountCenter>
+    );
+  }
+
+  if (!organization) {
+    return (
+      <AccountCenter>
+        <Surface>
+          <p className="text-sm text-m3-secondary">{t("org.noOrganization")}</p>
+        </Surface>
       </AccountCenter>
     );
   }
