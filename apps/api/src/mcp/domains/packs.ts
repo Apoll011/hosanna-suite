@@ -8,6 +8,13 @@
 
 import { permissionsForDomain } from "@hosanna/auth";
 import { MCP_TOOL_GROUPS } from "../lib/toolCatalog.js";
+import { registerChordProTools } from "../tools/chordpro.js";
+import { registerDiscoveryTools } from "../tools/discovery.js";
+import { registerLibraryTools } from "../tools/library.js";
+import { registerOrgTools } from "../tools/org.js";
+import { registerServiceTools } from "../tools/services.js";
+import { registerSongTools } from "../tools/songs.js";
+import { captureMcpTools } from "./captureTools.js";
 import { registerDomainPack } from "./registry.js";
 import type { DomainPack, McpToolGate } from "./types.js";
 
@@ -142,18 +149,24 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     resources: ["hosanna://ops/catalog"],
     prompts: ["hosanna_system"],
     skills: ["hosanna://skills/hosanna-safe-data"],
+    app: "platform",
+    toolFactory: captureMcpTools(registerDiscoveryTools, "suite"),
   },
   {
     id: "platform.org",
     title: "Organization",
     permissions: [],
     tools: gates([...ORG_TOOLS]),
+    app: "platform",
+    toolFactory: captureMcpTools(registerOrgTools, "suite"),
   },
   {
     id: "platform.chordpro",
     title: "ChordPro",
     permissions: [],
     tools: gates([...MCP_TOOL_GROUPS.chordpro]),
+    app: "platform",
+    toolFactory: captureMcpTools(registerChordProTools, "suite"),
     resources: [
       "hosanna://chordpro/guide",
       "hosanna://chordpro/directives",
@@ -166,6 +179,8 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     logosKind: "song",
     permissions: permissionsForDomain("music.song"),
     tools: songToolGates(),
+    app: "music",
+    toolFactory: captureMcpTools(registerSongTools, "music"),
     resources: ["hosanna://domain/songs", "hosanna://schemas/song"],
     prompts: [
       "songs_create",
@@ -191,6 +206,8 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     logosKind: "service",
     permissions: permissionsForDomain("music.service"),
     tools: serviceToolGates(),
+    app: "planning",
+    toolFactory: captureMcpTools(registerServiceTools, "planning"),
     resources: [
       "hosanna://domain/services",
       "hosanna://schemas/service",
@@ -215,6 +232,10 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
       ...permissionsForDomain("library.agenda"),
     ],
     tools: libraryToolGates(),
+    app: "music",
+    toolFactory: captureMcpTools(registerLibraryTools, (name) =>
+      name.startsWith("agenda_") ? "planning" : "music",
+    ),
     resources: ["hosanna://domain/library"],
   },
 ];

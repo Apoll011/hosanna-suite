@@ -4,7 +4,7 @@ import type { LogosToolDefinition, LogosToolSurface } from "@hosanna/logos-ai/to
 import { tool, type ToolSet } from "ai";
 import type { z } from "zod";
 import { requireMcpContext, requirePermission, requireWriteEntitlement } from "../context.js";
-import { ALL_MCP_TOOL_NAMES, STUDIO_ONLY_TOOLS } from "../lib/toolCatalog.js";
+import { STUDIO_ONLY_TOOLS } from "../lib/toolCatalog.js";
 import { ensureDomainPacksRegistered } from "./packs.js";
 import { listDomainPacks } from "./registry.js";
 
@@ -65,7 +65,13 @@ function collect(
       }
       if (seen.has(d.name)) throw new Error(`Duplicate tool name: ${d.name}`);
       seen.add(d.name);
-      out.push({ ...d, inputSchema: schemaOf(d), execute: gated(d, authInfo) });
+      const gate = pack.tools.find((toolGate) => toolGate.name === d.name);
+      const definition = {
+        ...d,
+        permission: d.permission ?? gate?.permission,
+        requiresEntitlement: d.requiresEntitlement ?? gate?.requiresEntitlement,
+      };
+      out.push({ ...definition, inputSchema: schemaOf(definition), execute: gated(definition, authInfo) });
     }
   }
   return out;
@@ -89,7 +95,7 @@ export function createSharedEmbeddedTools(
 }
 
 export function mountSharedDomainTools(server: McpServer, authInfo?: AuthInfo): void {
-  for (const d of collect("mcp", authInfo, {}, ALL_MCP_TOOL_NAMES)) {
+  for (const d of collect("mcp", authInfo, {}, [])) {
     server.registerTool(
       d.name,
       { title: d.title, description: d.description, inputSchema: schemaOf(d) },

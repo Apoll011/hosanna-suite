@@ -2600,9 +2600,13 @@ export class AiChatService {
       rawMessages: opts.messages,
     };
     const baseTools = buildHosannaTools(opts.authInfo, toolCtx);
+    const sharedTools = createSharedEmbeddedTools(opts.authInfo, { ...toolCtx, appId: opts.appId });
+    const embeddedOnlyTools = Object.fromEntries(
+      Object.entries(baseTools).filter(([name]) => !(name in sharedTools)),
+    );
     const tools = {
-      ...baseTools,
-      ...createSharedEmbeddedTools(opts.authInfo, { ...toolCtx, appId: opts.appId }, Object.keys(baseTools)),
+      ...embeddedOnlyTools,
+      ...sharedTools,
     };
     const system =
       LOGOS_CHAT_SYSTEM +
