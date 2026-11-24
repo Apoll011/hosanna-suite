@@ -13,12 +13,7 @@ import {
 import { STUDIO_UI_CATALOG } from "../lib/studioUi.js";
 import { errorResult, getMcpContext, jsonResult } from "../context.js";
 import { HOSANNA_MCP_VERSION } from "../version.js";
-import {
-  MCP_TOOL_GROUPS,
-  ALL_MCP_TOOL_NAMES,
-  STUDIO_ONLY_TOOLS,
-  TOOL_SURFACE,
-} from "../lib/toolCatalog.js";
+import { STUDIO_ONLY_TOOLS, TOOL_SURFACE } from "../lib/toolCatalog.js";
 import { recentToolTimings, toolTimingSummary } from "../lib/toolMetrics.js";
 import { createSongSchema } from "../../validators/song.validators.js";
 import { createServiceSchema } from "../../validators/service.validators.js";
@@ -26,8 +21,12 @@ import {
   serviceElementSchema,
   serviceElementTypeSchema,
 } from "../../validators/serviceElement.validators.js";
-import { permissionsReportForUser, summarizeDomainsForUser } from "../domains/discovery.js";
-import { ensureDomainPacksRegistered } from "../domains/packs.js";
+import {
+  allPackToolNames,
+  permissionsReportForUser,
+  summarizeDomainsForUser,
+  toolGroupsFromPacks,
+} from "../domains/discovery.js";
 
 function zToRoughJson(schema: { description?: string; _def?: unknown }) {
   return {
@@ -37,8 +36,6 @@ function zToRoughJson(schema: { description?: string; _def?: unknown }) {
 }
 
 export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): void {
-  ensureDomainPacksRegistered();
-
   server.registerTool(
     "hosanna_capabilities",
     {
@@ -50,6 +47,17 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
     async () => {
       try {
         const chordpro = getChordProCapabilities();
+        const packGroups = toolGroupsFromPacks();
+        const toolGroups = {
+          discovery: [
+            ...(packGroups["platform.discovery"] ?? []),
+            ...(packGroups["platform.org"] ?? []),
+          ],
+          chordpro: packGroups["platform.chordpro"] ?? [],
+          songs: packGroups["music.song"] ?? [],
+          services: packGroups["music.service"] ?? [],
+          library: packGroups.library ?? [],
+        };
         const ctx = getMcpContext(authInfo);
         const user = ctx?.user ?? null;
         const domains = summarizeDomainsForUser(user);
@@ -61,7 +69,7 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
           server: {
             name: "hosanna",
             version: HOSANNA_MCP_VERSION,
-            toolCount: ALL_MCP_TOOL_NAMES.length,
+            toolCount: allPackToolNames().length,
             allowedToolCount: user ? allowedToolCount : null,
           },
           architecture: {
@@ -72,9 +80,9 @@ export function registerDiscoveryTools(server: McpServer, authInfo?: AuthInfo): 
           },
           domains,
           tools: {
-            ...MCP_TOOL_GROUPS,
+            ...toolGroups,
             services: [
-              ...MCP_TOOL_GROUPS.services.map((name) =>
+              ...toolGroups.services.map((name) =>
                 name === "services_search" ? "services_search (archived / includeArchived)" : name,
               ),
             ],

@@ -4,7 +4,10 @@ import { z } from "zod";
 import type { AuthInfo } from "@modelcontextprotocol/server";
 import type { McpServer } from "@modelcontextprotocol/server";
 import { clearDomainPacks, registerDomainPack } from "../../src/mcp/domains/registry.js";
-import { createSharedEmbeddedTools, mountSharedDomainTools } from "../../src/mcp/domains/toolFactory.js";
+import {
+  createSharedEmbeddedTools,
+  mountSharedDomainTools,
+} from "../../src/mcp/domains/toolFactory.js";
 
 const auth = {} as AuthInfo;
 const pack = (defs: unknown[]) =>
@@ -36,9 +39,16 @@ describe("shared tool factory", () => {
       def({ name: "suite_tool", apps: "suite" }),
       def({ name: "music_tool", apps: ["music"] }),
     ]);
-    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "auth" })), ["suite_tool"]);
-    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "music" })), ["suite_tool", "music_tool"]);
-    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "unknown" })), ["suite_tool"]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "auth" })), [
+      "suite_tool",
+    ]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "music" })), [
+      "suite_tool",
+      "music_tool",
+    ]);
+    assert.deepEqual(Object.keys(createSharedEmbeddedTools(auth, { appId: "unknown" })), [
+      "suite_tool",
+    ]);
   });
   it("never exposes UI directives on MCP", () => {
     pack([def({ name: "host_directive", ui: true })]);
@@ -55,7 +65,10 @@ describe("shared tool factory", () => {
   });
   it("rejects name collisions with existing tools", () => {
     pack([def()]);
-    assert.throws(() => createSharedEmbeddedTools(auth, { appId: "music" }, ["funds_search"]), /Duplicate/);
+    assert.throws(
+      () => createSharedEmbeddedTools(auth, { appId: "music" }, ["funds_search"]),
+      /Duplicate/,
+    );
   });
   it("enforces permission before execute", async () => {
     pack([def({ permission: "fund.update" })]);

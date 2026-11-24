@@ -783,7 +783,11 @@ function embeddedToolAllowedForApp(name: string, appId: string | undefined): boo
     "studio_search",
   ]);
   if (musicAndPlanningTools.has(name)) return appId === "music" || appId === "planning";
-  if (name === "songs_import_sheet" || name.startsWith("folders_") || name.startsWith("collections_")) {
+  if (
+    name === "songs_import_sheet" ||
+    name.startsWith("folders_") ||
+    name.startsWith("collections_")
+  ) {
     return appId === "music";
   }
   return false;
