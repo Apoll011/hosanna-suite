@@ -57,7 +57,10 @@ export function createLogosDomainTools(
     if (definition.surfaces && !definition.surfaces.includes(surface)) return false;
     if (surface === "embedded") {
       const apps = definition.apps ?? context.owningApp;
-      if (apps !== "suite" && (!apps || !context.appId || !apps.includes(context.appId))) return false;
+      const allowed =
+        apps === "suite" ||
+        (Array.isArray(apps) ? apps.includes(context.appId) : apps === context.appId);
+      if (!allowed) return false;
     }
     return true;
   });
