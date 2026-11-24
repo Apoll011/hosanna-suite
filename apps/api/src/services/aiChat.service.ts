@@ -16,11 +16,7 @@ import { z } from "zod";
 import { clockContextPromptBlock } from "../lib/clockContext.js";
 import { getMcpContext, requireMcpContext, requirePermission } from "../mcp/context.js";
 import { createSharedEmbeddedTools } from "../mcp/domains/toolFactory.js";
-import {
-  nativeWebAuthFromRuntime,
-  providerSupportsNativeFetch,
-  type NativeWebAuth,
-} from "../mcp/lib/nativeWeb.js";
+import { nativeWebAuthFromRuntime } from "../mcp/lib/nativeWeb.js";
 import { AppError } from "../utils/errors.js";
 import {
   AI_LIMITS,
@@ -148,14 +144,11 @@ function deleteConfirmation(opts: {
 function buildHosannaTools(
   authInfo: AuthInfo,
   opts?: {
-    nativeWebAuth?: NativeWebAuth | null;
     memory?: AiMemoryService;
     rawMessages?: UIMessage[];
   },
 ) {
   const memory = opts?.memory;
-  const nativeWebAuth = opts?.nativeWebAuth ?? null;
-  const webBackend = nativeWebAuth ? `native(${nativeWebAuth.provider})→duckduckgo` : "duckduckgo";
   const memoryTools = memory
     ? {
         memory_list: tool({
@@ -264,8 +257,6 @@ function buildHosannaTools(
     : {};
   return {
     ...memoryTools,
-
-    ...(nativeWebAuth && providerSupportsNativeFetch(nativeWebAuth.provider) ? {} : {}),
 
     songs_import_sheet: tool({
       description:

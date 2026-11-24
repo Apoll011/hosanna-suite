@@ -36,8 +36,14 @@ describe("MCP domain packs", () => {
       "print",
       "library.sync",
     ];
-    const music = createSharedEmbeddedTools(authInfo, { appId: "music", capabilities: hostCapabilities });
-    const planning = createSharedEmbeddedTools(authInfo, { appId: "planning", capabilities: hostCapabilities });
+    const music = createSharedEmbeddedTools(authInfo, {
+      appId: "music",
+      capabilities: hostCapabilities,
+    });
+    const planning = createSharedEmbeddedTools(authInfo, {
+      appId: "planning",
+      capabilities: hostCapabilities,
+    });
     const unknown = createSharedEmbeddedTools(authInfo, { appId: "unrecognized" });
     const allMusicAndPlanning = new Set([...Object.keys(music), ...Object.keys(planning)]);
 

@@ -14,8 +14,7 @@ export const MCP_SERVER_INFO = {
  * Studio-only tools (studio_sync, navigate, PDF, search) are NOT registered here —
  * they exist only on the Hosanna Studio embedded assistant.
  *
- * Domains mount via {@link wireHosannaDomainPacks} — add a pack in domains/packs.ts
- * and wire its register* call in domains/wire.ts.
+ * Domains mount via {@link wireHosannaDomainPacks} from factories in domains/packs.ts.
  */
 export function createHosannaMcpServer(authInfo?: AuthInfo): McpServer {
   const server = new McpServer(MCP_SERVER_INFO, {

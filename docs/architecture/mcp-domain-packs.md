@@ -162,10 +162,10 @@ apps/api/src/mcp/
     registry.ts      # registerDomainPack, listDomainPacks, …
     packs.ts         # DOMAIN_PACKS metadata
     discovery.ts     # summarizeDomainsForUser, permissionsReportForUser
-    wire.ts          # sync mount of register*Tool modules
+    wire.ts          # mount factories, prompts, and resources
     index.ts
   tools/             # songs.ts, services.ts, library.ts, …
-  lib/toolCatalog.ts # authoritative tool name lists (contract tests)
+  lib/toolCatalog.ts # tool name lists derived from pack factories
   resources/         # hosanna:// MCP resources
   prompts/           # MCP prompts
 
@@ -199,11 +199,11 @@ Use this when adding a real domain (example names: `fund`, domain id `finance.fu
 4. If needed, add `APP_ROLE_PERMISSIONS["finance.treasurer"] = [...]` in `appRoles.ts`.
 5. Build/test `@hosanna/auth`.
 
-### Step 2 — MCP tools module
+### Step 2 — Domain service and tools
 
-1. Create `apps/api/src/mcp/tools/funds.ts` with `registerFundTools(server, authInfo)`.
-2. Inside each tool: `requireMcpContext` → `requirePermission(ctx, "fund.…")` → (writes) `requireWriteEntitlement`.
-3. Follow existing patterns: draft/propose first, `funds_save` only after approval; return JSON via `jsonResult`.
+1. Implement the domain service calls and tool schemas.
+2. Declare permission and entitlement gates on each factory definition.
+3. Follow existing patterns: draft/propose first and `funds_save` only after approval.
 
 ### Step 3 — Tool catalog + Domain Pack
 
@@ -216,14 +216,14 @@ Use this when adding a real domain (example names: `fund`, domain id `finance.fu
   title: "Funds",
   logosKind: "fund", // when Logos supports it
   permissions: permissionsForDomain("finance.fund"),
-  tools: [ /* { name, permission, requiresEntitlement? } */ ],
+  tools: [ /* generated from factory definitions and their gates */ ],
   resources: ["hosanna://domain/funds"],
   prompts: ["funds_create", …],
   skills: ["hosanna://skills/funds-safe-edit"],
 }
 ```
 
-3. In `domains/wire.ts`, call `registerFundTools(server, authInfo)` (and prompts if any).
+3. Register prompts and resources in `domains/wire.ts` if the domain owns any.
 4. Extend `DomainId` / `logosKind` types if you introduced new literals.
 
 Discovery (`hosanna_capabilities` / `hosanna_permissions`) picks up the pack automatically — **do not** hardcode a new permission list in discovery tools.
@@ -262,7 +262,7 @@ toolFactory: () => [
 ```
 
 - `/ai/chat` carries the host `appId` and Logos host capabilities. Embedded factories filter by both before exposing tools. `apps: "suite"` makes a tool available in every embedded app. Without `apps`, the pack's owning app is used.
-- `createSharedEmbeddedTools` mounts the definitions on embedded chat; `mountSharedDomainTools` mounts only non-UI definitions on MCP.
+- `createSharedEmbeddedTools` mounts definitions on embedded chat; `mountSharedDomainTools` mounts non-UI definitions on MCP. Existing domains adapt their registered handlers through the factory until their implementations move beside the definitions.
 - **Guards:** duplicate names, non-zod `inputSchema`, permissions and entitlements declared by the definition, and UI directives excluded from MCP.
 - Host-executed directives such as navigation, sync, print, and `open_app` set `ui: true`. UI tool names and MCP tool catalogs are derived from definitions.
 - Pack `tools` gates carry permission metadata for discovery. Their names are generated from factory definitions.
