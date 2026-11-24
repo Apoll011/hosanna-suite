@@ -8,6 +8,8 @@ export type {
 
 export { admin, editor, guest, musician, owner, roles, teamLeader } from "./authorization/roles.js";
 export type { AppRole } from "./authorization/roles.js";
+export { canManageTeam } from "./authorization/teamPolicy.js";
+export type { TeamAction } from "./authorization/teamPolicy.js";
 
 export {
   DOMAINS,

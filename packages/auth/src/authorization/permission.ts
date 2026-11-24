@@ -15,6 +15,7 @@ export const statement = {
   export: ["pdf"],
   backup: ["import", "export"],
   notification: ["sent"],
+  team: ["create", "update", "delete"],
 } as const;
 
 // Annotated so the emitted .d.ts keeps the AccessControl alias; the expanded
