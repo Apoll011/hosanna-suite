@@ -263,6 +263,7 @@ model User {
   serviceNotes            ServiceNote[]
   reminderDispatches      AgendaReminderDispatch[]
   aiMemory                UserAiMemory[]
+  organizationAgreements  OrganizationAgreement[]
 
   stripeCustomerId String?
 
@@ -455,6 +456,7 @@ model Organization {
   serviceNotes           ServiceNote[]
   aiConfig               OrgAiConfig?
   aiMemory               OrgAiMemory[]
+  agreements             OrganizationAgreement[]
 
   stripeCustomerId String?
 
@@ -779,3 +781,22 @@ model OauthClientAssertion {
 
   @@map("oauthClientAssertion")
 }
+
+model OrganizationAgreement {
+  id               String       @id @default(cuid())
+  organizationId   String
+  agreementType    String
+  version          String
+  acceptedByUserId String
+  acceptedAt       DateTime     @default(now())
+  ipAddress        String?
+  userAgent        String?
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  acceptedByUser   User         @relation(fields: [acceptedByUserId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, agreementType, version])
+  @@index([organizationId])
+  @@index([acceptedByUserId])
+  @@map("organizationAgreement")
+}
+
