@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: AGPL-3.0-only
 #!/usr/bin/env node
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Run tailwint (official Tailwind language-server fixer) in each app that uses Tailwind.
  * Must run with cwd = the app root so the LSP resolves that app's CSS @theme entry.
