@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { useI18n } from "@/src/lib/i18n";
 import { Button } from "@hosanna/ui";
-import { Archive, FolderInput, Printer, Trash2, X } from "lucide-react";
+import { Archive, Download, FolderInput, Printer, Trash2, X } from "lucide-react";
 import React from "react";
 
 interface BatchActionFloatingBarProps {
@@ -9,6 +9,7 @@ interface BatchActionFloatingBarProps {
   itemLabel?: string;
   onArchive?: () => void;
   onPrint?: () => void;
+  onExport?: () => void;
   onMove?: () => void;
   onDelete: () => void;
   onCancel: () => void;
@@ -21,6 +22,7 @@ export const BatchActionFloatingBar: React.FC<BatchActionFloatingBarProps> = ({
   itemLabel = "cultos",
   onArchive,
   onPrint,
+  onExport,
   onMove,
   onDelete,
   onCancel,
@@ -54,6 +56,17 @@ export const BatchActionFloatingBar: React.FC<BatchActionFloatingBarProps> = ({
           className="text-m3-text hover:bg-m3-hover"
         >
           {t("common.print")}
+        </Button>
+      )}
+      {onExport && (
+        <Button
+          size="sm"
+          variant="ghost"
+          icon={<Download className="w-4 h-4" />}
+          onClick={onExport}
+          className="text-m3-text hover:bg-m3-hover"
+        >
+          {t("common.export")}
         </Button>
       )}
       {onArchive && (

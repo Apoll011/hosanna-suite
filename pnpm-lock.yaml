@@ -539,6 +539,9 @@ importers:
       '@hosanna/replication':
         specifier: workspace:*
         version: link:../../packages/replication
+      '@hosanna/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@hosanna/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -612,9 +615,6 @@ importers:
       '@hosanna/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@hosanna/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       '@types/cheerio':
         specifier: ^0.22.35
         version: 0.22.35
@@ -1060,6 +1060,10 @@ importers:
         version: 5.9.3
 
   packages/types:
+    dependencies:
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@hosanna/config':
         specifier: workspace:*

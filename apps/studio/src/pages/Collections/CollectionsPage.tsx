@@ -8,15 +8,19 @@ import { BatchActionFloatingBar } from "@/src/components/explorer/BatchActionFlo
 import { MarqueeSelectionBox } from "@/src/components/explorer/MarqueeSelectionBox";
 import { CreateCollectionModal } from "@/src/components/modals/CreateCollectionModal";
 import { useAuth } from "@/src/contexts/AuthContext";
+import { useSync } from "@/src/contexts/SyncContext";
+import { getDatabase } from "@/src/db";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useCollections } from "@/src/hooks/useCollections";
 import { useMarqueeSelection } from "@/src/hooks/useMarqueeSelection";
+import { downloadHosannaExport, exportSelectionFromDatabase } from "@/src/lib/export/hosannaExport";
 import { useI18n } from "@/src/lib/i18n";
 
 import { Collection } from "@/src/types";
 import { getFolderColorStyle, getFolderIconComponent } from "@/src/utils/folderCustomization";
 import {
   CheckSquare,
+  Download,
   Edit2,
   FolderOpen,
   LibraryBig,
@@ -41,6 +45,7 @@ export const CollectionsPage: React.FC = () => {
   const { navigate } = useAppNavigate();
   const { t } = useI18n();
   const { organization } = useAuth();
+  const { showToast } = useSync();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
   const { granted: canCreateCollection } = useCan("collection.create");
   const { granted: canDeleteCollection } = useCan("collection.delete");
@@ -73,6 +78,24 @@ export const CollectionsPage: React.FC = () => {
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [lastClickedId, setLastClickedId] = useState<string | null>(null);
+
+  const exportCollections = useCallback(
+    async (ids: string[]) => {
+      const db = await getDatabase();
+      const doc = exportSelectionFromDatabase(db, {
+        selectedCollectionIds: ids,
+        orgId: organization?.id,
+      });
+      downloadHosannaExport(doc);
+      showToast(
+        t("modals.hosannaExportImport.exportSuccessToast", {
+          songs: doc.songs.length,
+        }),
+        "success",
+      );
+    },
+    [organization?.id, showToast, t],
+  );
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -372,6 +395,17 @@ export const CollectionsPage: React.FC = () => {
                   <span>{t("common.print")}</span>
                 </button>
               </Can>
+              <button
+                type="button"
+                className={MENU_ITEM}
+                onClick={() => {
+                  setContextMenu(null);
+                  void exportCollections(Array.from(selectedIds));
+                }}
+              >
+                <Download className={MENU_ICON} />
+                <span>{t("explorer.contextMenu.exportSelection")}</span>
+              </button>
               <Can permission="collection.delete">
                 <div className="my-1 border-t border-m3-border" />
                 <button
@@ -437,6 +471,17 @@ export const CollectionsPage: React.FC = () => {
                   <span>{t("print.buttons.printCollection")}</span>
                 </button>
               </Can>
+              <button
+                type="button"
+                className={MENU_ITEM}
+                onClick={() => {
+                  setContextMenu(null);
+                  void exportCollections([menuCollection.id]);
+                }}
+              >
+                <Download className={MENU_ICON} />
+                <span>{t("explorer.contextMenu.exportItem")}</span>
+              </button>
               <Can permission="collection.delete">
                 <div className="my-1 border-t border-m3-border" />
                 <button
@@ -457,6 +502,7 @@ export const CollectionsPage: React.FC = () => {
         selectedCount={selectedIds.size}
         itemLabel={t("common.collections")}
         onPrint={canPrint ? printSelected : undefined}
+        onExport={() => void exportCollections(Array.from(selectedIds))}
         onDelete={() => requestDelete(Array.from(selectedIds))}
         onCancel={() => setSelectedIds(new Set())}
       />

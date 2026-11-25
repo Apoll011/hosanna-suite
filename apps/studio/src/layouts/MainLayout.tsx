@@ -32,6 +32,7 @@ import {
   getFolderDescendantIds,
 } from "../components/explorer";
 import { HosannaCommandPalette } from "../components/HosannaCommandPalette";
+import { HosannaExportImportModal } from "../components/modals/HosannaExportImportModal";
 import {
   ActiveModal,
   AppSidebar,
@@ -58,6 +59,7 @@ import { useSongImportController } from "../hooks/useSongImportController";
 import { invalidateSongsCache, useSearchableSongs, useSongs } from "../hooks/useSongs";
 import { useTrash } from "../hooks/useTrash";
 import { getAuthAppUrl, navigateToAuthAccount, prefetchAuthAccount } from "../lib/authUrl";
+import { downloadHosannaExport, exportSelectionFromDatabase } from "../lib/export/hosannaExport";
 import { track } from "../lib/posthog";
 import { writeThemeCookie } from "../lib/themeBoot";
 import { emitOnboardingEvent, getActiveOnboardingWaitFor } from "../lib/tour";
@@ -755,6 +757,35 @@ export const MainLayout: React.FC = () => {
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [hosannaImportModal, setHosannaImportModal] = useState<{
+    open: boolean;
+    file: File | null;
+  }>({ open: false, file: null });
+
+  const exportSelection = useCallback(
+    async (selection: {
+      folderIds?: Iterable<string>;
+      songIds?: Iterable<string>;
+      collectionIds?: Iterable<string>;
+    }) => {
+      const db = await getDatabase();
+      const doc = exportSelectionFromDatabase(db, {
+        selectedFolderIds: selection.folderIds,
+        selectedSongIds: selection.songIds,
+        selectedCollectionIds: selection.collectionIds,
+        orgId: organization?.id,
+      });
+      downloadHosannaExport(doc);
+      showToast(
+        t("modals.hosannaExportImport.exportSuccessToast", {
+          songs: doc.songs.length,
+        }),
+        "success",
+      );
+    },
+    [organization?.id, showToast, t],
+  );
+
   const { handleFiles: processAndUploadFiles, modal: songImportModal } = useSongImportController({
     folderId: currentFolderId,
     resolveFolderName: () => (currentFolder ? currentFolder.name : t("layout.rootDirectory")),
@@ -764,6 +795,43 @@ export const MainLayout: React.FC = () => {
       await Promise.all([songsQuery.refetch(), foldersQuery.refetch()]);
     },
   });
+
+  const handleIncomingFiles = useCallback(
+    async (files: File[]) => {
+      const remaining: File[] = [];
+      let openedHosannaFile: File | null = null;
+
+      for (const file of files) {
+        if (file.name.toLowerCase().endsWith(".json") && !openedHosannaFile) {
+          try {
+            const text = await file.text();
+            const parsed = JSON.parse(text) as unknown;
+            if (
+              typeof parsed === "object" &&
+              parsed !== null &&
+              !Array.isArray(parsed) &&
+              (parsed as Record<string, unknown>).format === "hosanna-export"
+            ) {
+              openedHosannaFile = file;
+              continue;
+            }
+          } catch {
+            openedHosannaFile = file;
+            continue;
+          }
+        }
+        remaining.push(file);
+      }
+
+      if (openedHosannaFile) {
+        setHosannaImportModal({ open: true, file: openedHosannaFile });
+      }
+      if (remaining.length > 0) {
+        await processAndUploadFiles(remaining);
+      }
+    },
+    [processAndUploadFiles],
+  );
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [isInternalDragActive, setIsInternalDragActive] = useState(false);
   const [dropTargetFolderId, setDropTargetFolderId] = useState<string | null>(null);
@@ -1375,7 +1443,7 @@ export const MainLayout: React.FC = () => {
   const handleChordProFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      await processAndUploadFiles(Array.from(files));
+      await handleIncomingFiles(Array.from(files));
     }
     if (e.target) e.target.value = "";
   };
@@ -1406,7 +1474,7 @@ export const MainLayout: React.FC = () => {
 
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
-      await processAndUploadFiles(Array.from(files));
+      await handleIncomingFiles(Array.from(files));
     }
   };
 
@@ -1632,6 +1700,7 @@ export const MainLayout: React.FC = () => {
                 density={density}
                 onDensityChange={handleDensityChange}
                 onOpenFilterPanel={() => openModal("filter")}
+                onOpenHosannaImport={() => setHosannaImportModal({ open: true, file: null })}
                 collectionActions={collectionToolbarActions}
               />
             )}
@@ -1769,6 +1838,12 @@ export const MainLayout: React.FC = () => {
           }
         }}
         onDelete={() => openModal("batch-delete")}
+        onExport={() =>
+          void exportSelection({
+            folderIds: selectedFolderIds,
+            songIds: selectedSongIds,
+          })
+        }
         onCancel={clearSelection}
       />
 
@@ -1824,6 +1899,14 @@ export const MainLayout: React.FC = () => {
           const sList = allSongs.filter((s) => selectedSongIds.has(s.id));
           if (sList.length) printSongs(sList);
         }}
+        onExportSelection={() =>
+          void exportSelection({
+            folderIds: selectedFolderIds,
+            songIds: selectedSongIds,
+          })
+        }
+        onExportFolder={(folderId) => void exportSelection({ folderIds: [folderId] })}
+        onExportSong={(songId) => void exportSelection({ songIds: [songId] })}
         onPrintFolders={() => {
           const fList = allFolders
             .filter((f) => selectedFolderIds.has(f.id))
@@ -1836,6 +1919,20 @@ export const MainLayout: React.FC = () => {
       />
 
       {songImportModal}
+
+      <HosannaExportImportModal
+        isOpen={hosannaImportModal.open}
+        initialFile={hosannaImportModal.file}
+        defaultTargetFolderId={currentFolderId}
+        folders={allFolders}
+        onClose={() => setHosannaImportModal({ open: false, file: null })}
+        onImported={async () => {
+          await invalidateSongsCache();
+          await invalidateCollectionsCache();
+          await foldersQuery.refetch();
+          await songsQuery.refetch();
+        }}
+      />
 
       <ExplorerModals
         activeModal={activeModal}

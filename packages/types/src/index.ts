@@ -1,5 +1,24 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 export type { $defs, components, operations, paths, webhooks } from "./schema";
+export {
+  HOSANNA_EXPORT_CURRENT_VERSION,
+  HOSANNA_EXPORT_FORMAT,
+  HOSANNA_EXPORT_MAX_BYTES,
+  HosannaExportCollectionSchema,
+  HosannaExportFolderSchema,
+  HosannaExportSongSchema,
+  HosannaExportSourceSchema,
+  HosannaExportV1Schema,
+  parseHosannaExport,
+  parseHosannaExportJson,
+  type HosannaExportCollection,
+  type HosannaExportDocument,
+  type HosannaExportFolder,
+  type HosannaExportParseErrorCode,
+  type HosannaExportParseResult,
+  type HosannaExportSong,
+  type HosannaExportSource,
+} from "./hosannaExport";
 
 import type { components, operations, paths } from "./schema";
 
