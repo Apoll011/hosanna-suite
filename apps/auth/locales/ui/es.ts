@@ -501,16 +501,19 @@ export const es: typeof pt = {
       desc: "Regula el tratamiento de datos personales de la iglesia por parte de Hosanna como encargado del tratamiento.",
       statusAccepted: "Aceptado el {date} por {name}",
       statusPending: "Pendiente de aceptación",
-      pendingWarning: "Su iglesia aún no ha aceptado el Acuerdo de Tratamiento de Datos (DPA). Para cumplir con el RGPD, un administrador debe revisar y aceptar el acuerdo.",
+      pendingWarning:
+        "Su iglesia aún no ha aceptado el Acuerdo de Tratamiento de Datos (DPA). Para cumplir con el RGPD, un administrador debe revisar y aceptar el acuerdo.",
       reviewBtn: "Revisar y aceptar DPA",
       viewBtn: "Ver acuerdo completo",
       printBtn: "Imprimir / Guardar",
       modalTitle: "Acuerdo de Tratamiento de Datos (DPA)",
-      churchLawfulBasis: "Confirmo que estoy autorizado para representar a la iglesia y que la organización mantiene una base legal válida según el Artículo 9 del RGPD (datos de categoría especial que revelan convicciones religiosas).",
+      churchLawfulBasis:
+        "Confirmo que estoy autorizado para representar a la iglesia y que la organización mantiene una base legal válida según el Artículo 9 del RGPD (datos de categoría especial que revelan convicciones religiosas).",
       acceptBtn: "Aceptar acuerdo",
       acceptSuccess: "Acuerdo de Tratamiento de Datos aceptado con éxito.",
       acceptError: "No se pudo aceptar el acuerdo: {error}",
-      subprocessorsNote: "Consulte la lista pública de subencargados en hosanna.live/legal/subprocessors.",
+      subprocessorsNote:
+        "Consulte la lista pública de subencargados en hosanna.live/legal/subprocessors.",
     },
     danger: {
       title: "Zona de peligro",
@@ -529,7 +532,8 @@ export const es: typeof pt = {
       exportCompleted: "Copia de seguridad descargada. Ahora puedes continuar con la eliminación.",
       exportBtn: "Exportar y descargar copia",
       otpTitle: "Verifica tu identidad",
-      otpDesc: "Enviamos un código de 6 dígitos a {email}. Introdúcelo a continuación para continuar.",
+      otpDesc:
+        "Enviamos un código de 6 dígitos a {email}. Introdúcelo a continuación para continuar.",
       otpLabel: "Código de verificación",
       otpSendError: "No se pudo enviar el código: {error}",
       otpInvalid: "Código de verificación no válido o caducado.",

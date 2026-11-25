@@ -383,9 +383,7 @@ export const HosannaExportImportModal: React.FC<HosannaExportImportModalProps> =
                       {c.exportSong.artist ? ` - ${c.exportSong.artist}` : ""}
                     </li>
                   ))}
-                  {previewPlan.conflicts.length > 5 && (
-                    <li>+{previewPlan.conflicts.length - 5}</li>
-                  )}
+                  {previewPlan.conflicts.length > 5 && <li>+{previewPlan.conflicts.length - 5}</li>}
                 </ul>
               </div>
             )}

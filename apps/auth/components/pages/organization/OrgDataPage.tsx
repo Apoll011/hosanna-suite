@@ -7,7 +7,16 @@ import { authClient } from "@/lib/auth/client";
 import { backupApi, type BackupDocument } from "@/lib/services/backup-api";
 import { useI18n } from "@/lib/ui/i18n";
 import { Button, Can, Modal, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
-import { AlertTriangle, CheckCircle2, Clock, Download, ExternalLink, Printer, ShieldCheck, Upload } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Download,
+  ExternalLink,
+  Printer,
+  ShieldCheck,
+  Upload,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function OrgDataPage() {
@@ -558,9 +567,7 @@ export function OrgDataPage() {
             setDeleteStep("otp");
           }}
           title={
-            deleteStep === "otp"
-              ? t("org.danger.otpTitle")
-              : t("org.danger.deleteConfirmTitle")
+            deleteStep === "otp" ? t("org.danger.otpTitle") : t("org.danger.deleteConfirmTitle")
           }
         >
           {deleteStep === "otp" ? (
@@ -642,9 +649,16 @@ export function OrgDataPage() {
         >
           <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1 text-xs text-m3-secondary leading-relaxed">
             <div className="p-3 bg-m3-sidebar rounded-md border border-m3-border space-y-1">
-              <p><strong className="text-m3-text">Controller:</strong> {organization.name}</p>
-              <p><strong className="text-m3-text">Processor:</strong> Hosanna (support@hosanna.live)</p>
-              <p><strong className="text-m3-text">Version:</strong> {dpaData?.currentVersion || "1.0"}</p>
+              <p>
+                <strong className="text-m3-text">Controller:</strong> {organization.name}
+              </p>
+              <p>
+                <strong className="text-m3-text">Processor:</strong> Hosanna (support@hosanna.live)
+              </p>
+              <p>
+                <strong className="text-m3-text">Version:</strong>{" "}
+                {dpaData?.currentVersion || "1.0"}
+              </p>
               {dpaData?.accepted && dpaData.agreement ? (
                 <p>
                   <strong className="text-m3-text">Accepted:</strong>{" "}
@@ -657,39 +671,49 @@ export function OrgDataPage() {
 
             <div className="space-y-3">
               <div>
-                <h4 className="font-semibold text-m3-text">1. Subject Matter, Purpose, and Nature</h4>
+                <h4 className="font-semibold text-m3-text">
+                  1. Subject Matter, Purpose, and Nature
+                </h4>
                 <p className="mt-0.5">
-                  Hosanna provides cloud-based worship planning, liturgy management, music library administration,
-                  team scheduling, and church collaboration software. Processing is performed exclusively to provide,
-                  maintain, and support the Services on documented instructions of the Church.
+                  Hosanna provides cloud-based worship planning, liturgy management, music library
+                  administration, team scheduling, and church collaboration software. Processing is
+                  performed exclusively to provide, maintain, and support the Services on documented
+                  instructions of the Church.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-m3-text">2. Special Category Data (GDPR Art. 9: Religious Beliefs)</h4>
+                <h4 className="font-semibold text-m3-text">
+                  2. Special Category Data (GDPR Art. 9: Religious Beliefs)
+                </h4>
                 <p className="mt-0.5">
-                  Organization data, member rosters, ministry positions, and service notes may reveal religious
-                  or philosophical beliefs. The Church confirms it maintains a lawful basis under GDPR Article 9(2)(d)
-                  (legitimate activities of religious bodies) or Article 9(2)(a) (explicit consent).
+                  Organization data, member rosters, ministry positions, and service notes may
+                  reveal religious or philosophical beliefs. The Church confirms it maintains a
+                  lawful basis under GDPR Article 9(2)(d) (legitimate activities of religious
+                  bodies) or Article 9(2)(a) (explicit consent).
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold text-m3-text">3. Processor Obligations</h4>
                 <p className="mt-0.5">
-                  Hosanna processes data only on documented instructions, ensures staff confidentiality, implements
-                  technical and organizational measures (TLS encryption, AES-256 at rest, query-level tenant isolation,
-                  RBAC, 2FA), assists with data-subject requests, notifies the Church within 48 hours of any confirmed
-                  data breach, and deletes or exports data upon contract termination.
+                  Hosanna processes data only on documented instructions, ensures staff
+                  confidentiality, implements technical and organizational measures (TLS encryption,
+                  AES-256 at rest, query-level tenant isolation, RBAC, 2FA), assists with
+                  data-subject requests, notifies the Church within 48 hours of any confirmed data
+                  breach, and deletes or exports data upon contract termination.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-semibold text-m3-text">4. Sub-processors and International Transfers</h4>
+                <h4 className="font-semibold text-m3-text">
+                  4. Sub-processors and International Transfers
+                </h4>
                 <p className="mt-0.5">
-                  The Church authorizes approved sub-processors (Vercel in France, Supabase in Ireland, Redis Cloud in France,
-                  PostHog in Germany, Stripe in Ireland). Any transfers outside the EEA are governed by the EU Standard
-                  Contractual Clauses (SCCs).
+                  The Church authorizes approved sub-processors (Vercel in France, Supabase in
+                  Ireland, Redis Cloud in France, PostHog in Germany, Stripe in Ireland). Any
+                  transfers outside the EEA are governed by the EU Standard Contractual Clauses
+                  (SCCs).
                 </p>
               </div>
             </div>
@@ -722,7 +746,7 @@ export function OrgDataPage() {
                 <Button variant="outline" size="sm" onClick={() => setDpaModalOpen(false)}>
                   {t("common.back")}
                 </Button>
-                {!dpaData?.accepted && (capabilities.canManageOrg) ? (
+                {!dpaData?.accepted && capabilities.canManageOrg ? (
                   <Button
                     variant="primary"
                     size="sm"

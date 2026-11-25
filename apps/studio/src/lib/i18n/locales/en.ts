@@ -1516,8 +1516,7 @@ export const en: typeof pt = {
       errorInvalidFormat: "This file is not a valid Hosanna export.",
       errorUnsupportedVersion:
         "Unsupported export version (v{version}). This version only supports v1.",
-      errorSubscriptionBlocked:
-        "An active subscription or trial is required to import items.",
+      errorSubscriptionBlocked: "An active subscription or trial is required to import items.",
       errorPermissionDenied: "Missing required permissions to import: {permissions}",
     },
   },

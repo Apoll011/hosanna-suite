@@ -696,7 +696,10 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                   },
                 });
               } catch (err) {
-                console.error("[auth] Failed to record DPA agreement on organization creation:", err);
+                console.error(
+                  "[auth] Failed to record DPA agreement on organization creation:",
+                  err,
+                );
               }
             }
           },

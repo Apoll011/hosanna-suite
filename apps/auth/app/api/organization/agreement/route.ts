@@ -58,7 +58,10 @@ async function acceptAgreement(req: Request) {
     }
 
     if (ctx.role !== "owner" && ctx.role !== "admin") {
-      throw new AuthHttpError(403, "Only organization owners or administrators can accept legal agreements.");
+      throw new AuthHttpError(
+        403,
+        "Only organization owners or administrators can accept legal agreements.",
+      );
     }
 
     let bodyData = {};

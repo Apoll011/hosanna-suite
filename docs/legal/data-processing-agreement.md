@@ -25,6 +25,7 @@ This DPA supplements and forms part of the Hosanna Terms of Service or main serv
 ### 2.1 Roles of the parties
 
 The parties acknowledge and agree that:
+
 - The Church is the **Controller** of Customer Personal Data.
 - Hosanna is the **Processor** acting on the Church's documented instructions.
 
@@ -39,6 +40,7 @@ The processing continues for the duration of the Church's subscription and activ
 ### 2.4 Nature and purpose of processing
 
 Hosanna processes Customer Personal Data exclusively to:
+
 - Provide, maintain, host, synchronize, and support the Services.
 - Enable user authentication, session security, and access control.
 - Enable worship team scheduling, roster coordination, service planning, and song annotations.
@@ -54,6 +56,7 @@ Hosanna processes Customer Personal Data exclusively to:
 ### 2.6 Types of personal data
 
 The Customer Personal Data processed may include:
+
 - **Identification and contact details:** Full name, email address, telephone number, display name, and profile avatar.
 - **Church role and administrative data:** Assigned teams, ministry positions, skill sets, scheduling availability, blockout dates, and attendance records.
 - **Service planning content:** Service notes, rehearsals, setlists, song arrangements, annotations, and run-sheet assignments.
@@ -70,6 +73,7 @@ The parties acknowledge that personal data submitted to the Services in the cont
 ### 3.2 Church confirmation of lawful basis
 
 The Church, as Controller, represents and warrants that:
+
 1. It maintains a valid lawful basis under Applicable Data Protection Law to collect and process such data, including Article 9(2)(d) of the GDPR (processing carried out in the course of legitimate activities by a foundation, association, or other not-for-profit body with a religious or philosophical aim, concerning members, former members, or persons in regular contact), or Article 9(2)(a) (explicit consent of the data subject).
 2. Appropriate disclosures have been made to data subjects informing them that their details and participation in church services are stored within church management and worship software.
 3. The Church will not use the Services to process special category data outside the scope of its legitimate church or ministry activities.
@@ -93,6 +97,7 @@ Hosanna shall ensure that persons authorized to process the Customer Personal Da
 ### 4.3 Security of processing (Art. 28(3)(c), Art. 32)
 
 Hosanna shall implement and maintain appropriate technical and organizational measures to ensure a level of security appropriate to the risk, as set forth in Annex I (Technical and Organizational Security Measures). These measures include:
+
 - TLS 1.3/1.2 encryption in transit for all web, API, and WebSocket connections.
 - AES-256 encryption at rest for database storage and object stores.
 - Strict logical tenant isolation enforced at the database query layer (`forOrganization(orgId)`), preventing cross-organization data leakage.
@@ -111,6 +116,7 @@ Hosanna provides self-service features in the Services enabling the Church to vi
 Hosanna shall notify the Church without undue delay, and in any event within 48 hours, after becoming aware of a confirmed Personal Data Breach affecting Customer Personal Data.
 
 The notification shall contain, to the extent known:
+
 1. A description of the nature of the Personal Data Breach, including the categories and approximate number of data subjects and records concerned.
 2. The name and contact details of Hosanna's contact point (support@hosanna.live).
 3. The likely consequences of the breach.
@@ -164,6 +170,7 @@ Hosanna prioritizes processing within the European Economic Area ("EEA"). Primar
 ### 6.2 Transfer mechanisms
 
 If Customer Personal Data is transferred outside the EEA, the UK, or Switzerland to a country that has not received an adequacy decision from the European Commission (or UK/Swiss competent authority), the transfer shall be governed by:
+
 1. The EU Standard Contractual Clauses (Commission Implementing Decision (EU) 2021/914), Module 2 (Controller-to-Processor) or Module 3 (Processor-to-Subprocessor), which are hereby incorporated into this DPA by reference.
 2. For transfers originating in the United Kingdom, the UK International Data Transfer Addendum to the EU Commission Standard Contractual Clauses.
 3. For transfers originating in Switzerland, the Swiss Addendum to the EU Standard Contractual Clauses.
@@ -175,6 +182,7 @@ If Customer Personal Data is transferred outside the EEA, the UK, or Switzerland
 ### 7.1 Electronic acceptance
 
 This DPA is accepted electronically by an authorized representative of the Church through one of the following methods:
+
 1. Selecting the DPA acceptance checkbox during organization creation.
 2. Confirming DPA acceptance during subscription checkout or onboarding.
 3. Explicit confirmation in Organization Settings.
@@ -182,6 +190,7 @@ This DPA is accepted electronically by an authorized representative of the Churc
 ### 7.2 Stored acceptance record
 
 Upon acceptance, Hosanna automatically records and binds the agreement to the Church's organization record, storing:
+
 - Organization Identifier (`orgId`) and Church Legal/Operating Name.
 - User Identifier and name of the accepting administrator (`acceptedByUserId`).
 - UTC timestamp of acceptance (`acceptedAt`).
@@ -226,12 +235,12 @@ Pursuant to GDPR Article 32, Hosanna maintains the following technical and organ
 
 The following Sub-processors are authorized as of the date of this agreement:
 
-| Provider | Purpose | Data processed | Configured region | Transfer mechanism |
-| :--- | :--- | :--- | :--- | :--- |
-| **Vercel Inc.** | Application compute, edge routing, and serverless hosting | Account, organization, authentication, and HTTP request logs | `cdg1` (`eu-west-3`), Paris, France | EU-US Data Privacy Framework / SCCs |
-| **Supabase Inc.** | Primary Postgres database, real-time sync, and object storage | Customer organization data, songs, rosters, service plans, member records, and uploaded logos | `eu-west-1`, Ireland | EU-US Data Privacy Framework / SCCs |
-| **PostHog Inc.** | Privacy-friendly product analytics and usage metrics | User IDs, organization IDs, and anonymized feature usage events | EU Cloud, Frankfurt, Germany | Direct EU hosting / SCCs |
-| **Redis Cloud (Redis Inc.)** | Authentication cache, session stores, and rate-limiting counters | Transient session tokens, rate-limit keys, and cache entries | `eu-west-3`, Paris, France | EU-US Data Privacy Framework / SCCs |
-| **Stripe Payments Europe, Ltd.** | Billing and payment processing for paid subscriptions | Customer billing contact name, email, billing address, and transaction metadata | Ireland / Global | Direct EU entity / SCCs |
+| Provider                         | Purpose                                                          | Data processed                                                                                | Configured region                   | Transfer mechanism                  |
+| :------------------------------- | :--------------------------------------------------------------- | :-------------------------------------------------------------------------------------------- | :---------------------------------- | :---------------------------------- |
+| **Vercel Inc.**                  | Application compute, edge routing, and serverless hosting        | Account, organization, authentication, and HTTP request logs                                  | `cdg1` (`eu-west-3`), Paris, France | EU-US Data Privacy Framework / SCCs |
+| **Supabase Inc.**                | Primary Postgres database, real-time sync, and object storage    | Customer organization data, songs, rosters, service plans, member records, and uploaded logos | `eu-west-1`, Ireland                | EU-US Data Privacy Framework / SCCs |
+| **PostHog Inc.**                 | Privacy-friendly product analytics and usage metrics             | User IDs, organization IDs, and anonymized feature usage events                               | EU Cloud, Frankfurt, Germany        | Direct EU hosting / SCCs            |
+| **Redis Cloud (Redis Inc.)**     | Authentication cache, session stores, and rate-limiting counters | Transient session tokens, rate-limit keys, and cache entries                                  | `eu-west-3`, Paris, France          | EU-US Data Privacy Framework / SCCs |
+| **Stripe Payments Europe, Ltd.** | Billing and payment processing for paid subscriptions            | Customer billing contact name, email, billing address, and transaction metadata               | Ireland / Global                    | Direct EU entity / SCCs             |
 
 The authoritative live list of Sub-processors is maintained at: `https://hosanna.live/legal/subprocessors`.

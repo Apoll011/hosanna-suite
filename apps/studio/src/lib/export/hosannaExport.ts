@@ -61,9 +61,7 @@ function isActive(item: { deleted?: boolean; isDeleted?: boolean; _deleted?: boo
   return !item.deleted && !item.isDeleted && !item._deleted;
 }
 
-export function buildHosannaExportDocument(
-  input: BuildHosannaExportInput,
-): HosannaExportDocument {
+export function buildHosannaExportDocument(input: BuildHosannaExportInput): HosannaExportDocument {
   const activeFolders = input.folders.filter(isActive);
   const activeSongs = input.songs.filter(isActive);
   const activeCollections = input.collections.filter(isActive);

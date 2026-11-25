@@ -22,11 +22,11 @@ This document records the implemented account and organization deletion flows an
 
 ## Stores and scope
 
-| Store | Account deletion | Organization deletion |
-| --- | --- | --- |
-| Postgres | User row + cascaded user tables + OAuth/verification rows | Organization row + cascaded tenant tables + Subscription + Notification + OAuth/verification rows; `OrganizationAgreement` detached and retained |
-| Supabase Storage | Avatar deleted | Organization logo deleted |
-| Redis | Sessions revoked via Better Auth | Self-expiring cache keys left to expire |
-| Stripe | Not applicable (billing is org-scoped) | Subscription canceled immediately; Customer retained |
-| Firestore / PostHog / FCM | PushDevice rows cascaded in Postgres; FCM tokens expire naturally; Firestore and PostHog untouched | Untouched |
-| Provider backups | Encrypted backups may retain copies for up to 30 days | Encrypted backups may retain copies for up to 30 days |
+| Store                     | Account deletion                                                                                   | Organization deletion                                                                                                                            |
+| ------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Postgres                  | User row + cascaded user tables + OAuth/verification rows                                          | Organization row + cascaded tenant tables + Subscription + Notification + OAuth/verification rows; `OrganizationAgreement` detached and retained |
+| Supabase Storage          | Avatar deleted                                                                                     | Organization logo deleted                                                                                                                        |
+| Redis                     | Sessions revoked via Better Auth                                                                   | Self-expiring cache keys left to expire                                                                                                          |
+| Stripe                    | Not applicable (billing is org-scoped)                                                             | Subscription canceled immediately; Customer retained                                                                                             |
+| Firestore / PostHog / FCM | PushDevice rows cascaded in Postgres; FCM tokens expire naturally; Firestore and PostHog untouched | Untouched                                                                                                                                        |
+| Provider backups          | Encrypted backups may retain copies for up to 30 days                                              | Encrypted backups may retain copies for up to 30 days                                                                                            |

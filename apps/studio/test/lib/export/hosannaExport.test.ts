@@ -111,10 +111,7 @@ describe("buildHosannaExportDocument", () => {
       collections,
     });
 
-    assert.deepEqual(
-      doc.songs.map((s) => s.id).sort(),
-      ["s-1", "s-2", "s-3"],
-    );
+    assert.deepEqual(doc.songs.map((s) => s.id).sort(), ["s-1", "s-2", "s-3"]);
     const s3 = doc.songs.find((s) => s.id === "s-3");
     assert.equal(s3?.folderId, null);
     assert.deepEqual(doc.collections[0]?.songIds, ["s-1", "s-3"]);

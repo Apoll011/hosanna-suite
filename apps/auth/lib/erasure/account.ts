@@ -99,10 +99,7 @@ export async function eraseAccount(
     await tx.oauthClient.deleteMany({ where: { userId } });
     await tx.verification.deleteMany({
       where: {
-        OR: [
-          { identifier: `erasure:account:${userId}` },
-          { identifier: user.email },
-        ],
+        OR: [{ identifier: `erasure:account:${userId}` }, { identifier: user.email }],
       },
     });
 

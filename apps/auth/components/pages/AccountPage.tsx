@@ -60,7 +60,9 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteChecking, setDeleteChecking] = useState(false);
-  const [soleOwnerOrgs, setSoleOwnerOrgs] = useState<Array<{ id: string; name: string; slug: string }>>([]);
+  const [soleOwnerOrgs, setSoleOwnerOrgs] = useState<
+    Array<{ id: string; name: string; slug: string }>
+  >([]);
   const [deleteOtpSent, setDeleteOtpSent] = useState(false);
   const [deleteOtpSending, setDeleteOtpSending] = useState(false);
   const [deleteOtp, setDeleteOtp] = useState("");
@@ -238,10 +240,7 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
       }
       setDeleteOtpSent(true);
     } catch (err) {
-      showToast(
-        t("account.danger.deleteError", { error: (err as Error)?.message || "" }),
-        "error",
-      );
+      showToast(t("account.danger.deleteError", { error: (err as Error)?.message || "" }), "error");
     } finally {
       setDeleteOtpSending(false);
     }
@@ -270,10 +269,7 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
       showToast(t("account.danger.deleteSuccess"), "success");
       window.location.assign("/login?deleted=1");
     } catch (err) {
-      showToast(
-        t("account.danger.deleteError", { error: (err as Error)?.message || "" }),
-        "error",
-      );
+      showToast(t("account.danger.deleteError", { error: (err as Error)?.message || "" }), "error");
     } finally {
       setDeletingAccount(false);
     }

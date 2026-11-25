@@ -194,20 +194,21 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
       </div>
 
       <div className="flex items-center gap-2.5">
-        {onOpenHosannaImport && (view === "explorer" || view === "collections" || view === "songs") && (
-          <CanAny permissions={["song.create", "folder.create", "collection.create"]}>
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              icon={<Upload className="w-4 h-4" />}
-              onClick={onOpenHosannaImport}
-              data-tour="toolbar-import-export"
-            >
-              {t("common.import")}
-            </Button>
-          </CanAny>
-        )}
+        {onOpenHosannaImport &&
+          (view === "explorer" || view === "collections" || view === "songs") && (
+            <CanAny permissions={["song.create", "folder.create", "collection.create"]}>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                icon={<Upload className="w-4 h-4" />}
+                onClick={onOpenHosannaImport}
+                data-tour="toolbar-import-export"
+              >
+                {t("common.import")}
+              </Button>
+            </CanAny>
+          )}
         {view === "collection-detail" && collectionActions && (
           <div ref={collectionMenuRef} className="relative shrink-0">
             <button

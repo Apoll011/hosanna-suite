@@ -9,9 +9,7 @@ const OTP_EXPIRY_MINUTES = 10;
 export type ErasureOtpKind = "account" | "organization";
 
 function otpIdentifier(kind: ErasureOtpKind, userId: string, orgId?: string): string {
-  return kind === "account"
-    ? `erasure:account:${userId}`
-    : `erasure:org:${orgId ?? ""}:${userId}`;
+  return kind === "account" ? `erasure:account:${userId}` : `erasure:org:${orgId ?? ""}:${userId}`;
 }
 
 function hashOtp(otp: string): string {

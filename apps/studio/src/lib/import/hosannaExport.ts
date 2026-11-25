@@ -23,11 +23,7 @@ export class HosannaImportError extends Error {
   readonly code: HosannaImportErrorCode;
   readonly missingPermissions: string[];
 
-  constructor(
-    code: HosannaImportErrorCode,
-    message: string,
-    missingPermissions: string[] = [],
-  ) {
+  constructor(code: HosannaImportErrorCode, message: string, missingPermissions: string[] = []) {
     super(message);
     this.name = "HosannaImportError";
     this.code = code;
@@ -66,10 +62,7 @@ export interface PlannedSongSkip {
   existingId: string;
 }
 
-export type PlannedSongOperation =
-  | PlannedSongCreate
-  | PlannedSongOverwrite
-  | PlannedSongSkip;
+export type PlannedSongOperation = PlannedSongCreate | PlannedSongOverwrite | PlannedSongSkip;
 
 export interface PlannedCollectionCreate {
   sourceId: string;
@@ -128,9 +121,7 @@ export function normalizeSongMatchKey(title: string, artist: string): string {
   return `${title.trim().toLowerCase()}\0${(artist ?? "").trim().toLowerCase()}`;
 }
 
-function sortFoldersTopologically(
-  folders: readonly HosannaExportFolder[],
-): HosannaExportFolder[] {
+function sortFoldersTopologically(folders: readonly HosannaExportFolder[]): HosannaExportFolder[] {
   const byId = new Map<string, HosannaExportFolder>();
   for (const folder of folders) {
     byId.set(folder.id, folder);
@@ -489,9 +480,7 @@ export function createIndexedDbImportStore(db: HosanaDatabase): HosannaImportSto
       const chunkSize = 150;
       for (let i = 0; i < docs.length; i += chunkSize) {
         const chunk = docs.slice(i, i + chunkSize);
-        await db.songs.bulkInsert(
-          chunk as unknown as Parameters<typeof db.songs.bulkInsert>[0],
-        );
+        await db.songs.bulkInsert(chunk as unknown as Parameters<typeof db.songs.bulkInsert>[0]);
       }
     },
     async patchSong(id, patch) {
@@ -502,9 +491,7 @@ export function createIndexedDbImportStore(db: HosanaDatabase): HosannaImportSto
     },
     async insertCollections(docs) {
       for (const doc of docs) {
-        await db.collections.insert(
-          doc as unknown as Parameters<typeof db.collections.insert>[0],
-        );
+        await db.collections.insert(doc as unknown as Parameters<typeof db.collections.insert>[0]);
       }
     },
     async recalculateCounts() {

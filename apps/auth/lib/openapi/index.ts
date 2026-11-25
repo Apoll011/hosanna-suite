@@ -248,8 +248,7 @@ export function getAuthPaths(): Record<string, any> {
         summary: "Check account deletion eligibility",
         operationId: "checkAccountErasure",
         security: sessionAuth,
-        description:
-          "Returns any organizations where the authenticated user is the sole owner.",
+        description: "Returns any organizations where the authenticated user is the sole owner.",
         responses: {
           200: {
             description: "OK",

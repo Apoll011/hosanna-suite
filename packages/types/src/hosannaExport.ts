@@ -55,11 +55,7 @@ export type HosannaExportCollection = z.infer<typeof HosannaExportCollectionSche
 export type HosannaExportDocument = z.infer<typeof HosannaExportV1Schema>;
 
 export type HosannaExportParseErrorCode =
-  | "file_too_large"
-  | "malformed_json"
-  | "invalid_format"
-  | "unsupported_version"
-  | "invalid_schema";
+  "file_too_large" | "malformed_json" | "invalid_format" | "unsupported_version" | "invalid_schema";
 
 export type HosannaExportParseResult =
   | { ok: true; data: HosannaExportDocument }
@@ -75,7 +71,7 @@ export function parseHosannaExport(raw: unknown): HosannaExportParseResult {
     return {
       ok: false,
       code: "invalid_format",
-      message: "Expected a JSON object with format \"hosanna-export\".",
+      message: 'Expected a JSON object with format "hosanna-export".',
     };
   }
 

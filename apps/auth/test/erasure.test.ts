@@ -170,7 +170,10 @@ describe("eraseOrganization", () => {
 
     const mockDb = {
       organization: {
-        findUnique: async () => ({ id: "org-1", logo: "https://auth.hosanna.live/api/media/organization/org-1" }),
+        findUnique: async () => ({
+          id: "org-1",
+          logo: "https://auth.hosanna.live/api/media/organization/org-1",
+        }),
       },
       subscription: {
         findMany: async () => [{ id: "sub-1", stripeSubscriptionId: "sub_stripe_123" }],
@@ -197,7 +200,9 @@ describe("eraseOrganization", () => {
     assert.equal(result.deleted, true);
     assert.deepEqual(canceledSubs, ["sub_stripe_123"]);
     assert.deepEqual(deletedLogos, ["org-1"]);
-    assert.ok(calls.includes('agreement.updateMany:{"deletedOrgId":"org-1","organizationId":null}'));
+    assert.ok(
+      calls.includes('agreement.updateMany:{"deletedOrgId":"org-1","organizationId":null}'),
+    );
     assert.ok(calls.includes("subscription.deleteMany"));
     assert.ok(calls.includes("notification.deleteMany"));
     assert.ok(calls.includes("organization.delete:org-1"));

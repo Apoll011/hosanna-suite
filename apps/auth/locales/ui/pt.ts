@@ -498,16 +498,19 @@ export const pt = {
       desc: "Regula o tratamento de dados pessoais da igreja pelo Hosanna enquanto subcontratante.",
       statusAccepted: "Aceite em {date} por {name}",
       statusPending: "Pendente de aceitação",
-      pendingWarning: "A sua igreja ainda não aceitou o Acordo de Tratamento de Dados (DPA). Para conformidade com o RGPD, um administrador deve rever e aceitar o acordo.",
+      pendingWarning:
+        "A sua igreja ainda não aceitou o Acordo de Tratamento de Dados (DPA). Para conformidade com o RGPD, um administrador deve rever e aceitar o acordo.",
       reviewBtn: "Rever e aceitar DPA",
       viewBtn: "Ver acordo completo",
       printBtn: "Imprimir / Guardar",
       modalTitle: "Acordo de Tratamento de Dados (DPA)",
-      churchLawfulBasis: "Confirmo que tenho autorização para representar a igreja e que a organização possui base de licitude válida ao abrigo do Artigo 9.º do RGPD (dados de categoria especial reveladores de convicções religiosas).",
+      churchLawfulBasis:
+        "Confirmo que tenho autorização para representar a igreja e que a organização possui base de licitude válida ao abrigo do Artigo 9.º do RGPD (dados de categoria especial reveladores de convicções religiosas).",
       acceptBtn: "Aceitar acordo",
       acceptSuccess: "Acordo de Tratamento de Dados aceite com sucesso.",
       acceptError: "Não foi possível aceitar o acordo: {error}",
-      subprocessorsNote: "Consulte a lista pública de subcontratantes secundários em hosanna.live/legal/subprocessors.",
+      subprocessorsNote:
+        "Consulte a lista pública de subcontratantes secundários em hosanna.live/legal/subprocessors.",
     },
     danger: {
       title: "Zona de perigo",
