@@ -25,6 +25,7 @@
     "@hosanna/config": "workspace:*",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.7.3",
+    "tsx": "^4.23.15",
     "typescript": "catalog:"
   }
 }
