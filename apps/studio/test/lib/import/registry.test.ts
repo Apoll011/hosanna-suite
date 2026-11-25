@@ -17,7 +17,13 @@ function makeProvider(id: string, isActive: () => Promise<boolean>): SongImportP
     supportedExtensions: [`.${id}`],
     interactive: false,
     isActive,
-    import: async () => ({ imported: [], failed: [] }),
+    import: async () => ({
+      providerId: id,
+      fileTypeName: id,
+      created: 0,
+      ignored: 0,
+      failed: 0,
+    }),
   };
 }
 
