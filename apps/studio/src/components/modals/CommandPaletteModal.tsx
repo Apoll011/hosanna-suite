@@ -136,10 +136,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
   }, [groupedActions]);
 
   useEffect(() => {
-    setSelectedIndex(0);
-  }, [searchQuery, activeParentId]);
-
-  useEffect(() => {
     if (!listContainerRef.current) return;
     const selectedEl = listContainerRef.current.querySelector(
       `[data-action-index="${selectedIndex}"]`,

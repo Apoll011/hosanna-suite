@@ -1005,15 +1005,13 @@ export const ServiceDetailPage: React.FC = () => {
   );
 
   const filteredLibrarySongs = useMemo(() => {
-    let list: Song[];
-
     let matchedSongIds: Set<string> | null = null;
     if (librarySearch.trim()) {
       const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, librarySearch);
       matchedSongIds = new Set(liqeMatches.map((s) => s.id));
     }
 
-    list = allSongs.filter((s) => {
+    const list = allSongs.filter((s) => {
       if (matchedSongIds !== null && !matchedSongIds.has(s.id)) {
         return false;
       }
