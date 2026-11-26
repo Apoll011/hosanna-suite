@@ -228,7 +228,7 @@ function requestHeadersForAuth(req: Request): Headers {
 /** Parse locale out of an org's JSON metadata blob. */
 function parseLocaleFromMeta(metadata: unknown): string | null {
   try {
-    let meta: any = typeof metadata === "string" ? JSON.parse(metadata) : metadata;
+    const meta: any = typeof metadata === "string" ? JSON.parse(metadata) : metadata;
     const locale = meta?.settings?.general?.locale ?? meta?.locale;
     if (typeof locale === "string" && locale.length > 0) return locale;
   } catch {

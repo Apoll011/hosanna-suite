@@ -96,7 +96,7 @@ export function useApplyProposal() {
       }
       try {
         const resource = getResource(proposal.kind);
-        let patch = resource.toPatch(proposal);
+        const patch = resource.toPatch(proposal);
 
         if (proposal.kind === "song") {
           const content = (proposal.payload as { content: string }).content;
