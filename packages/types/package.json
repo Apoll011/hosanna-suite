@@ -17,7 +17,7 @@
     "generate": "openapi-typescript openapi.yaml -o src/schema.ts && prettier --write src/schema.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"test/**/*.test.ts\"",
-    "lint": "eslint ."
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "zod": "^4.6.7"

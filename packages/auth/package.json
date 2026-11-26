@@ -24,7 +24,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"test/**/*.test.ts\"",
-    "lint": "eslint ."
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "@better-auth/cimd": "^1.7.18",

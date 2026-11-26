@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint .",
+    "lint": "eslint --config ../config/eslint.config.js .",
     "test": "tsx --test \"test/**/*.test.ts\"",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -21,8 +21,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
-    "postinstall": "prisma generate",
-    "lint": "eslint ."
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^7.*",

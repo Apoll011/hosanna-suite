@@ -17,7 +17,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"test/**/*.test.ts\"",
-    "lint": "eslint ."
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "keyv": "^5.5.5"

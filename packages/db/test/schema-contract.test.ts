@@ -21,7 +21,10 @@ describe("database schema contract", () => {
 
   it("includes an initial migration and Prisma migration lock", async () => {
     assert.ok(migrations.includes("0_init"));
-    const lock = await readFile(new URL("../prisma/migrations/migration_lock.toml", import.meta.url), "utf8");
+    const lock = await readFile(
+      new URL("../prisma/migrations/migration_lock.toml", import.meta.url),
+      "utf8",
+    );
     assert.match(lock, /provider\s*=\s*"postgresql"/);
   });
 });

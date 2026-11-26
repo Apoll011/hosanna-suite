@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit",
     "openapi:generate": "node ../../scripts/generate-openapi.mjs && pnpm --filter @hosanna/types generate",
     "clean": "rm -rf dist",
-    "lint": "eslint ."
+    "lint": "eslint --config ../../packages/config/eslint.config.js ."
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.92",

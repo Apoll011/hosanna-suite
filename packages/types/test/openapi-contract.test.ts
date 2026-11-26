@@ -6,10 +6,15 @@ import { parse } from "yaml";
 
 type OpenApiContract = {
   openapi: string;
-  paths: Record<string, Record<string, { operationId?: string; responses?: Record<string, unknown> }>>;
+  paths: Record<
+    string,
+    Record<string, { operationId?: string; responses?: Record<string, unknown> }>
+  >;
   components?: { schemas?: Record<string, unknown> };
 };
-const contract = parse<OpenApiContract>(await readFile(new URL("../openapi.yaml", import.meta.url), "utf8"));
+const contract = parse<OpenApiContract>(
+  await readFile(new URL("../openapi.yaml", import.meta.url), "utf8"),
+);
 
 describe("OpenAPI contract", () => {
   it("declares an OpenAPI version, paths, and reusable schemas", () => {
@@ -24,8 +29,14 @@ describe("OpenAPI contract", () => {
       for (const [method, operation] of Object.entries(pathItem)) {
         if (!["get", "post", "put", "patch", "delete"].includes(method)) continue;
         assert.ok(operation.operationId, `${method.toUpperCase()} ${path} has an operationId`);
-        assert.ok(operation.responses && Object.keys(operation.responses).length > 0, `${method.toUpperCase()} ${path} has responses`);
-        assert.ok(!ids.has(operation.operationId), `duplicate operationId: ${operation.operationId}`);
+        assert.ok(
+          operation.responses && Object.keys(operation.responses).length > 0,
+          `${method.toUpperCase()} ${path} has responses`,
+        );
+        assert.ok(
+          !ids.has(operation.operationId),
+          `duplicate operationId: ${operation.operationId}`,
+        );
         ids.add(operation.operationId);
       }
     }

@@ -57,7 +57,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test \"test/**/*.test.ts\"",
     "clean": "rm -rf dist",
-    "lint": "eslint ."
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "keywords": [],
   "author": "",
