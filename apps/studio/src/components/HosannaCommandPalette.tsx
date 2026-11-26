@@ -367,6 +367,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
     deleteService,
     toggleDarkMode,
     t,
+    fileInputRef,
   ]);
 
   return (
