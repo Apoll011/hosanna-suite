@@ -384,7 +384,7 @@ async function loadCollectionSongIds(
 
   const rows = await prisma.$queryRaw<Array<{ A: string; B: string }>>`
     SELECT j."A", j."B" FROM "_CollectionToSong" j
-    INNER JOIN "Collection" c ON c."id" = j."A"
+    INNER JOIN "collections" c ON c."id" = j."A"
     WHERE c."orgId" = ${tenantId}
       AND j."A" IN (${Prisma.join(collectionIds)})
   `;
@@ -406,7 +406,7 @@ async function loadSongCollectionIds(
 
   const rows = await prisma.$queryRaw<Array<{ A: string; B: string }>>`
     SELECT j."A", j."B" FROM "_CollectionToSong" j
-    INNER JOIN "Song" s ON s."id" = j."B"
+    INNER JOIN "songs" s ON s."id" = j."B"
     WHERE s."orgId" = ${tenantId}
       AND j."B" IN (${Prisma.join(songIds)})
   `;

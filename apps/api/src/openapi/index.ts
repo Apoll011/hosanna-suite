@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { getApiComponentSchemas } from "./schemas.js";
+import { getAgendaEventPaths } from "./domains/agendaEvents.js";
+import { getCollectionPaths } from "./domains/collections.js";
 import { getCronPaths } from "./domains/cron.js";
 import { getFolderPaths } from "./domains/folders.js";
 import { getHealthPaths } from "./domains/health.js";
@@ -16,7 +18,9 @@ export function getApiPaths(): Record<string, any> {
     ...getCronPaths(),
     ...getSongPaths(),
     ...getFolderPaths(),
+    ...getCollectionPaths(),
     ...getServicePaths(),
+    ...getAgendaEventPaths(),
     ...getMediaPaths(),
     ...getReplicationPaths(),
     ...getTrashPaths(),
@@ -49,7 +53,9 @@ export function buildApiOpenApiDoc() {
       { name: "Cron" },
       { name: "Songs" },
       { name: "Folders" },
+      { name: "Collections" },
       { name: "Services" },
+      { name: "Agenda" },
       { name: "ServiceNotes" },
       { name: "Annotations" },
       { name: "Replication" },
