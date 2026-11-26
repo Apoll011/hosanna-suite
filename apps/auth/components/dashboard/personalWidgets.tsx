@@ -269,7 +269,10 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
     );
   }
 
-  const visibleItems = items.slice(0, instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8));
+  const visibleItems = items.slice(
+    0,
+    instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8),
+  );
   const showBody = instance.h >= 3 && instance.w >= 3;
 
   return (

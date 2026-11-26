@@ -46,7 +46,14 @@ export function AppLauncherWidget({ instance }: WidgetRendererProps) {
   const settings = useHomeSettings();
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
-  const cols = instance.w >= 9 ? "lg:grid-cols-4" : instance.w >= 6 ? "lg:grid-cols-3" : instance.w >= 4 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2";
+  const cols =
+    instance.w >= 9
+      ? "lg:grid-cols-4"
+      : instance.w >= 6
+        ? "lg:grid-cols-3"
+        : instance.w >= 4
+          ? "sm:grid-cols-2 lg:grid-cols-3"
+          : "sm:grid-cols-2";
   const showDescription = instance.h >= 2;
 
   const filtered = useMemo(() => {
@@ -137,11 +144,7 @@ export function AppLauncherWidget({ instance }: WidgetRendererProps) {
       {filtered.length === 0 ? (
         <WidgetEmptyBox icon={<LayoutGrid className="h-5 w-5" />} title={t("home.empty")} />
       ) : (
-        <ul
-          className={
-            view === "grid" ? `grid gap-2 ${cols}` : "flex flex-col gap-1.5"
-          }
-        >
+        <ul className={view === "grid" ? `grid gap-2 ${cols}` : "flex flex-col gap-1.5"}>
           {filtered.map((app) => {
             const openable = isOpenableApp(app);
             const favorite = settings.favorites.includes(app.id);
@@ -382,7 +385,6 @@ function SingleAppWidget({
         {app.description ? (
           <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
         ) : null}
-
       </div>
       {openable ? (
         <ChevronRight

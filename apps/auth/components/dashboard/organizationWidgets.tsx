@@ -546,9 +546,7 @@ export function MembersWidget({ instance }: WidgetRendererProps) {
               )}
             </div>
             {members.length > avatarLimit ? (
-              <span className="text-caption tabular-nums">
-                +{members.length - avatarLimit}
-              </span>
+              <span className="text-caption tabular-nums">+{members.length - avatarLimit}</span>
             ) : null}
           </div>
         ) : null}
@@ -745,9 +743,7 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
       ) : visibleItems.length === 0 ? (
         <WidgetEmptyBox icon={<HardDrive className="h-5 w-5" />} title={t("home.widgets.error")} />
       ) : (
-        <div
-          className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : gridCols}`}
-        >
+        <div className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : gridCols}`}>
           {visibleItems.map((item) => (
             <div key={item.key} className="surface-inset px-3 py-2">
               <p className="text-caption truncate">{item.label}</p>

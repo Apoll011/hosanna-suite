@@ -327,7 +327,9 @@ export function LibrarySummaryWidget({ instance }: WidgetRendererProps) {
             </span>
           </p>
 
-          <div className={`grid gap-2 ${instance.w >= 5 || density === "expanded" ? "grid-cols-4" : "grid-cols-2"}`}>
+          <div
+            className={`grid gap-2 ${instance.w >= 5 || density === "expanded" ? "grid-cols-4" : "grid-cols-2"}`}
+          >
             <div className="surface-inset px-2.5 py-2">
               <p className="text-caption truncate">{t("home.widgets.library.folders")}</p>
               <p className="mt-0.5 flex items-center gap-1 text-sm font-semibold tabular-nums text-m3-text">
@@ -856,7 +858,9 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
               <div className="flex items-center justify-between gap-2 py-1.5">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
-                  {song.artist && showArtist ? <p className="truncate text-caption">{song.artist}</p> : null}
+                  {song.artist && showArtist ? (
+                    <p className="truncate text-caption">{song.artist}</p>
+                  ) : null}
                 </div>
                 <Badge variant="warning" size="sm" className="tabular-nums">
                   {t("home.widgets.restingSongs.daysAgo", { count: song.daysSince ?? 0 })}
