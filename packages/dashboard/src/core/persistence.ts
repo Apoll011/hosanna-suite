@@ -3,10 +3,14 @@ import { normalizeLayout } from "./normalization.js";
 import type { WidgetRegistry } from "./registry.js";
 import { buildDefaultLayout, mergeNewEligibleWidgets } from "./defaults.js";
 import type { DashboardContext } from "./types.js";
+export type ValidatedDashboardPersistence = {
+  load: (organizationId: string) => Promise<DashboardLayout | null>;
+  save: (organizationId: string, layout: DashboardLayout) => Promise<void>;
+};
 export function createValidatedPersistence(
   persistence: DashboardPersistence,
   registry: WidgetRegistry,
-): DashboardPersistence {
+): ValidatedDashboardPersistence {
   return {
     async load(organizationId) {
       const value = await persistence.load(organizationId);
