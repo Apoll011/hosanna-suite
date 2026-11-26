@@ -146,7 +146,7 @@ export function WidgetGalleryModal({
     ? Math.min(Math.max(selectedWidget.defaultSize.w * 84, 240), 620)
     : 340;
   const previewMinHeight = selectedWidget
-    ? Math.min(Math.max(selectedWidget.defaultSize.h * 76, 112), 340)
+    ? Math.min(Math.max(selectedWidget.defaultSize.h * 80, 88), 340)
     : 180;
 
   return (

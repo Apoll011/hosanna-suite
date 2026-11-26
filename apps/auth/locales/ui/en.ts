@@ -238,6 +238,15 @@ export const en: typeof pt = {
         assignees: "{count} assigned",
         linkedService: "Linked service",
       },
+      agendaCalendar: {
+        title: "Agenda calendar",
+        description: "Monthly calendar with scheduled events and quick day preview.",
+        keywords: "calendar month agenda dates schedule events",
+        today: "Today",
+        previousMonth: "Previous month",
+        nextMonth: "Next month",
+        noEventsForDay: "No events for this day.",
+      },
       trash: {
         title: "Trash",
         description: "Recently deleted items that can still be restored.",

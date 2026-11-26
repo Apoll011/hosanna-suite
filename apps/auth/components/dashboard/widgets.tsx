@@ -2,6 +2,7 @@
 
 export { AppLauncherWidget, AuthAppWidget, FavoritesWidget, MusicAppWidget } from "./appWidgets";
 export {
+  AgendaCalendarWidget,
   AgendaWidget,
   CollectionsWidget,
   FoldersWidget,

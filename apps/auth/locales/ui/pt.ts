@@ -236,6 +236,15 @@ export const pt = {
         assignees: "{count} responsáveis",
         linkedService: "Culto ligado",
       },
+      agendaCalendar: {
+        title: "Calendário da agenda",
+        description: "Calendário mensal com eventos agendados e resumo do dia.",
+        keywords: "calendário mês agenda datas eventos",
+        today: "Hoje",
+        previousMonth: "Mês anterior",
+        nextMonth: "Mês seguinte",
+        noEventsForDay: "Sem eventos para este dia.",
+      },
       trash: {
         title: "Reciclagem",
         description: "Itens eliminados recentemente que podem ser restaurados.",

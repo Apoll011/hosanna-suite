@@ -8,6 +8,7 @@ import {
   Calendar,
   CalendarClock,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   Clock,
   FolderOpen,
@@ -19,8 +20,9 @@ import {
   Tags,
   Trash2,
   TrendingUp,
+  Users,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   computeSongHealthInsights,
   daysBetweenYmd,
@@ -1255,6 +1257,8 @@ type ReplAgendaEvent = {
   date: string;
   title: string;
   time: string;
+  type?: string | null;
+  color?: string | null;
   durationMinutes?: number;
   location?: string | null;
   linkedServiceId?: string | null;
@@ -1263,6 +1267,16 @@ type ReplAgendaEvent = {
   }>;
   isDeleted?: boolean;
   _deleted?: boolean;
+};
+
+const AGENDA_COLOR_CLASSES: Record<string, string> = {
+  blue: "bg-blue-500",
+  green: "bg-emerald-500",
+  red: "bg-red-500",
+  yellow: "bg-amber-400",
+  purple: "bg-purple-500",
+  orange: "bg-orange-500",
+  gray: "bg-neutral-500",
 };
 
 export function AgendaWidget({ instance }: WidgetRendererProps) {
@@ -1296,9 +1310,9 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
         }
       />
       {loading ? (
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {[0, 1, 2].map((item) => (
-            <SkeletonLine key={item} className="h-11 w-full rounded-md" />
+            <SkeletonLine key={item} className="h-14 w-full rounded-lg" />
           ))}
         </div>
       ) : error ? (
@@ -1310,22 +1324,24 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
           description={t("home.widgets.agenda.emptyHint")}
         />
       ) : (
-        <ul className="divide-y divide-m3-border/60">
+        <ul className="space-y-2">
           {events.map((ev) => {
             const assignees = (ev.responsibilities ?? []).reduce(
               (sum, r) => sum + (r.assignees?.length ?? 0),
               0,
             );
-            const row = (
-              <div className="flex items-start justify-between gap-2.5 py-1.5">
-                <div className="min-w-0 flex-1 space-y-0.5">
-                  <p className="truncate text-sm font-medium text-m3-text">{ev.title}</p>
-                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-caption tabular-nums">
+            const dotClass = AGENDA_COLOR_CLASSES[ev.color ?? "blue"] ?? "bg-blue-500";
+            const card = (
+              <div className="flex items-center justify-between gap-2.5 rounded-lg border border-m3-border/70 bg-m3-sidebar/35 px-3 py-2.5 transition-colors hover:border-m3-primary/30 hover:bg-m3-hover/60">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-m3-text">
+                    <span className={`h-2 w-2 shrink-0 rounded-full ${dotClass}`} aria-hidden />
+                    <span className="tabular-nums text-m3-secondary">{ev.time}</span>
+                    <span className="truncate font-bold text-m3-text">{ev.title}</span>
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-m3-secondary tabular-nums">
                     <span>{formatServiceDate(ev.date, locale)}</span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="h-3 w-3" aria-hidden />
-                      {ev.time}
-                    </span>
+                    {ev.type ? <span className="truncate">· {ev.type}</span> : null}
                     {showLocation && ev.location ? (
                       <span className="inline-flex items-center gap-1 truncate">
                         <MapPin className="h-3 w-3 shrink-0" aria-hidden />
@@ -1337,9 +1353,13 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
                 {showAssignees ? (
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     {assignees > 0 ? (
-                      <Badge variant="neutral" size="sm" className="tabular-nums">
-                        {t("home.widgets.agenda.assignees", { count: assignees })}
-                      </Badge>
+                      <span
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-m3-secondary tabular-nums"
+                        title={t("home.widgets.agenda.assignees", { count: assignees })}
+                      >
+                        <Users className="h-3.5 w-3.5" aria-hidden />
+                        {assignees}
+                      </span>
                     ) : null}
                     {density === "expanded" && ev.linkedServiceId ? (
                       <Badge variant="accent" size="sm">
@@ -1353,14 +1373,11 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
             return (
               <li key={ev.id}>
                 {musicUrl ? (
-                  <a
-                    href={`${musicUrl}/agenda`}
-                    className="block rounded px-1 transition-colors hover:bg-m3-hover/50"
-                  >
-                    {row}
+                  <a href={`${musicUrl}/agenda`} className="block">
+                    {card}
                   </a>
                 ) : (
-                  row
+                  card
                 )}
               </li>
             );
@@ -1368,6 +1385,199 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
         </ul>
       )}
     </>
+  );
+}
+
+function toIsoYmd(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate(),
+  ).padStart(2, "0")}`;
+}
+
+function buildAgendaMonthGrid(visibleMonth: Date): (Date | null)[] {
+  const year = visibleMonth.getFullYear();
+  const month = visibleMonth.getMonth();
+  const firstOfMonth = new Date(year, month, 1);
+  const offset = (firstOfMonth.getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cells: (Date | null)[] = [];
+  for (let i = 0; i < offset; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
+  while (cells.length % 7 !== 0) cells.push(null);
+  return cells;
+}
+
+export function AgendaCalendarWidget({ instance }: WidgetRendererProps) {
+  const { t, locale } = useI18n();
+  const musicUrl = useMusicHomeUrl();
+  const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 200);
+  const todayIso = todayYmdLocal();
+  const [visibleMonth, setVisibleMonth] = useState<Date>(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+  const [selectedDate, setSelectedDate] = useState<string>(todayIso);
+
+  const eventsByDate = useMemo(() => {
+    const map = new Map<string, ReplAgendaEvent[]>();
+    for (const ev of value ?? []) {
+      const ymd = ev.date.slice(0, 10);
+      const list = map.get(ymd) ?? [];
+      list.push(ev);
+      map.set(ymd, list);
+    }
+    for (const list of map.values()) {
+      list.sort((a, b) => a.time.localeCompare(b.time));
+    }
+    return map;
+  }, [value]);
+
+  const weekdayLabels = useMemo(() => {
+    const fmt = new Intl.DateTimeFormat(locale, { weekday: "narrow" });
+    return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2024, 0, 1 + i)));
+  }, [locale]);
+
+  const monthTitle = useMemo(() => {
+    const raw = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+      visibleMonth,
+    );
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  }, [locale, visibleMonth]);
+
+  const cells = useMemo(() => buildAgendaMonthGrid(visibleMonth), [visibleMonth]);
+  const selectedEvents = eventsByDate.get(selectedDate) ?? [];
+  const showSelectedEvents = instance.h >= 4;
+
+  const changeMonth = (delta: number) => {
+    setVisibleMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + delta, 1));
+  };
+
+  const goToday = () => {
+    const now = new Date();
+    setVisibleMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+    setSelectedDate(todayIso);
+  };
+
+  return (
+    <div className="flex h-full flex-col">
+      <div className="mb-2.5 flex items-center justify-between gap-2">
+        <h2 className="truncate text-title text-m3-text">{monthTitle}</h2>
+        <div className="flex items-center gap-0.5">
+          <button
+            type="button"
+            onClick={() => changeMonth(-1)}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-m3-secondary transition-colors hover:bg-m3-hover hover:text-m3-text cursor-pointer"
+            aria-label={t("home.widgets.agendaCalendar.previousMonth")}
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => changeMonth(1)}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-m3-secondary transition-colors hover:bg-m3-hover hover:text-m3-text cursor-pointer"
+            aria-label={t("home.widgets.agendaCalendar.nextMonth")}
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={goToday}
+            className="ml-1 h-8 rounded-md border border-m3-border px-2.5 text-xs font-medium text-m3-secondary transition-colors hover:bg-m3-hover hover:text-m3-text cursor-pointer"
+          >
+            {t("home.widgets.agendaCalendar.today")}
+          </button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-7 gap-1.5 pt-2">
+          {Array.from({ length: 28 }, (_, idx) => (
+            <SkeletonLine key={idx} className="aspect-square w-full rounded-full" />
+          ))}
+        </div>
+      ) : error ? (
+        <WidgetErrorBox message={t("home.widgets.error")} />
+      ) : (
+        <>
+          <div className="mb-1 grid grid-cols-7 gap-1">
+            {weekdayLabels.map((label, idx) => (
+              <div key={idx} className="py-0.5 text-center text-caption font-semibold uppercase">
+                {label}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-7 gap-1">
+            {cells.map((date, idx) => {
+              if (!date) return <div key={`empty-${idx}`} className="aspect-square" />;
+              const iso = toIsoYmd(date);
+              const isSelected = iso === selectedDate;
+              const isToday = iso === todayIso;
+              const dayEvents = eventsByDate.get(iso);
+              const hasEvents = Boolean(dayEvents && dayEvents.length > 0);
+              return (
+                <button
+                  key={iso}
+                  type="button"
+                  onClick={() => setSelectedDate(iso)}
+                  className={`relative flex aspect-square max-h-9 w-full flex-col items-center justify-center rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                    isSelected
+                      ? "bg-m3-primary text-white shadow-xs"
+                      : isToday
+                        ? "border border-m3-primary text-m3-primary"
+                        : "text-m3-text hover:bg-m3-hover"
+                  }`}
+                >
+                  <span className="tabular-nums">{date.getDate()}</span>
+                  {hasEvents && !isSelected ? (
+                    <span className="absolute bottom-1 h-1 w-1 rounded-full bg-m3-primary" />
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+
+          {showSelectedEvents ? (
+            <div className="mt-auto border-t border-m3-border/60 pt-2.5">
+              <div className="mb-1.5 flex items-center justify-between gap-2">
+                <span className="text-caption font-semibold">
+                  {formatServiceDate(selectedDate, locale)}
+                </span>
+                {musicUrl ? (
+                  <WidgetHeaderLink
+                    href={`${musicUrl}/agenda`}
+                    label={t("home.widgets.agenda.open")}
+                  />
+                ) : null}
+              </div>
+              {selectedEvents.length === 0 ? (
+                <p className="text-caption text-m3-secondary">
+                  {t("home.widgets.agendaCalendar.noEventsForDay")}
+                </p>
+              ) : (
+                <div className="space-y-1">
+                  {selectedEvents.slice(0, 2).map((ev) => (
+                    <div
+                      key={ev.id}
+                      className="flex items-center gap-1.5 rounded-md bg-m3-sidebar/50 px-2 py-1 text-xs"
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                          AGENDA_COLOR_CLASSES[ev.color ?? "blue"] ?? "bg-blue-500"
+                        }`}
+                        aria-hidden
+                      />
+                      <span className="tabular-nums text-m3-secondary">{ev.time}</span>
+                      <span className="truncate font-medium text-m3-text">{ev.title}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : null}
+        </>
+      )}
+    </div>
   );
 }
 

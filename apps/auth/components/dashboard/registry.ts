@@ -1,6 +1,7 @@
 import { createWidgetRegistry } from "@hosanna/dashboard/core";
 import type { WidgetRenderers } from "@hosanna/dashboard/react";
 import {
+  AgendaCalendarWidget,
   AgendaWidget,
   AppLauncherWidget,
   AuthAppWidget,
@@ -82,8 +83,8 @@ export const authDashboardWidgets = [
     searchPatterns: ["home.widgets.appAuth.keywords"],
     icon: "grid",
     minSize: { w: 1, h: 1 },
-    defaultSize: { w: 2, h: 2 },
-    maxSize: { w: 4, h: 3 },
+    defaultSize: { w: 2, h: 1 },
+    maxSize: { w: 2, h: 1 },
     singleton: true,
   },
   {
@@ -95,8 +96,8 @@ export const authDashboardWidgets = [
     searchPatterns: ["home.widgets.appMusic.keywords"],
     icon: "music",
     minSize: { w: 1, h: 1 },
-    defaultSize: { w: 2, h: 2 },
-    maxSize: { w: 4, h: 3 },
+    defaultSize: { w: 2, h: 1 },
+    maxSize: { w: 2, h: 1 },
     singleton: true,
   },
   {
@@ -284,6 +285,20 @@ export const authDashboardWidgets = [
     singleton: true,
   },
   {
+    id: "music.agenda-calendar",
+    app: "music",
+    group: "home.dashboard.sections.worship",
+    title: "home.widgets.agendaCalendar.title",
+    description: "home.widgets.agendaCalendar.description",
+    searchPatterns: ["home.widgets.agendaCalendar.keywords"],
+    icon: "calendar",
+    minSize: { w: 3, h: 3 },
+    defaultSize: { w: 4, h: 4 },
+    maxSize: { w: 6, h: 6 },
+    requires: ["agenda.access"],
+    singleton: true,
+  },
+  {
     id: "music.trash",
     app: "music",
     group: "home.dashboard.sections.worship",
@@ -438,6 +453,7 @@ export const authDashboardRenderers: WidgetRenderers = {
   "music.collections": CollectionsWidget,
   "music.folders": FoldersWidget,
   "music.agenda": AgendaWidget,
+  "music.agenda-calendar": AgendaCalendarWidget,
   "music.trash": TrashWidget,
   "auth.subscription": SubscriptionWidget,
   "auth.organization-overview": OrganizationOverviewWidget,

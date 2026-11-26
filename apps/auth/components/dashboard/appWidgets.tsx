@@ -148,30 +148,62 @@ export function AppLauncherWidget({ instance }: WidgetRendererProps) {
           {filtered.map((app) => {
             const openable = isOpenableApp(app);
             const favorite = settings.favorites.includes(app.id);
-            const content = (
-              <>
-                <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="md" />
-                <div className="min-w-0 flex-1 space-y-1">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="truncate text-sm font-semibold text-m3-text">{app.name}</span>
-                    {!openable ? (
-                      <Badge variant="neutral" size="sm">
-                        {t("suite.comingSoon")}
-                      </Badge>
+            const content =
+              view === "list" ? (
+                <>
+                  <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="truncate text-sm font-semibold text-m3-text">
+                        {app.name}
+                      </span>
+                      {!openable ? (
+                        <Badge variant="neutral" size="sm">
+                          {t("suite.comingSoon")}
+                        </Badge>
+                      ) : null}
+                    </div>
+                    {app.description && showDescription ? (
+                      <p className="truncate text-caption">{app.description}</p>
                     ) : null}
                   </div>
+                  {openable ? (
+                    <ChevronRight
+                      className="h-4 w-4 shrink-0 text-m3-secondary opacity-0 transition-opacity group-hover:opacity-100"
+                      aria-hidden
+                    />
+                  ) : null}
+                </>
+              ) : (
+                <div className="flex w-full min-w-0 flex-col gap-2">
+                  <div className="flex items-center gap-2.5 pr-7">
+                    <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="sm" />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="truncate text-sm font-semibold text-m3-text">
+                          {app.name}
+                        </span>
+                        {!openable ? (
+                          <Badge variant="neutral" size="sm">
+                            {t("suite.comingSoon")}
+                          </Badge>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
                   {app.description && showDescription ? (
-                    <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
+                    <div className="flex items-end justify-between gap-2">
+                      <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
+                      {openable ? (
+                        <ChevronRight
+                          className="h-3.5 w-3.5 shrink-0 text-m3-secondary opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      ) : null}
+                    </div>
                   ) : null}
                 </div>
-                {openable ? (
-                  <ChevronRight
-                    className="mt-1 h-4 w-4 shrink-0 text-m3-secondary opacity-0 transition-opacity group-hover:opacity-100"
-                    aria-hidden
-                  />
-                ) : null}
-              </>
-            );
+              );
             return (
               <li key={app.id} className="list-none">
                 <div
@@ -182,12 +214,18 @@ export function AppLauncherWidget({ instance }: WidgetRendererProps) {
                   {openable && app.homeUrl ? (
                     <AppCardLink
                       href={app.homeUrl}
-                      className="flex min-w-0 flex-1 items-start gap-3 pr-8 text-left"
+                      className={`flex min-w-0 flex-1 text-left ${
+                        view === "list" ? "items-center gap-3 pr-8" : "items-start"
+                      }`}
                     >
                       {content}
                     </AppCardLink>
                   ) : (
-                    <div className="flex min-w-0 flex-1 items-start gap-3 pr-8 text-left">
+                    <div
+                      className={`flex min-w-0 flex-1 text-left ${
+                        view === "list" ? "items-center gap-3 pr-8" : "items-start"
+                      }`}
+                    >
                       {content}
                     </div>
                   )}
@@ -326,20 +364,20 @@ function SingleAppWidget({
 }) {
   const { t } = useI18n();
   const { apps, loading } = useApps();
-  const isCompact = instance.h === 1;
+  const isTiny = instance.w <= 1;
 
   if (loading) {
-    return isCompact ? (
-      <div className="flex h-full flex-col items-center justify-center gap-2">
-        <SkeletonLine className="h-12 w-12 rounded-2xl" />
-        <SkeletonLine className="h-3.5 w-16" />
+    return isTiny ? (
+      <div className="flex h-full flex-col items-center justify-center gap-1.5">
+        <SkeletonLine className="h-9 w-9 rounded-xl" />
+        <SkeletonLine className="h-3 w-12" />
       </div>
     ) : (
       <div className="flex h-full items-center gap-3">
-        <SkeletonLine className="h-12 w-12 shrink-0 rounded-2xl" />
-        <div className="min-w-0 flex-1 space-y-2">
+        <SkeletonLine className="h-11 w-11 shrink-0 rounded-xl" />
+        <div className="min-w-0 flex-1 space-y-1.5">
           <SkeletonLine className="h-4 w-24" />
-          <SkeletonLine className="h-3 w-full" />
+          <SkeletonLine className="h-3 w-3/4" />
         </div>
       </div>
     );
@@ -356,25 +394,30 @@ function SingleAppWidget({
   }
 
   const openable = isOpenableApp(app);
-  const compactBody = (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-center">
+  const body = isTiny ? (
+    <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 text-center">
       <SuiteAppIcon
         logoUrl={app.logoUrl}
         accent={app.accent}
-        size="md"
+        size="sm"
         className={openable ? "transition-transform duration-150 group-hover:scale-105" : ""}
       />
       <span className="line-clamp-1 max-w-full text-xs font-semibold text-m3-text">
         {app.shortName || app.name}
       </span>
     </div>
-  );
-
-  const expandedBody = (
-    <div className="flex h-full w-full items-center gap-3.5">
-      <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="lg" />
-      <div className="min-w-0 flex-1 space-y-1.5">
-        <div className="flex flex-wrap items-center gap-1.5">
+  ) : (
+    <div className="flex h-full w-full items-center gap-3">
+      <SuiteAppIcon
+        logoUrl={app.logoUrl}
+        accent={app.accent}
+        size="md"
+        className={
+          openable ? "shrink-0 transition-transform duration-150 group-hover:scale-105" : "shrink-0"
+        }
+      />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
           <span className="truncate text-sm font-semibold text-m3-text">{app.name}</span>
           {!openable ? (
             <Badge variant="neutral" size="sm">
@@ -383,19 +426,17 @@ function SingleAppWidget({
           ) : null}
         </div>
         {app.description ? (
-          <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
+          <p className="mt-0.5 truncate text-caption">{app.description}</p>
         ) : null}
       </div>
       {openable ? (
         <ChevronRight
-          className="h-4 w-4 shrink-0 text-m3-secondary opacity-0 transition-opacity group-hover:opacity-100"
+          className="h-4 w-4 shrink-0 text-m3-secondary opacity-50 transition-all group-hover:translate-x-0.5 group-hover:text-m3-primary group-hover:opacity-100"
           aria-hidden
         />
       ) : null}
     </div>
   );
-
-  const body = isCompact ? compactBody : expandedBody;
 
   if (!openable || !app.homeUrl) {
     return <div className="flex h-full w-full items-center">{body}</div>;
