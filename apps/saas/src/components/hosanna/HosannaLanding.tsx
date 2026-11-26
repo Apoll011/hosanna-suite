@@ -41,7 +41,7 @@ import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
 import AppGallery from "./AppGallery";
 
-function Logo({ className }: { className?: string }) {
+function _Logo({ className }: { className?: string }) {
   return (
     <Link to="/" hash="top" className={cn("flex items-center", className)}>
       <img

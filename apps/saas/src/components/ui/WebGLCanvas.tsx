@@ -50,7 +50,7 @@ const detectSoftwareWebGL = (): boolean => {
   }
 };
 
-function measureTrackedTextWidth(
+function _measureTrackedTextWidth(
   ctx: CanvasRenderingContext2D,
   text: string,
   trackingPx: number,
@@ -60,7 +60,7 @@ function measureTrackedTextWidth(
   return widths.reduce((sum, w) => sum + w, 0) + trackingPx * Math.max(0, chars.length - 1);
 }
 
-function drawTrackedText(
+function _drawTrackedText(
   ctx: CanvasRenderingContext2D,
   text: string,
   x: number,

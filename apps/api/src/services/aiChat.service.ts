@@ -123,23 +123,6 @@ export function modelFileDataToBase64(data: unknown): string | null {
   return null;
 }
 
-/** Studio-only: stage a destructive action for the Confirm button (does not mutate). */
-function deleteConfirmation(opts: {
-  action:
-    "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";
-  id: string;
-  title: string;
-  detail?: string;
-  folderAction?: "move_to_root" | "delete_songs";
-}) {
-  return {
-    confirmation: {
-      ...opts,
-      requiresUiConfirm: true,
-      message: `Staged in Studio — the user must click Confirm to ${opts.action.replace(/_/g, " ")} "${opts.title}". Do NOT claim it is deleted until they confirm.`,
-    },
-  };
-}
 
 function buildHosannaTools(
   authInfo: AuthInfo,

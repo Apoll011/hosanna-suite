@@ -75,7 +75,6 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
     setSelectedDate,
     visibleHours,
     workingHours,
-    selectedEventId,
     setSelectedEventId,
     selectedEvent,
     categories,
