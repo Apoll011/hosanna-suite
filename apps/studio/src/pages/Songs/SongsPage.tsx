@@ -212,7 +212,14 @@ export const SongsPage: React.FC<SongsPageProps> = ({
     actualSelectedTag !== prevFilters.actualSelectedTag ||
     itemsPerPage !== prevFilters.itemsPerPage
   ) {
-    setPrevFilters({ finalSearchQuery, finalSortBy, finalSortOrder, actualSelectedKey, actualSelectedTag, itemsPerPage });
+    setPrevFilters({
+      finalSearchQuery,
+      finalSortBy,
+      finalSortOrder,
+      actualSelectedKey,
+      actualSelectedTag,
+      itemsPerPage,
+    });
     setPage(1);
     setSelectedSongIds(new Set());
     setLastClickedId(null);

@@ -163,16 +163,7 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
         cancelImportJob: (id) => songsApi.cancelImportJob(id),
         renderPdf: renderPdfPages,
       }),
-    [
-      catalog,
-      t,
-      tc,
-      language,
-      locale,
-      user,
-      organization,
-      canUseAi,
-    ],
+    [catalog, t, tc, language, locale, user, organization, canUseAi],
   );
 
   const songs = useMemo<LogosSongAdapter>(

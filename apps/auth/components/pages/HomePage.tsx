@@ -305,132 +305,136 @@ export function HomePage() {
           {editing ? (
             <section aria-label={t("home.dashboard.keyboardControls")} className="space-y-3">
               <h2 className="text-title">{t("home.dashboard.keyboardControls")}</h2>
-              {draft?.items.filter((item) => {
-                const definition = authDashboardRegistry.get(item.widget);
-                return definition && isWidgetEligible(definition, context);
-              }).map((item) => {
-                const definition = authDashboardRegistry.get(item.widget);
-                if (configuring !== item.instanceId || !definition?.config) return null;
-                return (
-                  <div key={item.instanceId} className="surface p-4">
-                    <h3 className="mb-3 text-sm font-semibold">
-                      {t("home.dashboard.configure")}:{" "}
-                      {t(definition.title as Parameters<typeof t>[0])}
-                    </h3>
-                    <WidgetConfiguration
-                      definition={definition.config}
-                      value={item.config ?? definition.config.defaults ?? {}}
-                      label={(key) => t(key as Parameters<typeof t>[0])}
-                      onChange={(config) =>
-                        update(item.instanceId, {
-                          config,
-                          configVersion: definition.config?.version ?? 0,
-                        })
-                      }
-                    />
-                  </div>
-                );
-              })}
-              {draft?.items.filter((item) => {
-                const definition = authDashboardRegistry.get(item.widget);
-                return definition && isWidgetEligible(definition, context);
-              }).map((item) => {
-                const definition = authDashboardRegistry.get(item.widget);
-                if (!definition) return null;
-                return (
-                  <div
-                    key={item.instanceId}
-                    className="flex flex-wrap items-center gap-2 rounded-md border border-m3-border p-2"
-                  >
-                    <span className="min-w-28 flex-1 text-sm">
-                      {t(definition.title as Parameters<typeof t>[0])}
-                    </span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      aria-label={t("home.dashboard.moveLeft")}
-                      onClick={() => update(item.instanceId, { x: item.x - 1 })}
+              {draft?.items
+                .filter((item) => {
+                  const definition = authDashboardRegistry.get(item.widget);
+                  return definition && isWidgetEligible(definition, context);
+                })
+                .map((item) => {
+                  const definition = authDashboardRegistry.get(item.widget);
+                  if (configuring !== item.instanceId || !definition?.config) return null;
+                  return (
+                    <div key={item.instanceId} className="surface p-4">
+                      <h3 className="mb-3 text-sm font-semibold">
+                        {t("home.dashboard.configure")}:{" "}
+                        {t(definition.title as Parameters<typeof t>[0])}
+                      </h3>
+                      <WidgetConfiguration
+                        definition={definition.config}
+                        value={item.config ?? definition.config.defaults ?? {}}
+                        label={(key) => t(key as Parameters<typeof t>[0])}
+                        onChange={(config) =>
+                          update(item.instanceId, {
+                            config,
+                            configVersion: definition.config?.version ?? 0,
+                          })
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              {draft?.items
+                .filter((item) => {
+                  const definition = authDashboardRegistry.get(item.widget);
+                  return definition && isWidgetEligible(definition, context);
+                })
+                .map((item) => {
+                  const definition = authDashboardRegistry.get(item.widget);
+                  if (!definition) return null;
+                  return (
+                    <div
+                      key={item.instanceId}
+                      className="flex flex-wrap items-center gap-2 rounded-md border border-m3-border p-2"
                     >
-                      ←
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      aria-label={t("home.dashboard.moveRight")}
-                      onClick={() => update(item.instanceId, { x: item.x + 1 })}
-                    >
-                      →
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      aria-label={t("home.dashboard.moveUp")}
-                      onClick={() => update(item.instanceId, { y: item.y - 1 })}
-                    >
-                      ↑
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      aria-label={t("home.dashboard.moveDown")}
-                      onClick={() => update(item.instanceId, { y: item.y + 1 })}
-                    >
-                      ↓
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      aria-label={t("home.dashboard.smaller")}
-                      onClick={() =>
-                        update(item.instanceId, {
-                          w: Math.max(definition.minSize.w, item.w - 1),
-                          h: Math.max(definition.minSize.h, item.h - 1),
-                        })
-                      }
-                    >
-                      −
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      aria-label={t("home.dashboard.larger")}
-                      onClick={() =>
-                        update(item.instanceId, {
-                          w: Math.min(definition.maxSize?.w ?? 12, item.w + 1),
-                          h: Math.min(definition.maxSize?.h ?? 20, item.h + 1),
-                        })
-                      }
-                    >
-                      +
-                    </Button>
-                    {definition.config?.schema &&
-                    Object.keys(definition.config.schema.fields).length > 0 ? (
+                      <span className="min-w-28 flex-1 text-sm">
+                        {t(definition.title as Parameters<typeof t>[0])}
+                      </span>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        aria-label={t("home.dashboard.moveLeft")}
+                        onClick={() => update(item.instanceId, { x: item.x - 1 })}
+                      >
+                        ←
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        aria-label={t("home.dashboard.moveRight")}
+                        onClick={() => update(item.instanceId, { x: item.x + 1 })}
+                      >
+                        →
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        aria-label={t("home.dashboard.moveUp")}
+                        onClick={() => update(item.instanceId, { y: item.y - 1 })}
+                      >
+                        ↑
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        aria-label={t("home.dashboard.moveDown")}
+                        onClick={() => update(item.instanceId, { y: item.y + 1 })}
+                      >
+                        ↓
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        aria-label={t("home.dashboard.smaller")}
+                        onClick={() =>
+                          update(item.instanceId, {
+                            w: Math.max(definition.minSize.w, item.w - 1),
+                            h: Math.max(definition.minSize.h, item.h - 1),
+                          })
+                        }
+                      >
+                        −
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        aria-label={t("home.dashboard.larger")}
+                        onClick={() =>
+                          update(item.instanceId, {
+                            w: Math.min(definition.maxSize?.w ?? 12, item.w + 1),
+                            h: Math.min(definition.maxSize?.h ?? 20, item.h + 1),
+                          })
+                        }
+                      >
+                        +
+                      </Button>
+                      {definition.config?.schema &&
+                      Object.keys(definition.config.schema.fields).length > 0 ? (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() =>
+                            setConfiguring((current) =>
+                              current === item.instanceId ? null : item.instanceId,
+                            )
+                          }
+                        >
+                          {t("home.dashboard.configure")}
+                        </Button>
+                      ) : null}
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() =>
-                          setConfiguring((current) =>
-                            current === item.instanceId ? null : item.instanceId,
+                          setDraft((current) =>
+                            current ? removeWidget(current, item.instanceId) : current,
                           )
                         }
                       >
-                        {t("home.dashboard.configure")}
+                        {t("home.dashboard.remove")}
                       </Button>
-                    ) : null}
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setDraft((current) =>
-                          current ? removeWidget(current, item.instanceId) : current,
-                        )
-                      }
-                    >
-                      {t("home.dashboard.remove")}
-                    </Button>
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })}
             </section>
           ) : null}
         </div>

@@ -113,7 +113,13 @@ export const CollectionDetailPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const [prevSearchFilters, setPrevSearchFilters] = useState({ searchQuery, sortBy, sortOrder, selectedKey, selectedTag });
+  const [prevSearchFilters, setPrevSearchFilters] = useState({
+    searchQuery,
+    sortBy,
+    sortOrder,
+    selectedKey,
+    selectedTag,
+  });
   if (
     searchQuery !== prevSearchFilters.searchQuery ||
     sortBy !== prevSearchFilters.sortBy ||

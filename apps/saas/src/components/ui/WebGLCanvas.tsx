@@ -854,7 +854,7 @@ export default function WebGLCanvas({
         container.removeChild(renderer.domElement);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- targetRef is a stable ref; showTextLayer only controls initial scene setup
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- targetRef is a stable ref; showTextLayer only controls initial scene setup
   }, [stepLerp, setTargetUV, impulseTriggerRef, showTextLayer]);
 
   return (
