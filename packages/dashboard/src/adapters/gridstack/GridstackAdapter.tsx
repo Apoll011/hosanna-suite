@@ -54,11 +54,11 @@ export function GridstackAdapter({
         const definition = registry.get(instance.widget);
         const title = definition && getTitle ? getTitle(definition) : instance.widget;
         return (
-          <div className="surface relative h-full overflow-auto p-3 md:p-4 ring-1 ring-m3-primary/15">
+          <div className="surface relative h-full cursor-grab active:cursor-grabbing rounded-[inherit] p-3 md:p-4 ring-1 ring-m3-primary/20 transition-shadow hover:ring-m3-primary/45">
             {onRemove ? (
               <button
                 type="button"
-                className="gs-no-drag absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md text-m3-secondary transition-colors hover:bg-m3-danger/10 hover:text-m3-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
+                className="gs-no-drag absolute -right-2 -top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full border border-m3-border bg-m3-card text-m3-secondary shadow-sm transition-colors hover:border-m3-danger hover:bg-m3-danger hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
                 onMouseDown={(event) => event.stopPropagation()}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -70,7 +70,9 @@ export function GridstackAdapter({
                 <CloseIcon />
               </button>
             ) : null}
-            <Renderer instance={instance} />
+            <div className="pointer-events-none h-full overflow-hidden select-none">
+              <Renderer instance={instance} />
+            </div>
           </div>
         );
       };
@@ -108,7 +110,7 @@ export function GridstackAdapter({
     <div data-dashboard-gridstack>
       <style>
         {
-          "[data-dashboard-gridstack] .grid-stack-item-content{overflow:visible!important;border-radius:var(--radius-lg)}[data-dashboard-gridstack] .grid-stack-placeholder>.placeholder-content{border:2px dashed var(--m3-primary);background-color:color-mix(in srgb,var(--m3-primary) 10%,transparent);border-radius:var(--radius-lg)}"
+          "[data-dashboard-gridstack] .grid-stack-item-content{overflow:visible!important;border-radius:var(--radius-lg)}[data-dashboard-gridstack] .grid-stack-placeholder>.placeholder-content{border:2px dashed var(--m3-primary);background-color:color-mix(in srgb,var(--m3-primary) 10%,transparent);border-radius:var(--radius-lg)}[data-dashboard-gridstack] .ui-resizable-se{right:6px;bottom:6px;width:14px;height:14px;opacity:.45;transition:opacity .15s}[data-dashboard-gridstack] .grid-stack-item:hover .ui-resizable-se{opacity:.9}"
         }
       </style>
       <GridStack

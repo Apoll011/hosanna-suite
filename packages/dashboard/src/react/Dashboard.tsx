@@ -46,7 +46,9 @@ export function Dashboard({
         return (
           <section
             key={instance.instanceId}
-            className="surface relative min-w-0 overflow-hidden p-3 md:p-4"
+            className={`surface relative min-w-0 p-3 md:p-4 ${
+              editable ? "overflow-visible ring-1 ring-m3-primary/20" : "overflow-hidden"
+            }`}
             style={
               {
                 "--dashboard-column-start": instance.x + 1,
@@ -62,14 +64,14 @@ export function Dashboard({
             {editable && onRemove ? (
               <button
                 type="button"
-                className="absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md text-m3-secondary transition-colors hover:bg-m3-danger/10 hover:text-m3-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
+                className="absolute -right-2 -top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full border border-m3-border bg-m3-card text-m3-secondary shadow-sm transition-colors hover:border-m3-danger hover:bg-m3-danger hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
                 onClick={() => onRemove(instance.instanceId)}
                 aria-label={removeLabel + " " + getTitle(definition)}
                 title={removeLabel}
               >
                 <svg
-                  width="16"
-                  height="16"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -83,9 +85,11 @@ export function Dashboard({
                 </svg>
               </button>
             ) : null}
-            <WidgetErrorBoundary errorLabel={errorLabel}>
-              <Renderer instance={instance} />
-            </WidgetErrorBoundary>
+            <div className={editable ? "pointer-events-none select-none" : undefined}>
+              <WidgetErrorBoundary errorLabel={errorLabel}>
+                <Renderer instance={instance} />
+              </WidgetErrorBoundary>
+            </div>
           </section>
         );
       })}

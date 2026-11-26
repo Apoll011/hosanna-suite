@@ -7,7 +7,90 @@ import { useI18n } from "@/lib/ui/i18n";
 import { loadSuiteApps, localizeSuiteApps } from "@hosanna/ui";
 import { AlertCircle, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
+
+export type WidgetPreviewData = {
+  orgData: Record<string, unknown>;
+  replData: Record<string, unknown[]>;
+  apps: AppItem[];
+  favorites: string[];
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image: string | null;
+    emailVerified: boolean;
+    twoFactorEnabled: boolean;
+  };
+  sessionCount: number;
+  organization: {
+    id: string;
+    name: string;
+    slug: string;
+    logo: string | null;
+    members: Array<{
+      id: string;
+      userId: string;
+      role: string;
+      user?: { name?: string | null; email?: string | null; image?: string | null };
+    }>;
+  };
+  activeRole: string;
+  subscription: {
+    entitled: boolean;
+    subscription: {
+      id: string;
+      plan: string;
+      status: string;
+      periodEnd: string;
+      cancelAtPeriodEnd: boolean;
+      trialEnd: string | null;
+      billingInterval: string;
+    };
+  };
+  teams: Array<{
+    id: string;
+    name: string;
+    memberCount: number;
+    members: Array<{
+      id: string;
+      userId: string;
+      name: string | null;
+      email: string | null;
+      image: string | null;
+    }>;
+  }>;
+  invitations: Array<{
+    id: string;
+    email: string;
+    role: string | null;
+    status: string;
+  }>;
+  inbox: {
+    unreadCount: number;
+    items: Array<{
+      id: string;
+      title: string;
+      body: string | null;
+      href: string | null;
+      readAt: string | null;
+      createdAt: string;
+    }>;
+  };
+};
+
+export const WidgetPreviewContext = createContext<WidgetPreviewData | null>(null);
+
+export function useWidgetPreview(): WidgetPreviewData | null {
+  return useContext(WidgetPreviewContext);
+}
 
 export type AppItem = {
   id: string;
@@ -95,11 +178,27 @@ export function useOrganizationLoader<T>(
 }
 
 export function useOrganizationData<T>(key: string, path: string, enabled = true) {
+  const preview = useWidgetPreview();
   const loader = useCallback(
     (orgId: string) => apiFetch<T>(path, { organizationId: orgId }),
     [path],
   );
-  return useOrganizationLoader<T>(key, loader, enabled);
+  const live = useOrganizationLoader<T>(key, loader, enabled && !preview);
+  if (preview) {
+    const matched =
+      key in preview.orgData
+        ? preview.orgData[key]
+        : key.startsWith("service-detail-")
+          ? preview.orgData["service-detail"]
+          : null;
+    return {
+      organizationId: "preview",
+      value: (matched ?? null) as T | null,
+      loading: false,
+      error: false,
+    };
+  }
+  return live;
 }
 
 export function useReplicationCollection<T extends { isDeleted?: boolean; _deleted?: boolean }>(
@@ -107,6 +206,7 @@ export function useReplicationCollection<T extends { isDeleted?: boolean; _delet
   limit = 200,
   enabled = true,
 ) {
+  const preview = useWidgetPreview();
   const loader = useCallback(
     async (orgId: string) => {
       const res = await apiFetch<{ documents: T[] }>(`/replication/${collection}/pull`, {
@@ -118,16 +218,27 @@ export function useReplicationCollection<T extends { isDeleted?: boolean; _delet
     },
     [collection, limit],
   );
-  return useOrganizationLoader<T[]>(`repl:${collection}:${limit}`, loader, enabled);
+  const live = useOrganizationLoader<T[]>(`repl:${collection}:${limit}`, loader, enabled && !preview);
+  if (preview) {
+    return {
+      organizationId: "preview",
+      value: (preview.replData[collection] ?? []) as T[],
+      loading: false,
+      error: false,
+    };
+  }
+  return live;
 }
 
 export function useApps() {
+  const preview = useWidgetPreview();
   const { organization } = useActiveOrganization();
   const { t } = useI18n();
   const translate = useCallback((key: string) => t(key as Parameters<typeof t>[0]), [t]);
   const [apps, setApps] = useState<AppItem[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
+    if (preview) return;
     let active = true;
     const url = "/api/suite/apps?organizationId=" + encodeURIComponent(organization?.id ?? "");
     void loadSuiteApps(url)
@@ -143,7 +254,10 @@ export function useApps() {
     return () => {
       active = false;
     };
-  }, [translate, organization?.id]);
+  }, [translate, organization?.id, preview]);
+  if (preview) {
+    return { apps: preview.apps, loading: false };
+  }
   return { apps, loading };
 }
 
@@ -153,7 +267,12 @@ export function useMusicHomeUrl(): string | null {
 }
 
 export function useHomeSettings() {
-  return useSyncExternalStore(homeSettings.subscribe, homeSettings.get, homeSettings.get);
+  const preview = useWidgetPreview();
+  const live = useSyncExternalStore(homeSettings.subscribe, homeSettings.get, homeSettings.get);
+  if (preview) {
+    return { ...live, favorites: preview.favorites };
+  }
+  return live;
 }
 
 export function isOpenableApp(app: AppItem): boolean {
