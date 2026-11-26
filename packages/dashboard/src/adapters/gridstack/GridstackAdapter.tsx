@@ -54,7 +54,7 @@ export function GridstackAdapter({
         const definition = registry.get(instance.widget);
         const title = definition && getTitle ? getTitle(definition) : instance.widget;
         return (
-          <div className="surface relative h-full overflow-auto p-4 md:p-5 ring-1 ring-m3-primary/15">
+          <div className="surface relative h-full overflow-auto p-3 md:p-4 ring-1 ring-m3-primary/15">
             {onRemove ? (
               <button
                 type="button"
@@ -80,7 +80,7 @@ export function GridstackAdapter({
   const options: GridStackOptions = useMemo(
     () => ({
       column: 12,
-      cellHeight: 144,
+      cellHeight: 96,
       margin: 8,
       float: false,
       children: layout.items

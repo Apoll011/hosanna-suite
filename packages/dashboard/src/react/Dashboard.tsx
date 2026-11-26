@@ -31,7 +31,7 @@ export function Dashboard({
   const mobile = mobileOrder({ ...layout, items: visible });
   return (
     <div
-      className="grid grid-cols-1 gap-4 md:grid-cols-12 md:auto-rows-[minmax(9rem,auto)]"
+      className="grid grid-cols-1 gap-3 md:grid-cols-12 md:auto-rows-[minmax(6rem,auto)]"
       data-dashboard-view
     >
       <style>
@@ -46,7 +46,7 @@ export function Dashboard({
         return (
           <section
             key={instance.instanceId}
-            className="surface relative min-w-0 overflow-hidden p-4 md:p-5"
+            className="surface relative min-w-0 overflow-hidden p-3 md:p-4"
             style={
               {
                 "--dashboard-column-start": instance.x + 1,

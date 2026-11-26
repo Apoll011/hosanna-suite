@@ -169,7 +169,7 @@ export function toggleFavoriteApp(favorites: readonly string[], appId: string) {
 
 export function WidgetHeader({ title, action }: { title: string; action?: React.ReactNode }) {
   return (
-    <div className="mb-3 flex items-center justify-between gap-2">
+    <div className="mb-2 flex items-center justify-between gap-2">
       <h2 className="text-title truncate">{title}</h2>
       {action}
     </div>
@@ -220,7 +220,7 @@ export function WidgetEmptyBox({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-m3-border bg-m3-sidebar/40 px-4 py-6 text-center">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-m3-border bg-m3-sidebar/40 px-3 py-4 text-center">
       <div className="mb-2.5 rounded-md bg-m3-hover p-2 text-m3-secondary" aria-hidden>
         {icon}
       </div>
@@ -238,8 +238,8 @@ export function SkeletonLine({ className = "" }: { className?: string }) {
 export type WidgetDensity = "compact" | "standard" | "expanded";
 
 export function getWidgetDensity(instance: { w: number; h: number }): WidgetDensity {
-  if (instance.h <= 1 || (instance.w <= 2 && instance.h <= 2)) return "compact";
-  if (instance.w >= 5 || instance.h >= 3) return "expanded";
+  if (instance.h <= 1 || (instance.w <= 2 && instance.h <= 1)) return "compact";
+  if (instance.w >= 6 || instance.h >= 4) return "expanded";
   return "standard";
 }
 

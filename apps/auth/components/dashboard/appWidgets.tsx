@@ -321,7 +321,7 @@ function SingleAppWidget({
 }) {
   const { t } = useI18n();
   const { apps, loading } = useApps();
-  const isCompact = instance.w <= 2 && instance.h === 1;
+  const isCompact = instance.h === 1;
 
   if (loading) {
     return isCompact ? (
