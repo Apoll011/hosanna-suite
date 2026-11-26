@@ -8,7 +8,7 @@ const migrations = await readdir(new URL("../prisma/migrations", import.meta.url
 
 describe("database schema contract", () => {
   it("contains the models required for core music and service data", () => {
-    for (const model of ["Organization", "Folder", "Song", "Service", "ServiceSong"]) {
+    for (const model of ["Organization", "Folder", "Song", "Service", "ServiceSongAnnotation"]) {
       assert.match(schema, new RegExp(`model ${model}\\s*\\{`));
     }
   });

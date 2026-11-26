@@ -270,7 +270,6 @@ export function useCanAll(permissions: PermissionString[]): PermResult {
     return () => {
       mounted.current = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cacheKey deterministically tracks permissions
   }, [cacheKey, role, roleLoading, checkPermissions]);
 
   return result;
@@ -348,7 +347,6 @@ export function useCanAny(permissions: PermissionString[]): PermResult {
     return () => {
       mounted.current = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cacheKey deterministically tracks permissions
   }, [cacheKey, role, roleLoading, checkPermissions]);
 
   return result;

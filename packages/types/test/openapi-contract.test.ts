@@ -18,7 +18,7 @@ const contract = parse<OpenApiContract>(
 
 describe("OpenAPI contract", () => {
   it("declares an OpenAPI version, paths, and reusable schemas", () => {
-    assert.match(contract.openapi, /^3\\./);
+    assert.match(contract.openapi, /^3\./);
     assert.ok(Object.keys(contract.paths).length > 0);
     assert.ok(Object.keys(contract.components?.schemas ?? {}).length > 0);
   });
