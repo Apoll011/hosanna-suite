@@ -269,7 +269,8 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
     );
   }
 
-  const visibleItems = items.slice(0, density === "expanded" ? 6 : 3);
+  const visibleItems = items.slice(0, instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8));
+  const showBody = instance.h >= 3 && instance.w >= 3;
 
   return (
     <>
@@ -324,7 +325,7 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
                       <p className="truncate text-sm font-medium text-m3-text">{item.title}</p>
                     )}
                   </div>
-                  {density === "expanded" && item.body ? (
+                  {showBody && item.body ? (
                     <p className="line-clamp-1 text-caption">{item.body}</p>
                   ) : null}
                   {item.createdAt ? (

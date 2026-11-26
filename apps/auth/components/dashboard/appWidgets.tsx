@@ -244,12 +244,12 @@ export function FavoritesWidget(_: WidgetRendererProps) {
     <>
       <WidgetHeader title={t("home.widgets.favorites.title")} />
       {items.length ? (
-        <div className="flex flex-wrap gap-2.5">
+        <div className="flex flex-wrap gap-2">
           {items.map((app) => {
             const openable = isOpenableApp(app);
             const tile = (
               <div
-                className={`flex w-24 flex-col items-center gap-2 rounded-xl border border-m3-border bg-m3-card px-2.5 py-3 transition-[transform,border-color,background-color] ${
+                className={`flex w-20 flex-col items-center gap-1.5 rounded-xl border border-m3-border bg-m3-card px-2 py-2.5 transition-[transform,border-color,background-color] ${
                   openable
                     ? "hover:-translate-y-0.5 hover:border-m3-primary/35 hover:bg-m3-hover/40"
                     : "opacity-60"
@@ -277,10 +277,10 @@ export function FavoritesWidget(_: WidgetRendererProps) {
           {nextCandidate ? (
             <button
               type="button"
-              className="flex w-24 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-m3-border bg-m3-sidebar/40 px-2.5 py-3 text-m3-secondary transition-colors hover:border-m3-primary/40 hover:bg-m3-hover/50 hover:text-m3-primary"
+              className="flex w-20 flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-m3-border bg-m3-sidebar/40 px-2 py-2.5 text-m3-secondary transition-colors hover:border-m3-primary/40 hover:bg-m3-hover/50 hover:text-m3-primary"
               onClick={() => toggleFavoriteApp(favorites, nextCandidate.id)}
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-dashed border-current/40">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-dashed border-current/40">
                 <Plus className="h-4 w-4" aria-hidden />
               </span>
               <span className="text-center text-[11px] font-semibold leading-tight">

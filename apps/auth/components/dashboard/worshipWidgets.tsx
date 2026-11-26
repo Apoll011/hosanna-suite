@@ -322,7 +322,7 @@ export function LibrarySummaryWidget({ instance }: WidgetRendererProps) {
             </span>
           </p>
 
-          <div className={`grid gap-2 ${density === "expanded" ? "grid-cols-4" : "grid-cols-2"}`}>
+          <div className={`grid gap-2 ${instance.w >= 5 || density === "expanded" ? "grid-cols-4" : "grid-cols-2"}`}>
             <div className="surface-inset px-2.5 py-2">
               <p className="text-caption truncate">{t("home.widgets.library.folders")}</p>
               <p className="mt-0.5 flex items-center gap-1 text-sm font-semibold tabular-nums text-m3-text">
@@ -336,7 +336,7 @@ export function LibrarySummaryWidget({ instance }: WidgetRendererProps) {
                 {songs.length > 0 ? Math.round((insights.withChords / songs.length) * 100) : 0}%
               </p>
             </div>
-            {density === "expanded" ? (
+            {instance.w >= 5 || density === "expanded" ? (
               <>
                 <div className="surface-inset px-2.5 py-2">
                   <p className="text-caption truncate">{t("home.widgets.library.withKey")}</p>
@@ -691,7 +691,9 @@ export function MostPlayedSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { loading, error, summary } = useSetlistStats();
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
+  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const showArtist = instance.w >= 3;
+  const showBar = instance.w >= 5;
   const rows = summary.top.slice(0, rowLimit);
 
   return (
@@ -736,12 +738,12 @@ export function MostPlayedSongsWidget({ instance }: WidgetRendererProps) {
               <div className="flex items-center justify-between gap-2 py-2">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
-                  {song.artist && density !== "compact" ? (
+                  {song.artist && showArtist ? (
                     <p className="truncate text-caption">{song.artist}</p>
                   ) : null}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  {density === "expanded" ? (
+                  {showBar ? (
                     <div className="h-1.5 w-16 overflow-hidden rounded-full bg-m3-sidebar">
                       <div
                         className="h-full rounded-full bg-m3-primary"
@@ -781,7 +783,8 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { loading, error, summary } = useSetlistStats();
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
+  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const showArtist = instance.w >= 3;
   const rows = summary.resting.slice(0, rowLimit);
 
   if (density === "compact" && !loading && !error) {
@@ -845,7 +848,7 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
               <div className="flex items-center justify-between gap-2 py-2">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
-                  {song.artist ? <p className="truncate text-caption">{song.artist}</p> : null}
+                  {song.artist && showArtist ? <p className="truncate text-caption">{song.artist}</p> : null}
                 </div>
                 <Badge variant="warning" size="sm" className="tabular-nums">
                   {t("home.widgets.restingSongs.daysAgo", { count: song.daysSince ?? 0 })}
@@ -878,8 +881,9 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const rawLimit = typeof instance.config?.limit === "number" ? instance.config.limit : 5;
-  const maxForDensity = density === "compact" ? 2 : density === "expanded" ? 8 : 5;
-  const limit = Math.min(Math.max(rawLimit, 2), maxForDensity);
+  const maxForDensity = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const limit = Math.min(rawLimit, maxForDensity);
+  const showArtist = instance.w >= 3;
   const { value, loading, error } = useOrganizationData<SongsResponse>(
     "songs-recent",
     "/songs?limit=10",
@@ -923,7 +927,7 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
                   <p className="truncate text-sm font-medium text-m3-text">
                     {song.title?.trim() || t("home.widgets.recentSongs.untitled")}
                   </p>
-                  {song.artist?.trim() && density !== "compact" ? (
+                  {song.artist?.trim() && showArtist ? (
                     <p className="truncate text-caption">{song.artist.trim()}</p>
                   ) : null}
                 </div>
@@ -969,7 +973,8 @@ export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
     "/services?metadataOnly=true",
   );
   const today = todayYmdLocal();
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 7 : 4;
+  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const showDetails = instance.w >= 3;
   const upcoming = useMemo(
     () =>
       (value ?? [])
@@ -1016,7 +1021,7 @@ export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
                   <p className="truncate text-sm font-medium text-m3-text">{service.name}</p>
                   <p className="text-caption tabular-nums">
                     {formatServiceDate(service.date, locale)}
-                    {density !== "compact" && typeof service.elementCount === "number"
+                    {showDetails && typeof service.elementCount === "number"
                       ? ` · ${t("home.widgets.upcomingServices.elements", {
                           count: service.elementCount,
                         })}`
@@ -1072,7 +1077,7 @@ export function CollectionsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { value, loading, error } = useReplicationCollection<ReplCollectionRow>("collections", 100);
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 8 : 5;
+  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const collections = useMemo(
     () =>
       [...(value ?? [])]
@@ -1158,7 +1163,7 @@ export function FoldersWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<FolderRow[]>("folders-summary", "/folders");
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 8 : 5;
+  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const folders = useMemo(
     () =>
       [...(value ?? [])]
@@ -1205,7 +1210,7 @@ export function FoldersWidget({ instance }: WidgetRendererProps) {
                   <span>
                     {t("home.widgets.folders.songsCount", { count: folder.songCount ?? 0 })}
                   </span>
-                  {density === "expanded" && (folder.folderCount ?? 0) > 0 ? (
+                  {instance.w >= 4 && (folder.folderCount ?? 0) > 0 ? (
                     <span>
                       ·{" "}
                       {t("home.widgets.folders.subfoldersCount", {
@@ -1258,7 +1263,9 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
   const density = getWidgetDensity(instance);
   const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 100);
   const today = todayYmdLocal();
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
+  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const showLocation = instance.w >= 4;
+  const showAssignees = instance.w >= 3;
   const events = useMemo(
     () =>
       (value ?? [])
@@ -1311,7 +1318,7 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
                       <Clock className="h-3 w-3" aria-hidden />
                       {ev.time}
                     </span>
-                    {density === "expanded" && ev.location ? (
+                    {showLocation && ev.location ? (
                       <span className="inline-flex items-center gap-1 truncate">
                         <MapPin className="h-3 w-3 shrink-0" aria-hidden />
                         <span className="truncate">{ev.location}</span>
@@ -1319,7 +1326,7 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
                     ) : null}
                   </div>
                 </div>
-                {density !== "compact" ? (
+                {showAssignees ? (
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     {assignees > 0 ? (
                       <Badge variant="neutral" size="sm" className="tabular-nums">

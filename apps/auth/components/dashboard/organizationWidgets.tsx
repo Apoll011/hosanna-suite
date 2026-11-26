@@ -717,7 +717,8 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
     },
   ].filter(Boolean) as Array<{ key: string; label: string; value: number }>;
 
-  const visibleItems = density === "compact" ? items.slice(0, 3) : items;
+  const visibleItems = density === "compact" && items.length > 3 ? items.slice(0, 3) : items;
+  const colCount = instance.w >= 5 ? 3 : instance.w >= 3 ? 3 : 2;
 
   return (
     <>
@@ -742,7 +743,7 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
         <WidgetEmptyBox icon={<HardDrive className="h-5 w-5" />} title={t("home.widgets.error")} />
       ) : (
         <div
-          className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : "grid-cols-2 sm:grid-cols-3"}`}
+          className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : colCount === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}
         >
           {visibleItems.map((item) => (
             <div key={item.key} className="surface-inset px-3 py-2">
