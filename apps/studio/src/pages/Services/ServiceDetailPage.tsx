@@ -4,12 +4,11 @@
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChordProSettings";
-import { Button, Spinner, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useFolders } from "@/src/hooks/useFolders";
 import { usePreviewSettings } from "@/src/hooks/usePreviewSettings";
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
-import { ServiceElement, Song } from "@/src/types";
+import { ServiceElement } from "@/src/types";
 import { filterSearchableSongsWithLiqe } from "@/src/utils";
 import {
   attachClosestEdge,
@@ -23,12 +22,19 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   ChordProRenderer,
-  parseChordPro,
-  resolveChords,
-  parseCapoValue,
-  parseKeyShiftValue,
   instrumentRegistry,
+  parseCapoValue,
+  parseChordPro,
+  parseKeyShiftValue,
+  resolveChords,
 } from "@hosanna/chordpro";
+import {
+  aiContextBridge,
+  AiProposalBanner,
+  aiProposals,
+  useServiceProposal,
+} from "@hosanna/logos-ai";
+import { Button, Input, Spinner } from "@hosanna/ui";
 import {
   AlertTriangle,
   ArrowDown,
@@ -63,12 +69,6 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useSync } from "../../contexts/SyncContext";
-import {
-  AiProposalBanner,
-  aiProposals,
-  useServiceProposal,
-  aiContextBridge,
-} from "@hosanna/logos-ai";
 import { useOrgSettings } from "../../hooks/useOrgSettings";
 import { useService, useServices } from "../../hooks/useServices";
 import { useSearchableSongs, useSong, useSongs } from "../../hooks/useSongs";
@@ -1103,10 +1103,7 @@ export const ServiceDetailPage: React.FC = () => {
   }, [readingMode, previewElement]);
 
   const [lastPreviewElement, setLastPreviewElement] = useState<ServiceElement | null>(null);
-  const selectPreviewElement = useCallback((el: ServiceElement | null) => {
-    setPreviewElement(el);
-    if (el) setLastPreviewElement(el);
-  }, []);
+
   const handleTogglePreview = (el: ServiceElement) => {
     setPreviewElement((prev) => (prev?.id === el.id ? null : el));
     setLastPreviewElement(el);
