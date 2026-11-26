@@ -35,6 +35,7 @@ type AppItem = {
   accessible?: boolean;
   logoUrl?: string | null;
   accent?: string;
+  categories?: string[];
 };
 
 const cache = new Map<string, { at: number; value: unknown }>();
@@ -455,14 +456,25 @@ export function FavoritesWidget(_: WidgetRendererProps) {
   );
 }
 
-function SingleAppWidget({ appId }: { appId: string }) {
+function SingleAppWidget({
+  appId,
+  instance,
+}: {
+  appId: string;
+  instance: WidgetRendererProps["instance"];
+}) {
   const { t } = useI18n();
   const { apps, loading } = useApps();
-  const favorites = useHomeSettings().favorites;
+  const isCompact = instance.w <= 2 && instance.h === 1;
 
   if (loading) {
-    return (
-      <div className="flex items-center gap-3">
+    return isCompact ? (
+      <div className="flex h-full flex-col items-center justify-center gap-2">
+        <SkeletonLine className="h-12 w-12 rounded-2xl" />
+        <SkeletonLine className="h-3.5 w-16" />
+      </div>
+    ) : (
+      <div className="flex h-full items-center gap-3">
         <SkeletonLine className="h-12 w-12 shrink-0 rounded-2xl" />
         <div className="min-w-0 flex-1 space-y-2">
           <SkeletonLine className="h-4 w-24" />
@@ -483,12 +495,27 @@ function SingleAppWidget({ appId }: { appId: string }) {
   }
 
   const openable = isOpenableApp(app);
-  const favorite = favorites.includes(app.id);
-  const body = (
-    <div className="flex min-w-0 flex-1 items-center gap-3 pr-7">
-      <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="md" />
-      <div className="min-w-0 flex-1 space-y-0.5">
-        <div className="flex items-center gap-1.5">
+  const categories = app.categories ?? [];
+
+  const compactBody = (
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-center">
+      <SuiteAppIcon
+        logoUrl={app.logoUrl}
+        accent={app.accent}
+        size="md"
+        className={openable ? "transition-transform duration-150 group-hover:scale-105" : ""}
+      />
+      <span className="line-clamp-1 max-w-full text-xs font-semibold text-m3-text">
+        {app.shortName || app.name}
+      </span>
+    </div>
+  );
+
+  const expandedBody = (
+    <div className="flex h-full w-full items-center gap-3.5">
+      <SuiteAppIcon logoUrl={app.logoUrl} accent={app.accent} size="lg" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
           <span className="truncate text-sm font-semibold text-m3-text">{app.name}</span>
           {!openable ? (
             <Badge variant="neutral" size="sm">
@@ -498,6 +525,15 @@ function SingleAppWidget({ appId }: { appId: string }) {
         </div>
         {app.description ? (
           <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
+        ) : null}
+        {categories.length > 0 ? (
+          <div className="flex flex-wrap gap-1 pt-0.5">
+            {categories.map((category) => (
+              <Badge key={category} variant="neutral" size="sm">
+                {category}
+              </Badge>
+            ))}
+          </div>
         ) : null}
       </div>
       {openable ? (
@@ -509,42 +545,33 @@ function SingleAppWidget({ appId }: { appId: string }) {
     </div>
   );
 
+  const body = isCompact ? compactBody : expandedBody;
+
+  if (!openable || !app.homeUrl) {
+    return <div className="flex h-full w-full items-center">{body}</div>;
+  }
+
+  if (app.homeUrl.startsWith("/") && !app.homeUrl.startsWith("//")) {
+    return (
+      <Link href={app.homeUrl} className="group flex h-full w-full items-center">
+        {body}
+      </Link>
+    );
+  }
+
   return (
-    <div className="group relative flex h-full items-center">
-      {openable && app.homeUrl ? (
-        app.homeUrl.startsWith("/") && !app.homeUrl.startsWith("//") ? (
-          <Link href={app.homeUrl} className="flex min-w-0 flex-1 items-center">
-            {body}
-          </Link>
-        ) : (
-          <a href={app.homeUrl} className="flex min-w-0 flex-1 items-center">
-            {body}
-          </a>
-        )
-      ) : (
-        body
-      )}
-      <button
-        type="button"
-        className="absolute right-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-m3-secondary transition-colors hover:bg-m3-hover hover:text-amber-500"
-        aria-label={favorite ? t("home.widgets.favorites.remove") : t("home.widgets.favorites.add")}
-        onClick={() => toggleFavoriteApp(favorites, app.id)}
-      >
-        <Star
-          className={`h-4 w-4 ${favorite ? "fill-amber-400 text-amber-500" : ""}`}
-          aria-hidden
-        />
-      </button>
-    </div>
+    <a href={app.homeUrl} className="group flex h-full w-full items-center">
+      {body}
+    </a>
   );
 }
 
-export function AuthAppWidget(_: WidgetRendererProps) {
-  return <SingleAppWidget appId="auth" />;
+export function AuthAppWidget({ instance }: WidgetRendererProps) {
+  return <SingleAppWidget appId="auth" instance={instance} />;
 }
 
-export function MusicAppWidget(_: WidgetRendererProps) {
-  return <SingleAppWidget appId="music" />;
+export function MusicAppWidget({ instance }: WidgetRendererProps) {
+  return <SingleAppWidget appId="music" instance={instance} />;
 }
 
 type ServiceRow = {
