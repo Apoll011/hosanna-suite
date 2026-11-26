@@ -378,7 +378,8 @@ export function TeamsWidget({ instance }: WidgetRendererProps) {
     return (await res.json()) as { teams: TeamRow[] };
   }, []);
   const { value, loading, error } = useOrganizationLoader("org-teams", loadTeams);
-  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
+  const rowLimit = instance.h <= 1 ? 1 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const showAvatars = instance.w >= 4;
   const teams = (value?.teams ?? []).slice(0, rowLimit);
 
   return (
@@ -409,14 +410,14 @@ export function TeamsWidget({ instance }: WidgetRendererProps) {
       ) : (
         <ul className="divide-y divide-m3-border/60">
           {teams.map((team) => (
-            <li key={team.id} className="flex items-center justify-between gap-2.5 py-2">
+            <li key={team.id} className="flex items-center justify-between gap-2.5 py-1.5">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-m3-text">{team.name}</p>
                 <p className="text-caption tabular-nums">
                   {t("home.widgets.teams.membersCount", { count: team.memberCount })}
                 </p>
               </div>
-              {density !== "compact" ? (
+              {showAvatars ? (
                 <div className="flex -space-x-1.5">
                   {team.members.slice(0, 3).map((member) =>
                     member.image ? (
@@ -450,6 +451,8 @@ export function MembersWidget({ instance }: WidgetRendererProps) {
   const { organization } = useActiveOrganization();
   const density = getWidgetDensity(instance);
   const members = useMemo(() => organization?.members ?? [], [organization?.members]);
+  const avatarLimit = instance.h <= 1 ? 3 : instance.w >= 5 ? 10 : instance.w >= 4 ? 7 : 5;
+  const roleLimit = instance.h >= 3 ? 8 : 4;
   const roleCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const m of members) {
@@ -514,7 +517,7 @@ export function MembersWidget({ instance }: WidgetRendererProps) {
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          {roleCounts.slice(0, density === "expanded" ? 8 : 4).map(([role, count]) => (
+          {roleCounts.slice(0, roleLimit).map(([role, count]) => (
             <Badge key={role} variant="neutral" size="sm" className="tabular-nums">
               {role} · {count}
             </Badge>
@@ -524,7 +527,7 @@ export function MembersWidget({ instance }: WidgetRendererProps) {
         {members.length > 0 ? (
           <div className="flex items-center gap-1.5 pt-0.5">
             <div className="flex -space-x-2">
-              {members.slice(0, density === "expanded" ? 8 : 5).map((member) =>
+              {members.slice(0, avatarLimit).map((member) =>
                 member.user?.image ? (
                   <img
                     key={member.id}
@@ -542,9 +545,9 @@ export function MembersWidget({ instance }: WidgetRendererProps) {
                 ),
               )}
             </div>
-            {members.length > (density === "expanded" ? 8 : 5) ? (
+            {members.length > avatarLimit ? (
               <span className="text-caption tabular-nums">
-                +{members.length - (density === "expanded" ? 8 : 5)}
+                +{members.length - avatarLimit}
               </span>
             ) : null}
           </div>
@@ -583,7 +586,7 @@ export function InvitationsWidget({ instance }: WidgetRendererProps) {
     Boolean(organization?.id),
   );
   const invites = value ?? [];
-  const rowLimit = density === "expanded" ? 6 : 3;
+  const rowLimit = instance.h <= 1 ? 1 : Math.min(Math.max(instance.h - 1, 2), 8);
 
   if (density === "compact" && !loading && !error) {
     return (
@@ -632,7 +635,7 @@ export function InvitationsWidget({ instance }: WidgetRendererProps) {
       ) : (
         <ul className="divide-y divide-m3-border/60">
           {invites.slice(0, rowLimit).map((inv) => (
-            <li key={inv.id} className="flex items-center justify-between gap-2 py-2">
+            <li key={inv.id} className="flex items-center justify-between gap-2 py-1.5">
               <span className="truncate text-sm text-m3-text">{inv.email}</span>
               {inv.role ? (
                 <Badge variant="neutral" size="sm">
@@ -718,7 +721,7 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
   ].filter(Boolean) as Array<{ key: string; label: string; value: number }>;
 
   const visibleItems = density === "compact" && items.length > 3 ? items.slice(0, 3) : items;
-  const colCount = instance.w >= 5 ? 3 : instance.w >= 3 ? 3 : 2;
+  const gridCols = instance.w <= 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3";
 
   return (
     <>
@@ -743,7 +746,7 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
         <WidgetEmptyBox icon={<HardDrive className="h-5 w-5" />} title={t("home.widgets.error")} />
       ) : (
         <div
-          className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : colCount === 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}
+          className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : gridCols}`}
         >
           {visibleItems.map((item) => (
             <div key={item.key} className="surface-inset px-3 py-2">

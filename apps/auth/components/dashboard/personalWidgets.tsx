@@ -308,7 +308,7 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
           {visibleItems.map((item) => {
             const unread = !item.readAt;
             return (
-              <li key={item.id} className="flex items-start justify-between gap-2 py-2">
+              <li key={item.id} className="flex items-start justify-between gap-2 py-1.5">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
                     {unread ? (

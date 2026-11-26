@@ -80,7 +80,10 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
   );
   const next = upcoming[0];
   const following = upcoming[1];
-  const showSetlist = density === "expanded" && Boolean(next?.id && next?.hasSongs);
+  const showSetlist = instance.h >= 3 && Boolean(next?.id && next?.hasSongs);
+  const showFollowing = instance.h >= 3 && Boolean(following);
+  const showNotes = instance.h >= 3 && !showSetlist;
+  const showMeta = instance.h >= 2 && instance.w >= 3;
   const { value: nextDetail } = useOrganizationData<ServiceDetail>(
     `service-detail-${next?.id ?? "none"}`,
     next ? `/services/${next.id}` : "",
@@ -370,6 +373,9 @@ export function RepertoireKeysWidget({ instance }: WidgetRendererProps) {
   const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
   const insights = useMemo(() => computeSongHealthInsights(songs), [songs]);
   const hasAny = insights.topKeys.length > 0 || insights.topTags.length > 0;
+  const keyLimit = instance.w >= 5 ? 6 : 4;
+  const tagLimit = instance.h >= 3 ? 5 : 3;
+  const showTags = instance.h >= 2;
 
   if (density === "compact" && !loading && !error && hasAny) {
     return (
@@ -418,7 +424,7 @@ export function RepertoireKeysWidget({ instance }: WidgetRendererProps) {
             <div className="space-y-1.5">
               <p className="text-caption">{t("home.widgets.repertoireKeys.keysLabel")}</p>
               <div className="flex flex-wrap gap-1.5">
-                {insights.topKeys.map(([key, count]) => (
+                {insights.topKeys.slice(0, keyLimit).map(([key, count]) => (
                   <Badge key={key} variant="accent" size="sm" className="font-mono tabular-nums">
                     {key} · {count}
                   </Badge>
@@ -426,11 +432,11 @@ export function RepertoireKeysWidget({ instance }: WidgetRendererProps) {
               </div>
             </div>
           ) : null}
-          {insights.topTags.length > 0 ? (
+          {insights.topTags.length > 0 && showTags ? (
             <div className="space-y-1.5">
               <p className="text-caption">{t("home.widgets.repertoireKeys.tagsLabel")}</p>
               <div className="flex flex-wrap gap-1.5">
-                {insights.topTags.map(([tag, count]) => (
+                {insights.topTags.slice(0, tagLimit).map(([tag, count]) => (
                   <Badge key={tag} variant="neutral" size="sm" className="tabular-nums">
                     {tag} · {count}
                   </Badge>
@@ -455,7 +461,7 @@ export function LibraryHealthWidget({ instance }: WidgetRendererProps) {
   const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
   const total = value?.total ?? 0;
   const health = useMemo(() => computeSongHealthInsights(songs), [songs]);
-  const criteriaLimit = density === "expanded" ? 6 : 3;
+  const criteriaLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 6);
   const topMissing = health.missingCounts.slice(0, criteriaLimit);
 
   const tone =
@@ -735,7 +741,7 @@ export function MostPlayedSongsWidget({ instance }: WidgetRendererProps) {
           {rows.map((song) => {
             const pct = Math.max(8, Math.round((song.playCount / summary.maxPlays) * 100));
             const inner = (
-              <div className="flex items-center justify-between gap-2 py-2">
+              <div className="flex items-center justify-between gap-2 py-1.5">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
                   {song.artist && showArtist ? (
@@ -845,7 +851,7 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
         <ul className="divide-y divide-m3-border/60">
           {rows.map((song) => {
             const inner = (
-              <div className="flex items-center justify-between gap-2 py-2">
+              <div className="flex items-center justify-between gap-2 py-1.5">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
                   {song.artist && showArtist ? <p className="truncate text-caption">{song.artist}</p> : null}
@@ -922,7 +928,7 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
           {songs.map((song) => {
             const key = extractSongKey(song.content);
             const row = (
-              <div className="flex items-center justify-between gap-2.5 py-2">
+              <div className="flex items-center justify-between gap-2.5 py-1.5">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">
                     {song.title?.trim() || t("home.widgets.recentSongs.untitled")}
@@ -1016,7 +1022,7 @@ export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
           {upcoming.map((service) => {
             const diff = diffDaysFromToday(service.date);
             const row = (
-              <div className="flex items-center justify-between gap-2.5 py-2">
+              <div className="flex items-center justify-between gap-2.5 py-1.5">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-m3-text">{service.name}</p>
                   <p className="text-caption tabular-nums">
@@ -1121,7 +1127,7 @@ export function CollectionsWidget({ instance }: WidgetRendererProps) {
           {collections.map((collection) => {
             const count = collection.songCount ?? collection.songIds?.length ?? 0;
             const row = (
-              <div className="flex items-center justify-between gap-2.5 py-2">
+              <div className="flex items-center justify-between gap-2.5 py-1.5">
                 <div className="flex min-w-0 items-center gap-2.5">
                   <span
                     className="h-2.5 w-2.5 shrink-0 rounded-full bg-m3-primary"
@@ -1201,7 +1207,7 @@ export function FoldersWidget({ instance }: WidgetRendererProps) {
         <ul className="divide-y divide-m3-border/60">
           {folders.map((folder) => {
             const row = (
-              <div className="flex items-center justify-between gap-2.5 py-2">
+              <div className="flex items-center justify-between gap-2.5 py-1.5">
                 <div className="flex min-w-0 items-center gap-2">
                   <FolderOpen className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
                   <span className="truncate text-sm font-medium text-m3-text">{folder.name}</span>
@@ -1309,7 +1315,7 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
               0,
             );
             const row = (
-              <div className="flex items-start justify-between gap-2.5 py-2">
+              <div className="flex items-start justify-between gap-2.5 py-1.5">
                 <div className="min-w-0 flex-1 space-y-0.5">
                   <p className="truncate text-sm font-medium text-m3-text">{ev.title}</p>
                   <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-caption tabular-nums">
