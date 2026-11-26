@@ -34,7 +34,6 @@ import {
   todayYmdLocal,
   useMusicHomeUrl,
   useOrganizationData,
-  useReplicationCollection,
   WidgetEmptyBox,
   WidgetErrorBox,
   WidgetHeader,
@@ -624,15 +623,13 @@ type ReplServiceRow = {
   _deleted?: boolean;
 };
 
-type ReplSongRow = SongRow & { isDeleted?: boolean; _deleted?: boolean };
-
 function useSetlistStats() {
   const { t } = useI18n();
-  const songsRes = useReplicationCollection<ReplSongRow>("songs", 250);
-  const servicesRes = useReplicationCollection<ReplServiceRow>("services", 200);
+  const songsRes = useOrganizationData<SongsResponse>("songs-summary", "/songs?limit=150");
+  const servicesRes = useOrganizationData<ReplServiceRow[]>("services-full", "/services");
 
   const summary = useMemo(() => {
-    const songs = songsRes.value ?? [];
+    const songs = songsRes.value?.songs ?? [];
     const services = servicesRes.value ?? [];
     const today = todayYmdLocal();
 
@@ -1087,7 +1084,10 @@ type ReplCollectionRow = {
 export function CollectionsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const { value, loading, error } = useReplicationCollection<ReplCollectionRow>("collections", 100);
+  const { value, loading, error } = useOrganizationData<ReplCollectionRow[]>(
+    "collections",
+    "/collections",
+  );
   const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const collections = useMemo(
     () =>
@@ -1283,7 +1283,10 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
-  const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 100);
+  const { value, loading, error } = useOrganizationData<ReplAgendaEvent[]>(
+    "agenda-events",
+    "/agenda-events",
+  );
   const today = todayYmdLocal();
   const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const showLocation = instance.w >= 4;
@@ -1410,7 +1413,10 @@ function buildAgendaMonthGrid(visibleMonth: Date): (Date | null)[] {
 export function AgendaCalendarWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 200);
+  const { value, loading, error } = useOrganizationData<ReplAgendaEvent[]>(
+    "agenda-events",
+    "/agenda-events",
+  );
   const todayIso = todayYmdLocal();
   const [visibleMonth, setVisibleMonth] = useState<Date>(() => {
     const now = new Date();

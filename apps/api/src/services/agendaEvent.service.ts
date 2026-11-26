@@ -33,7 +33,7 @@ export class AgendaEventService {
       where: { id, deleted: false },
     });
     if (!event) {
-      throw AppError.notFound("AGENDA_EVENT_NOT_FOUND", t(this.locale, "agenda.not_found"));
+      throw AppError.notFound("AGENDA_EVENT_NOT_FOUND", t(this.locale, "error.resource_not_found"));
     }
     return event;
   }

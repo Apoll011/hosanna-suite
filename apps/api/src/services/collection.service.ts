@@ -46,7 +46,7 @@ export class CollectionService {
       },
     });
     if (!collection) {
-      throw AppError.notFound("COLLECTION_NOT_FOUND", t(this.locale, "collection.not_found"));
+      throw AppError.notFound("COLLECTION_NOT_FOUND", t(this.locale, "error.resource_not_found"));
     }
     const { _count, ...rest } = collection;
     return {

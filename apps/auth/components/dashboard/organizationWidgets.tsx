@@ -27,7 +27,6 @@ import {
   SkeletonLine,
   useOrganizationData,
   useOrganizationLoader,
-  useReplicationCollection,
   useWidgetPreview,
   WidgetEmptyBox,
   WidgetErrorBox,
@@ -699,14 +698,14 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
     "/services?metadataOnly=true",
     canServices,
   );
-  const collections = useReplicationCollection<{
-    id: string;
-    isDeleted?: boolean;
-    _deleted?: boolean;
-  }>("collections", 100, canCollections);
-  const agenda = useReplicationCollection<{ id: string; isDeleted?: boolean; _deleted?: boolean }>(
-    "agendaEvents",
-    100,
+  const collections = useOrganizationData<{ id: string }[]>(
+    "collections",
+    "/collections",
+    canCollections,
+  );
+  const agenda = useOrganizationData<{ id: string }[]>(
+    "agenda-events",
+    "/agenda-events",
     canAgenda,
   );
 

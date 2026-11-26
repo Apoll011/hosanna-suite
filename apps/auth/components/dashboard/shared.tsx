@@ -18,7 +18,6 @@ import {
 
 export type WidgetPreviewData = {
   orgData: Record<string, unknown>;
-  replData: Record<string, unknown[]>;
   apps: AppItem[];
   favorites: string[];
   user: {
@@ -194,39 +193,6 @@ export function useOrganizationData<T>(key: string, path: string, enabled = true
     return {
       organizationId: "preview",
       value: (matched ?? null) as T | null,
-      loading: false,
-      error: false,
-    };
-  }
-  return live;
-}
-
-export function useReplicationCollection<T extends { isDeleted?: boolean; _deleted?: boolean }>(
-  collection: "songs" | "folders" | "collections" | "services" | "agendaEvents",
-  limit = 200,
-  enabled = true,
-) {
-  const preview = useWidgetPreview();
-  const loader = useCallback(
-    async (orgId: string) => {
-      const res = await apiFetch<{ documents: T[] }>(`/replication/${collection}/pull`, {
-        organizationId: orgId,
-        method: "POST",
-        body: JSON.stringify({ checkpoint: null, limit }),
-      });
-      return (res.documents ?? []).filter((doc) => !doc.isDeleted && !doc._deleted);
-    },
-    [collection, limit],
-  );
-  const live = useOrganizationLoader<T[]>(
-    `repl:${collection}:${limit}`,
-    loader,
-    enabled && !preview,
-  );
-  if (preview) {
-    return {
-      organizationId: "preview",
-      value: (preview.replData[collection] ?? []) as T[],
       loading: false,
       error: false,
     };

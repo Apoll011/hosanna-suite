@@ -2424,12 +2424,22 @@ components:
         name:
           type: string
           description: Collection name
+        description:
+          description: Collection description
+          type:
+            - string
+            - "null"
         color:
           description: Collection color code
           type: string
         icon:
           description: Collection icon
           type: string
+        image:
+          description: Collection cover image URL
+          type:
+            - string
+            - "null"
         songCount:
           default: 0
           description: Number of songs in this collection
@@ -2474,9 +2484,23 @@ components:
           description: Event title
         date:
           type: string
-          format: date-time
-          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
-          description: Event start date/time (ISO 8601)
+          description: Event date (YYYY-MM-DD)
+        time:
+          type: string
+          description: Event start time (HH:MM)
+        type:
+          type: string
+          description: Event type
+        durationMinutes:
+          description: Duration in minutes
+          type: integer
+          minimum: -9007199254740991
+          maximum: 9007199254740991
+        location:
+          description: Event location
+          type:
+            - string
+            - "null"
         notes:
           description: Event notes
           type:
@@ -2487,6 +2511,18 @@ components:
           type:
             - string
             - "null"
+        linkedServiceId:
+          description: Linked worship service UUID
+          anyOf:
+            - type: string
+              format: uuid
+              pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+            - type: "null"
+        responsibilities:
+          default: []
+          description: Team responsibilities and assignees
+          type: array
+          items: {}
         isDeleted:
           default: false
           description: Replication tombstone flag
@@ -2506,6 +2542,8 @@ components:
         - orgId
         - title
         - date
+        - time
+        - type
         - createdAt
         - updatedAt
       additionalProperties: false

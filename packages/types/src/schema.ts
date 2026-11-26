@@ -1250,10 +1250,14 @@ export interface components {
       orgId: string;
       /** @description Collection name */
       name: string;
+      /** @description Collection description */
+      description?: string | null;
       /** @description Collection color code */
       color?: string;
       /** @description Collection icon */
       icon?: string;
+      /** @description Collection cover image URL */
+      image?: string | null;
       /**
        * @description Number of songs in this collection
        * @default 0
@@ -1286,15 +1290,27 @@ export interface components {
       orgId: string;
       /** @description Event title */
       title: string;
-      /**
-       * Format: date-time
-       * @description Event start date/time (ISO 8601)
-       */
+      /** @description Event date (YYYY-MM-DD) */
       date: string;
+      /** @description Event start time (HH:MM) */
+      time: string;
+      /** @description Event type */
+      type: string;
+      /** @description Duration in minutes */
+      durationMinutes?: number;
+      /** @description Event location */
+      location?: string | null;
       /** @description Event notes */
       notes?: string | null;
       /** @description Event color theme */
       color?: string | null;
+      /** @description Linked worship service UUID */
+      linkedServiceId?: string | null;
+      /**
+       * @description Team responsibilities and assignees
+       * @default []
+       */
+      responsibilities: unknown[];
       /**
        * @description Replication tombstone flag
        * @default false
