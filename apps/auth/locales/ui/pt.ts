@@ -44,10 +44,30 @@ export const pt = {
     widgets: {
       error: "Não foi possível carregar este widget.",
       launcher: { title: "Aplicações", description: "Abra as aplicações disponíveis." },
-      favorites: { title: "Favoritos", description: "Atalhos para as suas aplicações favoritas.", empty: "Ainda não tem aplicações favoritas.", add: "Adicionar aos favoritos", remove: "Remover dos favoritos" },
-      nextService: { title: "Próximo culto", description: "Veja o próximo culto planeado.", empty: "Não há cultos planeados." },
-      library: { title: "Biblioteca", description: "Resumo da biblioteca de músicas.", songs: "músicas" },
-      subscription: { title: "Subscrição", description: "Estado da subscrição da organização.", active: "Subscrição ativa", inactive: "Sem subscrição ativa", manage: "Gerir subscrição" },
+      favorites: {
+        title: "Favoritos",
+        description: "Atalhos para as suas aplicações favoritas.",
+        empty: "Ainda não tem aplicações favoritas.",
+        add: "Adicionar aos favoritos",
+        remove: "Remover dos favoritos",
+      },
+      nextService: {
+        title: "Próximo culto",
+        description: "Veja o próximo culto planeado.",
+        empty: "Não há cultos planeados.",
+      },
+      library: {
+        title: "Biblioteca",
+        description: "Resumo da biblioteca de músicas.",
+        songs: "músicas",
+      },
+      subscription: {
+        title: "Subscrição",
+        description: "Estado da subscrição da organização.",
+        active: "Subscrição ativa",
+        inactive: "Sem subscrição ativa",
+        manage: "Gerir subscrição",
+      },
     },
     nav: {
       account: "Conta",

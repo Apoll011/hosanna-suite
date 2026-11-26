@@ -46,10 +46,30 @@ export const es: typeof pt = {
     widgets: {
       error: "No se pudo cargar este widget.",
       launcher: { title: "Aplicaciones", description: "Abre las aplicaciones disponibles." },
-      favorites: { title: "Favoritos", description: "Accesos rápidos a tus aplicaciones favoritas.", empty: "Aún no tienes aplicaciones favoritas.", add: "Añadir a favoritos", remove: "Quitar de favoritos" },
-      nextService: { title: "Próximo servicio", description: "Consulta el próximo servicio planificado.", empty: "No hay servicios planificados." },
-      library: { title: "Biblioteca", description: "Resumen de la biblioteca de canciones.", songs: "canciones" },
-      subscription: { title: "Suscripción", description: "Estado de la suscripción de la organización.", active: "Suscripción activa", inactive: "No hay una suscripción activa", manage: "Gestionar suscripción" },
+      favorites: {
+        title: "Favoritos",
+        description: "Accesos rápidos a tus aplicaciones favoritas.",
+        empty: "Aún no tienes aplicaciones favoritas.",
+        add: "Añadir a favoritos",
+        remove: "Quitar de favoritos",
+      },
+      nextService: {
+        title: "Próximo servicio",
+        description: "Consulta el próximo servicio planificado.",
+        empty: "No hay servicios planificados.",
+      },
+      library: {
+        title: "Biblioteca",
+        description: "Resumen de la biblioteca de canciones.",
+        songs: "canciones",
+      },
+      subscription: {
+        title: "Suscripción",
+        description: "Estado de la suscripción de la organización.",
+        active: "Suscripción activa",
+        inactive: "No hay una suscripción activa",
+        manage: "Gestionar suscripción",
+      },
     },
     nav: {
       account: "Cuenta",

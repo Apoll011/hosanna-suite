@@ -5,6 +5,7 @@ import {
   registerAppSettingsScope,
 } from "@hosanna/auth";
 import type { DashboardLayout } from "@hosanna/dashboard/core";
+import { mergeLegacyFavorites } from "./favorites";
 
 export type HomeSettings = {
   layouts: Record<string, DashboardLayout>;
@@ -25,7 +26,9 @@ export function readLegacyFavorites(): string[] {
   try {
     const raw = localStorage.getItem("hosanna_suite_favorite_apps");
     const value: unknown = raw ? JSON.parse(raw) : [];
-    return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+    return Array.isArray(value)
+      ? value.filter((item): item is string => typeof item === "string")
+      : [];
   } catch {
     return [];
   }
@@ -33,12 +36,11 @@ export function readLegacyFavorites(): string[] {
 
 export function migrateLegacyFavorites(): string[] {
   const current = homeSettings.get();
-  if (current.favoritesMigrated) return current.favorites;
-  const legacy = readLegacyFavorites();
-  homeSettings.set({
-    favorites: current.favorites.length > 0 ? current.favorites : legacy,
-    favoritesMigrated: true,
+  const migrated = mergeLegacyFavorites({
+    favorites: current.favorites,
+    migrated: current.favoritesMigrated,
+    legacyFavorites: readLegacyFavorites(),
   });
-  // The legacy key stays in place until the new scope has synced to metadata.
-  return legacy;
+  if (!current.favoritesMigrated) homeSettings.set(migrated);
+  return migrated.favorites;
 }

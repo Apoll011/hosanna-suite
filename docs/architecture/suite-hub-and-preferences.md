@@ -36,9 +36,21 @@ Post-login hub on the **auth** site (not a separate suite app):
 - URL: `auth.hosanna.live/home` (dev: auth app `/home`)
 - Default after login and for `/` when signed in (explicit redirect query params still win)
 - Header chrome: Inbox bell → Logos AI → App Switcher → AccountMenu (org switching lives in the menu, not the header)
-- Body: app grid from the suite catalog (live + coming soon), linking into each product
+- Body: organization-scoped widget dashboard, with the app launcher and favorites drawing from the suite catalog
 
 Product copy for the grid / switcher lives in `@hosanna/i18n` under `suite.*`.
+
+### Dashboard engine
+
+@hosanna/dashboard is the reusable engine. Its core export owns serializable widget definitions, registry composition, layout normalization, defaults, configuration schemas, and persistence contracts without React or Hosanna application imports. The react export renders CSS Grid view mode and widget configuration. The gridstack export is loaded only when Auth enters desktop customization; Gridstack positions outer shells and React renders widget contents.
+
+Auth registers widgets separately from their renderers in apps/auth/components/dashboard/. Widget ownership is the suite app ID (auth or music), while the dashboard itself belongs to Auth. Registry entries for unimplemented or coming-soon apps stay unavailable until the suite catalog marks the owner live.
+
+Layouts and favorites are stored in the registered apps.home personal-settings scope. Layouts are keyed by organization ID, normalized when loaded, and saved only when customization is committed. Layouts use a versioned 12-column desktop grid; mobile renders one column in stored vertical/horizontal order and uses keyboard controls instead of drag editing.
+
+The existing localStorage favorites key is copied into the settings scope once. The source key is retained, and a migration marker prevents a later empty favorites selection from being repopulated.
+
+Widgets fetch from their domain endpoints. The current Auth widgets use GET /api/suite/apps, GET /api/services, GET /api/songs, and Auth GET /api/billing/entitlement. Song and service endpoints keep their existing server-side permission and subscription checks. Widget data cache keys include the organization ID, and the suite catalog URL includes the active organization ID because its app URLs can be organization-specific.
 
 ---
 

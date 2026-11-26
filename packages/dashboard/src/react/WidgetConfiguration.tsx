@@ -29,9 +29,23 @@ export function WidgetConfiguration({
             <select
               className="min-h-10 rounded-md border border-m3-border bg-m3-card px-3"
               value={String(value[key] ?? definition.defaults?.[key] ?? "")}
-              onChange={(event) => onChange({ ...value, [key]: field.type === "number" ? Number(event.currentTarget.value) : event.currentTarget.value })}
+              onChange={(event) =>
+                onChange({
+                  ...value,
+                  [key]:
+                    field.type === "number"
+                      ? Number(event.currentTarget.value)
+                      : field.type === "boolean"
+                        ? event.currentTarget.value === "true"
+                        : event.currentTarget.value,
+                })
+              }
             >
-              {field.enum.map((option) => <option key={String(option)} value={option}>{String(option)}</option>)}
+              {field.enum.map((option) => (
+                <option key={String(option)} value={String(option)}>
+                  {String(option)}
+                </option>
+              ))}
             </select>
           ) : (
             <input
@@ -40,7 +54,15 @@ export function WidgetConfiguration({
               min={field.min}
               max={field.max}
               value={String(value[key] ?? definition.defaults?.[key] ?? "")}
-              onChange={(event) => onChange({ ...value, [key]: field.type === "number" ? Number(event.currentTarget.value) : event.currentTarget.value })}
+              onChange={(event) =>
+                onChange({
+                  ...value,
+                  [key]:
+                    field.type === "number"
+                      ? Number(event.currentTarget.value)
+                      : event.currentTarget.value,
+                })
+              }
             />
           )}
         </label>

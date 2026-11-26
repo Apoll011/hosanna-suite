@@ -59,6 +59,7 @@ export function mergeNewEligibleWidgets(
   for (const definition of registry.list()) {
     if (!isWidgetEligible(definition, context) || next.seen.includes(definition.id)) continue;
     next.seen.push(definition.id);
+    if (next.hidden.includes(definition.id)) continue;
     if (definition.singleton && existing.has(definition.id)) continue;
     const base = definition.defaultSize;
     next.items.push({

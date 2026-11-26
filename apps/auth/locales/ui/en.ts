@@ -46,10 +46,26 @@ export const en: typeof pt = {
     widgets: {
       error: "This widget could not be loaded.",
       launcher: { title: "Applications", description: "Open available applications." },
-      favorites: { title: "Favorites", description: "Quick links to your favorite applications.", empty: "You have no favorite applications yet.", add: "Add to favorites", remove: "Remove from favorites" },
-      nextService: { title: "Next service", description: "See the next planned service.", empty: "No services are planned." },
+      favorites: {
+        title: "Favorites",
+        description: "Quick links to your favorite applications.",
+        empty: "You have no favorite applications yet.",
+        add: "Add to favorites",
+        remove: "Remove from favorites",
+      },
+      nextService: {
+        title: "Next service",
+        description: "See the next planned service.",
+        empty: "No services are planned.",
+      },
       library: { title: "Library", description: "A summary of the song library.", songs: "songs" },
-      subscription: { title: "Subscription", description: "Organization subscription status.", active: "Subscription active", inactive: "No active subscription", manage: "Manage subscription" },
+      subscription: {
+        title: "Subscription",
+        description: "Organization subscription status.",
+        active: "Subscription active",
+        inactive: "No active subscription",
+        manage: "Manage subscription",
+      },
     },
     nav: {
       account: "Account",

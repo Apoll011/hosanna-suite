@@ -226,9 +226,10 @@ Shared across Auth and Studio via `@hosanna/ui` — one composition language, no
 
 **Home (`auth …/home`)**
 
-- Quiet page: brand-present header, then one app grid (live + coming soon). No marketing hero, no stat strips.
-- Tiles use `SuiteAppIcon`: rounded accent well, logo **`object-contain` with inset** so full mark artwork stays visible (Hosanna favicon fills the PNG — do not `object-cover` / scale-up into the guitar).
-- Coming-soon apps stay visible but muted / non-primary.
+- Quiet page header, then a customizable dashboard of useful suite widgets. Keep page titles at 24px, use Surface styling and hairline borders, and avoid decorative shadows or oversized card shapes.
+- The app launcher and favorites use the live suite catalog. App marks use SuiteAppIcon with the existing per-app accent treatment.
+- Widget ownership remains visible through the gallery's app grouping; widget icons stay monochromatic, and status colors only communicate status.
+- View mode uses a single-column mobile stack and a 12-column desktop grid. Customization controls keep 40px minimum targets and visible focus states.
 
 **App Switcher**
 
