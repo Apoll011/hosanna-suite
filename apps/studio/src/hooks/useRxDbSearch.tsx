@@ -125,6 +125,7 @@ export function useRxDbSearch({
     registerDynamicActions,
     unregisterDynamicActions,
     closePalette,
+    trimmed,
     t,
     tc,
     locale,

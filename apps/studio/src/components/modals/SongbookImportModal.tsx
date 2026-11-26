@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import {
   summarizeSongbookSetlists,
@@ -12,8 +11,9 @@ import {
   type SongbookSetlistSummary,
 } from "@/src/lib/import/songbook";
 import type { InteractiveImportModalProps } from "@/src/lib/import/types";
+import { Button, Modal } from "@hosanna/ui";
 import { CheckSquare, LibraryBig, Loader2, Square } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 export type SongbookImportModalProps = InteractiveImportModalProps<
   SongbookBackupDocument,

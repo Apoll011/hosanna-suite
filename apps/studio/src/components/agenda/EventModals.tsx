@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Input, Modal } from "@hosanna/ui";
 import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useServices } from "@/src/hooks/useServices";
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
 import { Assignee, ResponsibilityCategory, TEventColor } from "@/src/types";
+import { Button, Input, Modal } from "@hosanna/ui";
 import {
   Calendar,
   CheckCircle2,
@@ -26,7 +26,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { AssigneeTagInput } from "./AssigneeTagInput";
 import { ServiceLinkField } from "./ServiceLinkField";
 

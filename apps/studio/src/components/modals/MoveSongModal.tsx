@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
+import { Button, Modal } from "@hosanna/ui";
 import { HardDrive } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { buildFolderTree, MoveFolderTreeItem } from "../explorer";
 
 interface MoveSongModalProps {

@@ -10,7 +10,7 @@ import {
 } from "@/src/components/print/options";
 import type { OrgPrintSettings } from "@/src/components/print/types";
 import { ResponsibilityCategory } from "@/src/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { authClient } from "../lib/authClient";
 
