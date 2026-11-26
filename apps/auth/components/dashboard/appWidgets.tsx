@@ -40,12 +40,14 @@ function AppCardLink({
   );
 }
 
-export function AppLauncherWidget(_: WidgetRendererProps) {
+export function AppLauncherWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const { apps, loading } = useApps();
   const settings = useHomeSettings();
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const cols = instance.w >= 9 ? "lg:grid-cols-4" : instance.w >= 6 ? "lg:grid-cols-3" : instance.w >= 4 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2";
+  const showDescription = instance.h >= 2;
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -65,7 +67,7 @@ export function AppLauncherWidget(_: WidgetRendererProps) {
           <SkeletonLine className="h-5 w-28" />
           <SkeletonLine className="h-9 w-44 rounded-md" />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid gap-2 ${cols}`}>
           {[0, 1, 2].map((item) => (
             <div
               key={item}
@@ -137,7 +139,7 @@ export function AppLauncherWidget(_: WidgetRendererProps) {
       ) : (
         <ul
           className={
-            view === "grid" ? "grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-2"
+            view === "grid" ? `grid gap-2 ${cols}` : "flex flex-col gap-1.5"
           }
         >
           {filtered.map((app) => {
@@ -155,7 +157,7 @@ export function AppLauncherWidget(_: WidgetRendererProps) {
                       </Badge>
                     ) : null}
                   </div>
-                  {app.description ? (
+                  {app.description && showDescription ? (
                     <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
                   ) : null}
                 </div>

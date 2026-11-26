@@ -172,22 +172,24 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
 
           <div>
             <p className="truncate text-base font-semibold text-m3-text">{next.name}</p>
-            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-caption tabular-nums">
-              {typeof next.elementCount === "number" ? (
-                <span className="inline-flex items-center gap-1 rounded-sm bg-m3-sidebar px-2 py-0.5">
-                  {t("home.widgets.nextService.elements", { count: next.elementCount })}
-                </span>
-              ) : null}
-              {next.hasSongs ? (
-                <span className="inline-flex items-center gap-1 rounded-sm bg-m3-sidebar px-2 py-0.5">
-                  <Music2 className="h-3 w-3" aria-hidden />
-                  {t("home.widgets.nextService.hasSongs")}
-                </span>
-              ) : null}
-            </div>
+            {showMeta ? (
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-caption tabular-nums">
+                {typeof next.elementCount === "number" ? (
+                  <span className="inline-flex items-center gap-1 rounded-sm bg-m3-sidebar px-2 py-0.5">
+                    {t("home.widgets.nextService.elements", { count: next.elementCount })}
+                  </span>
+                ) : null}
+                {next.hasSongs ? (
+                  <span className="inline-flex items-center gap-1 rounded-sm bg-m3-sidebar px-2 py-0.5">
+                    <Music2 className="h-3 w-3" aria-hidden />
+                    {t("home.widgets.nextService.hasSongs")}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
           </div>
 
-          {setlistSongs.length > 0 ? (
+          {setlistSongs.length > 0 && showSetlist ? (
             <div className="surface-inset space-y-1 px-3 py-2">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-m3-secondary">
                 {t("home.widgets.nextService.setlistPreview")}
@@ -201,19 +203,19 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
                 ))}
               </ol>
             </div>
-          ) : next.notes?.trim() ? (
+          ) : next.notes?.trim() && showNotes ? (
             <p className="surface-inset line-clamp-2 px-3 py-2 text-xs text-m3-secondary">
               {next.notes.trim()}
             </p>
           ) : null}
 
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
-            {following ? (
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {showFollowing ? (
               <span className="truncate text-caption">
-                {t("home.widgets.nextService.then")}: {following.name} (
-                {formatServiceDate(following.date, locale)})
+                {t("home.widgets.nextService.then")}: {following!.name} (
+                {formatServiceDate(following!.date, locale)})
               </span>
-            ) : musicUrl ? (
+            ) : musicUrl && instance.h >= 2 ? (
               <a
                 href={`${musicUrl}/services`}
                 className="text-xs font-medium text-m3-secondary hover:text-m3-text"
