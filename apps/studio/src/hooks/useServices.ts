@@ -282,20 +282,15 @@ export function useService(id: string | null) {
     id ? (cachedSingleServices.get(id) ?? null) : null,
   );
   const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleServices.has(id) : false));
+  const [prevId, setPrevId] = useState(id);
+  if (id !== prevId) {
+    setPrevId(id);
+    setService(id ? (cachedSingleServices.get(id) ?? null) : null);
+    setIsLoading(id ? !cachedSingleServices.has(id) : false);
+  }
 
   useEffect(() => {
-    if (!id) {
-      setService(null);
-      setIsLoading(false);
-      return;
-    }
-
-    // Only enter the loading state if we don't already have a cached copy.
-    // This prevents the ~2s blank/spinner flash on every navigation when the
-    // in-memory DB already holds the document.
-    if (!cachedSingleServices.has(id)) {
-      setIsLoading(true);
-    }
+    if (!id) return;
 
     let isSubscribed = true;
     let rxSub: { unsubscribe: () => void } | null = null;

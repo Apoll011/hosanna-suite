@@ -649,20 +649,15 @@ export function useSong(id: string | null) {
     id ? (cachedSingleSongs.get(id) ?? null) : null,
   );
   const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleSongs.has(id) : false));
+  const [prevId, setPrevId] = useState(id);
+  if (id !== prevId) {
+    setPrevId(id);
+    setSong(id ? (cachedSingleSongs.get(id) ?? null) : null);
+    setIsLoading(id ? !cachedSingleSongs.has(id) : false);
+  }
 
   useEffect(() => {
-    if (!id) {
-      setSong(null);
-      setIsLoading(false);
-      return;
-    }
-
-    // Only enter the loading state if we don't already have a cached copy.
-    // This prevents the ~2s blank/spinner flash on every navigation when the
-    // in-memory DB already holds the document.
-    if (!cachedSingleSongs.has(id)) {
-      setIsLoading(true);
-    }
+    if (!id) return;
 
     let isSubscribed = true;
     let rxSub: { unsubscribe: () => void } | null = null;

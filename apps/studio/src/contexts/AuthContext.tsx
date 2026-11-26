@@ -475,7 +475,13 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [handleClearSession]);
 
   useEffect(() => {
-    fetchSession();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) void fetchSession();
+    });
+    return () => {
+      active = false;
+    };
   }, [fetchSession]);
 
   useEffect(() => {

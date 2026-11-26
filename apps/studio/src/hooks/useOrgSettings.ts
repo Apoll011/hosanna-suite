@@ -172,17 +172,22 @@ export interface UseOrgSettingsReturn {
 export function useOrgSettings(): UseOrgSettingsReturn {
   const { organization, refetch } = useAuth();
 
-  const [settings, setSettings] = useState<OrgSettings>(DEFAULT_ORG_SETTINGS);
-  const [savedSettings, setSavedSettings] = useState<OrgSettings>(DEFAULT_ORG_SETTINGS);
+  const [settings, setSettings] = useState<OrgSettings>(() =>
+    organization
+      ? parseOrgSettings((organization.metadata as OrgMetadataStructure) ?? {})
+      : DEFAULT_ORG_SETTINGS,
+  );
+  const [savedSettings, setSavedSettings] = useState<OrgSettings>(settings);
   const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
+  const [prevOrganization, setPrevOrganization] = useState(organization);
+  if (organization !== prevOrganization) {
+    setPrevOrganization(organization);
     if (organization) {
       const parsed = parseOrgSettings((organization.metadata as OrgMetadataStructure) ?? {});
       setSettings(parsed);
       setSavedSettings(parsed);
     }
-  }, [organization]);
+  }
 
   const isDirty = JSON.stringify(settings) !== JSON.stringify(savedSettings);
 
