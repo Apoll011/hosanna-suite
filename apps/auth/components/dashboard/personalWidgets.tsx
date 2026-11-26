@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   getWidgetDensity,
   SkeletonLine,
+  useWidgetPreview,
   WidgetEmptyBox,
   WidgetErrorBox,
   WidgetHeader,
@@ -20,7 +21,10 @@ import {
 
 export function ProfileWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
-  const { user, isLoading } = useAuthUser({ requireAuth: false });
+  const preview = useWidgetPreview();
+  const liveUser = useAuthUser({ requireAuth: false });
+  const user = preview ? preview.user : liveUser.user;
+  const isLoading = preview ? false : liveUser.isLoading;
   const density = getWidgetDensity(instance);
 
   const emailVerified = Boolean(
@@ -98,17 +102,21 @@ export function ProfileWidget({ instance }: WidgetRendererProps) {
 
 export function SecurityWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
-  const { user, isLoading } = useAuthUser({ requireAuth: false });
+  const preview = useWidgetPreview();
+  const liveUser = useAuthUser({ requireAuth: false });
+  const user = preview ? preview.user : liveUser.user;
+  const isLoading = preview ? false : liveUser.isLoading;
   const density = getWidgetDensity(instance);
-  const [sessionCount, setSessionCount] = useState<number | null>(null);
+  const [liveSessionCount, setLiveSessionCount] = useState<number | null>(null);
 
   useEffect(() => {
+    if (preview) return;
     let active = true;
     void authClient
       .listSessions({ query: {} })
       .then((res: { data?: unknown }) => {
         if (active && Array.isArray(res.data)) {
-          setSessionCount(res.data.length);
+          setLiveSessionCount(res.data.length);
         }
       })
       .catch(() => {
@@ -117,7 +125,9 @@ export function SecurityWidget({ instance }: WidgetRendererProps) {
     return () => {
       active = false;
     };
-  }, []);
+  }, [preview]);
+
+  const sessionCount = preview ? preview.sessionCount : liveSessionCount;
 
   const twoFactorEnabled = Boolean(
     user && "twoFactorEnabled" in user && (user as { twoFactorEnabled?: boolean }).twoFactorEnabled,
@@ -192,17 +202,19 @@ type InboxItem = {
 
 export function InboxWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
+  const preview = useWidgetPreview();
   const { organization } = useActiveOrganization();
   const density = getWidgetDensity(instance);
   const orgId = organization?.id ?? undefined;
-  const [items, setItems] = useState<InboxItem[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [liveItems, setLiveItems] = useState<InboxItem[]>([]);
+  const [liveUnreadCount, setLiveUnreadCount] = useState(0);
+  const [liveLoading, setLiveLoading] = useState(true);
+  const [liveError, setLiveError] = useState(false);
 
   const loadInbox = useCallback(async () => {
-    setLoading(true);
-    setError(false);
+    if (preview) return;
+    setLiveLoading(true);
+    setLiveError(false);
     try {
       const client = authClient as unknown as {
         inbox?: {
@@ -216,8 +228,8 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
         };
       };
       if (!client.inbox?.list) {
-        setItems([]);
-        setUnreadCount(0);
+        setLiveItems([]);
+        setLiveUnreadCount(0);
         return;
       }
       const [listRes, countRes] = await Promise.all([
@@ -226,28 +238,35 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
           ? client.inbox.unreadCount({ query: { organizationId: orgId } })
           : Promise.resolve({ data: { count: 0 } }),
       ]);
-      setItems(listRes.data?.notifications ?? []);
-      setUnreadCount(countRes.data?.count ?? 0);
+      setLiveItems(listRes.data?.notifications ?? []);
+      setLiveUnreadCount(countRes.data?.count ?? 0);
     } catch {
-      setError(true);
+      setLiveError(true);
     } finally {
-      setLoading(false);
+      setLiveLoading(false);
     }
-  }, [orgId]);
+  }, [orgId, preview]);
 
   useEffect(() => {
+    if (preview) return;
     void loadInbox();
-  }, [loadInbox]);
+  }, [loadInbox, preview]);
+
+  const items = preview ? preview.inbox.items : liveItems;
+  const unreadCount = preview ? preview.inbox.unreadCount : liveUnreadCount;
+  const loading = preview ? false : liveLoading;
+  const error = preview ? false : liveError;
 
   const markRead = async (id: string) => {
+    if (preview) return;
     const client = authClient as unknown as {
       inbox?: { markRead?: (args: { id: string }) => Promise<unknown> };
     };
     if (!client.inbox?.markRead) return;
-    setItems((prev) =>
+    setLiveItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, readAt: new Date().toISOString() } : item)),
     );
-    setUnreadCount((c) => Math.max(0, c - 1));
+    setLiveUnreadCount((c) => Math.max(0, c - 1));
     await client.inbox.markRead({ id }).catch(() => {
       void loadInbox();
     });

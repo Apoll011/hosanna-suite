@@ -28,6 +28,7 @@ import {
   useOrganizationData,
   useOrganizationLoader,
   useReplicationCollection,
+  useWidgetPreview,
   WidgetEmptyBox,
   WidgetErrorBox,
   WidgetHeader,
@@ -53,6 +54,7 @@ type SubscriptionWidgetState = {
 
 export function SubscriptionWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
+  const preview = useWidgetPreview();
   const { organization } = useActiveOrganization();
   const density = getWidgetDensity(instance);
   const [state, setState] = useState<{
@@ -63,6 +65,7 @@ export function SubscriptionWidget({ instance }: WidgetRendererProps) {
   }>({ organizationId: null, value: null, loading: true, error: false });
 
   useEffect(() => {
+    if (preview) return;
     let active = true;
     const orgId = organization?.id;
     if (!orgId) {
@@ -103,10 +106,16 @@ export function SubscriptionWidget({ instance }: WidgetRendererProps) {
     return () => {
       active = false;
     };
-  }, [organization?.id]);
+  }, [organization?.id, preview]);
 
-  const currentState =
-    state.organizationId === (organization?.id ?? null)
+  const currentState = preview
+    ? {
+        organizationId: "preview",
+        value: preview.subscription,
+        loading: false,
+        error: false,
+      }
+    : state.organizationId === (organization?.id ?? null)
       ? state
       : { organizationId: organization?.id ?? null, value: null, loading: true, error: false };
   const { value, loading, error } = currentState;
@@ -244,7 +253,13 @@ export function SubscriptionWidget({ instance }: WidgetRendererProps) {
 
 export function OrganizationOverviewWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
-  const { organization, activeRole, capabilities } = useActiveOrganization();
+  const preview = useWidgetPreview();
+  const liveOrg = useActiveOrganization();
+  const organization = preview ? preview.organization : liveOrg.organization;
+  const activeRole = preview ? preview.activeRole : liveOrg.activeRole;
+  const capabilities = preview
+    ? { canManageOrg: true, canExportBackup: true }
+    : liveOrg.capabilities;
   const density = getWidgetDensity(instance);
 
   if (!organization) {
@@ -370,13 +385,17 @@ type TeamRow = {
 
 export function TeamsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
+  const preview = useWidgetPreview();
   const loadTeams = useCallback(async (orgId: string) => {
     await ensureActiveOrganizationSession(orgId);
     const res = await fetch("/api/organization/teams", { credentials: "include" });
     if (!res.ok) throw new Error("Request failed");
     return (await res.json()) as { teams: TeamRow[] };
   }, []);
-  const { value, loading, error } = useOrganizationLoader("org-teams", loadTeams);
+  const live = useOrganizationLoader("org-teams", loadTeams, !preview);
+  const value = preview ? { teams: preview.teams } : live.value;
+  const loading = preview ? false : live.loading;
+  const error = preview ? false : live.error;
   const rowLimit = instance.h <= 1 ? 1 : Math.min(Math.max(instance.h - 1, 2), 8);
   const showAvatars = instance.w >= 4;
   const teams = (value?.teams ?? []).slice(0, rowLimit);
@@ -447,7 +466,9 @@ export function TeamsWidget({ instance }: WidgetRendererProps) {
 
 export function MembersWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
-  const { organization } = useActiveOrganization();
+  const preview = useWidgetPreview();
+  const liveOrg = useActiveOrganization();
+  const organization = preview ? preview.organization : liveOrg.organization;
   const density = getWidgetDensity(instance);
   const members = useMemo(() => organization?.members ?? [], [organization?.members]);
   const avatarLimit = instance.h <= 1 ? 3 : instance.w >= 5 ? 10 : instance.w >= 4 ? 7 : 5;
@@ -563,6 +584,7 @@ type InvitationRow = {
 
 export function InvitationsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
+  const preview = useWidgetPreview();
   const { organization, capabilities } = useActiveOrganization();
   const density = getWidgetDensity(instance);
   const loadInvites = useCallback(
@@ -577,11 +599,14 @@ export function InvitationsWidget({ instance }: WidgetRendererProps) {
     },
     [capabilities.canManageInvites],
   );
-  const { value, loading, error } = useOrganizationLoader(
+  const live = useOrganizationLoader(
     `org-pending-invites-${capabilities.canManageInvites}`,
     loadInvites,
-    Boolean(organization?.id),
+    Boolean(organization?.id) && !preview,
   );
+  const value = preview ? preview.invitations : live.value;
+  const loading = preview ? false : live.loading;
+  const error = preview ? false : live.error;
   const invites = value ?? [];
   const rowLimit = instance.h <= 1 ? 1 : Math.min(Math.max(instance.h - 1, 2), 8);
 
@@ -649,7 +674,13 @@ export function InvitationsWidget({ instance }: WidgetRendererProps) {
 
 export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
-  const { organization, activeRole, capabilities } = useActiveOrganization();
+  const preview = useWidgetPreview();
+  const liveOrg = useActiveOrganization();
+  const organization = preview ? preview.organization : liveOrg.organization;
+  const activeRole = preview ? preview.activeRole : liveOrg.activeRole;
+  const capabilities = preview
+    ? { canManageOrg: true, canExportBackup: true }
+    : liveOrg.capabilities;
   const density = getWidgetDensity(instance);
   const perms = useMemo(
     () => new Set(resolveEffectivePermissions({ orgRole: activeRole }).allowed),

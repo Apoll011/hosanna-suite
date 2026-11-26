@@ -44,6 +44,11 @@ export const es: typeof pt = {
       configure: "Configurar",
       searchWidgets: "Buscar widgets…",
       noMatchingWidgets: "Ningún widget coincide con la búsqueda.",
+      allSections: "Todos",
+      addWidget: "Añadir widget",
+      added: "Añadido",
+      previewLabel: "Vista previa",
+      previewHint: "Datos de ejemplo para vista previa",
       sections: {
         apps: "Aplicaciones",
         worship: "Alabanza y música",

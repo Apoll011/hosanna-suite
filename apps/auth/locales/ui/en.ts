@@ -44,6 +44,11 @@ export const en: typeof pt = {
       configure: "Configure",
       searchWidgets: "Search widgets…",
       noMatchingWidgets: "No widgets match your search.",
+      allSections: "All",
+      addWidget: "Add widget",
+      added: "Added",
+      previewLabel: "Preview",
+      previewHint: "Sample data shown for preview",
       sections: {
         apps: "Applications",
         worship: "Worship & music",

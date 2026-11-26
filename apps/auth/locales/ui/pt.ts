@@ -42,6 +42,11 @@ export const pt = {
       configure: "Configurar",
       searchWidgets: "Pesquisar widgets…",
       noMatchingWidgets: "Nenhum widget corresponde à pesquisa.",
+      allSections: "Todos",
+      addWidget: "Adicionar widget",
+      added: "Adicionado",
+      previewLabel: "Pré-visualização",
+      previewHint: "Dados de exemplo para pré-visualização",
       sections: {
         apps: "Aplicações",
         worship: "Louvor e música",
