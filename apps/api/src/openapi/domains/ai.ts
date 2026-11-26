@@ -1,9 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import {
-  aiChatContextSchema,
-  aiConfirmActionSchema,
-  updateAiSettingsSchema,
-} from "../../validators/ai.validators.js";
+import { aiConfirmActionSchema, updateAiSettingsSchema } from "../../validators/ai.validators.js";
 import { jsonBody, jsonResp, op, OpenApiOperation, sessionAuth } from "../builder.js";
 
 export function getAiPaths(): Record<string, Record<string, OpenApiOperation>> {

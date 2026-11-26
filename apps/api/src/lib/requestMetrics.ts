@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+import type { RequestHandler } from "express";
 import { AsyncLocalStorage } from "node:async_hooks";
-import type { Request, RequestHandler } from "express";
 import { randomUUID } from "node:crypto";
 
 type RequestMetrics = {

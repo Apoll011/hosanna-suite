@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { idParamSchema } from "../../validators/common.validators.js";
-import {
-  createServiceSchema,
-  updateServiceElementsSchema,
-  updateServiceSchema,
-} from "../../validators/service.validators.js";
+import { updateServiceSchema } from "../../validators/service.validators.js";
 import {
   jsonBody,
   jsonResp,

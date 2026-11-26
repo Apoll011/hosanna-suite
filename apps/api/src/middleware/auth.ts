@@ -5,11 +5,11 @@ import type { NextFunction, Request, Response } from "express";
 import { createHash } from "node:crypto";
 import { forOrganization, prisma } from "../database/prisma.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
-import { getSession, type SessionResult } from "../lib/session.js";
+import { recordAuthenticationDuration } from "../lib/requestMetrics.js";
+import { getSession } from "../lib/session.js";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
-import { recordAuthenticationDuration } from "../lib/requestMetrics.js";
 
 export interface DeniedResponse {
   status?: number;
