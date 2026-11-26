@@ -35,10 +35,11 @@ export const DeleteEventModal: React.FC<DeleteEventModalProps> = ({
 }) => {
   const { t, tc } = useI18n();
   const [notify, setNotify] = useState(false);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
     if (isOpen) setNotify(false);
-  }, [isOpen]);
+  }
 
   if (!isOpen) return null;
 

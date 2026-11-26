@@ -1022,8 +1022,8 @@ export const ServiceDetailPage: React.FC = () => {
     });
 
     return [...list].sort((a, b) => {
-      let valA = (a.title || "").toLowerCase();
-      let valB = (b.title || "").toLowerCase();
+      const valA = (a.title || "").toLowerCase();
+      const valB = (b.title || "").toLowerCase();
 
       if (valA < valB) return -1;
       if (valA > valB) return 1;

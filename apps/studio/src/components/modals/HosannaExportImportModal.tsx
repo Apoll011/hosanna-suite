@@ -110,13 +110,22 @@ export const HosannaExportImportModal: React.FC<HosannaExportImportModalProps> =
     [t],
   );
 
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevDefaultTargetFolderId, setPrevDefaultTargetFolderId] = useState(defaultTargetFolderId);
+  if (isOpen !== prevOpen || defaultTargetFolderId !== prevDefaultTargetFolderId) {
+    setPrevOpen(isOpen);
+    setPrevDefaultTargetFolderId(defaultTargetFolderId);
+    if (isOpen) {
+      setTargetFolderId(defaultTargetFolderId ?? null);
+      setConflictPolicy("skip");
+      setSelectedFile(null);
+      setParsedDoc(null);
+      setParseError(null);
+    }
+  }
+
   useEffect(() => {
     if (!isOpen) return;
-    setTargetFolderId(defaultTargetFolderId ?? null);
-    setConflictPolicy("skip");
-    setSelectedFile(null);
-    setParsedDoc(null);
-    setParseError(null);
 
     let active = true;
     void getDatabase().then((db) => {

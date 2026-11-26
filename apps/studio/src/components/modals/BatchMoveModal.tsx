@@ -33,15 +33,18 @@ export const BatchMoveModal: React.FC<BatchMoveModalProps> = ({
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevFolders, setPrevFolders] = useState(folders);
+  if (isOpen !== prevOpen || folders !== prevFolders) {
+    setPrevOpen(isOpen);
+    setPrevFolders(folders);
     if (isOpen) {
       setSelectedFolderId(null);
       const nextExpanded = new Set<string>();
       folders.forEach((f) => nextExpanded.add(f.id));
       setExpandedFolderIds(nextExpanded);
     }
-  }, [isOpen, folders]);
+  }
 
   const folderTree = useMemo(() => buildFolderTree(folders), [folders]);
 

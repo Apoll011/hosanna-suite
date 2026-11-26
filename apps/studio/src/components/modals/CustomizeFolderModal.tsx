@@ -33,14 +33,17 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
   const [selectedIcon, setSelectedIcon] = useState<string>("default");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevFolder, setPrevFolder] = useState(folder);
+  if (isOpen !== prevOpen || folder !== prevFolder) {
+    setPrevOpen(isOpen);
+    setPrevFolder(folder);
     if (folder && isOpen) {
       setSelectedColor(folder.color || "default");
       setSelectedIcon(folder.icon || "default");
       setSearchQuery("");
     }
-  }, [folder, isOpen]);
+  }
 
   const filteredIcons = useMemo(() => {
     if (!searchQuery.trim()) return FOLDER_ICONS;

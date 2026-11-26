@@ -177,10 +177,13 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
   const { t } = useI18n();
 
   const [draft, setDraft] = useState(currentQuery);
-
-  React.useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevQuery, setPrevQuery] = useState(currentQuery);
+  if (isOpen !== prevOpen || currentQuery !== prevQuery) {
+    setPrevOpen(isOpen);
+    setPrevQuery(currentQuery);
     if (isOpen) setDraft(currentQuery);
-  }, [isOpen, currentQuery]);
+  }
 
   const activeTags = useMemo(
     () =>

@@ -57,8 +57,11 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const imageInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevCollection, setPrevCollection] = useState(collection);
+  if (isOpen !== prevOpen || collection !== prevCollection) {
+    setPrevOpen(isOpen);
+    setPrevCollection(collection);
     if (isOpen) {
       if (collection) {
         setName(collection.name || "");
@@ -76,7 +79,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
       setSearchQuery("");
       setError("");
     }
-  }, [isOpen, collection]);
+  }
 
   const filteredIcons = useMemo(() => {
     if (!searchQuery.trim()) return FOLDER_ICONS;

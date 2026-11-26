@@ -34,12 +34,18 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  React.useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
     if (isOpen) {
       setSelectedCollectionId(null);
       setSearchQuery("");
       setIsSubmitting(false);
+    }
+  }
+
+  React.useEffect(() => {
+    if (isOpen) {
       // After paint so the tour can attach to [data-tour='add-to-collection-modal'].
       requestAnimationFrame(() => {
         emitOnboardingEvent("add-to-collection-modal-opened");

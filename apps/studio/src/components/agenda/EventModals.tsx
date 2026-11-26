@@ -178,16 +178,19 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
   );
   const [titleTouched, setTitleTouched] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setForm(emptyEventForm(initial, defaultType, usualStartTime));
-    setTitleTouched(false);
-    setConfirmingDelete(false);
-    // Seed once when opening / when the edited event changes — not when org
-    // settings hydrate mid-edit.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- usualStartTime read on open
-  }, [isOpen, initial, defaultType]);
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevInitial, setPrevInitial] = useState(initial);
+  const [prevDefaultType, setPrevDefaultType] = useState(defaultType);
+  if (isOpen !== prevOpen || initial !== prevInitial || defaultType !== prevDefaultType) {
+    setPrevOpen(isOpen);
+    setPrevInitial(initial);
+    setPrevDefaultType(defaultType);
+    if (isOpen) {
+      setForm(emptyEventForm(initial, defaultType, usualStartTime));
+      setTitleTouched(false);
+      setConfirmingDelete(false);
+    }
+  }
 
   const applyEventType = (type: string) => {
     setForm((f) => ({
@@ -517,13 +520,16 @@ export const AddResponsibilityModal: React.FC<AddResponsibilityModalProps> = ({
   );
   const [categoryId, setCategoryId] = useState(available[0]?.id ?? "");
   const [assignees, setAssignees] = useState<Assignee[]>([]);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevAvailable, setPrevAvailable] = useState(available);
+  if (isOpen !== prevOpen || available !== prevAvailable) {
+    setPrevOpen(isOpen);
+    setPrevAvailable(available);
     if (isOpen) {
       setCategoryId(available[0]?.id ?? "");
       setAssignees([]);
     }
-  }, [isOpen, available]);
+  }
 
   if (!isOpen) return null;
 
@@ -634,10 +640,13 @@ export const EditAssigneesModal: React.FC<EditAssigneesModalProps> = ({
 }) => {
   const { t, tc } = useI18n();
   const [value, setValue] = useState<Assignee[]>(assignees);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevAssignees, setPrevAssignees] = useState(assignees);
+  if (isOpen !== prevOpen || assignees !== prevAssignees) {
+    setPrevOpen(isOpen);
+    setPrevAssignees(assignees);
     if (isOpen) setValue(assignees);
-  }, [isOpen, assignees]);
+  }
 
   if (!isOpen) return null;
 
