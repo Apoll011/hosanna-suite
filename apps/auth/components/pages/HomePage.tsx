@@ -2,6 +2,7 @@
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { authDashboardRegistry, authDashboardRenderers } from "@/components/dashboard/registry";
+import { WidgetGalleryModal } from "@/components/dashboard/WidgetGalleryModal";
 import { migrateLegacyFavorites, homeSettings } from "@/lib/dashboard/settings";
 import { useI18n } from "@/lib/ui/i18n";
 import {
@@ -11,7 +12,7 @@ import {
   Spinner,
   type SuiteCatalogApp,
 } from "@hosanna/ui";
-import { Dashboard, listRenderableWidgets, WidgetConfiguration } from "@hosanna/dashboard/react";
+import { Dashboard, listRenderableWidgets } from "@hosanna/dashboard/react";
 import {
   addWidget,
   buildDefaultLayout,
@@ -19,11 +20,10 @@ import {
   mergeNewEligibleWidgets,
   normalizeLayout,
   removeWidget,
-  updateWidget,
   type DashboardLayout,
-  type WidgetInstance,
 } from "@hosanna/dashboard/core";
 import { resolveEffectivePermissions } from "@hosanna/auth";
+import { Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
@@ -48,7 +48,7 @@ export function HomePage() {
   const [layout, setLayout] = useState<DashboardLayout | null>(null);
   const [draft, setDraft] = useState<DashboardLayout | null>(null);
   const [editing, setEditing] = useState(false);
-  const [configuring, setConfiguring] = useState<string | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [error, setError] = useState(false);
   const [catalogRevision, setCatalogRevision] = useState(0);
@@ -90,8 +90,8 @@ export function HomePage() {
     setError(false);
     setLayout(null);
     setDraft(null);
+    setGalleryOpen(false);
     setEditing(false);
-    setConfiguring(null);
     const scopedUrl = APPS_URL + "?organizationId=" + encodeURIComponent(orgId);
     const cached = peekSuiteAppsCache(scopedUrl);
     if (cached && active) setApps(cached);
@@ -137,6 +137,7 @@ export function HomePage() {
   }, [layout]);
   const cancelEditing = () => {
     setDraft(null);
+    setGalleryOpen(false);
     setEditing(false);
   };
   const saveEditing = () => {
@@ -145,14 +146,21 @@ export function HomePage() {
     setLayout(normalized);
     homeSettings.set({ layouts: { ...homeSettings.get().layouts, [orgId]: normalized } });
     setDraft(null);
+    setGalleryOpen(false);
     setEditing(false);
   };
   const resetEditing = () => setDraft(buildDefaultLayout(context, authDashboardRegistry));
-  const update = (instanceId: string, patch: Partial<WidgetInstance>) => {
+  const handleRemove = useCallback((instanceId: string) => {
+    setDraft((current) => (current ? removeWidget(current, instanceId) : current));
+  }, []);
+  const handleAddWidget = useCallback((widgetId: string) => {
     setDraft((current) =>
-      current ? updateWidget(current, instanceId, patch, authDashboardRegistry) : current,
+      current
+        ? addWidget(current, widgetId, authDashboardRegistry, widgetId + ":" + crypto.randomUUID())
+        : current,
     );
-  };
+  }, []);
+
   const currentLayout = editing ? draft : layout;
   const renderLayout = currentLayout
     ? {
@@ -165,7 +173,6 @@ export function HomePage() {
     : null;
   const usableWidgets = listRenderableWidgets(authDashboardRegistry, authDashboardRenderers);
   const gallery = usableWidgets.filter((definition) => isWidgetEligible(definition, context));
-  const groups = [...new Set(gallery.map((definition) => definition.app))];
 
   if ((userLoading && !user) || (orgLoading && !organization)) {
     return (
@@ -197,7 +204,14 @@ export function HomePage() {
           <p className="mt-1 text-muted">{organization?.name}</p>
         </div>
         {editing ? (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setGalleryOpen(true)}
+              icon={<Plus className="h-4 w-4" aria-hidden />}
+            >
+              {t("home.dashboard.gallery")}
+            </Button>
             <Button variant="ghost" onClick={resetEditing}>
               {t("home.dashboard.reset")}
             </Button>
@@ -223,69 +237,16 @@ export function HomePage() {
           <Spinner size="md" label={t("common.loading")} />
         </div>
       ) : (
-        <div className="space-y-6">
-          {editing ? (
-            <section className="surface p-4 sm:p-5">
-              <h2 className="text-title">{t("home.dashboard.gallery")}</h2>
-              <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {groups.map((appId) => (
-                  <div key={appId} className="space-y-2">
-                    <h3 className="text-label uppercase">
-                      {t(("suite.apps." + appId + ".name") as Parameters<typeof t>[0])}
-                    </h3>
-                    {gallery
-                      .filter((widget) => widget.app === appId)
-                      .map((widget) => {
-                        const count =
-                          draft?.items.filter((item) => item.widget === widget.id).length ?? 0;
-                        const unavailable = widget.singleton && count > 0;
-                        return (
-                          <div
-                            key={widget.id}
-                            className="flex items-center justify-between gap-2 rounded-md border border-m3-border px-3 py-2"
-                          >
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium">
-                                {t(widget.title as Parameters<typeof t>[0])}
-                              </p>
-                              <p className="text-caption">
-                                {t(widget.description as Parameters<typeof t>[0])}
-                              </p>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={unavailable}
-                              onClick={() =>
-                                setDraft((current) =>
-                                  current
-                                    ? addWidget(
-                                        current,
-                                        widget.id,
-                                        authDashboardRegistry,
-                                        widget.id + ":" + crypto.randomUUID(),
-                                      )
-                                    : current,
-                                )
-                              }
-                            >
-                              {t("home.dashboard.add")}
-                            </Button>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
+        <div className="min-w-0 w-full">
           {editing && !mobile ? (
             <GridstackAdapter
               layout={renderLayout}
               registry={authDashboardRegistry}
               renderers={authDashboardRenderers}
               onChange={setDraft}
+              onRemove={handleRemove}
+              removeLabel={t("home.dashboard.remove")}
+              getTitle={(definition) => t(definition.title as Parameters<typeof t>[0])}
             />
           ) : (
             <Dashboard
@@ -296,149 +257,20 @@ export function HomePage() {
               removeLabel={t("home.dashboard.remove")}
               errorLabel={t("home.widgets.error")}
               getTitle={(definition) => t(definition.title as Parameters<typeof t>[0])}
-              onRemove={(instanceId) =>
-                setDraft((current) => (current ? removeWidget(current, instanceId) : current))
-              }
+              onRemove={handleRemove}
             />
           )}
-
-          {editing ? (
-            <section aria-label={t("home.dashboard.keyboardControls")} className="space-y-3">
-              <h2 className="text-title">{t("home.dashboard.keyboardControls")}</h2>
-              {draft?.items
-                .filter((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  return definition && isWidgetEligible(definition, context);
-                })
-                .map((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  if (configuring !== item.instanceId || !definition?.config) return null;
-                  return (
-                    <div key={item.instanceId} className="surface p-4">
-                      <h3 className="mb-3 text-sm font-semibold">
-                        {t("home.dashboard.configure")}:{" "}
-                        {t(definition.title as Parameters<typeof t>[0])}
-                      </h3>
-                      <WidgetConfiguration
-                        definition={definition.config}
-                        value={item.config ?? definition.config.defaults ?? {}}
-                        label={(key) => t(key as Parameters<typeof t>[0])}
-                        onChange={(config) =>
-                          update(item.instanceId, {
-                            config,
-                            configVersion: definition.config?.version ?? 0,
-                          })
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              {draft?.items
-                .filter((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  return definition && isWidgetEligible(definition, context);
-                })
-                .map((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  if (!definition) return null;
-                  return (
-                    <div
-                      key={item.instanceId}
-                      className="flex flex-wrap items-center gap-2 rounded-md border border-m3-border p-2"
-                    >
-                      <span className="min-w-28 flex-1 text-sm">
-                        {t(definition.title as Parameters<typeof t>[0])}
-                      </span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveLeft")}
-                        onClick={() => update(item.instanceId, { x: item.x - 1 })}
-                      >
-                        ←
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveRight")}
-                        onClick={() => update(item.instanceId, { x: item.x + 1 })}
-                      >
-                        →
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveUp")}
-                        onClick={() => update(item.instanceId, { y: item.y - 1 })}
-                      >
-                        ↑
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveDown")}
-                        onClick={() => update(item.instanceId, { y: item.y + 1 })}
-                      >
-                        ↓
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.smaller")}
-                        onClick={() =>
-                          update(item.instanceId, {
-                            w: Math.max(definition.minSize.w, item.w - 1),
-                            h: Math.max(definition.minSize.h, item.h - 1),
-                          })
-                        }
-                      >
-                        −
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.larger")}
-                        onClick={() =>
-                          update(item.instanceId, {
-                            w: Math.min(definition.maxSize?.w ?? 12, item.w + 1),
-                            h: Math.min(definition.maxSize?.h ?? 20, item.h + 1),
-                          })
-                        }
-                      >
-                        +
-                      </Button>
-                      {definition.config?.schema &&
-                      Object.keys(definition.config.schema.fields).length > 0 ? (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() =>
-                            setConfiguring((current) =>
-                              current === item.instanceId ? null : item.instanceId,
-                            )
-                          }
-                        >
-                          {t("home.dashboard.configure")}
-                        </Button>
-                      ) : null}
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() =>
-                          setDraft((current) =>
-                            current ? removeWidget(current, item.instanceId) : current,
-                          )
-                        }
-                      >
-                        {t("home.dashboard.remove")}
-                      </Button>
-                    </div>
-                  );
-                })}
-            </section>
-          ) : null}
         </div>
       )}
+
+      <WidgetGalleryModal
+        isOpen={editing && galleryOpen}
+        onClose={() => setGalleryOpen(false)}
+        widgets={gallery}
+        draft={draft}
+        apps={apps}
+        onAddWidget={handleAddWidget}
+      />
     </main>
   );
 }

@@ -1,7 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createCache, createSecondaryStorage } from "../src/index.js";
+import {
+  createCache,
+  createScopedCache,
+  createSecondaryStorage,
+  globalCacheKey,
+  orgCacheKey,
+  orgUserCacheKey,
+  userCacheKey,
+  type ScopedCacheKey,
+} from "../src/index.js";
 
 describe("createCache (memory)", () => {
   it("round-trips values with TTL", async () => {
@@ -57,5 +66,36 @@ describe("createSecondaryStorage", () => {
       if (prev === undefined) delete process.env.REDIS_URL;
       else process.env.REDIS_URL = prev;
     }
+  });
+});
+
+describe("createScopedCache & scoped key helpers", () => {
+  it("formats org, orgUser, user, and global keys deterministically", () => {
+    assert.equal(orgCacheKey("org_1", "songs"), "org:org_1:songs");
+    assert.equal(orgUserCacheKey("org_1", "user_1", "role"), "org:org_1:user:user_1:role");
+    assert.equal(userCacheKey("user_1", "export"), "user:user_1:export");
+    assert.equal(globalCacheKey("jwks", "document"), "global:jwks:document");
+  });
+
+  it("rejects empty or colon-containing tenant/user segments", () => {
+    assert.throws(() => orgCacheKey("", "songs"));
+    assert.throws(() => orgCacheKey("org:1", "songs"));
+    assert.throws(() => orgUserCacheKey("org_1", "", "role"));
+    assert.throws(() => orgUserCacheKey("org_1", "u:1", "role"));
+    assert.throws(() => userCacheKey(" ", "export"));
+    assert.throws(() => globalCacheKey());
+  });
+
+  it("rejects unscoped keys at runtime and isolates orgs", async () => {
+    const cache = createScopedCache({ namespace: "test:scoped" });
+    await cache.set(orgCacheKey("org_a", "item"), "payload-a");
+    await cache.set(orgCacheKey("org_b", "item"), "payload-b");
+
+    assert.equal(await cache.get(orgCacheKey("org_a", "item")), "payload-a");
+    assert.equal(await cache.get(orgCacheKey("org_b", "item")), "payload-b");
+
+    await assert.rejects(() => cache.get("unscoped-key" as unknown as ScopedCacheKey));
+    await assert.rejects(() => cache.set("unscoped-key" as unknown as ScopedCacheKey, "x"));
+    await assert.rejects(() => cache.delete("unscoped-key" as unknown as ScopedCacheKey));
   });
 });

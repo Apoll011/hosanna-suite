@@ -6,11 +6,11 @@
 import { LibraryHealthTab } from "@/src/components/analytics/LibraryHealthTab";
 import { SetlistInsightsTab } from "@/src/components/analytics/SetlistInsightsTab";
 import { UsageOverviewTab } from "@/src/components/analytics/UsageOverviewTab";
-import { PageHeader, Tabs, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
+import { PageHeader, Tabs, useCan } from "@hosanna/ui";
 
 import { Gauge, HeartPulse, ListMusic } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 
 type TabType = "usage" | "setlist" | "libraryHealth";

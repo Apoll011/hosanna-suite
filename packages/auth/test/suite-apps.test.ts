@@ -25,7 +25,7 @@ describe("listSuiteApps", () => {
 
     const auth = apps.find((a) => a.id === "auth");
     const music = apps.find((a) => a.id === "music");
-    const _planning = apps.find((a) => a.id === "planning");
+    const planning = apps.find((a) => a.id === "planning");
 
     assert.equal(auth?.status, "live");
     assert.equal(auth?.accessible, true);

@@ -35,7 +35,14 @@ import { isTransientNetworkError } from "@hosanna/replication/replication";
 import { captureException, identify, posthog, track } from "../lib/posthog";
 import { createResumeRefetchGate } from "../lib/resumeRefetch";
 import { fetchSubscriptionRows } from "../lib/subscriptions";
-import { ensureOrgScopedData, getDatabase, resetDatabase, resetReplication } from "../db";
+import {
+  clearReplicationState,
+  ensureOrgScopedData,
+  getDatabase,
+  resetDatabase,
+  resetReplication,
+} from "../db";
+import { deleteIndexedDbByName, PROD_CHECKPOINT_DB_NAME, PROD_DB_NAME } from "../db/dbNames";
 
 export { CACHED_USER_KEY } from "../lib/authSessionCache";
 
@@ -371,6 +378,13 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } else {
         localStorage.removeItem("active_org_slug");
         clearPermissionCache();
+        if (userSwitched) {
+          try {
+            await clearReplicationState();
+          } catch (err) {
+            console.warn("[AuthContext] Failed to clear replication state on user switch:", err);
+          }
+        }
       }
 
       let acceptedTrial: boolean | null = null;
@@ -532,29 +546,27 @@ const StandardAuthProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     clearPersonalSettingsCache();
     localStorage.clear();
 
-    // Reset the IDB singleton *before* deleting the databases.
+    // Reset replication + IDB singletons *before* deleting the databases.
     // This ensures the next getDatabase() call (e.g. after an in-tab re-login)
     // opens a fresh connection instead of reusing the now-closing one, which
     // would throw "The database connection is closing" on every write/purge.
+    resetReplication();
+    await clearReplicationState().catch(() => {});
     resetDatabase();
+
+    await Promise.all([
+      deleteIndexedDbByName(PROD_DB_NAME),
+      deleteIndexedDbByName(PROD_CHECKPOINT_DB_NAME),
+    ]);
 
     if (typeof indexedDB !== "undefined" && indexedDB.databases) {
       try {
         const databases = await indexedDB.databases();
         await Promise.all(
-          databases.map(
-            (db) =>
-              new Promise<void>((resolve) => {
-                if (!db.name) {
-                  resolve();
-                  return;
-                }
-                const req = indexedDB.deleteDatabase(db.name);
-                req.onsuccess = () => resolve();
-                req.onerror = () => resolve();
-                req.onblocked = () => resolve();
-              }),
-          ),
+          databases
+            .map((db) => db.name)
+            .filter((name): name is string => Boolean(name))
+            .map((name) => deleteIndexedDbByName(name)),
         );
       } catch {
         // indexedDB.databases() may not be available in all browsers; ignore errors

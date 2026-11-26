@@ -138,7 +138,10 @@ export const HosannaExportImportModal: React.FC<HosannaExportImportModalProps> =
     });
 
     if (initialFile) {
-      void loadFile(initialFile);
+      void Promise.resolve().then(() => {
+        if (!active) return;
+        return loadFile(initialFile);
+      });
     }
 
     return () => {

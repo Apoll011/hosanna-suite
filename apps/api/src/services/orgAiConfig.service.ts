@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { prisma } from "../database/prisma.js";
+import { forOrganization } from "../database/prisma.js";
 import { decryptSecret, encryptSecret, isAiCryptoConfigured } from "../lib/aiCrypto.js";
 import { NATIVE_WEB_CAPABILITIES } from "../mcp/lib/nativeWebCapabilities.js";
 import { AppError } from "../utils/errors.js";
@@ -100,7 +100,7 @@ export function publicAiSettings(
 
 export class OrgAiConfigService {
   async getPublic(orgId: string) {
-    const row = await prisma.orgAiConfig.findUnique({ where: { orgId } });
+    const row = await forOrganization(orgId).orgAiConfig.findUnique({ where: { orgId } });
     return publicAiSettings(row);
   }
 
@@ -119,7 +119,8 @@ export class OrgAiConfigService {
       memoryEnabled?: boolean;
     },
   ) {
-    const existing = await prisma.orgAiConfig.findUnique({ where: { orgId } });
+    const db = forOrganization(orgId);
+    const existing = await db.orgAiConfig.findUnique({ where: { orgId } });
     const provider = input.provider ?? existing?.provider ?? "openai";
     assertProvider(provider);
     const model = input.model?.trim() || existing?.model || AI_MODEL_PRESETS[provider][0];
@@ -182,7 +183,7 @@ export class OrgAiConfigService {
       }),
     };
 
-    const row = await prisma.orgAiConfig.upsert({
+    const row = await db.orgAiConfig.upsert({
       where: { orgId },
       create: {
         ...behavior,
@@ -211,9 +212,10 @@ export class OrgAiConfigService {
   }
 
   async clearKey(orgId: string) {
-    const row = await prisma.orgAiConfig.findUnique({ where: { orgId } });
+    const db = forOrganization(orgId);
+    const row = await db.orgAiConfig.findUnique({ where: { orgId } });
     if (!row) return publicAiSettings(null);
-    const updated = await prisma.orgAiConfig.update({
+    const updated = await db.orgAiConfig.update({
       where: { orgId },
       data: {
         apiKeyCiphertext: null,
@@ -234,7 +236,7 @@ export class OrgAiConfigService {
     apiKey: string;
     baseUrl: string | null;
   } | null> {
-    const row = await prisma.orgAiConfig.findUnique({ where: { orgId } });
+    const row = await forOrganization(orgId).orgAiConfig.findUnique({ where: { orgId } });
     if (!row?.apiKeyCiphertext || !row.apiKeyIv || !row.apiKeyTag) {
       return null;
     }
@@ -263,7 +265,7 @@ export class OrgAiConfigService {
     instructions: string | null;
     memoryEnabled: boolean;
   }> {
-    const row = await prisma.orgAiConfig.findUnique({ where: { orgId } });
+    const row = await forOrganization(orgId).orgAiConfig.findUnique({ where: { orgId } });
     if (!row?.enabled) {
       throw AppError.badRequest("AI assistant is disabled for this organization.");
     }

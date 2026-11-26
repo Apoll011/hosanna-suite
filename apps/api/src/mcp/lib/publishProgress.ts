@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { createCache } from "@hosanna/cache";
+import { createScopedCache, orgCacheKey } from "@hosanna/cache";
 
 type PublishPhase = "service_saved" | "agenda_saved" | "verified";
 
@@ -15,11 +15,11 @@ export type PublishProgress = {
 export type PublishProgressInput = Omit<PublishProgress, "at">;
 
 const TTL_MS = 30 * 60 * 1000;
-const progress = createCache({ namespace: "mcp:publish", ttlMs: TTL_MS });
-const completed = createCache({ namespace: "mcp:publish-done", ttlMs: TTL_MS });
+const progress = createScopedCache({ namespace: "mcp:publish", ttlMs: TTL_MS });
+const completed = createScopedCache({ namespace: "mcp:publish-done", ttlMs: TTL_MS });
 
 function progressKey(orgId: string, clientRequestId: string) {
-  return `${orgId}:${clientRequestId.trim()}`;
+  return orgCacheKey(orgId, clientRequestId.trim());
 }
 
 export async function getPublishProgress(

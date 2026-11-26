@@ -33,9 +33,11 @@ export const serviceListSchema = z.object({
       if (val === "true" || val === true) return true;
       return false;
     })
-    .pipe(z.boolean()),
+    .pipe(z.boolean())
+    .default(false),
   metadataOnly: z
     .union([z.string(), z.boolean(), z.undefined()])
     .transform((val) => val === "true" || val === true)
-    .pipe(z.boolean()),
+    .pipe(z.boolean())
+    .default(false),
 });

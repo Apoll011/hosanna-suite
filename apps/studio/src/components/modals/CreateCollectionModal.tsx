@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Collection } from "@/src/types";
 import { compressImage } from "@/src/utils/settingsUtils";
+import { Button, Input, Modal } from "@hosanna/ui";
 import {
   Check,
   ImageIcon,
@@ -18,7 +18,7 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
   FOLDER_COLORS,
   FOLDER_ICONS,

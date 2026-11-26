@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
-import { createCache } from "@hosanna/cache";
+import { createScopedCache, orgCacheKey, orgUserCacheKey } from "@hosanna/cache";
 import type { NextFunction, Request, Response } from "express";
 import { createHash } from "node:crypto";
 import { forOrganization, prisma } from "../database/prisma.js";
@@ -168,9 +168,9 @@ const AUTH_CTX_TTL_MS = 120_000;
 const ORG_LOCALE_TTL_MS = 300_000;
 const USER_ROLE_TTL_MS = 300_000;
 
-const authCtxCache = createCache({ namespace: "auth:ctx", ttlMs: AUTH_CTX_TTL_MS });
-const orgLocaleCache = createCache({ namespace: "auth:locale", ttlMs: ORG_LOCALE_TTL_MS });
-const userRoleCache = createCache({ namespace: "auth:role", ttlMs: USER_ROLE_TTL_MS });
+const authCtxCache = createScopedCache({ namespace: "auth:ctx", ttlMs: AUTH_CTX_TTL_MS });
+const orgLocaleCache = createScopedCache({ namespace: "auth:locale", ttlMs: ORG_LOCALE_TTL_MS });
+const userRoleCache = createScopedCache({ namespace: "auth:role", ttlMs: USER_ROLE_TTL_MS });
 
 export async function invalidateAuthCaches() {
   await Promise.all([authCtxCache.clear(), orgLocaleCache.clear(), userRoleCache.clear()]);
@@ -238,7 +238,8 @@ function parseLocaleFromMeta(metadata: unknown): string | null {
 }
 
 async function getCachedOrgLocale(workspaceId: string): Promise<string> {
-  const cached = await orgLocaleCache.get<string>(workspaceId);
+  const key = orgCacheKey(workspaceId, "locale");
+  const cached = await orgLocaleCache.get<string>(key);
   if (cached) return cached;
 
   const org = await prisma.organization.findUnique({
@@ -247,12 +248,12 @@ async function getCachedOrgLocale(workspaceId: string): Promise<string> {
   });
 
   const locale = parseLocaleFromMeta(org?.metadata) ?? DEFAULT_LOCALE;
-  await orgLocaleCache.set(workspaceId, locale);
+  await orgLocaleCache.set(key, locale);
   return locale;
 }
 
 async function getCachedUserRole(workspaceId: string, userId: string): Promise<string> {
-  const key = `${workspaceId}:${userId}`;
+  const key = orgUserCacheKey(workspaceId, userId, "role");
   const cached = await userRoleCache.get<string>(key);
   if (cached) return cached;
 
@@ -285,7 +286,7 @@ async function resolveAuthContext(req: Request): Promise<AuthContext> {
     throw AppError.forbidden("An active workspace/organization context is required.");
   }
 
-  const ctxKey = `${tokenKey}:${workspaceId}`;
+  const ctxKey = orgUserCacheKey(workspaceId, user.id, "token", tokenKey);
   const cached = await authCtxCache.get<AuthContext>(ctxKey);
   if (cached?.userId && cached.workspaceId === workspaceId) return cached;
 

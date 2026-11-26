@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { createHash } from "node:crypto";
-import { createCache } from "@hosanna/cache";
+import { createScopedCache, orgCacheKey } from "@hosanna/cache";
 
 type Entry = { result: unknown; hash: string };
 type Inflight = { hash: string; promise: Promise<unknown> };
 
 const TTL_MS = 10 * 60 * 1000;
-const store = createCache({ namespace: "mcp:idem", ttlMs: TTL_MS });
+const store = createScopedCache({ namespace: "mcp:idem", ttlMs: TTL_MS });
 /** Coalesce concurrent same-id runs so two callers don't both execute `run`. */
 const inflight = new Map<string, Inflight>();
 
@@ -41,7 +41,7 @@ export async function withClientRequestId<T>(
   if (!id) return run();
 
   const hash = payloadHash(payload);
-  const key = `${orgId}:${id}`;
+  const key = orgCacheKey(orgId, id);
   const hit = await store.get<Entry>(key);
   if (hit) {
     if (hit.hash !== hash) {

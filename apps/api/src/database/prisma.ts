@@ -98,14 +98,16 @@ const prisma = new PrismaClient({
 
 prisma.$on("query", (event) => recordDatabaseDuration(event.duration));
 
-const ORG_SCOPED_MODELS = new Set([
+export const ORG_SCOPED_MODELS = new Set([
   "Folder",
   "Collection",
   "Song",
   "Service",
   "ServiceNote",
+  "ServiceSongAnnotation",
   "AgendaEvent",
-  "Settings",
+  "OrgAiConfig",
+  "OrgAiMemory",
 ]);
 
 // Reuse the extended client across requests for the same org.

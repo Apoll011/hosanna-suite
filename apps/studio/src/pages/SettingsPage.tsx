@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { PageHeader, Tabs, useCan } from "@hosanna/ui";
 import { navigateToAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
+import { PageHeader, Tabs, useCan } from "@hosanna/ui";
 
 import { isDemoMode } from "@/src/demo";
 import { AppWindow, Church, CloudOff, Info, Printer, Users, Zap } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AboutTab } from "../components/settings/AboutTab";
 import { AppearanceTab } from "../components/settings/AppearanceTab";

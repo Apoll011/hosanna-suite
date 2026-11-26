@@ -28,7 +28,8 @@ export function getServicePaths(): Record<string, Record<string, OpenApiOperatio
         tags: ["Services"],
         operationId: "listServices",
         security: sessionAuth,
-        description: "List scheduled services with optional archived status and metadata-only filters.",
+        description:
+          "List scheduled services with optional archived status and metadata-only filters.",
         parameters: [
           { name: "archived", in: "query", schema: { type: "boolean", default: false } },
           { name: "metadataOnly", in: "query", schema: { type: "boolean", default: false } },

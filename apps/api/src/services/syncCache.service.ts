@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { createCache } from "@hosanna/cache";
+import { createScopedCache, orgCacheKey } from "@hosanna/cache";
 
 export type ReplicatedCollection =
   "songs" | "folders" | "collections" | "services" | "agendaEvents";
@@ -16,13 +16,13 @@ type CheckpointEntry = {
 /** Long enough to cover idle sync polls; writes invalidate the touched collection. */
 const CHECKPOINT_TTL_MS = 300_000;
 
-const checkpoints = createCache({
+const checkpoints = createScopedCache({
   namespace: "sync:checkpoint",
   ttlMs: CHECKPOINT_TTL_MS,
 });
 
 function key(tenantId: string, collection: ReplicatedCollection) {
-  return `${tenantId}:${collection}`;
+  return orgCacheKey(tenantId, collection);
 }
 
 export const syncCache = {

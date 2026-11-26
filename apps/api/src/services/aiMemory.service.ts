@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { prisma } from "../database/prisma.js";
+import { forOrganization, prisma } from "../database/prisma.js";
 import { AppError } from "../utils/errors.js";
 import { AI_LIMITS, normalizeMemoryContent, type AiMemoryEntry } from "./aiBehavior.js";
 
@@ -13,8 +13,7 @@ export type AiMemoryRow = AiMemoryEntry & {
 
 export class AiMemoryService {
   async listOrg(orgId: string): Promise<AiMemoryRow[]> {
-    const rows = await prisma.orgAiMemory.findMany({
-      where: { orgId },
+    const rows = await forOrganization(orgId).orgAiMemory.findMany({
       orderBy: { createdAt: "asc" },
       select: { id: true, content: true, source: true, createdAt: true },
     });
@@ -57,7 +56,7 @@ export class AiMemoryService {
         `Organization memory is full (${AI_LIMITS.memoryMaxEntries} entries). Forget one first.`,
       );
     }
-    const row = await prisma.orgAiMemory.create({
+    const row = await forOrganization(orgId).orgAiMemory.create({
       data: {
         orgId,
         content: text,
@@ -106,7 +105,7 @@ export class AiMemoryService {
   }
 
   async removeOrg(orgId: string, id: string): Promise<boolean> {
-    const res = await prisma.orgAiMemory.deleteMany({ where: { id, orgId } });
+    const res = await forOrganization(orgId).orgAiMemory.deleteMany({ where: { id } });
     return res.count > 0;
   }
 
@@ -123,7 +122,7 @@ export class AiMemoryService {
   }
 
   async clearOrg(orgId: string): Promise<number> {
-    const res = await prisma.orgAiMemory.deleteMany({ where: { orgId } });
+    const res = await forOrganization(orgId).orgAiMemory.deleteMany({});
     return res.count;
   }
 

@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Input, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
+import { Button, Input, Modal } from "@hosanna/ui";
 import { AlertTriangle, Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface BatchDeleteModalProps {
   isOpen: boolean;

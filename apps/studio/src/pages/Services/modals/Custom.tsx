@@ -7,7 +7,7 @@ import {
 import { useI18n } from "@/src/lib/i18n";
 import { Button, Modal } from "@hosanna/ui";
 import { Plus } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface CustomModalProps {
   isOpen: boolean;

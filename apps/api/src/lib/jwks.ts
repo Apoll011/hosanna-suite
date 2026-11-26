@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { createCache } from "@hosanna/cache";
+import { createScopedCache, globalCacheKey } from "@hosanna/cache";
 import { createLocalJWKSet, type JSONWebKeySet, type JWTVerifyGetKey } from "jose";
 import { auth } from "./auth.js";
 
 /** JWKS rarely rotates — cache in memory/Redis to skip DB on every MCP JWT. */
 const JWKS_TTL_MS = 10 * 60_000;
-const jwksCache = createCache({ namespace: "auth:jwks", ttlMs: JWKS_TTL_MS });
+const jwksCache = createScopedCache({ namespace: "auth:jwks", ttlMs: JWKS_TTL_MS });
+const JWKS_DOC_KEY = globalCacheKey("document");
 
 let localKeySet: JWTVerifyGetKey | null = null;
 let localKeySetAt = 0;
 
 async function loadJwksDocument(): Promise<JSONWebKeySet> {
-  const cached = await jwksCache.get<JSONWebKeySet>("document");
+  const cached = await jwksCache.get<JSONWebKeySet>(JWKS_DOC_KEY);
   if (cached?.keys?.length) return cached;
 
   const document = (await auth.api.getJwks()) as JSONWebKeySet;
   if (!document?.keys?.length) {
     throw new Error("Better Auth JWKS returned no keys");
   }
-  await jwksCache.set("document", document);
+  await jwksCache.set(JWKS_DOC_KEY, document);
   return document;
 }
 

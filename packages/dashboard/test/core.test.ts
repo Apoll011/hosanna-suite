@@ -305,3 +305,29 @@ test("new eligible widgets merge without replacing a customized layout", () => {
     ["custom", "auth.new:introduced"],
   );
 });
+
+test("mergeNewEligibleWidgets skips optional widgets without defaultFor for the role", () => {
+  const registry = createWidgetRegistry([
+    base,
+    { ...base, id: "auth.optional", defaultFor: undefined, singleton: true },
+  ]);
+  const customized = normalizeLayout(
+    {
+      version: 1,
+      items: [{ instanceId: "custom", widget: base.id, x: 0, y: 0, w: 4, h: 2 }],
+      hidden: [],
+      seen: [base.id],
+    },
+    registry,
+  );
+  const merged = mergeNewEligibleWidgets(
+    customized,
+    { permissions: [], orgRole: "owner", apps: [authApp] },
+    registry,
+  );
+  assert.deepEqual(
+    merged.items.map((item) => item.widget),
+    [base.id],
+  );
+  assert.ok(merged.seen.includes("auth.optional"));
+});

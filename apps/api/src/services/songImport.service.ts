@@ -11,7 +11,7 @@ import { searchMusicBrainzRecordings } from "../mcp/lib/musicbrainz.js";
 import { nativeWebAuthFromRuntime, type NativeWebAuth } from "../mcp/lib/nativeWeb.js";
 import { searchWeb } from "../mcp/lib/webSearch.js";
 import { getYouTubeDuration, searchYouTube } from "../mcp/lib/youtubeSearch.js";
-import { prisma } from "../database/prisma.js";
+import { forOrganization } from "../database/prisma.js";
 import { AppError } from "../utils/errors.js";
 import {
   AI_PROVIDER_DEFAULT_BASE_URL,
@@ -569,9 +569,8 @@ async function findPossibleDuplicates(
 ): Promise<SongImportDuplicate[]> {
   const t = title.trim();
   if (!t) return [];
-  const rows = await prisma.song.findMany({
+  const rows = await forOrganization(orgId).song.findMany({
     where: {
-      orgId,
       deleted: false,
       OR: [
         { title: { equals: t, mode: "insensitive" } },

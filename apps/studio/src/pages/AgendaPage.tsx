@@ -6,7 +6,6 @@
 import { DayAgendaList } from "@/src/components/agenda/DayAgendaList";
 import { DeleteEventModal } from "@/src/components/agenda/DeleteEventModal";
 import { DetailsSidebar } from "@/src/components/agenda/DetailsSidebar";
-import { EventFormModal } from "@hosanna/calendar";
 import {
   AddResponsibilityModal,
   EditAssigneesModal,
@@ -15,11 +14,12 @@ import {
 import { MiniCalendar, toIso } from "@/src/components/agenda/MiniCalendar";
 import { RemoveAssignmentModal } from "@/src/components/agenda/RemoveAssignmentModal";
 import { ResponsibilitiesPanel } from "@/src/components/agenda/ResponsibilitiesPanel";
-import { Button, PageHeader, Spinner, useCan, Can } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
 import { useServices } from "@/src/hooks/useServices";
 import { useI18n } from "@/src/lib/i18n";
+import { EventFormModal } from "@hosanna/calendar";
+import { Button, Can, PageHeader, Spinner, useCan } from "@hosanna/ui";
 
 import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
 import { formatLongDate } from "@/src/utils/agendaDate";
@@ -65,17 +65,26 @@ export const AgendaPage: React.FC = () => {
   /** Snapshot kept open while delete + optional notify finish. */
   const [pendingDeleteEvent, setPendingDeleteEvent] = useState<AgendaEvent | null>(null);
 
-  useEffect(() => {
-    if (searchParams.get("create") !== "1" || !canCreateAgenda) return;
+  const wantsCreate = searchParams.get("create") === "1" && canCreateAgenda;
+  const [prevWantsCreate, setPrevWantsCreate] = useState(false);
+  if (wantsCreate && !prevWantsCreate) {
+    setPrevWantsCreate(true);
     setIsNewEventOpen(true);
+  } else if (!wantsCreate && prevWantsCreate) {
+    setPrevWantsCreate(false);
+  }
+
+  useEffect(() => {
+    if (!wantsCreate) return;
     setSearchParams(
       (prev) => {
-        prev.delete("create");
-        return prev;
+        const next = new URLSearchParams(prev);
+        next.delete("create");
+        return next;
       },
       { replace: true },
     );
-  }, []);
+  }, [wantsCreate, setSearchParams]);
 
   const markedDates = useMemo(() => new Set(store.events.map((ev) => ev.date)), [store.events]);
 
@@ -212,14 +221,22 @@ export const AgendaPage: React.FC = () => {
     } catch {}
   };
 
-  const editingAssigneesResp = useMemo(() => {
+  const editingAssigneesResp = (() => {
     if (!editingAssigneesFor) return null;
+
     for (const ev of store.events) {
       const r = ev.responsibilities.find((x) => x.id === editingAssigneesFor);
-      if (r) return { eventId: ev.id, responsibility: r };
+
+      if (r) {
+        return {
+          eventId: ev.id,
+          responsibility: r,
+        };
+      }
     }
+
     return null;
-  }, [store, editingAssigneesFor]);
+  })();
 
   const handleSelectDate = (date: string) => {
     setSelectedDate(date);

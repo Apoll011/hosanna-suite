@@ -11,6 +11,58 @@ export type CreateCacheOptions = {
   redisUrl?: string | null;
 };
 
+export type ScopedCacheKey = string & { readonly __scopedCacheKey: unique symbol };
+
+const SCOPED_KEY_PREFIX = /^(org|user|global):/;
+
+function requireSegment(value: string, label: string): string {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.includes(":")) {
+    throw new Error(`@hosanna/cache: invalid ${label} for scoped cache key`);
+  }
+  return trimmed;
+}
+
+function cleanParts(parts: string[]): string[] {
+  return parts.map((p) => p.trim()).filter((p) => p.length > 0);
+}
+
+export function orgCacheKey(orgId: string, ...parts: string[]): ScopedCacheKey {
+  const org = requireSegment(orgId, "orgId");
+  const rest = cleanParts(parts);
+  return (rest.length ? `org:${org}:${rest.join(":")}` : `org:${org}`) as ScopedCacheKey;
+}
+
+export function orgUserCacheKey(orgId: string, userId: string, ...parts: string[]): ScopedCacheKey {
+  const org = requireSegment(orgId, "orgId");
+  const user = requireSegment(userId, "userId");
+  const rest = cleanParts(parts);
+  return (
+    rest.length ? `org:${org}:user:${user}:${rest.join(":")}` : `org:${org}:user:${user}`
+  ) as ScopedCacheKey;
+}
+
+export function userCacheKey(userId: string, ...parts: string[]): ScopedCacheKey {
+  const user = requireSegment(userId, "userId");
+  const rest = cleanParts(parts);
+  return (rest.length ? `user:${user}:${rest.join(":")}` : `user:${user}`) as ScopedCacheKey;
+}
+
+export function globalCacheKey(...parts: string[]): ScopedCacheKey {
+  const rest = cleanParts(parts);
+  if (rest.length === 0) {
+    throw new Error("@hosanna/cache: globalCacheKey requires at least one key part");
+  }
+  return `global:${rest.join(":")}` as ScopedCacheKey;
+}
+
+export function assertScopedCacheKey(key: string): ScopedCacheKey {
+  if (!SCOPED_KEY_PREFIX.test(key)) {
+    throw new Error(`@hosanna/cache: unscoped cache key rejected ("${key}")`);
+  }
+  return key as ScopedCacheKey;
+}
+
 export type Cache = {
   readonly namespace: string;
   get<T>(key: string): Promise<T | undefined>;
@@ -18,6 +70,15 @@ export type Cache = {
   delete(key: string): Promise<boolean>;
   clear(): Promise<void>;
   /** Open the underlying store (useful to warm Redis before traffic). */
+  ready(): Promise<void>;
+};
+
+export type ScopedCache = {
+  readonly namespace: string;
+  get<T>(key: ScopedCacheKey): Promise<T | undefined>;
+  set<T>(key: ScopedCacheKey, value: T, ttlMs?: number): Promise<void>;
+  delete(key: ScopedCacheKey): Promise<boolean>;
+  clear(): Promise<void>;
   ready(): Promise<void>;
 };
 
@@ -182,5 +243,19 @@ export function createCache(opts: CreateCacheOptions): Cache {
     async clear() {
       await (await readyStore()).clear();
     },
+  };
+}
+
+/** Namespaced cache that rejects any key not built via org/user/global helpers. */
+export function createScopedCache(opts: CreateCacheOptions): ScopedCache {
+  const base = createCache(opts);
+  return {
+    namespace: base.namespace,
+    ready: () => base.ready(),
+    get: async <T>(key: ScopedCacheKey) => base.get<T>(assertScopedCacheKey(key)),
+    set: async <T>(key: ScopedCacheKey, value: T, ttlMs?: number) =>
+      base.set<T>(assertScopedCacheKey(key), value, ttlMs),
+    delete: async (key: ScopedCacheKey) => base.delete(assertScopedCacheKey(key)),
+    clear: () => base.clear(),
   };
 }

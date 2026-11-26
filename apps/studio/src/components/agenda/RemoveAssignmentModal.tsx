@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Modal } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
+import { Button, Modal } from "@hosanna/ui";
 import { Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { NotifyToggle } from "./NotifyToggle";
 
 interface RemoveAssignmentModalProps {
