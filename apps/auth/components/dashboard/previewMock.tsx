@@ -300,7 +300,9 @@ export function WidgetPreviewProvider({
             type: isPt ? "Culto" : isEs ? "Culto" : "Service",
             color: "green",
             linkedServiceId: "svc-1",
-            responsibilities: [{ assignees: [{ id: "u1" }, { id: "u2" }, { id: "u3" }, { id: "u4" }] }],
+            responsibilities: [
+              { assignees: [{ id: "u1" }, { id: "u2" }, { id: "u3" }, { id: "u4" }] },
+            ],
           },
           {
             id: "ag3",

@@ -43,7 +43,8 @@ export class ServiceSongAnnotationService {
     });
     if (!row) return null;
 
-    const docMatchesOrg = firebaseDoc != null && (!firebaseDoc.orgId || firebaseDoc.orgId === this.orgId);
+    const docMatchesOrg =
+      firebaseDoc != null && (!firebaseDoc.orgId || firebaseDoc.orgId === this.orgId);
     const updatedAt = docMatchesOrg ? new Date(firebaseDoc.updatedAt) : row.updatedAt;
     const updatedById = (docMatchesOrg ? firebaseDoc.updatedById : null) || row.updatedById;
 

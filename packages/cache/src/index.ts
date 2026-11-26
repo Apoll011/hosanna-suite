@@ -33,11 +33,7 @@ export function orgCacheKey(orgId: string, ...parts: string[]): ScopedCacheKey {
   return (rest.length ? `org:${org}:${rest.join(":")}` : `org:${org}`) as ScopedCacheKey;
 }
 
-export function orgUserCacheKey(
-  orgId: string,
-  userId: string,
-  ...parts: string[]
-): ScopedCacheKey {
+export function orgUserCacheKey(orgId: string, userId: string, ...parts: string[]): ScopedCacheKey {
   const org = requireSegment(orgId, "orgId");
   const user = requireSegment(userId, "userId");
   const rest = cleanParts(parts);

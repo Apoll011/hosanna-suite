@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { AppRole, PermissionString, roles, toPermissionRequest } from "@hosanna/auth";
-import {
-  createScopedCache,
-  orgCacheKey,
-  orgUserCacheKey,
-} from "@hosanna/cache";
+import { createScopedCache, orgCacheKey, orgUserCacheKey } from "@hosanna/cache";
 import type { NextFunction, Request, Response } from "express";
 import { createHash } from "node:crypto";
 import { forOrganization, prisma } from "../database/prisma.js";

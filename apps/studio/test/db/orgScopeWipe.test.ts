@@ -50,8 +50,14 @@ describe("Studio replication checkpoint wipe on org switch / logout", () => {
       epochLsKey: () => PROD_EPOCH_LS_KEY,
     };
 
-    localStorage.setItem(`${PROD_CHECKPOINT_LS_PREFIX}_songs`, JSON.stringify({ updatedAt: 100, id: "s1" }));
-    localStorage.setItem(`${PROD_CHECKPOINT_LS_PREFIX}_services`, JSON.stringify({ updatedAt: 200, id: "svc1" }));
+    localStorage.setItem(
+      `${PROD_CHECKPOINT_LS_PREFIX}_songs`,
+      JSON.stringify({ updatedAt: 100, id: "s1" }),
+    );
+    localStorage.setItem(
+      `${PROD_CHECKPOINT_LS_PREFIX}_services`,
+      JSON.stringify({ updatedAt: 200, id: "svc1" }),
+    );
     localStorage.setItem(PROD_EPOCH_LS_KEY, String(Date.now()));
     localStorage.setItem("unrelated_key", "keep-me");
 

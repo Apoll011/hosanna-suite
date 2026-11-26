@@ -425,9 +425,7 @@ function SingleAppWidget({
             </Badge>
           ) : null}
         </div>
-        {app.description ? (
-          <p className="mt-0.5 truncate text-caption">{app.description}</p>
-        ) : null}
+        {app.description ? <p className="mt-0.5 truncate text-caption">{app.description}</p> : null}
       </div>
       {openable ? (
         <ChevronRight

@@ -42,11 +42,7 @@ import {
   resetDatabase,
   resetReplication,
 } from "../db";
-import {
-  deleteIndexedDbByName,
-  PROD_CHECKPOINT_DB_NAME,
-  PROD_DB_NAME,
-} from "../db/dbNames";
+import { deleteIndexedDbByName, PROD_CHECKPOINT_DB_NAME, PROD_DB_NAME } from "../db/dbNames";
 
 export { CACHED_USER_KEY } from "../lib/authSessionCache";
 
