@@ -332,6 +332,15 @@ export function getWidgetDensity(instance: { w: number; h: number }): WidgetDens
   return "standard";
 }
 
+export function getListRowLimit(
+  h: number,
+  rowSize: "compact" | "normal" | "tall" = "normal",
+): number {
+  if (h <= 1) return rowSize === "compact" ? 2 : 1;
+  const rowPx = rowSize === "compact" ? 38 : rowSize === "tall" ? 64 : 50;
+  return Math.max(2, Math.floor((h * 108 - 76) / rowPx));
+}
+
 export function todayYmdLocal(): string {
   const now = new Date();
   const y = now.getFullYear();

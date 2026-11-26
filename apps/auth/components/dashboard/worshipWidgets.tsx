@@ -29,6 +29,7 @@ import {
   diffDaysFromToday,
   extractSongKey,
   formatServiceDate,
+  getListRowLimit,
   getWidgetDensity,
   SkeletonLine,
   todayYmdLocal,
@@ -466,7 +467,7 @@ export function LibraryHealthWidget({ instance }: WidgetRendererProps) {
   const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
   const total = value?.total ?? 0;
   const health = useMemo(() => computeSongHealthInsights(songs), [songs]);
-  const criteriaLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 6);
+  const criteriaLimit = getListRowLimit(instance.h, "compact");
   const topMissing = health.missingCounts.slice(0, criteriaLimit);
 
   const tone =
@@ -700,7 +701,7 @@ export function MostPlayedSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { loading, error, summary } = useSetlistStats();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const rowLimit = getListRowLimit(instance.h, "normal");
   const showArtist = instance.w >= 3;
   const showBar = instance.w >= 5;
   const rows = summary.top.slice(0, rowLimit);
@@ -792,7 +793,7 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { loading, error, summary } = useSetlistStats();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const rowLimit = getListRowLimit(instance.h, "normal");
   const showArtist = instance.w >= 3;
   const rows = summary.resting.slice(0, rowLimit);
 
@@ -890,13 +891,15 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
 export function RecentSongsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const rawLimit = typeof instance.config?.limit === "number" ? instance.config.limit : 5;
-  const maxForDensity = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
-  const limit = Math.min(rawLimit, maxForDensity);
+  const maxForDensity = getListRowLimit(instance.h, "normal");
+  const limit =
+    typeof instance.config?.limit === "number" && instance.config.limit !== 5
+      ? Math.min(instance.config.limit, maxForDensity)
+      : maxForDensity;
   const showArtist = instance.w >= 3;
   const { value, loading, error } = useOrganizationData<SongsResponse>(
     "songs-recent",
-    "/songs?limit=10",
+    "/songs?limit=20",
   );
   const songs = useMemo(() => (value?.songs ?? []).slice(0, limit), [value?.songs, limit]);
 
@@ -982,7 +985,7 @@ export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
     "/services?metadataOnly=true",
   );
   const today = todayYmdLocal();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "tall");
   const showDetails = instance.w >= 3;
   const upcoming = useMemo(
     () =>
@@ -1088,7 +1091,7 @@ export function CollectionsWidget({ instance }: WidgetRendererProps) {
     "collections",
     "/collections",
   );
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "compact");
   const collections = useMemo(
     () =>
       [...(value ?? [])]
@@ -1173,7 +1176,7 @@ export function FoldersWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
   const { value, loading, error } = useOrganizationData<FolderRow[]>("folders-summary", "/folders");
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "compact");
   const folders = useMemo(
     () =>
       [...(value ?? [])]
@@ -1288,7 +1291,7 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
     "/agenda-events",
   );
   const today = todayYmdLocal();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "tall");
   const showLocation = instance.w >= 4;
   const showAssignees = instance.w >= 3;
   const events = useMemo(
