@@ -405,7 +405,7 @@ export interface paths {
     };
     /**
      * List services
-     * @description List scheduled services with optional archived status filter.
+     * @description List scheduled services with optional archived status and metadata-only filters.
      */
     get: operations["listServices"];
     put?: never;
@@ -2258,6 +2258,7 @@ export interface operations {
     parameters: {
       query?: {
         archived?: boolean;
+        metadataOnly?: boolean;
       };
       header?: never;
       path?: never;

@@ -92,6 +92,11 @@ export class ServiceService {
     includeArchived?: boolean;
     metadataOnly?: false;
   }): Promise<ReturnType<typeof serialize>[]>;
+  async list(body: {
+    archived?: boolean;
+    includeArchived?: boolean;
+    metadataOnly?: boolean;
+  }): Promise<ReturnType<typeof serialize>[] | ReturnType<typeof serializeListRow>[]>;
   async list(
     body: {
       archived?: boolean;
