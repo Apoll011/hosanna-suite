@@ -321,8 +321,8 @@ export const authDashboardWidgets = [
     searchPatterns: ["home.widgets.subscription.keywords"],
     icon: "credit-card",
     minSize: { w: 2, h: 1 },
-    defaultSize: { w: 4, h: 3 },
-    maxSize: { w: 8, h: 6 },
+    defaultSize: { w: 4, h: 2 },
+    maxSize: { w: 8, h: 2 },
     requires: ["billing.access"],
     defaultFor: [
       { role: "owner", priority: 40 },
@@ -339,8 +339,8 @@ export const authDashboardWidgets = [
     searchPatterns: ["home.widgets.orgOverview.keywords"],
     icon: "building",
     minSize: { w: 2, h: 1 },
-    defaultSize: { w: 4, h: 3 },
-    maxSize: { w: 8, h: 4 },
+    defaultSize: { w: 4, h: 2 },
+    maxSize: { w: 8, h: 2 },
     singleton: true,
   },
   {
@@ -405,7 +405,7 @@ export const authDashboardWidgets = [
     icon: "user",
     minSize: { w: 2, h: 1 },
     defaultSize: { w: 4, h: 2 },
-    maxSize: { w: 8, h: 4 },
+    maxSize: { w: 8, h: 2 },
     singleton: true,
   },
   {
@@ -417,8 +417,8 @@ export const authDashboardWidgets = [
     searchPatterns: ["home.widgets.security.keywords"],
     icon: "shield-check",
     minSize: { w: 2, h: 1 },
-    defaultSize: { w: 4, h: 2 },
-    maxSize: { w: 8, h: 4 },
+    defaultSize: { w: 4, h: 1 },
+    maxSize: { w: 8, h: 1 },
     singleton: true,
   },
   {
