@@ -1,0 +1,43 @@
+{
+  "name": "@hosanna/dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./core": {
+      "types": "./src/core/index.ts",
+      "default": "./src/core/index.ts"
+    },
+    "./react": {
+      "types": "./src/react/index.ts",
+      "default": "./src/react/index.ts"
+    },
+    "./gridstack": {
+      "types": "./src/adapters/gridstack/index.ts",
+      "default": "./src/adapters/gridstack/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test \"test/**/*.test.ts\""
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "dependencies": {
+    "gridstack": "^13.3.0"
+  },
+  "devDependencies": {
+    "@hosanna/config": "workspace:*",
+    "@types/react": "^19.2.0",
+    "react": "^19.2.0",
+    "tsx": "^4.23.15",
+    "typescript": "catalog:"
+  }
+}
