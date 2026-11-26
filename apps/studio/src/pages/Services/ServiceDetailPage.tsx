@@ -933,8 +933,11 @@ export const ServiceDetailPage: React.FC = () => {
   }, [elements]);
 
   useEffect(() => {
-    if (service) {
-      aiContextBridge.setService({
+    if (!service) {
+      aiContextBridge.setService(null);
+      return;
+    }
+    aiContextBridge.setService({
       serviceId: service.id,
       title: service.name,
       elements,
