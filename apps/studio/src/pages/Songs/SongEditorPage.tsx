@@ -76,9 +76,11 @@ export const SongEditorPage: React.FC = () => {
 
   const [layoutMode, setLayoutMode] = useState<LayoutMode>(canUpdateSong ? "split" : "preview");
 
-  useEffect(() => {
+  const [prevCanUpdate, setPrevCanUpdate] = useState(canUpdateSong);
+  if (canUpdateSong !== prevCanUpdate) {
+    setPrevCanUpdate(canUpdateSong);
     setLayoutMode(canUpdateSong ? "split" : "preview");
-  }, [canUpdateSong]);
+  }
 
   const [showEditorSettings, setShowEditorSettings] = useState(false);
   const [showPreviewSettings, setShowPreviewSettings] = useState(false);
@@ -170,15 +172,21 @@ export const SongEditorPage: React.FC = () => {
     }
   }, [song, hasUnsavedChanges]);
 
-  useEffect(() => {
+  const [prevSongIdForVariant, setPrevSongIdForVariant] = useState(song?.id);
+  const [prevDeferredContent, setPrevDeferredContent] = useState(deferredContent);
+  if (song?.id !== prevSongIdForVariant || deferredContent !== prevDeferredContent) {
+    setPrevSongIdForVariant(song?.id);
+    setPrevDeferredContent(deferredContent);
     setSelectedVariant(null);
-  }, [song?.id, deferredContent]);
+  }
 
-  useEffect(() => {
+  const [prevAiProposal, setPrevAiProposal] = useState(aiProposal);
+  if (aiProposal !== prevAiProposal) {
+    setPrevAiProposal(aiProposal);
     if (aiProposal) {
       setLayoutMode((mode) => (mode === "preview" ? "split" : mode));
     }
-  }, [aiProposal]);
+  }
 
   useEffect(() => {
     if (!song) {

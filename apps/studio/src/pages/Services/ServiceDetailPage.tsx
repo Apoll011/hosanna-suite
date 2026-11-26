@@ -427,7 +427,11 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [localNote, setLocalNote] = useState(element.notes || "");
-  useEffect(() => setLocalNote(element.notes || ""), [element.notes]);
+  const [prevNotes, setPrevNotes] = useState(element.notes);
+  if (element.notes !== prevNotes) {
+    setPrevNotes(element.notes);
+    setLocalNote(element.notes || "");
+  }
 
   const badge = getElementBadge(element.type, t);
   const Icon = badge.icon;
@@ -929,11 +933,8 @@ export const ServiceDetailPage: React.FC = () => {
   }, [elements]);
 
   useEffect(() => {
-    if (!service) {
-      aiContextBridge.setService(null);
-      return;
-    }
-    aiContextBridge.setService({
+    if (service) {
+      aiContextBridge.setService({
       serviceId: service.id,
       title: service.name,
       elements,
@@ -987,11 +988,15 @@ export const ServiceDetailPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [generalNotes, orgSettings.services.autoSave, service, isEditingGeneralNotes, updateService]);
 
-  useEffect(() => {
+  const [prevPreviewElement, setPrevPreviewElement] = useState(previewElement);
+  const [prevElements, setPrevElements] = useState(elements);
+  if (previewElement !== prevPreviewElement || elements !== prevElements) {
+    setPrevPreviewElement(previewElement);
+    setPrevElements(elements);
     if (previewElement && !elements.some((e) => e.id === previewElement.id)) {
       setPreviewElement(null);
     }
-  }, [elements, previewElement]);
+  }
 
   const allAvailableSongs = songsQuery.data?.songs || [];
   const songCountById = elements.reduce<Record<string, number>>((acc, el) => {

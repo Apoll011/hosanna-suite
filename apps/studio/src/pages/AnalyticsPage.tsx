@@ -28,12 +28,14 @@ export const AnalyticsPage: React.FC = () => {
     VALID_TABS.includes(initialTab as TabType) ? (initialTab as TabType) : "usage",
   );
 
-  useEffect(() => {
+  const [prevSearchParamsAnalytics, setPrevSearchParamsAnalytics] = useState(searchParams);
+  if (searchParams !== prevSearchParamsAnalytics) {
+    setPrevSearchParamsAnalytics(searchParams);
     const tab = searchParams.get("tab");
     if (VALID_TABS.includes(tab as TabType) && tab !== activeTab) {
       setActiveTab(tab as TabType);
     }
-  }, [searchParams, activeTab]);
+  }
 
   if (permLoading) {
     return null;

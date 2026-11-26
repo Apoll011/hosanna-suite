@@ -66,17 +66,16 @@ export const AgendaPage: React.FC = () => {
   const [pendingDeleteEvent, setPendingDeleteEvent] = useState<AgendaEvent | null>(null);
 
   useEffect(() => {
-    if (searchParams.get("create") === "1" && canCreateAgenda) {
-      setIsNewEventOpen(true);
-      setSearchParams(
-        (prev) => {
-          prev.delete("create");
-          return prev;
-        },
-        { replace: true },
-      );
-    }
-  }, [searchParams, setSearchParams, canCreateAgenda]);
+    if (searchParams.get("create") !== "1" || !canCreateAgenda) return;
+    setIsNewEventOpen(true);
+    setSearchParams(
+      (prev) => {
+        prev.delete("create");
+        return prev;
+      },
+      { replace: true },
+    );
+  }, []);
 
   const markedDates = useMemo(() => new Set(store.events.map((ev) => ev.date)), [store.events]);
 
