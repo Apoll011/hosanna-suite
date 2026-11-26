@@ -64,7 +64,7 @@ export function parseSong(apiSong: Song, folders: Folder[] = []): ParsedSong {
     parts.length > 0
       ? parts[parts.length - 1]
       : apiSong.title
-        ? `${apiSong.title.replace(/[\/\\]/g, "_")}.chopro`
+        ? `${apiSong.title.replace(/[/\\]/g, "_")}.chopro`
         : "song.chopro";
   const folder = apiSong.folderId
     ? folders.find((f) => f.id === apiSong.folderId)?.name || ""

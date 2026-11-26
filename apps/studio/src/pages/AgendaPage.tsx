@@ -220,7 +220,7 @@ export const AgendaPage: React.FC = () => {
       if (r) return { eventId: ev.id, responsibility: r };
     }
     return null;
-  }, [store.events, editingAssigneesFor]);
+  }, [store, editingAssigneesFor]);
 
   const handleSelectDate = (date: string) => {
     setSelectedDate(date);

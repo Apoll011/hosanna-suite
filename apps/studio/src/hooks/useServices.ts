@@ -9,8 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useSync } from "../contexts/SyncContext";
 import { getDatabase, getPurgeAt, validateServiceRules } from "../db";
 
-let cachedServicesMap: Map<string, Service[]> = new Map();
-let cachedSingleServices: Map<string, Service> = new Map();
+const cachedServicesMap: Map<string, Service[]> = new Map();
+const cachedSingleServices: Map<string, Service> = new Map();
 
 export function useServices(includeArchived: boolean = false) {
   const { showToast } = useSync();

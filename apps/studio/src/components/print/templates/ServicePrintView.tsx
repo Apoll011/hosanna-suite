@@ -88,12 +88,13 @@ export const ServicePrintView: React.FC<ServicePrintViewProps> = ({
   const startLabel = linkedEvent?.time?.slice(0, 5) || settings.services.usualStartTime || null;
 
   const startOffsets = useMemo(() => {
+    const offsets: number[] = [];
     let acc = 0;
-    return elements.map((el) => {
-      const start = acc;
+    for (const el of elements) {
+      offsets.push(acc);
       acc += el.duration || 0;
-      return start;
-    });
+    }
+    return offsets;
   }, [elements]);
 
   const songsToPrint = useMemo(() => {

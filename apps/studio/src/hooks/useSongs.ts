@@ -23,9 +23,9 @@ import {
 } from "../db";
 import { invalidateCollectionsCache } from "./useCollections";
 
-let cachedSongsByFolder: Map<string, Song[]> = new Map();
+const cachedSongsByFolder: Map<string, Song[]> = new Map();
 let cachedAllSongs: Song[] | null = null;
-let cachedSingleSongs: Map<string, Song> = new Map();
+const cachedSingleSongs: Map<string, Song> = new Map();
 
 export function invalidateSongsCache(): void {
   cachedSongsByFolder.clear();

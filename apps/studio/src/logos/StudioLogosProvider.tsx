@@ -169,10 +169,8 @@ export function StudioLogosProvider({ children }: { children: React.ReactNode })
       tc,
       language,
       locale,
-      user?.name,
-      user?.id,
-      organization?.id,
-      organization?.slug,
+      user,
+      organization,
       canUseAi,
     ],
   );

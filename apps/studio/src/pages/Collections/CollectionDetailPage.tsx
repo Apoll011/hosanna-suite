@@ -72,7 +72,7 @@ export const CollectionDetailPage: React.FC = () => {
   const { songsQuery } = useAllSongs();
   const allSongs = useMemo(
     () => (Array.isArray(songsQuery.data?.songs) ? songsQuery.data.songs : []),
-    [songsQuery.data?.songs],
+    [songsQuery.data],
   );
 
   const [currentPage, setCurrentPage] = useState(1);

@@ -24,7 +24,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { CommandAction } from "../command-palette.types";
 import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
 import { useTheme } from "../contexts/ThemeContext";
@@ -101,6 +101,10 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
   const { toggleDarkMode } = useTheme();
   const { granted: canCreateAgenda } = useCan("agenda.create");
   const { granted: canViewLibraryHealth } = useCan("library.health");
+
+  const triggerFileUpload = useCallback(() => {
+    fileInputRef.current?.click();
+  }, [fileInputRef]);
 
   const staticActions = useMemo<CommandAction[]>(() => {
     const actions: CommandAction[] = [
@@ -235,7 +239,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         keywords: "upload carregar ficheiros chordpro sbpbackup import txt pro",
         section: t("commandPalette.sections.quickActions"),
         icon: <Upload className="w-4 h-4 text-purple-500" />,
-        perform: () => fileInputRef.current?.click(),
+        perform: triggerFileUpload,
       },
 
       {
@@ -363,7 +367,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
     setTargetSongFolderId,
     setDeleteSongTarget,
     deleteService,
-    fileInputRef,
+    triggerFileUpload,
     toggleDarkMode,
     t,
   ]);

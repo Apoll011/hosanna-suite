@@ -67,7 +67,7 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
   const filteredActions = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
 
-    let currentPool = allActions.filter((a) => {
+    const currentPool = allActions.filter((a) => {
       if (activeParentId) return a.parent === activeParentId;
       return !a.parent; // Top level
     });

@@ -122,13 +122,13 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 
   const folders = useMemo(
     () => (Array.isArray(foldersQuery.data?.folders) ? foldersQuery.data.folders : []),
-    [foldersQuery.data?.folders],
+    [foldersQuery.data],
   );
 
   const { searchableSongs } = useSearchableSongs(folders);
   const allSongs: Song[] = useMemo(
     () => (Array.isArray(songsQuery.data?.songs) ? songsQuery.data.songs : []),
-    [songsQuery.data?.songs],
+    [songsQuery.data],
   );
 
   const folderMap = useMemo(() => {

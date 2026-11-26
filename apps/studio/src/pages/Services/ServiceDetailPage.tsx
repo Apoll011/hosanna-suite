@@ -1096,15 +1096,16 @@ export const ServiceDetailPage: React.FC = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [readingMode, previewElement]);
 
+  const [lastPreviewElement, setLastPreviewElement] = useState<ServiceElement | null>(null);
+  const selectPreviewElement = useCallback((el: ServiceElement | null) => {
+    setPreviewElement(el);
+    if (el) setLastPreviewElement(el);
+  }, []);
   const handleTogglePreview = (el: ServiceElement) => {
     setPreviewElement((prev) => (prev?.id === el.id ? null : el));
+    setLastPreviewElement(el);
   };
-
-  const previewContentRef = useRef<ServiceElement | null>(null);
-  useEffect(() => {
-    if (previewElement) previewContentRef.current = previewElement;
-  }, [previewElement]);
-  const previewContent = previewElement ?? previewContentRef.current;
+  const previewContent = previewElement ?? lastPreviewElement;
 
   const [isSavingService, setIsSavingService] = useState(false);
 
@@ -1319,9 +1320,11 @@ export const ServiceDetailPage: React.FC = () => {
   }, []);
 
   const syncElementsRef = useRef(syncElements);
-  syncElementsRef.current = syncElements;
   const handleAddSongToServiceRef = useRef(handleAddSongToService);
-  handleAddSongToServiceRef.current = handleAddSongToService;
+  useEffect(() => {
+    syncElementsRef.current = syncElements;
+    handleAddSongToServiceRef.current = handleAddSongToService;
+  });
 
   useEffect(() => {
     return monitorForElements({

@@ -13,7 +13,7 @@ import { getDatabase, getPurgeAt, updateCollectionCounts, validateCollectionRule
 import { invalidateSongsCache } from "./useSongs";
 
 let cachedCollections: Collection[] | null = null;
-let cachedSingleCollections: Map<string, Collection> = new Map();
+const cachedSingleCollections: Map<string, Collection> = new Map();
 
 export function invalidateCollectionsCache(): void {
   cachedCollections = null;

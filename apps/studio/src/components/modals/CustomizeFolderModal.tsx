@@ -87,7 +87,9 @@ export const CustomizeFolderModal: React.FC<CustomizeFolderModalProps> = ({
           <div
             className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center border shadow-sm transition-all duration-300 shrink-0 ${previewColorStyle.bgClass} ${previewColorStyle.borderClass} ${previewColorStyle.textClass}`}
           >
-            <PreviewIcon className="w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110" />
+            {React.createElement(PreviewIcon, {
+              className: "w-7 h-7 sm:w-8 sm:h-8 transition-transform duration-300 group-hover:scale-110",
+            })}
           </div>
 
           <div className="flex flex-col min-w-0 flex-1">

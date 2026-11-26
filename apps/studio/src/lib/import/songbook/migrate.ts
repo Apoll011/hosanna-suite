@@ -246,7 +246,7 @@ export function migrateSongbookSongToChordPro(song: SongbookSong): {
 }
 
 export function sanitizePathSegment(value: string): string {
-  return value.replace(/[\/\\]/g, "_").trim() || "Untitled";
+  return value.replace(/[/\\]/g, "_").trim() || "Untitled";
 }
 
 export function uniqueSongPath(basePath: string, seen: Set<string>): string {

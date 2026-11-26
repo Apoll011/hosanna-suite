@@ -175,7 +175,7 @@ export function CalendarPage() {
       if (r) return { eventId: ev.id, responsibility: r };
     }
     return null;
-  }, [store.events, editingAssigneesFor]);
+  }, [store, editingAssigneesFor]);
 
   const handleCreateEvent = async (value: EventFormValue) => {
     const id = await store.addEvent(value);
