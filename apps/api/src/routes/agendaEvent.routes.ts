@@ -8,8 +8,14 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { idParamSchema } from "../validators/common.validators.js";
 
 export const listAgendaEventsQuerySchema = z.object({
-  from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  from: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  to: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
   limit: z.coerce.number().int().min(1).max(500).optional(),
 });
 

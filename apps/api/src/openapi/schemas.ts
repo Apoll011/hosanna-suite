@@ -145,7 +145,12 @@ export const AgendaEventSchema = z
     location: z.string().nullable().optional().describe("Event location"),
     notes: z.string().nullable().optional().describe("Event notes"),
     color: z.string().nullable().optional().describe("Event color theme"),
-    linkedServiceId: z.string().uuid().nullable().optional().describe("Linked worship service UUID"),
+    linkedServiceId: z
+      .string()
+      .uuid()
+      .nullable()
+      .optional()
+      .describe("Linked worship service UUID"),
     responsibilities: z.array(z.any()).default([]).describe("Team responsibilities and assignees"),
     isDeleted: z.boolean().default(false).describe("Replication tombstone flag"),
     createdAt: z.string().datetime().describe("Creation timestamp (ISO 8601)"),
