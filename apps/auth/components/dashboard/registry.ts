@@ -2,8 +2,10 @@ import { createWidgetRegistry } from "@hosanna/dashboard/core";
 import type { WidgetRenderers } from "@hosanna/dashboard/react";
 import {
   AppLauncherWidget,
+  AuthAppWidget,
   FavoritesWidget,
   LibrarySummaryWidget,
+  MusicAppWidget,
   NextServiceWidget,
   SubscriptionWidget,
 } from "./widgets";
@@ -105,6 +107,28 @@ export const authDashboardWidgets = [
     ],
     singleton: true,
   },
+  {
+    id: "auth.app-auth",
+    app: "auth",
+    title: "home.widgets.appAuth.title",
+    description: "home.widgets.appAuth.description",
+    icon: "grid",
+    minSize: { w: 2, h: 1 },
+    defaultSize: { w: 3, h: 1 },
+    maxSize: { w: 4, h: 2 },
+    singleton: true,
+  },
+  {
+    id: "auth.app-music",
+    app: "music",
+    title: "home.widgets.appMusic.title",
+    description: "home.widgets.appMusic.description",
+    icon: "music",
+    minSize: { w: 2, h: 1 },
+    defaultSize: { w: 3, h: 1 },
+    maxSize: { w: 4, h: 2 },
+    singleton: true,
+  },
 ] as const;
 
 export const authDashboardRegistry = createWidgetRegistry([...authDashboardWidgets]);
@@ -114,4 +138,6 @@ export const authDashboardRenderers: WidgetRenderers = {
   "auth.next-service": NextServiceWidget,
   "auth.library-summary": LibrarySummaryWidget,
   "auth.subscription": SubscriptionWidget,
+  "auth.app-auth": AuthAppWidget,
+  "auth.app-music": MusicAppWidget,
 };

@@ -5,13 +5,14 @@ import { authDashboardRegistry, authDashboardRenderers } from "@/components/dash
 import { migrateLegacyFavorites, homeSettings } from "@/lib/dashboard/settings";
 import { useI18n } from "@/lib/ui/i18n";
 import {
+  Badge,
   Button,
   loadSuiteApps,
   peekSuiteAppsCache,
   Spinner,
   type SuiteCatalogApp,
 } from "@hosanna/ui";
-import { Dashboard, listRenderableWidgets, WidgetConfiguration } from "@hosanna/dashboard/react";
+import { Dashboard, listRenderableWidgets } from "@hosanna/dashboard/react";
 import {
   addWidget,
   buildDefaultLayout,
@@ -19,11 +20,10 @@ import {
   mergeNewEligibleWidgets,
   normalizeLayout,
   removeWidget,
-  updateWidget,
   type DashboardLayout,
-  type WidgetInstance,
 } from "@hosanna/dashboard/core";
 import { resolveEffectivePermissions } from "@hosanna/auth";
+import { Check, ChevronDown, ChevronRight, Plus, Search } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
@@ -48,7 +48,8 @@ export function HomePage() {
   const [layout, setLayout] = useState<DashboardLayout | null>(null);
   const [draft, setDraft] = useState<DashboardLayout | null>(null);
   const [editing, setEditing] = useState(false);
-  const [configuring, setConfiguring] = useState<string | null>(null);
+  const [widgetQuery, setWidgetQuery] = useState("");
+  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
   const [mobile, setMobile] = useState(false);
   const [error, setError] = useState(false);
   const [catalogRevision, setCatalogRevision] = useState(0);
@@ -91,7 +92,6 @@ export function HomePage() {
     setLayout(null);
     setDraft(null);
     setEditing(false);
-    setConfiguring(null);
     const scopedUrl = APPS_URL + "?organizationId=" + encodeURIComponent(orgId);
     const cached = peekSuiteAppsCache(scopedUrl);
     if (cached && active) setApps(cached);
@@ -132,11 +132,13 @@ export function HomePage() {
   const beginEditing = useCallback(() => {
     if (layout) {
       setDraft(structuredClone(layout));
+      setWidgetQuery("");
       setEditing(true);
     }
   }, [layout]);
   const cancelEditing = () => {
     setDraft(null);
+    setWidgetQuery("");
     setEditing(false);
   };
   const saveEditing = () => {
@@ -145,14 +147,14 @@ export function HomePage() {
     setLayout(normalized);
     homeSettings.set({ layouts: { ...homeSettings.get().layouts, [orgId]: normalized } });
     setDraft(null);
+    setWidgetQuery("");
     setEditing(false);
   };
   const resetEditing = () => setDraft(buildDefaultLayout(context, authDashboardRegistry));
-  const update = (instanceId: string, patch: Partial<WidgetInstance>) => {
-    setDraft((current) =>
-      current ? updateWidget(current, instanceId, patch, authDashboardRegistry) : current,
-    );
-  };
+  const handleRemove = useCallback((instanceId: string) => {
+    setDraft((current) => (current ? removeWidget(current, instanceId) : current));
+  }, []);
+
   const currentLayout = editing ? draft : layout;
   const renderLayout = currentLayout
     ? {
@@ -165,7 +167,23 @@ export function HomePage() {
     : null;
   const usableWidgets = listRenderableWidgets(authDashboardRegistry, authDashboardRenderers);
   const gallery = usableWidgets.filter((definition) => isWidgetEligible(definition, context));
-  const groups = [...new Set(gallery.map((definition) => definition.app))];
+  const normalizedQuery = widgetQuery.trim().toLowerCase();
+  const filteredGallery = useMemo(() => {
+    if (!normalizedQuery) return gallery;
+    return gallery.filter((widget) => {
+      const title = t(widget.title as Parameters<typeof t>[0]).toLowerCase();
+      const description = t(widget.description as Parameters<typeof t>[0]).toLowerCase();
+      const appName = t(
+        ("suite.apps." + widget.app + ".name") as Parameters<typeof t>[0],
+      ).toLowerCase();
+      return (
+        title.includes(normalizedQuery) ||
+        description.includes(normalizedQuery) ||
+        appName.includes(normalizedQuery)
+      );
+    });
+  }, [gallery, normalizedQuery, t]);
+  const groups = [...new Set(filteredGallery.map((definition) => definition.app))];
 
   if ((userLoading && !user) || (orgLoading && !organization)) {
     return (
@@ -197,7 +215,7 @@ export function HomePage() {
           <p className="mt-1 text-muted">{organization?.name}</p>
         </div>
         {editing ? (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button variant="ghost" onClick={resetEditing}>
               {t("home.dashboard.reset")}
             </Button>
@@ -223,220 +241,154 @@ export function HomePage() {
           <Spinner size="md" label={t("common.loading")} />
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className={editing ? "flex flex-col items-start gap-6 lg:flex-row" : "space-y-6"}>
           {editing ? (
-            <section className="surface p-4 sm:p-5">
-              <h2 className="text-title">{t("home.dashboard.gallery")}</h2>
-              <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {groups.map((appId) => (
-                  <div key={appId} className="space-y-2">
-                    <h3 className="text-label uppercase">
-                      {t(("suite.apps." + appId + ".name") as Parameters<typeof t>[0])}
-                    </h3>
-                    {gallery
-                      .filter((widget) => widget.app === appId)
-                      .map((widget) => {
-                        const count =
-                          draft?.items.filter((item) => item.widget === widget.id).length ?? 0;
-                        const unavailable = widget.singleton && count > 0;
-                        return (
-                          <div
-                            key={widget.id}
-                            className="flex items-center justify-between gap-2 rounded-md border border-m3-border px-3 py-2"
-                          >
-                            <div className="min-w-0">
-                              <p className="text-sm font-medium">
-                                {t(widget.title as Parameters<typeof t>[0])}
-                              </p>
-                              <p className="text-caption">
-                                {t(widget.description as Parameters<typeof t>[0])}
-                              </p>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={unavailable}
-                              onClick={() =>
-                                setDraft((current) =>
-                                  current
-                                    ? addWidget(
-                                        current,
-                                        widget.id,
-                                        authDashboardRegistry,
-                                        widget.id + ":" + crypto.randomUUID(),
-                                      )
-                                    : current,
-                                )
-                              }
-                            >
-                              {t("home.dashboard.add")}
-                            </Button>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ))}
+            <aside
+              aria-label={t("home.dashboard.gallery")}
+              className="surface w-full shrink-0 space-y-3 p-4 lg:sticky lg:top-20 lg:max-h-[calc(100vh-7rem)] lg:w-80 lg:overflow-y-auto"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-title">{t("home.dashboard.gallery")}</h2>
+                <Badge variant="neutral" size="sm" className="tabular-nums">
+                  {filteredGallery.length}
+                </Badge>
               </div>
-            </section>
-          ) : null}
+              <label className="relative block">
+                <Search
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-m3-secondary"
+                  aria-hidden
+                />
+                <input
+                  type="search"
+                  value={widgetQuery}
+                  onChange={(event) => setWidgetQuery(event.target.value)}
+                  placeholder={t("home.dashboard.searchWidgets")}
+                  className="h-10 w-full rounded-md border border-m3-border bg-m3-card pl-9 pr-3 text-sm outline-none transition-colors focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20"
+                />
+              </label>
 
-          {editing && !mobile ? (
-            <GridstackAdapter
-              layout={renderLayout}
-              registry={authDashboardRegistry}
-              renderers={authDashboardRenderers}
-              onChange={setDraft}
-            />
-          ) : (
-            <Dashboard
-              layout={renderLayout}
-              registry={authDashboardRegistry}
-              renderers={authDashboardRenderers}
-              editable={editing}
-              removeLabel={t("home.dashboard.remove")}
-              errorLabel={t("home.widgets.error")}
-              getTitle={(definition) => t(definition.title as Parameters<typeof t>[0])}
-              onRemove={(instanceId) =>
-                setDraft((current) => (current ? removeWidget(current, instanceId) : current))
-              }
-            />
-          )}
-
-          {editing ? (
-            <section aria-label={t("home.dashboard.keyboardControls")} className="space-y-3">
-              <h2 className="text-title">{t("home.dashboard.keyboardControls")}</h2>
-              {draft?.items
-                .filter((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  return definition && isWidgetEligible(definition, context);
-                })
-                .map((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  if (configuring !== item.instanceId || !definition?.config) return null;
-                  return (
-                    <div key={item.instanceId} className="surface p-4">
-                      <h3 className="mb-3 text-sm font-semibold">
-                        {t("home.dashboard.configure")}:{" "}
-                        {t(definition.title as Parameters<typeof t>[0])}
-                      </h3>
-                      <WidgetConfiguration
-                        definition={definition.config}
-                        value={item.config ?? definition.config.defaults ?? {}}
-                        label={(key) => t(key as Parameters<typeof t>[0])}
-                        onChange={(config) =>
-                          update(item.instanceId, {
-                            config,
-                            configVersion: definition.config?.version ?? 0,
-                          })
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              {draft?.items
-                .filter((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  return definition && isWidgetEligible(definition, context);
-                })
-                .map((item) => {
-                  const definition = authDashboardRegistry.get(item.widget);
-                  if (!definition) return null;
-                  return (
-                    <div
-                      key={item.instanceId}
-                      className="flex flex-wrap items-center gap-2 rounded-md border border-m3-border p-2"
-                    >
-                      <span className="min-w-28 flex-1 text-sm">
-                        {t(definition.title as Parameters<typeof t>[0])}
-                      </span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveLeft")}
-                        onClick={() => update(item.instanceId, { x: item.x - 1 })}
+              {groups.length === 0 ? (
+                <p className="rounded-md border border-dashed border-m3-border bg-m3-sidebar/40 px-3 py-5 text-center text-caption">
+                  {t("home.dashboard.noMatchingWidgets")}
+                </p>
+              ) : (
+                <div className="space-y-2.5">
+                  {groups.map((appId) => {
+                    const groupWidgets = filteredGallery.filter((widget) => widget.app === appId);
+                    const isCollapsed = !normalizedQuery && Boolean(collapsedGroups[appId]);
+                    return (
+                      <div
+                        key={appId}
+                        className="rounded-md border border-m3-border/70 bg-m3-sidebar/30"
                       >
-                        ←
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveRight")}
-                        onClick={() => update(item.instanceId, { x: item.x + 1 })}
-                      >
-                        →
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveUp")}
-                        onClick={() => update(item.instanceId, { y: item.y - 1 })}
-                      >
-                        ↑
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.moveDown")}
-                        onClick={() => update(item.instanceId, { y: item.y + 1 })}
-                      >
-                        ↓
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.smaller")}
-                        onClick={() =>
-                          update(item.instanceId, {
-                            w: Math.max(definition.minSize.w, item.w - 1),
-                            h: Math.max(definition.minSize.h, item.h - 1),
-                          })
-                        }
-                      >
-                        −
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        aria-label={t("home.dashboard.larger")}
-                        onClick={() =>
-                          update(item.instanceId, {
-                            w: Math.min(definition.maxSize?.w ?? 12, item.w + 1),
-                            h: Math.min(definition.maxSize?.h ?? 20, item.h + 1),
-                          })
-                        }
-                      >
-                        +
-                      </Button>
-                      {definition.config?.schema &&
-                      Object.keys(definition.config.schema.fields).length > 0 ? (
-                        <Button
-                          size="sm"
-                          variant="ghost"
+                        <button
+                          type="button"
+                          aria-expanded={!isCollapsed}
                           onClick={() =>
-                            setConfiguring((current) =>
-                              current === item.instanceId ? null : item.instanceId,
-                            )
+                            setCollapsedGroups((prev) => ({
+                              ...prev,
+                              [appId]: !prev[appId],
+                            }))
                           }
+                          className="flex min-h-10 w-full items-center justify-between gap-2 px-3 py-2 text-left transition-colors hover:bg-m3-hover/60"
                         >
-                          {t("home.dashboard.configure")}
-                        </Button>
-                      ) : null}
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() =>
-                          setDraft((current) =>
-                            current ? removeWidget(current, item.instanceId) : current,
-                          )
-                        }
-                      >
-                        {t("home.dashboard.remove")}
-                      </Button>
-                    </div>
-                  );
-                })}
-            </section>
+                          <span className="flex items-center gap-2 text-label uppercase">
+                            {isCollapsed ? (
+                              <ChevronRight className="h-3.5 w-3.5" aria-hidden />
+                            ) : (
+                              <ChevronDown className="h-3.5 w-3.5" aria-hidden />
+                            )}
+                            {t(("suite.apps." + appId + ".name") as Parameters<typeof t>[0])}
+                          </span>
+                          <Badge variant="neutral" size="sm" className="tabular-nums">
+                            {groupWidgets.length}
+                          </Badge>
+                        </button>
+                        {!isCollapsed ? (
+                          <div className="space-y-2 border-t border-m3-border/60 p-2">
+                            {groupWidgets.map((widget) => {
+                              const count =
+                                draft?.items.filter((item) => item.widget === widget.id).length ??
+                                0;
+                              const unavailable = widget.singleton && count > 0;
+                              return (
+                                <div
+                                  key={widget.id}
+                                  className="flex items-center justify-between gap-2 rounded-md border border-m3-border bg-m3-card px-3 py-2"
+                                >
+                                  <div className="min-w-0">
+                                    <p className="truncate text-sm font-medium text-m3-text">
+                                      {t(widget.title as Parameters<typeof t>[0])}
+                                    </p>
+                                    <p className="line-clamp-2 text-caption">
+                                      {t(widget.description as Parameters<typeof t>[0])}
+                                    </p>
+                                  </div>
+                                  <Button
+                                    size="sm"
+                                    variant={unavailable ? "ghost" : "outline"}
+                                    disabled={unavailable}
+                                    onClick={() =>
+                                      setDraft((current) =>
+                                        current
+                                          ? addWidget(
+                                              current,
+                                              widget.id,
+                                              authDashboardRegistry,
+                                              widget.id + ":" + crypto.randomUUID(),
+                                            )
+                                          : current,
+                                      )
+                                    }
+                                    aria-label={
+                                      t("home.dashboard.add") +
+                                      " " +
+                                      t(widget.title as Parameters<typeof t>[0])
+                                    }
+                                  >
+                                    {unavailable ? (
+                                      <Check className="h-3.5 w-3.5" aria-hidden />
+                                    ) : (
+                                      <Plus className="h-3.5 w-3.5" aria-hidden />
+                                    )}
+                                  </Button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </aside>
           ) : null}
+
+          <div className="min-w-0 w-full flex-1">
+            {editing && !mobile ? (
+              <GridstackAdapter
+                layout={renderLayout}
+                registry={authDashboardRegistry}
+                renderers={authDashboardRenderers}
+                onChange={setDraft}
+                onRemove={handleRemove}
+                removeLabel={t("home.dashboard.remove")}
+                getTitle={(definition) => t(definition.title as Parameters<typeof t>[0])}
+              />
+            ) : (
+              <Dashboard
+                layout={renderLayout}
+                registry={authDashboardRegistry}
+                renderers={authDashboardRenderers}
+                editable={editing}
+                removeLabel={t("home.dashboard.remove")}
+                errorLabel={t("home.widgets.error")}
+                getTitle={(definition) => t(definition.title as Parameters<typeof t>[0])}
+                onRemove={handleRemove}
+              />
+            )}
+          </div>
         </div>
       )}
     </main>
