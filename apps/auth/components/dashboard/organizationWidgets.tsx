@@ -370,7 +370,6 @@ type TeamRow = {
 
 export function TeamsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
-  const density = getWidgetDensity(instance);
   const loadTeams = useCallback(async (orgId: string) => {
     await ensureActiveOrganizationSession(orgId);
     const res = await fetch("/api/organization/teams", { credentials: "include" });

@@ -891,7 +891,6 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
 export function RecentSongsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const density = getWidgetDensity(instance);
   const rawLimit = typeof instance.config?.limit === "number" ? instance.config.limit : 5;
   const maxForDensity = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const limit = Math.min(rawLimit, maxForDensity);
@@ -979,7 +978,6 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
 export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<ServiceRow[]>(
     "services",
     "/services?metadataOnly=true",
@@ -1087,7 +1085,6 @@ type ReplCollectionRow = {
 export function CollectionsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const density = getWidgetDensity(instance);
   const { value, loading, error } = useReplicationCollection<ReplCollectionRow>("collections", 100);
   const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const collections = useMemo(
@@ -1173,7 +1170,6 @@ export function CollectionsWidget({ instance }: WidgetRendererProps) {
 export function FoldersWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<FolderRow[]>("folders-summary", "/folders");
   const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
   const folders = useMemo(
