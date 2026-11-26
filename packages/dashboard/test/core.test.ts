@@ -68,6 +68,49 @@ test("defaults filter permissions, role, unavailable owners and pack determinist
   assert.equal(buildDefaultLayout({ ...context, orgRole: "member", permissions: [] }, registry).items.length, 0);
 });
 
+test("defaults are role-specific and exclude widgets with unmet requirements", () => {
+  const byRole = ["owner", "admin", "editor", "musician", "guest"].map((role) => ({
+    ...base,
+    id: "auth." + role,
+    defaultFor: [{ role, priority: 1 }],
+  }));
+  const restricted = { ...base, id: "auth.restricted", requires: ["billing.access"], defaultFor: [{ role: "owner", priority: 2 }] };
+  const registry = createWidgetRegistry([...byRole, restricted]);
+  const apps = [authApp];
+  for (const role of ["owner", "admin", "editor", "musician", "guest"]) {
+    const layout = buildDefaultLayout({ permissions: [], orgRole: role, apps }, registry);
+    assert.deepEqual(layout.items.map((item) => item.widget), ["auth." + role]);
+  }
+  assert.deepEqual(
+    buildDefaultLayout({ permissions: ["billing.access"], orgRole: "owner", apps }, registry).items.map((item) => item.widget),
+    ["auth.restricted", "auth.owner"],
+  );
+});
+
+test("configuration defaults, migration and invalid values normalize predictably", () => {
+  const configured: WidgetDefinition = {
+    ...base,
+    config: {
+      version: 1,
+      defaults: { limit: 5, density: "comfortable" },
+      schema: { fields: { limit: { type: "number", min: 1, max: 25 } } },
+      migrations: [{ from: 0, to: 1, renameFields: { count: "limit" } }],
+    },
+  };
+  const registry = createWidgetRegistry([configured]);
+  const migrated = normalizeLayout({ version: 1, items: [{ instanceId: "cfg", widget: configured.id, x: 0, y: 0, w: 4, h: 2, config: { count: 8, future: true } }], hidden: [], seen: [] }, registry);
+  assert.deepEqual(migrated.items[0]?.config, { limit: 8, density: "comfortable", future: true });
+  const invalid = normalizeLayout({ version: 1, items: [{ instanceId: "bad", widget: configured.id, x: 0, y: 0, w: 4, h: 2, config: { limit: "bad", future: true } }], hidden: [], seen: [] }, registry);
+  assert.equal(invalid.items[0]?.config?.limit, 5);
+});
+
+test("newer layout versions keep their version and unknown top-level fields", () => {
+  const registry = createWidgetRegistry([base]);
+  const value = normalizeLayout({ version: 4, futureSettings: { keep: true }, items: [], hidden: [], seen: [] }, registry);
+  assert.equal(value.version, 4);
+  assert.deepEqual(value.futureSettings, { keep: true });
+});
+
 test("new eligible widgets merge without replacing a customized layout", () => {
   const registry = createWidgetRegistry([base, { ...base, id: "auth.new", singleton: true }]);
   const customized = normalizeLayout({ version: 1, items: [{ instanceId: "custom", widget: base.id, x: 5, y: 2, w: 3, h: 2 }], hidden: [], seen: [base.id] }, registry);

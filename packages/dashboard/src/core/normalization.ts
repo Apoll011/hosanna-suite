@@ -1,4 +1,4 @@
-import type { DashboardLayout, WidgetDefinition, WidgetInstance } from "./types.js";
+import type { ConfigField, DashboardLayout, WidgetDefinition, WidgetInstance } from "./types.js";
 import type { WidgetRegistry } from "./registry.js";
 export const DASHBOARD_LAYOUT_VERSION = 1;
 export const DASHBOARD_COLUMNS = 12;
@@ -26,6 +26,39 @@ function place(item: WidgetInstance, placed: WidgetInstance[]): WidgetInstance {
   while (placed.some((other) => overlaps(candidate, other))) candidate = { ...candidate, y: candidate.y + 1 };
   return candidate;
 }
+function validConfigField(value: unknown, field: ConfigField): boolean {
+  if (field.type === "string" && typeof value !== "string") return false;
+  if (field.type === "number" && (typeof value !== "number" || !Number.isFinite(value))) return false;
+  if (field.type === "boolean" && typeof value !== "boolean") return false;
+  if (field.enum && !field.enum.includes(value as string | number | boolean)) return false;
+  if (typeof value === "number" && ((field.min !== undefined && value < field.min) || (field.max !== undefined && value > field.max))) return false;
+  return true;
+}
+
+function normalizeConfig(raw: unknown, rawVersion: unknown, definition: WidgetDefinition): { config: Record<string, unknown>; version: number } {
+  const configDefinition = definition.config;
+  const original = isRecord(raw) ? { ...raw } : {};
+  let version = integer(rawVersion, 0);
+  const migrations = [...(configDefinition?.migrations ?? [])].sort((a, b) => a.from - b.from);
+  for (const migration of migrations) {
+    if (migration.from !== version) continue;
+    for (const [from, to] of Object.entries(migration.renameFields ?? {})) {
+      if (from in original && !(to in original)) original[to] = original[from];
+      delete original[from];
+    }
+    Object.assign(original, migration.defaults ?? {}, original);
+    version = migration.to;
+  }
+  const currentVersion = Math.max(configDefinition?.version ?? version, version);
+  const merged = { ...(configDefinition?.defaults ?? {}), ...original };
+  for (const [key, field] of Object.entries(configDefinition?.schema?.fields ?? {})) {
+    if (key in merged && !validConfigField(merged[key], field)) {
+      if (key in (configDefinition?.defaults ?? {})) merged[key] = configDefinition?.defaults?.[key];
+      else delete merged[key];
+    }
+  }
+  return { config: merged, version: currentVersion };
+}
 export function normalizeLayout(value: unknown, registry: WidgetRegistry): DashboardLayout {
   if (!isRecord(value)) return { ...EMPTY_LAYOUT, items: [], hidden: [], seen: [] };
   const originalItems = Array.isArray(value.items) ? value.items : [];
@@ -49,11 +82,9 @@ export function normalizeLayout(value: unknown, registry: WidgetRegistry): Dashb
       ...size,
     };
     if (definition?.config) {
-      const rawConfig = isRecord(raw.config) ? raw.config : {};
-      const migrated = definition.config.migrate?.(rawConfig) ?? rawConfig;
-      const merged = { ...(definition.config.defaults ?? {}), ...migrated };
-      if (!definition.config.validate || definition.config.validate(merged)) instance.config = merged;
-      else if (definition.config.defaults) instance.config = { ...definition.config.defaults, ...rawConfig };
+      const normalizedConfig = normalizeConfig(raw.config, raw.configVersion, definition);
+      instance.config = normalizedConfig.config;
+      instance.configVersion = normalizedConfig.version;
     } else if (isRecord(raw.config)) instance.config = { ...raw.config };
     valid.push(instance);
   }
@@ -63,7 +94,9 @@ export function normalizeLayout(value: unknown, registry: WidgetRegistry): Dashb
   const stringList = (x: unknown) => Array.isArray(x) ? x.filter((v): v is string => typeof v === "string") : [];
   return {
     ...value,
-    version: DASHBOARD_LAYOUT_VERSION,
+    version: integer(value.version, DASHBOARD_LAYOUT_VERSION) > DASHBOARD_LAYOUT_VERSION
+      ? integer(value.version, DASHBOARD_LAYOUT_VERSION)
+      : DASHBOARD_LAYOUT_VERSION,
     items: placed,
     hidden: [...new Set(stringList(value.hidden))],
     seen: [...new Set(stringList(value.seen))],

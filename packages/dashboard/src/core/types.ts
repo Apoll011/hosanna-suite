@@ -1,4 +1,21 @@
 export type GridSize = { w: number; h: number };
+export type ConfigField = {
+  type: "string" | "number" | "boolean";
+  enum?: readonly (string | number | boolean)[];
+  min?: number;
+  max?: number;
+};
+export type WidgetConfigDefinition = {
+  version?: number;
+  defaults?: Record<string, unknown>;
+  schema?: { fields: Record<string, ConfigField> };
+  migrations?: readonly {
+    from: number;
+    to: number;
+    renameFields?: Readonly<Record<string, string>>;
+    defaults?: Record<string, unknown>;
+  }[];
+};
 export type WidgetDefinition = {
   id: string;
   app: string;
@@ -13,11 +30,7 @@ export type WidgetDefinition = {
   singleton?: boolean;
   enabled?: boolean;
   group?: string;
-  config?: {
-    defaults?: Record<string, unknown>;
-    validate?: (value: unknown) => value is Record<string, unknown>;
-    migrate?: (value: Record<string, unknown>) => Record<string, unknown>;
-  };
+  config?: WidgetConfigDefinition;
 };
 export type WidgetInstance = {
   instanceId: string;
@@ -27,6 +40,7 @@ export type WidgetInstance = {
   w: number;
   h: number;
   config?: Record<string, unknown>;
+  configVersion?: number;
   [extra: string]: unknown;
 };
 export type DashboardLayout = {
