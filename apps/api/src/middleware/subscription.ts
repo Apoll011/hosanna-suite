@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { createCache } from "@hosanna/cache";
+import { createScopedCache, orgCacheKey } from "@hosanna/cache";
 import type { NextFunction, Request, Response } from "express";
 import { prisma } from "../database/prisma.js";
 import { DEFAULT_LOCALE, t } from "../lib/i18n.js";
@@ -9,7 +9,7 @@ import { AppError } from "../utils/errors.js";
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
 const SUB_CACHE_TTL_MS = 400_000;
-const subCache = createCache({ namespace: "sub:entitled", ttlMs: SUB_CACHE_TTL_MS });
+const subCache = createScopedCache({ namespace: "sub:entitled", ttlMs: SUB_CACHE_TTL_MS });
 
 export function isEntitledSubscription(sub: { status: string; trialEnd?: Date | null }): boolean {
   if (sub.status === "active") return true;
@@ -18,7 +18,8 @@ export function isEntitledSubscription(sub: { status: string; trialEnd?: Date | 
 }
 
 export async function hasActiveSubscription(organizationId: string): Promise<boolean> {
-  const cached = await subCache.get<boolean>(organizationId);
+  const key = orgCacheKey(organizationId, "entitled");
+  const cached = await subCache.get<boolean>(key);
   if (typeof cached === "boolean") return cached;
 
   const subscriptions = await prisma.subscription.findMany({
@@ -26,7 +27,7 @@ export async function hasActiveSubscription(organizationId: string): Promise<boo
     select: { status: true, trialEnd: true },
   });
   const result = subscriptions.some(isEntitledSubscription);
-  await subCache.set(organizationId, result);
+  await subCache.set(key, result);
   return result;
 }
 

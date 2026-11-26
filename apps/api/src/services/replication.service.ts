@@ -375,13 +375,18 @@ function buildCheckpointWhere(checkpoint: ReplicationCheckpoint | null) {
 }
 
 /** `_CollectionToSong`: A = collectionId, B = songId. One round-trip instead of Prisma include. */
-async function loadCollectionSongIds(collectionIds: string[]): Promise<Map<string, string[]>> {
+async function loadCollectionSongIds(
+  tenantId: string,
+  collectionIds: string[],
+): Promise<Map<string, string[]>> {
   const map = new Map<string, string[]>();
   if (collectionIds.length === 0) return map;
 
   const rows = await prisma.$queryRaw<Array<{ A: string; B: string }>>`
-    SELECT "A", "B" FROM "_CollectionToSong"
-    WHERE "A" IN (${Prisma.join(collectionIds)})
+    SELECT j."A", j."B" FROM "_CollectionToSong" j
+    INNER JOIN "Collection" c ON c."id" = j."A"
+    WHERE c."orgId" = ${tenantId}
+      AND j."A" IN (${Prisma.join(collectionIds)})
   `;
 
   for (const row of rows) {
@@ -392,13 +397,18 @@ async function loadCollectionSongIds(collectionIds: string[]): Promise<Map<strin
   return map;
 }
 
-async function loadSongCollectionIds(songIds: string[]): Promise<Map<string, string[]>> {
+async function loadSongCollectionIds(
+  tenantId: string,
+  songIds: string[],
+): Promise<Map<string, string[]>> {
   const map = new Map<string, string[]>();
   if (songIds.length === 0) return map;
 
   const rows = await prisma.$queryRaw<Array<{ A: string; B: string }>>`
-    SELECT "A", "B" FROM "_CollectionToSong"
-    WHERE "B" IN (${Prisma.join(songIds)})
+    SELECT j."A", j."B" FROM "_CollectionToSong" j
+    INNER JOIN "Song" s ON s."id" = j."B"
+    WHERE s."orgId" = ${tenantId}
+      AND j."B" IN (${Prisma.join(songIds)})
   `;
 
   for (const row of rows) {
@@ -477,6 +487,7 @@ async function pullOne(
     }
 
     const songIdsByCollection = await loadCollectionSongIds(
+      tenantId,
       docs.map((doc: { id: string }) => doc.id),
     );
     const documents = docs.map((doc: any) => {
@@ -509,6 +520,7 @@ async function pullOne(
     }
 
     const collectionIdsBySong = await loadSongCollectionIds(
+      tenantId,
       docs.map((doc: { id: string }) => doc.id),
     );
     const documents = docs.map((doc: any) =>

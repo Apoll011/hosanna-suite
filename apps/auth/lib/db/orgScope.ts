@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { prisma } from "@/lib/db/prisma";
 
-const ORG_SCOPED_MODELS = new Set([
+export const ORG_SCOPED_MODELS = new Set([
   "Folder",
   "Collection",
   "Song",
   "Service",
   "ServiceNote",
+  "ServiceSongAnnotation",
   "AgendaEvent",
-  "Settings",
+  "OrgAiConfig",
+  "OrgAiMemory",
 ]);
 
 const orgClientCache = new Map<string, ReturnType<typeof buildOrgClient>>();

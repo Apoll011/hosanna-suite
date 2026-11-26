@@ -20,8 +20,14 @@ export class ServiceSongAnnotationService {
    * metadata-only in Firestore — bytes come from Postgres.
    */
   async get(serviceId: string, songId: string): Promise<AnnotationRecord | null> {
+    const service = await this.db.service.findFirst({
+      where: { id: serviceId },
+      select: { id: true },
+    });
+    if (!service) return null;
+
     const firebaseDoc = await getAnnotationDoc(serviceId, songId);
-    if (firebaseDoc) {
+    if (firebaseDoc && (!firebaseDoc.orgId || firebaseDoc.orgId === this.orgId)) {
       const bytes = await resolveAnnotationBytes(firebaseDoc);
       if (bytes && bytes.byteLength > 0) {
         return {
@@ -37,8 +43,9 @@ export class ServiceSongAnnotationService {
     });
     if (!row) return null;
 
-    const updatedAt = firebaseDoc != null ? new Date(firebaseDoc.updatedAt) : row.updatedAt;
-    const updatedById = firebaseDoc?.updatedById || row.updatedById;
+    const docMatchesOrg = firebaseDoc != null && (!firebaseDoc.orgId || firebaseDoc.orgId === this.orgId);
+    const updatedAt = docMatchesOrg ? new Date(firebaseDoc.updatedAt) : row.updatedAt;
+    const updatedById = (docMatchesOrg ? firebaseDoc.updatedById : null) || row.updatedById;
 
     return {
       canvasData: Buffer.from(row.canvasData),
