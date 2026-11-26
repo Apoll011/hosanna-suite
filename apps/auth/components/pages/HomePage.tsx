@@ -154,6 +154,15 @@ export function HomePage() {
     );
   };
   const currentLayout = editing ? draft : layout;
+  const renderLayout = currentLayout
+    ? {
+        ...currentLayout,
+        items: currentLayout.items.filter((item) => {
+          const definition = authDashboardRegistry.get(item.widget);
+          return !definition || isWidgetEligible(definition, context);
+        }),
+      }
+    : null;
   const usableWidgets = listRenderableWidgets(authDashboardRegistry, authDashboardRenderers);
   const gallery = usableWidgets.filter((definition) => isWidgetEligible(definition, context));
   const groups = [...new Set(gallery.map((definition) => definition.app))];
@@ -209,7 +218,7 @@ export function HomePage() {
           {t("home.loadError")}
         </p>
       ) : null}
-      {appsLoading || !currentLayout ? (
+      {appsLoading || !renderLayout ? (
         <div className="flex justify-center py-12">
           <Spinner size="md" label={t("common.loading")} />
         </div>
@@ -273,14 +282,14 @@ export function HomePage() {
 
           {editing && !mobile ? (
             <GridstackAdapter
-              layout={currentLayout}
+              layout={renderLayout}
               registry={authDashboardRegistry}
               renderers={authDashboardRenderers}
               onChange={setDraft}
             />
           ) : (
             <Dashboard
-              layout={currentLayout}
+              layout={renderLayout}
               registry={authDashboardRegistry}
               renderers={authDashboardRenderers}
               editable={editing}
@@ -296,7 +305,10 @@ export function HomePage() {
           {editing ? (
             <section aria-label={t("home.dashboard.keyboardControls")} className="space-y-3">
               <h2 className="text-title">{t("home.dashboard.keyboardControls")}</h2>
-              {draft?.items.map((item) => {
+              {draft?.items.filter((item) => {
+                const definition = authDashboardRegistry.get(item.widget);
+                return definition && isWidgetEligible(definition, context);
+              }).map((item) => {
                 const definition = authDashboardRegistry.get(item.widget);
                 if (configuring !== item.instanceId || !definition?.config) return null;
                 return (
@@ -319,7 +331,10 @@ export function HomePage() {
                   </div>
                 );
               })}
-              {draft?.items.map((item) => {
+              {draft?.items.filter((item) => {
+                const definition = authDashboardRegistry.get(item.widget);
+                return definition && isWidgetEligible(definition, context);
+              }).map((item) => {
                 const definition = authDashboardRegistry.get(item.widget);
                 if (!definition) return null;
                 return (

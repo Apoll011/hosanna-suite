@@ -395,7 +395,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
           },
         },
         update: {
-          before: async (user, _context) => {
+          before: async (user, context) => {
             if (user.image && typeof user.image === "string") {
               try {
                 const userId = context?.context?.session?.user?.id;

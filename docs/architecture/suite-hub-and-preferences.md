@@ -52,6 +52,8 @@ The existing localStorage favorites key is copied into the settings scope once. 
 
 Widgets fetch from their domain endpoints. The current Auth widgets use GET /api/suite/apps, GET /api/services, GET /api/songs, and Auth GET /api/billing/entitlement. Song and service endpoints keep their existing server-side permission and subscription checks. Widget data cache keys include the organization ID, and the suite catalog URL includes the active organization ID because its app URLs can be organization-specific.
 
+For adding consumer-owned widgets, see [Creating dashboard widgets](./dashboard-widgets.md).
+
 ---
 
 ## 2. Suite app catalog

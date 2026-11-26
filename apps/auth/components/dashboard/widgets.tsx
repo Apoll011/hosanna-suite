@@ -261,6 +261,10 @@ export function SubscriptionWidget(_: WidgetRendererProps) {
       setState({ organizationId: null, value: null, loading: false, error: false });
       return;
     }
+    if (lastOrganizationId !== orgId) {
+      cache.clear();
+      lastOrganizationId = orgId;
+    }
     const cacheKey = orgId + ":subscription";
     const cached = cache.get(cacheKey);
     if (cached && Date.now() - cached.at < 60_000) {
