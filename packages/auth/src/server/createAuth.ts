@@ -329,7 +329,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
       maxPasswordLength: 128,
       autoSignIn: false,
 
-      sendResetPassword: async ({ user, url, token }, request) => {
+      sendResetPassword: async ({ user, url: _url, token }, _request) => {
         try {
           const resetUrl = `${appUrl}/reset-password/?token=${token}`;
           await emails.sendPasswordResetEmail(user.email, {
@@ -341,7 +341,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
           console.error("[auth] Failed to send password reset email:", err);
         }
       },
-      onPasswordReset: async ({ user }, request) => {
+      onPasswordReset: async ({ user }, _request) => {
         try {
           await emails.sendPasswordResetSuccessEmail(user.email, {
             first_name: user.name,
@@ -354,7 +354,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
     databaseHooks: {
       user: {
         create: {
-          before: async (user, context) => {
+          before: async (user, _context) => {
             if (user.image && typeof user.image === "string") {
               try {
                 let publicUrl: string | undefined;
@@ -395,7 +395,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
           },
         },
         update: {
-          before: async (user, context) => {
+          before: async (user, _context) => {
             if (user.image && typeof user.image === "string") {
               try {
                 const userId = context?.context?.session?.user?.id;
@@ -474,7 +474,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
     emailVerification: {
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
-      sendVerificationEmail: async ({ user, url, token }, request) => {
+      sendVerificationEmail: async ({ user, url: _url, token }, _request) => {
         try {
           const resetUrl = `${appUrl}/verify-email/?token=${token}`;
           await emails.sendVerificationEmail(user.email, {
@@ -633,7 +633,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
           }
         },
         organizationHooks: {
-          beforeCreateOrganization: async ({ organization, user }) => {
+          beforeCreateOrganization: async ({ organization, user: _user }) => {
             // Reserved for Studio isolated demo mode (`DEMO_ORG_SLUG`).
             const reservedSlugs = new Set(["hosanna-demo", "demo"]);
             const slug = (organization?.slug ?? "").toLowerCase();
@@ -724,7 +724,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             );
           },
 
-          afterAddMember: async ({ member, user, organization }) => {
+          afterAddMember: async ({ member: _member, user, organization }) => {
             try {
               const locale = await getOrgLocale(organization.id);
               await emails.sendWelcomeEmail(user.email, {
@@ -748,7 +748,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             });
           },
 
-          afterUpdateMemberRole: async ({ member, previousRole, user, organization }) => {
+          afterUpdateMemberRole: async ({ member, previousRole: _previousRole, user, organization }) => {
             try {
               const locale = await getOrgLocale(organization.id);
               if (member.role === "admin" || member.role === "owner") {
@@ -771,7 +771,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             }
           },
 
-          afterRemoveMember: async ({ member, user, organization }) => {
+          afterRemoveMember: async ({ member: _member, user, organization }) => {
             try {
               const locale = await getOrgLocale(organization.id);
               await emails.sendRemovedFromChurchEmail(user.email, {
@@ -966,7 +966,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
               console.error("[auth] Failed to notify org after subscription complete:", err);
             }
           },
-          onSubscriptionCancel: async ({ subscription, event }) => {
+          onSubscriptionCancel: async ({ subscription, event: _event }) => {
             try {
               const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
                 subscription.referenceId,
@@ -1008,9 +1008,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             user,
             newEmail,
             url,
-            token,
+            token: _token,
           }: { user: any; newEmail: string; url: string; token: string },
-          request?: any,
+          _request?: any,
         ) => {
           try {
             await emails.sendChangeEmailVerificationEmail(newEmail, {

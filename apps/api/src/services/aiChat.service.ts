@@ -123,7 +123,6 @@ export function modelFileDataToBase64(data: unknown): string | null {
   return null;
 }
 
-
 function buildHosannaTools(
   authInfo: AuthInfo,
   opts?: {

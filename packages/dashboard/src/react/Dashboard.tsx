@@ -36,7 +36,7 @@ export function Dashboard({
     >
       <style>
         {
-          "[data-dashboard-view] [data-widget-instance]{grid-column:1/-1}@media(min-width:768px){[data-dashboard-view] [data-widget-instance]{grid-column:span var(--dashboard-columns)}}"
+          "[data-dashboard-view] [data-widget-instance]{grid-column:1/-1;grid-row:auto!important}@media(min-width:768px){[data-dashboard-view] [data-widget-instance]{grid-column:var(--dashboard-column-start)/span var(--dashboard-columns);grid-row:var(--dashboard-row-start)/span var(--dashboard-row-span)!important}}"
         }
       </style>
       {mobile.map((instance) => {
@@ -49,8 +49,10 @@ export function Dashboard({
             className="surface relative min-w-0 overflow-hidden p-4 md:p-5"
             style={
               {
-                gridRow: "span " + Math.max(1, instance.h),
+                "--dashboard-column-start": instance.x + 1,
                 "--dashboard-columns": Math.min(instance.w, 12),
+                "--dashboard-row-start": instance.y + 1,
+                "--dashboard-row-span": Math.max(1, instance.h),
               } as CSSProperties
             }
             aria-label={getTitle(definition)}
