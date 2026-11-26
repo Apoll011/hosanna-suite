@@ -142,7 +142,10 @@ export function SubscriptionWidget({ instance }: WidgetRendererProps) {
 
   if (density === "compact" && !loading && !error && value) {
     return (
-      <Link href="/account/organization/billing" className="flex h-full items-center justify-between gap-2">
+      <Link
+        href="/account/organization/billing"
+        className="flex h-full items-center justify-between gap-2"
+      >
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-m3-text">
             {t("home.widgets.subscription.planName")}
@@ -458,7 +461,10 @@ export function MembersWidget({ instance }: WidgetRendererProps) {
 
   if (density === "compact") {
     return (
-      <Link href="/account/organization/members" className="flex h-full items-center justify-between gap-2">
+      <Link
+        href="/account/organization/members"
+        className="flex h-full items-center justify-between gap-2"
+      >
         <div className="flex min-w-0 items-center gap-2">
           <UserCheck className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
           <span className="truncate text-sm font-semibold tabular-nums text-m3-text">
@@ -581,11 +587,18 @@ export function InvitationsWidget({ instance }: WidgetRendererProps) {
 
   if (density === "compact" && !loading && !error) {
     return (
-      <Link href="/account/organization/members" className="flex h-full items-center justify-between gap-2">
+      <Link
+        href="/account/organization/members"
+        className="flex h-full items-center justify-between gap-2"
+      >
         <span className="truncate text-sm font-medium text-m3-text">
           {t("home.widgets.invitations.title")}
         </span>
-        <Badge variant={invites.length > 0 ? "accent" : "neutral"} size="sm" className="tabular-nums">
+        <Badge
+          variant={invites.length > 0 ? "accent" : "neutral"}
+          size="sm"
+          className="tabular-nums"
+        >
           {invites.length}
         </Badge>
       </Link>
@@ -655,11 +668,11 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
     "/services?metadataOnly=true",
     canServices,
   );
-  const collections = useReplicationCollection<{ id: string; isDeleted?: boolean; _deleted?: boolean }>(
-    "collections",
-    100,
-    canCollections,
-  );
+  const collections = useReplicationCollection<{
+    id: string;
+    isDeleted?: boolean;
+    _deleted?: boolean;
+  }>("collections", 100, canCollections);
   const agenda = useReplicationCollection<{ id: string; isDeleted?: boolean; _deleted?: boolean }>(
     "agendaEvents",
     100,
@@ -728,7 +741,9 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
       ) : visibleItems.length === 0 ? (
         <WidgetEmptyBox icon={<HardDrive className="h-5 w-5" />} title={t("home.widgets.error")} />
       ) : (
-        <div className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : "grid-cols-2 sm:grid-cols-3"}`}>
+        <div
+          className={`grid gap-2 ${density === "compact" ? "grid-cols-3" : "grid-cols-2 sm:grid-cols-3"}`}
+        >
           {visibleItems.map((item) => (
             <div key={item.key} className="surface-inset px-3 py-2">
               <p className="text-caption truncate">{item.label}</p>

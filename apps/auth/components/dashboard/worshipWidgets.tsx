@@ -114,7 +114,9 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
           </div>
           <p className="mt-1 truncate text-sm font-semibold text-m3-text">{next.name}</p>
         </div>
-        {musicUrl ? <ChevronRight className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden /> : null}
+        {musicUrl ? (
+          <ChevronRight className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
+        ) : null}
       </div>
     );
     return musicUrl ? (
@@ -468,7 +470,9 @@ export function LibraryHealthWidget({ instance }: WidgetRendererProps) {
   if (density === "compact" && !loading && !error && total > 0) {
     return (
       <div className="flex h-full items-center gap-3">
-        <span className={`text-xl font-semibold tabular-nums ${tone.split(" ").slice(1).join(" ")}`}>
+        <span
+          className={`text-xl font-semibold tabular-nums ${tone.split(" ").slice(1).join(" ")}`}
+        >
           {health.healthPct}%
         </span>
         <div className="min-w-0">
@@ -622,7 +626,13 @@ function useSetlistStats() {
 
     const byId = new Map<
       string,
-      { id: string; title: string; artist: string; serviceIds: Set<string>; lastPlayed: string | null }
+      {
+        id: string;
+        title: string;
+        artist: string;
+        serviceIds: Set<string>;
+        lastPlayed: string | null;
+      }
     >();
     for (const song of songs) {
       byId.set(song.id, {
@@ -783,7 +793,11 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
             {rows[0]?.title ?? t("home.widgets.restingSongs.empty")}
           </p>
         </div>
-        <Badge variant={summary.resting.length > 0 ? "warning" : "neutral"} size="sm" className="tabular-nums">
+        <Badge
+          variant={summary.resting.length > 0 ? "warning" : "neutral"}
+          size="sm"
+          className="tabular-nums"
+        >
           {summary.resting.length}
         </Badge>
       </div>
@@ -1009,7 +1023,11 @@ export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
                       : ""}
                   </p>
                 </div>
-                <Badge variant={diff <= 1 ? "accent" : "neutral"} size="sm" className="tabular-nums">
+                <Badge
+                  variant={diff <= 1 ? "accent" : "neutral"}
+                  size="sm"
+                  className="tabular-nums"
+                >
                   {diff === 0
                     ? t("home.widgets.nextService.today")
                     : diff === 1
@@ -1184,7 +1202,9 @@ export function FoldersWidget({ instance }: WidgetRendererProps) {
                   <span className="truncate text-sm font-medium text-m3-text">{folder.name}</span>
                 </div>
                 <div className="flex shrink-0 items-center gap-2 text-caption tabular-nums">
-                  <span>{t("home.widgets.folders.songsCount", { count: folder.songCount ?? 0 })}</span>
+                  <span>
+                    {t("home.widgets.folders.songsCount", { count: folder.songCount ?? 0 })}
+                  </span>
                   {density === "expanded" && (folder.folderCount ?? 0) > 0 ? (
                     <span>
                       ·{" "}
@@ -1397,7 +1417,9 @@ export function TrashWidget({ instance }: WidgetRendererProps) {
           <div className="grid grid-cols-3 gap-2">
             <div className="surface-inset px-2.5 py-2">
               <p className="text-caption truncate">{t("home.widgets.trash.songs")}</p>
-              <p className="mt-0.5 text-base font-semibold tabular-nums text-m3-text">{songCount}</p>
+              <p className="mt-0.5 text-base font-semibold tabular-nums text-m3-text">
+                {songCount}
+              </p>
             </div>
             <div className="surface-inset px-2.5 py-2">
               <p className="text-caption truncate">{t("home.widgets.trash.folders")}</p>

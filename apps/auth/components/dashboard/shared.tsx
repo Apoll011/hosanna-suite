@@ -304,14 +304,7 @@ export type FolderRow = {
 };
 
 export type HealthCriterion =
-  | "title"
-  | "artist"
-  | "key"
-  | "tempo"
-  | "sections"
-  | "chords"
-  | "songNumber"
-  | "youtube";
+  "title" | "artist" | "key" | "tempo" | "sections" | "chords" | "songNumber" | "youtube";
 
 export function extractSongKey(content?: string | null): string | null {
   if (!content) return null;

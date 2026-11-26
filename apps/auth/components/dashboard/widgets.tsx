@@ -1,11 +1,6 @@
 "use client";
 
-export {
-  AppLauncherWidget,
-  AuthAppWidget,
-  FavoritesWidget,
-  MusicAppWidget,
-} from "./appWidgets";
+export { AppLauncherWidget, AuthAppWidget, FavoritesWidget, MusicAppWidget } from "./appWidgets";
 export {
   AgendaWidget,
   CollectionsWidget,
