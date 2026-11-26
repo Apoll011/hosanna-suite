@@ -17,7 +17,6 @@ import { CopyButton } from "./CopyButton";
 import { countByName, toolRunStatus } from "../../core/stream";
 import {
   formatDuration,
-  parseToolOutput,
   toolIcon,
   toolLabel,
   toolPayloadText,

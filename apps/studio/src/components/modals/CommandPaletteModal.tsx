@@ -57,17 +57,29 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
   const inputRef = useRef<HTMLInputElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
 
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevActiveParentId, setPrevActiveParentId] = useState(activeParentId);
+  const [prevSearchQuery, setPrevSearchQuery] = useState(searchQuery);
+  if (isOpen !== prevOpen || activeParentId !== prevActiveParentId) {
+    setPrevOpen(isOpen);
+    setPrevActiveParentId(activeParentId);
+    if (isOpen) setSelectedIndex(0);
+  }
+  if (searchQuery !== prevSearchQuery) {
+    setPrevSearchQuery(searchQuery);
+    setSelectedIndex(0);
+  }
+
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 20);
-      setSelectedIndex(0);
     }
   }, [isOpen, activeParentId]);
 
   const filteredActions = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
 
-    let currentPool = allActions.filter((a) => {
+    const currentPool = allActions.filter((a) => {
       if (activeParentId) return a.parent === activeParentId;
       return !a.parent; // Top level
     });
@@ -122,10 +134,6 @@ export function CommandPaletteModal({ isSearchingDb }: CommandPaletteModalProps)
   const flatVisibleActions = useMemo(() => {
     return groupedActions.flatMap((g) => g.actions);
   }, [groupedActions]);
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [searchQuery, activeParentId]);
 
   useEffect(() => {
     if (!listContainerRef.current) return;

@@ -122,13 +122,13 @@ export const SongsPage: React.FC<SongsPageProps> = ({
 
   const folders = useMemo(
     () => (Array.isArray(foldersQuery.data?.folders) ? foldersQuery.data.folders : []),
-    [foldersQuery.data?.folders],
+    [foldersQuery.data],
   );
 
   const { searchableSongs } = useSearchableSongs(folders);
   const allSongs: Song[] = useMemo(
     () => (Array.isArray(songsQuery.data?.songs) ? songsQuery.data.songs : []),
-    [songsQuery.data?.songs],
+    [songsQuery.data],
   );
 
   const folderMap = useMemo(() => {
@@ -196,19 +196,34 @@ export const SongsPage: React.FC<SongsPageProps> = ({
   const totalSongs = filteredSongs.length;
   const effectivePerPage = itemsPerPage === 0 ? Math.max(1, totalSongs) : itemsPerPage;
 
-  useEffect(() => {
-    setPage(1);
-    setSelectedSongIds(new Set());
-    setLastClickedId(null);
-  }, [
+  const [prevFilters, setPrevFilters] = useState({
     finalSearchQuery,
     finalSortBy,
     finalSortOrder,
     actualSelectedKey,
     actualSelectedTag,
     itemsPerPage,
-    setSelectedSongIds,
-  ]);
+  });
+  if (
+    finalSearchQuery !== prevFilters.finalSearchQuery ||
+    finalSortBy !== prevFilters.finalSortBy ||
+    finalSortOrder !== prevFilters.finalSortOrder ||
+    actualSelectedKey !== prevFilters.actualSelectedKey ||
+    actualSelectedTag !== prevFilters.actualSelectedTag ||
+    itemsPerPage !== prevFilters.itemsPerPage
+  ) {
+    setPrevFilters({
+      finalSearchQuery,
+      finalSortBy,
+      finalSortOrder,
+      actualSelectedKey,
+      actualSelectedTag,
+      itemsPerPage,
+    });
+    setPage(1);
+    setSelectedSongIds(new Set());
+    setLastClickedId(null);
+  }
 
   const songsData = useMemo(() => {
     if (itemsPerPage === 0) return filteredSongs;

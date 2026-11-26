@@ -64,46 +64,52 @@ export const SettingsPage: React.FC = () => {
     return "app";
   });
 
-  useEffect(() => {
+  const [prevSearchParams1, setPrevSearchParams1] = useState(searchParams);
+  if (searchParams !== prevSearchParams1) {
+    setPrevSearchParams1(searchParams);
     const tab = searchParams.get("tab");
-    if (!tab) return;
-
-    const alias = SETTINGS_TAB_ALIASES[tab];
-    if (alias) {
-      const next = new URLSearchParams(searchParams);
-      next.set("tab", alias);
-      setSearchParams(next, { replace: true });
-      setActiveTab(alias);
-      return;
+    if (tab) {
+      const alias = SETTINGS_TAB_ALIASES[tab];
+      if (alias) {
+        const next = new URLSearchParams(searchParams);
+        next.set("tab", alias);
+        setSearchParams(next, { replace: true });
+        setActiveTab(alias);
+      } else {
+        const authPath = MOVED_TO_AUTH[tab];
+        if (authPath) {
+          if (isDemoMode()) {
+            setActiveTab("app");
+            const next = new URLSearchParams(searchParams);
+            next.set("tab", "app");
+            setSearchParams(next, { replace: true });
+          } else {
+            navigateToAuthAccount({
+              path: authPath,
+              returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
+            });
+          }
+        }
+      }
     }
+  }
 
-    const authPath = MOVED_TO_AUTH[tab];
-    if (!authPath) return;
-
-    // Demo has no auth account surface — drop legacy tabs onto Application.
-    if (isDemoMode()) {
-      setActiveTab("app");
-      const next = new URLSearchParams(searchParams);
-      next.set("tab", "app");
-      setSearchParams(next, { replace: true });
-      return;
-    }
-
-    navigateToAuthAccount({
-      path: authPath,
-      returnUrl: typeof window !== "undefined" ? window.location.href : undefined,
-    });
-  }, [searchParams, setSearchParams]);
-
-  useEffect(() => {
+  const [prevSearchParams2, setPrevSearchParams2] = useState(searchParams);
+  const [prevActiveTab, setPrevActiveTab] = useState(activeTab);
+  if (searchParams !== prevSearchParams2 || activeTab !== prevActiveTab) {
+    setPrevSearchParams2(searchParams);
+    setPrevActiveTab(activeTab);
     const tab = searchParams.get("tab");
     if (VALID_TABS.includes(tab as TabType) && tab !== activeTab) {
       setActiveTab(tab as TabType);
     }
-  }, [searchParams, activeTab]);
+  }
 
-  // Org-managed tabs require organization.update; drop users without it.
-  useEffect(() => {
+  const [prevActiveTabForOrg, setPrevActiveTabForOrg] = useState(activeTab);
+  const [prevCanUpdate, setPrevCanUpdate] = useState(canUpdate);
+  if (activeTab !== prevActiveTabForOrg || canUpdate !== prevCanUpdate) {
+    setPrevActiveTabForOrg(activeTab);
+    setPrevCanUpdate(canUpdate);
     const orgTabs: TabType[] = ["services", "printing", "responsibilities"];
     if (orgTabs.includes(activeTab) && !canUpdate) {
       setActiveTab("app");
@@ -111,7 +117,7 @@ export const SettingsPage: React.FC = () => {
       next.set("tab", "app");
       setSearchParams(next, { replace: true });
     }
-  }, [activeTab, canUpdate, searchParams, setSearchParams]);
+  }
 
   const tabs = [
     {

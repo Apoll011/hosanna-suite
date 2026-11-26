@@ -82,7 +82,13 @@ export function useSubscription(): SubscriptionApi {
   }, [orgId]);
 
   useEffect(() => {
-    void refresh();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) void refresh();
+    });
+    return () => {
+      active = false;
+    };
   }, [refresh]);
 
   const hasStarted = useMemo(() => {

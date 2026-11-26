@@ -13,6 +13,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "lint": "eslint --config ../config/eslint.config.js .",
+    "test": "tsx --test \"test/**/*.test.ts\"",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
@@ -29,6 +31,8 @@
   "devDependencies": {
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0",
+    "tsx": "^4.23.15"
   }
 }

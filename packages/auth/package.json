@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/auth",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": true,
   "license": "AGPL-3.0-only",
   "description": "Hosanna Better Auth factory, RBAC roles, and shared auth client helpers",
@@ -23,7 +23,8 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "@better-auth/cimd": "^1.7.18",
@@ -41,6 +42,7 @@
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

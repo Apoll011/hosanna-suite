@@ -51,12 +51,18 @@ export const ServiceBehaviorTab: React.FC<ServiceBehaviorTabProps> = ({ active, 
     secondsToDurationInput(settings.services.sermonDuration),
   );
 
-  React.useEffect(() => {
+  const [prevSongDuration, setPrevSongDuration] = React.useState(settings.services.songDuration);
+  if (settings.services.songDuration !== prevSongDuration) {
+    setPrevSongDuration(settings.services.songDuration);
     setSongRaw(secondsToDurationInput(settings.services.songDuration));
-  }, [settings.services.songDuration]);
-  React.useEffect(() => {
+  }
+  const [prevSermonDuration, setPrevSermonDuration] = React.useState(
+    settings.services.sermonDuration,
+  );
+  if (settings.services.sermonDuration !== prevSermonDuration) {
+    setPrevSermonDuration(settings.services.sermonDuration);
     setSermonRaw(secondsToDurationInput(settings.services.sermonDuration));
-  }, [settings.services.sermonDuration]);
+  }
 
   if (!active) return null;
 

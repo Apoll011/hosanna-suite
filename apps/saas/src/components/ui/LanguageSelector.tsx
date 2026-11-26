@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { SUPPORTED_LANGUAGES, useI18n, type Language } from "@/lib/i18n";
+import { SUPPORTED_LANGUAGES, useI18n } from "@/lib/i18n";
 import { Globe } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 

@@ -16,7 +16,8 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "keyv": "^5.5.5"
@@ -28,6 +29,7 @@
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

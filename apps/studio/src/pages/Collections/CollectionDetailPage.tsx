@@ -72,7 +72,7 @@ export const CollectionDetailPage: React.FC = () => {
   const { songsQuery } = useAllSongs();
   const allSongs = useMemo(
     () => (Array.isArray(songsQuery.data?.songs) ? songsQuery.data.songs : []),
-    [songsQuery.data?.songs],
+    [songsQuery.data],
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,11 +113,25 @@ export const CollectionDetailPage: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
+  const [prevSearchFilters, setPrevSearchFilters] = useState({
+    searchQuery,
+    sortBy,
+    sortOrder,
+    selectedKey,
+    selectedTag,
+  });
+  if (
+    searchQuery !== prevSearchFilters.searchQuery ||
+    sortBy !== prevSearchFilters.sortBy ||
+    sortOrder !== prevSearchFilters.sortOrder ||
+    selectedKey !== prevSearchFilters.selectedKey ||
+    selectedTag !== prevSearchFilters.selectedTag
+  ) {
+    setPrevSearchFilters({ searchQuery, sortBy, sortOrder, selectedKey, selectedTag });
     setCurrentPage(1);
     setSelectedSongIds(new Set());
     setLastClickedId(null);
-  }, [searchQuery, sortBy, sortOrder, selectedKey, selectedTag]);
+  }
 
   const songsInCollection = useMemo(() => {
     if (!collection) return [];
@@ -197,9 +211,11 @@ export const CollectionDetailPage: React.FC = () => {
     return filteredSongs.slice(start, start + effectivePerPage);
   }, [filteredSongs, currentPage, effectivePerPage, itemsPerPage]);
 
-  useEffect(() => {
+  const [prevItemsPerPage, setPrevItemsPerPage] = useState(itemsPerPage);
+  if (itemsPerPage !== prevItemsPerPage) {
+    setPrevItemsPerPage(itemsPerPage);
     setCurrentPage(1);
-  }, [itemsPerPage]);
+  }
 
   const handleUpdate = async (data: {
     name: string;

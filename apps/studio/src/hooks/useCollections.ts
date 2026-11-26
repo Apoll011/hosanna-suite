@@ -13,7 +13,7 @@ import { getDatabase, getPurgeAt, updateCollectionCounts, validateCollectionRule
 import { invalidateSongsCache } from "./useSongs";
 
 let cachedCollections: Collection[] | null = null;
-let cachedSingleCollections: Map<string, Collection> = new Map();
+const cachedSingleCollections: Map<string, Collection> = new Map();
 
 export function invalidateCollectionsCache(): void {
   cachedCollections = null;
@@ -508,20 +508,15 @@ export function useCollection(id: string | null) {
     id ? (cachedSingleCollections.get(id) ?? null) : null,
   );
   const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleCollections.has(id) : false));
+  const [prevId, setPrevId] = useState(id);
+  if (id !== prevId) {
+    setPrevId(id);
+    setCollection(id ? (cachedSingleCollections.get(id) ?? null) : null);
+    setIsLoading(id ? !cachedSingleCollections.has(id) : false);
+  }
 
   useEffect(() => {
-    if (!id) {
-      setCollection(null);
-      setIsLoading(false);
-      return;
-    }
-
-    // Only enter the loading state if we don't already have a cached copy.
-    // This prevents the ~2s blank/spinner flash on every navigation when the
-    // in-memory DB already holds the document.
-    if (!cachedSingleCollections.has(id)) {
-      setIsLoading(true);
-    }
+    if (!id) return;
 
     let isSubscribed = true;
     let rxSub: { unsubscribe: () => void } | null = null;

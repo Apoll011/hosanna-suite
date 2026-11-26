@@ -20,7 +20,8 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "posthog-js": "^1.450.1"
@@ -39,6 +40,7 @@
     "@types/react": "^19.2.0",
     "react": "^19.2.0",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

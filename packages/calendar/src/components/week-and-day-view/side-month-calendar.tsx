@@ -7,7 +7,6 @@ import {
   endOfMonth,
   eachDayOfInterval,
   isSameDay,
-  isSameMonth,
   isToday,
   addMonths,
   subMonths,

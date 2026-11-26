@@ -549,9 +549,13 @@ export const MainLayout: React.FC = () => {
     emitOnboardingEvent("select-all");
   }, [filteredSubfolders, filteredFiles]);
 
-  useEffect(() => {
-    clearSelection();
-  }, [currentFolderId, clearSelection]);
+  const [prevFolderIdForSelection, setPrevFolderIdForSelection] = useState(currentFolderId);
+  if (currentFolderId !== prevFolderIdForSelection) {
+    setPrevFolderIdForSelection(currentFolderId);
+    setSelectedFolderIds(new Set());
+    setSelectedSongIds(new Set());
+    setLastClickedId(null);
+  }
 
   const handleItemClick = useCallback(
     (e: React.MouseEvent, id: string, type: "folder" | "song") => {
@@ -1023,11 +1027,15 @@ export const MainLayout: React.FC = () => {
   const [collectionToolbarActions, setCollectionToolbarActions] =
     useState<CollectionToolbarActions | null>(null);
 
-  useEffect(() => {
+  const [prevViewForToolbar, setPrevViewForToolbar] = useState(view);
+  const [prevCollectionIdForToolbar, setPrevCollectionIdForToolbar] = useState(currentCollectionId);
+  if (view !== prevViewForToolbar || currentCollectionId !== prevCollectionIdForToolbar) {
+    setPrevViewForToolbar(view);
+    setPrevCollectionIdForToolbar(currentCollectionId);
     if (view !== "collection-detail") {
       setCollectionToolbarActions(null);
     }
-  }, [view, currentCollectionId]);
+  }
 
   useEffect(() => {
     aiContextBridge.setExplorer({
@@ -1082,7 +1090,11 @@ export const MainLayout: React.FC = () => {
     [addToCollectionTarget, selectedSongIds, addSongsToCollection, closeModal],
   );
 
-  useEffect(() => {
+  const [prevExpandedFolderId, setPrevExpandedFolderId] = useState(currentFolderId);
+  const [prevExpandedAllFolders, setPrevExpandedAllFolders] = useState(allFolders);
+  if (currentFolderId !== prevExpandedFolderId || allFolders !== prevExpandedAllFolders) {
+    setPrevExpandedFolderId(currentFolderId);
+    setPrevExpandedAllFolders(allFolders);
     if (currentFolderId && allFolders.length > 0) {
       setExpandedFolderIds((prev) => {
         const next = new Set(prev);
@@ -1095,7 +1107,7 @@ export const MainLayout: React.FC = () => {
         return next;
       });
     }
-  }, [currentFolderId, allFolders]);
+  }
 
   const toggleExpand = useCallback((id: string) => {
     setExpandedFolderIds((prev) => {

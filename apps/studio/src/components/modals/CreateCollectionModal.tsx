@@ -57,8 +57,11 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const imageInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevCollection, setPrevCollection] = useState(collection);
+  if (isOpen !== prevOpen || collection !== prevCollection) {
+    setPrevOpen(isOpen);
+    setPrevCollection(collection);
     if (isOpen) {
       if (collection) {
         setName(collection.name || "");
@@ -76,7 +79,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
       setSearchQuery("");
       setError("");
     }
-  }, [isOpen, collection]);
+  }
 
   const filteredIcons = useMemo(() => {
     if (!searchQuery.trim()) return FOLDER_ICONS;
@@ -180,7 +183,7 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
             <div
               className={`w-14 h-14 rounded-2xl flex items-center justify-center border shadow-sm shrink-0 ${previewColorStyle.bgClass} ${previewColorStyle.borderClass} ${previewColorStyle.textClass}`}
             >
-              <PreviewIcon className="w-7 h-7" />
+              {React.createElement(PreviewIcon, { className: "w-7 h-7" })}
             </div>
           )}
           <div className="flex flex-col min-w-0 flex-1">

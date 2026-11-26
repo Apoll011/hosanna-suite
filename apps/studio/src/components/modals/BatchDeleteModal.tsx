@@ -28,13 +28,14 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
   const [folderAction, setFolderAction] = useState<"move_to_root" | "delete_songs">("move_to_root");
   const [confirmText, setConfirmText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
     if (isOpen) {
       setFolderAction("move_to_root");
       setConfirmText("");
     }
-  }, [isOpen]);
+  }
 
   const hasFolders = selectedFolders.length > 0;
   const totalItems = selectedFolders.length + selectedSongsCount;

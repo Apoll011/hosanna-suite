@@ -694,7 +694,7 @@ async function pushSongs(
         tags: Array.isArray(doc.tags) ? doc.tags : [],
         song_number: doc.song_number ?? null,
         deleted: Boolean(doc.isDeleted),
-        purgeAt: Boolean(doc.isDeleted)
+        purgeAt: doc.isDeleted
           ? (parseDate(doc.purgeAt) ?? defaultPurgeAt())
           : parseDate(doc.purgeAt),
       };
@@ -809,7 +809,7 @@ async function pushFolders(
         color: doc.color ?? "default",
         icon: doc.icon ?? "default",
         deleted: Boolean(doc.isDeleted),
-        purgeAt: Boolean(doc.isDeleted)
+        purgeAt: doc.isDeleted
           ? (parseDate(doc.purgeAt) ?? defaultPurgeAt())
           : parseDate(doc.purgeAt),
       };
@@ -935,7 +935,7 @@ async function pushCollections(
         icon: doc.icon ?? "default",
         image: doc.image ?? null,
         deleted: Boolean(doc.isDeleted),
-        purgeAt: Boolean(doc.isDeleted)
+        purgeAt: doc.isDeleted
           ? (parseDate(doc.purgeAt) ?? defaultPurgeAt())
           : parseDate(doc.purgeAt),
       };
@@ -1053,7 +1053,7 @@ async function pushServices(
         elements: Array.isArray(doc.elements) ? doc.elements : [],
         archived: Boolean(doc.archived),
         deleted: Boolean(doc.isDeleted),
-        purgeAt: Boolean(doc.isDeleted)
+        purgeAt: doc.isDeleted
           ? (parseDate(doc.purgeAt) ?? defaultPurgeAt())
           : parseDate(doc.purgeAt),
       };
@@ -1175,7 +1175,7 @@ async function pushAgendaEvents(
         linkedServiceId: doc.linkedServiceId ?? null,
         responsibilities: Array.isArray(doc.responsibilities) ? doc.responsibilities : [],
         deleted: Boolean(doc.isDeleted),
-        purgeAt: Boolean(doc.isDeleted)
+        purgeAt: doc.isDeleted
           ? (parseDate(doc.purgeAt) ?? defaultPurgeAt())
           : parseDate(doc.purgeAt),
       };

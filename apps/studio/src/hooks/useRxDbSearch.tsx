@@ -29,18 +29,20 @@ export function useRxDbSearch({
     useCommandPalette();
   const { t, tc, locale } = useI18n();
   const [isDebouncing, setIsDebouncing] = useState(false);
+  const trimmed = searchQuery.trim();
+  const [prevTrimmed, setPrevTrimmed] = useState(trimmed);
+  if (trimmed !== prevTrimmed) {
+    setPrevTrimmed(trimmed);
+    setIsDebouncing(trimmed.length >= 2);
+  }
 
   useEffect(() => {
-    const trimmed = searchQuery.trim();
-
     if (trimmed.length < 2) {
       unregisterDynamicActions("rxdb-results");
-      setIsDebouncing(false);
       return;
     }
 
     let isSubscribed = true;
-    setIsDebouncing(true);
 
     const timer = setTimeout(async () => {
       try {

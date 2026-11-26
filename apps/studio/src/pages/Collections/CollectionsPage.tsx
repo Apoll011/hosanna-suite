@@ -616,7 +616,7 @@ const CollectionCard: React.FC<CollectionItemProps> = ({
               borderColor: `${colorStyle.colorHex}33`,
             }}
           >
-            <IconComp className={isCompact ? "w-4 h-4" : "w-5 h-5"} />
+            {React.createElement(IconComp, { className: isCompact ? "w-4 h-4" : "w-5 h-5" })}
           </div>
           <div className="min-w-0 flex-1 pt-0.5">
             <h4
@@ -699,7 +699,7 @@ const CollectionRow: React.FC<CollectionItemProps> = ({
             borderColor: `${colorStyle.colorHex}33`,
           }}
         >
-          <IconComp className={isCompact ? "w-4 h-4" : "w-5 h-5"} />
+          {React.createElement(IconComp, { className: isCompact ? "w-4 h-4" : "w-5 h-5" })}
         </div>
       )}
       <div className="min-w-0 flex-1">

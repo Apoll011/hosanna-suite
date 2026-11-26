@@ -838,11 +838,16 @@ paths:
                   $ref: "#/components/schemas/Service"
       tags:
         - Services
-      description: List scheduled services with optional archived status filter.
+      description: List scheduled services with optional archived status and metadata-only filters.
       operationId: listServices
       security: *a3
       parameters:
         - name: archived
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: metadataOnly
           in: query
           schema:
             type: boolean

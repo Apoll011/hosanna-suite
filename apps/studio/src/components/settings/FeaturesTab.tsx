@@ -119,7 +119,13 @@ const EarlyAccessPanel: React.FC = () => {
   }, [t]);
 
   useEffect(() => {
-    load();
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) load();
+    });
+    return () => {
+      active = false;
+    };
   }, [load]);
 
   const toggleEnrolled = (flagKey: string) => {
@@ -343,7 +349,14 @@ const SupportPanel: React.FC = () => {
   }, [available, t]);
 
   useEffect(() => {
-    if (view === "tickets") loadTickets();
+    if (view !== "tickets") return;
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) void loadTickets();
+    });
+    return () => {
+      active = false;
+    };
   }, [view, loadTickets]);
 
   useEffect(() => {
@@ -380,7 +393,14 @@ const SupportPanel: React.FC = () => {
   // not-yet-sent conversation has nothing to fetch — fetching here used to
   // pull in the previous ticket's messages by mistake.
   useEffect(() => {
-    if (view === "chat" && activeTicketId) loadMessages(activeTicketId);
+    if (view !== "chat" || !activeTicketId) return;
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active) void loadMessages(activeTicketId);
+    });
+    return () => {
+      active = false;
+    };
   }, [view, activeTicketId, loadMessages]);
 
   useEffect(() => {

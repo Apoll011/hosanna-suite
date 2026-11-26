@@ -86,9 +86,13 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
     return () => document.removeEventListener("mousedown", onDown);
   }, [isCollectionMenuOpen]);
 
-  useEffect(() => {
+  const [prevView, setPrevView] = useState(view);
+  const [prevCollectionActions, setPrevCollectionActions] = useState(collectionActions);
+  if (view !== prevView || collectionActions !== prevCollectionActions) {
+    setPrevView(view);
+    setPrevCollectionActions(collectionActions);
     setIsCollectionMenuOpen(false);
-  }, [view, collectionActions]);
+  }
 
   if (
     view !== "explorer" &&

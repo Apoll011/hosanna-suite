@@ -2,7 +2,6 @@
 import {
   createAnalyticsClient,
   detectRuntimeEnv,
-  isAnalyticsEnabled,
   posthog,
   resolvePostHogConfig,
   setGlobalAnalyticsClient,
@@ -23,7 +22,6 @@ export function getSaasAnalytics(): AnalyticsClient {
 
   const env = detectRuntimeEnv();
   const consentAllowed = hasAnalyticsConsent();
-  const enabled = isAnalyticsEnabled(env) && consentAllowed;
   const config = resolvePostHogConfig(env);
 
   currentClient = createAnalyticsClient({

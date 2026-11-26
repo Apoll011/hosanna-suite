@@ -43,7 +43,9 @@ export const ProductTourController: React.FC = () => {
   const autoStartedRef = useRef(false);
   const missedOfferedRef = useRef(false);
   const settingsRef = useRef(settings);
-  settingsRef.current = settings;
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
   /** Prevents missed-toast onDismiss from firing after user clicks Start. */
   const missedAcceptedRef = useRef(false);
 

@@ -72,7 +72,7 @@ export default function HeroHeader({
     }
     return false;
   };
-  const activeNav = propActiveNav !== undefined ? propActiveNav : localActiveNav;
+  const _activeNav = propActiveNav !== undefined ? propActiveNav : localActiveNav;
 
   const onSelectNav =
     propOnSelectNav ||

@@ -1,0 +1,10 @@
+{
+  "extends": "@hosanna/config/tsconfig/vite.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM"],
+    "noEmit": true,
+    "strict": true
+  },
+  "include": ["src", "test"]
+}

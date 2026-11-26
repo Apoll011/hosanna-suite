@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ALL_MCP_TOOL_NAMES } from "../../src/mcp/lib/toolCatalog.js";
-import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
+import type { AuthInfo } from "@modelcontextprotocol/server";
 import { createSharedEmbeddedTools } from "../../src/mcp/domains/toolFactory.js";
 import { MCP_TOOL_GROUPS } from "../../src/mcp/lib/toolCatalog.js";
 import { AiMemoryService } from "../../src/services/aiMemory.service.js";

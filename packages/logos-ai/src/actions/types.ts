@@ -5,7 +5,7 @@
  * Tool output → typed actions. One pipeline for every host.
  */
 
-import type { ResourceKind, StagedProposal } from "../resources/types";
+import type { StagedProposal } from "../resources/types";
 
 export type ConfirmActionKind =
   "delete_song" | "delete_service" | "delete_folder" | "delete_collection" | "delete_agenda";

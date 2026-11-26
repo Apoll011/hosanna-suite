@@ -2,16 +2,29 @@
   "name": "@hosanna/config",
   "version": "1.0.1",
   "private": true,
+  "type": "module",
   "license": "AGPL-3.0-only",
   "description": "Shared TypeScript and Prettier configuration for Hosanna workspaces",
   "files": [
     "tsconfig",
-    "prettier.json"
+    "prettier.json",
+    "eslint.config.js"
   ],
   "exports": {
     "./tsconfig/base.json": "./tsconfig/base.json",
     "./tsconfig/node.json": "./tsconfig/node.json",
     "./tsconfig/vite.json": "./tsconfig/vite.json",
-    "./prettier": "./prettier.json"
+    "./prettier": "./prettier.json",
+    "./eslint": "./eslint.config.js"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.32.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint": "^9.32.0",
+    "typescript-eslint": "^8.56.1"
+  },
+  "scripts": {
+    "lint": "eslint ."
   }
 }

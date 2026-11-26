@@ -5,11 +5,11 @@ import type { NextFunction, Request, Response } from "express";
 import { createHash } from "node:crypto";
 import { forOrganization, prisma } from "../database/prisma.js";
 import { DEFAULT_LOCALE } from "../lib/i18n.js";
-import { getSession, type SessionResult } from "../lib/session.js";
+import { recordAuthenticationDuration } from "../lib/requestMetrics.js";
+import { getSession } from "../lib/session.js";
 import { AuthorizedUser } from "../types/express.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/errors.js";
-import { recordAuthenticationDuration } from "../lib/requestMetrics.js";
 
 export interface DeniedResponse {
   status?: number;
@@ -228,7 +228,7 @@ function requestHeadersForAuth(req: Request): Headers {
 /** Parse locale out of an org's JSON metadata blob. */
 function parseLocaleFromMeta(metadata: unknown): string | null {
   try {
-    let meta: any = typeof metadata === "string" ? JSON.parse(metadata) : metadata;
+    const meta: any = typeof metadata === "string" ? JSON.parse(metadata) : metadata;
     const locale = meta?.settings?.general?.locale ?? meta?.locale;
     if (typeof locale === "string" && locale.length > 0) return locale;
   } catch {

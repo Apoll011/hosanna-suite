@@ -201,12 +201,19 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
     };
   }, [isOpen, session, t]);
 
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
     if (!isOpen) {
-      initializedRef.current = false;
       setJob(null);
       setPollError(null);
       setCancelling(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!isOpen) {
+      initializedRef.current = false;
     }
   }, [isOpen]);
 

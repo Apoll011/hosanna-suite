@@ -21,7 +21,8 @@ serviceRouter.get(
   validate({ query: serviceListSchema }),
   asyncHandler(async (req, res) => {
     const service = new ServiceService(req.db!, req.orgId!, req.locale);
-    res.json(await service.list(req.query as any));
+    const query = serviceListSchema.parse(req.query);
+    res.json(await service.list(query));
   }),
 );
 

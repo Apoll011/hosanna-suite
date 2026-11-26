@@ -27,17 +27,16 @@ export const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, onSav
   const [content, setContent] = useState(initial?.content || "");
   const [notes, setNotes] = useState(initial?.notes || "");
   const [duration, setDuration] = useState(secondsToDurationInput(initial?.duration));
-
-  // Snapshot form fields only when the modal opens — do not depend on
-  // `initial` identity, or parent re-renders reset in-progress edits.
-  useEffect(() => {
-    if (!isOpen) return;
-    setTitle(initial?.title || "");
-    setContent(initial?.content || "");
-    setNotes(initial?.notes || "");
-    setDuration(secondsToDurationInput(initial?.duration));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset on open only
-  }, [isOpen]);
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
+    if (isOpen) {
+      setTitle(initial?.title || "");
+      setContent(initial?.content || "");
+      setNotes(initial?.notes || "");
+      setDuration(secondsToDurationInput(initial?.duration));
+    }
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("serviceModals.custom.modalTitle")}>

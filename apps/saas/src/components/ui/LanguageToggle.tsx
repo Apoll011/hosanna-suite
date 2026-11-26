@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect, useRef, useState } from "react";
 
 export type LanguageCode = "pt" | "en" | "es";

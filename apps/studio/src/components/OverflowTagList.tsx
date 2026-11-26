@@ -14,11 +14,7 @@ export const OverflowTagList: React.FC<OverflowTagListProps> = ({ tags }) => {
   const [isMeasured, setIsMeasured] = useState<boolean>(false);
 
   useLayoutEffect(() => {
-    if (safeTags.length === 0) {
-      setVisibleCount(0);
-      setIsMeasured(true);
-      return;
-    }
+    if (safeTags.length === 0) return;
 
     const calculateOverflow = () => {
       const container = containerRef.current;

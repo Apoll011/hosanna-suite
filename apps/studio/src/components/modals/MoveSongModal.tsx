@@ -32,15 +32,20 @@ export const MoveSongModal: React.FC<MoveSongModalProps> = ({
   const { t } = useI18n();
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(initialFolderId || null);
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevInitialFolderId, setPrevInitialFolderId] = useState(initialFolderId);
+  const [prevFolders, setPrevFolders] = useState(folders);
+  if (isOpen !== prevOpen || initialFolderId !== prevInitialFolderId || folders !== prevFolders) {
+    setPrevOpen(isOpen);
+    setPrevInitialFolderId(initialFolderId);
+    setPrevFolders(folders);
     if (isOpen) {
       setSelectedFolderId(initialFolderId || null);
       const nextExpanded = new Set<string>();
       folders.forEach((f) => nextExpanded.add(f.id));
       setExpandedFolderIds(nextExpanded);
     }
-  }, [isOpen, initialFolderId, folders]);
+  }
 
   const folderTree = useMemo(() => buildFolderTree(folders), [folders]);
 

@@ -9,8 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useSync } from "../contexts/SyncContext";
 import { getDatabase, getPurgeAt, validateServiceRules } from "../db";
 
-let cachedServicesMap: Map<string, Service[]> = new Map();
-let cachedSingleServices: Map<string, Service> = new Map();
+const cachedServicesMap: Map<string, Service[]> = new Map();
+const cachedSingleServices: Map<string, Service> = new Map();
 
 export function useServices(includeArchived: boolean = false) {
   const { showToast } = useSync();
@@ -282,20 +282,15 @@ export function useService(id: string | null) {
     id ? (cachedSingleServices.get(id) ?? null) : null,
   );
   const [isLoading, setIsLoading] = useState(() => (id ? !cachedSingleServices.has(id) : false));
+  const [prevId, setPrevId] = useState(id);
+  if (id !== prevId) {
+    setPrevId(id);
+    setService(id ? (cachedSingleServices.get(id) ?? null) : null);
+    setIsLoading(id ? !cachedSingleServices.has(id) : false);
+  }
 
   useEffect(() => {
-    if (!id) {
-      setService(null);
-      setIsLoading(false);
-      return;
-    }
-
-    // Only enter the loading state if we don't already have a cached copy.
-    // This prevents the ~2s blank/spinner flash on every navigation when the
-    // in-memory DB already holds the document.
-    if (!cachedSingleServices.has(id)) {
-      setIsLoading(true);
-    }
+    if (!id) return;
 
     let isSubscribed = true;
     let rxSub: { unsubscribe: () => void } | null = null;

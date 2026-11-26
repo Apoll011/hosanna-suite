@@ -36,12 +36,16 @@ export const SongbookImportModal: React.FC<SongbookImportModalProps> = ({
 
   const [alsoCreateCollections, setAlsoCreateCollections] = useState(false);
   const [selected, setSelected] = useState<Set<number>>(new Set());
-
-  useEffect(() => {
-    if (!isOpen || !session) return;
-    setAlsoCreateCollections(false);
-    setSelected(new Set(summarizeSongbookSetlists(session).map((s) => s.id)));
-  }, [isOpen, session]);
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+  const [prevSession, setPrevSession] = useState(session);
+  if (isOpen !== prevOpen || session !== prevSession) {
+    setPrevOpen(isOpen);
+    setPrevSession(session);
+    if (isOpen && session) {
+      setAlsoCreateCollections(false);
+      setSelected(new Set(summarizeSongbookSetlists(session).map((s) => s.id)));
+    }
+  }
 
   const selectedCount = selected.size;
   const selectedSongCount = useMemo(() => {

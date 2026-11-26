@@ -1,2 +1,3 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-export { default, FancyHero } from "./Hero";
+// eslint-disable-next-line react-refresh/only-export-components
+export { FancyHero, default } from "./Hero";

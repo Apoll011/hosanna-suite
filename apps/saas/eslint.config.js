@@ -1,52 +1,27 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import js from "@eslint/js";
-import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
+import shared from "@hosanna/config/eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi"] },
+  ...shared,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
-    },
+    files: ["src/**/*.{js,ts,jsx,tsx}"],
+    languageOptions: { globals: globals.browser },
+    plugins: { "react-hooks": reactHooks, "react-refresh": reactRefresh },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "no-restricted-imports": [
-        "error",
-        {
-          paths: [
-            {
-              name: "server-only",
-              message:
-                "TanStack Start does not use the Next.js `server-only` package. Rename the module to `*.server.ts` or mark it with `@tanstack/react-start/server-only`.",
-            },
-          ],
-        },
-      ],
-      "react-refresh/only-export-components": [
-        "warn",
-        {
-          allowConstantExport: true,
-          allowExportNames: [
-            "useI18n",
-            "detectUserLanguage",
-            "SUPPORTED_LANGUAGES",
-            "translations",
-          ],
-        },
-      ],
-      "@typescript-eslint/no-unused-vars": "off",
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     },
   },
-  eslintPluginPrettier,
+  {
+    files: ["public/sw.js"],
+    languageOptions: { globals: globals.serviceworker },
+  },
+  {
+    files: ["scripts/**/*.{js,mjs}"],
+    languageOptions: { globals: globals.node },
+  },
 );

@@ -18,7 +18,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "lint": "eslint --config ../config/eslint.config.js ."
   },
   "dependencies": {
     "@hosanna/i18n": "workspace:*",
@@ -38,6 +39,7 @@
     "lucide-react": "^0.546.0",
     "react": "^19.2.0",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

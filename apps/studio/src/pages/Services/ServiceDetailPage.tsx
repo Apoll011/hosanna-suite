@@ -4,12 +4,11 @@
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChordProSettings";
-import { Button, Spinner, Input } from "@hosanna/ui";
 import { useAppNavigate } from "@/src/hooks/useAppNavigate";
 import { useFolders } from "@/src/hooks/useFolders";
 import { usePreviewSettings } from "@/src/hooks/usePreviewSettings";
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
-import { ServiceElement, Song } from "@/src/types";
+import { ServiceElement } from "@/src/types";
 import { filterSearchableSongsWithLiqe } from "@/src/utils";
 import {
   attachClosestEdge,
@@ -23,12 +22,19 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   ChordProRenderer,
-  parseChordPro,
-  resolveChords,
-  parseCapoValue,
-  parseKeyShiftValue,
   instrumentRegistry,
+  parseCapoValue,
+  parseChordPro,
+  parseKeyShiftValue,
+  resolveChords,
 } from "@hosanna/chordpro";
+import {
+  aiContextBridge,
+  AiProposalBanner,
+  aiProposals,
+  useServiceProposal,
+} from "@hosanna/logos-ai";
+import { Button, Input, Spinner } from "@hosanna/ui";
 import {
   AlertTriangle,
   ArrowDown,
@@ -63,12 +69,6 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { usePrint } from "../../contexts/PrintContext";
 import { useSync } from "../../contexts/SyncContext";
-import {
-  AiProposalBanner,
-  aiProposals,
-  useServiceProposal,
-  aiContextBridge,
-} from "@hosanna/logos-ai";
 import { useOrgSettings } from "../../hooks/useOrgSettings";
 import { useService, useServices } from "../../hooks/useServices";
 import { useSearchableSongs, useSong, useSongs } from "../../hooks/useSongs";
@@ -427,7 +427,11 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [localNote, setLocalNote] = useState(element.notes || "");
-  useEffect(() => setLocalNote(element.notes || ""), [element.notes]);
+  const [prevNotes, setPrevNotes] = useState(element.notes);
+  if (element.notes !== prevNotes) {
+    setPrevNotes(element.notes);
+    setLocalNote(element.notes || "");
+  }
 
   const badge = getElementBadge(element.type, t);
   const Icon = badge.icon;
@@ -987,11 +991,15 @@ export const ServiceDetailPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [generalNotes, orgSettings.services.autoSave, service, isEditingGeneralNotes, updateService]);
 
-  useEffect(() => {
+  const [prevPreviewElement, setPrevPreviewElement] = useState(previewElement);
+  const [prevElements, setPrevElements] = useState(elements);
+  if (previewElement !== prevPreviewElement || elements !== prevElements) {
+    setPrevPreviewElement(previewElement);
+    setPrevElements(elements);
     if (previewElement && !elements.some((e) => e.id === previewElement.id)) {
       setPreviewElement(null);
     }
-  }, [elements, previewElement]);
+  }
 
   const allAvailableSongs = songsQuery.data?.songs || [];
   const songCountById = elements.reduce<Record<string, number>>((acc, el) => {
@@ -1005,15 +1013,13 @@ export const ServiceDetailPage: React.FC = () => {
   );
 
   const filteredLibrarySongs = useMemo(() => {
-    let list: Song[];
-
     let matchedSongIds: Set<string> | null = null;
     if (librarySearch.trim()) {
       const liqeMatches = filterSearchableSongsWithLiqe(searchableSongs, librarySearch);
       matchedSongIds = new Set(liqeMatches.map((s) => s.id));
     }
 
-    list = allSongs.filter((s) => {
+    const list = allSongs.filter((s) => {
       if (matchedSongIds !== null && !matchedSongIds.has(s.id)) {
         return false;
       }
@@ -1022,8 +1028,8 @@ export const ServiceDetailPage: React.FC = () => {
     });
 
     return [...list].sort((a, b) => {
-      let valA = (a.title || "").toLowerCase();
-      let valB = (b.title || "").toLowerCase();
+      const valA = (a.title || "").toLowerCase();
+      const valB = (b.title || "").toLowerCase();
 
       if (valA < valB) return -1;
       if (valA > valB) return 1;
@@ -1096,15 +1102,13 @@ export const ServiceDetailPage: React.FC = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [readingMode, previewElement]);
 
+  const [lastPreviewElement, setLastPreviewElement] = useState<ServiceElement | null>(null);
+
   const handleTogglePreview = (el: ServiceElement) => {
     setPreviewElement((prev) => (prev?.id === el.id ? null : el));
+    setLastPreviewElement(el);
   };
-
-  const previewContentRef = useRef<ServiceElement | null>(null);
-  useEffect(() => {
-    if (previewElement) previewContentRef.current = previewElement;
-  }, [previewElement]);
-  const previewContent = previewElement ?? previewContentRef.current;
+  const previewContent = previewElement ?? lastPreviewElement;
 
   const [isSavingService, setIsSavingService] = useState(false);
 
@@ -1319,9 +1323,11 @@ export const ServiceDetailPage: React.FC = () => {
   }, []);
 
   const syncElementsRef = useRef(syncElements);
-  syncElementsRef.current = syncElements;
   const handleAddSongToServiceRef = useRef(handleAddSongToService);
-  handleAddSongToServiceRef.current = handleAddSongToService;
+  useEffect(() => {
+    syncElementsRef.current = syncElements;
+    handleAddSongToServiceRef.current = handleAddSongToService;
+  });
 
   useEffect(() => {
     return monitorForElements({

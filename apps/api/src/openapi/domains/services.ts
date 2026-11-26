@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { idParamSchema } from "../../validators/common.validators.js";
-import {
-  createServiceSchema,
-  updateServiceElementsSchema,
-  updateServiceSchema,
-} from "../../validators/service.validators.js";
+import { updateServiceSchema } from "../../validators/service.validators.js";
 import {
   jsonBody,
   jsonResp,
@@ -32,9 +28,10 @@ export function getServicePaths(): Record<string, Record<string, OpenApiOperatio
         tags: ["Services"],
         operationId: "listServices",
         security: sessionAuth,
-        description: "List scheduled services with optional archived status filter.",
+        description: "List scheduled services with optional archived status and metadata-only filters.",
         parameters: [
           { name: "archived", in: "query", schema: { type: "boolean", default: false } },
+          { name: "metadataOnly", in: "query", schema: { type: "boolean", default: false } },
         ],
         responses: jsonResp(200, {
           type: "array",

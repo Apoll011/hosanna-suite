@@ -1,6 +1,6 @@
 {
   "name": "@hosanna/auth-app",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "license": "AGPL-3.0-only",
   "description": "Hosanna authentication app (auth.hosanna.live) — Better Auth UI + handlers",
@@ -28,6 +28,7 @@
     "@hosanna/analytics": "workspace:*",
     "@hosanna/auth": "workspace:*",
     "@hosanna/cache": "workspace:*",
+    "@hosanna/dashboard": "workspace:*",
     "@hosanna/db": "workspace:*",
     "@hosanna/i18n": "workspace:*",
     "@hosanna/logos-ai": "workspace:*",
