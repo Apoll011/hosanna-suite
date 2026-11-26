@@ -6,7 +6,7 @@ import { cn } from "../src/cn.js";
 
 describe("cn", () => {
   it("joins truthy class names", () => {
-    assert.equal(cn("a",  false && "b", "c"), "a c");
+    assert.equal(cn("a", null, "c"), "a c");
     assert.equal(cn("px-2", null, undefined, "py-1"), "px-2 py-1");
   });
 
