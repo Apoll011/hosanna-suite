@@ -16,16 +16,18 @@ import {
   ListMusic,
   MapPin,
   Music2,
+  Tags,
   Trash2,
   TrendingUp,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   computeSongHealthInsights,
   daysBetweenYmd,
   diffDaysFromToday,
   extractSongKey,
   formatServiceDate,
+  getWidgetDensity,
   SkeletonLine,
   todayYmdLocal,
   useMusicHomeUrl,
@@ -63,6 +65,7 @@ type ServiceDetail = {
 export function NextServiceWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<ServiceRow[]>(
     "services",
     "/services?metadataOnly=true",
@@ -77,7 +80,7 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
   );
   const next = upcoming[0];
   const following = upcoming[1];
-  const showSetlist = instance.h >= 3 && Boolean(next?.id && next?.hasSongs);
+  const showSetlist = density === "expanded" && Boolean(next?.id && next?.hasSongs);
   const { value: nextDetail } = useOrganizationData<ServiceDetail>(
     `service-detail-${next?.id ?? "none"}`,
     next ? `/services/${next.id}` : "",
@@ -87,12 +90,41 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
     const elements = nextDetail?.elements ?? [];
     return elements
       .filter((el) => el.type === "song")
-      .slice(0, 4)
+      .slice(0, 5)
       .map((el, idx) => ({
         key: el.id ?? `${idx}`,
         title: el.song?.title || el.title || t("home.widgets.recentSongs.untitled"),
       }));
   }, [nextDetail?.elements, t]);
+
+  if (density === "compact" && next && !loading && !error) {
+    const diff = diffDaysFromToday(next.date);
+    const content = (
+      <div className="flex h-full items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <Badge variant={diff <= 1 ? "accent" : "neutral"} size="sm">
+              {diff === 0
+                ? t("home.widgets.nextService.today")
+                : diff === 1
+                  ? t("home.widgets.nextService.tomorrow")
+                  : t("home.widgets.nextService.inDays", { count: diff })}
+            </Badge>
+            <span className="truncate text-caption">{formatServiceDate(next.date, locale)}</span>
+          </div>
+          <p className="mt-1 truncate text-sm font-semibold text-m3-text">{next.name}</p>
+        </div>
+        {musicUrl ? <ChevronRight className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden /> : null}
+      </div>
+    );
+    return musicUrl ? (
+      <a href={`${musicUrl}/services/${next.id}`} className="block h-full">
+        {content}
+      </a>
+    ) : (
+      content
+    );
+  }
 
   return (
     <>
@@ -219,9 +251,10 @@ export function NextServiceWidget({ instance }: WidgetRendererProps) {
   );
 }
 
-export function LibrarySummaryWidget(_: WidgetRendererProps) {
+export function LibrarySummaryWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<SongsResponse>(
     "songs-summary",
     "/songs?limit=150",
@@ -231,14 +264,26 @@ export function LibrarySummaryWidget(_: WidgetRendererProps) {
   const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
   const total = value?.total ?? 0;
   const insights = useMemo(() => computeSongHealthInsights(songs), [songs]);
-  const healthColor =
-    insights.healthPct >= 80
-      ? "stroke-emerald-500 text-emerald-600 dark:text-emerald-400"
-      : insights.healthPct >= 55
-        ? "stroke-amber-500 text-amber-600 dark:text-amber-400"
-        : "stroke-rose-500 text-rose-600 dark:text-rose-400";
-  const ringCircumference = 2 * Math.PI * 26;
-  const ringDash = `${(insights.healthPct / 100) * ringCircumference} ${ringCircumference}`;
+
+  if (density === "compact" && !loading && !error && total > 0) {
+    return (
+      <div className="flex h-full items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-caption">{t("home.widgets.library.title")}</p>
+          <p className="mt-0.5 tabular-nums text-xl font-semibold text-m3-text">
+            {total}
+            <span className="ml-1.5 text-xs font-normal text-m3-secondary">
+              {t("home.widgets.library.songs")}
+            </span>
+          </p>
+        </div>
+        <div className="text-right tabular-nums">
+          <p className="text-xs font-medium text-m3-text">{folders?.length ?? 0}</p>
+          <p className="text-caption">{t("home.widgets.library.folders")}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -251,15 +296,11 @@ export function LibrarySummaryWidget(_: WidgetRendererProps) {
         }
       />
       {loading ? (
-        <div className="flex items-center gap-4">
-          <SkeletonLine className="h-16 w-16 shrink-0 rounded-full" />
-          <div className="min-w-0 flex-1 space-y-2">
-            <SkeletonLine className="h-6 w-24" />
-            <SkeletonLine className="h-3 w-36" />
-            <div className="flex gap-2">
-              <SkeletonLine className="h-5 w-14 rounded-sm" />
-              <SkeletonLine className="h-5 w-14 rounded-sm" />
-            </div>
+        <div className="space-y-3">
+          <SkeletonLine className="h-7 w-28" />
+          <div className="grid grid-cols-2 gap-2">
+            <SkeletonLine className="h-14 w-full rounded-md" />
+            <SkeletonLine className="h-14 w-full rounded-md" />
           </div>
         </div>
       ) : error ? (
@@ -269,61 +310,17 @@ export function LibrarySummaryWidget(_: WidgetRendererProps) {
           icon={<Music2 className="h-5 w-5" />}
           title={t("home.widgets.library.empty")}
           description={t("home.widgets.library.emptyHint")}
-          action={
-            musicUrl ? (
-              <a
-                href={`${musicUrl}/songs`}
-                className="inline-flex items-center gap-1.5 rounded-md border border-m3-border bg-m3-card px-3 py-1.5 text-xs font-medium text-m3-text transition-colors hover:bg-m3-hover"
-              >
-                {t("home.widgets.library.open")}
-                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
-              </a>
-            ) : undefined
-          }
         />
       ) : (
         <div className="space-y-3">
-          <div className="flex items-center gap-4">
-            <div className="relative h-16 w-16 shrink-0">
-              <svg className="h-full w-full -rotate-90" viewBox="0 0 64 64" aria-hidden>
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="26"
-                  fill="none"
-                  strokeWidth="6"
-                  className="stroke-m3-border/70"
-                />
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="26"
-                  fill="none"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                  className={healthColor.split(" ")[0]}
-                  strokeDasharray={ringDash}
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className={`text-xs font-semibold tabular-nums ${healthColor}`}>
-                  {insights.healthPct}%
-                </span>
-              </div>
-            </div>
+          <p className="tabular-nums text-2xl font-semibold leading-none text-m3-text">
+            {total}
+            <span className="ml-1.5 text-sm font-normal text-m3-secondary">
+              {t("home.widgets.library.songs")}
+            </span>
+          </p>
 
-            <div className="min-w-0 flex-1 space-y-1">
-              <p className="tabular-nums text-2xl font-semibold leading-none text-m3-text">
-                {total}
-                <span className="ml-1.5 text-sm font-normal text-m3-secondary">
-                  {t("home.widgets.library.songs")}
-                </span>
-              </p>
-              <p className="text-caption">{t("home.widgets.library.healthLabel")}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className={`grid gap-2 ${density === "expanded" ? "grid-cols-4" : "grid-cols-2"}`}>
             <div className="surface-inset px-2.5 py-2">
               <p className="text-caption truncate">{t("home.widgets.library.folders")}</p>
               <p className="mt-0.5 flex items-center gap-1 text-sm font-semibold tabular-nums text-m3-text">
@@ -337,32 +334,106 @@ export function LibrarySummaryWidget(_: WidgetRendererProps) {
                 {songs.length > 0 ? Math.round((insights.withChords / songs.length) * 100) : 0}%
               </p>
             </div>
-            <div className="surface-inset px-2.5 py-2">
-              <p className="text-caption truncate">{t("home.widgets.library.withKey")}</p>
-              <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
-                {songs.length > 0 ? Math.round((insights.withKey / songs.length) * 100) : 0}%
-              </p>
-            </div>
-            <div className="surface-inset px-2.5 py-2">
-              <p className="text-caption truncate">{t("home.widgets.library.withTags")}</p>
-              <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
-                {songs.length > 0 ? Math.round((insights.withTags / songs.length) * 100) : 0}%
-              </p>
-            </div>
+            {density === "expanded" ? (
+              <>
+                <div className="surface-inset px-2.5 py-2">
+                  <p className="text-caption truncate">{t("home.widgets.library.withKey")}</p>
+                  <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
+                    {songs.length > 0 ? Math.round((insights.withKey / songs.length) * 100) : 0}%
+                  </p>
+                </div>
+                <div className="surface-inset px-2.5 py-2">
+                  <p className="text-caption truncate">{t("home.widgets.library.withTags")}</p>
+                  <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
+                    {songs.length > 0 ? Math.round((insights.withTags / songs.length) * 100) : 0}%
+                  </p>
+                </div>
+              </>
+            ) : null}
           </div>
+        </div>
+      )}
+    </>
+  );
+}
 
-          {insights.topTags.length > 0 || insights.topKeys.length > 0 ? (
-            <div className="flex flex-wrap items-center gap-1.5">
-              {insights.topKeys.map(([key, count]) => (
-                <Badge key={`key-${key}`} variant="accent" size="sm" className="font-mono tabular-nums">
-                  {key} · {count}
-                </Badge>
-              ))}
-              {insights.topTags.map(([tag, count]) => (
-                <Badge key={`tag-${tag}`} variant="neutral" size="sm" className="tabular-nums">
-                  {tag} · {count}
-                </Badge>
-              ))}
+export function RepertoireKeysWidget({ instance }: WidgetRendererProps) {
+  const { t } = useI18n();
+  const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
+  const { value, loading, error } = useOrganizationData<SongsResponse>(
+    "songs-summary",
+    "/songs?limit=150",
+  );
+  const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
+  const insights = useMemo(() => computeSongHealthInsights(songs), [songs]);
+  const hasAny = insights.topKeys.length > 0 || insights.topTags.length > 0;
+
+  if (density === "compact" && !loading && !error && hasAny) {
+    return (
+      <div className="flex h-full flex-col justify-center gap-1.5">
+        <p className="text-caption">{t("home.widgets.repertoireKeys.title")}</p>
+        <div className="flex flex-wrap gap-1">
+          {insights.topKeys.slice(0, 3).map(([key, count]) => (
+            <Badge key={key} variant="accent" size="sm" className="font-mono tabular-nums">
+              {key} · {count}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <WidgetHeader
+        title={t("home.widgets.repertoireKeys.title")}
+        action={
+          musicUrl ? (
+            <WidgetHeaderLink
+              href={`${musicUrl}/songs`}
+              label={t("home.widgets.repertoireKeys.open")}
+            />
+          ) : null
+        }
+      />
+      {loading ? (
+        <div className="space-y-2.5">
+          <SkeletonLine className="h-6 w-40" />
+          <SkeletonLine className="h-6 w-48" />
+        </div>
+      ) : error ? (
+        <WidgetErrorBox message={t("home.widgets.error")} />
+      ) : !hasAny ? (
+        <WidgetEmptyBox
+          icon={<Tags className="h-5 w-5" />}
+          title={t("home.widgets.repertoireKeys.empty")}
+          description={t("home.widgets.repertoireKeys.emptyHint")}
+        />
+      ) : (
+        <div className="space-y-3">
+          {insights.topKeys.length > 0 ? (
+            <div className="space-y-1.5">
+              <p className="text-caption">{t("home.widgets.repertoireKeys.keysLabel")}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {insights.topKeys.map(([key, count]) => (
+                  <Badge key={key} variant="accent" size="sm" className="font-mono tabular-nums">
+                    {key} · {count}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          {insights.topTags.length > 0 ? (
+            <div className="space-y-1.5">
+              <p className="text-caption">{t("home.widgets.repertoireKeys.tagsLabel")}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {insights.topTags.map(([tag, count]) => (
+                  <Badge key={tag} variant="neutral" size="sm" className="tabular-nums">
+                    {tag} · {count}
+                  </Badge>
+                ))}
+              </div>
             </div>
           ) : null}
         </div>
@@ -371,9 +442,10 @@ export function LibrarySummaryWidget(_: WidgetRendererProps) {
   );
 }
 
-export function LibraryHealthWidget(_: WidgetRendererProps) {
+export function LibraryHealthWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<SongsResponse>(
     "songs-summary",
     "/songs?limit=150",
@@ -381,7 +453,8 @@ export function LibraryHealthWidget(_: WidgetRendererProps) {
   const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
   const total = value?.total ?? 0;
   const health = useMemo(() => computeSongHealthInsights(songs), [songs]);
-  const topMissing = health.missingCounts.slice(0, 4);
+  const criteriaLimit = density === "expanded" ? 6 : 3;
+  const topMissing = health.missingCounts.slice(0, criteriaLimit);
 
   const tone =
     health.healthPct >= 80
@@ -391,6 +464,24 @@ export function LibraryHealthWidget(_: WidgetRendererProps) {
         : "stroke-rose-500 text-rose-600 dark:text-rose-400";
   const ringCircumference = 2 * Math.PI * 22;
   const ringDash = `${(health.healthPct / 100) * ringCircumference} ${ringCircumference}`;
+
+  if (density === "compact" && !loading && !error && total > 0) {
+    return (
+      <div className="flex h-full items-center gap-3">
+        <span className={`text-xl font-semibold tabular-nums ${tone.split(" ").slice(1).join(" ")}`}>
+          {health.healthPct}%
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium text-m3-text">
+            {t("home.widgets.libraryHealth.title")}
+          </p>
+          <p className="truncate text-caption tabular-nums">
+            {t("home.widgets.libraryHealth.healthy", { count: health.healthyCount })}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -519,15 +610,10 @@ type ReplServiceRow = {
 
 type ReplSongRow = SongRow & { isDeleted?: boolean; _deleted?: boolean };
 
-export function SetlistInsightsWidget(_: WidgetRendererProps) {
+function useSetlistStats() {
   const { t } = useI18n();
-  const musicUrl = useMusicHomeUrl();
-  const [tab, setTab] = useState<"top" | "resting" | "never">("top");
   const songsRes = useReplicationCollection<ReplSongRow>("songs", 250);
   const servicesRes = useReplicationCollection<ReplServiceRow>("services", 200);
-
-  const loading = songsRes.loading || servicesRes.loading;
-  const error = songsRes.error || servicesRes.error;
 
   const summary = useMemo(() => {
     const songs = songsRes.value ?? [];
@@ -575,37 +661,44 @@ export function SetlistInsightsWidget(_: WidgetRendererProps) {
 
     const top = [...stats]
       .filter((s) => s.playCount > 0)
-      .sort((a, b) => b.playCount - a.playCount || a.title.localeCompare(b.title))
-      .slice(0, 5);
+      .sort((a, b) => b.playCount - a.playCount || a.title.localeCompare(b.title));
     const resting = [...stats]
       .filter((s) => s.playCount > 0 && (s.daysSince ?? 0) >= 28)
-      .sort((a, b) => (b.daysSince ?? 0) - (a.daysSince ?? 0))
-      .slice(0, 5);
-    const never = [...stats]
-      .filter((s) => s.playCount === 0)
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .slice(0, 5);
+      .sort((a, b) => (b.daysSince ?? 0) - (a.daysSince ?? 0));
 
-    return { pastServices, top, resting, never, maxPlays: top[0]?.playCount ?? 1 };
+    return { pastServices, top, resting, maxPlays: top[0]?.playCount ?? 1 };
   }, [songsRes.value, servicesRes.value, t]);
 
-  const rows = tab === "top" ? summary.top : tab === "resting" ? summary.resting : summary.never;
+  return {
+    loading: songsRes.loading || servicesRes.loading,
+    error: songsRes.error || servicesRes.error,
+    summary,
+  };
+}
+
+export function MostPlayedSongsWidget({ instance }: WidgetRendererProps) {
+  const { t } = useI18n();
+  const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
+  const { loading, error, summary } = useSetlistStats();
+  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
+  const rows = summary.top.slice(0, rowLimit);
 
   return (
     <>
       <WidgetHeader
-        title={t("home.widgets.setlistInsights.title")}
+        title={t("home.widgets.mostPlayed.title")}
         action={
           <div className="flex items-center gap-2">
-            {!loading && !error && summary.pastServices > 0 ? (
+            {!loading && !error && summary.pastServices > 0 && density !== "compact" ? (
               <Badge variant="neutral" size="sm" className="tabular-nums">
-                {t("home.widgets.setlistInsights.pastServices", { count: summary.pastServices })}
+                {t("home.widgets.mostPlayed.pastServices", { count: summary.pastServices })}
               </Badge>
             ) : null}
             {musicUrl ? (
               <WidgetHeaderLink
                 href={`${musicUrl}/analytics?tab=setlist`}
-                label={t("home.widgets.setlistInsights.open")}
+                label={t("home.widgets.mostPlayed.open")}
               />
             ) : null}
           </div>
@@ -613,107 +706,154 @@ export function SetlistInsightsWidget(_: WidgetRendererProps) {
       />
       {loading ? (
         <div className="space-y-2.5">
-          <SkeletonLine className="h-8 w-full rounded-md" />
-          <SkeletonLine className="h-10 w-full rounded-md" />
-          <SkeletonLine className="h-10 w-full rounded-md" />
+          {[0, 1, 2].map((item) => (
+            <SkeletonLine key={item} className="h-9 w-full rounded-md" />
+          ))}
         </div>
       ) : error ? (
         <WidgetErrorBox message={t("home.widgets.error")} />
-      ) : (songsRes.value?.length ?? 0) === 0 ? (
+      ) : rows.length === 0 ? (
         <WidgetEmptyBox
           icon={<TrendingUp className="h-5 w-5" />}
-          title={t("home.widgets.setlistInsights.empty")}
-          description={t("home.widgets.setlistInsights.emptyHint")}
+          title={t("home.widgets.mostPlayed.empty")}
+          description={t("home.widgets.mostPlayed.emptyHint")}
         />
       ) : (
-        <div className="space-y-3">
-          <div className="inline-flex w-full rounded-md border border-m3-border bg-m3-sidebar p-0.5">
-            {(
-              [
-                ["top", t("home.widgets.setlistInsights.tabTop")],
-                ["resting", t("home.widgets.setlistInsights.tabResting")],
-                ["never", t("home.widgets.setlistInsights.tabNever")],
-              ] as const
-            ).map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setTab(key)}
-                className={`flex-1 rounded-sm px-2 py-1 text-xs font-medium transition-colors ${
-                  tab === key
-                    ? "bg-m3-card text-m3-primary shadow-xs"
-                    : "text-m3-secondary hover:text-m3-text"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {rows.length === 0 ? (
-            <p className="surface-inset px-3 py-4 text-center text-xs text-m3-secondary">
-              {tab === "resting"
-                ? t("home.widgets.setlistInsights.noResting")
-                : tab === "never"
-                  ? t("home.widgets.setlistInsights.noNever")
-                  : t("home.widgets.setlistInsights.emptyHint")}
-            </p>
-          ) : (
-            <ul className="divide-y divide-m3-border/60">
-              {rows.map((song) => {
-                const pct = Math.max(
-                  8,
-                  Math.round((song.playCount / Math.max(summary.maxPlays, 1)) * 100),
-                );
-                const inner = (
-                  <div className="flex items-center justify-between gap-2 py-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
-                      {song.artist ? (
-                        <p className="truncate text-caption">{song.artist}</p>
-                      ) : null}
+        <ul className="divide-y divide-m3-border/60">
+          {rows.map((song) => {
+            const pct = Math.max(8, Math.round((song.playCount / summary.maxPlays) * 100));
+            const inner = (
+              <div className="flex items-center justify-between gap-2 py-2">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
+                  {song.artist && density !== "compact" ? (
+                    <p className="truncate text-caption">{song.artist}</p>
+                  ) : null}
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  {density === "expanded" ? (
+                    <div className="h-1.5 w-16 overflow-hidden rounded-full bg-m3-sidebar">
+                      <div
+                        className="h-full rounded-full bg-m3-primary"
+                        style={{ width: `${pct}%` }}
+                      />
                     </div>
-                    {tab === "top" ? (
-                      <div className="flex shrink-0 items-center gap-2">
-                        <div className="h-1.5 w-14 overflow-hidden rounded-full bg-m3-sidebar">
-                          <div
-                            className="h-full rounded-full bg-m3-primary"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                        <span className="w-8 text-right text-xs font-semibold tabular-nums text-m3-text">
-                          {t("home.widgets.setlistInsights.plays", { count: song.playCount })}
-                        </span>
-                      </div>
-                    ) : tab === "resting" ? (
-                      <Badge variant="warning" size="sm" className="tabular-nums">
-                        {t("home.widgets.setlistInsights.daysAgo", { count: song.daysSince ?? 0 })}
-                      </Badge>
-                    ) : (
-                      <Badge variant="neutral" size="sm">
-                        {t("home.widgets.setlistInsights.neverPlayed")}
-                      </Badge>
-                    )}
-                  </div>
-                );
-                return (
-                  <li key={song.id}>
-                    {musicUrl ? (
-                      <a
-                        href={`${musicUrl}/songs/${song.id}`}
-                        className="block rounded px-1 transition-colors hover:bg-m3-hover/50"
-                      >
-                        {inner}
-                      </a>
-                    ) : (
-                      inner
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                  ) : null}
+                  <span className="w-8 text-right text-xs font-semibold tabular-nums text-m3-text">
+                    {t("home.widgets.mostPlayed.plays", { count: song.playCount })}
+                  </span>
+                </div>
+              </div>
+            );
+            return (
+              <li key={song.id}>
+                {musicUrl ? (
+                  <a
+                    href={`${musicUrl}/songs/${song.id}`}
+                    className="block rounded px-1 transition-colors hover:bg-m3-hover/50"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  inner
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </>
+  );
+}
+
+export function RestingSongsWidget({ instance }: WidgetRendererProps) {
+  const { t } = useI18n();
+  const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
+  const { loading, error, summary } = useSetlistStats();
+  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
+  const rows = summary.resting.slice(0, rowLimit);
+
+  if (density === "compact" && !loading && !error) {
+    return (
+      <div className="flex h-full items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-caption">{t("home.widgets.restingSongs.title")}</p>
+          <p className="mt-0.5 truncate text-sm font-semibold text-m3-text">
+            {rows[0]?.title ?? t("home.widgets.restingSongs.empty")}
+          </p>
         </div>
+        <Badge variant={summary.resting.length > 0 ? "warning" : "neutral"} size="sm" className="tabular-nums">
+          {summary.resting.length}
+        </Badge>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <WidgetHeader
+        title={t("home.widgets.restingSongs.title")}
+        action={
+          <div className="flex items-center gap-2">
+            {!loading && !error && summary.resting.length > 0 ? (
+              <Badge variant="warning" size="sm" className="tabular-nums">
+                {t("home.widgets.restingSongs.restingCount", { count: summary.resting.length })}
+              </Badge>
+            ) : null}
+            {musicUrl ? (
+              <WidgetHeaderLink
+                href={`${musicUrl}/analytics?tab=setlist`}
+                label={t("home.widgets.restingSongs.open")}
+              />
+            ) : null}
+          </div>
+        }
+      />
+      {loading ? (
+        <div className="space-y-2.5">
+          {[0, 1, 2].map((item) => (
+            <SkeletonLine key={item} className="h-9 w-full rounded-md" />
+          ))}
+        </div>
+      ) : error ? (
+        <WidgetErrorBox message={t("home.widgets.error")} />
+      ) : rows.length === 0 ? (
+        <WidgetEmptyBox
+          icon={<Clock className="h-5 w-5" />}
+          title={t("home.widgets.restingSongs.empty")}
+          description={t("home.widgets.restingSongs.emptyHint")}
+        />
+      ) : (
+        <ul className="divide-y divide-m3-border/60">
+          {rows.map((song) => {
+            const inner = (
+              <div className="flex items-center justify-between gap-2 py-2">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-m3-text">{song.title}</p>
+                  {song.artist ? <p className="truncate text-caption">{song.artist}</p> : null}
+                </div>
+                <Badge variant="warning" size="sm" className="tabular-nums">
+                  {t("home.widgets.restingSongs.daysAgo", { count: song.daysSince ?? 0 })}
+                </Badge>
+              </div>
+            );
+            return (
+              <li key={song.id}>
+                {musicUrl ? (
+                  <a
+                    href={`${musicUrl}/songs/${song.id}`}
+                    className="block rounded px-1 transition-colors hover:bg-m3-hover/50"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  inner
+                )}
+              </li>
+            );
+          })}
+        </ul>
       )}
     </>
   );
@@ -722,8 +862,10 @@ export function SetlistInsightsWidget(_: WidgetRendererProps) {
 export function RecentSongsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const rawLimit = typeof instance.config?.limit === "number" ? instance.config.limit : 5;
-  const limit = Math.min(Math.max(rawLimit, 3), 10);
+  const maxForDensity = density === "compact" ? 2 : density === "expanded" ? 8 : 5;
+  const limit = Math.min(Math.max(rawLimit, 2), maxForDensity);
   const { value, loading, error } = useOrganizationData<SongsResponse>(
     "songs-recent",
     "/songs?limit=10",
@@ -745,8 +887,8 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
       />
       {loading ? (
         <div className="space-y-2.5">
-          {[0, 1, 2, 3].map((item) => (
-            <SkeletonLine key={item} className="h-10 w-full rounded-md" />
+          {[0, 1, 2].map((item) => (
+            <SkeletonLine key={item} className="h-9 w-full rounded-md" />
           ))}
         </div>
       ) : error ? (
@@ -767,7 +909,7 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
                   <p className="truncate text-sm font-medium text-m3-text">
                     {song.title?.trim() || t("home.widgets.recentSongs.untitled")}
                   </p>
-                  {song.artist?.trim() ? (
+                  {song.artist?.trim() && density !== "compact" ? (
                     <p className="truncate text-caption">{song.artist.trim()}</p>
                   ) : null}
                 </div>
@@ -804,21 +946,23 @@ export function RecentSongsWidget({ instance }: WidgetRendererProps) {
   );
 }
 
-export function UpcomingServicesWidget(_: WidgetRendererProps) {
+export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<ServiceRow[]>(
     "services",
     "/services?metadataOnly=true",
   );
   const today = todayYmdLocal();
+  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 7 : 4;
   const upcoming = useMemo(
     () =>
       (value ?? [])
         .filter((service) => service.date.slice(0, 10) >= today)
         .sort((a, b) => a.date.localeCompare(b.date))
-        .slice(0, 5),
-    [value, today],
+        .slice(0, rowLimit),
+    [value, today, rowLimit],
   );
 
   return (
@@ -837,7 +981,7 @@ export function UpcomingServicesWidget(_: WidgetRendererProps) {
       {loading ? (
         <div className="space-y-2.5">
           {[0, 1, 2].map((item) => (
-            <SkeletonLine key={item} className="h-11 w-full rounded-md" />
+            <SkeletonLine key={item} className="h-10 w-full rounded-md" />
           ))}
         </div>
       ) : error ? (
@@ -858,7 +1002,7 @@ export function UpcomingServicesWidget(_: WidgetRendererProps) {
                   <p className="truncate text-sm font-medium text-m3-text">{service.name}</p>
                   <p className="text-caption tabular-nums">
                     {formatServiceDate(service.date, locale)}
-                    {typeof service.elementCount === "number"
+                    {density !== "compact" && typeof service.elementCount === "number"
                       ? ` · ${t("home.widgets.upcomingServices.elements", {
                           count: service.elementCount,
                         })}`
@@ -905,16 +1049,21 @@ type ReplCollectionRow = {
   _deleted?: boolean;
 };
 
-export function CollectionsWidget(_: WidgetRendererProps) {
+export function CollectionsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useReplicationCollection<ReplCollectionRow>("collections", 100);
+  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 8 : 5;
   const collections = useMemo(
     () =>
       [...(value ?? [])]
-        .sort((a, b) => (b.songCount ?? b.songIds?.length ?? 0) - (a.songCount ?? a.songIds?.length ?? 0))
-        .slice(0, 6),
-    [value],
+        .sort(
+          (a, b) =>
+            (b.songCount ?? b.songIds?.length ?? 0) - (a.songCount ?? a.songIds?.length ?? 0),
+        )
+        .slice(0, rowLimit),
+    [value, rowLimit],
   );
 
   return (
@@ -986,17 +1135,19 @@ export function CollectionsWidget(_: WidgetRendererProps) {
   );
 }
 
-export function FoldersWidget(_: WidgetRendererProps) {
+export function FoldersWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<FolderRow[]>("folders-summary", "/folders");
+  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 8 : 5;
   const folders = useMemo(
     () =>
       [...(value ?? [])]
         .filter((f) => !f.parentId)
         .sort((a, b) => (b.songCount ?? 0) - (a.songCount ?? 0))
-        .slice(0, 6),
-    [value],
+        .slice(0, rowLimit),
+    [value, rowLimit],
   );
 
   return (
@@ -1034,7 +1185,7 @@ export function FoldersWidget(_: WidgetRendererProps) {
                 </div>
                 <div className="flex shrink-0 items-center gap-2 text-caption tabular-nums">
                   <span>{t("home.widgets.folders.songsCount", { count: folder.songCount ?? 0 })}</span>
-                  {(folder.folderCount ?? 0) > 0 ? (
+                  {density === "expanded" && (folder.folderCount ?? 0) > 0 ? (
                     <span>
                       ·{" "}
                       {t("home.widgets.folders.subfoldersCount", {
@@ -1081,11 +1232,13 @@ type ReplAgendaEvent = {
   _deleted?: boolean;
 };
 
-export function AgendaWidget(_: WidgetRendererProps) {
+export function AgendaWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 100);
   const today = todayYmdLocal();
+  const rowLimit = density === "compact" ? 2 : density === "expanded" ? 6 : 4;
   const events = useMemo(
     () =>
       (value ?? [])
@@ -1093,8 +1246,8 @@ export function AgendaWidget(_: WidgetRendererProps) {
         .sort((a, b) =>
           a.date === b.date ? a.time.localeCompare(b.time) : a.date.localeCompare(b.date),
         )
-        .slice(0, 5),
-    [value, today],
+        .slice(0, rowLimit),
+    [value, today, rowLimit],
   );
 
   return (
@@ -1110,7 +1263,7 @@ export function AgendaWidget(_: WidgetRendererProps) {
       {loading ? (
         <div className="space-y-2.5">
           {[0, 1, 2].map((item) => (
-            <SkeletonLine key={item} className="h-12 w-full rounded-md" />
+            <SkeletonLine key={item} className="h-11 w-full rounded-md" />
           ))}
         </div>
       ) : error ? (
@@ -1138,7 +1291,7 @@ export function AgendaWidget(_: WidgetRendererProps) {
                       <Clock className="h-3 w-3" aria-hidden />
                       {ev.time}
                     </span>
-                    {ev.location ? (
+                    {density === "expanded" && ev.location ? (
                       <span className="inline-flex items-center gap-1 truncate">
                         <MapPin className="h-3 w-3 shrink-0" aria-hidden />
                         <span className="truncate">{ev.location}</span>
@@ -1146,18 +1299,20 @@ export function AgendaWidget(_: WidgetRendererProps) {
                     ) : null}
                   </div>
                 </div>
-                <div className="flex shrink-0 flex-col items-end gap-1">
-                  {assignees > 0 ? (
-                    <Badge variant="neutral" size="sm" className="tabular-nums">
-                      {t("home.widgets.agenda.assignees", { count: assignees })}
-                    </Badge>
-                  ) : null}
-                  {ev.linkedServiceId ? (
-                    <Badge variant="accent" size="sm">
-                      {t("home.widgets.agenda.linkedService")}
-                    </Badge>
-                  ) : null}
-                </div>
+                {density !== "compact" ? (
+                  <div className="flex shrink-0 flex-col items-end gap-1">
+                    {assignees > 0 ? (
+                      <Badge variant="neutral" size="sm" className="tabular-nums">
+                        {t("home.widgets.agenda.assignees", { count: assignees })}
+                      </Badge>
+                    ) : null}
+                    {density === "expanded" && ev.linkedServiceId ? (
+                      <Badge variant="accent" size="sm">
+                        {t("home.widgets.agenda.linkedService")}
+                      </Badge>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             );
             return (
@@ -1187,14 +1342,31 @@ type TrashResponse = {
   services?: unknown[];
 };
 
-export function TrashWidget(_: WidgetRendererProps) {
+export function TrashWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
+  const density = getWidgetDensity(instance);
   const { value, loading, error } = useOrganizationData<TrashResponse>("trash-summary", "/trash");
   const songCount = value?.songs?.length ?? 0;
   const folderCount = value?.folders?.length ?? 0;
   const serviceCount = value?.services?.length ?? 0;
   const total = songCount + folderCount + serviceCount;
+
+  if (density === "compact" && !loading && !error) {
+    return (
+      <div className="flex h-full items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <Trash2 className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
+          <span className="truncate text-sm font-medium text-m3-text">
+            {t("home.widgets.trash.title")}
+          </span>
+        </div>
+        <Badge variant="neutral" size="sm" className="tabular-nums">
+          {total}
+        </Badge>
+      </div>
+    );
+  }
 
   return (
     <>

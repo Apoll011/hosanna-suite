@@ -235,6 +235,14 @@ export function SkeletonLine({ className = "" }: { className?: string }) {
   return <div className={`animate-pulse rounded bg-m3-border/45 ${className}`} />;
 }
 
+export type WidgetDensity = "compact" | "standard" | "expanded";
+
+export function getWidgetDensity(instance: { w: number; h: number }): WidgetDensity {
+  if (instance.h <= 1 || (instance.w <= 2 && instance.h <= 2)) return "compact";
+  if (instance.w >= 5 || instance.h >= 3) return "expanded";
+  return "standard";
+}
+
 export function todayYmdLocal(): string {
   const now = new Date();
   const y = now.getFullYear();

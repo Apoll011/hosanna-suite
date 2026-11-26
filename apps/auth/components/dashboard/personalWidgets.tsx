@@ -7,8 +7,10 @@ import { useI18n } from "@/lib/ui/i18n";
 import type { WidgetRendererProps } from "@hosanna/dashboard/react";
 import { Badge } from "@hosanna/ui";
 import { Bell, Check, ShieldCheck, ShieldOff, User } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import {
+  getWidgetDensity,
   SkeletonLine,
   WidgetEmptyBox,
   WidgetErrorBox,
@@ -16,40 +18,42 @@ import {
   WidgetHeaderLink,
 } from "./shared";
 
-export function ProfileSecurityWidget(_: WidgetRendererProps) {
+export function ProfileWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const { user, isLoading } = useAuthUser({ requireAuth: false });
-  const [sessionCount, setSessionCount] = useState<number | null>(null);
+  const density = getWidgetDensity(instance);
 
-  useEffect(() => {
-    let active = true;
-    void authClient
-      .listSessions({ query: {} })
-      .then((res) => {
-        if (active && Array.isArray(res.data)) {
-          setSessionCount(res.data.length);
-        }
-      })
-      .catch(() => {
-        /* ignore */
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const twoFactorEnabled = Boolean(
-    user && "twoFactorEnabled" in user && (user as { twoFactorEnabled?: boolean }).twoFactorEnabled,
-  );
   const emailVerified = Boolean(
     user && "emailVerified" in user && (user as { emailVerified?: boolean }).emailVerified,
   );
 
+  if (density === "compact" && user && !isLoading) {
+    return (
+      <Link href="/account" className="flex h-full items-center gap-3">
+        {user.image ? (
+          <img
+            src={user.image}
+            alt=""
+            className="h-9 w-9 shrink-0 rounded-full border border-m3-border object-cover"
+          />
+        ) : (
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-m3-border bg-m3-sidebar text-xs font-semibold text-m3-text">
+            {(user.name || user.email || "?")[0]?.toUpperCase()}
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-m3-text">{user.name}</p>
+          <p className="truncate text-caption">{user.email}</p>
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <>
       <WidgetHeader
-        title={t("home.widgets.profileSecurity.title")}
-        action={<WidgetHeaderLink href="/account" label={t("home.widgets.profileSecurity.manage")} />}
+        title={t("home.widgets.profile.title")}
+        action={<WidgetHeaderLink href="/account" label={t("home.widgets.profile.manage")} />}
       />
       {isLoading && !user ? (
         <div className="flex items-center gap-3">
@@ -60,10 +64,7 @@ export function ProfileSecurityWidget(_: WidgetRendererProps) {
           </div>
         </div>
       ) : !user ? (
-        <WidgetEmptyBox
-          icon={<User className="h-5 w-5" />}
-          title={t("home.widgets.error")}
-        />
+        <WidgetEmptyBox icon={<User className="h-5 w-5" />} title={t("home.widgets.error")} />
       ) : (
         <div className="space-y-3">
           <div className="flex items-center gap-3">
@@ -84,28 +85,96 @@ export function ProfileSecurityWidget(_: WidgetRendererProps) {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Badge variant={emailVerified ? "success" : "warning"} size="sm">
-              {emailVerified
-                ? t("home.widgets.profileSecurity.verified")
-                : t("home.widgets.profileSecurity.unverified")}
+          <Badge variant={emailVerified ? "success" : "warning"} size="sm">
+            {emailVerified
+              ? t("home.widgets.profile.verified")
+              : t("home.widgets.profile.unverified")}
+          </Badge>
+        </div>
+      )}
+    </>
+  );
+}
+
+export function SecurityWidget({ instance }: WidgetRendererProps) {
+  const { t } = useI18n();
+  const { user, isLoading } = useAuthUser({ requireAuth: false });
+  const density = getWidgetDensity(instance);
+  const [sessionCount, setSessionCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void authClient
+      .listSessions({ query: {} })
+      .then((res: { data?: unknown }) => {
+        if (active && Array.isArray(res.data)) {
+          setSessionCount(res.data.length);
+        }
+      })
+      .catch(() => {
+        /* ignore */
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const twoFactorEnabled = Boolean(
+    user && "twoFactorEnabled" in user && (user as { twoFactorEnabled?: boolean }).twoFactorEnabled,
+  );
+
+  if (density === "compact" && user && !isLoading) {
+    return (
+      <Link href="/account" className="flex h-full items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          {twoFactorEnabled ? (
+            <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-500" aria-hidden />
+          ) : (
+            <ShieldOff className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
+          )}
+          <span className="truncate text-sm font-medium text-m3-text">
+            {twoFactorEnabled
+              ? t("home.widgets.security.twoFactorOn")
+              : t("home.widgets.security.twoFactorOff")}
+          </span>
+        </div>
+        {sessionCount !== null ? (
+          <Badge variant="neutral" size="sm" className="tabular-nums">
+            {sessionCount}
+          </Badge>
+        ) : null}
+      </Link>
+    );
+  }
+
+  return (
+    <>
+      <WidgetHeader
+        title={t("home.widgets.security.title")}
+        action={<WidgetHeaderLink href="/account" label={t("home.widgets.security.manage")} />}
+      />
+      {isLoading && !user ? (
+        <div className="space-y-2">
+          <SkeletonLine className="h-6 w-28 rounded-sm" />
+          <SkeletonLine className="h-6 w-36 rounded-sm" />
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant={twoFactorEnabled ? "success" : "neutral"} size="sm">
+            {twoFactorEnabled ? (
+              <ShieldCheck className="mr-1 h-3 w-3" aria-hidden />
+            ) : (
+              <ShieldOff className="mr-1 h-3 w-3" aria-hidden />
+            )}
+            {twoFactorEnabled
+              ? t("home.widgets.security.twoFactorOn")
+              : t("home.widgets.security.twoFactorOff")}
+          </Badge>
+          {sessionCount !== null ? (
+            <Badge variant="neutral" size="sm" className="tabular-nums">
+              {t("home.widgets.security.sessionsCount", { count: sessionCount })}
             </Badge>
-            <Badge variant={twoFactorEnabled ? "success" : "neutral"} size="sm">
-              {twoFactorEnabled ? (
-                <ShieldCheck className="mr-1 h-3 w-3" aria-hidden />
-              ) : (
-                <ShieldOff className="mr-1 h-3 w-3" aria-hidden />
-              )}
-              {twoFactorEnabled
-                ? t("home.widgets.profileSecurity.twoFactorOn")
-                : t("home.widgets.profileSecurity.twoFactorOff")}
-            </Badge>
-            {sessionCount !== null ? (
-              <Badge variant="neutral" size="sm" className="tabular-nums">
-                {t("home.widgets.profileSecurity.sessionsCount", { count: sessionCount })}
-              </Badge>
-            ) : null}
-          </div>
+          ) : null}
         </div>
       )}
     </>
@@ -121,9 +190,10 @@ type InboxItem = {
   createdAt?: string | Date;
 };
 
-export function InboxWidget(_: WidgetRendererProps) {
+export function InboxWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const { organization } = useActiveOrganization();
+  const density = getWidgetDensity(instance);
   const orgId = organization?.id ?? undefined;
   const [items, setItems] = useState<InboxItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -151,7 +221,7 @@ export function InboxWidget(_: WidgetRendererProps) {
         return;
       }
       const [listRes, countRes] = await Promise.all([
-        client.inbox.list({ query: { organizationId: orgId, limit: 5, offset: 0 } }),
+        client.inbox.list({ query: { organizationId: orgId, limit: 6, offset: 0 } }),
         client.inbox.unreadCount
           ? client.inbox.unreadCount({ query: { organizationId: orgId } })
           : Promise.resolve({ data: { count: 0 } }),
@@ -183,6 +253,24 @@ export function InboxWidget(_: WidgetRendererProps) {
     });
   };
 
+  if (density === "compact" && !loading && !error) {
+    return (
+      <div className="flex h-full items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <Bell className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
+          <span className="truncate text-sm font-medium text-m3-text">
+            {items[0]?.title ?? t("home.widgets.inbox.empty")}
+          </span>
+        </div>
+        <Badge variant={unreadCount > 0 ? "accent" : "neutral"} size="sm" className="tabular-nums">
+          {unreadCount}
+        </Badge>
+      </div>
+    );
+  }
+
+  const visibleItems = items.slice(0, density === "expanded" ? 6 : 3);
+
   return (
     <>
       <WidgetHeader
@@ -208,7 +296,7 @@ export function InboxWidget(_: WidgetRendererProps) {
         </div>
       ) : error ? (
         <WidgetErrorBox message={t("home.widgets.error")} />
-      ) : items.length === 0 ? (
+      ) : visibleItems.length === 0 ? (
         <WidgetEmptyBox
           icon={<Bell className="h-5 w-5" />}
           title={t("home.widgets.inbox.empty")}
@@ -216,7 +304,7 @@ export function InboxWidget(_: WidgetRendererProps) {
         />
       ) : (
         <ul className="divide-y divide-m3-border/60">
-          {items.map((item) => {
+          {visibleItems.map((item) => {
             const unread = !item.readAt;
             return (
               <li key={item.id} className="flex items-start justify-between gap-2 py-2">
@@ -236,7 +324,9 @@ export function InboxWidget(_: WidgetRendererProps) {
                       <p className="truncate text-sm font-medium text-m3-text">{item.title}</p>
                     )}
                   </div>
-                  {item.body ? <p className="line-clamp-1 text-caption">{item.body}</p> : null}
+                  {density === "expanded" && item.body ? (
+                    <p className="line-clamp-1 text-caption">{item.body}</p>
+                  ) : null}
                   {item.createdAt ? (
                     <p className="text-[11px] text-m3-secondary tabular-nums">
                       {new Date(item.createdAt).toLocaleDateString(locale, {

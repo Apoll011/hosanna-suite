@@ -12,17 +12,20 @@ export {
   FoldersWidget,
   LibraryHealthWidget,
   LibrarySummaryWidget,
+  MostPlayedSongsWidget,
   NextServiceWidget,
   RecentSongsWidget,
-  SetlistInsightsWidget,
+  RepertoireKeysWidget,
+  RestingSongsWidget,
   TrashWidget,
   UpcomingServicesWidget,
 } from "./worshipWidgets";
 export {
+  InvitationsWidget,
   MembersWidget,
   OrganizationOverviewWidget,
   SubscriptionWidget,
   TeamsWidget,
   WorkspaceUsageWidget,
 } from "./organizationWidgets";
-export { InboxWidget, ProfileSecurityWidget } from "./personalWidgets";
+export { InboxWidget, ProfileWidget, SecurityWidget } from "./personalWidgets";
