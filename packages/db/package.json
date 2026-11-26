@@ -32,6 +32,7 @@
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "eslint": "^9.32.0"
+    "eslint": "^9.32.0",
+    "tsx": "^4.23.15"
   }
 }

@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { Readable } from "node:stream";
 import { createHash } from "node:crypto";
-import { StorageError, StorageNotFoundError } from "../types.js";
+import { Readable } from "node:stream";
 import type {
   ListInput,
   ListResult,
   MultipartPart,
-  MultipartUpload,
   ObjectBody,
   ObjectMetadata,
   ObjectStorage,
@@ -15,6 +13,7 @@ import type {
   UploadInput,
   UrlOptions,
 } from "../types.js";
+import { StorageError, StorageNotFoundError } from "../types.js";
 
 type Entry = { bytes: Uint8Array; metadata: ObjectMetadata };
 type PendingUpload = {

@@ -1,21 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import {
-  GetObjectCommand,
-  HeadObjectCommand,
+  AbortMultipartUploadCommand,
+  CompleteMultipartUploadCommand,
   CopyObjectCommand,
+  CreateMultipartUploadCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
-  CreateMultipartUploadCommand,
-  UploadPartCommand,
-  CompleteMultipartUploadCommand,
-  AbortMultipartUploadCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
   S3Client,
+  UploadPartCommand,
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Readable } from "node:stream";
-import { StorageError, StorageNotFoundError } from "../types.js";
 import type {
   ListInput,
   ListResult,
@@ -25,9 +24,9 @@ import type {
   ObjectStorage,
   PresignedUrl,
   TenantObjectStorage,
-  UploadInput,
   UrlOptions,
 } from "../types.js";
+import { StorageError, StorageNotFoundError } from "../types.js";
 
 export type S3StorageConfig = {
   bucket: string;
