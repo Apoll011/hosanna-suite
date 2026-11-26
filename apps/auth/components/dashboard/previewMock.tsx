@@ -160,7 +160,6 @@ export function WidgetPreviewProvider({
             accessible: app.accessible,
             logoUrl: app.logoUrl,
             accent: app.accent,
-            categories: app.categories,
           }))
         : FALLBACK_APPS;
 

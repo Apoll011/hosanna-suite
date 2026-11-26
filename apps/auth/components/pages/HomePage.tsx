@@ -156,12 +156,7 @@ export function HomePage() {
   const handleAddWidget = useCallback((widgetId: string) => {
     setDraft((current) =>
       current
-        ? addWidget(
-            current,
-            widgetId,
-            authDashboardRegistry,
-            widgetId + ":" + crypto.randomUUID(),
-          )
+        ? addWidget(current, widgetId, authDashboardRegistry, widgetId + ":" + crypto.randomUUID())
         : current,
     );
   }, []);

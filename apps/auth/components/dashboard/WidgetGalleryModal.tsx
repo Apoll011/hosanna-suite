@@ -76,10 +76,7 @@ export function WidgetGalleryModal({
   const sectionKeyFor = (widget: WidgetDefinition) =>
     widget.group ?? "suite.apps." + widget.app + ".name";
 
-  const allSections = useMemo(
-    () => [...new Set(widgets.map(sectionKeyFor))],
-    [widgets],
-  );
+  const allSections = useMemo(() => [...new Set(widgets.map(sectionKeyFor))], [widgets]);
 
   const normalizedQuery = query.trim().toLowerCase();
 

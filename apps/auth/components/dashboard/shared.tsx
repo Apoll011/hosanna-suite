@@ -218,7 +218,11 @@ export function useReplicationCollection<T extends { isDeleted?: boolean; _delet
     },
     [collection, limit],
   );
-  const live = useOrganizationLoader<T[]>(`repl:${collection}:${limit}`, loader, enabled && !preview);
+  const live = useOrganizationLoader<T[]>(
+    `repl:${collection}:${limit}`,
+    loader,
+    enabled && !preview,
+  );
   if (preview) {
     return {
       organizationId: "preview",
