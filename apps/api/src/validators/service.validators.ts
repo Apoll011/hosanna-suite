@@ -38,5 +38,6 @@ export const serviceListSchema = z.object({
   metadataOnly: z
     .union([z.string(), z.boolean(), z.undefined()])
     .transform((val) => val === "true" || val === true)
-    .pipe(z.boolean()),
+    .pipe(z.boolean())
+    .default(false),
 });
