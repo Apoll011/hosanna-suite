@@ -18,7 +18,7 @@ export function WidgetConfiguration({
     <fieldset className="space-y-3">
       {fields.map(([key, field]) => (
         <label key={key} className="flex items-center justify-between gap-3 text-sm">
-          <span>{label?.(key) ?? key}</span>
+          <span>{label?.(field.label ?? key) ?? field.label ?? key}</span>
           {field.type === "boolean" ? (
             <input
               type="checkbox"

@@ -1,6 +1,7 @@
 export type GridSize = { w: number; h: number };
 export type ConfigField = {
   type: "string" | "number" | "boolean";
+  label?: string;
   enum?: readonly (string | number | boolean)[];
   min?: number;
   max?: number;

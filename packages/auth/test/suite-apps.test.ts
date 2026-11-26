@@ -25,7 +25,7 @@ describe("listSuiteApps", () => {
 
     const auth = apps.find((a) => a.id === "auth");
     const music = apps.find((a) => a.id === "music");
-    const planning = apps.find((a) => a.id === "planning");
+    const _planning = apps.find((a) => a.id === "planning");
 
     assert.equal(auth?.status, "live");
     assert.equal(auth?.accessible, true);
@@ -43,7 +43,7 @@ describe("listSuiteApps", () => {
     const apps = listSuiteApps(env);
     const auth = apps.find((a) => a.id === "auth");
     const music = apps.find((a) => a.id === "music");
-    const planning = apps.find((a) => a.id === "planning");
+    const _planning = apps.find((a) => a.id === "planning");
     assert.equal(auth?.logoUrl, "https://auth.hosanna.live/favicon.png");
     assert.equal(auth?.accent, "#0F766E");
     assert.equal(music?.logoUrl, "https://studio.hosanna.live/favicon.png");

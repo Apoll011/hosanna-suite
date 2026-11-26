@@ -28,6 +28,7 @@
     "@hosanna/analytics": "workspace:*",
     "@hosanna/auth": "workspace:*",
     "@hosanna/cache": "workspace:*",
+    "@hosanna/dashboard": "workspace:*",
     "@hosanna/db": "workspace:*",
     "@hosanna/i18n": "workspace:*",
     "@hosanna/logos-ai": "workspace:*",

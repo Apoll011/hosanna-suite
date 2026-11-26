@@ -21,7 +21,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export function OrgDataPage() {
   const { t } = useI18n();
-  const { organization, capabilities, isLoading, refresh, user } = useActiveOrganization();
+  const { organization, capabilities, isLoading, user } = useActiveOrganization();
   const canExportPerm = useCan("backup.export");
   const canImportPerm = useCan("backup.import");
 
