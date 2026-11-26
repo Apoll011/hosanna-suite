@@ -62,11 +62,25 @@ export function Dashboard({
             {editable && onRemove ? (
               <button
                 type="button"
-                className="absolute right-3 top-3 rounded-md p-2 text-m3-secondary hover:bg-m3-hover"
+                className="absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md text-m3-secondary transition-colors hover:bg-m3-danger/10 hover:text-m3-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
                 onClick={() => onRemove(instance.instanceId)}
                 aria-label={removeLabel + " " + getTitle(definition)}
+                title={removeLabel}
               >
-                {removeLabel}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
               </button>
             ) : null}
             <WidgetErrorBoundary errorLabel={errorLabel}>

@@ -4,20 +4,45 @@ import { GridStack, type ComponentMap } from "gridstack/dist/react";
 import type { GridStackOptions, GridStackWidget } from "gridstack";
 import { useMemo } from "react";
 import type { ComponentType } from "react";
-import type { DashboardLayout, WidgetInstance } from "../../core/types.js";
+import type { DashboardLayout, WidgetDefinition, WidgetInstance } from "../../core/types.js";
 import type { WidgetRegistry } from "../../core/registry.js";
 import type { WidgetRendererProps, WidgetRenderers } from "../../react/Dashboard.js";
+
+function CloseIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
 export function GridstackAdapter({
   layout,
   registry,
   renderers,
   onChange,
+  onRemove,
+  removeLabel = "Remove",
+  getTitle,
 }: {
   layout: DashboardLayout;
   registry: WidgetRegistry;
   renderers: WidgetRenderers;
   onChange: (layout: DashboardLayout) => void;
+  onRemove?: (instanceId: string) => void;
+  removeLabel?: string;
+  getTitle?: (definition: WidgetDefinition) => string;
 }) {
   const components = useMemo<ComponentMap>(() => {
     const entries = Object.entries(renderers) as [string, ComponentType<WidgetRendererProps>][];
@@ -26,15 +51,32 @@ export function GridstackAdapter({
       output[id] = function WidgetSlot(props) {
         const instance = props.instance;
         if (!isWidgetInstance(instance)) return null;
+        const definition = registry.get(instance.widget);
+        const title = definition && getTitle ? getTitle(definition) : instance.widget;
         return (
-          <div className="h-full overflow-auto p-4">
+          <div className="surface relative h-full overflow-auto p-4 md:p-5 ring-1 ring-m3-primary/15">
+            {onRemove ? (
+              <button
+                type="button"
+                className="gs-no-drag absolute right-2.5 top-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-md text-m3-secondary transition-colors hover:bg-m3-danger/10 hover:text-m3-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary"
+                onMouseDown={(event) => event.stopPropagation()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onRemove(instance.instanceId);
+                }}
+                aria-label={`${removeLabel} ${title}`}
+                title={removeLabel}
+              >
+                <CloseIcon />
+              </button>
+            ) : null}
             <Renderer instance={instance} />
           </div>
         );
       };
     }
     return output;
-  }, [renderers]);
+  }, [renderers, registry, onRemove, removeLabel, getTitle]);
   const options: GridStackOptions = useMemo(
     () => ({
       column: 12,
@@ -63,11 +105,18 @@ export function GridstackAdapter({
     [layout.items, registry, renderers],
   );
   return (
-    <GridStack
-      options={options}
-      components={components}
-      onChange={(_, nodes) => onChange(gridstackLayout(nodes, layout))}
-    />
+    <div data-dashboard-gridstack>
+      <style>
+        {
+          "[data-dashboard-gridstack] .grid-stack-item-content{overflow:visible!important;border-radius:var(--radius-lg)}[data-dashboard-gridstack] .grid-stack-placeholder>.placeholder-content{border:2px dashed var(--m3-primary);background-color:color-mix(in srgb,var(--m3-primary) 10%,transparent);border-radius:var(--radius-lg)}"
+        }
+      </style>
+      <GridStack
+        options={options}
+        components={components}
+        onChange={(_, nodes) => onChange(gridstackLayout(nodes, layout))}
+      />
+    </div>
   );
 }
 
