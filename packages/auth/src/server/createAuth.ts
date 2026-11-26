@@ -748,7 +748,12 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             });
           },
 
-          afterUpdateMemberRole: async ({ member, previousRole: _previousRole, user, organization }) => {
+          afterUpdateMemberRole: async ({
+            member,
+            previousRole: _previousRole,
+            user,
+            organization,
+          }) => {
             try {
               const locale = await getOrgLocale(organization.id);
               if (member.role === "admin" || member.role === "owner") {
