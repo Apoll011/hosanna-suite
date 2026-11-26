@@ -1,5 +1,5 @@
 {
-  "extends": "@hosanna/config/tsconfig/base.json",
+  "extends": "@hosanna/config/tsconfig/vite.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM"],

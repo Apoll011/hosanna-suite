@@ -9,7 +9,7 @@ export function createWidgetRegistry(...groups: readonly WidgetDefinition[][]): 
   const byId = new Map<string, WidgetDefinition>();
   for (const definition of definitions) {
     if (!definition.id.trim() || !definition.app.trim()) throw new Error("Widget id and app must be non-empty");
-    if (byId.has(definition.id)) throw new Error(\`Duplicate widget id: \${definition.id}\`);
+    if (byId.has(definition.id)) throw new Error("Duplicate widget id: " + definition.id);
     byId.set(definition.id, definition);
   }
   return { definitions, get: (id) => byId.get(id), list: () => definitions };

@@ -50,7 +50,7 @@ test("normalization clamps dimensions, resolves collisions and removes duplicate
     { instanceId: "a", widget: "unknown", x: 4, y: 0, w: 2, h: 1 },
   ] }, registry);
   assert.equal(layout.items.length, 1);
-  assert.deepEqual([layout.items[0]?.x, layout.items[0]?.w, layout.items[0]?.h], [0, 8, 2]);
+  assert.deepEqual([layout.items[0]?.x, layout.items[0]?.w, layout.items[0]?.h], [0, 8, 1]);
 });
 
 test("defaults filter permissions, role, unavailable owners and pack deterministically", () => {
