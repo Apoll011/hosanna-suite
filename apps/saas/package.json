@@ -13,7 +13,8 @@
     "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "fix": "eslint . --fix; prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "clean": "rm -rf dist .output",
-    "deploy:production": "wrangler deploy"
+    "deploy:production": "wrangler deploy",
+    "test": "tsx --test \"test/**/*.test.ts\""
   },
   "dependencies": {
     "@hosanna/analytics": "workspace:*",
@@ -80,7 +81,8 @@
     "typescript": "catalog:",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.16",
-    "wrangler": "^4.151.1"
+    "wrangler": "^4.151.1",
+    "tsx": "^4.23.15"
   },
   "prettier": "@hosanna/config/prettier",
   "version": "2.0.0"

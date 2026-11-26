@@ -18,7 +18,8 @@
     "prisma:push": "pnpm --filter @hosanna/db db:push",
     "typecheck": "tsc --noEmit",
     "openapi:generate": "node ../../scripts/generate-openapi.mjs && pnpm --filter @hosanna/types generate",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.92",
@@ -60,6 +61,7 @@
     "@types/pg": "^8.23.1",
     "@types/uuid": "^9.0.8",
     "tsx": "^4.19.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

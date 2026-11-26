@@ -13,13 +13,16 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "tsx --test \"test/**/*.test.ts\"",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@prisma/client": "^7.*",
@@ -29,6 +32,7 @@
   "devDependencies": {
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

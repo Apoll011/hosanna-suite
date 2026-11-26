@@ -23,7 +23,8 @@
     "build": "tsc -p tsconfig.json",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@better-auth/cimd": "^1.7.18",
@@ -41,6 +42,7 @@
     "@hosanna/config": "workspace:*",
     "@types/node": "catalog:",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

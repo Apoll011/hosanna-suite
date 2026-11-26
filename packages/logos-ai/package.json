@@ -41,7 +41,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "tsx --test \"test/**/*.test.ts\"",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@hosanna/auth": "workspace:*",
@@ -64,6 +65,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tsx": "^4.23.15",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "eslint": "^9.32.0"
   }
 }

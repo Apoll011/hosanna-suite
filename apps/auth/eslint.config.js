@@ -1,16 +1,4 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import shared from "@hosanna/config/eslint";
 
-export default tseslint.config(
-  { ignores: [".next/**", "node_modules/**", "out/**", "dist/**", "next-env.d.ts", "public/**"] },
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    files: ["**/*.{ts,tsx}"],
-    rules: {
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-    },
-  },
-);
+export default shared;
