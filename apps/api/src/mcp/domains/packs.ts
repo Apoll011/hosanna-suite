@@ -7,7 +7,7 @@
  */
 
 import { permissionsForDomain } from "@hosanna/auth";
-import { createLogosToolFactory } from "@hosanna/logos-ai/tools";
+import type { LogosToolFactory } from "@hosanna/logos-ai/tools";
 import { registerChordProTools } from "../tools/chordpro.js";
 import { registerDiscoveryTools } from "../tools/discovery.js";
 import { registerLibraryTools } from "../tools/library.js";
@@ -21,6 +21,10 @@ import { libraryBatchToolFactory } from "./libraryBatchTools.js";
 import { songBatchToolFactory } from "./songBatchTools.js";
 import { registerDomainPack } from "./registry.js";
 import type { DomainPack, McpToolGate } from "./types.js";
+
+function createLogosToolFactory(factories: readonly LogosToolFactory[]): LogosToolFactory {
+  return (context) => factories.flatMap((factory) => [...factory(context)]);
+}
 
 const discoveryFactory = captureMcpTools(registerDiscoveryTools, "suite");
 const orgFactory = captureMcpTools(registerOrgTools, "suite");
