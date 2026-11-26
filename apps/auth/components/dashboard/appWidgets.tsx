@@ -353,8 +353,6 @@ function SingleAppWidget({
   }
 
   const openable = isOpenableApp(app);
-  const categories = app.categories ?? [];
-
   const compactBody = (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-center">
       <SuiteAppIcon
@@ -384,15 +382,7 @@ function SingleAppWidget({
         {app.description ? (
           <p className="line-clamp-2 text-caption leading-snug">{app.description}</p>
         ) : null}
-        {categories.length > 0 ? (
-          <div className="flex flex-wrap gap-1 pt-0.5">
-            {categories.map((category) => (
-              <Badge key={category} variant="neutral" size="sm">
-                {category}
-              </Badge>
-            ))}
-          </div>
-        ) : null}
+
       </div>
       {openable ? (
         <ChevronRight
