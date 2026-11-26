@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { cimd } from "@better-auth/cimd";
 import { fetchClientMetadataResource } from "@better-auth/cimd/node";
 import { i18n, locales } from "@better-auth/i18n";
@@ -21,12 +22,14 @@ import { createSecondaryStorage } from "@hosanna/cache";
 import { roles } from "../authorization/roles.js";
 import { pluginLocaleOverrides } from "../i18n/plugin-locale-overrides.js";
 import { RESPONSIBILITIES } from "../authorization/responsibilities.js";
+import { CURRENT_DPA_VERSION, CURRENT_TERMS_VERSION } from "../legal/terms.js";
 import type {
   AuthSecondaryStorage,
   CreateAuthFullOptions,
   CreateAuthOptions,
   CreateAuthSlimOptions,
 } from "./types.js";
+import { Stripe } from "stripe";
 
 export type {
   CreateAuthOptions,
@@ -175,6 +178,17 @@ function createSlimAuth(options: CreateAuthSlimOptions): any {
         metadata: {
           type: "string",
           required: false,
+        },
+        termsAcceptedVersion: {
+          type: "string",
+          required: false,
+          input: true,
+        },
+        termsAcceptedAt: {
+          type: "date",
+          required: false,
+          input: false,
+          returned: false,
         },
       },
     },
@@ -355,6 +369,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                     data: {
                       ...user,
                       image: publicUrl,
+                      ...(user.termsAcceptedVersion === CURRENT_TERMS_VERSION
+                        ? { termsAcceptedAt: new Date() }
+                        : {}),
                     },
                   };
                 }
@@ -362,6 +379,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 console.error("[auth databaseHook] avatar upload failed on create:", err);
                 throw err;
               }
+            }
+            if (user.termsAcceptedVersion === CURRENT_TERMS_VERSION) {
+              return { data: { ...user, termsAcceptedAt: new Date() } };
             }
           },
           after: async (user) => {
@@ -393,6 +413,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                     data: {
                       ...user,
                       image: publicUrl,
+                      ...(user.termsAcceptedVersion === CURRENT_TERMS_VERSION
+                        ? { termsAcceptedAt: new Date() }
+                        : {}),
                     },
                   };
                 }
@@ -400,6 +423,9 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 console.error("[auth databaseHook] avatar upload failed on update:", err);
                 throw err;
               }
+            }
+            if (user.termsAcceptedVersion === CURRENT_TERMS_VERSION) {
+              return { data: { ...user, termsAcceptedAt: new Date() } };
             }
           },
           after: async (user) => {
@@ -657,6 +683,26 @@ function createFullAuth(options: CreateAuthFullOptions): any {
               },
             };
           },
+          afterCreateOrganization: async ({ organization, user }: any) => {
+            if (organization?.id && user?.id && prisma?.organizationAgreement) {
+              try {
+                await prisma.organizationAgreement.create({
+                  data: {
+                    organizationId: organization.id,
+                    agreementType: "dpa",
+                    version: CURRENT_DPA_VERSION,
+                    acceptedByUserId: user.id,
+                    acceptedAt: new Date(),
+                  },
+                });
+              } catch (err) {
+                console.error(
+                  "[auth] Failed to record DPA agreement on organization creation:",
+                  err,
+                );
+              }
+            }
+          },
           afterUpdateOrganization: async ({ organization }) => {
             if (organization && !organization.logo) {
               try {
@@ -665,6 +711,17 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 console.error("[auth] organization logo cleanup failed:", error);
               }
             }
+          },
+
+          afterDeleteOrganization: async ({ organization }) => {
+            console.info(
+              JSON.stringify({
+                event: "org.deleted",
+                entityType: "organization",
+                entityId: organization.id,
+                timestamp: new Date().toISOString(),
+              }),
+            );
           },
 
           afterAddMember: async ({ member, user, organization }) => {
@@ -840,8 +897,48 @@ function createFullAuth(options: CreateAuthFullOptions): any {
             }
             return isOrgOwner(user.id, referenceId);
           },
-          onSubscriptionComplete: async ({ subscription, plan }) => {
+          onSubscriptionComplete: async ({ event, subscription, plan }) => {
             try {
+              if (event.type === "checkout.session.completed") {
+                const checkoutSession = event.data.object as Stripe.Checkout.Session;
+                if (checkoutSession.consent?.terms_of_service === "accepted") {
+                  const owner = await prisma.member.findFirst({
+                    where: { organizationId: subscription.referenceId, role: "owner" },
+                    select: { userId: true },
+                  });
+                  if (owner) {
+                    await prisma.user.update({
+                      where: { id: owner.userId },
+                      data: {
+                        termsAcceptedAt: new Date(checkoutSession.created * 1000),
+                        termsAcceptedVersion: CURRENT_TERMS_VERSION,
+                      },
+                    });
+                    if (prisma?.organizationAgreement) {
+                      await prisma.organizationAgreement.upsert({
+                        where: {
+                          organizationId_agreementType_version: {
+                            organizationId: subscription.referenceId,
+                            agreementType: "dpa",
+                            version: CURRENT_DPA_VERSION,
+                          },
+                        },
+                        update: {
+                          acceptedByUserId: owner.userId,
+                          acceptedAt: new Date(checkoutSession.created * 1000),
+                        },
+                        create: {
+                          organizationId: subscription.referenceId,
+                          agreementType: "dpa",
+                          version: CURRENT_DPA_VERSION,
+                          acceptedByUserId: owner.userId,
+                          acceptedAt: new Date(checkoutSession.created * 1000),
+                        },
+                      });
+                    }
+                  }
+                }
+              }
               const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
                 subscription.referenceId,
                 ["owner", "admin"],
@@ -930,6 +1027,17 @@ function createFullAuth(options: CreateAuthFullOptions): any {
         metadata: {
           type: "string",
           required: false,
+        },
+        termsAcceptedVersion: {
+          type: "string",
+          required: false,
+          input: true,
+        },
+        termsAcceptedAt: {
+          type: "date",
+          required: false,
+          input: false,
+          returned: false,
         },
       },
     },

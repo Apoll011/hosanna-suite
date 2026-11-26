@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/useReveal";
 import { useI18n, type TranslationKey } from "@/lib/i18n";

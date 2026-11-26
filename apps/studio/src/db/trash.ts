@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { HosanaDatabase } from "./database";
 
 export const TRASH_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;

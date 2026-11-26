@@ -54,3 +54,9 @@ See [docs/architecture/notifications.md](../../docs/architecture/notifications.m
 Vercel project rooted at `apps/auth` (see `.github/workflows/deploy-auth.yml`). Domain: `auth.hosanna.live`.
 
 Cutover notes: [docs/architecture/auth-app-migration.md](../../docs/architecture/auth-app-migration.md).
+
+## License
+
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](../../LICENSE.md)
+
+Licensed under AGPL-3.0-only. If a modified copy is used over a network, users must be offered its corresponding source code. See the [license](../../LICENSE.md) and [contribution guide](../../CONTRIBUTING.md).

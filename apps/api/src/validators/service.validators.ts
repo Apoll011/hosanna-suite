@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { z } from "zod";
 import { concurrencySchema } from "./common.validators.js";
 import { serviceElementsSchema } from "./serviceElement.validators.js";

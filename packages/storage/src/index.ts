@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { createMemoryStorage } from "./adapters/memory.js";
 import { createS3Storage } from "./adapters/s3.js";
 import type { ObjectStorage } from "./types.js";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const en: typeof import("./pt").pt = {
   common: {
     getItOn: "Get it on",
@@ -65,7 +66,7 @@ export const en: typeof import("./pt").pt = {
       titleStart: "Your team's songbook,",
       titleHighlight: "for rehearsal and live stage",
       subtitle:
-        "Hosanna is a music songbook app for live worship: shared ChordPro library, planned services, per-musician transpose, metronome, auto-scroll, and PDF — in the mobile app and Studio. Offline when you need it.",
+        "Hosanna is a music songbook app for live worship: shared ChordPro library, planned services, per-musician transpose, metronome, auto-scroll, and PDF, in the mobile app and Studio. Offline when you need it.",
       ctaStart: "Get Started",
       ctaDemo: "Watch Demo",
       dashboardAlt: "Hosanna dashboard preview showing the song library and Sunday service plan",
@@ -79,7 +80,7 @@ export const en: typeof import("./pt").pt = {
       cards: [
         {
           title: "One ChordPro library",
-          body: "Songs with chords, key, capo, BPM, and hymnal numbers — searchable and shared with the whole team. No more final_v3.pdf.",
+          body: "Songs with chords, key, capo, BPM, and hymnal numbers, searchable and shared with the whole team. No more final_v3.pdf.",
         },
         {
           title: "Clear service order",
@@ -87,7 +88,7 @@ export const en: typeof import("./pt").pt = {
         },
         {
           title: "Stage tools in the app",
-          body: "Transpose, metronome, auto-scroll, diagrams, and PDF on the same screen you read from — even offline.",
+          body: "Transpose, metronome, auto-scroll, diagrams, and PDF on the same screen you read from, even offline.",
         },
       ],
       verse: "«Let everything that has breath praise the Lord!»",
@@ -98,7 +99,7 @@ export const en: typeof import("./pt").pt = {
       eyebrow: "Two apps, one flow",
       title: "Studio to plan. App to play.",
       description:
-        "Studio runs the library and services. The mobile app is the stage songbook: ChordPro charts, metronome, auto-scroll, and PDF — with a personal view per musician.",
+        "Studio runs the library and services. The mobile app is the stage songbook: ChordPro charts, metronome, auto-scroll, and PDF, with a personal view per musician.",
       dashboardBadge: "Studio (web)",
       dashboardTitle: "For leaders and team",
       mobileBadge: "Mobile app",
@@ -130,14 +131,14 @@ export const en: typeof import("./pt").pt = {
         "AI import (photo, gallery, or PDF)",
         "YouTube mini-player from song metadata",
         "Keep-awake screen; personal notes",
-        "Offline — syncs when you reconnect",
+        "Offline, syncs when you reconnect",
       ],
     },
     gallery: {
       eyebrow: "See it in action",
       title: "A closer look at Hosanna",
       description:
-        "Peek inside the tool your worship team will actually use — from the song library to the stage.",
+        "Peek inside the tool your worship team will actually use, from the song library to the stage.",
       openHint: "Double-click to open",
       dragHint: "Drag any screenshot down to close",
       captions: {
@@ -151,11 +152,11 @@ export const en: typeof import("./pt").pt = {
       eyebrow: "Organize your music",
       title: "A library that finally feels like yours.",
       description:
-        "Bring order to years of scattered songs — without forcing your team to learn a complicated new system.",
+        "Bring order to years of scattered songs, without forcing your team to learn a complicated new system.",
       cards: [
         {
           title: "Familiar Folders",
-          body: "Organize songs into folders just like on your computer — zero learning curve.",
+          body: "Organize songs into folders just like on your computer, zero learning curve.",
         },
         {
           title: "Search that finds everything",
@@ -175,7 +176,7 @@ export const en: typeof import("./pt").pt = {
         {
           n: "01",
           title: "Schedule the Gathering",
-          body: "Create a new service with title and date. Sunday morning or prayer night — preparation starts here.",
+          body: "Create a new service with title and date. Sunday morning or prayer night, preparation starts here.",
         },
         {
           n: "02",
@@ -185,7 +186,7 @@ export const en: typeof import("./pt").pt = {
         {
           n: "03",
           title: "Communicate Vision",
-          body: "Add notes for the team — transitions, arrangements, or specific prayer focus moments during songs.",
+          body: "Add notes for the team, transitions, arrangements, or specific prayer focus moments during songs.",
         },
         {
           n: "04",
@@ -196,9 +197,9 @@ export const en: typeof import("./pt").pt = {
     },
     liveWorship: {
       eyebrow: "Built for the stage",
-      title: "A stage songbook — not just a lyrics viewer.",
+      title: "A stage songbook, not just a lyrics viewer.",
       description:
-        "Same song, same service — each musician with their own key, capo, chords, and text size. Metronome and auto-scroll in the app. PDF when you need paper. Offline when the network drops.",
+        "Same song, same service, each musician with their own key, capo, chords, and text size. Metronome and auto-scroll in the app. PDF when you need paper. Offline when the network drops.",
       items: {
         transpose: "Per-musician transpose & capo",
         textSize: "Adjustable text size",
@@ -214,33 +215,33 @@ export const en: typeof import("./pt").pt = {
       eyebrow: "Any church, any size",
       title: "From house church to multi-campus ministry.",
       description:
-        "Each church gets its own private, secure library and services — with room for as many worship teams as you need under one church.",
+        "Each church gets its own private, secure library and services, with room for as many worship teams as you need under one church.",
       privateLibTitle: "Your library, safe and separate",
       privateLibBody:
         "Each church has its own private workspace. Songs, services, and members stay within your doors.",
       multiTeamTitle: "Multiple teams, one shared library",
       multiTeamBody:
-        "Sunday, mid-week, youth, campus A, campus B — every team draws from the same source.",
+        "Sunday, mid-week, youth, campus A, campus B, every team draws from the same source.",
     },
     export: {
       eyebrow: "Export & Portability",
       title: "Open ChordPro. PDF when you need paper.",
       description:
-        "Import and export open ChordPro — migrate and back up without lock-in. Mobile exports a print-ready song PDF with your current transpose, capo, chords, and diagrams. Studio prints songs, songbooks, full services, and agenda events.",
+        "Import and export open ChordPro, migrate and back up without lock-in. Mobile exports a print-ready song PDF with your current transpose, capo, chords, and diagrams. Studio prints songs, songbooks, full services, and agenda events.",
       bullets: [
         "ChordPro import and export",
         "Song PDF from the mobile app",
         "Service / songbook / event print from Studio",
         "AI import from a paper photo or PDF",
-        "No vendor lock-in — your library stays yours",
+        "No vendor lock-in, your library stays yours",
       ],
-      sampleServiceTitle: "Sunday Service — May 18",
+      sampleServiceTitle: "Sunday Service: May 18",
       sampleItems: [
         "Welcome & Announcements",
-        "Great Are You Lord — All Sons & Daughters",
-        "Scripture Reading — Psalm 100",
-        "10,000 Reasons — Matt Redman",
-        "Message — Pastor John",
+        "Great Are You Lord (All Sons & Daughters)",
+        "Scripture Reading, Psalm 100",
+        "10,000 Reasons, Matt Redman",
+        "Message, Pastor John",
       ],
     },
     pricing: {
@@ -260,7 +261,7 @@ export const en: typeof import("./pt").pt = {
       freeTrialDays: "14-day free trial",
       ctaTry: "Try for Free",
       pricingClarification:
-        "Unlimited musicians and dashboard users — the price is per church, regardless of team size.",
+        "Unlimited musicians and dashboard users, the price is per church, regardless of team size.",
       multiCampusLabel: "Multi-campus churches:",
       multiCampusText: "+12€/mo for each additional campus. Unlimited users across all locations.",
       features: [
@@ -283,14 +284,14 @@ export const en: typeof import("./pt").pt = {
     vision: {
       eyebrow: "Our vision",
       quote1: "«We believe technology should support worship, not complicate it.»",
-      body: "Hosanna removes unnecessary barriers between preparation and worship — so churches spend less time looking for songs and managing files, and more time leading people in praise.",
+      body: "Hosanna removes unnecessary barriers between preparation and worship, so churches spend less time looking for songs and managing files, and more time leading people in praise.",
       quote2:
         "«May it be a blessing to your church, your worship team, and everyone serving through music.»",
     },
     openSource: {
       eyebrow: "Open source",
       title: "The code is public. Fork it, read it, contribute.",
-      body: "Hosanna’s mobile app and Studio are open source under the Apache License 2.0. You can audit how sync, ChordPro, and permissions work — or build on top of them.",
+      body: "Hosanna's source code is licensed under AGPL-3.0-only. You can inspect, modify, and redistribute it under the license terms.",
       ctaApp: "Mobile app on GitHub",
       ctaStudio: "Suite on GitHub",
     },
@@ -328,7 +329,7 @@ export const en: typeof import("./pt").pt = {
         },
         {
           q: "Is Hosanna a digital songbook / chord chart app?",
-          a: "Yes. It is a ChordPro songbook for churches: shared library, transpose and capo, diagrams, metronome, auto-scroll, PDF export, and service/setlist planning — in the mobile app and Studio on the web.",
+          a: "Yes. It is a ChordPro songbook for churches: shared library, transpose and capo, diagrams, metronome, auto-scroll, PDF export, and service/setlist planning, in the mobile app and Studio on the web.",
         },
         {
           q: "Does it include a metronome, auto-scroll, and PDF export?",
@@ -340,7 +341,7 @@ export const en: typeof import("./pt").pt = {
         },
         {
           q: "In what format are songs saved?",
-          a: "Open ChordPro — plain text with chords and lyrics together. Import and export so you are not locked in.",
+          a: "Open ChordPro, plain text with chords and lyrics together. Import and export so you are not locked in.",
         },
         {
           q: "Can each musician personalize their view?",
@@ -348,7 +349,7 @@ export const en: typeof import("./pt").pt = {
         },
         {
           q: "Is there a free trial?",
-          a: "Yes — 14 days. Sign up, invite the team, and try it on a real Sunday.",
+          a: "Yes, 14 days. Sign up, invite the team, and try it on a real Sunday.",
         },
         {
           q: "Can multiple worship teams share one library?",
@@ -360,19 +361,19 @@ export const en: typeof import("./pt").pt = {
         },
         {
           q: "Is Hosanna open source?",
-          a: "Yes. The Flutter mobile app and Hosanna Studio are published on GitHub under the Apache License 2.0. Hosted cloud billing is optional — the product code is open to inspect and contribute to.",
+          a: "Yes. Hosanna's source code is published on GitHub under AGPL-3.0-only. Hosanna Cloud is a separately managed service.",
         },
       ],
     },
     finalCta: {
       title: "Ready for your team's songbook?",
       subtitle:
-        "ChordPro library, shared services, and stage tools — start with a 14-day free trial.",
+        "ChordPro library, shared services, and stage tools, start with a 14-day free trial.",
       ctaStart: "Get Started",
       ctaContact: "Talk with us",
     },
     footer: {
-      tagline: "ChordPro songbook and worship planning for churches — Studio + mobile app.",
+      tagline: "ChordPro songbook and worship planning for churches, Studio + mobile app.",
       colProduct: "Product",
       colSupport: "Support",
       colLegal: "Legal",
@@ -392,6 +393,7 @@ export const en: typeof import("./pt").pt = {
       serviceStatus: "System Status",
       termsOfService: "Terms of Service",
       privacyPolicy: "Privacy Policy",
+      subprocessors: "Subprocessors",
       cookies: "Cookies",
       copyright: "All rights reserved.",
     },
@@ -446,7 +448,7 @@ export const en: typeof import("./pt").pt = {
     heroTitleStart: "Master",
     heroTitleHighlight: "ChordPro",
     heroSubtitle:
-      "The standard and smart way to write chord charts. Everything your team needs to know to organize your repertoire in Hosanna — from the first chord to Sunday service.",
+      "The standard and smart way to write chord charts. Everything your team needs to know to organize your repertoire in Hosanna, from the first chord to Sunday service.",
     traditionalDoc: "Traditional Document (Word)",
     traditionalWarning: "Misaligns on mobile and requires separate files per key.",
     chordproInHosanna: "ChordPro in Hosanna",
@@ -592,34 +594,34 @@ export const en: typeof import("./pt").pt = {
     ccli: "CCLI number (Christian Copyright Licensing International)",
     time_signature: "Alternative to {time} directive for meter (e.g. 4/4)",
     define:
-      "Official ChordPro chord definitions — recognized by the formatter but not first-class in Hosanna (use instrument diagrams instead)",
-    new_page: "Page break hint — recognized by the formatter; not applied by Hosanna rendering",
+      "Official ChordPro chord definitions, recognized by the formatter but not first-class in Hosanna (use instrument diagrams instead)",
+    new_page: "Page break hint, recognized by the formatter; not applied by Hosanna rendering",
   },
   about: {
     eyebrow: "The Story Behind Hosanna",
     heroTitleStart: "Built by cousins,",
     heroTitleHighlight: "for the church.",
     heroSubtitle:
-      "Two 18-year-olds, self-taught, several months in — building the tool we wished our own worship team had.",
+      "Two 18-year-olds, self-taught, several months in, building the tool we wished our own worship team had.",
     storyEyebrow: "Where it started",
     storyTitle: "It started with one church, not a business plan.",
     storyP1:
       "Tiago and Éber are cousins. They grew up together in Cabo Verde before moving to Portugal, where they ended up serving on the same worship team at their local church.",
     storyP2:
-      "Music runs in the family on both sides. Tiago's father is a church pianist, and Tiago followed him onto the keys. Éber's father plays guitar too — he's the one who first put an instrument in Éber's hands.",
+      "Music runs in the family on both sides. Tiago's father is a church pianist, and Tiago followed him onto the keys. Éber's father plays guitar too, he's the one who first put an instrument in Éber's hands.",
     storyP3:
-      "When they saw their own church struggling with scattered chord sheets, outdated versions, and messy group chats before every rehearsal, they didn't wait for someone else to fix it. Still full-time students, they started building Hosanna in the evenings — for their church first, and for every church like it.",
+      "When they saw their own church struggling with scattered chord sheets, outdated versions, and messy group chats before every rehearsal, they didn't wait for someone else to fix it. Still full-time students, they started building Hosanna in the evenings, for their church first, and for every church like it.",
     founderIntroEyebrow: "Meet the founders",
     founderIntroTitle: "Still students. Still building.",
     tiagoName: "Tiago Inês",
     tiagoRole: "Co-founder & Lead Developer",
     tiagoBio:
-      "18, studying computer engineering, writing code since he was 8. A self-taught pianist who followed his father onto the church stage — and the hands behind every line of Hosanna.",
+      "18, studying computer engineering, writing code since he was 8. A self-taught pianist who followed his father onto the church stage, and the hands behind every line of Hosanna.",
     tiagoQuote: "I wanted our own worship team to stop losing chord sheets in group chats.",
     eberName: "Éber Rodrigues",
     eberRole: "Co-founder, Design & Product",
     eberBio:
-      "18, studying information management, a self-taught guitarist introduced to music by his own father. Shaped Hosanna's look and feel — the logo, the brand, and the small details that come from real Sunday-morning testing.",
+      "18, studying information management, a self-taught guitarist introduced to music by his own father. Shaped Hosanna's look and feel, the logo, the brand, and the small details that come from real Sunday-morning testing.",
     eberQuote: "Every screen has been tested on an actual Sunday, with an actual band.",
     pullQuote:
       "«We didn't set out to build a company. We just wanted our own church's worship team to stop losing chord sheets between rehearsals.»",

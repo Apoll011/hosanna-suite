@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { z } from "zod";
 import { cleanJsonSchema } from "./builder.js";
 
@@ -137,6 +138,7 @@ export const AgendaEventSchema = z
     title: z.string().describe("Event title"),
     date: z.string().datetime().describe("Event start date/time (ISO 8601)"),
     notes: z.string().nullable().optional().describe("Event notes"),
+    color: z.string().nullable().optional().describe("Event color theme"),
     isDeleted: z.boolean().default(false).describe("Replication tombstone flag"),
     createdAt: z.string().datetime().describe("Creation timestamp (ISO 8601)"),
     updatedAt: z.string().datetime().describe("Last updated timestamp (ISO 8601)"),

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
 
@@ -10,6 +11,13 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
+  webpack(config) {
+    config.resolve.extensionAlias = {
+      ...config.resolve.extensionAlias,
+      ".js": [".ts", ".tsx", ".js"],
+    };
+    return config;
+  },
   transpilePackages: [
     "@hosanna/auth",
     "@hosanna/chordpro",

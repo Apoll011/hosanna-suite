@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import type { chat as chatPt, settings as settingsPt } from "./pt";
@@ -163,8 +163,8 @@ export const chat: typeof chatPt = {
     statusApplied: "Applied",
     statusDeclined: "Declined",
     statusStale: "Superseded",
-    inEditorNote: "This song is open — review the diff in the editor.",
-    inEditorNoteService: "This service is open — review the plan in the editor.",
+    inEditorNote: "This song is open, review the diff in the editor.",
+    inEditorNoteService: "This service is open, review the plan in the editor.",
     fullReview: "Full review",
     applyFailed: "Could not apply this proposal. Try again.",
     moreItems: "+{count} more",
@@ -182,7 +182,7 @@ export const chat: typeof chatPt = {
     openDetail: "{kind}",
     printTitle: "Print in {app}",
     printDetail: "{kind} · {count}",
-    optionalHint: "Optional — you can keep working here in chat.",
+    optionalHint: "Optional, you can keep working here in chat.",
     open: "Open in {app}",
     openToPrint: "Open in {app} to print",
     opened: "Opening…",
@@ -193,7 +193,7 @@ export const chat: typeof chatPt = {
   confirmDone: "Moved to trash",
   confirmDeclined: "Cancelled",
   confirmError: "Could not complete the delete.",
-  confirmTrashHint: "Moves to trash — you can restore later.",
+  confirmTrashHint: "Moves to trash, you can restore later.",
   confirmDeleteSong: "Delete song?",
   confirmDeleteService: "Delete service?",
   confirmDeleteFolder: "Delete folder?",
@@ -245,7 +245,7 @@ export const chat: typeof chatPt = {
     transpose:
       "Help me transpose this song. Ask which target key if unclear, then propose the transposed ChordPro.",
     completeChords:
-      "Complete chords: use chordpro_propagate_chords on the current song. Copy chord markers from the first chorded verse onto the other verses at the same lyric places — do NOT invent new chords. The tool returns a draft: check every line it marks `check`, fix chord placement yourself, then propose the corrected result in the editor with songs_propose_edit; do not save yet.",
+      "Complete chords: use chordpro_propagate_chords on the current song. Copy chord markers from the first chorded verse onto the other verses at the same lyric places, do NOT invent new chords. The tool returns a draft: check every line it marks `check`, fix chord placement yourself, then propose the corrected result in the editor with songs_propose_edit; do not save yet.",
     completeMeta:
       "Complete missing song metadata (title, artist, key, tempo, tags) based on the ChordPro content. Propose edits only.",
     explainSelection:
@@ -404,7 +404,7 @@ export const settings: typeof settingsPt = {
   memoryOrgDesc: "Shared notes for everyone in this organization.",
   memoryOrgPlaceholder: "e.g. Worship team prefers G major.",
   memoryPersonalTitle: "Individual memory",
-  memoryPersonalDesc: "Account-scoped notes for you only — not shared with the org.",
+  memoryPersonalDesc: "Account-scoped notes for you only, not shared with the org.",
   memoryPersonalPlaceholder: "e.g. I prefer shorter setlists.",
   memoryEnabled: "Enable memory",
   memoryEnabledDesc: "Include notes in context and allow updates.",

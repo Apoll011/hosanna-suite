@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { getVercelOidcToken } from "@vercel/oidc";
 
 /** Header Vercel Deployment Protection expects from Trusted Sources callers. */

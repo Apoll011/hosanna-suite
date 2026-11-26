@@ -1,8 +1,9 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+import { isTransientNetworkError } from "@hosanna/replication/replication";
 import { Song } from "@/src/types";
 import { createLocalImportSink, type ImportSink } from "./sink";
 import {
@@ -43,7 +44,9 @@ export class SongImportRegistry {
         const active = await provider.isActive();
         if (!active) continue;
       } catch (error: unknown) {
-        console.error(`Failed to activate import provider "${provider.id}".`, error);
+        if (!isTransientNetworkError(error)) {
+          console.error(`Failed to activate import provider "${provider.id}".`, error);
+        }
         continue;
       }
       byId.set(provider.id, provider);

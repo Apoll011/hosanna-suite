@@ -1,12 +1,12 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 "use client";
 
 import type { AppRole, PermissionString } from "@hosanna/auth";
-import React, { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 
 export interface PermissionsProviderProps {
   role: AppRole | null;

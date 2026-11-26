@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import { AccountLayoutChrome } from "@/components/account/AccountLayoutChrome";

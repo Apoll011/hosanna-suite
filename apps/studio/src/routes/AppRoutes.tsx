@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { Spinner, usePreloadPermissions } from "@hosanna/ui";
@@ -27,6 +27,7 @@ const PageLoader = () => {
 
 import {
   AgendaPage,
+  CalendarPage,
   AnalyticsPage,
   CollectionDetailPage,
   CollectionsPage,
@@ -37,7 +38,6 @@ import {
   SettingsPage,
   SongEditorPage,
   SongsPage,
-  TeamsPage,
   TrashPage,
   prefetchQueue,
 } from "./routePreloader";
@@ -203,8 +203,12 @@ export const AppRoutes: React.FC = () => {
                 <Route path="collections/:id" element={<CollectionDetailPage />} />
                 <Route path="services" element={<ServicesPage />} />
                 <Route path="services/:id" element={<ServiceDetailPage />} />
-                <Route path="teams" element={<TeamsPage />} />
+                <Route
+                  path="teams"
+                  element={<ExternalAuthRedirect path="/account/organization/teams" />}
+                />
                 <Route path="agenda" element={<AgendaPage />} />
+                <Route path="calendar" element={<CalendarPage />} />
                 <Route path="trash" element={<TrashPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="organization" element={<OrganizationRedirect />} />

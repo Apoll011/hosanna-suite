@@ -1,10 +1,10 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
-import { Button, Input, Can, CanAny, InboxButton } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
+import { Button, Can, CanAny, InboxButton, Input } from "@hosanna/ui";
 import {
   BarChart3,
   Calendar,
@@ -26,15 +26,14 @@ import {
   Search,
   Settings,
   Trash2Icon,
-  Users,
   X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
 import { authClient } from "../../lib/authClient";
 
-import { emitOnboardingEvent } from "../../lib/tour";
 import { AiChatToggle } from "@hosanna/logos-ai";
+import { emitOnboardingEvent } from "../../lib/tour";
 import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
 import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 import { SyncStatusBadge } from "../SyncStatusBadge";
@@ -286,22 +285,22 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             </>
           )}
 
-          {view === "teams" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Users className="w-4 h-4" />
-                <span>{t("common.teams")}</span>
-              </div>
-            </>
-          )}
-
           {view === "agenda" && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
               <div className={crumbCurrent}>
                 <Calendar1 className="w-4 h-4" />
                 <span>{t("common.agenda")}</span>
+              </div>
+            </>
+          )}
+
+          {view === "calendar" && (
+            <>
+              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
+              <div className={crumbCurrent}>
+                <Calendar1 className="w-4 h-4" />
+                <span>Planning calendar</span>
               </div>
             </>
           )}

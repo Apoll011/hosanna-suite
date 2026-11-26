@@ -1,13 +1,12 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
 import { isDemoMode } from "@/src/demo";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
-import { posthog } from "@/src/lib/posthog";
 import { Folder } from "@/src/types";
 import { Organization } from "better-auth/client";
 import {
@@ -25,7 +24,6 @@ import {
   Settings,
   Trash2,
   UserRound,
-  Users,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -113,8 +111,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
   const orgMenuRef = useRef<HTMLDivElement>(null);
   const hasMultipleOrgs = (organizations?.length ?? 0) > 1;
-
-  const teams_enabled = posthog.isFeatureEnabled("teams-enabled") || false;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -434,28 +430,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </Badge>
           </div>
         </button>
-
-        {teams_enabled && (
-          <button
-            onClick={() => {
-              navigate(`${slugPrefix}/teams`);
-              if (window.innerWidth < 768) setIsSidebarOpen(false);
-            }}
-            title={isSidebarCollapsed ? t("common.teams") : undefined}
-            className={`${NAV_BASE} ${view === "teams" ? NAV_ACTIVE : NAV_INACTIVE}`}
-          >
-            <div className="flex items-center gap-3 min-w-0 flex-1">
-              <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                <Users
-                  className={`w-4.5 h-4.5 ${
-                    view === "teams" ? "text-m3-primary" : "text-m3-secondary"
-                  }`}
-                />
-              </div>
-              <span className={collapseText()}>{t("common.teams")}</span>
-            </div>
-          </button>
-        )}
 
         <Can permission="agenda.access">
           <button

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { Button, Input, Modal } from "@hosanna/ui";
@@ -249,6 +249,9 @@ export const ThirdPartyProvidersModal: React.FC<ThirdPartyProvidersModalProps> =
         </div>
       ) : (
         <div className="space-y-4 py-1">
+          <p className="m-0 text-xs leading-relaxed text-m3-secondary">
+            {t("modals.importRightsNotice")}
+          </p>
           <div className="flex items-center p-1 bg-m3-sidebar/60 border border-m3-border rounded-xl">
             <button
               type="button"

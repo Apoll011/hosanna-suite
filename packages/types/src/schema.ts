@@ -689,7 +689,7 @@ export interface paths {
     };
     /**
      * Export backup
-     * @description Export entire organization library (songs, folders, services) as a standalone JSON backup archive.
+     * @description Export organization content, settings, members, invitations, and non-private service notes as JSON. Available in read-only billing mode.
      */
     get: operations["exportBackup"];
     put?: never;
@@ -1293,6 +1293,8 @@ export interface components {
       date: string;
       /** @description Event notes */
       notes?: string | null;
+      /** @description Event color theme */
+      color?: string | null;
       /**
        * @description Replication tombstone flag
        * @default false
@@ -1345,13 +1347,37 @@ export interface components {
     };
     /** @description Full organization data archive for backup and restore */
     BackupDocument: {
-      /** @description Backup schema version (e.g., 2.2) */
+      /** @description Backup schema version (e.g., 3.0) */
       version: string;
       /**
        * Format: date-time
        * @description Export ISO timestamp
        */
       exportedAt: string;
+      /** @description Organization profile */
+      organization?: {
+        [key: string]: unknown;
+      } | null;
+      /** @description Exportable organization settings */
+      settings?: {
+        [key: string]: unknown;
+      };
+      /** @description Organization AI memory */
+      aiMemory?: {
+        [key: string]: unknown;
+      }[];
+      /** @description Organization members */
+      members?: {
+        [key: string]: unknown;
+      }[];
+      /** @description Organization teams and memberships */
+      teams?: {
+        [key: string]: unknown;
+      }[];
+      /** @description Organization invitations */
+      invitations?: {
+        [key: string]: unknown;
+      }[];
       /** @description Exported folder documents */
       folders: {
         [key: string]: unknown;
@@ -1370,6 +1396,14 @@ export interface components {
       }[];
       /** @description Exported calendar agenda events */
       agendaEvents?: {
+        [key: string]: unknown;
+      }[];
+      /** @description Non-private service notes */
+      notes?: {
+        [key: string]: unknown;
+      }[];
+      /** @description Service song annotations */
+      annotations?: {
         [key: string]: unknown;
       }[];
     };
@@ -3152,6 +3186,9 @@ export interface operations {
           context?: {
             [key: string]: unknown;
           };
+          /** @enum {string} */
+          appId?:
+            "auth" | "music" | "planning" | "finance" | "presenter" | "community" | "platform";
           /** @enum {string} */
           locale?: "pt" | "en" | "es";
         };

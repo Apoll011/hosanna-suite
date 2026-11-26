@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { OrgScopedPrisma } from "../database/prisma.js";
 import { getAnnotationDoc, publishAnnotation, resolveAnnotationBytes } from "../lib/firestore.js";
 

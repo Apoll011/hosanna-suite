@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Product domains map 1:1 onto permission resources (`song.update`) and Logos
  * resource kinds (`song`). New suite products register a domain here first —

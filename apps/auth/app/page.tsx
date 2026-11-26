@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 

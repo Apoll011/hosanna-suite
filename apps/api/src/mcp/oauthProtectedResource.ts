@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { Request, Response } from "express";
 import { env } from "../config/env.js";
 

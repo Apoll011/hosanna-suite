@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Firebase Cloud Messaging (HTTP v1) client.
  * Never throws from sendFcmToToken — failures are returned for pruning.

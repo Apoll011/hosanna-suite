@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useSyncExternalStore, useState, useEffect } from "react";
 
 export type ConsentValue = "all" | "essential";

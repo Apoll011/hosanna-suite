@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Starts the wait-for-action interactive onboarding inside an isolated demo tab.
  */

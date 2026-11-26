@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Demo-mode session flags — kept free of DB imports so storage naming helpers
  * can depend on this without circular modules.

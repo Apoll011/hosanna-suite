@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export type { InstrumentCategory, InstrumentFingering, InstrumentProfile } from "./types";
 export { InstrumentRegistry, instrumentRegistry } from "./registry";
 

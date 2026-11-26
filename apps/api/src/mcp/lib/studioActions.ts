@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Studio-only AI action directives.
  * The Studio tab interprets these from tool output (navigate, print, sync).

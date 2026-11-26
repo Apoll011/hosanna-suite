@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { NextResponse } from "next/server";
 import { buildAuthOpenApiDoc } from "@/lib/openapi";
 import { auth } from "@/lib/auth/server";

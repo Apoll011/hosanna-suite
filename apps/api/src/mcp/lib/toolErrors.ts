@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { AppError } from "../../utils/errors.js";
 import { IdempotencyConflictError } from "./idempotency.js";
 import { ProviderError } from "./providerError.js";

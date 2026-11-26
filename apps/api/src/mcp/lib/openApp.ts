@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Cross-app open directive for embedded Logos chat.
  * Hosts (Studio, Auth, future apps) resolve `app` → origin and open the URL.

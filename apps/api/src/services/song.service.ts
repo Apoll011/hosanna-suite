@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Prisma, Song } from "@hosanna/db";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";

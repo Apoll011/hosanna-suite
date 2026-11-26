@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { I18nKeys } from "./pt-PT.js";
 
 /**
- * en-US — English locale.
+ * en-US: English locale.
  */
 const en = {
   // ── errors / middleware ─────────────────────────────────────────────────
@@ -68,7 +69,7 @@ const en = {
     folder_deleted_title: "Folder deleted with all its contents",
     folder_deleted_description:
       "{{songs}} song(s) and {{folders}} subfolder(s) were permanently removed.",
-    backup_restored_title: "Backup restored — all data replaced",
+    backup_restored_title: "Backup restored: all data replaced",
     backup_restored_description:
       "A full restore imported {{folders}} folder(s), {{songs}} song(s), and {{services}} service(s).",
     trial_started_title: "Free trial started",

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { describe } from "node:test";
 import { createS3Storage } from "../src/index.js";
 import { runStorageContract } from "./contract.js";

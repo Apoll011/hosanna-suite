@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useI18n } from "@/src/lib/i18n";
 import { Keyboard, Lightbulb, X } from "lucide-react";
 import React, { useEffect } from "react";

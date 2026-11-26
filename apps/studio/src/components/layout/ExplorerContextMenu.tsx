@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { useI18n } from "@/src/lib/i18n";
@@ -9,6 +9,7 @@ import { Badge, Can, CanAll } from "@hosanna/ui";
 import {
   ArrowRightLeft,
   CheckSquare,
+  Download,
   Edit2,
   ExternalLink,
   FolderOpen,
@@ -59,6 +60,9 @@ export interface ExplorerContextMenuProps {
   onPrintFolders?: () => void;
   onPrintSong?: (id: string) => void;
   onPrintFolder?: (id: string) => void;
+  onExportSelection?: () => void;
+  onExportFolder?: (id: string) => void;
+  onExportSong?: (id: string) => void;
 }
 
 const MENU_ITEM =
@@ -95,6 +99,9 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
   onPrintFolders,
   onPrintSong,
   onPrintFolder,
+  onExportSelection,
+  onExportFolder,
+  onExportSong,
 }) => {
   const { t } = useI18n();
 
@@ -261,6 +268,19 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
             </button>
           </CanAll>
 
+          {onExportSelection && (
+            <button
+              onClick={() => {
+                onExportSelection();
+                onClose();
+              }}
+              className={MENU_ITEM}
+            >
+              <Download className={MENU_ICON} />
+              <span>{t("explorer.contextMenu.exportSelection")}</span>
+            </button>
+          )}
+
           <CanAll permissions={["song.delete", "folder.delete"]}>
             <button
               onClick={() => {
@@ -360,6 +380,19 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
                 </button>
               </Can>
 
+              {onExportFolder && (
+                <button
+                  onClick={() => {
+                    onExportFolder((contextMenu.item as Folder).id);
+                    onClose();
+                  }}
+                  className={MENU_ITEM}
+                >
+                  <Download className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.exportItem")}</span>
+                </button>
+              )}
+
               <Can permission="folder.delete">
                 <div className="my-1 border-t border-m3-border" />
 
@@ -425,6 +458,19 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
                   <span>{t("explorer.contextMenu.printSong")}</span>
                 </button>
               </Can>
+
+              {onExportSong && (
+                <button
+                  onClick={() => {
+                    onExportSong((contextMenu.item as Song).id);
+                    onClose();
+                  }}
+                  className={MENU_ITEM}
+                >
+                  <Download className={MENU_ICON} />
+                  <span>{t("explorer.contextMenu.exportItem")}</span>
+                </button>
+              )}
 
               <Can permission="song.delete">
                 <div className="my-1 border-t border-m3-border" />

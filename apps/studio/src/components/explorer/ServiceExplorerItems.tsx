@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Button, Badge } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Service } from "@/src/types";

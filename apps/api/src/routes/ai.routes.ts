@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Router } from "express";
 import { APICallError, type UIMessage } from "ai";
 import { requirePermission } from "../middleware/auth.js";
@@ -230,6 +231,7 @@ aiRouter.post(
       authInfo,
       messages,
       pageContext: req.body.context,
+      appId: req.body.appId,
       locale: req.body.locale,
       abortSignal: abort.signal,
     });

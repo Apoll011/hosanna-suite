@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import {
@@ -303,6 +303,9 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
       }
     >
       <div className="space-y-5">
+        <p className="m-0 text-xs leading-relaxed text-m3-secondary">
+          {t("modals.importRightsNotice")}
+        </p>
         {session && (
           <div className="flex items-center gap-3 rounded-xl border border-m3-border bg-m3-sidebar/40 px-3 py-2.5">
             {session.sourceType === "pdf" ? (

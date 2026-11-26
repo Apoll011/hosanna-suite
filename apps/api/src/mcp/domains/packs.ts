@@ -1,33 +1,52 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Canonical MCP domain pack metadata. Tool mounting lives in `wire.ts`
  * (static imports) so discovery can read packs without a module cycle.
  */
 
 import { permissionsForDomain } from "@hosanna/auth";
-import { MCP_TOOL_GROUPS } from "../lib/toolCatalog.js";
+import { createLogosToolFactory } from "@hosanna/logos-ai/tools";
+import { registerChordProTools } from "../tools/chordpro.js";
+import { registerDiscoveryTools } from "../tools/discovery.js";
+import { registerLibraryTools } from "../tools/library.js";
+import { registerOrgTools } from "../tools/org.js";
+import { registerServiceTools } from "../tools/services.js";
+import { registerSongTools } from "../tools/songs.js";
+import { captureMcpTools } from "./captureTools.js";
+import { embeddedUiToolFactory } from "./embeddedUiTools.js";
+import { embeddedMemoryToolFactory } from "./embeddedMemoryTools.js";
+import { libraryBatchToolFactory } from "./libraryBatchTools.js";
+import { songBatchToolFactory } from "./songBatchTools.js";
 import { registerDomainPack } from "./registry.js";
 import type { DomainPack, McpToolGate } from "./types.js";
 
-const DISCOVERY_TOOLS = [
-  "hosanna_capabilities",
-  "hosanna_permissions",
-  "hosanna_skills_list",
-  "hosanna_skill_read",
-  "hosanna_resources_list",
-  "hosanna_resource_read",
-] as const;
+const discoveryFactory = captureMcpTools(registerDiscoveryTools, "suite");
+const orgFactory = captureMcpTools(registerOrgTools, "suite");
+const chordProFactory = captureMcpTools(registerChordProTools, "suite");
+const songFactory = createLogosToolFactory([
+  captureMcpTools(registerSongTools, "music"),
+  songBatchToolFactory,
+]);
+const serviceFactory = captureMcpTools(registerServiceTools, "planning");
+const libraryFactory = createLogosToolFactory([
+  captureMcpTools(registerLibraryTools, (name) =>
+    name.startsWith("agenda_") ? "planning" : "music",
+  ),
+  libraryBatchToolFactory,
+]);
+const platformFactory = createLogosToolFactory([
+  discoveryFactory,
+  embeddedUiToolFactory,
+  embeddedMemoryToolFactory,
+]);
 
-const ORG_TOOLS = [
-  "me",
-  "members_list",
-  "members_get",
-  "members_resolve",
-  "members_invite",
-  "org_get",
-] as const;
+function toolNames(
+  factory: (context: { surface: "mcp" }) => readonly { name: string }[],
+): string[] {
+  return factory({ surface: "mcp" }).map((definition) => definition.name);
+}
 
 function gates(
   names: readonly string[],
@@ -57,12 +76,13 @@ function songToolGates(): McpToolGate[] {
     "songs_propose_fix",
     "songs_propose_transpose",
     "songs_draft_propagate_chords",
+    "songs_move_many",
     "songs_save",
     "songs_move",
     "songs_restore",
   ]);
   const del = new Set(["songs_delete"]);
-  return MCP_TOOL_GROUPS.songs.map((name) => {
+  return toolNames(songFactory).map((name) => {
     if (read.has(name)) return { name, permission: "song.access" as const };
     if (create.has(name))
       return { name, permission: "song.create" as const, requiresEntitlement: true };
@@ -85,7 +105,7 @@ function serviceToolGates(): McpToolGate[] {
   const create = new Set(["services_create_draft", "services_publish"]);
   const update = new Set(["services_propose_edit", "services_save", "services_restore"]);
   const del = new Set(["services_delete"]);
-  return MCP_TOOL_GROUPS.services.map((name) => {
+  return toolNames(serviceFactory).map((name) => {
     if (read.has(name)) return { name, permission: "service.access" as const };
     if (create.has(name))
       return { name, permission: "service.create" as const, requiresEntitlement: true };
@@ -98,10 +118,12 @@ function serviceToolGates(): McpToolGate[] {
 }
 
 function libraryToolGates(): McpToolGate[] {
-  return MCP_TOOL_GROUPS.library.map((name): McpToolGate => {
+  return toolNames(libraryFactory).map((name): McpToolGate => {
     if (name.startsWith("folders_")) {
       if (name === "folders_list") return { name, permission: "folder.access" };
       if (name === "folders_create")
+        return { name, permission: "folder.create", requiresEntitlement: true };
+      if (name === "folders_create_many")
         return { name, permission: "folder.create", requiresEntitlement: true };
       if (name === "folders_delete")
         return { name, permission: "folder.delete", requiresEntitlement: true };
@@ -138,22 +160,28 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     id: "platform.discovery",
     title: "Discovery",
     permissions: [],
-    tools: gates([...DISCOVERY_TOOLS]),
+    tools: gates(toolNames(discoveryFactory)),
     resources: ["hosanna://ops/catalog"],
     prompts: ["hosanna_system"],
     skills: ["hosanna://skills/hosanna-safe-data"],
+    app: "platform",
+    toolFactory: platformFactory,
   },
   {
     id: "platform.org",
     title: "Organization",
     permissions: [],
-    tools: gates([...ORG_TOOLS]),
+    tools: gates(toolNames(orgFactory)),
+    app: "platform",
+    toolFactory: orgFactory,
   },
   {
     id: "platform.chordpro",
     title: "ChordPro",
     permissions: [],
-    tools: gates([...MCP_TOOL_GROUPS.chordpro]),
+    tools: gates(toolNames(chordProFactory)),
+    app: "platform",
+    toolFactory: chordProFactory,
     resources: [
       "hosanna://chordpro/guide",
       "hosanna://chordpro/directives",
@@ -166,6 +194,8 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     logosKind: "song",
     permissions: permissionsForDomain("music.song"),
     tools: songToolGates(),
+    app: "music",
+    toolFactory: songFactory,
     resources: ["hosanna://domain/songs", "hosanna://schemas/song"],
     prompts: [
       "songs_create",
@@ -191,6 +221,8 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
     logosKind: "service",
     permissions: permissionsForDomain("music.service"),
     tools: serviceToolGates(),
+    app: "planning",
+    toolFactory: serviceFactory,
     resources: [
       "hosanna://domain/services",
       "hosanna://schemas/service",
@@ -215,6 +247,8 @@ export const DOMAIN_PACKS: readonly DomainPack[] = [
       ...permissionsForDomain("library.agenda"),
     ],
     tools: libraryToolGates(),
+    app: "music",
+    toolFactory: libraryFactory,
     resources: ["hosanna://domain/library"],
   },
 ];

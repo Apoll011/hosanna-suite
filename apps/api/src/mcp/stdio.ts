@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Local stdio entry for Cursor / Claude Desktop.
  *

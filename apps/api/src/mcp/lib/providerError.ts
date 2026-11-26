@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Structured failure from an external metadata / search provider. */
 export class ProviderError extends Error {
   readonly kind: "unavailable" | "rate_limited" | "auth" | "empty";

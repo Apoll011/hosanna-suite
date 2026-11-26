@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Static-site SEO.
  *
@@ -52,6 +53,11 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     title: "Terms of Service | Hosanna",
     description: "Terms of Service for the Hosanna platform and music songbook applications.",
     url: `${SITE_URL}/terms`,
+  },
+  "/subprocessors": {
+    title: "Subprocessors | Hosanna",
+    description: "Service providers and configured processing regions for Hosanna Cloud.",
+    url: `${SITE_URL}/subprocessors`,
   },
 };
 

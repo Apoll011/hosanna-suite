@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { listSuiteApps, type SuiteAppDto, type SuiteAppUrlEnv } from "@hosanna/auth";
 
 import { env } from "@/lib/config/env";

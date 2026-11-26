@@ -1,4 +1,5 @@
-/** Auth UI — English. */
+// SPDX-License-Identifier: AGPL-3.0-only
+/** Auth UI, English. */
 import type { pt } from "./pt";
 
 export const en: typeof pt = {
@@ -71,6 +72,11 @@ export const en: typeof pt = {
       successTitle: "Check your email",
       successDesc: "We sent a verification link to activate your account.",
       showPassword: "Show password",
+      termsRequired: "Accept the Terms of Service and Privacy Policy to continue.",
+      termsPrefix: "By creating an account, I agree to the",
+      termsLink: "Terms of Service",
+      termsAnd: "and acknowledge the",
+      privacyLink: "Privacy Policy.",
     },
     forgotPassword: {
       title: "Reset password",
@@ -491,6 +497,25 @@ export const en: typeof pt = {
     data: {
       noBackupAccess: "You don't have permission to export or restore backups.",
     },
+    dpa: {
+      title: "Data Processing Agreement (GDPR Art. 28)",
+      desc: "Governs personal data processed by Hosanna on behalf of the church as processor.",
+      statusAccepted: "Accepted on {date} by {name}",
+      statusPending: "Pending acceptance",
+      pendingWarning:
+        "Your church has not accepted the Data Processing Agreement (DPA) yet. For GDPR compliance, an administrator should review and accept the agreement.",
+      reviewBtn: "Review & accept DPA",
+      viewBtn: "View full agreement",
+      printBtn: "Print / Save",
+      modalTitle: "Data Processing Agreement (DPA)",
+      churchLawfulBasis:
+        "I confirm that I am authorized to represent the church and that the organization maintains a valid lawful basis under GDPR Article 9 (special category data revealing religious beliefs).",
+      acceptBtn: "Accept agreement",
+      acceptSuccess: "Data Processing Agreement accepted successfully.",
+      acceptError: "Failed to accept agreement: {error}",
+      subprocessorsNote:
+        "Review the public sub-processors list at hosanna.live/legal/subprocessors.",
+    },
     danger: {
       title: "Danger zone",
       desc: "Irreversible actions for your membership or this workspace.",
@@ -502,6 +527,19 @@ export const en: typeof pt = {
       deleteConfirmText: 'Type "{name}" to confirm deletion.',
       deleteSuccess: "Organization deleted.",
       deleteError: "Could not delete: {error}",
+      exportRequiredTitle: "Export your data before deleting",
+      exportRequiredDesc:
+        "Download a complete backup of your organization's songs, folders, services, collections, and agenda first. Deletion is permanent and cannot be undone.",
+      exportCompleted: "Backup downloaded. You can now proceed with deletion.",
+      exportBtn: "Export and download backup",
+      otpTitle: "Verify your identity",
+      otpDesc: "We sent a 6-digit confirmation code to {email}. Enter it below to continue.",
+      otpLabel: "Verification code",
+      otpSendError: "Could not send verification code: {error}",
+      otpInvalid: "Invalid or expired verification code.",
+      backupRetentionNotice:
+        "Your data will be removed from active systems immediately. Encrypted provider backups may retain copies for up to 30 days.",
+      nextBtn: "Continue",
     },
   },
   oauth: {
@@ -520,14 +558,14 @@ export const en: typeof pt = {
     settings: {
       memberTitle: "Logos AI",
       memberDesc: "Organization memory (read-only) and your personal memory.",
-      memberOrgReadonly: "Organization notes are managed by admins — you can view them here.",
+      memberOrgReadonly: "Organization notes are managed by admins, you can view them here.",
       memberNotConfiguredTitle: "AI is not set up yet",
       memberNotConfiguredDesc: "Ask an organization owner or admin to connect a provider.",
       setup: {
         eyebrow: "Logos AI",
         title: "Bring an assistant into your worship planning",
         subtitle:
-          "Connect a provider once. Your team gets help with songs, ChordPro, and services — right inside Studio.",
+          "Connect a provider once. Your team gets help with songs, ChordPro, and services, right inside Studio.",
         cta: "Configure Logos AI",
         ctaHint: "You’ll choose a provider, model, and API key next.",
         features: {
@@ -545,7 +583,7 @@ export const en: typeof pt = {
           },
           memory: {
             title: "Org memory",
-            desc: "Remember preferences — keys, style, language — shared across the workspace.",
+            desc: "Remember preferences, keys, style, language, shared across the workspace.",
           },
         },
         providersNote:
@@ -561,6 +599,28 @@ export const en: typeof pt = {
     title: "Account",
     subtitle: "Manage your Hosanna profile, security, notifications, and sessions.",
     signOut: "Sign out",
+    danger: {
+      title: "Danger zone",
+      desc: "Permanently delete your personal Hosanna account and all associated data.",
+      deleteTitle: "Delete your account",
+      deleteDesc:
+        "Removes your profile, sessions, push registrations, preferences, and personal AI memory.",
+      deleteBtn: "Delete account",
+      soleOwnerTitle: "Ownership transfer required",
+      soleOwnerDesc:
+        "You are the sole owner of the following organization(s). Transfer ownership to another member or delete the organization before deleting your account:",
+      manageOrgLink: "Manage organization",
+      otpTitle: "Confirm account deletion",
+      otpDesc:
+        "We sent a 6-digit confirmation code to {email}. Enter it below to permanently delete your account.",
+      otpLabel: "Verification code",
+      sendOtpBtn: "Send verification code",
+      confirmBtn: "Permanently delete account",
+      backupRetentionNotice:
+        "Your data will be removed from active systems immediately. Encrypted provider backups may retain copies for up to 30 days.",
+      deleteSuccess: "Account deleted.",
+      deleteError: "Could not delete account: {error}",
+    },
     menu: {
       open: "Account menu",
       theme: "Theme",
@@ -575,7 +635,7 @@ export const en: typeof pt = {
     },
     notifications: {
       title: "Notification preferences",
-      description: "Choose how Hosanna reaches you — inbox, push, and email.",
+      description: "Choose how Hosanna reaches you, inbox, push, and email.",
       loading: "Loading preferences…",
       saved: "Notification preferences saved.",
       saveError: "Could not save preferences: {error}",
@@ -617,6 +677,7 @@ export const en: typeof pt = {
       overview: "Overview",
       profile: "Profile",
       members: "Members",
+      teams: "Teams",
       billing: "Billing",
       notifications: "Notifications",
       ai: "AI",
@@ -680,5 +741,58 @@ export const en: typeof pt = {
       title: "Data",
       description: "Backup, restore, and danger zone.",
     },
+  },
+  teams: {
+    title: "Teams",
+    description: "Organize people in {organization} into working groups.",
+    create: "Create team",
+    createFirst: "Create your first team",
+    createTitle: "New team",
+    createDesc: "Give the group a clear name. You can add members next.",
+    nameLabel: "Team name",
+    allTeams: "All teams",
+    count: "{count} teams",
+    search: "Search teams",
+    emptyTitle: "No teams yet",
+    emptyDesc: "Create groups to organize people by ministry or role.",
+    noSearchResults: "No teams found",
+    noSearchDesc: "Try a different search term.",
+    teamLabel: "Team",
+    memberCount: "{count} members",
+    privateToOrg: "People in this organization",
+    createdAt: "Created {date}",
+    activeTeamTitle: "Active team",
+    activeTeamDesc: "Your active team follows your session across Hosanna apps.",
+    active: "Active",
+    setActive: "Set as active",
+    membersTitle: "People on this team",
+    membersDesc: "Choose people who already belong to this organization.",
+    chooseMember: "Select a member",
+    addMember: "Add",
+    removeMember: "Remove {name}",
+    roleLabel: "Role: {role}",
+    unnamedMember: "Unnamed member",
+    you: "You",
+    noMembers: "This team has no members yet",
+    noMembersDesc: "Add someone from the organization member list.",
+    chooseTeam: "Choose a team to see its details",
+    renameLabel: "New name",
+    renamePlaceholder: "New team name",
+    rename: "Rename",
+    delete: "Delete",
+    remove: "Remove",
+    deleteConfirmTitle: "Delete team?",
+    deleteConfirmDesc: "The {name} team and its memberships will be deleted.",
+    removeConfirmTitle: "Remove member?",
+    removeConfirmDesc: "This person will no longer be part of the team.",
+    loadError: "Could not load teams.",
+    actionError: "Could not complete this action.",
+    retry: "Try again",
+    created: "Team created.",
+    renamed: "Team name updated.",
+    deleted: "Team deleted.",
+    memberAdded: "Member added.",
+    memberRemoved: "Member removed.",
+    activeUpdated: "Active team updated.",
   },
 };

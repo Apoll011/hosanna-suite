@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * `@hosanna/db` — Prisma client + generated types for Hosanna.
  *

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Localize suite catalog DTOs using host `t()` against `@hosanna/i18n` keys
  * (`suite.apps.*`). Dictionaries live in the i18n package, not here.

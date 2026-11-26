@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Provider-native web Search / Fetch when the org's BYOK AI exposes them.
  * Today: DeepSeek (`POST /v1/tools/search` + `/v1/tools/fetch`).

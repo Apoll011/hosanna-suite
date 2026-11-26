@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
 import { formatChordPro } from "@hosanna/chordpro/formatter";
 import { z } from "zod";
@@ -31,7 +32,7 @@ function extractKeyDirective(content: string): string | null {
   return m?.[1]?.trim() ?? null;
 }
 
-function serializeSong(song: {
+export function serializeSong(song: {
   id: string;
   title: string;
   artist: string;

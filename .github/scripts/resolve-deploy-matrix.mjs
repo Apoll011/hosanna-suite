@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Resolve which Cloudflare apps to deploy for the current branch/stage.
  *

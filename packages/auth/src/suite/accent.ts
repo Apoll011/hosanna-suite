@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Per-app accent tokens derived from {@link SUITE_APP_REGISTRY}.
  * Host apps set CSS variables once; `@hosanna/ui` already reads `--m3-primary*`.

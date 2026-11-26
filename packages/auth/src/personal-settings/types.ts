@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * User-level preferences stored in Better Auth `user.metadata` (JSON string)
  * and mirrored in localStorage under {@link PERSONAL_SETTINGS_KEY}.

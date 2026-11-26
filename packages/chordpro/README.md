@@ -244,4 +244,6 @@ Comment styles example: `{c: Softly|warning}`. Layout directives such as `define
 
 ## License
 
-Licensed under the [Apache License 2.0](LICENSE.md).
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](LICENSE.md)
+
+Licensed under AGPL-3.0-only. If a modified copy is used over a network, users must be offered its corresponding source code. See [LICENSE.md](LICENSE.md) and the [suite contribution guide](../../CONTRIBUTING.md).

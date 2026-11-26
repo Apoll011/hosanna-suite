@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Configurable HTTP replication manager.
  * Collections / storage keys / HTTP client are injected by the host app.
@@ -15,6 +15,7 @@ import {
   markPopulationEpoch,
 } from "./checkpoints";
 import { countConfiguredDocs, runSyncCycle, type DbWithCollections } from "./cycle";
+import { isTransientNetworkError } from "./network";
 import { clearServerCacheModule, hydrateServerCache, rememberPushBaseline } from "./serverCache";
 import { makeStatusSubject } from "./status";
 import type {
@@ -190,7 +191,11 @@ export function createReplicationManager<TDb>(
           try {
             await runSyncOnce(force);
           } catch (err) {
-            console.error(`${logPrefix} Sync error:`, err);
+            if (isTransientNetworkError(err)) {
+              console.warn(`${logPrefix} Sync paused while the network was unavailable.`);
+            } else {
+              console.error(`${logPrefix} Sync error:`, err);
+            }
             updateStatus(navigator.onLine ? "error" : "offline");
           }
         }

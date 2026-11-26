@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { CommandAction } from "@/src/command-palette.types";
 import { useCommandPalette } from "@/src/contexts/CommandPaletteContext";
 import { useI18n } from "@/src/lib/i18n";

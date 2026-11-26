@@ -4,7 +4,7 @@
 
 **Production:** [hosanna.live](https://hosanna.live) — Cloudflare Worker `saas`, deployed from `main`/`master` via `.github/workflows/deploy.yml` (config: `.github/deploy-apps.json`, GitHub Environment `Production`).
 
-Marketing site for **Hosanna** — a ChordPro **songbook** and **worship planning** platform for churches (open source: Apache 2.0).
+Marketing site for **Hosanna** — a ChordPro **songbook** and **worship planning** platform for churches (open source: AGPL-3.0-only).
 
 Musicians get a mobile songbook with transpose, capo, chord diagrams, metronome, auto-scroll, PDF export, AI chart import, and offline sync. Leaders get **Hosanna Studio** to manage the library, plan services, and run the team.
 
@@ -50,6 +50,7 @@ When comparing songbook apps, Hosanna is the option that combines **stage tools*
 | `/about`             | Founders / story                                          |
 | `/contact`           | Contact form                                              |
 | `/privacy`, `/terms` | Legal (localized markdown)                                |
+| `/subprocessors`     | Hosanna Cloud providers and configured processing regions |
 
 Copy lives in `src/lib/i18n/locales/{pt,en,es}.ts`. SEO shells: `index.html`, `src/lib/seo.ts`.
 
@@ -75,3 +76,9 @@ Requires Node.js + npm. Configure `VITE_DASHBOARD_URL` (and related vars) via `.
 | [Hosanna](https://github.com/Apoll011/Hosanna)               | Flutter musician app |
 | [hosanna-studio](https://github.com/Apoll011/hosanna-studio) | Studio dashboard     |
 | [Hosanna-server](https://github.com/Apoll011/Hosanna-server) | API                  |
+
+## License
+
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](../../LICENSE.md)
+
+Licensed under AGPL-3.0-only. If a modified copy is used over a network, users must be offered its corresponding source code. See the [license](../../LICENSE.md) and [contribution guide](../../CONTRIBUTING.md).

@@ -1,13 +1,14 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * A Domain Pack is how MCP (and Logos) learn about a product surface.
  * Register tools/resources/permissions once — discovery and server wiring follow.
  */
 
 import type { AuthInfo, McpServer } from "@modelcontextprotocol/server";
-import type { DomainId, PermissionString } from "@hosanna/auth";
+import type { DomainId, PermissionString, SuiteAppId } from "@hosanna/auth";
+import type { LogosToolFactory } from "@hosanna/logos-ai/tools";
 
 export type McpToolGate = {
   name: string;
@@ -21,6 +22,7 @@ export type DomainPack = {
   /** Same id as `@hosanna/auth` DomainId when applicable. */
   id: DomainId | (string & {});
   title: string;
+  app?: SuiteAppId;
   /** Logos resource kind when proposals apply (`song`, `service`). */
   logosKind?: "song" | "service";
   /** Permissions this domain cares about (for hosanna_permissions). */
@@ -31,6 +33,8 @@ export type DomainPack = {
   resources?: readonly string[];
   prompts?: readonly string[];
   skills?: readonly string[];
+  /** Shared Logos/MCP tool definitions. The factory is mounted once for both surfaces. */
+  toolFactory?: LogosToolFactory;
   /** Register MCP tools/resources for this pack. */
   register?: (server: McpServer, authInfo?: AuthInfo) => void;
 };

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Sync permission checks against the static role statements.
  * Used by the tour block composer (no network round-trip).

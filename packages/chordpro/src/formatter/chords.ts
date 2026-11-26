@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Unicode music symbols that map to their ASCII equivalents. */
 const UNICODE_ACCIDENTALS: [string, string][] = [
   ["\u266F", "#"], // ♯ → #

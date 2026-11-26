@@ -80,3 +80,9 @@ Root `@hosanna/logos-ai` still re-exports the public API (`AiChatDock`, `useAiCh
 - **Events**: `dispatchAiNavigate`, `dispatchAiPrint`, `dispatchLibraryChanged`, `dispatchAiSettingsChanged`
 
 Host apps own translations (`ai.chat.*` keys), the HTTP client, and song load/save hooks.
+
+## License
+
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](../../LICENSE.md)
+
+Licensed under AGPL-3.0-only. If a modified copy is used over a network, users must be offered its corresponding source code. See the [license](../../LICENSE.md) and [contribution guide](../../CONTRIBUTING.md).

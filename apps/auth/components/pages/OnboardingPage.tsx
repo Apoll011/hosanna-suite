@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
 import { authClient } from "@/lib/auth/client";
+import { CURRENT_TERMS_VERSION } from "@hosanna/auth";
 import { useI18n } from "@/lib/ui/i18n";
 import { navigateAfterOrgReady } from "@/lib/auth/redirect";
 import { onboardingNavLinks } from "@/lib/auth/onboarding-nav";
@@ -53,6 +55,7 @@ export function OnboardingPage() {
   const [mode, setMode] = useState<"choose" | "create" | "trial">("choose");
   const [orgName, setOrgName] = useState("");
   const [orgSlug, setOrgSlug] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [slugStatus, setSlugStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
   const [isLoading, setIsLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
@@ -302,7 +305,20 @@ export function OnboardingPage() {
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
+    if (!acceptedTerms) {
+      setErrorMsg(t("auth.register.termsRequired"));
+      return;
+    }
     setIsLoading(true);
+
+    const { error: termsError } = await authClient.updateUser({
+      termsAcceptedVersion: CURRENT_TERMS_VERSION,
+    });
+    if (termsError) {
+      setIsLoading(false);
+      setErrorMsg(termsError.message || "Could not record Terms of Service acceptance.");
+      return;
+    }
 
     const slug = orgSlug.trim();
     const { data, error } = await authClient.organization.create({
@@ -742,6 +758,28 @@ export function OnboardingPage() {
               ) : undefined
             }
           />
+          <div className="flex items-start gap-2.5">
+            <input
+              id="onboarding-terms"
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(event) => setAcceptedTerms(event.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded-sm border-m3-border text-m3-primary focus:ring-m3-primary cursor-pointer"
+            />
+            <label
+              htmlFor="onboarding-terms"
+              className="text-xs leading-snug text-m3-secondary cursor-pointer select-none"
+            >
+              {t("auth.register.termsPrefix")}{" "}
+              <Link href="https://hosanna.live/terms" className="text-m3-primary hover:underline">
+                {t("auth.register.termsLink")}
+              </Link>{" "}
+              {t("auth.register.termsAnd")}{" "}
+              <Link href="https://hosanna.live/privacy" className="text-m3-primary hover:underline">
+                {t("auth.register.privacyLink")}
+              </Link>
+            </label>
+          </div>
           <div className="flex items-center justify-between gap-3 pt-3">
             <button
               type="button"
@@ -755,7 +793,11 @@ export function OnboardingPage() {
               type="submit"
               size="md"
               disabled={
-                isLoading || !orgName.trim() || !orgSlug.trim() || slugStatus !== "available"
+                isLoading ||
+                !orgName.trim() ||
+                !orgSlug.trim() ||
+                slugStatus !== "available" ||
+                !acceptedTerms
               }
               isLoading={isLoading}
               className="rounded-full"

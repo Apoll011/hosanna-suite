@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { AccountProviders } from "@/components/account/AccountProviders";
 import type { ReactNode } from "react";
 

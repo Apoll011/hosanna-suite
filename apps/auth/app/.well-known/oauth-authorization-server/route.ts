@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { NextResponse } from "next/server";
 
 /** RFC 8414: alias bare AS metadata to the Better Auth issuer path. */

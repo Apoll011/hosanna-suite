@@ -1,4 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import createClient, { type Client, type Middleware } from "openapi-fetch";
+import { isTransientNetworkError } from "@hosanna/replication/replication";
 import type { paths } from "@hosanna/types";
 import { captureException } from "../lib/posthog";
 
@@ -111,6 +113,7 @@ export class ApiClient {
         }
       },
       onError: ({ error, request, schemaPath }) => {
+        if (isTransientNetworkError(error)) return;
         captureException(error, {
           method: request.method,
           path: schemaPath,
@@ -181,14 +184,7 @@ export class ApiClient {
       response = await fetch(url, config);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to connect to server";
-      const error = new ApiError(`Network Error: ${message}`, 0);
-      captureException(err, {
-        status: 0,
-        code: "network_error",
-        method: options.method ?? "GET",
-        path: endpoint,
-      });
-      throw error;
+      throw new ApiError(`Network Error: ${message}`, 0);
     }
 
     if (response.status === 401) {

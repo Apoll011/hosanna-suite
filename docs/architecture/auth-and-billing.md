@@ -58,6 +58,19 @@ Permission statements cover: song, service, folder, collection, agenda, settings
 
 Middleware: `requirePermission` / `requireAll` / `requireAny` / `requireRole`.
 
+### Team management
+
+The Auth account page at `/account/organization/teams` manages the Better Auth
+team records for the active organization. Its `/api/organization/teams` routes
+scope reads and writes by the authenticated session's `activeOrganizationId`
+and verify each added person is already an organization member.
+
+The `team` resource uses the shared role statements. Owners and admins retain
+the organization plugin's full team permissions. `teamLeader` can create a
+team, then update membership and its name only while they belong to that team;
+team deletion remains an owner/admin action. The Auth page caches each org's
+team list locally and refreshes it from the server on entry and after writes.
+
 ## Billing (Stripe)
 
 Via `@better-auth/stripe`:
@@ -84,6 +97,8 @@ Studio client uses `authClient.subscription.*` (list, upgrade, portal); display 
 Auth also hosts the post-login **home** (`/home`), session-gated **suite app catalog** (`GET /api/suite/apps`), and the shared store for **theme / language** plus per-app preference scopes under `user.metadata`.
 
 See [suite-hub-and-preferences.md](./suite-hub-and-preferences.md) for App Switcher, AccountMenu, caching, and how to `registerAppSettingsScope` for a new suite app.
+
+Account and organization deletion state, intended full-erasure workflow, and store coverage are documented in [data-erasure.md](./data-erasure.md). The official Hosanna Cloud provider list and configured regions are in [subprocessors-draft.md](../legal/subprocessors-draft.md).
 
 Expected `hosanna-cloud` Global Config JSON:
 

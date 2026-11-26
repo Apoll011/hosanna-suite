@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 export type { DomainPack, McpToolGate } from "./types.js";
@@ -18,6 +18,7 @@ export {
 } from "./registry.js";
 export { DOMAIN_PACKS, ensureDomainPacksRegistered } from "./packs.js";
 export { wireHosannaDomainPacks } from "./wire.js";
+export { createSharedEmbeddedTools, mountSharedDomainTools } from "./toolFactory.js";
 export {
   summarizeDomainsForUser,
   toolAvailabilityForUser,

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export { ac, statement, toPermissionRequest } from "./authorization/permission.js";
 export type {
   ActionFor,
@@ -8,6 +9,8 @@ export type {
 
 export { admin, editor, guest, musician, owner, roles, teamLeader } from "./authorization/roles.js";
 export type { AppRole } from "./authorization/roles.js";
+export { canManageTeam } from "./authorization/teamPolicy.js";
+export type { TeamAction } from "./authorization/teamPolicy.js";
 
 export {
   DOMAINS,
@@ -51,6 +54,7 @@ export type { SuiteAppBrandTokens } from "./suite/accent.js";
 
 export { pluginLocaleOverrides } from "./i18n/plugin-locale-overrides.js";
 export { RESPONSIBILITIES } from "./authorization/responsibilities.js";
+export { CURRENT_DPA_VERSION, CURRENT_TERMS_VERSION } from "./legal/terms.js";
 
 export {
   CROSS_APP_KEYS,

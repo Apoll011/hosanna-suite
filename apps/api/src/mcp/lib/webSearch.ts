@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * General web search for song metadata / reference links.
  * Prefers provider-native Search (DeepSeek) when org BYOK supports it;

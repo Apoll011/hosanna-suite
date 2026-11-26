@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { withAuthCors } from "@hosanna/auth/server";
 import { pricingResponse } from "@/lib/billing/pricing";
 

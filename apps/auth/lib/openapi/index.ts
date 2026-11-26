@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { getAuthComponentSchemas } from "./schemas";
 
 const sessionAuth = [{ cookieAuth: [] }, { bearerAuth: [] }];
@@ -92,7 +93,7 @@ export function getAuthPaths(): Record<string, any> {
         operationId: "exportBackup",
         security: sessionAuth,
         description:
-          "Export entire organization library (songs, folders, services) as a standalone JSON backup archive.",
+          "Export organization content, settings, members, invitations, and non-private service notes as JSON. Available in read-only billing mode.",
         responses: {
           200: {
             description: "OK",
@@ -204,6 +205,178 @@ export function getAuthPaths(): Record<string, any> {
         },
       },
     },
+    "/erasure/otp": {
+      post: {
+        tags: ["Erasure"],
+        summary: "Send deletion verification OTP",
+        operationId: "sendErasureOtp",
+        security: sessionAuth,
+        description:
+          "Send a dedicated 6-digit email OTP to re-authenticate before account or organization deletion.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["kind"],
+                properties: {
+                  kind: { type: "string", enum: ["account", "organization"] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "OTP sent",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: { sent: { type: "boolean" } },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/erasure/account": {
+      get: {
+        tags: ["Erasure"],
+        summary: "Check account deletion eligibility",
+        operationId: "checkAccountErasure",
+        security: sessionAuth,
+        description: "Returns any organizations where the authenticated user is the sole owner.",
+        responses: {
+          200: {
+            description: "OK",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    soleOwnerOrgs: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          name: { type: "string" },
+                          slug: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      post: {
+        tags: ["Erasure"],
+        summary: "Delete authenticated user account (GDPR Art. 17)",
+        operationId: "eraseAccount",
+        security: sessionAuth,
+        description:
+          "Permanently deletes the user account after OTP re-authentication. Blocked if the user is the sole owner of any organization.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["otp"],
+                properties: {
+                  otp: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Account deleted",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: { deleted: { type: "boolean" } },
+                },
+              },
+            },
+          },
+          409: {
+            description: "Blocked because user is sole owner of one or more organizations",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    blocked: { type: "boolean" },
+                    reason: { type: "string" },
+                    orgs: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          id: { type: "string" },
+                          name: { type: "string" },
+                          slug: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/erasure/organization": {
+      post: {
+        tags: ["Erasure"],
+        summary: "Delete active organization (GDPR Art. 17)",
+        operationId: "eraseOrganization",
+        security: sessionAuth,
+        description:
+          "Permanently deletes the active organization, cancels its Stripe subscription immediately, removes its logo, and retains detached DPA records.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["otp", "exportConfirmed"],
+                properties: {
+                  otp: { type: "string" },
+                  exportConfirmed: { type: "boolean" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Organization deleted",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    deleted: { type: "boolean" },
+                    stripeNote: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   };
 }
 
@@ -221,7 +394,13 @@ export function buildAuthOpenApiDoc() {
       { url: "https://auth.hosanna.live/api", description: "Auth host" },
       { url: "http://localhost:5174/api", description: "Local auth dev" },
     ],
-    tags: [{ name: "Notifications" }, { name: "Billing" }, { name: "Backup" }, { name: "Cron" }],
+    tags: [
+      { name: "Notifications" },
+      { name: "Billing" },
+      { name: "Backup" },
+      { name: "Cron" },
+      { name: "Erasure" },
+    ],
     paths: getAuthPaths(),
     components: {
       securitySchemes: {

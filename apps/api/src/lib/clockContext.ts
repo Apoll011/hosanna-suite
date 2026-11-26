@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Compact clock context for AI system prompts (Studio + MCP).
  * Avoids the model guessing "today" / "next Sunday".

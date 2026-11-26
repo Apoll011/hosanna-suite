@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Single source of route SEO for prerender (sitemap + static HTML shells).
  * Keep in sync with src/lib/seo.ts (client-side navigation meta).
@@ -56,6 +57,14 @@ export const ROUTES = [
     title: "Terms of Service | Hosanna",
     description: "Terms of Service for the Hosanna platform and music songbook applications.",
     url: `${SITE_URL}/terms`,
+    changefreq: "yearly",
+    priority: "0.3",
+  },
+  {
+    path: "/subprocessors",
+    title: "Subprocessors | Hosanna",
+    description: "Service providers and configured processing regions for Hosanna Cloud.",
+    url: `${SITE_URL}/subprocessors`,
     changefreq: "yearly",
     priority: "0.3",
   },

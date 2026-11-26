@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import fs from "node:fs";
 import { stringify } from "yaml";
 import { buildApiOpenApiDoc } from "../apps/api/src/openapi/index.js";
@@ -18,7 +19,7 @@ const doc = {
       "Identity-adjacent routes moved to auth.hosanna.live: `/api/notifications*`, `/api/billing/*`,\n" +
       "`/api/backup*`, `/api/cron/agenda-reminders`. This API keeps domain music routes and\n" +
       "`/api/cron/purge-trash`.",
-    license: { name: "Apache-2.0" },
+    license: { name: "AGPL-3.0-only" },
   },
   servers: [
     { url: "https://api.hosanna.live/api", description: "Production API (domain data)" },

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Machine-readable ChordPro capability manifest for Hosanna.
  *

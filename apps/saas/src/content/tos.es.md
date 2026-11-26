@@ -54,6 +54,8 @@ Los clientes y usuarios conservan todos los derechos de propiedad sobre el conte
 **7.2. Responsabilidad de Licenciamiento**  
 Las organizaciones son las únicas responsables de garantizar que disponen de los derechos, autorizaciones o licencias requeridas (por ejemplo, mediante CCLI) para todo el material musical que gestionan en la plataforma. Hosanna no audita automáticamente el licenciamiento de cada canción.
 
+Al importar contenido de CifraClub, Ultimate Guitar u otra fuente, eres responsable de tener derecho a importarlo y utilizarlo, incluidas las licencias CCLI u otras que sean necesarias. Hosanna no proporciona ni licencia música.
+
 **7.3. Integración de Audio y YouTube**  
 Hosanna no aloja archivos de audio ni grabaciones. Los enlaces de canciones a YouTube únicamente referencian contenido externo y quedan sujetos a los términos de dichas plataformas de terceros.
 
@@ -77,10 +79,10 @@ Si el cobro falla, la pasarela reintentará el pago. Tras el periodo de regulari
 ## 9. Código Abierto y Self-Hosting
 
 **9.1. Licencia Open Source**  
-El código fuente de Hosanna (servidor, Studio, App Móvil y paquetes) se distribuye bajo la licencia Apache 2.0.
+El código fuente de Hosanna se distribuye bajo la GNU Affero General Public License, versión 3 únicamente (AGPL-3.0-only). Consulta el texto de la licencia y el repositorio del código fuente para conocer las condiciones de copia, modificación y distribución.
 
 **9.2. Distinción del Servicio en la Nube (Hosanna Cloud)**  
-El uso de nuestra plataforma alojada ("Hosanna Cloud") se rige por estos Términos de Servicio independientes de la licencia del código.
+El uso de nuestra plataforma alojada ("Hosanna Cloud") se rige por estos Términos de Servicio, independientemente de la licencia del código fuente.
 
 **9.3. Autoalojamiento (Self-Hosting)**  
 Quienes decidan alojar Hosanna en sus propios servidores lo hacen bajo su exclusiva responsabilidad, sin que Hosanna asuma obligaciones sobre dicha infraestructura o su cumplimiento legal.

@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { I18nKeys } from "./pt-PT";
 
 /**
- * en-US — English locale.
+ * en-US: English locale.
  */
 const en = {
   // ── errors / middleware ─────────────────────────────────────────────────
@@ -68,7 +69,7 @@ const en = {
     folder_deleted_title: "Folder deleted with all its contents",
     folder_deleted_description:
       "{{songs}} song(s) and {{folders}} subfolder(s) were permanently removed.",
-    backup_restored_title: "Backup restored — all data replaced",
+    backup_restored_title: "Backup restored: all data replaced",
     backup_restored_description:
       "A full restore imported {{folders}} folder(s), {{songs}} song(s), and {{services}} service(s).",
     trial_started_title: "Free trial started",
@@ -247,6 +248,33 @@ const en = {
       body1: "The {{church_name}} subscription has been canceled.",
       body2:
         "Access will remain available until the end of the billing period. If you change your mind, you can reactivate your subscription at any time.",
+    },
+    deletion_otp: {
+      subject: "Account deletion confirmation code — Hosanna",
+      heading: "Confirm your account deletion",
+      body1:
+        "We received a request to permanently delete your Hosanna account. Use the code below to confirm.",
+      body2:
+        "If you did not request account deletion, ignore this email and your account will remain active.",
+      expiry: "This code expires in {{expiry_time}} minutes.",
+    },
+    org_deletion_otp: {
+      subject: "Organisation deletion confirmation code — Hosanna",
+      heading: "Confirm deletion of {{church_name}}",
+      body1:
+        "We received a request to permanently delete the organisation {{church_name}} from Hosanna. Use the code below to confirm.",
+      body2:
+        "This action is irreversible. All organisation data will be removed from active systems.",
+      expiry: "This code expires in {{expiry_time}} minutes.",
+    },
+    org_deleted: {
+      subject: "Organisation {{church_name}} has been deleted — Hosanna",
+      heading: "Organisation deleted",
+      salutation: "Hi{{#if first_name}} {{first_name}}{{/if}},",
+      body1:
+        "We confirm that the organisation {{church_name}} has been permanently deleted. All associated data has been removed from our active systems.",
+      body2:
+        "Encrypted provider backups may retain copies for up to 30 days before they are overwritten.",
     },
   },
 } as const satisfies I18nKeys;

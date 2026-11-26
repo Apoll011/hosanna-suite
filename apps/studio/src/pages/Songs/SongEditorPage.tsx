@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { ChordProPreviewSettings } from "@/src/components/ChordProSettings";
@@ -55,7 +55,7 @@ type LayoutMode = "editor" | "split" | "preview";
 export const SongEditorPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { navigate } = useAppNavigate();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const { organization } = useAuth();
   const slugPrefix = organization?.slug ? `/${organization.slug}` : "";
 
@@ -189,14 +189,17 @@ export const SongEditorPage: React.FC = () => {
       songId: song.id,
       title: song.title,
       artist: song.artist,
-      content,
+      content: deferredContent,
       updatedAt: song.updatedAt,
       folderId: song.folderId ?? null,
     });
+  }, [song, deferredContent]);
+
+  useEffect(() => {
     return () => {
       aiContextBridge.setSong(null);
     };
-  }, [song, content]);
+  }, []);
 
   const acceptAiProposal = useCallback(
     (next: string) => {
@@ -227,6 +230,11 @@ export const SongEditorPage: React.FC = () => {
         : null,
     [aiProposal, diffLabels, acceptAiProposal, declineAiProposal, t],
   );
+
+  const handleEditorChange = useCallback((value: string) => {
+    setContent(value);
+    setHasUnsavedChanges(true);
+  }, []);
 
   const handleSave = useCallback(
     async (updatedContent: string) => {
@@ -443,15 +451,13 @@ export const SongEditorPage: React.FC = () => {
           <div className="flex-1 overflow-hidden relative">
             <Editor
               value={content}
-              onChange={(val) => {
-                setContent(val);
-                setHasUnsavedChanges(true);
-              }}
+              onChange={handleEditorChange}
               settings={editorSettings}
               readOnly={!canUpdateSong}
               onSave={handleSave}
               proposal={editorProposal}
               mode="chordpro"
+              language={language}
               fallback={
                 <div className="h-full w-full flex items-center justify-center">
                   <Spinner size="md" label={t("songEditor.loadingEditor")} />

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Simple line-oriented change summary for MCP proposals. */
 export function summarizeDiff(
   before: string,

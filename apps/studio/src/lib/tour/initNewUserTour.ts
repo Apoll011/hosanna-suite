@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Marks a freshly created account as eligible for the auto-start product tour.
  * Call after successful sign-up while a session exists.

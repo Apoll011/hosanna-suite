@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Local cache for account-center data so revisits paint instantly while network refreshes.
  */

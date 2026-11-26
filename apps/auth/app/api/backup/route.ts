@@ -1,40 +1,33 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { BackupService } from "@/lib/backup/service";
-import { hasActiveSubscription } from "@/lib/billing/entitlement";
 import { forOrganization } from "@/lib/db/orgScope";
+import { requireExportRateLimit } from "@/lib/privacy/exportRateLimit";
 import {
   AuthHttpError,
   assertPermission,
   jsonError,
   requireAuthSession,
 } from "@/lib/notifications/session";
-import { t } from "@/locales/server";
 
-async function requireEntitledOrg() {
-  const ctx = await requireAuthSession();
-  if (!ctx.organizationId) {
-    throw new AuthHttpError(403, "An active organization is required.");
-  }
-  if (!(await hasActiveSubscription(ctx.organizationId))) {
-    throw new AuthHttpError(
-      402,
-      t(ctx.locale, "error.subscription_required"),
-      "SUBSCRIPTION_REQUIRED",
-    );
-  }
-  return ctx;
-}
-
-/** GET /api/backup — export tenant library JSON. */
 export async function GET() {
   try {
-    const ctx = await requireEntitledOrg(); //TODO: DO i want an active subscription? Also duplicated code related to requirend orgENtitled
+    const ctx = await requireAuthSession();
+    if (!ctx.organizationId) {
+      throw new AuthHttpError(403, "An active organization is required.");
+    }
     assertPermission(ctx, "backup.export");
+    await requireExportRateLimit(ctx.userId, "organization");
     const service = new BackupService(
-      forOrganization(ctx.organizationId!),
-      ctx.organizationId!,
+      forOrganization(ctx.organizationId),
+      ctx.organizationId,
       ctx.locale,
     );
-    return Response.json(await service.export());
+    return Response.json(await service.export(), {
+      headers: {
+        "Cache-Control": "private, no-store",
+        "Content-Disposition": 'attachment; filename="hosanna-organization-export.json"',
+      },
+    });
   } catch (err) {
     return jsonError(err);
   }

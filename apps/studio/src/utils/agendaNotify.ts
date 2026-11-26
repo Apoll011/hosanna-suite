@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Pure helpers around the notification metadata stored inside the extensible
  * responsibility JSON of an agenda event:

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 const STYLE_ELEMENT_ID = "hosanna-chordpro-diff-styles";
 
 /**

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { prisma } from "../database/prisma.js";
 import { decryptSecret, encryptSecret, isAiCryptoConfigured } from "../lib/aiCrypto.js";
 import { NATIVE_WEB_CAPABILITIES } from "../mcp/lib/nativeWebCapabilities.js";

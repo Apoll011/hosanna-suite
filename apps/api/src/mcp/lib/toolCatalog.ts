@@ -1,10 +1,5 @@
-/**
- * Authoritative tool catalogs.
- * Core tools are registered on the MCP server (ChatGPT / Claude / etc.).
- * Studio-only tools exist only in the Hosanna Studio embedded assistant.
- */
+// SPDX-License-Identifier: AGPL-3.0-only
 
-/** UI / session tools — never registered on the external MCP server. */
 export const STUDIO_ONLY_TOOLS = [
   "studio_sync",
   "studio_navigate",
@@ -99,7 +94,7 @@ export const MCP_TOOL_GROUPS = {
 export const ALL_MCP_TOOL_NAMES: string[] = Object.values(MCP_TOOL_GROUPS).flatMap((g) => [...g]);
 
 export const TOOL_SURFACE = {
-  core: "Registered on the Hosanna MCP server — available to external AI clients (ChatGPT, Claude, …).",
+  core: "Registered on the Hosanna MCP server: available to external AI clients (ChatGPT, Claude, etc.).",
   studioOnly:
-    "Available only inside Hosanna embedded chat (Studio, Auth, …) — UI navigation, open_app, PDF, search, and live sync. Not exposed via MCP.",
+    "Available only inside Hosanna embedded chat (Studio, Auth, etc.): UI navigation, open_app, PDF, search, and live sync. Not exposed via MCP.",
 } as const;

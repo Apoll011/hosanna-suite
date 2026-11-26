@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { ArrowRightLeft, Music } from "lucide-react";
 import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import type { IAceEditorProps } from "react-ace";
@@ -5,7 +6,7 @@ import type { ChordProDiffEditorProps } from "../diff/DiffEditor";
 import { ChordProDiffEditor } from "../diff/DiffEditor";
 import { registerFormatShortcut } from "../formatter/integrations/ace";
 import type { FormatResult } from "../formatter/types";
-import { ChordFinder } from "./ChordFinder";
+import { createChordCompleter } from "./chordCompletions";
 import { createDirectiveCompleter, createFilteredTextCompleter } from "./directiveCompletions";
 import type { ChordProDiagnostic, LintController } from "./lint";
 import { attachChordProLinter, injectChordProLintStyles } from "./lint";
@@ -60,23 +61,7 @@ export function preloadEditor(): Promise<React.ComponentType<IAceEditorProps>> {
                 typeof window !== "undefined" &&
                 !(window as any)._chordproCompleterRegistered
               ) {
-                const chordCompleter = {
-                  getCompletions: (
-                    editor: any,
-                    _session: any,
-                    _pos: any,
-                    _prefix: string,
-                    callback: any,
-                  ) => {
-                    if (!editor || typeof editor.getValue !== "function") {
-                      callback(null, []);
-                      return;
-                    }
-                    const text = editor.getValue();
-                    const chords = ChordFinder.getChords(text);
-                    callback(null, chords);
-                  },
-                };
+                const chordCompleter = createChordCompleter();
 
                 // Drop directive names from Ace "local" word completion so they
                 // only appear via snippets / the dedicated directive completer.
@@ -255,11 +240,13 @@ interface TransposeModalProps {
 }
 
 function TransposeModal({ visible, currentText, onConfirm, onClose }: TransposeModalProps) {
-  const currentKey = getKeyFromText(currentText) ?? getOriginalKeyFromText(currentText) ?? "C";
-  const [targetNote, setTargetNote] = useState(currentKey);
+  const currentKey = visible
+    ? (getKeyFromText(currentText) ?? getOriginalKeyFromText(currentText) ?? "C")
+    : null;
+  const [targetNote, setTargetNote] = useState(currentKey ?? "C");
 
   useEffect(() => {
-    if (visible) setTargetNote(currentKey);
+    if (visible && currentKey) setTargetNote(currentKey);
   }, [visible, currentKey]);
 
   useEffect(() => {
@@ -270,7 +257,7 @@ function TransposeModal({ visible, currentText, onConfirm, onClose }: TransposeM
     return () => document.removeEventListener("keydown", handleEsc);
   }, [visible, onClose]);
 
-  if (!visible) return null;
+  if (!visible || !currentKey) return null;
 
   const semitones = getSemitones(currentKey, targetNote);
   const previewText = transposeText(currentText, semitones);
@@ -497,6 +484,7 @@ export interface EditorProps {
   settings?: EditorSettings;
   mode?: string;
   readOnly?: boolean;
+  language?: string;
   fallback?: React.ReactNode;
   /** When set, replaces the text editor with an inline diff review. */
   proposal?: EditorProposal | null;
@@ -531,6 +519,7 @@ function TextEditor({
   settings,
   mode = "chordpro",
   readOnly = false,
+  language,
   fallback = null,
 }: EditorProps) {
   const activeSettings = {
@@ -567,12 +556,12 @@ function TextEditor({
     };
   }, []);
 
-  // Run linter whenever the text value changes
+  // Run linter whenever the text value or language changes
   useEffect(() => {
     if (linterRef.current) {
-      linterRef.current.lint(value);
+      linterRef.current.lint(value, language ? { language } : undefined);
     }
-  }, [value]);
+  }, [value, language]);
 
   const handleTransposeConfirm = useCallback(
     (newText: string, targetNote: string) => {
@@ -613,7 +602,13 @@ function TextEditor({
 
       const aceInstance = (window as any).ace;
       if (aceInstance && mode === "chordpro") {
-        linterRef.current = attachChordProLinter(aceInstance, editor, onDiagnostics);
+        linterRef.current = attachChordProLinter(
+          aceInstance,
+          editor,
+          onDiagnostics,
+          250,
+          language ? { language } : undefined,
+        );
         linterRef.current.lint(editor.getValue());
       }
 

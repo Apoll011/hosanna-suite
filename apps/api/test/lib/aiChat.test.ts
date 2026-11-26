@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { APICallError } from "ai";
@@ -7,10 +8,10 @@ import {
   filterUnsupportedFileParts,
   localePromptBlock,
   modelFileDataToBase64,
-  runBatch,
 } from "../../src/services/aiChat.service.js";
 import { AppError } from "../../src/utils/errors.js";
 import { AI_CHAT_MAX_MESSAGES, aiChatBodySchema } from "../../src/validators/ai.validators.js";
+import { runBatch } from "../../src/mcp/lib/runBatch.js";
 
 const msg = (n: number) =>
   Array.from({ length: n }, (_, i) => ({

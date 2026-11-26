@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Readable } from "node:stream";
 import { createHash } from "node:crypto";
 import { StorageError, StorageNotFoundError } from "../types.js";

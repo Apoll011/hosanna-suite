@@ -1,15 +1,15 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { DayAgendaList } from "@/src/components/agenda/DayAgendaList";
 import { DeleteEventModal } from "@/src/components/agenda/DeleteEventModal";
 import { DetailsSidebar } from "@/src/components/agenda/DetailsSidebar";
+import { EventFormModal } from "@hosanna/calendar";
 import {
   AddResponsibilityModal,
   EditAssigneesModal,
-  EventFormModal,
   EventFormValue,
 } from "@/src/components/agenda/EventModals";
 import { MiniCalendar, toIso } from "@/src/components/agenda/MiniCalendar";
@@ -18,6 +18,7 @@ import { ResponsibilitiesPanel } from "@/src/components/agenda/ResponsibilitiesP
 import { Button, PageHeader, Spinner, useCan, Can } from "@hosanna/ui";
 import { useAuth } from "@/src/contexts/AuthContext";
 import { useAgendaNotifications } from "@/src/hooks/useAgendaNotifications";
+import { useServices } from "@/src/hooks/useServices";
 import { useI18n } from "@/src/lib/i18n";
 
 import type { AgendaEvent, Assignee, ResponsibilityCategory } from "@/src/types";
@@ -44,6 +45,7 @@ export const AgendaPage: React.FC = () => {
   const { t } = useI18n();
   const { organization } = useAuth();
   const store = useAgenda();
+  const { servicesQuery } = useServices();
   const { printEvent, printEvents } = usePrint();
   const [searchParams, setSearchParams] = useSearchParams();
   const { granted: canCreateAgenda } = useCan("agenda.create");
@@ -379,6 +381,8 @@ export const AgendaPage: React.FC = () => {
         onSubmit={handleCreateEvent}
         title={t("agenda.newEvent")}
         submitLabel={t("agenda.createEvent")}
+        services={servicesQuery.data ?? []}
+        servicesLoading={servicesQuery.isLoading}
         initial={{ date: selectedDate }}
       />
 
@@ -411,6 +415,8 @@ export const AgendaPage: React.FC = () => {
           }
           title={t("agenda.editEvent")}
           submitLabel={t("common.save")}
+          services={servicesQuery.data ?? []}
+          servicesLoading={servicesQuery.isLoading}
           initial={selectedEvent as EventFormValue}
         />
       )}

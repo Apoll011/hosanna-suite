@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { lintChordPro, parseChordPro, type ChordProDiagnostic } from "@hosanna/chordpro/parser";
 
 export interface ChordProValidationReport {

@@ -1,4 +1,5 @@
-/** Auth UI — Portuguese (canonical). */
+// SPDX-License-Identifier: AGPL-3.0-only
+/** Auth UI, Portuguese (canonical). */
 export const pt = {
   common: {
     goHome: "Ir para o início",
@@ -69,6 +70,11 @@ export const pt = {
       successTitle: "Verifique o seu e-mail",
       successDesc: "Enviámos um link de verificação para ativar a conta.",
       showPassword: "Mostrar palavra-passe",
+      termsRequired: "Aceite os Termos de Serviço e a Política de Privacidade para continuar.",
+      termsPrefix: "Ao criar uma conta, aceito os",
+      termsLink: "Termos de Serviço",
+      termsAnd: "e reconheço a",
+      privacyLink: "Política de Privacidade.",
     },
     forgotPassword: {
       title: "Recuperar palavra-passe",
@@ -487,6 +493,25 @@ export const pt = {
     data: {
       noBackupAccess: "Não tem permissão para exportar ou restaurar backups.",
     },
+    dpa: {
+      title: "Acordo de Tratamento de Dados (RGPD Art. 28)",
+      desc: "Regula o tratamento de dados pessoais da igreja pelo Hosanna enquanto subcontratante.",
+      statusAccepted: "Aceite em {date} por {name}",
+      statusPending: "Pendente de aceitação",
+      pendingWarning:
+        "A sua igreja ainda não aceitou o Acordo de Tratamento de Dados (DPA). Para conformidade com o RGPD, um administrador deve rever e aceitar o acordo.",
+      reviewBtn: "Rever e aceitar DPA",
+      viewBtn: "Ver acordo completo",
+      printBtn: "Imprimir / Guardar",
+      modalTitle: "Acordo de Tratamento de Dados (DPA)",
+      churchLawfulBasis:
+        "Confirmo que tenho autorização para representar a igreja e que a organização possui base de licitude válida ao abrigo do Artigo 9.º do RGPD (dados de categoria especial reveladores de convicções religiosas).",
+      acceptBtn: "Aceitar acordo",
+      acceptSuccess: "Acordo de Tratamento de Dados aceite com sucesso.",
+      acceptError: "Não foi possível aceitar o acordo: {error}",
+      subprocessorsNote:
+        "Consulte a lista pública de subcontratantes secundários em hosanna.live/legal/subprocessors.",
+    },
     danger: {
       title: "Zona de perigo",
       desc: "Ações irreversíveis sobre a sua participação ou o espaço.",
@@ -498,6 +523,19 @@ export const pt = {
       deleteConfirmText: 'Escreva "{name}" para confirmar a eliminação.',
       deleteSuccess: "Organização eliminada.",
       deleteError: "Não foi possível eliminar: {error}",
+      exportRequiredTitle: "Exporte os dados antes de eliminar",
+      exportRequiredDesc:
+        "Descarregue primeiro uma cópia de segurança das músicas, pastas, cultos, coleções e agenda. A eliminação é permanente e irreversível.",
+      exportCompleted: "Cópia de segurança descarregada. Pode agora avançar com a eliminação.",
+      exportBtn: "Exportar e descarregar cópia",
+      otpTitle: "Verificar a sua identidade",
+      otpDesc: "Enviámos um código de 6 dígitos para {email}. Introduza-o abaixo para continuar.",
+      otpLabel: "Código de verificação",
+      otpSendError: "Não foi possível enviar o código: {error}",
+      otpInvalid: "Código de verificação inválido ou expirado.",
+      backupRetentionNotice:
+        "Os seus dados serão removidos dos sistemas ativos imediatamente. Cópias de segurança encriptadas dos fornecedores podem reter cópias até 30 dias.",
+      nextBtn: "Continuar",
     },
   },
   oauth: {
@@ -516,14 +554,14 @@ export const pt = {
     settings: {
       memberTitle: "Logos IA",
       memberDesc: "Memória da organização (só de leitura) e a sua memória pessoal.",
-      memberOrgReadonly: "As notas da organização são geridas pelos admins — aqui só as pode ver.",
+      memberOrgReadonly: "As notas da organização são geridas pelos admins, aqui só as pode ver.",
       memberNotConfiguredTitle: "A IA ainda não está configurada",
       memberNotConfiguredDesc: "Peça a um proprietário ou administrador para ligar um fornecedor.",
       setup: {
         eyebrow: "Logos IA",
         title: "Traga um assistente para o planeamento de culto",
         subtitle:
-          "Ligue um fornecedor uma vez. A equipa ganha ajuda com músicas, ChordPro e cultos — dentro do Studio.",
+          "Ligue um fornecedor uma vez. A equipa ganha ajuda com músicas, ChordPro e cultos, dentro do Studio.",
         cta: "Configurar Logos IA",
         ctaHint: "A seguir escolhe fornecedor, modelo e chave de API.",
         features: {
@@ -541,7 +579,7 @@ export const pt = {
           },
           memory: {
             title: "Memória da organização",
-            desc: "Lembrar preferências — tonalidades, estilo, idioma — em todo o espaço.",
+            desc: "Lembrar preferências, tonalidades, estilo, idioma, em todo o espaço.",
           },
         },
         providersNote:
@@ -557,6 +595,28 @@ export const pt = {
     title: "Conta",
     subtitle: "Gerir o seu perfil, segurança, notificações e sessões Hosanna.",
     signOut: "Terminar sessão",
+    danger: {
+      title: "Zona de perigo",
+      desc: "Eliminar permanentemente a sua conta pessoal Hosanna e todos os dados associados.",
+      deleteTitle: "Eliminar a sua conta",
+      deleteDesc:
+        "Remove o seu perfil, sessões, dispositivos push, preferências e memória pessoal de IA.",
+      deleteBtn: "Eliminar conta",
+      soleOwnerTitle: "Transferência de propriedade necessária",
+      soleOwnerDesc:
+        "É o único proprietário da(s) seguinte(s) organização(ões). Transfira a propriedade para outro membro ou elimine a organização antes de eliminar a sua conta:",
+      manageOrgLink: "Gerir organização",
+      otpTitle: "Confirmar eliminação da conta",
+      otpDesc:
+        "Enviámos um código de 6 dígitos para {email}. Introduza-o abaixo para eliminar permanentemente a sua conta.",
+      otpLabel: "Código de verificação",
+      sendOtpBtn: "Enviar código de verificação",
+      confirmBtn: "Eliminar conta permanentemente",
+      backupRetentionNotice:
+        "Os seus dados serão removidos dos sistemas ativos imediatamente. Cópias de segurança encriptadas dos fornecedores podem reter cópias até 30 dias.",
+      deleteSuccess: "Conta eliminada.",
+      deleteError: "Não foi possível eliminar a conta: {error}",
+    },
     menu: {
       open: "Menu da conta",
       theme: "Tema",
@@ -571,7 +631,7 @@ export const pt = {
     },
     notifications: {
       title: "Preferências de notificação",
-      description: "Escolha como a Hosanna o contacta — caixa de entrada, push e email.",
+      description: "Escolha como a Hosanna o contacta, caixa de entrada, push e email.",
       loading: "A carregar preferências…",
       saved: "Preferências de notificação guardadas.",
       saveError: "Não foi possível guardar: {error}",
@@ -615,6 +675,7 @@ export const pt = {
       overview: "Resumo",
       profile: "Perfil",
       members: "Membros",
+      teams: "Equipas",
       billing: "Faturação",
       notifications: "Notificações",
       ai: "IA",
@@ -678,5 +739,58 @@ export const pt = {
       title: "Dados",
       description: "Cópia de segurança, restauro e zona de perigo.",
     },
+  },
+  teams: {
+    title: "Equipas",
+    description: "Organize os membros de {organization} em grupos de trabalho.",
+    create: "Criar equipa",
+    createFirst: "Criar a primeira equipa",
+    createTitle: "Nova equipa",
+    createDesc: "Dê um nome claro ao grupo. Pode adicionar membros a seguir.",
+    nameLabel: "Nome da equipa",
+    allTeams: "Todas as equipas",
+    count: "{count} equipas",
+    search: "Pesquisar equipas",
+    emptyTitle: "Ainda não há equipas",
+    emptyDesc: "Crie grupos para organizar pessoas por ministério ou função.",
+    noSearchResults: "Nenhuma equipa encontrada",
+    noSearchDesc: "Experimente outro termo de pesquisa.",
+    teamLabel: "Equipa",
+    memberCount: "{count} membros",
+    privateToOrg: "Membros desta organização",
+    createdAt: "Criada em {date}",
+    activeTeamTitle: "Equipa ativa",
+    activeTeamDesc: "A equipa ativa acompanha a sua sessão nas aplicações Hosanna.",
+    active: "Ativa",
+    setActive: "Definir como ativa",
+    membersTitle: "Pessoas nesta equipa",
+    membersDesc: "Escolha membros que já pertencem a esta organização.",
+    chooseMember: "Selecionar membro",
+    addMember: "Adicionar",
+    removeMember: "Remover {name}",
+    roleLabel: "Função: {role}",
+    unnamedMember: "Membro sem nome",
+    you: "Você",
+    noMembers: "Esta equipa ainda não tem membros",
+    noMembersDesc: "Adicione alguém da lista de membros da organização.",
+    chooseTeam: "Escolha uma equipa para ver os detalhes",
+    renameLabel: "Novo nome",
+    renamePlaceholder: "Novo nome da equipa",
+    rename: "Renomear",
+    delete: "Eliminar",
+    remove: "Remover",
+    deleteConfirmTitle: "Eliminar equipa?",
+    deleteConfirmDesc: "A equipa {name} e as respetivas associações serão eliminadas.",
+    removeConfirmTitle: "Remover membro?",
+    removeConfirmDesc: "Esta pessoa deixará de fazer parte da equipa.",
+    loadError: "Não foi possível carregar as equipas.",
+    actionError: "Não foi possível concluir esta ação.",
+    retry: "Tentar novamente",
+    created: "Equipa criada.",
+    renamed: "Nome da equipa atualizado.",
+    deleted: "Equipa eliminada.",
+    memberAdded: "Membro adicionado.",
+    memberRemoved: "Membro removido.",
+    activeUpdated: "Equipa ativa atualizada.",
   },
 };

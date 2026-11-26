@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useMemo } from "react";
 import "../instruments"; // ensure built-in instruments are registered
 import { instrumentRegistry } from "../instruments/registry";

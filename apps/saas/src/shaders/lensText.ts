@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export const lensTextVertexShader = /* glsl */ `
   varying vec2 vUv;
 

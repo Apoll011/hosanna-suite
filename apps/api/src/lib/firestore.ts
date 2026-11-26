@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Minimal Firestore REST writer used for realtime "ping" documents and
  * worship-service song annotations.

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Resolve chrome strings for shared `@hosanna/ui` suite components from
  * `@hosanna/i18n` `sharedMessages`. Hosts pass `language` when reactive;

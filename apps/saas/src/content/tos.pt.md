@@ -54,6 +54,8 @@ Os clientes e utilizadores mantêm todos os direitos de propriedade sobre o cont
 **7.2. Responsabilidade pelo Licenciamento**  
 As organizações são inteiramente responsáveis por garantir que possuem os direitos, autorizações ou licenças necessárias (por exemplo, através da CCLI) para todo o conteúdo musical que armazenam, reproduzem ou partilham na plataforma. O Hosanna atua como fornecedor de infraestrutura e não verifica automaticamente o licenciamento de cada música.
 
+Ao importar conteúdo do CifraClub, do Ultimate Guitar ou de outra fonte, é responsável por ter o direito de o importar e utilizar, incluindo quaisquer licenças CCLI ou outras licenças necessárias. O Hosanna não fornece nem licencia música.
+
 **7.3. Integração com Áudio/YouTube**  
 O Hosanna não aloja ficheiros de áudio ou gravações. Qualquer metadado que ligue uma música a vídeos no YouTube apenas referencia conteúdo externo. O Hosanna não controla esse conteúdo externo, estando este sujeito aos termos das plataformas de terceiros.
 
@@ -77,10 +79,10 @@ Se a cobrança falhar, o serviço de faturação tentará novamente. Findo o per
 ## 9. Open Source e Self-Hosting
 
 **9.1. Licença Open Source**  
-O código-fonte do servidor, do Studio, da App Mobile e dos pacotes partilhados do Hosanna é disponibilizado ao abrigo da Apache License 2.0. Os utilizadores e a comunidade são livres de inspecionar, modificar e redistribuir o código fonte sujeito aos termos dessa licença.
+O código-fonte do Hosanna é licenciado ao abrigo da GNU Affero General Public License, versão 3 apenas (AGPL-3.0-only). Consulte o texto da licença e o repositório do código-fonte para conhecer os termos aplicáveis à cópia, modificação e distribuição.
 
 **9.2. Distinção do Serviço na Nuvem (Hosanna Cloud)**  
-A licença Apache 2.0 regula o uso do código fonte. No entanto, a utilização da nossa plataforma gerida na nuvem ("Hosanna Cloud") rege-se pelos presentes Termos de Serviço. A subscrição da Hosanna Cloud não confere a titularidade do software, sendo apenas a prestação de um serviço.
+A utilização da nossa plataforma gerida na nuvem ("Hosanna Cloud") rege-se pelos presentes Termos de Serviço, separadamente da licença do código-fonte. A subscrição da Hosanna Cloud não confere a titularidade do software, sendo apenas a prestação de um serviço.
 
 **9.3. Instalações Próprias (Self-Hosting)**  
 Quem optar por alojar o Hosanna nos seus próprios servidores (Self-Hosting) fá-lo sob a sua total responsabilidade. O Hosanna não é responsável pela infraestrutura, disponibilidade, segurança, atualizações, backups ou conformidade legal em matéria de proteção de dados de instalações geridas por terceiros.

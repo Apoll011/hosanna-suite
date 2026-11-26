@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { createCache } from "@hosanna/cache";
 import { createLocalJWKSet, type JSONWebKeySet, type JWTVerifyGetKey } from "jose";
 import { auth } from "./auth.js";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { hasActiveSubscription } from "@/lib/billing/entitlement";
 import { AuthHttpError, jsonError, requireAuthSession } from "@/lib/notifications/session";
 

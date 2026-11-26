@@ -18,6 +18,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify DCO sign-offs
+        if: github.event_name == 'pull_request'
+        run: node scripts/check-dco.mjs
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4

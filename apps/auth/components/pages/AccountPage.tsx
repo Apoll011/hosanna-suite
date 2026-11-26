@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import { AccountCenter } from "@/components/account/AccountCenter";
@@ -13,8 +14,9 @@ import { compressImage } from "@/lib/account/compress-image";
 import { useI18n } from "@/lib/ui/i18n";
 import { clearCachedOrg } from "@/lib/organization/cache";
 import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session/cache";
-import { Button, GoogleTextField, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, GoogleTextField, Modal, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import type { CachedAuthUser } from "@/lib/session/cache";
+import Link from "next/link";
 import {
   Camera,
   CheckCircle2,
@@ -55,6 +57,16 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
   const [draftOldPassword, setDraftOldPassword] = useState("");
   const [draftNewPassword, setDraftNewPassword] = useState("");
   const [draftConfirmPassword, setDraftConfirmPassword] = useState("");
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteChecking, setDeleteChecking] = useState(false);
+  const [soleOwnerOrgs, setSoleOwnerOrgs] = useState<
+    Array<{ id: string; name: string; slug: string }>
+  >([]);
+  const [deleteOtpSent, setDeleteOtpSent] = useState(false);
+  const [deleteOtpSending, setDeleteOtpSending] = useState(false);
+  const [deleteOtp, setDeleteOtp] = useState("");
+  const [deletingAccount, setDeletingAccount] = useState(false);
 
   const showToast = useCallback((msg: string, type: "success" | "error") => {
     setToast({ msg, type });
@@ -191,6 +203,76 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
     clearCachedOrg();
     await authClient.signOut();
     router.replace("/login");
+  };
+
+  const openDeleteModal = async () => {
+    setDeleteOpen(true);
+    setDeleteChecking(true);
+    setSoleOwnerOrgs([]);
+    setDeleteOtpSent(false);
+    setDeleteOtp("");
+    try {
+      const res = await fetch("/api/erasure/account");
+      if (res.ok) {
+        const json = (await res.json()) as {
+          soleOwnerOrgs?: Array<{ id: string; name: string; slug: string }>;
+        };
+        setSoleOwnerOrgs(json.soleOwnerOrgs ?? []);
+      }
+    } catch {
+      // Server POST still enforces sole-owner check.
+    } finally {
+      setDeleteChecking(false);
+    }
+  };
+
+  const sendDeleteOtp = async () => {
+    setDeleteOtpSending(true);
+    try {
+      const res = await fetch("/api/erasure/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "account" }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to send verification code");
+      }
+      setDeleteOtpSent(true);
+    } catch (err) {
+      showToast(t("account.danger.deleteError", { error: (err as Error)?.message || "" }), "error");
+    } finally {
+      setDeleteOtpSending(false);
+    }
+  };
+
+  const handleConfirmDeleteAccount = async () => {
+    if (!deleteOtp.trim()) return;
+    setDeletingAccount(true);
+    try {
+      const res = await fetch("/api/erasure/account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otp: deleteOtp.trim() }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.status === 409 && json.blocked && Array.isArray(json.orgs)) {
+        setSoleOwnerOrgs(json.orgs);
+        return;
+      }
+      if (!res.ok) {
+        throw new Error(json.error || "Delete failed");
+      }
+      clear();
+      clearCachedUser();
+      clearCachedOrg();
+      showToast(t("account.danger.deleteSuccess"), "success");
+      window.location.assign("/login?deleted=1");
+    } catch (err) {
+      showToast(t("account.danger.deleteError", { error: (err as Error)?.message || "" }), "error");
+    } finally {
+      setDeletingAccount(false);
+    }
   };
 
   if (isLoading && !user) {
@@ -481,7 +563,120 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
           <ActiveSessionsSection onToast={showToast} />
           <LoginHistorySection />
         </div>
+
+        <Surface className="space-y-4 border-rose-200/60 dark:border-rose-900/40">
+          <div>
+            <h3 className="text-sm font-semibold text-m3-danger">{t("account.danger.title")}</h3>
+            <p className="text-xs text-m3-secondary mt-1">{t("account.danger.desc")}</p>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20">
+            <div>
+              <p className="text-sm font-semibold text-m3-danger">
+                {t("account.danger.deleteTitle")}
+              </p>
+              <p className="text-xs text-m3-secondary mt-0.5">{t("account.danger.deleteDesc")}</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => void openDeleteModal()}>
+              {t("account.danger.deleteBtn")}
+            </Button>
+          </div>
+        </Surface>
       </div>
+
+      <Modal
+        isOpen={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setDeleteOtp("");
+          setDeleteOtpSent(false);
+        }}
+        title={
+          soleOwnerOrgs.length > 0
+            ? t("account.danger.soleOwnerTitle")
+            : t("account.danger.otpTitle")
+        }
+      >
+        {deleteChecking ? (
+          <div className="flex justify-center py-8">
+            <Spinner size="md" label={t("common.loading")} />
+          </div>
+        ) : soleOwnerOrgs.length > 0 ? (
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-m3-secondary">{t("account.danger.soleOwnerDesc")}</p>
+            <ul className="space-y-2">
+              {soleOwnerOrgs.map((org) => (
+                <li
+                  key={org.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-m3-border bg-m3-sidebar/60"
+                >
+                  <span className="text-sm font-semibold text-m3-text">{org.name}</span>
+                  <Link
+                    href="/account/organization/members"
+                    className="text-xs font-semibold text-m3-primary hover:underline"
+                    onClick={() => setDeleteOpen(false)}
+                  >
+                    {t("account.danger.manageOrgLink")}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-end">
+              <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+                {t("common.cancel")}
+              </Button>
+            </div>
+          </div>
+        ) : !deleteOtpSent ? (
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-m3-secondary">{t("account.danger.deleteDesc")}</p>
+            <p className="text-xs text-m3-secondary bg-m3-sidebar/60 p-3 rounded-lg border border-m3-border">
+              {t("account.danger.backupRetentionNotice")}
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+                {t("common.cancel")}
+              </Button>
+              <Button
+                variant="primary"
+                isLoading={deleteOtpSending}
+                onClick={() => void sendDeleteOtp()}
+              >
+                {t("account.danger.sendOtpBtn")}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 pt-2">
+            <p className="text-sm text-m3-secondary">
+              {t("account.danger.otpDesc", { email: user.email || "" })}
+            </p>
+            <p className="text-xs text-m3-secondary bg-m3-sidebar/60 p-3 rounded-lg border border-m3-border">
+              {t("account.danger.backupRetentionNotice")}
+            </p>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={deleteOtp}
+              onChange={(e) => setDeleteOtp(e.target.value)}
+              placeholder={t("account.danger.otpLabel")}
+              className="w-full rounded-md border border-m3-border bg-m3-card px-3.5 py-2.5 text-sm text-m3-text tracking-widest font-mono"
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+                {t("common.cancel")}
+              </Button>
+              <Button
+                variant="primary"
+                disabled={deleteOtp.trim().length < 4}
+                isLoading={deletingAccount}
+                onClick={() => void handleConfirmDeleteAccount()}
+              >
+                {t("account.danger.confirmBtn")}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </AccountCenter>
   );
 }

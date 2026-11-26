@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { Folder, FoldersResponse } from "../types";
 import { unwrapApiResult } from "./client";
 import { getApiClient } from "./http";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { McpContext } from "../context.js";
 import { requirePermission } from "../context.js";
 import { AppError } from "../../utils/errors.js";

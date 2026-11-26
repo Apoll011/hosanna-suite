@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Interactive onboarding runner — permission-composed modules with
  * wait-for-action steps. The spotlight is visual only: the rest of the UI

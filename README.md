@@ -84,3 +84,9 @@ Commits, authors, and timestamps from those projects are part of this history. T
 - Point Vercel / Cloudflare project **root directories** at `apps/saas`, `apps/studio`, or `apps/api` (or run filtered turbo builds from the monorepo root).
 - Prisma migrations: `pnpm db:migrate` before deploying API/auth that depend on schema.
 - Chordpro npm publish: GitHub release tags starting with `chordpro-v` / `@hosanna/chordpro@` trigger [`.github/workflows/publish-chordpro.yml`](./.github/workflows/publish-chordpro.yml).
+
+## License
+
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](LICENSE.md)
+
+Hosanna is licensed under AGPL-3.0-only. Churches may run and modify a copy under the license. If a modified copy is used over a network, users must be offered its corresponding source code. See [LICENSE.md](LICENSE.md) and [CONTRIBUTING.md](CONTRIBUTING.md).

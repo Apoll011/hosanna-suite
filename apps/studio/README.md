@@ -134,4 +134,6 @@ Environment variables go in a local Vite `.env` (API URL, auth, analytics). Do n
 
 ## License
 
-Apache License 2.0 — see [LICENSE.md](LICENSE.md).
+[![AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue.svg)](../../LICENSE.md)
+
+Hosanna is licensed under AGPL-3.0-only. Churches may run and modify a copy under the license. If a modified copy is used over a network, users must be offered its corresponding source code. See the [license](../../LICENSE.md) and [contribution guide](../../CONTRIBUTING.md).

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * In-chat service proposal card — Accept/Decline works on any host via catalog API.
  * Opening Planning/Music is optional.

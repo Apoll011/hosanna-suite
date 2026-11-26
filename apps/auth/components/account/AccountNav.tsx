@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import { OrgSwitcher } from "@/components/account/OrgSwitcher";
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { useBrowserSearch } from "@/hooks/useBrowserSearch";
 import type { TranslationKey } from "@/lib/ui/i18n";
 import { useI18n } from "@/lib/ui/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
@@ -19,7 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, type ComponentType, type MouseEvent, type ReactNode } from "react";
+import { type ComponentType, type MouseEvent, type ReactNode } from "react";
 
 type NavItem = {
   href: string;
@@ -42,6 +44,7 @@ const PERSONAL_ITEMS: NavItem[] = [
 const ORG_ITEMS: OrgNavItem[] = [
   { href: "/account/organization/profile", labelKey: "account.nav.profile", icon: Building2 },
   { href: "/account/organization/members", labelKey: "account.nav.members", icon: Users },
+  { href: "/account/organization/teams", labelKey: "account.nav.teams", icon: Users },
   {
     href: "/account/organization/billing",
     labelKey: "account.nav.billing",
@@ -81,10 +84,7 @@ const ORG_ITEMS: OrgNavItem[] = [
 ];
 
 function usePreservedSearch() {
-  return useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return window.location.search || "";
-  }, []);
+  return useBrowserSearch() ?? "";
 }
 
 function isActivePath(pathname: string, item: NavItem) {

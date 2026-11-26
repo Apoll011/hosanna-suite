@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { buildAuthOpenApiDoc } from "../lib/openapi/index.js";
@@ -21,6 +22,9 @@ describe("auth OpenAPI schema builder", () => {
     assert.ok(paths.includes("/backup"));
     assert.ok(paths.includes("/backup/restore"));
     assert.ok(paths.includes("/notifications"));
+    assert.ok(paths.includes("/erasure/otp"));
+    assert.ok(paths.includes("/erasure/account"));
+    assert.ok(paths.includes("/erasure/organization"));
   });
 
   it("includes required component schemas", () => {

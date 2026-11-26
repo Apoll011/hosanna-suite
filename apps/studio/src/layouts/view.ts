@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 /**
@@ -18,10 +18,10 @@ export type ViewName =
   | "service-editor"
   | "collections"
   | "collection-detail"
-  | "teams"
   | "settings"
   | "analytics"
   | "agenda"
+  | "calendar"
   | "trash";
 
 /**
@@ -41,8 +41,8 @@ export function deriveView(pathname: string, slugPrefix: string): ViewName {
   if (path.startsWith("/services/")) return "service-editor";
   if (path === "/collections") return "collections";
   if (path.startsWith("/collections/")) return "collection-detail";
-  if (path.includes("/teams")) return "teams";
   if (path.includes("/agenda")) return "agenda";
+  if (path === "/calendar") return "calendar";
   if (path.includes("/settings")) return "settings";
   if (path.includes("/analytics")) return "analytics";
   if (path.includes("/trash")) return "trash";

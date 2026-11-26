@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 export { AiChatDock } from "./chat/components/Dock";
@@ -57,6 +57,17 @@ export {
 } from "./catalog";
 
 export { createLogosHost, type CreateLogosHostInput, type LogosChatApi } from "./kernel";
+
+export {
+  createLogosDomainTools,
+  createLogosToolFactory,
+  clearLogosToolFactories,
+  registerLogosToolFactory,
+  type LogosToolDefinition,
+  type LogosToolFactory,
+  type LogosToolFactoryContext,
+  type LogosToolSurface,
+} from "./tools";
 
 export {
   getResource,

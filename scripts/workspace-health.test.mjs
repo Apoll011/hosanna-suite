@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Infra smoke checks: keep root scripts, turbo tasks, and CI tooling aligned.
  * Run: `pnpm test:workspace` (also invoked from CI).

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * In-memory + IndexedDB cache of last-known server document snapshots.
  * Source of assumedMasterState.updatedAt and field-diff baselines.

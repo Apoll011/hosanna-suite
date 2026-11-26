@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import type { pt } from "./pt";
@@ -23,6 +23,8 @@ export const es: typeof pt = {
     root: "Raíz",
     close: "Cerrar",
     print: "Imprimir",
+    export: "Exportar",
+    import: "Importar",
     archive: "Archivar",
     delete: "Eliminar",
     edit: "Editar",
@@ -301,12 +303,12 @@ export const es: typeof pt = {
         restore: "Restaurar conversaciones",
         restoreDesc:
           "Introduce tu correo para recibir un enlace que restaura tus conversaciones anteriores en este navegador.",
-        restoreSent: "Enlace de recuperación enviado — ¡revisa tu correo!",
+        restoreSent: "Enlace de recuperación enviado, ¡revisa tu correo!",
         emailPlaceholder: "tu@correo.com",
         sendLink: "Enviar enlace",
         loadError: "Algo salió mal al cargar esto.",
-        sendError: "No se pudo enviar el mensaje — inténtalo de nuevo.",
-        restoreRateLimited: "Demasiadas solicitudes — inténtalo de nuevo en un momento.",
+        sendError: "No se pudo enviar el mensaje, inténtalo de nuevo.",
+        restoreRateLimited: "Demasiadas solicitudes, inténtalo de nuevo en un momento.",
         restoreError: "No se pudo enviar el correo de recuperación.",
         noMessagesYet: "Aún no hay mensajes",
         messages: "mensajes",
@@ -699,7 +701,7 @@ export const es: typeof pt = {
     about: {
       title: "Acerca de Hosanna Studio",
       controlPanel: "Panel de Control",
-      copyright: "© {year} Embrace & Tiago Inês. Código bajo licencia Apache 2.0.",
+      copyright: "© {year} Embrace & Tiago Inês. Código bajo licencia AGPL-3.0-only.",
       studioVersion: "Versión de Studio",
       openSourceBanner:
         "¡Este proyecto es <strong>open-source</strong>! Creemos en el software libre para equipar y apoyar comunidades.",
@@ -803,7 +805,7 @@ export const es: typeof pt = {
         create: {
           title: "Crear una carpeta",
           description:
-            "Crea una carpeta nueva — elige “Nueva carpeta” en el menú (p. ej. “Ensayos”). El tour avanza cuando exista.",
+            "Crea una carpeta nueva, elige “Nueva carpeta” en el menú (p. ej. “Ensayos”). El tour avanza cuando exista.",
         },
         drive: {
           title: "Drive",
@@ -826,7 +828,7 @@ export const es: typeof pt = {
         editor: {
           title: "Editor ChordPro",
           description:
-            "Este es el editor. En líneas vacías puedes usar atajos que el editor completa solo — como snippets inteligentes.",
+            "Este es el editor. En líneas vacías puedes usar atajos que el editor completa solo, como snippets inteligentes.",
         },
         snippets: {
           title: "TAB completa directivas",
@@ -1166,8 +1168,8 @@ export const es: typeof pt = {
       allNotified: "Sin asignaciones por notificar.",
       updateSection: "Cambios del evento",
       noPendingChanges: "Sin cambios por notificar.",
-      datePending: "Fecha cambiada — aún por notificar.",
-      locationPending: "Ubicación cambiada — aún por notificar.",
+      datePending: "Fecha cambiada, aún por notificar.",
+      locationPending: "Ubicación cambiada, aún por notificar.",
       dateBtn: "Notificar cambio de fecha",
       locationBtn: "Notificar cambio de ubicación",
       bothBtn: "Notificar usuarios",
@@ -1242,7 +1244,7 @@ export const es: typeof pt = {
     deleteEventConfirmBody:
       "Esto eliminará permanentemente el evento y todas sus responsabilidades.",
     deleteEvent: "Eliminar",
-    printDayAgenda: "Agenda — {date}",
+    printDayAgenda: "Agenda: {date}",
     decreaseDuration: "Disminuir duración",
     increaseDuration: "Aumentar duración",
     eventTypes: {
@@ -1263,7 +1265,7 @@ export const es: typeof pt = {
       other: "{count} personas seleccionadas",
     },
     assignOptional: "Opcional: puedes asignar más tarde.",
-    assigneesTitle: "Asignados — {category}",
+    assigneesTitle: "Asignados: {category}",
     assignedAssignees: {
       one: "{count} persona asignada",
       other: "{count} personas asignadas",
@@ -1356,6 +1358,8 @@ export const es: typeof pt = {
     untitled: "Sin Título",
   },
   modals: {
+    importRightsNotice:
+      "Importa solo contenido que tengas derecho a usar. Eres responsable de obtener los permisos y licencias aplicables, incluida CCLI. Hosanna no proporciona ni licencia música.",
     sheetMusicImport: {
       title: "Importar Partitura",
       progressTitle: "Leyendo partitura…",
@@ -1503,6 +1507,37 @@ export const es: typeof pt = {
       partialError: "Error al importar {count} canciones.",
       parseError: "No se pudo leer la copia de SongbookPro.",
     },
+    hosannaExportImport: {
+      title: "Importar exportación Hosanna",
+      dropOrBrowse: "Arrastra un archivo .json o haz clic para elegir",
+      dropHint: "Acepta archivos hosanna-export (.json) de hasta {maxMb} MB.",
+      chooseFile: "Elegir archivo",
+      changeFile: "Cambiar archivo",
+      previewHeading: "Vista previa de importación",
+      foldersCount: "{count} carpeta(s)",
+      songsCount: "{count} canción(es)",
+      collectionsCount: "{count} colección(es)",
+      conflictsDetected: "{count} conflicto(s) detectado(s) (título + artista)",
+      conflictPolicyLabel: "Cuando el título y artista ya existen",
+      conflictSkip: "Omitir existentes",
+      conflictKeepBoth: "Mantener ambos (renombrar “… (2)”)",
+      conflictOverwrite: "Sobrescribir existentes",
+      targetFolderLabel: "Carpeta de destino",
+      rootFolder: "Raíz de la biblioteca",
+      importAction: "Importar",
+      importing: "Importando…",
+      successToast:
+        "Se importaron {folders} carpeta(s), {songs} canción(es) y {collections} colección(es).",
+      exportSuccessToast: "Exportación descargada ({songs} canción(es)).",
+      errorMalformedJson: "El archivo seleccionado no es un JSON válido.",
+      errorFileTooLarge: "El archivo supera el límite de {maxMb} MB.",
+      errorInvalidFormat: "Este archivo no es una exportación Hosanna válida.",
+      errorUnsupportedVersion:
+        "Versión de exportación no compatible (v{version}). Esta versión solo admite v1.",
+      errorSubscriptionBlocked:
+        "Se requiere una suscripción o prueba activa para importar elementos.",
+      errorPermissionDenied: "Faltan permisos necesarios para importar: {permissions}",
+    },
   },
   explorer: {
     moreOptions: "Más opciones",
@@ -1542,6 +1577,8 @@ export const es: typeof pt = {
       addToCollection: "Añadir a la Colección",
       addToCollectionCount: "Añadir {count} a la Colección",
       printSong: "Imprimir Canción",
+      exportSelection: "Exportar selección",
+      exportItem: "Exportar (.json)",
       deleteSong: "Eliminar Canción",
     },
     modals: {

@@ -1,13 +1,13 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { Button, Input, Modal } from "@hosanna/ui";
 import { useOrgSettings } from "@/src/hooks/useOrgSettings";
 import { useServices } from "@/src/hooks/useServices";
 import { TranslateFn, useI18n } from "@/src/lib/i18n";
-import { Assignee, ResponsibilityCategory } from "@/src/types";
+import { Assignee, ResponsibilityCategory, TEventColor } from "@/src/types";
 import {
   Calendar,
   CheckCircle2,
@@ -88,9 +88,30 @@ export interface EventFormValue {
   durationMinutes: number;
   location: string;
   notes: string;
+  color?: TEventColor;
   /** Linked order-of-worship `Service.id` (`@/src/types`), or null. */
   linkedServiceId: string | null;
 }
+
+const EVENT_COLOR_OPTIONS: TEventColor[] = [
+  "blue",
+  "green",
+  "red",
+  "yellow",
+  "purple",
+  "orange",
+  "gray",
+];
+
+const EVENT_COLOR_CLASSES: Record<TEventColor, string> = {
+  blue: "bg-blue-500",
+  green: "bg-emerald-500",
+  red: "bg-red-500",
+  yellow: "bg-amber-400",
+  purple: "bg-purple-500",
+  orange: "bg-orange-500",
+  gray: "bg-neutral-500",
+};
 
 const DURATION_PRESETS = [30, 45, 60, 90, 120];
 const NOTES_MAX = 500;
@@ -120,6 +141,7 @@ const emptyEventForm = (
     durationMinutes: initial?.durationMinutes ?? 90,
     location: initial?.location ?? "",
     notes: initial?.notes ?? "",
+    color: initial?.color ?? "blue",
     linkedServiceId: initial?.linkedServiceId ?? null,
   };
 };
@@ -298,6 +320,30 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
                     {opt}
                   </button>
                 ))}
+            </div>
+          </div>
+          <div>
+            <FieldLabel>Color</FieldLabel>
+            <div className="flex items-center gap-2 mt-1">
+              {EVENT_COLOR_OPTIONS.map((c) => {
+                const isSelected = (form.color ?? "blue") === c;
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, color: c }))}
+                    className={`w-7 h-7 rounded-full border-2 transition-transform cursor-pointer ${
+                      EVENT_COLOR_CLASSES[c]
+                    } ${
+                      isSelected
+                        ? "ring-2 ring-m3-primary ring-offset-2 scale-110 border-white dark:border-neutral-900"
+                        : "border-transparent opacity-80 hover:opacity-100"
+                    }`}
+                    title={c}
+                    aria-label={c}
+                  />
+                );
+              })}
             </div>
           </div>
         </section>

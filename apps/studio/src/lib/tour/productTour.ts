@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Product tour runner — lightweight driver.js coachmarks composed from
  * permission-gated blocks.

@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  *
  * Typed app-scoped settings registry — apps register a namespace under
  * `personal-settings.apps.<id>` with defaults, optional flat→nested migration,

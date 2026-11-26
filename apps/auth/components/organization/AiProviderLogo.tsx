@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import type { AiProvider } from "@/lib/services/ai-api";

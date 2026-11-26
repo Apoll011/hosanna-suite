@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { createCache } from "@hosanna/cache";
 import type { NextFunction, Request, Response } from "express";
 import { prisma } from "../database/prisma.js";

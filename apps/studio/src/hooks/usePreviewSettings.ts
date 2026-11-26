@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
@@ -135,7 +135,13 @@ export function usePreviewSettings(
         capoVal: directiveDefaults.capoVal,
       }));
     }
-  }, [songId, variantId, directiveDefaults?.transposeVal, directiveDefaults?.capoVal]);
+  }, [
+    songId,
+    variantId,
+    directiveDefaults,
+    directiveDefaults?.transposeVal,
+    directiveDefaults?.capoVal,
+  ]);
 
   const updateSetting = useCallback(
     <K extends keyof PreviewSettings>(key: K, value: PreviewSettings[K]) => {

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { Metadata } from "next";
 
 import { OrgMembersPage } from "@/components/pages/organization/OrgMembersPage";

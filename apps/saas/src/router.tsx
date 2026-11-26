@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import {
   createRootRoute,
   createRoute,
@@ -53,6 +54,12 @@ const termsRoute = createRoute({
   component: lazyRouteComponent(() => import("./routes/terms"), "Component"),
 });
 
+const subprocessorsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/subprocessors",
+  component: lazyRouteComponent(() => import("./routes/subprocessors"), "Component"),
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   aboutRoute,
@@ -60,6 +67,7 @@ const routeTree = rootRoute.addChildren([
   contactRoute,
   privacyRoute,
   termsRoute,
+  subprocessorsRoute,
 ]);
 
 export const router = createRouter({

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { FormatChange, FormatOptions, FormatWarning } from "./types";
 import { isValidChord, normalizeChordContent } from "./chords";
 import { buildDirectiveLine, detectMalformedDirective, parseDirectiveContent } from "./directives";

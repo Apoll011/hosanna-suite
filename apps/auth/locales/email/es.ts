@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { I18nKeys } from "./pt-PT";
 
 /**
- * es-ES — Spanish locale.
+ * es-ES: Spanish locale.
  */
 const es = {
   // ── errors / middleware ─────────────────────────────────────────────────
@@ -68,7 +69,7 @@ const es = {
     folder_deleted_title: "Carpeta eliminada con todo su contenido",
     folder_deleted_description:
       "{{songs}} canción(es) y {{folders}} subcarpeta(s) fueron eliminadas permanentemente.",
-    backup_restored_title: "Copia de seguridad restaurada — todos los datos reemplazados",
+    backup_restored_title: "Copia de seguridad restaurada: todos los datos reemplazados",
     backup_restored_description:
       "Una restauración completa importó {{folders}} carpeta(s), {{songs}} canción(es) y {{services}} culto(s).",
     trial_started_title: "Período de prueba iniciado",
@@ -252,6 +253,33 @@ const es = {
       body1: "La suscripción de {{church_name}} ha sido cancelada.",
       body2:
         "El acceso permanecerá disponible hasta el final del período de facturación. Si cambias de opinión, puedes reactivar la suscripción en cualquier momento.",
+    },
+    deletion_otp: {
+      subject: "Código de confirmación de eliminación — Hosanna",
+      heading: "Confirma la eliminación de tu cuenta",
+      body1:
+        "Recibimos una solicitud para eliminar permanentemente tu cuenta de Hosanna. Usa el código a continuación para confirmar.",
+      body2:
+        "Si no solicitaste la eliminación de la cuenta, ignora este correo y tu cuenta seguirá activa.",
+      expiry: "Este código expira en {{expiry_time}} minutos.",
+    },
+    org_deletion_otp: {
+      subject: "Código de confirmación de eliminación de organización — Hosanna",
+      heading: "Confirma la eliminación de {{church_name}}",
+      body1:
+        "Recibimos una solicitud para eliminar permanentemente la organización {{church_name}} de Hosanna. Usa el código a continuación para confirmar.",
+      body2:
+        "Esta acción es irreversible. Todos los datos de la organización serán eliminados de los sistemas activos.",
+      expiry: "Este código expira en {{expiry_time}} minutos.",
+    },
+    org_deleted: {
+      subject: "La organización {{church_name}} ha sido eliminada — Hosanna",
+      heading: "Organización eliminada",
+      salutation: "Hola{{#if first_name}} {{first_name}}{{/if}},",
+      body1:
+        "Confirmamos que la organización {{church_name}} ha sido eliminada permanentemente. Todos los datos asociados han sido eliminados de nuestros sistemas activos.",
+      body2:
+        "Las copias de seguridad cifradas de los proveedores pueden conservar copias durante hasta 30 días antes de ser sobrescritas.",
     },
   },
 } as const satisfies I18nKeys;

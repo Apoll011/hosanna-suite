@@ -1,10 +1,10 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { useI18n } from "@/src/lib/i18n";
-import { Minus, Plus } from "lucide-react";
+import { ChevronDown, Minus, Plus } from "lucide-react";
 import React, { useId } from "react";
 import { clampFontSize, DEFAULT_PRINT_OPTIONS, FONT_SIZE_MAX, FONT_SIZE_MIN } from "./options";
 import { getTemplateFamilyInfo } from "./templateFamilies";
@@ -208,10 +208,8 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
   const { t } = useI18n();
   const wide = layout === "wide";
   // Song body options only matter when song charts will actually print.
-  const showSongBodyOptions =
-    context.hasSongs && (!context.hasSongContainers || options.includeSongs);
-  const showPageBreak =
-    context.canPageBreak && (!context.hasSongContainers || options.includeSongs);
+  const showSongBodyOptions = context.hasSongs && options.includeSongs;
+  const showPageBreak = context.canPageBreak && options.includeSongs;
 
   const selectTemplate = (family: PrintTemplateFamily) =>
     onChange({
@@ -381,23 +379,35 @@ export const PrintOptionsPanel: React.FC<PrintOptionsPanelProps> = ({
   return (
     <div className="space-y-6">
       {!hideTemplate && (
-        <Group title={t("print.options.groups.template")}>
-          <TemplatePicker
-            value={options.templateFamily}
-            onSelect={selectTemplate}
-            brand={brand}
-            showChords={options.showChords}
-            disabled={disabled}
-            className={
-              wide
-                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
-                : "grid grid-cols-2 gap-2.5"
-            }
-          />
-          <p className="text-[11px] text-m3-secondary leading-snug">
-            {t(`print.templates.${options.templateFamily}.description`)}
-          </p>
-        </Group>
+        <details className="group rounded-md border border-m3-border/70 bg-m3-card">
+          <summary className="flex min-h-11 list-none items-center gap-2 px-3 py-2.5 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary [&::-webkit-details-marker]:hidden">
+            <ChevronDown className="w-4 h-4 shrink-0 text-m3-secondary transition-transform duration-200 -rotate-90 group-open:rotate-0" />
+            <span className="min-w-0 text-[13px] text-m3-text">
+              <span className="font-medium">{t("print.options.groups.template")}</span>
+              <span className="text-m3-secondary">
+                {" "}
+                / {t(`print.templates.${options.templateFamily}.name`)}
+              </span>
+            </span>
+          </summary>
+          <div className="px-3 pb-3 space-y-2.5 border-t border-m3-border/50 pt-3">
+            <TemplatePicker
+              value={options.templateFamily}
+              onSelect={selectTemplate}
+              brand={brand}
+              showChords={options.showChords}
+              disabled={disabled}
+              className={
+                wide
+                  ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
+                  : "grid grid-cols-2 gap-2.5"
+              }
+            />
+            <p className="text-[11px] text-m3-secondary leading-snug">
+              {t(`print.templates.${options.templateFamily}.description`)}
+            </p>
+          </div>
+        </details>
       )}
 
       {wide ? <div className="grid grid-cols-1 md:grid-cols-3 gap-6">{groups}</div> : groups}

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Lightweight event bus for wait-for-action interactive onboarding steps.
  */

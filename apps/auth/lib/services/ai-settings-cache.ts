@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Persist org AI settings so the account AI page paints instantly on revisit
  * while a background refresh runs.

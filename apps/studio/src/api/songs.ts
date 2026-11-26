@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { parseChordPro } from "@hosanna/chordpro";
 import { Folder, GetSongsParams, ParsedSong, Song, SongsResponse } from "../types";
 import { unwrapApiResult } from "./client";

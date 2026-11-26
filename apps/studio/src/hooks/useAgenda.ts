@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { useI18n } from "@/src/lib/i18n";
@@ -10,8 +10,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useSync } from "../contexts/SyncContext";
 import { AgendaEventDocType, getDatabase, getPurgeAt, validateAgendaEventRules } from "../db";
-import { useOrgSettings } from "./useOrgSettings";
 import { track } from "../lib/posthog";
+import { useOrgSettings } from "./useOrgSettings";
 
 const DEFAULT_REMINDER: ReminderSettings = {
   enabled: false,
@@ -213,6 +213,7 @@ export function useAgenda() {
           durationMinutes: input.durationMinutes,
           location: input.location ?? null,
           notes: input.notes ?? null,
+          color: input.color ?? "blue",
           reminder: input.reminder ?? DEFAULT_REMINDER,
           linkedServiceId: input.linkedServiceId ?? null,
           responsibilities: [],
@@ -273,6 +274,7 @@ export function useAgenda() {
         if (patch.durationMinutes !== undefined) next.durationMinutes = patch.durationMinutes;
         if (patch.location !== undefined) next.location = patch.location ?? null;
         if (patch.notes !== undefined) next.notes = patch.notes ?? null;
+        if (patch.color !== undefined) next.color = patch.color ?? null;
         if (patch.linkedServiceId !== undefined)
           next.linkedServiceId = patch.linkedServiceId ?? null;
         if (patch.reminder !== undefined) next.reminder = patch.reminder;

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * Pure helpers for the assistant's org-configurable behaviour: per-reply tool
  * budget, sampling parameters, custom instructions and saved memory.

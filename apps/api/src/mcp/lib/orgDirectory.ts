@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { RESPONSIBILITIES } from "@hosanna/auth";
 import { randomUUID } from "node:crypto";
 import { prisma } from "../../database/prisma.js";

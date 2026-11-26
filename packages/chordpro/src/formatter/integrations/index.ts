@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * ChordPro Formatter — Integrations
  * Re-exports all editor integrations from one entry point.

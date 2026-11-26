@@ -1,7 +1,7 @@
 {
   "name": "@hosanna/api",
   "version": "2.25.0",
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Production REST API backend for Hosanna Studio (songs, folders, services, musician access)",
   "main": "dist/index.mjs",
   "type": "module",
@@ -29,6 +29,7 @@
     "@hosanna/cache": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/db": "workspace:*",
+    "@hosanna/logos-ai": "workspace:*",
     "@hosanna/notifications": "workspace:*",
     "@modelcontextprotocol/node": "^2.1.2",
     "@modelcontextprotocol/server": "^2.4.0",

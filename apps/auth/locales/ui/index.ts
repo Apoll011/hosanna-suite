@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { deepMerge, sharedMessages, type Language } from "@hosanna/i18n";
 import { logosAiMessages } from "@hosanna/logos-ai/i18n";
 import { en as enApp } from "./en";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import { BackupService } from "@/lib/backup/service";
 import { hasActiveSubscription } from "@/lib/billing/entitlement";
 import { forOrganization } from "@/lib/db/orgScope";

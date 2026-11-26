@@ -1,6 +1,6 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import { useI18n } from "@/src/lib/i18n";
@@ -570,7 +570,6 @@ export const ExplorerModals: React.FC<ExplorerModalsProps> = ({
   onBatchMoveConfirm,
   selectedFolderObjects,
   onBatchDeleteConfirm,
-  onBatchTagConfirm,
   currentQuery,
   onApplyQuery,
   availableTags,

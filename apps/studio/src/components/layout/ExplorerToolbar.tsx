@@ -1,9 +1,9 @@
 /**
  * @license
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Can } from "@hosanna/ui";
+import { Button, Can, CanAny } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 
 import { Service } from "@/src/types";
@@ -18,6 +18,7 @@ import {
   Plus,
   Printer,
   Trash2,
+  Upload,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
@@ -43,6 +44,7 @@ interface ExplorerToolbarProps {
   density: "comfortable" | "compact";
   onDensityChange: (d: "comfortable" | "compact") => void;
   onOpenFilterPanel: () => void;
+  onOpenHosannaImport?: () => void;
   collectionActions?: CollectionToolbarActions | null;
 }
 
@@ -66,6 +68,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   density,
   onDensityChange,
   onOpenFilterPanel,
+  onOpenHosannaImport,
   collectionActions = null,
 }) => {
   const { t } = useI18n();
@@ -191,6 +194,21 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
       </div>
 
       <div className="flex items-center gap-2.5">
+        {onOpenHosannaImport &&
+          (view === "explorer" || view === "collections" || view === "songs") && (
+            <CanAny permissions={["song.create", "folder.create", "collection.create"]}>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                icon={<Upload className="w-4 h-4" />}
+                onClick={onOpenHosannaImport}
+                data-tour="toolbar-import-export"
+              >
+                {t("common.import")}
+              </Button>
+            </CanAny>
+          )}
         {view === "collection-detail" && collectionActions && (
           <div ref={collectionMenuRef} className="relative shrink-0">
             <button

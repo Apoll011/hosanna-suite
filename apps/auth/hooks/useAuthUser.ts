@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import { identify, reset } from "@/lib/analytics";
@@ -18,6 +19,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type Dispatch,
@@ -42,11 +44,6 @@ type UseAuthUserResult = {
   clear: () => void;
 };
 
-function seedUser(initialUser?: CachedAuthUser | null): CachedAuthUser | null {
-  if (initialUser) return initialUser;
-  return readCachedUser();
-}
-
 /**
  * Prefer a server-provided user, then localStorage, then network.
  * Never blank the page for a background session refresh.
@@ -62,9 +59,18 @@ export function useAuthUser(options: UseAuthUserOptions = {}): UseAuthUserResult
   loginRedirectRef.current = loginRedirect;
   requireAuthRef.current = requireAuth;
 
-  const [user, setUser] = useState<CachedAuthUser | null>(() => seedUser(initialUser));
-  const [isLoading, setIsLoading] = useState(() => seedUser(initialUser) === null);
-  const [isRefreshing, setIsRefreshing] = useState(() => seedUser(initialUser) !== null);
+  const [user, setUser] = useState<CachedAuthUser | null>(initialUser);
+  const [isLoading, setIsLoading] = useState(initialUser === null);
+  const [isRefreshing, setIsRefreshing] = useState(initialUser !== null);
+
+  useLayoutEffect(() => {
+    if (initialUser) return;
+    const cached = readCachedUser();
+    if (!cached) return;
+    setUser((prev) => prev ?? cached);
+    setIsLoading(false);
+    setIsRefreshing(true);
+  }, [initialUser]);
 
   const clear = useCallback(() => {
     clearCachedUser();

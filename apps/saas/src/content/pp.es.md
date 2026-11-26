@@ -15,6 +15,8 @@ A los efectos del Reglamento General de Protección de Datos (RGPD) y legislacio
 - **Hosanna actúa como Responsable del Tratamiento (Controller):** Respecto a los datos de tu cuenta personal, datos de autenticación, facturación, ajustes de seguridad y obligaciones legales directas.
 - **Hosanna actúa como Encargado del Tratamiento (Processor):** Respecto a los datos operativos y de miembros gestionados por la organización (contenido de cultos, repertorio, datos del equipo), donde la Organización actúa como Responsable del Tratamiento.
 
+El contenido de la organización y las listas de miembros pueden revelar creencias religiosas o filosóficas, que son categorías especiales de datos según el artículo 9 del RGPD. La organización es responsable de identificar y documentar su base jurídica y una condición aplicable del artículo 9, informar a sus miembros y dar instrucciones documentadas a Hosanna. Hosanna trata estos datos siguiendo las instrucciones de la organización y no determina la base jurídica de la iglesia.
+
 ## 3. Categorías de Datos Personales Tratados
 
 Podemos recopilar, o tratar en nombre de nuestros clientes y usuarios, las siguientes categorías de datos personales al utilizar o interactuar con nuestros productos y servicios:
@@ -25,6 +27,7 @@ Podemos recopilar, o tratar en nombre de nuestros clientes y usuarios, las sigui
 - **Contenido de la Organización y Alabanza:** Contenido creado o subido por las iglesias, incluyendo canciones en formato ChordPro, listas de cultos (setlists), carpetas, notas de planificación e invitaciones de equipo.
 - **Información de Facturación:** Metadatos de pago y estado de la suscripción procesados a través de nuestro proveedor de pagos certificado PCI (Stripe). Hosanna no almacena números completos de tarjetas de crédito.
 - **Datos Técnicos y de Diagnóstico:** Métricas de rendimiento, registros de fallos e información de diagnóstico necesarios para garantizar la estabilidad de la aplicación. Estos datos nunca se utilizan con fines publicitarios ni para perfilar contenido musical.
+- **Datos de miembros y actividad de la organización:** Equipos, roles, invitaciones, notas de servicios y anotaciones, incluida la identidad de quien las creó o modificó. Se pueden tratar tokens de notificaciones push para enviarlas a los dispositivos.
 
 ## 4. Cómo Utilizamos tus Datos (Incluyendo los Datos de Google)
 
@@ -77,14 +80,16 @@ Conservamos tu información personal durante un periodo de tiempo coherente con 
 - **Eliminación de Datos:** Cuando el periodo de conservación expire para un tipo determinado de datos, o cuando se cancele una cuenta u organización, los eliminaremos o destruiremos de manera segura.
 - **Cómo Solicitar la Eliminación:** Puedes eliminar tu cuenta personal de Hosanna en cualquier momento desde los ajustes de la cuenta, o solicitar la eliminación total de tus datos personales y datos de Google contactándonos en **[hosanna.songbook@gmail.com](mailto:hosanna.songbook@gmail.com)**. Tras recibir tu solicitud, eliminaremos o anonimizaremos tus datos personales dentro de los plazos legales aplicables, excepto cuando la conservación sea obligatoria por ley.
 - **Copias de Seguridad:** Los datos residuales en copias de seguridad se sobrescriben o destruyen conforme al ciclo de vida estándar de nuestros respaldos.
+- **Papelera:** Las canciones, carpetas, colecciones, servicios y eventos de agenda eliminados desde Studio o la API permanecen en la papelera durante 30 días antes de la eliminación permanente programada. Este plazo no describe las copias de seguridad de bases de datos ni otros registros sujetos a conservación legal.
 
 ## 8. Política de Cookies y Almacenamiento Local
 
-Hosanna emplea tecnologías de almacenamiento estrictamente necesarias:
+Hosanna utiliza tecnologías necesarias para la autenticación y el funcionamiento sin conexión. Las analíticas opcionales solo se activan cuando el visitante acepta las cookies de analítica:
 
 - **Cookies de Sesión:** Utilizadas para mantener sesiones de usuario autenticadas de forma segura.
 - **Almacenamiento Local / IndexedDB:** Utilizado en la App Móvil y en Studio para guardar preferencias locales y mantener una copia en caché sin conexión de canciones y cultos para poder dirigir la alabanza sin conexión a internet.
-- **Sin Rastreadores Publicitarios:** Hosanna no utiliza cookies de publicidad, marketing ni seguimiento de comportamiento de terceros.
+- **Analítica opcional:** La analítica de PostHog en las aplicaciones Hosanna Cloud y el sitio web solo se activa tras obtener el consentimiento. Los visitantes pueden cambiar su elección en Ajustes de cookies en el sitio.
+- **Sin rastreadores publicitarios:** Hosanna no vende datos personales ni utiliza cookies publicitarias.
 
 ## 9. Acuerdo de Encargo de Tratamiento (DPA)
 
@@ -107,6 +112,7 @@ Conforme al RGPD y a la legislación de protección de datos aplicable, tienes d
 - Solicitar la portabilidad de tus datos en un formato estructurado y de uso común.
 
 Para ejercer cualquiera de estos derechos, contáctanos en **[hosanna.songbook@gmail.com](mailto:hosanna.songbook@gmail.com)**.
+También puedes presentar una reclamación ante la autoridad de control portuguesa, la [Comissão Nacional de Proteção de Dados (CNPD)](https://www.cnpd.pt/).
 
 ## 11. Información Legal y Contacto
 

@@ -2,7 +2,7 @@
   "name": "@hosanna/logos-ai",
   "version": "1.2.0",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Logos AI chat UI for Hosanna",
   "type": "module",
   "sideEffects": [
@@ -25,6 +25,10 @@
       "types": "./src/proposals/index.ts",
       "default": "./src/proposals/index.ts"
     },
+    "./tools": {
+      "types": "./src/tools/index.ts",
+      "default": "./src/tools/index.ts"
+    },
     "./mascot": {
       "types": "./src/mascot/index.ts",
       "default": "./src/mascot/index.ts"
@@ -40,6 +44,7 @@
     "test": "tsx --test \"test/**/*.test.ts\""
   },
   "dependencies": {
+    "@hosanna/auth": "workspace:*",
     "@hosanna/chordpro": "workspace:*",
     "@hosanna/i18n": "workspace:*",
     "@hosanna/ui": "workspace:*",

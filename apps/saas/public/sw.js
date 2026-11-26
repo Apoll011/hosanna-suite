@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 const CACHE_NAME = "hosanna-v1";
 const PRECACHE_ASSETS = [
   "/",

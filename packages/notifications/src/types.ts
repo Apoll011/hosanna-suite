@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /** Delivery channels supported by the unified notification system. */
 export type NotificationChannel = "inbox" | "push" | "email";
 

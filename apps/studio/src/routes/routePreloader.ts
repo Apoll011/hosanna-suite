@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import React, { lazy } from "react";
 import { captureException } from "../lib/posthog";
 
@@ -54,6 +55,9 @@ export const lazyImport = <T>(componentImport: LazyImportFn<T>): LazyPreloadable
 export const AgendaPage = lazyImport(() =>
   import("../pages/AgendaPage").then((m) => ({ default: m.AgendaPage })),
 );
+export const CalendarPage = lazyImport(() =>
+  import("../pages/CalendarPage").then((m) => ({ default: m.CalendarPage })),
+);
 export const DemoPage = lazyImport(() =>
   import("../pages/DemoPage").then((m) => ({ default: m.DemoPage })),
 );
@@ -94,9 +98,6 @@ export const CollectionDetailPage = lazyImport(() =>
     default: m.CollectionDetailPage,
   })),
 );
-export const TeamsPage = lazyImport(() =>
-  import("../pages/TeamsPage").then((m) => ({ default: m.TeamsPage })),
-);
 export const TrashPage = lazyImport(() =>
   import("../pages/TrashPage").then((m) => ({ default: m.TrashPage })),
 );
@@ -118,7 +119,6 @@ export const routePreloaders: Array<{
   { pattern: /\/services\/[^/]+/, preload: () => ServiceDetailPage.preload() },
   { pattern: /\/services(\/|\?|#|$)/, preload: () => ServicesPage.preload() },
   { pattern: /\/folders(\/|\?|#|$)/, preload: () => FoldersPage.preload() },
-  { pattern: /\/teams(\/|\?|#|$)/, preload: () => TeamsPage.preload() },
   { pattern: /\/trash(\/|\?|#|$)/, preload: () => TrashPage.preload() },
   { pattern: /\/settings(\/|\?|#|$)/, preload: () => SettingsPage.preload() },
   {
@@ -126,6 +126,7 @@ export const routePreloaders: Array<{
     preload: () => AnalyticsPage.preload(),
   },
   { pattern: /\/agenda(\/|\?|#|$)/, preload: () => AgendaPage.preload() },
+  { pattern: /\/calendar(\/|\?|#|$)/, preload: () => CalendarPage.preload() },
   { pattern: /\/demo(\/|\?|#|$)/, preload: () => DemoPage.preload() },
 ];
 

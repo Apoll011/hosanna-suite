@@ -11,7 +11,7 @@ info:
     `/api/backup*`, `/api/cron/agenda-reminders`. This API keeps domain music routes and
     `/api/cron/purge-trash`.
   license:
-    name: Apache-2.0
+    name: AGPL-3.0-only
 servers:
   - url: https://api.hosanna.live/api
     description: Production API (domain data)
@@ -1421,7 +1421,7 @@ paths:
       summary: Export backup
       operationId: exportBackup
       security: *a10
-      description: Export entire organization library (songs, folders, services) as a standalone JSON backup archive.
+      description: Export organization content, settings, members, invitations, and non-private service notes as JSON. Available in read-only billing mode.
       responses:
         "200":
           description: OK
@@ -1842,6 +1842,16 @@ paths:
                 context:
                   type: object
                   additionalProperties: true
+                appId:
+                  type: string
+                  enum:
+                    - auth
+                    - music
+                    - planning
+                    - finance
+                    - presenter
+                    - community
+                    - platform
                 locale:
                   type: string
                   enum:
@@ -2467,6 +2477,11 @@ components:
           type:
             - string
             - "null"
+        color:
+          description: Event color theme
+          type:
+            - string
+            - "null"
         isDeleted:
           default: false
           description: Replication tombstone flag
@@ -2559,12 +2574,58 @@ components:
       properties:
         version:
           type: string
-          description: Backup schema version (e.g., 2.2)
+          description: Backup schema version (e.g., 3.0)
         exportedAt:
           type: string
           format: date-time
           pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
           description: Export ISO timestamp
+        organization:
+          description: Organization profile
+          anyOf:
+            - type: object
+              propertyNames:
+                type: string
+              additionalProperties: {}
+            - type: "null"
+        settings:
+          description: Exportable organization settings
+          type: object
+          propertyNames:
+            type: string
+          additionalProperties: {}
+        aiMemory:
+          description: Organization AI memory
+          type: array
+          items:
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+        members:
+          description: Organization members
+          type: array
+          items:
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+        teams:
+          description: Organization teams and memberships
+          type: array
+          items:
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+        invitations:
+          description: Organization invitations
+          type: array
+          items:
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
         folders:
           type: array
           items:
@@ -2599,6 +2660,22 @@ components:
             additionalProperties: {}
         agendaEvents:
           description: Exported calendar agenda events
+          type: array
+          items:
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+        notes:
+          description: Non-private service notes
+          type: array
+          items:
+            type: object
+            propertyNames:
+              type: string
+            additionalProperties: {}
+        annotations:
+          description: Service song annotations
           type: array
           items:
             type: object

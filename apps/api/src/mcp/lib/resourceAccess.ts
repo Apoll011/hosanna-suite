@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 import type { McpContext } from "../context.js";
 
 export type ResourceKind = "song" | "service" | "folder";

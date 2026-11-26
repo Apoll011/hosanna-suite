@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
@@ -6,6 +7,7 @@ import { PasswordStrengthMeter } from "@/components/PasswordStrengthMeter";
 import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { TurnstileWidget, type TurnstileHandle } from "@/components/TurnstileWidget";
 import { authClient } from "@/lib/auth/client";
+import { CURRENT_TERMS_VERSION } from "@hosanna/auth";
 import { captchaFetchOptions, captchaRequired } from "@/lib/auth/captcha";
 import { useI18n } from "@/lib/ui/i18n";
 import { CheckCircle2 } from "lucide-react";
@@ -20,6 +22,7 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
   const captchaRef = useRef<TurnstileHandle>(null);
@@ -39,6 +42,7 @@ export function RegisterPage() {
       name: name.trim(),
       email: email.trim(),
       password,
+      termsAcceptedVersion: CURRENT_TERMS_VERSION,
       fetchOptions: captchaFetchOptions(token),
     });
     setIsLoading(false);
@@ -78,6 +82,10 @@ export function RegisterPage() {
     }
     if (password.length < 6) {
       setErrorMsg(t("auth.password.minLength"));
+      return;
+    }
+    if (!acceptedTerms) {
+      setErrorMsg(t("auth.register.termsRequired"));
       return;
     }
     if (captchaRequired() && !captchaToken) {
@@ -169,6 +177,29 @@ export function RegisterPage() {
           </label>
         </div>
 
+        <div className="flex items-start gap-2.5">
+          <input
+            id="register-terms"
+            type="checkbox"
+            checked={acceptedTerms}
+            onChange={(event) => setAcceptedTerms(event.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded-sm border-m3-border text-m3-primary focus:ring-m3-primary cursor-pointer"
+          />
+          <label
+            htmlFor="register-terms"
+            className="text-xs leading-snug text-m3-secondary cursor-pointer select-none"
+          >
+            {t("auth.register.termsPrefix")}{" "}
+            <Link href="https://hosanna.live/terms" className="text-m3-primary hover:underline">
+              {t("auth.register.termsLink")}
+            </Link>{" "}
+            {t("auth.register.termsAnd")}{" "}
+            <Link href="https://hosanna.live/privacy" className="text-m3-primary hover:underline">
+              {t("auth.register.privacyLink")}
+            </Link>
+          </label>
+        </div>
+
         {password.length > 0 && <PasswordStrengthMeter password={password} />}
 
         <TurnstileWidget
@@ -207,7 +238,10 @@ export function RegisterPage() {
         </div>
       </form>
 
-      <SocialAuthButtons onError={(err) => setErrorMsg(err)} disabled={isLoading} />
+      <SocialAuthButtons
+        onError={(err) => setErrorMsg(err)}
+        disabled={isLoading || !acceptedTerms}
+      />
     </AuthLayout>
   );
 }

@@ -2,7 +2,7 @@
   "name": "@hosanna/notifications",
   "version": "1.0.0",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "description": "Unified multi-channel notification dispatch (inbox, push, email)",
   "type": "module",
   "sideEffects": false,

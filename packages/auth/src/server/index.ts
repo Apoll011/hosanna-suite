@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 export { createAuth } from "./createAuth.js";
 export type { HosannaAuth } from "./createAuth.js";
 export type {
