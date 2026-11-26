@@ -22,6 +22,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "no-empty": ["error", { allowEmptyCatch: true }],
+      "no-misleading-character-class": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

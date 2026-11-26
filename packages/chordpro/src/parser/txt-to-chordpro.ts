@@ -241,7 +241,7 @@ const SECTION_TAGS: Record<SectionKind, { start: string; end: string }> = {
 const BRACKET_HEADER_REGEX = /^\[([^\]]+)]$/;
 
 function classifySectionLabel(rawLabel: string): { kind: SectionKind; label: string } | null {
-  let s = rawLabel.trim().replace(/:$/, "").trim();
+  const s = rawLabel.trim().replace(/:$/, "").trim();
   const base = s.replace(/\s*\d+\s*$/, "").trim();
   const normalized = stripAccents(base).toLowerCase();
 

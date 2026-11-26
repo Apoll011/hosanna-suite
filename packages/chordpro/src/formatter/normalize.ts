@@ -108,7 +108,7 @@ function normalizeChordLyricSpacing(
 ): string {
   const original = line;
   // Remove space between a closing bracket ']' and a non-whitespace, non-'[' character
-  const result = line.replace(/\]\s+([^\s\[])/g, (_: string, char: string) => "]" + char);
+  const result = line.replace(/\]\s+([^\s\x5B])/g, (_: string, char: string) => "]" + char);
   if (result !== original) {
     changes.push({
       type: "chord_spacing",
