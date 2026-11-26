@@ -31,6 +31,7 @@ export type WidgetDefinition = {
   singleton?: boolean;
   enabled?: boolean;
   group?: string;
+  searchPatterns?: readonly string[];
   config?: WidgetConfigDefinition;
 };
 export type WidgetInstance = {

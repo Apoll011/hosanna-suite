@@ -167,23 +167,31 @@ export function HomePage() {
     : null;
   const usableWidgets = listRenderableWidgets(authDashboardRegistry, authDashboardRenderers);
   const gallery = usableWidgets.filter((definition) => isWidgetEligible(definition, context));
+  const sectionKeyFor = (widget: (typeof gallery)[number]) =>
+    widget.group ?? "suite.apps." + widget.app + ".name";
   const normalizedQuery = widgetQuery.trim().toLowerCase();
   const filteredGallery = useMemo(() => {
     if (!normalizedQuery) return gallery;
     return gallery.filter((widget) => {
       const title = t(widget.title as Parameters<typeof t>[0]).toLowerCase();
       const description = t(widget.description as Parameters<typeof t>[0]).toLowerCase();
+      const sectionName = t(sectionKeyFor(widget) as Parameters<typeof t>[0]).toLowerCase();
       const appName = t(
         ("suite.apps." + widget.app + ".name") as Parameters<typeof t>[0],
       ).toLowerCase();
+      const patterns = (widget.searchPatterns ?? []).map((key) =>
+        t(key as Parameters<typeof t>[0]).toLowerCase(),
+      );
       return (
         title.includes(normalizedQuery) ||
         description.includes(normalizedQuery) ||
-        appName.includes(normalizedQuery)
+        sectionName.includes(normalizedQuery) ||
+        appName.includes(normalizedQuery) ||
+        patterns.some((pattern) => pattern.includes(normalizedQuery))
       );
     });
   }, [gallery, normalizedQuery, t]);
-  const groups = [...new Set(filteredGallery.map((definition) => definition.app))];
+  const sections = [...new Set(filteredGallery.map(sectionKeyFor))];
 
   if ((userLoading && !user) || (orgLoading && !organization)) {
     return (
@@ -267,18 +275,20 @@ export function HomePage() {
                 />
               </label>
 
-              {groups.length === 0 ? (
+              {sections.length === 0 ? (
                 <p className="rounded-md border border-dashed border-m3-border bg-m3-sidebar/40 px-3 py-5 text-center text-caption">
                   {t("home.dashboard.noMatchingWidgets")}
                 </p>
               ) : (
                 <div className="space-y-2.5">
-                  {groups.map((appId) => {
-                    const groupWidgets = filteredGallery.filter((widget) => widget.app === appId);
-                    const isCollapsed = !normalizedQuery && Boolean(collapsedGroups[appId]);
+                  {sections.map((sectionKey) => {
+                    const sectionWidgets = filteredGallery.filter(
+                      (widget) => sectionKeyFor(widget) === sectionKey,
+                    );
+                    const isCollapsed = !normalizedQuery && Boolean(collapsedGroups[sectionKey]);
                     return (
                       <div
-                        key={appId}
+                        key={sectionKey}
                         className="rounded-md border border-m3-border/70 bg-m3-sidebar/30"
                       >
                         <button
@@ -287,7 +297,7 @@ export function HomePage() {
                           onClick={() =>
                             setCollapsedGroups((prev) => ({
                               ...prev,
-                              [appId]: !prev[appId],
+                              [sectionKey]: !prev[sectionKey],
                             }))
                           }
                           className="flex min-h-10 w-full items-center justify-between gap-2 px-3 py-2 text-left transition-colors hover:bg-m3-hover/60"
@@ -298,15 +308,15 @@ export function HomePage() {
                             ) : (
                               <ChevronDown className="h-3.5 w-3.5" aria-hidden />
                             )}
-                            {t(("suite.apps." + appId + ".name") as Parameters<typeof t>[0])}
+                            {t(sectionKey as Parameters<typeof t>[0])}
                           </span>
                           <Badge variant="neutral" size="sm" className="tabular-nums">
-                            {groupWidgets.length}
+                            {sectionWidgets.length}
                           </Badge>
                         </button>
                         {!isCollapsed ? (
                           <div className="space-y-2 border-t border-m3-border/60 p-2">
-                            {groupWidgets.map((widget) => {
+                            {sectionWidgets.map((widget) => {
                               const count =
                                 draft?.items.filter((item) => item.widget === widget.id).length ??
                                 0;

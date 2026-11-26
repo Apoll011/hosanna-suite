@@ -42,14 +42,24 @@ export const pt = {
       configure: "Configurar",
       searchWidgets: "Pesquisar widgets…",
       noMatchingWidgets: "Nenhum widget corresponde à pesquisa.",
+      sections: {
+        apps: "Aplicações",
+        worship: "Louvor e música",
+        organization: "Organização",
+      },
     },
     widgets: {
       error: "Não foi possível carregar este widget.",
       appUnavailable: "Aplicação indisponível.",
-      launcher: { title: "Aplicações", description: "Abra as aplicações disponíveis." },
+      launcher: {
+        title: "Aplicações",
+        description: "Abra as aplicações disponíveis.",
+        keywords: "apps aplicações catálogo produtos atalhos abrir",
+      },
       favorites: {
         title: "Favoritos",
         description: "Atalhos para as suas aplicações favoritas.",
+        keywords: "estrela fixados atalhos rápidos favoritos",
         empty: "Ainda não tem aplicações favoritas.",
         add: "Adicionar aos favoritos",
         remove: "Remover dos favoritos",
@@ -57,14 +67,17 @@ export const pt = {
       appAuth: {
         title: "Conta",
         description: "Acesso rápido ao perfil, organização e faturação.",
+        keywords: "conta perfil segurança membros organização",
       },
       appMusic: {
         title: "Music",
         description: "Acesso rápido a músicas, coleções e cultos.",
+        keywords: "music studio cifras acordes letras palco",
       },
       nextService: {
         title: "Próximo culto",
         description: "Veja o próximo culto planeado.",
+        keywords: "culto escala agenda data programa próximo domingo",
         empty: "Não há cultos planeados.",
         emptyHint: "Planeie o próximo culto no Music para o ver aqui.",
         upcomingCount: "{count} agendados",
@@ -80,6 +93,7 @@ export const pt = {
       library: {
         title: "Biblioteca",
         description: "Resumo da biblioteca de músicas.",
+        keywords: "músicas pastas acordes etiquetas saúde repertório",
         songs: "músicas",
         open: "Abrir biblioteca",
         empty: "Biblioteca vazia",
@@ -92,6 +106,7 @@ export const pt = {
       subscription: {
         title: "Subscrição",
         description: "Estado da subscrição da organização.",
+        keywords: "plano faturação stripe cloud pagamento teste",
         active: "Subscrição ativa",
         trialing: "Em período de teste",
         canceling: "A cancelar",

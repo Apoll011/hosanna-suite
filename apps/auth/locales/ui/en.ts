@@ -44,14 +44,24 @@ export const en: typeof pt = {
       configure: "Configure",
       searchWidgets: "Search widgets…",
       noMatchingWidgets: "No widgets match your search.",
+      sections: {
+        apps: "Applications",
+        worship: "Worship & music",
+        organization: "Organization",
+      },
     },
     widgets: {
       error: "This widget could not be loaded.",
       appUnavailable: "Application unavailable.",
-      launcher: { title: "Applications", description: "Open available applications." },
+      launcher: {
+        title: "Applications",
+        description: "Open available applications.",
+        keywords: "apps catalog products shortcuts open",
+      },
       favorites: {
         title: "Favorites",
         description: "Quick links to your favorite applications.",
+        keywords: "star pinned shortcuts quick favorites",
         empty: "You have no favorite applications yet.",
         add: "Add to favorites",
         remove: "Remove from favorites",
@@ -59,14 +69,17 @@ export const en: typeof pt = {
       appAuth: {
         title: "Account",
         description: "Quick access to profile, organization, and billing.",
+        keywords: "account profile security members organization",
       },
       appMusic: {
         title: "Music",
         description: "Quick access to songs, collections, and services.",
+        keywords: "music studio chords lyrics stage",
       },
       nextService: {
         title: "Next service",
         description: "See the next planned service.",
+        keywords: "service schedule agenda date order upcoming sunday",
         empty: "No services are planned.",
         emptyHint: "Plan your next service in Music to see it here.",
         upcomingCount: "{count} scheduled",
@@ -82,6 +95,7 @@ export const en: typeof pt = {
       library: {
         title: "Library",
         description: "A summary of the song library.",
+        keywords: "songs folders chords tags health repertoire",
         songs: "songs",
         open: "Open library",
         empty: "Library is empty",
@@ -94,6 +108,7 @@ export const en: typeof pt = {
       subscription: {
         title: "Subscription",
         description: "Organization subscription status.",
+        keywords: "plan billing stripe cloud payment trial",
         active: "Subscription active",
         trialing: "Trialing",
         canceling: "Canceling",

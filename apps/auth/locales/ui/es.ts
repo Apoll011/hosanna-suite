@@ -44,14 +44,24 @@ export const es: typeof pt = {
       configure: "Configurar",
       searchWidgets: "Buscar widgets…",
       noMatchingWidgets: "Ningún widget coincide con la búsqueda.",
+      sections: {
+        apps: "Aplicaciones",
+        worship: "Alabanza y música",
+        organization: "Organización",
+      },
     },
     widgets: {
       error: "No se pudo cargar este widget.",
       appUnavailable: "Aplicación no disponible.",
-      launcher: { title: "Aplicaciones", description: "Abre las aplicaciones disponibles." },
+      launcher: {
+        title: "Aplicaciones",
+        description: "Abre las aplicaciones disponibles.",
+        keywords: "apps aplicaciones catálogo productos atajos abrir",
+      },
       favorites: {
         title: "Favoritos",
         description: "Accesos rápidos a tus aplicaciones favoritas.",
+        keywords: "estrella fijados atajos rápidos favoritos",
         empty: "Aún no tienes aplicaciones favoritas.",
         add: "Añadir a favoritos",
         remove: "Quitar de favoritos",
@@ -59,14 +69,17 @@ export const es: typeof pt = {
       appAuth: {
         title: "Cuenta",
         description: "Acceso rápido al perfil, organización y facturación.",
+        keywords: "cuenta perfil seguridad miembros organización",
       },
       appMusic: {
         title: "Music",
         description: "Acceso rápido a canciones, colecciones y servicios.",
+        keywords: "music studio acordes letras escenario",
       },
       nextService: {
         title: "Próximo servicio",
         description: "Consulta el próximo servicio planificado.",
+        keywords: "servicio agenda fecha programa próximo domingo",
         empty: "No hay servicios planificados.",
         emptyHint: "Planifica tu próximo servicio en Music para verlo aquí.",
         upcomingCount: "{count} programados",
@@ -82,6 +95,7 @@ export const es: typeof pt = {
       library: {
         title: "Biblioteca",
         description: "Resumen de la biblioteca de canciones.",
+        keywords: "canciones carpetas acordes etiquetas salud repertorio",
         songs: "canciones",
         open: "Abrir biblioteca",
         empty: "Biblioteca vacía",
@@ -94,6 +108,7 @@ export const es: typeof pt = {
       subscription: {
         title: "Suscripción",
         description: "Estado de la suscripción de la organización.",
+        keywords: "plan facturación stripe cloud pago prueba",
         active: "Suscripción activa",
         trialing: "En prueba",
         canceling: "Cancelándose",
