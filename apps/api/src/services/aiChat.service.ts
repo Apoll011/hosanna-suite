@@ -20,7 +20,6 @@ import { createSharedEmbeddedTools } from "../mcp/domains/toolFactory.js";
 import { nativeWebAuthFromRuntime } from "../mcp/lib/nativeWeb.js";
 import { AppError } from "../utils/errors.js";
 import {
-  AI_LIMITS,
   customInstructionsPromptBlock,
   MEMORY_USAGE_PROMPT,
   memoryPromptBlock,
