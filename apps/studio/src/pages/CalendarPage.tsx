@@ -168,14 +168,22 @@ export function CalendarPage() {
     } catch {}
   };
 
-  const editingAssigneesResp = useMemo(() => {
+  const editingAssigneesResp = (() => {
     if (!editingAssigneesFor) return null;
+
     for (const ev of store.events) {
       const r = ev.responsibilities.find((x) => x.id === editingAssigneesFor);
-      if (r) return { eventId: ev.id, responsibility: r };
+
+      if (r) {
+        return {
+          eventId: ev.id,
+          responsibility: r,
+        };
+      }
     }
+
     return null;
-  }, [store, editingAssigneesFor]);
+  })();
 
   const handleCreateEvent = async (value: EventFormValue) => {
     const id = await store.addEvent(value);

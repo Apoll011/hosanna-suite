@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { useI18n } from "@/src/lib/i18n";
-import { useCan } from "@hosanna/ui";
 import { Folder, Service, Song } from "@/src/types";
+import { useCan } from "@hosanna/ui";
 import {
+  BarChart3,
   Calendar,
   CalendarPlus,
   ChevronRight,
@@ -19,18 +20,17 @@ import {
   Music,
   Plus,
   Printer,
-  BarChart3,
   Settings,
   Trash2,
   Upload,
 } from "lucide-react";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { CommandAction } from "../command-palette.types";
 import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
 import { useTheme } from "../contexts/ThemeContext";
+import { useRxDbSearch } from "../hooks/useRxDbSearch";
 import { ViewName } from "../layouts/view";
 import { useAiCommandPaletteActions } from "../logos/useAiCommandPaletteActions";
-import { useRxDbSearch } from "../hooks/useRxDbSearch";
 import { ActiveModal } from "./layout";
 import { CommandPaletteModal } from "./modals/CommandPaletteModal";
 
@@ -101,10 +101,6 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
   const { toggleDarkMode } = useTheme();
   const { granted: canCreateAgenda } = useCan("agenda.create");
   const { granted: canViewLibraryHealth } = useCan("library.health");
-
-  const triggerFileUpload = useCallback(() => {
-    fileInputRef.current?.click();
-  }, [fileInputRef]);
 
   const staticActions = useMemo<CommandAction[]>(() => {
     const actions: CommandAction[] = [
@@ -239,7 +235,9 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         keywords: "upload carregar ficheiros chordpro sbpbackup import txt pro",
         section: t("commandPalette.sections.quickActions"),
         icon: <Upload className="w-4 h-4 text-purple-500" />,
-        perform: triggerFileUpload,
+        perform: () => {
+          fileInputRef.current?.click();
+        },
       },
 
       {
@@ -367,7 +365,6 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
     setTargetSongFolderId,
     setDeleteSongTarget,
     deleteService,
-    triggerFileUpload,
     toggleDarkMode,
     t,
   ]);

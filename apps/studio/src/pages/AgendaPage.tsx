@@ -212,14 +212,22 @@ export const AgendaPage: React.FC = () => {
     } catch {}
   };
 
-  const editingAssigneesResp = useMemo(() => {
+  const editingAssigneesResp = (() => {
     if (!editingAssigneesFor) return null;
+
     for (const ev of store.events) {
       const r = ev.responsibilities.find((x) => x.id === editingAssigneesFor);
-      if (r) return { eventId: ev.id, responsibility: r };
+
+      if (r) {
+        return {
+          eventId: ev.id,
+          responsibility: r,
+        };
+      }
     }
+
     return null;
-  }, [store, editingAssigneesFor]);
+  })();
 
   const handleSelectDate = (date: string) => {
     setSelectedDate(date);
