@@ -24,7 +24,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { CommandAction } from "../command-palette.types";
 import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
 import { useTheme } from "../contexts/ThemeContext";
@@ -102,8 +102,12 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
   const { granted: canCreateAgenda } = useCan("agenda.create");
   const { granted: canViewLibraryHealth } = useCan("library.health");
 
+  const triggerFileUpload = useCallback(() => {
+    fileInputRef.current?.click();
+  }, [fileInputRef]);
+
   const staticActions = useMemo<CommandAction[]>(() => {
-    const actions: CommandAction[] = [
+    return [
       {
         id: "nav-drive",
         name: t("commandPalette.navDrive"),
@@ -213,21 +217,19 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         icon: <FolderPlus className="w-4 h-4 text-amber-500" />,
         perform: () => openModal("create-folder"),
       },
-    ];
-
-    if (canCreateAgenda) {
-      actions.push({
-        id: "action-create-agenda",
-        name: t("commandPalette.createAgenda"),
-        shortcut: ["c", "a"],
-        keywords: "novo evento agenda criar event schedule create add",
-        section: t("commandPalette.sections.quickActions"),
-        icon: <CalendarPlus className="w-4 h-4 text-violet-500" />,
-        perform: () => openModal("create-event"),
-      });
-    }
-
-    actions.push(
+      ...(canCreateAgenda
+        ? [
+            {
+              id: "action-create-agenda",
+              name: t("commandPalette.createAgenda"),
+              shortcut: ["c", "a"],
+              keywords: "novo evento agenda criar event schedule create add",
+              section: t("commandPalette.sections.quickActions"),
+              icon: <CalendarPlus className="w-4 h-4 text-violet-500" />,
+              perform: () => openModal("create-event"),
+            } satisfies CommandAction,
+          ]
+        : []),
       {
         id: "action-upload-files",
         name: t("commandPalette.uploadFiles"),
@@ -235,9 +237,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         keywords: "upload carregar ficheiros chordpro sbpbackup import txt pro",
         section: t("commandPalette.sections.quickActions"),
         icon: <Upload className="w-4 h-4 text-purple-500" />,
-        perform: () => {
-          fileInputRef.current?.click();
-        },
+        perform: triggerFileUpload,
       },
 
       {
@@ -268,84 +268,81 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
         icon: <LogOut className="w-4 h-4 text-rose-500" />,
         perform: () => logout(),
       },
-    );
-
-    if (view === "explorer") {
-      actions.push(
-        {
-          id: "view-grid",
-          name: t("commandPalette.viewGrid"),
-          keywords: "vista grelha grid view layout",
-          section: t("commandPalette.sections.visualization"),
-          icon: <LayoutGrid className="w-4 h-4 text-slate-500" />,
-          perform: () => handleViewModeChange("grid"),
-        },
-        {
-          id: "view-list",
-          name: t("commandPalette.viewList"),
-          keywords: "vista lista list view table layout",
-          section: t("commandPalette.sections.visualization"),
-          icon: <List className="w-4 h-4 text-slate-500" />,
-          perform: () => handleViewModeChange("list"),
-        },
-        {
-          id: "open-filters",
-          name: t("commandPalette.openFilters"),
-          keywords: "filtros filter pesquisar tom tag artista",
-          section: t("commandPalette.sections.visualization"),
-          icon: <Filter className="w-4 h-4 text-slate-500" />,
-          perform: () => openModal("filter"),
-        },
-      );
-    }
-
-    if (view === "song-editor" && currentSong) {
-      actions.push(
-        {
-          id: "song-print-current",
-          name: t("commandPalette.printSong", { title: currentSong.title }),
-          keywords: "imprimir print pdf cantico atual",
-          section: t("commandPalette.sections.currentSong"),
-          icon: <Printer className="w-4 h-4 text-indigo-500" />,
-          perform: () => handlePrintSong(currentSong.id),
-        },
-        {
-          id: "song-move-current",
-          name: t("commandPalette.moveSong", { title: currentSong.title }),
-          keywords: "mover pasta move folder destination",
-          section: t("commandPalette.sections.currentSong"),
-          icon: <Move className="w-4 h-4 text-sky-500" />,
-          perform: () => {
-            setMoveSongTarget(currentSong);
-            if (currentSong.folderId) setTargetSongFolderId(currentSong.folderId);
-          },
-        },
-        {
-          id: "song-delete-current",
-          name: t("commandPalette.deleteSong", { title: currentSong.title }),
-          keywords: "eliminar apagar remover delete remove",
-          section: t("commandPalette.sections.currentSong"),
-          icon: <Trash2 className="w-4 h-4 text-rose-500" />,
-          perform: () => setDeleteSongTarget(currentSong),
-        },
-      );
-    }
-
-    if (view === "service-editor" && currentService) {
-      actions.push({
-        id: "service-delete-current",
-        name: t("commandPalette.deleteService", { name: currentService.name }),
-        keywords: "eliminar apagar culto delete service",
-        section: t("commandPalette.sections.currentService"),
-        icon: <Trash2 className="w-4 h-4 text-rose-500" />,
-        perform: async () => {
-          await deleteService(currentService.id);
-          navigate(`${slugPrefix}/services`);
-        },
-      });
-    }
-
-    return actions;
+      ...(view === "explorer"
+        ? [
+            {
+              id: "view-grid",
+              name: t("commandPalette.viewGrid"),
+              keywords: "vista grelha grid view layout",
+              section: t("commandPalette.sections.visualization"),
+              icon: <LayoutGrid className="w-4 h-4 text-slate-500" />,
+              perform: () => handleViewModeChange("grid"),
+            } satisfies CommandAction,
+            {
+              id: "view-list",
+              name: t("commandPalette.viewList"),
+              keywords: "vista lista list view table layout",
+              section: t("commandPalette.sections.visualization"),
+              icon: <List className="w-4 h-4 text-slate-500" />,
+              perform: () => handleViewModeChange("list"),
+            } satisfies CommandAction,
+            {
+              id: "open-filters",
+              name: t("commandPalette.openFilters"),
+              keywords: "filtros filter pesquisar tom tag artista",
+              section: t("commandPalette.sections.visualization"),
+              icon: <Filter className="w-4 h-4 text-slate-500" />,
+              perform: () => openModal("filter"),
+            } satisfies CommandAction,
+          ]
+        : []),
+      ...(view === "song-editor" && currentSong
+        ? [
+            {
+              id: "song-print-current",
+              name: t("commandPalette.printSong", { title: currentSong.title }),
+              keywords: "imprimir print pdf cantico atual",
+              section: t("commandPalette.sections.currentSong"),
+              icon: <Printer className="w-4 h-4 text-indigo-500" />,
+              perform: () => handlePrintSong(currentSong.id),
+            } satisfies CommandAction,
+            {
+              id: "song-move-current",
+              name: t("commandPalette.moveSong", { title: currentSong.title }),
+              keywords: "mover pasta move folder destination",
+              section: t("commandPalette.sections.currentSong"),
+              icon: <Move className="w-4 h-4 text-sky-500" />,
+              perform: () => {
+                setMoveSongTarget(currentSong);
+                if (currentSong.folderId) setTargetSongFolderId(currentSong.folderId);
+              },
+            } satisfies CommandAction,
+            {
+              id: "song-delete-current",
+              name: t("commandPalette.deleteSong", { title: currentSong.title }),
+              keywords: "eliminar apagar remover delete remove",
+              section: t("commandPalette.sections.currentSong"),
+              icon: <Trash2 className="w-4 h-4 text-rose-500" />,
+              perform: () => setDeleteSongTarget(currentSong),
+            } satisfies CommandAction,
+          ]
+        : []),
+      ...(view === "service-editor" && currentService
+        ? [
+            {
+              id: "service-delete-current",
+              name: t("commandPalette.deleteService", { name: currentService.name }),
+              keywords: "eliminar apagar culto delete service",
+              section: t("commandPalette.sections.currentService"),
+              icon: <Trash2 className="w-4 h-4 text-rose-500" />,
+              perform: async () => {
+                await deleteService(currentService.id);
+                navigate(`${slugPrefix}/services`);
+              },
+            } satisfies CommandAction,
+          ]
+        : []),
+    ];
   }, [
     slugPrefix,
     view,
@@ -367,7 +364,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
     deleteService,
     toggleDarkMode,
     t,
-    fileInputRef,
+    triggerFileUpload,
   ]);
 
   return (

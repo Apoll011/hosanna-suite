@@ -65,17 +65,26 @@ export const AgendaPage: React.FC = () => {
   /** Snapshot kept open while delete + optional notify finish. */
   const [pendingDeleteEvent, setPendingDeleteEvent] = useState<AgendaEvent | null>(null);
 
-  useEffect(() => {
-    if (searchParams.get("create") !== "1" || !canCreateAgenda) return;
+  const wantsCreate = searchParams.get("create") === "1" && canCreateAgenda;
+  const [prevWantsCreate, setPrevWantsCreate] = useState(false);
+  if (wantsCreate && !prevWantsCreate) {
+    setPrevWantsCreate(true);
     setIsNewEventOpen(true);
+  } else if (!wantsCreate && prevWantsCreate) {
+    setPrevWantsCreate(false);
+  }
+
+  useEffect(() => {
+    if (!wantsCreate) return;
     setSearchParams(
       (prev) => {
-        prev.delete("create");
-        return prev;
+        const next = new URLSearchParams(prev);
+        next.delete("create");
+        return next;
       },
       { replace: true },
     );
-  }, [canCreateAgenda, searchParams, setSearchParams]);
+  }, [wantsCreate, setSearchParams]);
 
   const markedDates = useMemo(() => new Set(store.events.map((ev) => ev.date)), [store.events]);
 

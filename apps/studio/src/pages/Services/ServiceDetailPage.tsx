@@ -891,7 +891,7 @@ export const ServiceDetailPage: React.FC = () => {
   );
   const [mobilePane, setMobilePane] = useState<"order" | "library">("order");
   const [readingMode, setReadingMode] = useState(false);
-  const readingRoleApplied = useRef(false);
+  const [readingRoleApplied, setReadingRoleApplied] = useState(false);
   const [previewElement, setPreviewElement] = useState<ServiceElement | null>(null);
   const [isDropTargetActive, setIsDropTargetActive] = useState(false);
   const dropContainerRef = useRef<HTMLDivElement>(null);
@@ -907,15 +907,9 @@ export const ServiceDetailPage: React.FC = () => {
 
   const [isEditingGeneralNotes, setIsEditingGeneralNotes] = useState(false);
 
-  const appliedUpdatedAtRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (!service) return;
-    // While a modal is open, keep remote service updates queued — applying them
-    // would wipe local form state via parent re-renders / stale element sync.
-    if (activeModal) return;
-    if (service.updatedAt === appliedUpdatedAtRef.current) return;
-    appliedUpdatedAtRef.current = service.updatedAt;
+  const [appliedUpdatedAt, setAppliedUpdatedAt] = useState<string | null>(null);
+  if (service && !activeModal && service.updatedAt !== appliedUpdatedAt) {
+    setAppliedUpdatedAt(service.updatedAt);
 
     if (!isEditingGeneralNotes) {
       setGeneralNotes(service.notes || "");
@@ -925,8 +919,7 @@ export const ServiceDetailPage: React.FC = () => {
       (a, b) => (a.position || 0) - (b.position || 0),
     );
     setElements(sortedElements);
-    elementsRef.current = sortedElements;
-  }, [service, activeModal, isEditingGeneralNotes]);
+  }
 
   useEffect(() => {
     elementsRef.current = elements;
@@ -1059,11 +1052,12 @@ export const ServiceDetailPage: React.FC = () => {
     requestAnimationFrame(() => searchInputRef.current?.focus());
   };
 
-  useEffect(() => {
-    if (readingRoleApplied.current || !user?.role) return;
-    readingRoleApplied.current = true;
-    if (user.role === "musician") setReadingMode(true);
-  }, [user?.role]);
+  if (!readingRoleApplied && user?.role) {
+    setReadingRoleApplied(true);
+    if (user.role === "musician") {
+      setReadingMode(true);
+    }
+  }
 
   const enterReadingMode = () => {
     setReadingMode(true);
