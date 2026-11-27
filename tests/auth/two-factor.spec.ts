@@ -17,4 +17,12 @@ test.describe("Auth two-factor", () => {
     await expect(page.getByText(/Enter a backup recovery code/i)).toBeVisible();
     await expect(page.getByLabel(/Backup code/i)).toBeVisible();
   });
+
+  test("accepts 6-digit numeric OTP input", async ({ page }) => {
+    await page.goto("/two-factor");
+    const input = page.getByLabel(/Verification code/i);
+    await expect(input).toBeVisible();
+    await input.fill("12a3456b78");
+    await expect(input).toHaveValue("123456");
+  });
 });
