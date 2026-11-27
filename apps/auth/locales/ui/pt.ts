@@ -340,11 +340,18 @@ export const pt = {
         description:
           "Notifique rapidamente pessoas, equipas ou @Todos por caixa de entrada, email e push.",
         keywords: "enviar notificação mencionar mensagem equipa todos caixa entrada email push",
-        open: "Compositor completo",
         placeholder: "Escreva uma mensagem… Digite @ para mencionar",
         hint: "Digite @ para mencionar",
         send: "Enviar notificação",
         channelsLabel: "Canais de entrega",
+        typeLabel: "Tipo de notificação",
+        types: {
+          info: "Informação",
+          organization: "Organização",
+          team: "Equipa",
+          security: "Segurança",
+          billing: "Faturação",
+        },
         mentionList: "Sugestões de menção",
         allTarget: "Todos",
         allBadge: "Organização",
@@ -1015,7 +1022,6 @@ export const pt = {
       members: "Membros",
       teams: "Equipas",
       billing: "Faturação",
-      notifications: "Notificações",
       ai: "IA",
       regional: "Regional",
       activity: "Atividade",
@@ -1056,10 +1062,6 @@ export const pt = {
     billing: {
       title: "Faturação",
       description: "Plano, faturação e métodos de pagamento.",
-    },
-    notifications: {
-      title: "Enviar notificação",
-      description: "Compose e envie um aviso à organização, a uma equipa ou a um membro.",
     },
     ai: {
       title: "IA",

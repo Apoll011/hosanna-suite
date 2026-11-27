@@ -700,49 +700,52 @@ export function OrgMembersPage() {
             ) : (
               <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
                 {filteredMembers.map((member) => {
-                const name =
-                  member.user?.name || member.user?.email || t("settings.members.memberRole");
-                const isSelf = user?.id === member.userId;
-                return (
-                  <button
-                    key={member.id}
-                    type="button"
-                    onClick={() => openMember(member)}
-                    className="w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 text-left hover:bg-m3-sidebar/50 transition-colors cursor-pointer"
-                  >
-                    <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center overflow-hidden shrink-0">
-                      {member.user?.image ? (
-                        <img
-                          src={member.user.image}
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        orgInitials(name)
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-m3-text truncate">
-                        {name}
-                        {isSelf ? (
-                          <span className="text-m3-secondary font-normal">
-                            {" "}
-                            · {t("settings.members.you")}
-                          </span>
-                        ) : null}
-                      </p>
-                      <p className="text-xs text-m3-secondary truncate">{member.user?.email}</p>
-                    </div>
-                    <Badge variant="neutral" size="sm" className="shrink-0">
-                      {roleLabel(member.role, t)}
-                    </Badge>
-                  </button>
-                );
+                  const name =
+                    member.user?.name || member.user?.email || t("settings.members.memberRole");
+                  const isSelf = user?.id === member.userId;
+                  return (
+                    <button
+                      key={member.id}
+                      type="button"
+                      onClick={() => openMember(member)}
+                      className="w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 text-left hover:bg-m3-sidebar/50 transition-colors cursor-pointer"
+                    >
+                      <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center overflow-hidden shrink-0">
+                        {member.user?.image ? (
+                          <img
+                            src={member.user.image}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          orgInitials(name)
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-m3-text truncate">
+                          {name}
+                          {isSelf ? (
+                            <span className="text-m3-secondary font-normal">
+                              {" "}
+                              · {t("settings.members.you")}
+                            </span>
+                          ) : null}
+                        </p>
+                        <p className="text-xs text-m3-secondary truncate">{member.user?.email}</p>
+                      </div>
+                      <Badge variant="neutral" size="sm" className="shrink-0">
+                        {roleLabel(member.role, t)}
+                      </Badge>
+                    </button>
+                  );
                 })}
               </div>
             )}
             <Can permission="notification.sent">
-              <section className="border-t border-m3-border pt-5" aria-label={t("home.widgets.sendNotification.title")}>
+              <section
+                className="border-t border-m3-border pt-5"
+                aria-label={t("home.widgets.sendNotification.title")}
+              >
                 <SendNotificationWidget
                   instance={{
                     instanceId: "organization-members-notification-box",

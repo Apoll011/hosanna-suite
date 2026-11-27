@@ -6,12 +6,12 @@ This is not a new brand brief. It records what already ships. Prefer tokens and 
 
 **Source of truth**
 
-| Layer             | Where                                                                                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                               |
+| Layer             | Where                                                                                                                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                                                      |
 | Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `InboxButton`, `NotificationChatBox`, `SuiteAppIcon`, …) |
-| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                                        |
-| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Inbox → Logos → App Switcher → AccountMenu                                                            |
+| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                                                               |
+| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Inbox → Logos → App Switcher → AccountMenu                                                                                   |
 
 When Studio and Auth disagree, **Studio tokens win** and Auth should catch up — except Auth has no lyric/score surface, so it may omit `--font-lyric`.
 

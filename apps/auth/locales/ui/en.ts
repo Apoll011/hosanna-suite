@@ -340,11 +340,18 @@ export const en: typeof pt = {
         title: "Send notification",
         description: "Quickly notify people, teams, or @All across inbox, email, and push.",
         keywords: "send notification mention broadcast message team all inbox email push",
-        open: "Full composer",
         placeholder: "Write a message… Type @ to mention",
         hint: "Type @ to mention",
         send: "Send notification",
         channelsLabel: "Delivery channels",
+        typeLabel: "Notification type",
+        types: {
+          info: "Info",
+          organization: "Organization",
+          team: "Team",
+          security: "Security",
+          billing: "Billing",
+        },
         mentionList: "Mention suggestions",
         allTarget: "All",
         allBadge: "Organization",
@@ -1014,7 +1021,6 @@ export const en: typeof pt = {
       members: "Members",
       teams: "Teams",
       billing: "Billing",
-      notifications: "Notifications",
       ai: "AI",
       regional: "Regional",
       activity: "Activity",
@@ -1055,10 +1061,6 @@ export const en: typeof pt = {
     billing: {
       title: "Billing",
       description: "Plan, invoices, and payment methods.",
-    },
-    notifications: {
-      title: "Send notification",
-      description: "Compose and send an announcement to the organization, a team, or a member.",
     },
     ai: {
       title: "AI",

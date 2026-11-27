@@ -342,11 +342,18 @@ export const es: typeof pt = {
         description:
           "Notifica rápidamente a personas, equipos o @Todos por bandeja, correo y push.",
         keywords: "enviar notificación mencionar mensaje equipo todos bandeja correo push",
-        open: "Editor completo",
         placeholder: "Escribe un mensaje… Escribe @ para mencionar",
         hint: "Escribe @ para mencionar",
         send: "Enviar notificación",
         channelsLabel: "Canales de entrega",
+        typeLabel: "Tipo de notificación",
+        types: {
+          info: "Información",
+          organization: "Organización",
+          team: "Equipo",
+          security: "Seguridad",
+          billing: "Facturación",
+        },
         mentionList: "Sugerencias de mención",
         allTarget: "Todos",
         allBadge: "Organización",
@@ -1019,7 +1026,6 @@ export const es: typeof pt = {
       members: "Miembros",
       teams: "Equipos",
       billing: "Facturación",
-      notifications: "Notificaciones",
       ai: "IA",
       regional: "Regional",
       activity: "Actividad",
@@ -1060,10 +1066,6 @@ export const es: typeof pt = {
     billing: {
       title: "Facturación",
       description: "Plan, facturas y métodos de pago.",
-    },
-    notifications: {
-      title: "Enviar notificación",
-      description: "Redacta y envía un aviso a la organización, a un equipo o a un miembro.",
     },
     ai: {
       title: "IA",

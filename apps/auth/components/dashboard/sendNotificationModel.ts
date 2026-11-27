@@ -2,7 +2,6 @@ import type {
   CreateNotificationInput,
   NotificationChannel,
 } from "@/lib/services/notifications-api";
-import type { AppRole } from "@hosanna/auth";
 
 export type MentionTarget =
   | { kind: "all"; id: "all"; label: string }
@@ -13,7 +12,6 @@ export type MentionTarget =
       label: string;
       email?: string;
       image?: string | null;
-      role?: string;
     };
 
 export type ComposerPart =
@@ -26,7 +24,6 @@ export type OrgMemberInput = {
     email?: string | null;
     image?: string | null;
   } | null;
-  role?: string;
 };
 
 export type OrgTeamInput = {
@@ -63,7 +60,6 @@ export function buildMentionCandidates(params: {
       label,
       email: member.user?.email ?? undefined,
       image: member.user?.image ?? null,
-      role: member.role,
     });
   }
 
@@ -115,9 +111,7 @@ export function serializeComposerMessage(parts: readonly ComposerPart[]): {
   text: string;
   targets: MentionTarget[];
 } {
-  const raw = parts
-    .map((part) => (part.t === "text" ? part.s : part.target.label))
-    .join("");
+  const raw = parts.map((part) => (part.t === "text" ? part.s : part.target.label)).join("");
   const text = raw.replace(/\s+/g, " ").trim();
 
   const chips = parts
@@ -147,9 +141,7 @@ export function buildNotificationPayloads(params: {
   text: string;
   targets: readonly MentionTarget[];
   channels: readonly NotificationChannel[];
-  roles?: readonly AppRole[];
   type?: string;
-  href?: string;
 }): CreateNotificationInput[] {
   const trimmed = params.text.trim();
   if (!trimmed || params.targets.length === 0 || params.channels.length === 0) {
@@ -166,18 +158,13 @@ export function buildNotificationPayloads(params: {
       title,
       channels: [...params.channels],
       ...(body ? { body } : {}),
-      ...(params.href?.trim() ? { href: params.href.trim() } : {}),
     };
     if (target.kind === "all") {
       base.organizationId = params.organizationId;
     } else if (target.kind === "team") {
       base.teamId = target.id;
-      if (params.roles?.length) base.roles = [...params.roles];
     } else {
       base.userId = target.id;
-    }
-    if (target.kind === "all" && params.roles?.length) {
-      base.roles = [...params.roles];
     }
     return base;
   });
