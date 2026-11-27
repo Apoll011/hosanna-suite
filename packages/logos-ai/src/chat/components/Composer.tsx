@@ -303,7 +303,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
 
       <div
         className={[
-          "logos-composer-field flex items-end gap-2 rounded-[18px] border bg-m3-bg px-2.5 py-2.5 transition-[border-color,box-shadow,background] duration-200",
+          "logos-composer-field flex items-end gap-1.5 rounded-[16px] border bg-m3-bg px-2 py-1.5 transition-[border-color,box-shadow,background] duration-200",
           dragging
             ? "border-m3-primary ring-2 ring-m3-primary/20"
             : "border-m3-border focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20",
@@ -314,7 +314,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
           onClick={() => fileRef.current?.click()}
           aria-label={t("ai.chat.attachFiles")}
           title={t("ai.chat.attachFiles")}
-          className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors focus-visible:outline-2 focus-visible:outline-m3-primary"
+          className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors focus-visible:outline-2 focus-visible:outline-m3-primary"
         >
           <Paperclip className="w-4 h-4" />
         </button>
@@ -369,7 +369,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
           <button
             type="button"
             onClick={onStop}
-            className="shrink-0 w-9 h-9 rounded-xl bg-m3-text text-m3-bg flex items-center justify-center hover:opacity-85 transition-opacity active:scale-95"
+            className="shrink-0 w-8 h-8 rounded-lg bg-m3-text text-m3-bg flex items-center justify-center hover:opacity-85 transition-opacity active:scale-95"
             aria-label={t("ai.chat.stop")}
             title={`${t("ai.chat.stop")} (Esc)`}
           >
@@ -380,7 +380,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
             type="button"
             onClick={() => submit(draft)}
             disabled={!draft.trim() && attachments.length === 0}
-            className="logos-send-button shrink-0 w-9 h-9 rounded-xl bg-m3-primary text-white flex items-center justify-center disabled:opacity-35 hover:opacity-90 transition-[transform,opacity,background] duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-m3-primary focus-visible:outline-offset-2"
+            className="logos-send-button shrink-0 w-8 h-8 rounded-lg bg-m3-primary text-white flex items-center justify-center disabled:opacity-35 hover:opacity-90 transition-[transform,opacity,background] duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-m3-primary focus-visible:outline-offset-2"
             aria-label={t("ai.chat.send")}
             title={t("ai.chat.send")}
           >

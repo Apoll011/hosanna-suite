@@ -276,7 +276,7 @@ const AssistantMessage: React.FC<Props> = ({
             return (
               <div
                 key={block.key}
-                className={`logos-assistant-message text-m3-text text-[13px] leading-relaxed wrap-break-word *:first:mt-0 *:last:mb-0 ${
+                className={`text-m3-text text-[13px] leading-relaxed wrap-break-word *:first:mt-0 *:last:mb-0 ${
                   streamingThis ? "logos-streaming" : ""
                 }`}
               >
