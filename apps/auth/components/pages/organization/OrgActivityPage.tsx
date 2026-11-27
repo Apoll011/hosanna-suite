@@ -63,8 +63,9 @@ async function fetchOrganizationAuditEvents(
     return { events: [], error: result.error.message || null };
   }
 
-  const events = ((result.data?.events ?? []) as AuditEvent[])
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const events = ((result.data?.events ?? []) as AuditEvent[]).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
   return { events, error: null };
 }
 
@@ -259,7 +260,8 @@ export function OrgActivityPage() {
                         <>
                           {ua && (
                             <p className="text-xs text-m3-secondary mt-0.5 truncate" title={ua}>
-                              {[info.client, info.os, info.device].filter(Boolean).join(" · ") || ua}
+                              {[info.client, info.os, info.device].filter(Boolean).join(" · ") ||
+                                ua}
                             </p>
                           )}
                           {(ip || locationParts.length > 0) && (

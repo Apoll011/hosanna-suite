@@ -258,7 +258,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
               stickRef.current = true;
               scrollToBottom(true);
             }}
-          className="logos-popover logos-msg-in absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full border border-m3-border bg-m3-card px-3 py-1.5 text-[11.5px] text-m3-text hover:bg-m3-hover"
+            className="logos-popover logos-msg-in absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full border border-m3-border bg-m3-card px-3 py-1.5 text-[11.5px] text-m3-text hover:bg-m3-hover"
           >
             <ArrowDown className="w-3.5 h-3.5" />
             {t("ai.chat.jumpToLatest")}

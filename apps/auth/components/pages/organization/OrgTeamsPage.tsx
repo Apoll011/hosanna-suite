@@ -712,7 +712,12 @@ export function OrgTeamsPage() {
                 <Button type="button" variant="ghost" onClick={() => setRenameOpen(false)}>
                   {t("common.back")}
                 </Button>
-                <Button type="submit" variant="primary" isLoading={saving} disabled={!renameDraft.trim()}>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={saving}
+                  disabled={!renameDraft.trim()}
+                >
                   {t("teams.rename")}
                 </Button>
               </div>

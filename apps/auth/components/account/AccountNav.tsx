@@ -8,7 +8,17 @@ import type { TranslationKey } from "@/lib/ui/i18n";
 import { useI18n } from "@/lib/ui/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
 import { AnyRoleGate, Can, CanAny } from "@hosanna/ui";
-import { Activity, Bot, Building2, CreditCard, Database, MapPin, User, Users, UsersRound } from "lucide-react";
+import {
+  Activity,
+  Bot,
+  Building2,
+  CreditCard,
+  Database,
+  MapPin,
+  User,
+  Users,
+  UsersRound,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ComponentType, type MouseEvent, type ReactNode } from "react";
