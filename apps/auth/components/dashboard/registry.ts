@@ -22,6 +22,7 @@ import {
   RepertoireKeysWidget,
   RestingSongsWidget,
   SecurityWidget,
+  SendNotificationWidget,
   SubscriptionWidget,
   TeamsWidget,
   TrashWidget,
@@ -434,6 +435,20 @@ export const authDashboardWidgets = [
     maxSize: { w: 8, h: 8 },
     singleton: true,
   },
+  {
+    id: "auth.send-notification",
+    app: "auth",
+    group: "home.dashboard.sections.organization",
+    title: "home.widgets.sendNotification.title",
+    description: "home.widgets.sendNotification.description",
+    searchPatterns: ["home.widgets.sendNotification.keywords"],
+    icon: "bell",
+    requires: ["notification.sent"],
+    minSize: { w: 3, h: 2 },
+    defaultSize: { w: 4, h: 3 },
+    maxSize: { w: 8, h: 5 },
+    singleton: true,
+  },
 ] as const;
 
 export const authDashboardRegistry = createWidgetRegistry([...authDashboardWidgets]);
@@ -464,4 +479,5 @@ export const authDashboardRenderers: WidgetRenderers = {
   "auth.profile": ProfileWidget,
   "auth.security": SecurityWidget,
   "auth.inbox": InboxWidget,
+  "auth.send-notification": SendNotificationWidget,
 };

@@ -25,3 +25,4 @@ export {
   WorkspaceUsageWidget,
 } from "./organizationWidgets";
 export { InboxWidget, ProfileWidget, SecurityWidget } from "./personalWidgets";
+export { SendNotificationWidget } from "./SendNotificationWidget";
