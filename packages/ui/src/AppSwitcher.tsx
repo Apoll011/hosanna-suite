@@ -17,6 +17,7 @@ import { sharedUiT } from "./sharedT";
 import { SuiteAppIcon } from "./SuiteAppIcon";
 import { loadSuiteApps, peekSuiteAppsCache, type SuiteCatalogApp } from "./suiteAppsCache";
 import { localizeSuiteApps } from "./suiteLabels";
+import { usePresence } from "./usePresence";
 
 export type AppSwitcherApp = SuiteCatalogApp;
 
@@ -78,6 +79,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const panelMounted = usePresence(open);
   const t = useMemo(() => sharedUiT(language), [language]);
   const catalogT = translate ?? t;
 
@@ -151,7 +153,10 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        rootRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+      }
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKey);
@@ -207,12 +212,14 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
         <LayoutGrid className="h-5 w-5" aria-hidden />
       </button>
 
-      {open ? (
+      {panelMounted ? (
         <div
           id={panelId}
           role="dialog"
           aria-label={openLabel}
-          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_16px_48px_-16px_rgb(0_0_0_/0.4)] hosanna-surface-enter [--hosanna-origin:top_right]"
+          aria-hidden={!open}
+          inert={!open}
+          className={`absolute right-0 z-50 mt-2 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_16px_48px_-16px_rgb(0_0_0_/0.4)] [--hosanna-origin:top_right] ${open ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
         >
           <div className="flex items-center justify-between gap-2 border-b border-m3-border/60 px-4 py-3">
             <p className="text-sm font-semibold tracking-tight text-m3-text">{greeting}</p>

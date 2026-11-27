@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ButtonHTMLAttributes, type PointerEve
 
 export type HoldButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
   holdDuration?: number;
+  resetAfter?: number;
   holdingLabel?: string;
   completeLabel?: string;
   onHoldComplete: () => void;
@@ -10,6 +11,7 @@ export type HoldButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onC
 
 export function HoldButton({
   holdDuration = 900,
+  resetAfter = 1400,
   holdingLabel = "Keep holding",
   completeLabel = "Confirmed",
   onHoldComplete,
@@ -29,6 +31,7 @@ export function HoldButton({
   const [phase, setPhase] = useState<"idle" | "holding" | "complete">("idle");
   const start = useRef(0);
   const frame = useRef<number>(0);
+  const resetTimer = useRef<number>(0);
   const progressRef = useRef(0);
   const phaseRef = useRef(phase);
   const cancel = () => {
@@ -65,11 +68,25 @@ export function HoldButton({
         phaseRef.current = "complete";
         setPhase("complete");
         onHoldComplete();
+        if (resetAfter > 0) {
+          resetTimer.current = window.setTimeout(() => {
+            phaseRef.current = "idle";
+            progressRef.current = 0;
+            setProgress(0);
+            setPhase("idle");
+          }, resetAfter);
+        }
       } else frame.current = requestAnimationFrame(tick);
     };
     frame.current = requestAnimationFrame(tick);
   };
-  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(frame.current);
+      window.clearTimeout(resetTimer.current);
+    },
+    [],
+  );
   const onDown = (event: PointerEvent<HTMLButtonElement>) => {
     onPointerDown?.(event);
     if (event.button === 0) begin();

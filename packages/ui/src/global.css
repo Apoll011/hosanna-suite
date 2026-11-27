@@ -56,13 +56,11 @@
     animation: none;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    --hosanna-motion-menu: 280ms;
-    --hosanna-motion-surface: 220ms;
-    --hosanna-motion-feedback: 150ms;
-    --hosanna-ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
+:root {
+  --hosanna-motion-menu: 260ms;
+  --hosanna-motion-surface: 220ms;
+  --hosanna-motion-feedback: 150ms;
+  --hosanna-ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .hosanna-hold-button {
@@ -203,11 +201,11 @@
 }
 
 .hosanna-surface-enter {
-  animation: hosanna-surface-enter 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: hosanna-surface-enter var(--hosanna-motion-menu) var(--hosanna-ease-spring) both;
   transform-origin: var(--hosanna-origin, center);
 }
 .hosanna-surface-exit {
-  animation: hosanna-surface-enter 180ms cubic-bezier(.4, 0, 1, 1) reverse both;
+  animation: hosanna-surface-enter var(--hosanna-motion-feedback) cubic-bezier(.4, 0, 1, 1) reverse both;
   pointer-events: none;
 }
 @keyframes hosanna-surface-enter {
@@ -297,6 +295,11 @@
   transform-origin: left;
 }
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --hosanna-motion-menu: 1ms;
+    --hosanna-motion-surface: 1ms;
+    --hosanna-motion-feedback: 1ms;
+  }
   .hosanna-hold-fill,
   .hosanna-file-drop,
   .hosanna-checklist *,

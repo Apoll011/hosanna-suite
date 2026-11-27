@@ -4,7 +4,7 @@
  */
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
-import { Button, Can, CanAny, InboxButton, Input } from "@hosanna/ui";
+import { Button, Can, CanAny, InboxButton, Input, usePresence } from "@hosanna/ui";
 import {
   BarChart3,
   Calendar,
@@ -83,6 +83,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
   const { t, locale, language } = useI18n();
   const isDriveRoot = view === "explorer" && currentFolderId === null;
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
+  const plusMenuMounted = usePresence(isPlusMenuOpen);
   const [isSearchHelpOpen, setIsSearchHelpOpen] = useState(false);
   const plusMenuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -451,10 +452,12 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             >
               <Plus className="w-5 h-5" />
             </Button>
-            {isPlusMenuOpen && (
+            {plusMenuMounted && (
               <div
                 data-tour="create-menu"
-                className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 hosanna-surface-enter [--hosanna-origin:top_right]"
+                aria-hidden={!isPlusMenuOpen}
+                inert={!isPlusMenuOpen}
+                className={`absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 [--hosanna-origin:top_right] ${isPlusMenuOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
               >
                 <div className="px-4 py-2 text-label">{t("addressBar.createNew")}</div>
                 <Can permission="song.create">

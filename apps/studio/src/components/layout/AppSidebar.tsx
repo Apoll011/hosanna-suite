@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can } from "@hosanna/ui";
+import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can, usePresence } from "@hosanna/ui";
 import { isDemoMode } from "@/src/demo";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
@@ -109,6 +109,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const isDemo = isDemoMode();
   const shortName = organization?.metadata?.shortName || "";
   const [isOrgMenuOpen, setIsOrgMenuOpen] = useState(false);
+  const orgMenuMounted = usePresence(isOrgMenuOpen);
   const orgMenuRef = useRef<HTMLDivElement>(null);
   const hasMultipleOrgs = (organizations?.length ?? 0) > 1;
 
@@ -237,9 +238,11 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </div>
           </div>
 
-          {organization && isOrgMenuOpen && (
+          {organization && orgMenuMounted && (
             <div
-              className={`absolute top-full mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 hosanna-surface-enter [--hosanna-origin:top_left] ${
+              aria-hidden={!isOrgMenuOpen}
+              inert={!isOrgMenuOpen}
+              className={`absolute top-full mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 [--hosanna-origin:top_left] ${isOrgMenuOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"} ${
                 isSidebarCollapsed ? "left-0 w-64" : "left-0 right-0"
               }`}
               role="menu"
