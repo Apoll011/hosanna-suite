@@ -334,7 +334,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
   return (
     <SharedWorkspaceAddressBar
       breadcrumbs={breadcrumbs}
-      breadcrumbLabel={t("common.navigation")}
+      breadcrumbLabel={t("sidebar.mainMenu")}
       mobileMenuLabel={t("sidebar.mainMenu")}
       onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       backLabel={

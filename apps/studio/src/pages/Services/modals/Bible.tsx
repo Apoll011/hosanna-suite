@@ -356,13 +356,6 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
   initial,
 }) => {
   const { t } = useI18n();
-  const translationOptions = useMemo<SpringDropdownOption<string>[]>(
-    () => translations.map((translation) => ({
-      id: translation.short_name,
-      label: `${translation.short_name} — ${translation.full_name}`,
-    })),
-    [translations],
-  );
   const defaultTitle = t("serviceModals.bible.modalTitle");
 
   const [title, setTitle] = useState(initial?.title || defaultTitle);
@@ -371,6 +364,14 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
   const [duration, setDuration] = useState(secondsToDurationInput(initial?.duration));
 
   const [translations, setTranslations] = useState<Translation[]>(FALLBACK_TRANSLATIONS);
+  const translationOptions = useMemo<SpringDropdownOption<string>[]>(
+    () =>
+      translations.map((translation) => ({
+        id: translation.short_name,
+        label: `${translation.short_name} — ${translation.full_name}`,
+      })),
+    [translations],
+  );
   const [selectedTranslation, setSelectedTranslation] = useState("ARA");
   const [translationsLoading, setTranslationsLoading] = useState(false);
 

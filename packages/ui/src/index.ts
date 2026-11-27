@@ -101,6 +101,7 @@ export {
   WorkspaceMain,
   WorkspaceNavItem,
   WorkspaceSidebar,
+  WorkspaceAddressBar,
   type WorkspaceAddressBarProps,
   type WorkspaceAddressSearch,
   type WorkspaceBreadcrumbItem,

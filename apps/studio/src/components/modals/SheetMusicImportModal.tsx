@@ -140,6 +140,8 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
   onConfirm,
 }) => {
   const { t } = useI18n();
+  const { foldersQuery } = useFolders();
+  const folders = foldersQuery.data?.folders ?? [];
   const folderOptions = useMemo<SpringDropdownOption<string>[]>(
     () => [
       { id: "", label: t("forms.rootLevel") },
@@ -147,8 +149,6 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
     ],
     [folders, t],
   );
-  const { foldersQuery } = useFolders();
-  const folders = foldersQuery.data?.folders ?? [];
 
   const [job, setJob] = useState<SongImportJob | null>(null);
   const [pollError, setPollError] = useState<string | null>(null);

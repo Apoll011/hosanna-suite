@@ -92,14 +92,6 @@ export const SongEditorPage: React.FC = () => {
   const [showEditorSettings, setShowEditorSettings] = useState(false);
   const [showPreviewSettings, setShowPreviewSettings] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-  const variantOptions = useMemo<SpringDropdownOption<string>[]>(
-    () => [
-      { id: "", label: t("songEditor.defaultVariant") },
-      ...(parsedSong.variants ?? []).map((variant) => ({ id: variant.id, label: variant.name })),
-    ],
-    [parsedSong.variants, t],
-  );
-
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -110,6 +102,13 @@ export const SongEditorPage: React.FC = () => {
   } = useEditorSettings();
 
   const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
+  const variantOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => [
+      { id: "", label: t("songEditor.defaultVariant") },
+      ...(parsedSong.variants ?? []).map((variant) => ({ id: variant.id, label: variant.name })),
+    ],
+    [parsedSong.variants, t],
+  );
 
   const directiveDefaults = useMemo(() => {
     const variant = selectedVariant
