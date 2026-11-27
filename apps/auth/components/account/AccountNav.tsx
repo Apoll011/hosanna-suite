@@ -8,7 +8,7 @@ import type { TranslationKey } from "@/lib/ui/i18n";
 import { useI18n } from "@/lib/ui/i18n";
 import type { AppRole, PermissionString } from "@hosanna/auth";
 import { AnyRoleGate, Can, CanAny } from "@hosanna/ui";
-import { Activity, Bot, Building2, CreditCard, Database, MapPin, User, Users } from "lucide-react";
+import { Activity, Bot, Building2, CreditCard, Database, MapPin, User, Users, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ComponentType, type MouseEvent, type ReactNode } from "react";
@@ -34,7 +34,7 @@ const PERSONAL_ITEMS: NavItem[] = [
 const ORG_ITEMS: OrgNavItem[] = [
   { href: "/account/organization/profile", labelKey: "account.nav.profile", icon: Building2 },
   { href: "/account/organization/members", labelKey: "account.nav.members", icon: Users },
-  { href: "/account/organization/teams", labelKey: "account.nav.teams", icon: Users },
+  { href: "/account/organization/teams", labelKey: "account.nav.teams", icon: UsersRound },
   {
     href: "/account/organization/billing",
     labelKey: "account.nav.billing",

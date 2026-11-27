@@ -12,7 +12,19 @@ import {
 import { useI18n } from "@/lib/ui/i18n";
 import { canManageTeam } from "@hosanna/auth";
 import { Button, ConfirmDialog, Input, PageHeader, Spinner, Surface, useCan } from "@hosanna/ui";
-import { Check, Plus, Search, Shield, UserMinus, UserPlus, Users } from "lucide-react";
+import {
+  Check,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Search,
+  Shield,
+  Trash2,
+  UserMinus,
+  UserPlus,
+  UsersRound,
+  X,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { z } from "zod";
 
@@ -50,6 +62,8 @@ export function OrgTeamsPage() {
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [renameOpen, setRenameOpen] = useState(false);
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [renameDraft, setRenameDraft] = useState("");
   const [addUserId, setAddUserId] = useState("");
@@ -173,6 +187,7 @@ export function OrgTeamsPage() {
         name: renameDraft.trim(),
       });
       await refresh();
+      setRenameOpen(false);
       setToast({ msg: t("teams.renamed"), type: "success" });
     } catch (cause) {
       setToast({
@@ -226,6 +241,7 @@ export function OrgTeamsPage() {
       });
       setAddUserId("");
       await refresh();
+      setAddMemberOpen(false);
       setToast({ msg: t("teams.memberAdded"), type: "success" });
     } catch (cause) {
       setToast({
@@ -325,7 +341,7 @@ export function OrgTeamsPage() {
                     {t("teams.count", { count: teams.length })}
                   </p>
                 </div>
-                <Users className="h-4 w-4 text-m3-primary" aria-hidden />
+                <UsersRound className="h-4 w-4 text-m3-primary" aria-hidden />
               </div>
               <label className="relative block">
                 <Search
@@ -355,7 +371,7 @@ export function OrgTeamsPage() {
                       <span
                         className={`grid h-10 w-10 shrink-0 place-items-center rounded-md ${current ? "bg-m3-primary text-white" : "bg-m3-sidebar text-m3-secondary"}`}
                       >
-                        <Users className="h-4 w-4" aria-hidden />
+                        <UsersRound className="h-4 w-4" aria-hidden />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold">{team.name}</span>
@@ -374,7 +390,7 @@ export function OrgTeamsPage() {
                 })
               ) : (
                 <div className="px-4 py-10 text-center">
-                  <Users className="mx-auto h-7 w-7 text-m3-secondary/70" aria-hidden />
+                  <UsersRound className="mx-auto h-7 w-7 text-m3-secondary/70" aria-hidden />
                   <p className="mt-3 text-sm font-medium text-m3-text">
                     {teams.length ? t("teams.noSearchResults") : t("teams.emptyTitle")}
                   </p>
@@ -403,7 +419,7 @@ export function OrgTeamsPage() {
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="flex min-w-0 items-center gap-4">
                       <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-m3-primary text-white">
-                        <Users className="h-5 w-5" aria-hidden />
+                        <UsersRound className="h-5 w-5" aria-hidden />
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-m3-secondary">
@@ -414,39 +430,48 @@ export function OrgTeamsPage() {
                         </h2>
                       </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-2">
                       {canManage(selected, "update") ? (
-                        <form onSubmit={renameTeam} className="flex items-center gap-2">
-                          <Input
-                            aria-label={t("teams.renameLabel")}
-                            value={renameDraft}
-                            onChange={(event) => setRenameDraft(event.target.value)}
-                            placeholder={t("teams.renamePlaceholder")}
-                          />
-                          <Button
-                            type="submit"
-                            size="sm"
-                            variant="outline"
-                            disabled={saving || !renameDraft.trim()}
-                          >
-                            {t("teams.rename")}
-                          </Button>
-                        </form>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          icon={<Pencil className="h-4 w-4" />}
+                          onClick={() => {
+                            setRenameDraft(selected.name);
+                            setRenameOpen(true);
+                          }}
+                        >
+                          {t("teams.rename")}
+                        </Button>
                       ) : null}
                       {canManage(selected, "delete") ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setConfirm({ kind: "team", team: selected })}
-                        >
-                          {t("teams.delete")}
-                        </Button>
+                        <details className="relative">
+                          <summary
+                            className="grid h-10 w-10 cursor-pointer list-none place-items-center rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary [&::-webkit-details-marker]:hidden"
+                            aria-label={t("teams.moreActions")}
+                          >
+                            <MoreHorizontal className="h-5 w-5" aria-hidden />
+                          </summary>
+                          <div className="absolute right-0 top-11 z-20 w-48 rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg">
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.currentTarget.closest("details")?.removeAttribute("open");
+                                setConfirm({ kind: "team", team: selected });
+                              }}
+                              className="flex min-h-10 w-full items-center gap-2 rounded-md px-3 text-left text-sm font-medium text-m3-danger hover:bg-m3-danger/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                            >
+                              <Trash2 className="h-4 w-4" aria-hidden />
+                              {t("teams.delete")}
+                            </button>
+                          </div>
+                        </details>
                       ) : null}
                     </div>
                   </div>
                   <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-m3-secondary">
                     <span className="inline-flex items-center gap-2">
-                      <Users className="h-4 w-4 text-m3-primary" aria-hidden />
+                      <UsersRound className="h-4 w-4 text-m3-primary" aria-hidden />
                       {t("teams.memberCount", { count: selected.memberCount })}
                     </span>
                     <span className="inline-flex items-center gap-2">
@@ -496,29 +521,15 @@ export function OrgTeamsPage() {
                     <p className="mt-1 text-sm text-m3-secondary">{t("teams.membersDesc")}</p>
                   </div>
                   {canManage(selected, "update") ? (
-                    <form onSubmit={addMember} className="flex w-full gap-2 sm:w-auto">
-                      <select
-                        value={addUserId}
-                        onChange={(event) => setAddUserId(event.target.value)}
-                        className="h-10 min-w-0 flex-1 rounded-md border border-m3-border bg-m3-bg px-3 text-sm text-m3-text sm:w-56"
-                        aria-label={t("teams.chooseMember")}
-                      >
-                        <option value="">{t("teams.chooseMember")}</option>
-                        {addableMembers.map((member) => (
-                          <option key={member.userId} value={member.userId}>
-                            {member.user?.name || member.user?.email || member.userId}
-                          </option>
-                        ))}
-                      </select>
-                      <Button
-                        type="submit"
-                        size="sm"
-                        disabled={saving || !addUserId}
-                        icon={<UserPlus className="h-4 w-4" />}
-                      >
-                        {t("teams.addMember")}
-                      </Button>
-                    </form>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      icon={<UserPlus className="h-4 w-4" />}
+                      disabled={!addableMembers.length}
+                      onClick={() => setAddMemberOpen(true)}
+                    >
+                      {t("teams.addMember")}
+                    </Button>
                   ) : null}
                 </div>
                 {selected.members.length ? (
@@ -559,22 +570,33 @@ export function OrgTeamsPage() {
                             {t("teams.roleLabel", { role: orgMember?.role ?? "member" })}
                           </span>
                           {canRemove ? (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setConfirm({
-                                  kind: "member",
-                                  team: selected,
-                                  userId: member.userId,
-                                })
-                              }
-                              className="rounded-md p-2 text-m3-secondary hover:bg-m3-danger/10 hover:text-m3-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-                              aria-label={t("teams.removeMember", {
-                                name: member.name || member.email || "",
-                              })}
-                            >
-                              <UserMinus className="h-4 w-4" aria-hidden />
-                            </button>
+                            <details className="relative">
+                              <summary
+                                className="grid h-10 w-10 cursor-pointer list-none place-items-center rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary [&::-webkit-details-marker]:hidden"
+                                aria-label={t("teams.removeMember", {
+                                  name: member.name || member.email || "",
+                                })}
+                              >
+                                <MoreHorizontal className="h-5 w-5" aria-hidden />
+                              </summary>
+                              <div className="absolute right-0 top-11 z-20 w-48 rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg">
+                                <button
+                                  type="button"
+                                  onClick={(event) => {
+                                    event.currentTarget.closest("details")?.removeAttribute("open");
+                                    setConfirm({
+                                      kind: "member",
+                                      team: selected,
+                                      userId: member.userId,
+                                    });
+                                  }}
+                                  className="flex min-h-10 w-full items-center gap-2 rounded-md px-3 text-left text-sm font-medium text-m3-danger hover:bg-m3-danger/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                                >
+                                  <UserMinus className="h-4 w-4" aria-hidden />
+                                  {t("teams.remove")}
+                                </button>
+                              </div>
+                            </details>
                           ) : null}
                         </li>
                       );
@@ -582,7 +604,7 @@ export function OrgTeamsPage() {
                   </ul>
                 ) : (
                   <div className="mt-5 rounded-lg border border-dashed border-m3-border px-5 py-9 text-center">
-                    <Users className="mx-auto h-6 w-6 text-m3-secondary" aria-hidden />
+                    <UsersRound className="mx-auto h-6 w-6 text-m3-secondary" aria-hidden />
                     <p className="mt-2 text-sm font-medium text-m3-text">{t("teams.noMembers")}</p>
                     {canManage(selected, "update") ? (
                       <p className="mt-1 text-xs text-m3-secondary">{t("teams.noMembersDesc")}</p>
@@ -594,7 +616,7 @@ export function OrgTeamsPage() {
           ) : (
             <Surface className="grid min-h-72 place-items-center text-center">
               <div>
-                <Users className="mx-auto h-8 w-8 text-m3-secondary" aria-hidden />
+                <UsersRound className="mx-auto h-8 w-8 text-m3-secondary" aria-hidden />
                 <p className="mt-3 text-sm font-medium text-m3-text">{t("teams.chooseTeam")}</p>
               </div>
             </Surface>
@@ -640,6 +662,122 @@ export function OrgTeamsPage() {
                   icon={<Plus className="h-4 w-4" />}
                 >
                   {t("teams.create")}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : null}
+        {renameOpen && selected ? (
+          <div
+            className="fixed inset-0 z-40 grid place-items-center bg-m3-bg/75 p-4 backdrop-blur-sm"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setRenameOpen(false);
+            }}
+          >
+            <form
+              onSubmit={renameTeam}
+              className="w-full max-w-md rounded-xl border border-m3-border bg-m3-card p-5 shadow-lg"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="rename-team-title"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 id="rename-team-title" className="text-lg font-semibold text-m3-text">
+                    {t("teams.renameTitle")}
+                  </h2>
+                  <p className="mt-1 text-sm text-m3-secondary">{selected.name}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setRenameOpen(false)}
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-md text-m3-secondary hover:bg-m3-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                  aria-label={t("common.back")}
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                </button>
+              </div>
+              <Input
+                autoFocus
+                aria-label={t("teams.renameLabel")}
+                value={renameDraft}
+                onChange={(event) => setRenameDraft(event.target.value)}
+                placeholder={t("teams.renamePlaceholder")}
+                maxLength={80}
+                required
+                className="mt-5"
+              />
+              <div className="mt-5 flex justify-end gap-2">
+                <Button type="button" variant="ghost" onClick={() => setRenameOpen(false)}>
+                  {t("common.back")}
+                </Button>
+                <Button type="submit" variant="primary" isLoading={saving} disabled={!renameDraft.trim()}>
+                  {t("teams.rename")}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : null}
+        {addMemberOpen && selected ? (
+          <div
+            className="fixed inset-0 z-40 grid place-items-center bg-m3-bg/75 p-4 backdrop-blur-sm"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setAddMemberOpen(false);
+            }}
+          >
+            <form
+              onSubmit={addMember}
+              className="w-full max-w-md rounded-xl border border-m3-border bg-m3-card p-5 shadow-lg"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="add-team-member-title"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 id="add-team-member-title" className="text-lg font-semibold text-m3-text">
+                    {t("teams.addMemberTitle")}
+                  </h2>
+                  <p className="mt-1 text-sm text-m3-secondary">{selected.name}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAddMemberOpen(false)}
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-md text-m3-secondary hover:bg-m3-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                  aria-label={t("common.back")}
+                >
+                  <X className="h-4 w-4" aria-hidden />
+                </button>
+              </div>
+              <label className="mt-5 block">
+                <span className="text-label">{t("teams.chooseMember")}</span>
+                <select
+                  autoFocus
+                  value={addUserId}
+                  onChange={(event) => setAddUserId(event.target.value)}
+                  className="mt-1.5 h-10 w-full rounded-md border border-m3-border bg-m3-card px-3 text-sm text-m3-text outline-none focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20"
+                >
+                  <option value="">{t("teams.chooseMember")}</option>
+                  {addableMembers.map((member) => (
+                    <option key={member.userId} value={member.userId}>
+                      {member.user?.name || member.user?.email || member.userId}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="mt-5 flex justify-end gap-2">
+                <Button type="button" variant="ghost" onClick={() => setAddMemberOpen(false)}>
+                  {t("common.back")}
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  isLoading={saving}
+                  disabled={!addUserId}
+                  icon={<UserPlus className="h-4 w-4" />}
+                >
+                  {t("teams.addMember")}
                 </Button>
               </div>
             </form>

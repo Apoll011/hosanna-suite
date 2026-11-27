@@ -1104,6 +1104,7 @@ export const pt = {
     active: "Ativa",
     setActive: "Definir como ativa",
     membersTitle: "Pessoas nesta equipa",
+    addMemberTitle: "Adicionar pessoa",
     membersDesc: "Escolha membros que já pertencem a esta organização.",
     chooseMember: "Selecionar membro",
     addMember: "Adicionar",
