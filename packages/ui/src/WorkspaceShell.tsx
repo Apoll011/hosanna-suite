@@ -15,7 +15,7 @@ export function WorkspaceFrame({ className, ...props }: WorkspaceFrameProps) {
   );
 }
 
-interface WorkspaceSidebarProps extends HTMLAttributes<HTMLElement> {
+interface WorkspaceSidebarProps extends Omit<HTMLAttributes<HTMLElement>, "content"> {
   appName: string;
   logo: ReactNode;
   logoAlt: string;
@@ -102,12 +102,31 @@ export function WorkspaceSidebar({
               collapsed && "cursor-pointer hover:bg-m3-hover hover:text-m3-text",
             )}
           >
-            <span role="img" aria-label={logoAlt} className="h-10 w-10 transition-opacity group-hover:opacity-90">{logo}</span>
-            {collapsed && <span className="pointer-events-none absolute inset-0 grid place-items-center bg-m3-card/80 opacity-0 transition-opacity group-hover:opacity-100"><ChevronRight className="h-5 w-5" aria-hidden="true" /></span>}
+            <span
+              role="img"
+              aria-label={logoAlt}
+              className="h-10 w-10 transition-opacity group-hover:opacity-90"
+            >
+              {logo}
+            </span>
+            {collapsed && (
+              <span className="pointer-events-none absolute inset-0 grid place-items-center bg-m3-card/80 opacity-0 transition-opacity group-hover:opacity-100">
+                <ChevronRight className="h-5 w-5" aria-hidden="true" />
+              </span>
+            )}
           </button>
-          <div className={cn("flex min-w-0 flex-1 items-center justify-between gap-1 overflow-hidden whitespace-nowrap transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)]", collapsed ? "pointer-events-none max-w-0 -translate-x-2 opacity-0" : "max-w-60 translate-x-0 opacity-100")}>
+          <div
+            className={cn(
+              "flex min-w-0 flex-1 items-center justify-between gap-1 overflow-hidden whitespace-nowrap transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)]",
+              collapsed
+                ? "pointer-events-none max-w-0 -translate-x-2 opacity-0"
+                : "max-w-60 translate-x-0 opacity-100",
+            )}
+          >
             <div className="flex min-w-0 flex-1 flex-col items-start">
-              <h1 className="truncate font-display text-title font-semibold leading-none text-m3-text">{appName}</h1>
+              <h1 className="truncate font-display text-title font-semibold leading-none text-m3-text">
+                {appName}
+              </h1>
               {headerContent}
             </div>
             <button
@@ -169,18 +188,27 @@ export function WorkspaceNavItem({
       aria-current={active ? "page" : undefined}
       className={cn(
         "group flex min-h-10 w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium transition-[background-color,color,transform] duration-150 active:scale-[.99]",
-        active ? "bg-m3-primary/10 text-m3-primary" : "text-m3-secondary hover:bg-m3-hover hover:text-m3-text",
+        active
+          ? "bg-m3-primary/10 text-m3-primary"
+          : "text-m3-secondary hover:bg-m3-hover hover:text-m3-text",
         className,
       )}
     >
       <span className="flex min-w-0 flex-1 items-center gap-3">
-        <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center", active ? "text-m3-primary" : "text-m3-secondary group-hover:text-m3-text")}>
+        <span
+          className={cn(
+            "flex h-5 w-5 shrink-0 items-center justify-center",
+            active ? "text-m3-primary" : "text-m3-secondary group-hover:text-m3-text",
+          )}
+        >
           {icon}
         </span>
         <span
           className={cn(
             "truncate overflow-hidden whitespace-nowrap transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)]",
-            collapsed ? "pointer-events-none max-w-0 -translate-x-2 opacity-0" : "max-w-35 translate-x-0 opacity-100",
+            collapsed
+              ? "pointer-events-none max-w-0 -translate-x-2 opacity-0"
+              : "max-w-35 translate-x-0 opacity-100",
           )}
         >
           {label}
@@ -265,17 +293,34 @@ export function WorkspaceAddressBar({
         >
           <CornerLeftUp className="h-4 w-4" aria-hidden="true" />
         </button>
-        <nav aria-label={breadcrumbLabel} className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto rounded-lg border border-m3-border bg-m3-bg px-4 py-2.5 text-[13px] shadow-sm hide-scrollbar">
+        <nav
+          aria-label={breadcrumbLabel}
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto rounded-lg border border-m3-border bg-m3-bg px-4 py-2.5 text-[13px] shadow-sm hide-scrollbar"
+        >
           {breadcrumbs.map((item, index) => (
             <span key={item.id} className="flex shrink-0 items-center gap-2">
-              {index > 0 && <ChevronRight className="h-3.5 w-3.5 text-m3-secondary/40" aria-hidden="true" />}
+              {index > 0 && (
+                <ChevronRight className="h-3.5 w-3.5 text-m3-secondary/40" aria-hidden="true" />
+              )}
               {item.current || !item.onSelect ? (
-                <span aria-current={item.current ? "page" : undefined} className={cn("flex items-center gap-2", item.current ? "font-semibold text-m3-primary" : "font-medium text-m3-secondary")}>
+                <span
+                  aria-current={item.current ? "page" : undefined}
+                  className={cn(
+                    "flex items-center gap-2",
+                    item.current
+                      ? "font-semibold text-m3-primary"
+                      : "font-medium text-m3-secondary",
+                  )}
+                >
                   {item.icon}
                   {item.label}
                 </span>
               ) : (
-                <button type="button" onClick={item.onSelect} className="flex items-center gap-2 rounded-md font-medium text-m3-secondary transition-colors hover:text-m3-text focus-visible:outline-2 focus-visible:outline-m3-primary">
+                <button
+                  type="button"
+                  onClick={item.onSelect}
+                  className="flex items-center gap-2 rounded-md font-medium text-m3-secondary transition-colors hover:text-m3-text focus-visible:outline-2 focus-visible:outline-m3-primary"
+                >
                   {item.icon}
                   {item.label}
                 </button>
@@ -299,9 +344,18 @@ export function WorkspaceAddressBar({
               aria-label={search.label}
               className="h-10 w-full rounded-lg border border-m3-border bg-m3-card py-2 pl-10 pr-10 text-sm text-m3-text outline-none transition-[border-color,box-shadow] placeholder:text-m3-input focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20"
             />
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-m3-secondary" aria-hidden="true" />
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-m3-secondary"
+              aria-hidden="true"
+            />
             {search.value && (
-              <button type="button" onClick={() => search.onChange("")} className="absolute right-1 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-md text-m3-secondary transition-colors hover:bg-m3-hover hover:text-m3-text" aria-label={search.clearLabel} title={search.clearLabel}>
+              <button
+                type="button"
+                onClick={() => search.onChange("")}
+                className="absolute right-1 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-md text-m3-secondary transition-colors hover:bg-m3-hover hover:text-m3-text"
+                aria-label={search.clearLabel}
+                title={search.clearLabel}
+              >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
             )}
@@ -319,7 +373,10 @@ export function WorkspaceMain({ className, ...props }: WorkspaceMainProps) {
   return (
     <div
       {...props}
-      className={cn("flex h-full min-w-0 flex-1 flex-col overflow-hidden p-2 sm:p-4 md:p-0", className)}
+      className={cn(
+        "flex h-full min-w-0 flex-1 flex-col overflow-hidden p-2 sm:p-4 md:p-0",
+        className,
+      )}
     />
   );
 }

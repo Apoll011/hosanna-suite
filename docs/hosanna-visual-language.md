@@ -276,7 +276,9 @@ Shared interaction primitives in `@hosanna/ui` include `SpringDropdown` for spri
 
 ### Workspace shell
 
-`@hosanna/ui` provides `WorkspaceFrame`, `WorkspaceSidebar`, `WorkspaceMain`, `WorkspaceSurface`, and `WorkspaceHeader` as composable suite chrome. These own responsive layout and motion while each app supplies its own navigation, breadcrumb, toolbar, and page content. Keep app-specific routes and product navigation in the host app. Selection controls should use `SpringDropdown` so opening, option highlighting, and selection feedback share the same spring language; action menus and context menus retain menu semantics and use the shared surface transitions.
+`@hosanna/ui` provides configurable `WorkspaceSidebar` and `WorkspaceAddressBar` components alongside `WorkspaceFrame`, `WorkspaceMain`, and `WorkspaceSurface`. Hosts supply app identity, logo, localized navigation items, permission-filtered links, per-view breadcrumbs and optional search configuration. Route changes, permissions, and app-specific sections remain host-owned. The shared shell owns responsive layout, navigation affordances, breadcrumb rendering, search controls, and motion.
+
+Use `SpringDropdown` for selection controls, including leading icons or text labels inside its trigger. Shared `ContextMenuSurface` and `CommandPalette` own their interaction surfaces and keyboard behavior. Hosts provide context actions and command definitions. Selection menus use the spring dropdown motion, while action and context menus use the shared anchored surface transition.
 
 ---
 

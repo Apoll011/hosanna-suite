@@ -1,7 +1,16 @@
 "use client";
 
 import type { Interpolation, Language } from "@hosanna/i18n";
-import { ChevronRight, Command, CornerDownLeft, History, Loader2, Search, SearchX, X } from "lucide-react";
+import {
+  ChevronRight,
+  Command,
+  CornerDownLeft,
+  History,
+  Loader2,
+  Search,
+  SearchX,
+  X,
+} from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { cn } from "./cn";
 import { sharedUiT } from "./sharedT";
@@ -34,7 +43,12 @@ function HighlightText({ text, query }: { text: string; query: string }) {
   );
 }
 
-export function CommandPalette({ isSearching = false, language, translate, className }: CommandPaletteProps) {
+export function CommandPalette({
+  isSearching = false,
+  language,
+  translate,
+  className,
+}: CommandPaletteProps) {
   const {
     isOpen,
     closePalette,
@@ -78,7 +92,8 @@ export function CommandPalette({ isSearching = false, language, translate, class
 
   useEffect(() => {
     if (!isOpen) return;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const frame = requestAnimationFrame(() => inputRef.current?.focus());
     return () => {
       cancelAnimationFrame(frame);
@@ -88,13 +103,21 @@ export function CommandPalette({ isSearching = false, language, translate, class
 
   const filteredActions = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    const pool = allActions.filter((action) => (activeParentId ? action.parent === activeParentId : !action.parent));
+    const pool = allActions.filter((action) =>
+      activeParentId ? action.parent === activeParentId : !action.parent,
+    );
     if (!query) {
       if (!activeParentId && recentActionIds.length > 0) {
         const recent: CommandAction[] = [];
         for (const id of recentActionIds) {
           const action = pool.find((candidate) => candidate.id === id);
-          if (action) recent.push({ ...action, id: `recent-${action.id}`, section: t("palette.recents"), icon: <History className="h-4 w-4" /> });
+          if (action)
+            recent.push({
+              ...action,
+              id: `recent-${action.id}`,
+              section: t("palette.recents"),
+              icon: <History className="h-4 w-4" />,
+            });
         }
         return [...recent, ...pool.filter((action) => !recentActionIds.includes(action.id))];
       }
@@ -102,8 +125,9 @@ export function CommandPalette({ isSearching = false, language, translate, class
     }
     return pool.filter((action) => {
       if (action.id === "ai-ask") return true;
-      return [action.name, action.keywords, action.subtitle, action.section]
-        .some((value) => value?.toLowerCase().includes(query));
+      return [action.name, action.keywords, action.subtitle, action.section].some((value) =>
+        value?.toLowerCase().includes(query),
+      );
     });
   }, [activeParentId, allActions, recentActionIds, searchQuery, t]);
 
@@ -123,7 +147,9 @@ export function CommandPalette({ isSearching = false, language, translate, class
   const visibleActions = useMemo(() => groups.flatMap((group) => group.actions), [groups]);
 
   useEffect(() => {
-    listRef.current?.querySelector<HTMLElement>(`[data-action-index="${selectedIndex}"]`)?.scrollIntoView({ block: "nearest" });
+    listRef.current
+      ?.querySelector<HTMLElement>(`[data-action-index="${selectedIndex}"]`)
+      ?.scrollIntoView({ block: "nearest" });
   }, [selectedIndex]);
 
   const executeAction = (action: CommandAction) => {
@@ -142,7 +168,9 @@ export function CommandPalette({ isSearching = false, language, translate, class
       setSelectedIndex((index) => (index + 1) % Math.max(visibleActions.length, 1));
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      setSelectedIndex((index) => (index - 1 + visibleActions.length) % Math.max(visibleActions.length, 1));
+      setSelectedIndex(
+        (index) => (index - 1 + visibleActions.length) % Math.max(visibleActions.length, 1),
+      );
     } else if (event.key === "Enter") {
       event.preventDefault();
       const action = visibleActions[selectedIndex];
@@ -194,7 +222,9 @@ export function CommandPalette({ isSearching = false, language, translate, class
             aria-autocomplete="list"
             aria-expanded={isOpen}
             aria-controls={`${dialogId}-results`}
-            aria-activedescendant={visibleActions.length ? `${dialogId}-option-${selectedIndex}` : undefined}
+            aria-activedescendant={
+              visibleActions.length ? `${dialogId}-option-${selectedIndex}` : undefined
+            }
             autoComplete="off"
             spellCheck={false}
             value={searchQuery}
@@ -221,66 +251,124 @@ export function CommandPalette({ isSearching = false, language, translate, class
               <span>Search</span>
             </div>
           ) : (
-            <kbd className="hidden shrink-0 rounded-md border border-m3-border bg-m3-sidebar px-2 py-1 text-[10px] font-mono font-medium text-m3-secondary sm:inline-block">ESC</kbd>
+            <kbd className="hidden shrink-0 rounded-md border border-m3-border bg-m3-sidebar px-2 py-1 text-[10px] font-mono font-medium text-m3-secondary sm:inline-block">
+              ESC
+            </kbd>
           )}
         </div>
 
-        <div id={`${dialogId}-results`} ref={listRef} role="listbox" className="max-h-[min(55vh,30rem)] overflow-y-auto py-2">
+        <div
+          id={`${dialogId}-results`}
+          ref={listRef}
+          role="listbox"
+          className="max-h-[min(55vh,30rem)] overflow-y-auto py-2"
+        >
           {visibleActions.length === 0 ? (
             <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-m3-hover">
                 <SearchX className="h-6 w-6 text-m3-secondary" aria-hidden="true" />
               </div>
               <p className="text-sm font-medium text-m3-text">{t("palette.noResults")}</p>
-              <p className="mt-1 max-w-70 text-xs text-m3-secondary">{t("palette.noResultsDesc", { query: searchQuery })}</p>
+              <p className="mt-1 max-w-70 text-xs text-m3-secondary">
+                {t("palette.noResultsDesc", { query: searchQuery })}
+              </p>
             </div>
-          ) : groups.map((group) => (
-            <div key={group.name} className="mb-2 last:mb-0">
-              <div className="px-5 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[.12em] text-m3-secondary">{group.name}</div>
-              {group.actions.map((action) => {
-                const index = globalIndex++;
-                const selected = index === selectedIndex;
-                return (
-                  <button
-                    key={action.id}
-                    id={`${dialogId}-option-${index}`}
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    data-action-index={index}
-                    onClick={() => executeAction(action)}
-                    onMouseEnter={() => setSelectedIndex(index)}
-                    className={cn(
-                      "mx-2 my-0.5 flex min-h-12 w-[calc(100%-1rem)] items-center justify-between rounded-xl px-3 text-left transition-[background-color,transform,color] duration-150",
-                      selected ? "bg-m3-primary-light/50 text-m3-text dark:bg-m3-primary-dark/50" : "text-m3-text/90 hover:bg-m3-hover",
-                    )}
-                  >
-                    <span className="flex min-w-0 items-center gap-3 pr-2">
-                      {action.isLoading ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-m3-primary" /> : action.icon ? <span className="flex shrink-0 items-center justify-center">{action.icon}</span> : null}
-                      <span className="flex min-w-0 flex-col">
-                        <span className="flex items-center gap-2">
-                          <span className="truncate text-sm font-medium"><HighlightText text={action.name} query={searchQuery} /></span>
-                          {action.badge && <span className="rounded bg-m3-hover px-1.5 py-0.5 text-[10px] font-mono text-m3-secondary">{action.badge}</span>}
+          ) : (
+            groups.map((group) => (
+              <div key={group.name} className="mb-2 last:mb-0">
+                <div className="px-5 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[.12em] text-m3-secondary">
+                  {group.name}
+                </div>
+                {group.actions.map((action) => {
+                  const index = globalIndex++;
+                  const selected = index === selectedIndex;
+                  return (
+                    <button
+                      key={action.id}
+                      id={`${dialogId}-option-${index}`}
+                      type="button"
+                      role="option"
+                      aria-selected={selected}
+                      data-action-index={index}
+                      onClick={() => executeAction(action)}
+                      onMouseEnter={() => setSelectedIndex(index)}
+                      className={cn(
+                        "mx-2 my-0.5 flex min-h-12 w-[calc(100%-1rem)] items-center justify-between rounded-xl px-3 text-left transition-[background-color,transform,color] duration-150",
+                        selected
+                          ? "bg-m3-primary-light/50 text-m3-text dark:bg-m3-primary-dark/50"
+                          : "text-m3-text/90 hover:bg-m3-hover",
+                      )}
+                    >
+                      <span className="flex min-w-0 items-center gap-3 pr-2">
+                        {action.isLoading ? (
+                          <Loader2 className="h-4 w-4 shrink-0 animate-spin text-m3-primary" />
+                        ) : action.icon ? (
+                          <span className="flex shrink-0 items-center justify-center">
+                            {action.icon}
+                          </span>
+                        ) : null}
+                        <span className="flex min-w-0 flex-col">
+                          <span className="flex items-center gap-2">
+                            <span className="truncate text-sm font-medium">
+                              <HighlightText text={action.name} query={searchQuery} />
+                            </span>
+                            {action.badge && (
+                              <span className="rounded bg-m3-hover px-1.5 py-0.5 text-[10px] font-mono text-m3-secondary">
+                                {action.badge}
+                              </span>
+                            )}
+                          </span>
+                          {action.subtitle && (
+                            <span className="truncate text-xs text-m3-secondary">
+                              <HighlightText text={action.subtitle} query={searchQuery} />
+                            </span>
+                          )}
                         </span>
-                        {action.subtitle && <span className="truncate text-xs text-m3-secondary"><HighlightText text={action.subtitle} query={searchQuery} /></span>}
                       </span>
-                    </span>
-                    <span className="flex shrink-0 items-center gap-1.5">
-                      {action.shortcut?.length ? action.shortcut.map((key) => <kbd key={key} className="rounded border border-m3-border bg-m3-sidebar px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase text-m3-secondary">{key}</kbd>) : selected ? <CornerDownLeft className="h-3.5 w-3.5 text-m3-primary" aria-hidden="true" /> : null}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          ))}
+                      <span className="flex shrink-0 items-center gap-1.5">
+                        {action.shortcut?.length ? (
+                          action.shortcut.map((key) => (
+                            <kbd
+                              key={key}
+                              className="rounded border border-m3-border bg-m3-sidebar px-1.5 py-0.5 text-[10px] font-mono font-semibold uppercase text-m3-secondary"
+                            >
+                              {key}
+                            </kbd>
+                          ))
+                        ) : selected ? (
+                          <CornerDownLeft
+                            className="h-3.5 w-3.5 text-m3-primary"
+                            aria-hidden="true"
+                          />
+                        ) : null}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))
+          )}
         </div>
 
-        <footer id={`${dialogId}-title`} className="flex items-center justify-between border-t border-m3-border bg-m3-toolbar px-4 py-2.5 text-[11px] text-m3-secondary sm:px-5">
+        <footer
+          id={`${dialogId}-title`}
+          className="flex items-center justify-between border-t border-m3-border bg-m3-toolbar px-4 py-2.5 text-[11px] text-m3-secondary sm:px-5"
+        >
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1"><kbd className="rounded border border-m3-border bg-m3-card px-1 py-0.5">↑</kbd><kbd className="rounded border border-m3-border bg-m3-card px-1 py-0.5">↓</kbd>{t("palette.navigate")}</span>
-            <span className="flex items-center gap-1"><kbd className="rounded border border-m3-border bg-m3-card px-1 py-0.5">↵</kbd>{t("palette.select")}</span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded border border-m3-border bg-m3-card px-1 py-0.5">↑</kbd>
+              <kbd className="rounded border border-m3-border bg-m3-card px-1 py-0.5">↓</kbd>
+              {t("palette.navigate")}
+            </span>
+            <span className="flex items-center gap-1">
+              <kbd className="rounded border border-m3-border bg-m3-card px-1 py-0.5">↵</kbd>
+              {t("palette.select")}
+            </span>
           </div>
-          <span className="flex items-center gap-1 font-medium text-m3-primary"><Command className="h-3 w-3" aria-hidden="true" />{t("palette.title")}</span>
+          <span className="flex items-center gap-1 font-medium text-m3-primary">
+            <Command className="h-3 w-3" aria-hidden="true" />
+            {t("palette.title")}
+          </span>
         </footer>
       </section>
     </div>
@@ -309,7 +397,9 @@ export function CommandPaletteTrigger({
     >
       <Search className="h-3.5 w-3.5" aria-hidden="true" />
       <span className="hidden font-semibold sm:inline">{t("suite.commandPalette.search")}</span>
-      <kbd className="rounded-md border border-m3-border bg-m3-bg px-1.5 py-0.5 text-[10px] font-mono font-bold text-m3-secondary">⌘K</kbd>
+      <kbd className="rounded-md border border-m3-border bg-m3-bg px-1.5 py-0.5 text-[10px] font-mono font-bold text-m3-secondary">
+        ⌘K
+      </kbd>
     </button>
   );
 }

@@ -1,7 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 export interface CommandAction {
   id: string;
@@ -48,7 +56,9 @@ export function CommandPaletteProvider({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeParentId, setActiveParentId] = useState<string | null>(null);
-  const [dynamicActionGroups, setDynamicActionGroups] = useState<Record<string, CommandAction[]>>({});
+  const [dynamicActionGroups, setDynamicActionGroups] = useState<Record<string, CommandAction[]>>(
+    {},
+  );
   const [recentActionIds, setRecentActionIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(storageKey);
@@ -58,9 +68,10 @@ export function CommandPaletteProvider({
       return [];
     }
   });
-  const sequenceRef = useRef<{ keys: string[]; timer: ReturnType<typeof setTimeout> | null }>(
-    { keys: [], timer: null },
-  );
+  const sequenceRef = useRef<{ keys: string[]; timer: ReturnType<typeof setTimeout> | null }>({
+    keys: [],
+    timer: null,
+  });
 
   const openPalette = useCallback(() => {
     setIsOpen(true);

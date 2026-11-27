@@ -28,12 +28,12 @@ export { Button, type ButtonProps } from "./Button";
 export { CheckboxList, type CheckboxListItem } from "./CheckboxList";
 export { cn, type ClassValue } from "./cn";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
-export { CommandPaletteProvider, useCommandPalette, type CommandAction } from "./CommandPaletteContext";
 export {
-  CommandPalette,
-  CommandPaletteTrigger,
-  type CommandPaletteProps,
-} from "./CommandPalette";
+  CommandPaletteProvider,
+  useCommandPalette,
+  type CommandAction,
+} from "./CommandPaletteContext";
+export { CommandPalette, CommandPaletteTrigger, type CommandPaletteProps } from "./CommandPalette";
 export {
   ContextMenuItem,
   ContextMenuLabel,

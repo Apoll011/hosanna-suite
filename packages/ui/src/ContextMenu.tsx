@@ -1,6 +1,6 @@
 "use client";
 
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "./cn";
 
@@ -61,13 +61,19 @@ export function ContextMenuSurface({
       onClose();
       return;
     }
-    if (event.key === "ArrowDown" || event.key === "ArrowUp" || event.key === "Home" || event.key === "End") {
+    if (
+      event.key === "ArrowDown" ||
+      event.key === "ArrowUp" ||
+      event.key === "Home" ||
+      event.key === "End"
+    ) {
       event.preventDefault();
-      const nextIndex = event.key === "Home"
-        ? 0
-        : event.key === "End"
-          ? items.length - 1
-          : (currentIndex + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      const nextIndex =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? items.length - 1
+            : (currentIndex + (event.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
       items[nextIndex]?.focus();
     }
   };
@@ -93,7 +99,7 @@ export function ContextMenuSurface({
   );
 }
 
-export function ContextMenuItem({ className, ...props }: HTMLAttributes<HTMLButtonElement>) {
+export function ContextMenuItem({ className, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
@@ -108,7 +114,9 @@ export function ContextMenuItem({ className, ...props }: HTMLAttributes<HTMLButt
 }
 
 export function ContextMenuSeparator({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div {...props} role="separator" className={cn("my-1 border-t border-m3-border", className)} />;
+  return (
+    <div {...props} role="separator" className={cn("my-1 border-t border-m3-border", className)} />
+  );
 }
 
 export function ContextMenuLabel({ className, ...props }: HTMLAttributes<HTMLDivElement>) {

@@ -149,8 +149,16 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
         springs.highlightTop.v = springs.highlightBottom.v = 0;
       } else {
         const movingDown = index > hoveredIndexRef.current;
-        tuneSpring(movingDown ? springs.highlightBottom : springs.highlightTop, ...springPresets.highlightLead, reduced);
-        tuneSpring(movingDown ? springs.highlightTop : springs.highlightBottom, ...springPresets.highlightTrail, reduced);
+        tuneSpring(
+          movingDown ? springs.highlightBottom : springs.highlightTop,
+          ...springPresets.highlightLead,
+          reduced,
+        );
+        tuneSpring(
+          movingDown ? springs.highlightTop : springs.highlightBottom,
+          ...springPresets.highlightTrail,
+          reduced,
+        );
         springs.highlightTop.t = top;
         springs.highlightBottom.t = top + ROW_HEIGHT;
       }
@@ -310,7 +318,9 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
         disabled={disabled}
         aria-haspopup="listbox"
         aria-controls={listboxId}
-        aria-activedescendant={open && hoveredIndex >= 0 ? `${listboxId}-option-${hoveredIndex}` : undefined}
+        aria-activedescendant={
+          open && hoveredIndex >= 0 ? `${listboxId}-option-${hoveredIndex}` : undefined
+        }
         aria-expanded={open}
         aria-label={ariaLabel}
         onClick={() => {

@@ -114,6 +114,7 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
       y={contextMenu.y}
       ariaLabel={t("explorer.contextMenu.options")}
       className="w-56 select-none"
+      onClose={onClose}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >
