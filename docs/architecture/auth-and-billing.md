@@ -76,7 +76,7 @@ team list locally and refreshes it from the server on entry and after writes.
 Via `@better-auth/stripe`:
 
 - Plan name: **`cloud`** (monthly + annual price IDs)
-- 14-day trial
+- Every newly created organization starts a 14-day Stripe trial without a payment method. Stripe cancels the subscription at trial end if no payment method is on file; adding a payment method during the trial lets Stripe convert it to a paid subscription.
 - Subscriptions are **org-scoped** (`referenceId` = organization id)
 - Checkout: promo codes, ToS consent
 - Webhooks handled under `/api/auth` (`STRIPE_WEBHOOK_SECRET`)
@@ -88,7 +88,7 @@ Via `@better-auth/stripe`:
 - `GET /api/billing/pricing` → public plan display amounts on **auth**, read from Vercel Global Config key **`hosanna-cloud`** (`GLOBAL_CONFIG` connection string)
 - Period fields are stable ids (`month` | `year`); clients localize via shared `@hosanna/i18n` (`billing.period.*` / `billingPeriodLabel`)
 - API `requireSubscription` middleware still gates **domain** non-GET writes when the org is not active/trialing (reads shared `Subscription` rows)
-- Studio `ProtectedRoute` sends orgs with **no** subscription row (any status) to auth `/onboarding`. There, the active org gets the trial checkout when the user is its owner (the only role `authorizeReference` lets upgrade), or an "ask the owner" note otherwise. "Skip", checkout cancel, and the social sign-in fallback land on `/home`, never back on a Studio URL that re-gates
+- Studio `ProtectedRoute` sends orgs with **no** subscription row (any status) to auth `/onboarding`. Newly created organizations receive their trial from Stripe at creation; the subscription row appears through the Stripe webhook. Existing organizations without a subscription can still start a subscription through Checkout. "Skip", checkout cancel, and the social sign-in fallback land on `/home`, never back on a Studio URL that re-gates
 
 Studio client uses `authClient.subscription.*` (list, upgrade, portal); display prices fetch from auth `/api/billing/pricing`.
 
