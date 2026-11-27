@@ -150,7 +150,7 @@ const UserMessage: React.FC<Pick<Props, "msg" | "streaming" | "onEdit">> = ({
         </div>
       )}
       {text ? (
-        <div className="rounded-lg rounded-br-sm px-3 py-2 text-[13px] leading-relaxed bg-m3-primary text-white whitespace-pre-wrap wrap-break-word">
+        <div className="rounded-2xl rounded-br-md px-3.5 py-2.5 text-[13px] leading-relaxed bg-m3-primary text-white whitespace-pre-wrap wrap-break-word">
           {text}
         </div>
       ) : null}
@@ -246,7 +246,7 @@ const AssistantMessage: React.FC<Props> = ({
       <div className="min-w-0 flex-1">
         {blocks.length === 0 && live ? (
           <div
-            className="flex items-center gap-2 py-1.5 text-[12px] text-m3-secondary"
+            className="flex w-fit items-center gap-2 rounded-full bg-m3-sidebar px-3 py-1.5 text-[12px] text-m3-secondary"
             role="status"
           >
             <span className="inline-flex items-center gap-1" aria-hidden>
@@ -276,7 +276,7 @@ const AssistantMessage: React.FC<Props> = ({
             return (
               <div
                 key={block.key}
-                className={`text-m3-text text-[13px] leading-relaxed wrap-break-word *:first:mt-0 *:last:mb-0 ${
+                className={`logos-assistant-message text-m3-text text-[13px] leading-relaxed wrap-break-word *:first:mt-0 *:last:mb-0 ${
                   streamingThis ? "logos-streaming" : ""
                 }`}
               >

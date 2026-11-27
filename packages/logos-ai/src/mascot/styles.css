@@ -11,6 +11,65 @@
 .logos svg {
   overflow: visible;
 }
+
+.logos-chat-toggle[data-busy="true"]::after {
+  position: absolute;
+  inset: 2px;
+  border: 1.5px solid var(--m3-primary);
+  border-radius: 8px;
+  content: "";
+  animation: logos-toggle-busy 1.6s ease-out infinite;
+  pointer-events: none;
+}
+
+.logos-icon-button {
+  min-width: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.logos-icon-button:active {
+  transform: scale(0.94);
+}
+
+.logos-popover {
+  box-shadow: var(--shadow-lg, 0 12px 32px rgb(15 23 42 / 0.16));
+  transform-origin: top right;
+  animation: logos-popover-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.logos-composer-field {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+}
+
+.logos-assistant-message {
+  width: fit-content;
+  max-width: 100%;
+  margin-block: 2px;
+  padding: 9px 12px;
+  border: 1px solid var(--m3-border);
+  border-radius: 14px;
+  background: var(--m3-sidebar);
+}
+
+.logos-composer-field:focus-within {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--m3-primary) 16%, transparent);
+}
+
+.logos-composer.is-dragging .logos-composer-field {
+  background: color-mix(in srgb, var(--m3-primary) 6%, var(--m3-bg));
+}
+
+.logos-send-button:disabled {
+  background: var(--m3-sidebar);
+  color: var(--m3-secondary);
+}
 /* SVG attribute transforms (rotate/mirror about a point) are in user space,
    so keep the default box; animated parts opt in to fill-box below. */
 :where(.logos svg *) {
@@ -60,7 +119,7 @@
   animation: logos-shadow 3.2s ease-in-out infinite;
 }
 .logos-float {
-  animation: logos-float 3.2s ease-in-out infinite;
+  animation: logos-float 4s ease-in-out infinite;
 }
 .logos-body {
   transform-origin: 50% 100%;
@@ -801,7 +860,29 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-3.5px);
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes logos-toggle-busy {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+@keyframes logos-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 @keyframes logos-breathe {
@@ -1237,7 +1318,7 @@
 }
 .logos-aura {
   transform-origin: center;
-  animation: logos-pulse 4s ease-in-out infinite;
+  animation: logos-pulse 5s ease-in-out infinite;
 }
 .logos[data-mood="thinking"],
 .logos[data-mood="dizzy"] {

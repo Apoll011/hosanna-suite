@@ -190,6 +190,10 @@ Same object everywhere:
 
 Do not color “edit” sky and “move” green. Monochrome, then one danger row.
 
+### Logos AI
+
+Logos is the assistant's character and launcher mark. Keep its idle movement small and let mood changes carry the expression. The launcher uses the active app accent, not a separate gradient palette. Chat controls use the same card, border, radius, and focus tokens as the rest of the suite. Use the shared `logos-icon-button`, `logos-popover`, and `logos-composer-field` treatments for chat actions, menus, and the prompt surface. Motion settles quickly with a small scale or position change; reduced-motion settings suppress the mascot loops and component transitions.
+
 ---
 
 ## Navigation and hierarchy

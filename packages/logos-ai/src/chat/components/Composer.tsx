@@ -199,7 +199,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
 
   return (
     <div
-      className="relative"
+      className={`logos-composer relative ${dragging ? "is-dragging" : ""}`}
       onDragOver={(e) => {
         e.preventDefault();
         setDragging(true);
@@ -214,7 +214,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
         <div
           role="listbox"
           aria-label={t("ai.chat.quickActions")}
-          className="absolute bottom-full left-0 right-0 mb-1.5 max-h-56 overflow-auto rounded-lg border border-m3-border bg-m3-card shadow-lg p-1 z-10"
+          className="logos-popover absolute bottom-full left-0 right-0 mb-2 max-h-56 overflow-auto rounded-xl border border-m3-border bg-m3-card p-1.5 z-10"
         >
           {slashItems.length === 0 ? (
             <p className="m-0 px-2.5 py-2 text-[12px] text-m3-secondary">
@@ -256,7 +256,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
           {attachments.map((a) => (
             <div
               key={a.id}
-              className="group relative flex items-center gap-2 rounded-lg border border-m3-border bg-m3-card pl-1.5 pr-1 py-1 max-w-full"
+              className="group relative flex items-center gap-2 rounded-xl border border-m3-border bg-m3-card pl-1.5 pr-1 py-1 max-w-full"
             >
               {a.isImage ? (
                 <img
@@ -303,7 +303,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
 
       <div
         className={[
-          "flex items-end gap-2 rounded-lg border bg-m3-bg px-2.5 py-2 transition-shadow",
+          "logos-composer-field flex items-end gap-2 rounded-[18px] border bg-m3-bg px-2.5 py-2.5 transition-[border-color,box-shadow,background] duration-200",
           dragging
             ? "border-m3-primary ring-2 ring-m3-primary/20"
             : "border-m3-border focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20",
@@ -314,7 +314,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
           onClick={() => fileRef.current?.click()}
           aria-label={t("ai.chat.attachFiles")}
           title={t("ai.chat.attachFiles")}
-          className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors"
+          className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center text-m3-secondary hover:text-m3-text hover:bg-m3-hover transition-colors focus-visible:outline-2 focus-visible:outline-m3-primary"
         >
           <Paperclip className="w-4 h-4" />
         </button>
@@ -369,7 +369,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
           <button
             type="button"
             onClick={onStop}
-            className="shrink-0 w-8 h-8 rounded-full bg-m3-text text-m3-bg flex items-center justify-center hover:opacity-85 transition-opacity"
+            className="shrink-0 w-9 h-9 rounded-xl bg-m3-text text-m3-bg flex items-center justify-center hover:opacity-85 transition-opacity active:scale-95"
             aria-label={t("ai.chat.stop")}
             title={`${t("ai.chat.stop")} (Esc)`}
           >
@@ -380,7 +380,7 @@ export const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function A
             type="button"
             onClick={() => submit(draft)}
             disabled={!draft.trim() && attachments.length === 0}
-            className="shrink-0 w-8 h-8 rounded-full bg-m3-primary text-white flex items-center justify-center disabled:opacity-35 hover:opacity-90 transition-opacity"
+            className="logos-send-button shrink-0 w-9 h-9 rounded-xl bg-m3-primary text-white flex items-center justify-center disabled:opacity-35 hover:opacity-90 transition-[transform,opacity,background] duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-m3-primary focus-visible:outline-offset-2"
             aria-label={t("ai.chat.send")}
             title={t("ai.chat.send")}
           >
