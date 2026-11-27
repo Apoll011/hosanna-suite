@@ -226,6 +226,8 @@ export const FoldersPage: React.FC = () => {
                       accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json,.pdf,.png,.jpg,.jpeg,.webp"
                       title={t("commandPalette.uploadFiles")}
                       description={t("foldersPage.dragOrClick")}
+                      workingLabel={t("foldersPage.uploading")}
+                      errorLabel={t("foldersPage.uploadError")}
                       onFiles={context.handleIncomingFiles}
                     />
                   </div>

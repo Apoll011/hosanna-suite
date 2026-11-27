@@ -83,6 +83,7 @@ export {
 } from "./suiteLabels";
 export { Surface, type SurfaceProps } from "./Surface";
 export { Tabs, type TabItem } from "./Tabs";
+export { usePresence } from "./usePresence";
 
 export {
   AnyRoleGate,

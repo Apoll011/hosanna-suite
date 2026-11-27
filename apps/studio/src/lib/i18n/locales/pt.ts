@@ -968,6 +968,8 @@ export const pt = {
     emptyRootDesc: "Ainda não existem pastas nem cânticos na raiz.",
     emptyFolderDesc: 'Ainda não foram adicionados cânticos à pasta "{folder}".',
     dragOrClick: "Arraste e solte ficheiros aqui ou clique para carregar",
+    uploading: "A preparar ficheiros…",
+    uploadError: "Não foi possível preparar os ficheiros",
   },
   trashPage: {
     loading: "A carregar lixo...",

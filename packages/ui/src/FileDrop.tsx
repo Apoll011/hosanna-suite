@@ -10,6 +10,7 @@ export type FileDropProps = {
   description?: ReactNode;
   className?: string;
   workingLabel?: string;
+  errorLabel?: string;
 };
 
 export function FileDrop({
@@ -21,17 +22,23 @@ export function FileDrop({
   description,
   className = "",
   workingLabel = "Preparing files…",
+  errorLabel = "Could not prepare these files",
 }: FileDropProps) {
   const input = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [working, setWorking] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState("");
+  const [failed, setFailed] = useState(false);
   const process = async (files: File[]) => {
     if (disabled || files.length === 0) return;
     setWorking(true);
+    setFailed(false);
     setSelectedFiles(files.length === 1 ? files[0]!.name : `${files.length} files selected`);
     try {
       await onFiles(files);
+    } catch (error) {
+      setFailed(true);
+      setSelectedFiles(error instanceof Error ? error.message : errorLabel);
     } finally {
       setWorking(false);
     }
@@ -51,6 +58,7 @@ export function FileDrop({
       <button
         type="button"
         disabled={disabled || working}
+        aria-busy={working}
         onClick={() => input.current?.click()}
         onDragOver={(event) => {
           event.preventDefault();
@@ -66,11 +74,11 @@ export function FileDrop({
           <UploadCloud size={21} />
         </span>
         <span className="hosanna-file-drop-copy">
-          <strong>{working ? workingLabel : title}</strong>
-          {selectedFiles ? (
-            <span>{selectedFiles}</span>
-          ) : description ? (
-            <span>{description}</span>
+          <strong>{working ? workingLabel : failed ? errorLabel : title}</strong>
+          {selectedFiles || description ? (
+            <span className={failed ? "text-m3-danger" : undefined} aria-live="polite">
+              {selectedFiles || description}
+            </span>
           ) : null}
         </span>
         <FileUp className="hosanna-file-drop-end" size={18} aria-hidden="true" />

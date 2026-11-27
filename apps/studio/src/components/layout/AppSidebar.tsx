@@ -123,14 +123,14 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   }, []);
 
   const collapseText = (extra = "") =>
-    `truncate transition-[opacity,max-width,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
+    `truncate transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden whitespace-nowrap ${
       isSidebarCollapsed
         ? "opacity-0 max-w-0 -translate-x-2 pointer-events-none"
         : "opacity-100 max-w-35 translate-x-0"
     } ${extra}`;
 
   const collapseBadge = () =>
-    `transition-[opacity,max-width] duration-300 ease-in-out overflow-hidden shrink-0 ${
+    `transition-[opacity,max-width] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden shrink-0 ${
       isSidebarCollapsed ? "opacity-0 max-w-0 pointer-events-none" : "opacity-100 max-w-15"
     }`;
 
@@ -151,7 +151,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
           isSidebarOpen ? "flex absolute inset-y-0 left-0 z-50 bg-m3-sidebar shadow-lg" : "hidden"
         } md:flex md:relative md:bg-m3-sidebar/30 ${
           isSidebarCollapsed ? "md:w-20" : "md:w-64"
-        } w-72 border-r border-m3-border p-4 flex-col gap-1 select-none shrink-0 transition-[width] duration-300 ease-in-out z-30`}
+        } w-72 border-r border-m3-border p-4 flex-col gap-1 select-none shrink-0 transition-[width] duration-[320ms] [transition-timing-function:cubic-bezier(.2,.8,.2,1)] z-30`}
         role="navigation"
       >
         <div
@@ -190,7 +190,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </button>
 
             <div
-              className={`flex flex-col items-start min-w-0 flex-1 transition-[opacity,max-width,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
+              className={`flex flex-col items-start min-w-0 flex-1 transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden whitespace-nowrap ${
                 isSidebarCollapsed
                   ? "opacity-0 max-w-0 -translate-x-2 pointer-events-none"
                   : "opacity-100 max-w-50 translate-x-0"
@@ -306,7 +306,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         </div>
 
         <div
-          className={`px-3 py-2 text-label transition-[opacity,max-height,transform] duration-300 ease-in-out overflow-hidden whitespace-nowrap ${
+          className={`px-3 py-2 text-label transition-[opacity,max-height,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden whitespace-nowrap ${
             isSidebarCollapsed
               ? "opacity-0 max-h-0 py-0 -translate-x-2 pointer-events-none"
               : "opacity-100 max-h-8 translate-x-0"
@@ -459,7 +459,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
         {showFolderTree && (
           <div
-            className={`flex-1 flex flex-col min-h-0 transition-[opacity,max-height] duration-300 ease-in-out overflow-hidden ${
+            className={`flex-1 flex flex-col min-h-0 transition-[opacity,max-height] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden ${
               isSidebarCollapsed
                 ? "opacity-0 max-h-0 pointer-events-none"
                 : "opacity-100 max-h-full"

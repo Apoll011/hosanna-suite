@@ -960,6 +960,8 @@ export const en: typeof pt = {
     emptyRootDesc: "There are no folders or songs at the root level yet.",
     emptyFolderDesc: 'No songs have been added to "{folder}" yet.',
     dragOrClick: "Drag and drop files here or click to upload",
+    uploading: "Preparing files…",
+    uploadError: "Could not prepare these files",
   },
   trashPage: {
     loading: "Loading trash...",
