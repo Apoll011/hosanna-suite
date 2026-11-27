@@ -864,6 +864,7 @@ export const en: typeof pt = {
       leaveDesc: "Leave this workspace. You'll need a new invite to return.",
       deleteTitle: "Delete organization",
       deleteDesc: "Permanently deletes the workspace and all associated data.",
+      deleteExportRequired: "Export a backup of your organization to enable deletion.",
       deleteBtn: "Delete organization",
       deleteConfirmTitle: "Delete organization?",
       deleteConfirmText: 'Type "{name}" to confirm deletion.',

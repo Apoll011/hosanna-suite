@@ -866,6 +866,7 @@ export const es: typeof pt = {
       leaveDesc: "Salir de este espacio. Necesitarás una nueva invitación para volver.",
       deleteTitle: "Eliminar organización",
       deleteDesc: "Elimina permanentemente el espacio y todos los datos asociados.",
+      deleteExportRequired: "Exporta una copia de seguridad de la organización para habilitar la eliminación.",
       deleteBtn: "Eliminar organización",
       deleteConfirmTitle: "¿Eliminar organización?",
       deleteConfirmText: 'Escribe "{name}" para confirmar la eliminación.',

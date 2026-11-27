@@ -863,6 +863,7 @@ export const pt = {
       leaveDesc: "Sair deste espaço. Precisará de um novo convite para voltar.",
       deleteTitle: "Eliminar organização",
       deleteDesc: "Apaga permanentemente o espaço e todos os dados associados.",
+      deleteExportRequired: "Exporte uma cópia de segurança da organização para ativar a eliminação.",
       deleteBtn: "Eliminar organização",
       deleteConfirmTitle: "Eliminar organização?",
       deleteConfirmText: 'Escreva "{name}" para confirmar a eliminação.',
