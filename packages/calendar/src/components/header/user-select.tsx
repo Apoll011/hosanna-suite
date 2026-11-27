@@ -17,7 +17,10 @@ export function UserSelect() {
           <AvatarGroup max={2}>
             {users.map((user) => (
               <Avatar key={user.id} className="size-5 text-[0.625rem]">
-                <AvatarImage src={user.avatarUrl ?? user.picturePath ?? undefined} alt={user.name} />
+                <AvatarImage
+                  src={user.avatarUrl ?? user.picturePath ?? undefined}
+                  alt={user.name}
+                />
                 <AvatarFallback className="text-[0.625rem]">{user.name[0] ?? "?"}</AvatarFallback>
               </Avatar>
             ))}
