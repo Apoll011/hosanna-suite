@@ -2,7 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   clamp,
   createSpring,
@@ -25,6 +25,7 @@ type SpringDropdownBase<T extends string> = {
   ariaLabel: string;
   className?: string;
   disabled?: boolean;
+  startAdornment?: ReactNode;
 };
 
 export type SpringDropdownProps<T extends string> =
@@ -47,6 +48,7 @@ const MENU_GAP = 6;
 
 export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) {
   const { options, ariaLabel, className = "", disabled = false } = props;
+  const listboxId = useId();
   const multiple = props.mode === "multiple";
   const selected = multiple ? props.selected : [props.selected];
   const selectedKey = selected.join("\u0000");
@@ -307,6 +309,8 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
         type="button"
         disabled={disabled}
         aria-haspopup="listbox"
+        aria-controls={listboxId}
+        aria-activedescendant={open && hoveredIndex >= 0 ? `${listboxId}-option-${hoveredIndex}` : undefined}
         aria-expanded={open}
         aria-label={ariaLabel}
         onClick={() => {
@@ -354,6 +358,11 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
             aria-hidden
           />
         ) : null}
+        {props.startAdornment ? (
+          <span className="flex shrink-0 items-center gap-1.5 text-m3-secondary" aria-hidden="true">
+            {props.startAdornment}
+          </span>
+        ) : null}
         <span className="max-w-[140px] truncate">{summary}</span>
         <ChevronDown
           ref={chevronRef}
@@ -364,6 +373,7 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
 
       <div
         ref={menuRef}
+        id={listboxId}
         role="listbox"
         aria-multiselectable={props.mode === "multiple" || undefined}
         aria-label={ariaLabel}
@@ -381,6 +391,7 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
           return (
             <button
               key={option.id}
+              id={`${listboxId}-option-${index}`}
               ref={(element) => {
                 optionRefs.current[index] = element;
               }}

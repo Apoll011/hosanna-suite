@@ -28,6 +28,13 @@ export { Button, type ButtonProps } from "./Button";
 export { CheckboxList, type CheckboxListItem } from "./CheckboxList";
 export { cn, type ClassValue } from "./cn";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
+export {
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuSurface,
+  type ContextMenuSurfaceProps,
+} from "./ContextMenu";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
 export { FileDrop, type FileDropProps } from "./FileDrop";
 export { GoogleTextField, type GoogleTextFieldProps } from "./GoogleTextField";
