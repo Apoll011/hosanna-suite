@@ -940,6 +940,13 @@ export const en: typeof pt = {
   account: {
     title: "Account",
     subtitle: "Manage your Hosanna profile, security, notifications, and sessions.",
+    tabs: {
+      ariaLabel: "Account sections",
+      profile: "Profile",
+      connections: "Associated accounts",
+      sessions: "Sessions and history",
+      preferences: "Language and preferences",
+    },
     signOut: "Sign out",
     danger: {
       title: "Danger zone",

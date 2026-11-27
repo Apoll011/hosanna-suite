@@ -943,6 +943,13 @@ export const es: typeof pt = {
   },
   account: {
     title: "Cuenta",
+    tabs: {
+      ariaLabel: "Secciones de la cuenta",
+      profile: "Perfil",
+      connections: "Cuentas asociadas",
+      sessions: "Sesiones e historial",
+      preferences: "Idioma y preferencias",
+    },
     subtitle: "Gestiona tu perfil, seguridad, notificaciones y sesiones de Hosanna.",
     signOut: "Cerrar sesión",
     danger: {

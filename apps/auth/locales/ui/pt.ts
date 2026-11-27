@@ -938,6 +938,13 @@ export const pt = {
   },
   account: {
     title: "Conta",
+    tabs: {
+      ariaLabel: "Secções da conta",
+      profile: "Perfil",
+      connections: "Contas associadas",
+      sessions: "Sessões e histórico",
+      preferences: "Idioma e preferências",
+    },
     subtitle: "Gerir o seu perfil, segurança, notificações e sessões Hosanna.",
     signOut: "Terminar sessão",
     danger: {
@@ -1116,6 +1123,8 @@ export const pt = {
     noMembersDesc: "Adicione alguém da lista de membros da organização.",
     chooseTeam: "Escolha uma equipa para ver os detalhes",
     renameLabel: "Novo nome",
+    renameTitle: "Renomear equipa",
+    moreActions: "Mais ações da equipa",
     renamePlaceholder: "Novo nome da equipa",
     rename: "Renomear",
     delete: "Eliminar",
