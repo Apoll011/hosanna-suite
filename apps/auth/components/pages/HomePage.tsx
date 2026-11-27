@@ -1,18 +1,11 @@
 "use client";
-import { useActiveOrganization } from "@/hooks/useActiveOrganization";
-import { useAuthUser } from "@/hooks/useAuthUser";
 import { authDashboardRegistry, authDashboardRenderers } from "@/components/dashboard/registry";
 import { WidgetGalleryModal } from "@/components/dashboard/WidgetGalleryModal";
-import { migrateLegacyFavorites, homeSettings } from "@/lib/dashboard/settings";
+import { useActiveOrganization } from "@/hooks/useActiveOrganization";
+import { useAuthUser } from "@/hooks/useAuthUser";
+import { homeSettings, migrateLegacyFavorites } from "@/lib/dashboard/settings";
 import { useI18n } from "@/lib/ui/i18n";
-import {
-  Button,
-  loadSuiteApps,
-  peekSuiteAppsCache,
-  Spinner,
-  type SuiteCatalogApp,
-} from "@hosanna/ui";
-import { Dashboard, listRenderableWidgets } from "@hosanna/dashboard/react";
+import { resolveEffectivePermissions } from "@hosanna/auth";
 import {
   addWidget,
   buildDefaultLayout,
@@ -22,7 +15,14 @@ import {
   removeWidget,
   type DashboardLayout,
 } from "@hosanna/dashboard/core";
-import { resolveEffectivePermissions } from "@hosanna/auth";
+import { Dashboard, listRenderableWidgets } from "@hosanna/dashboard/react";
+import {
+  Button,
+  loadSuiteApps,
+  peekSuiteAppsCache,
+  Spinner,
+  type SuiteCatalogApp,
+} from "@hosanna/ui";
 import { Plus } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
