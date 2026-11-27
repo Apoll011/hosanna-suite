@@ -30,6 +30,11 @@ export { cn, type ClassValue } from "./cn";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export { CommandPaletteProvider, useCommandPalette, type CommandAction } from "./CommandPaletteContext";
 export {
+  CommandPalette,
+  CommandPaletteTrigger,
+  type CommandPaletteProps,
+} from "./CommandPalette";
+export {
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
