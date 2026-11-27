@@ -115,102 +115,96 @@ export default function HeroCtas({ ready, language, onStartClick, onDemoClick }:
         style={{ pointerEvents: ctaOpacity < 0.05 ? "none" : "auto" }}
       >
         {/* Primary CTA (Left): Moves left & fades out on scroll */}
-        <div
-          ref={leftEnterRef}
-          className="opacity-0 will-change-transform"
-        >
-        <div
-          className="relative inline-flex will-change-transform"
-          style={{
-            transform: `translateX(${leftX}px)`,
-            opacity: ctaOpacity,
-            transition:
-              "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
-          }}
-        >
-          {/* Outer-only subtle floating drop shadow synced with button scale without isolating blend context */}
-          <motion.div
-            aria-hidden="true"
-            animate={primaryMotionTarget}
-            transition={springTransition}
-            className={`pointer-events-none absolute inset-0 rounded-full bg-transparent transition-shadow duration-200 ${
-              primaryHovered
-                ? "shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)]"
-                : "shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)]"
-            }`}
-          />
-          <motion.button
-            type="button"
-            onClick={onStartClick}
-            onMouseEnter={() => setPrimaryHovered(true)}
-            onMouseLeave={() => {
-              setPrimaryHovered(false);
-              setPrimaryPressed(false);
+        <div ref={leftEnterRef} className="opacity-0 will-change-transform">
+          <div
+            className="relative inline-flex will-change-transform"
+            style={{
+              transform: `translateX(${leftX}px)`,
+              opacity: ctaOpacity,
+              transition:
+                "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
             }}
-            onFocus={() => setPrimaryHovered(true)}
-            onBlur={() => {
-              setPrimaryHovered(false);
-              setPrimaryPressed(false);
-            }}
-            onPointerDown={() => setPrimaryPressed(true)}
-            onPointerUp={() => setPrimaryPressed(false)}
-            onPointerCancel={() => setPrimaryPressed(false)}
-            animate={primaryMotionTarget}
-            transition={springTransition}
-            className={`${sizeClasses} relative bg-white text-[#021433] hover:bg-white/95 border border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
           >
-            <span>{copy.start}</span>
-            <svg
-              viewBox="0 0 16 16"
-              fill="none"
+            {/* Outer-only subtle floating drop shadow synced with button scale without isolating blend context */}
+            <motion.div
               aria-hidden="true"
-              className="w-3.25 h-3.25 md:w-3.5 md:h-3.5 shrink-0"
+              animate={primaryMotionTarget}
+              transition={springTransition}
+              className={`pointer-events-none absolute inset-0 rounded-full bg-transparent transition-shadow duration-200 ${
+                primaryHovered
+                  ? "shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)]"
+                  : "shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)]"
+              }`}
+            />
+            <motion.button
+              type="button"
+              onClick={onStartClick}
+              onMouseEnter={() => setPrimaryHovered(true)}
+              onMouseLeave={() => {
+                setPrimaryHovered(false);
+                setPrimaryPressed(false);
+              }}
+              onFocus={() => setPrimaryHovered(true)}
+              onBlur={() => {
+                setPrimaryHovered(false);
+                setPrimaryPressed(false);
+              }}
+              onPointerDown={() => setPrimaryPressed(true)}
+              onPointerUp={() => setPrimaryPressed(false)}
+              onPointerCancel={() => setPrimaryPressed(false)}
+              animate={primaryMotionTarget}
+              transition={springTransition}
+              className={`${sizeClasses} relative bg-white text-[#021433] hover:bg-white/95 border border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
             >
-              <path
-                d="M3.25 8H12.75M12.75 8L8.75 4M12.75 8L8.75 12"
-                stroke="currentColor"
-                strokeWidth="1.9"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </motion.button>
-        </div>
+              <span>{copy.start}</span>
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+                className="w-3.25 h-3.25 md:w-3.5 md:h-3.5 shrink-0"
+              >
+                <path
+                  d="M3.25 8H12.75M12.75 8L8.75 4M12.75 8L8.75 12"
+                  stroke="currentColor"
+                  strokeWidth="1.9"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.button>
+          </div>
         </div>
 
         {/* Secondary CTA (Right): Moves right & fades out on scroll */}
-        <div
-          ref={rightEnterRef}
-          className="opacity-0 will-change-transform"
-        >
-        <div
-          className="will-change-transform"
-          style={{
-            transform: `translateX(${rightX}px)`,
-            opacity: ctaOpacity,
-            transition:
-              "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
-          }}
-        >
-          <motion.button
-            type="button"
-            onClick={onDemoClick}
-            whileHover={hoverScale}
-            whileTap={tapScale}
-            transition={springTransition}
-            className={`${sizeClasses} bg-white/10 border border-white/40 backdrop-blur-[6px] text-white shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)] transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
+        <div ref={rightEnterRef} className="opacity-0 will-change-transform">
+          <div
+            className="will-change-transform"
+            style={{
+              transform: `translateX(${rightX}px)`,
+              opacity: ctaOpacity,
+              transition:
+                "transform 0.1s cubic-bezier(0,0,0.2,1), opacity 0.1s cubic-bezier(0,0,0.2,1)",
+            }}
           >
-            <span>{copy.demo}</span>
-            <svg
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-              className="w-2.75 h-2.75 md:w-3 md:h-3 shrink-0"
+            <motion.button
+              type="button"
+              onClick={onDemoClick}
+              whileHover={hoverScale}
+              whileTap={tapScale}
+              transition={springTransition}
+              className={`${sizeClasses} bg-white/10 border border-white/40 backdrop-blur-[6px] text-white shadow-[0_6px_18px_-4px_rgba(2,14,40,0.36),0_2px_6px_-2px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_26px_-6px_rgba(2,14,40,0.48),0_4px_10px_-2px_rgba(0,0,0,0.26)] transition-shadow duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80`}
             >
-              <path d="M7.2 5.45c0-1.08 1.18-1.74 2.1-1.18l10.2 6.2c.89.54.89 1.82 0 2.36l-10.2 6.2c-.92.56-2.1-.1-2.1-1.18V5.45z" />
-            </svg>
-          </motion.button>
-        </div>
+              <span>{copy.demo}</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+                className="w-2.75 h-2.75 md:w-3 md:h-3 shrink-0"
+              >
+                <path d="M7.2 5.45c0-1.08 1.18-1.74 2.1-1.18l10.2 6.2c.89.54.89 1.82 0 2.36l-10.2 6.2c-.92.56-2.1-.1-2.1-1.18V5.45z" />
+              </svg>
+            </motion.button>
+          </div>
         </div>
       </div>
     </div>

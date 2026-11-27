@@ -893,10 +893,6 @@ export default function WebGLCanvas({
   }, [stepLerp, setTargetUV, impulseTriggerRef, showTextLayer]);
 
   return (
-    <div
-      ref={mountRef}
-      className="relative w-full h-full pointer-events-none"
-      aria-hidden="true"
-    />
+    <div ref={mountRef} className="relative w-full h-full pointer-events-none" aria-hidden="true" />
   );
 }

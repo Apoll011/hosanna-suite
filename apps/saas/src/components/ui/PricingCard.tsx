@@ -349,9 +349,7 @@ export function PricingCard({
             className="num font-display text-5xl sm:text-6xl font-semibold text-[#0284c7]"
             aria-label={`${price}€`}
           />
-          <span className="font-display text-5xl sm:text-6xl font-semibold text-[#0284c7]">
-            €
-          </span>
+          <span className="font-display text-5xl sm:text-6xl font-semibold text-[#0284c7]">€</span>
           <span className="ml-1 text-slate-500">{unit}</span>
         </div>
 

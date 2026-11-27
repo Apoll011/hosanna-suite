@@ -92,9 +92,10 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
   const [isSending, setIsSending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [feedback, setFeedback] = useState<{ kind: "success" | "error" | "hint"; text: string } | null>(
-    null,
-  );
+  const [feedback, setFeedback] = useState<{
+    kind: "success" | "error" | "hint";
+    text: string;
+  } | null>(null);
 
   const edRef = useRef<HTMLDivElement>(null);
   const queryRef = useRef<HTMLSpanElement>(null);
@@ -344,23 +345,20 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
     });
   }, [query]);
 
-  const pickTarget = useCallback(
-    (target: MentionTarget) => {
-      const chipId = `${target.kind}:${target.id}:${Date.now()}:${Math.random().toString(36).slice(2, 6)}`;
-      const reduced = prefersReducedMotion();
-      const s = createSpring(reduced ? 1 : 0.6, 520, 16);
-      tuneSpring(s, 520, 16, reduced);
-      s.t = 1;
-      chipSprings.current.set(chipId, s);
+  const pickTarget = useCallback((target: MentionTarget) => {
+    const chipId = `${target.kind}:${target.id}:${Date.now()}:${Math.random().toString(36).slice(2, 6)}`;
+    const reduced = prefersReducedMotion();
+    const s = createSpring(reduced ? 1 : 0.6, 520, 16);
+    tuneSpring(s, 520, 16, reduced);
+    s.t = 1;
+    chipSprings.current.set(chipId, s);
 
-      setParts((prev) => [...prev, { t: "chip", id: chipId, target }, { t: "text", s: " " }]);
-      setQuery(null);
-      setActiveIdx(0);
-      setFeedback(null);
-      edRef.current?.focus();
-    },
-    [],
-  );
+    setParts((prev) => [...prev, { t: "chip", id: chipId, target }, { t: "text", s: " " }]);
+    setQuery(null);
+    setActiveIdx(0);
+    setFeedback(null);
+    edRef.current?.focus();
+  }, []);
 
   const playSendAnimation = () => {
     arrowRef.current?.animate(
@@ -518,8 +516,16 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
 
   const channelOptions = useMemo<ChannelOption[]>(
     () => [
-      { id: "inbox", label: t("home.widgets.sendNotification.channels.inbox"), dotColor: "#0f766e" },
-      { id: "email", label: t("home.widgets.sendNotification.channels.email"), dotColor: "#0284c7" },
+      {
+        id: "inbox",
+        label: t("home.widgets.sendNotification.channels.inbox"),
+        dotColor: "#0f766e",
+      },
+      {
+        id: "email",
+        label: t("home.widgets.sendNotification.channels.email"),
+        dotColor: "#0284c7",
+      },
       { id: "push", label: t("home.widgets.sendNotification.channels.push"), dotColor: "#d97706" },
     ],
     [t],

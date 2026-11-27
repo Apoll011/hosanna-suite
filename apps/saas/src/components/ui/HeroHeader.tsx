@@ -523,7 +523,7 @@ export default function HeroHeader({
             className={`absolute rounded-full transition-all duration-300 ease-in-out origin-center ${
               scrolledPanelOpen
                 ? "h-[1.75px] w-3.5 bg-white translate-x-0 rotate-45"
-                : "h-3.5 w-[2px] bg-[#021433] -translate-x-1.75 rotate-0"
+                : "h-3.5 w-0.5 bg-[#021433] -translate-x-1.75 rotate-0"
             }`}
           />
           <span

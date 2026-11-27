@@ -1,4 +1,7 @@
-import type { CreateNotificationInput, NotificationChannel } from "@/lib/services/notifications-api";
+import type {
+  CreateNotificationInput,
+  NotificationChannel,
+} from "@/lib/services/notifications-api";
 
 export type MentionTarget =
   | { kind: "all"; id: "all"; label: string }
@@ -6,8 +9,7 @@ export type MentionTarget =
   | { kind: "user"; id: string; label: string; email?: string; image?: string | null };
 
 export type ComposerPart =
-  | { t: "text"; s: string }
-  | { t: "chip"; id: string; target: MentionTarget };
+  { t: "text"; s: string } | { t: "chip"; id: string; target: MentionTarget };
 
 export type OrgMemberInput = {
   userId: string;
