@@ -30,14 +30,12 @@ const discoveryFactory = captureMcpTools(registerDiscoveryTools, "suite");
 const orgFactory = captureMcpTools(registerOrgTools, "suite");
 const chordProFactory = captureMcpTools(registerChordProTools, "suite");
 const songFactory = createLogosToolFactory([
-  captureMcpTools(registerSongTools, "music"),
+  captureMcpTools(registerSongTools, "suite"),
   songBatchToolFactory,
 ]);
-const serviceFactory = captureMcpTools(registerServiceTools, "planning");
+const serviceFactory = captureMcpTools(registerServiceTools, "suite");
 const libraryFactory = createLogosToolFactory([
-  captureMcpTools(registerLibraryTools, (name) =>
-    name.startsWith("agenda_") ? "planning" : "music",
-  ),
+  captureMcpTools(registerLibraryTools, "suite"),
   libraryBatchToolFactory,
 ]);
 const platformFactory = createLogosToolFactory([
