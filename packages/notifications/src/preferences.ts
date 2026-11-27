@@ -68,9 +68,9 @@ export function resolveChannelsForUser(opts: {
   now?: Date;
 }): ResolvedChannels {
   const def = getTypeDefinition(opts.type);
-  const base = channelsFromList(opts.requested?.length ? opts.requested : def.defaultChannels);
+  const base = channelsFromList(opts.requested ?? def.defaultChannels);
 
-  if (opts.bypassPreferences || !def.userOverridable) {
+  if (opts.bypassPreferences || !def.userOverridable || opts.requested !== undefined) {
     for (const ch of def.forcedChannels ?? []) base[ch] = true;
     return base;
   }

@@ -106,7 +106,7 @@ export function serializeComposerMessage(parts: readonly ComposerPart[]): {
   targets: MentionTarget[];
 } {
   const raw = parts
-    .map((part) => (part.t === "text" ? part.s : chipDisplayText(part.target)))
+    .map((part) => (part.t === "text" ? part.s : part.target.label))
     .join("");
   const text = raw.replace(/\s+/g, " ").trim();
 
