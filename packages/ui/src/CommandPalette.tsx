@@ -48,8 +48,12 @@ export function CommandPalette({ isSearching = false, language, translate, class
   } = useCommandPalette();
   const t = useMemo(() => {
     const fallback = sharedUiT(language);
-    return (key: string, values?: Interpolation) =>
-      translate?.(key, values) ?? fallback(`suite.commandPalette.${key.split(".").at(-1)}`, values);
+    return (key: string, values?: Interpolation) => {
+      const hostCopy = translate?.(key, values);
+      if (hostCopy && hostCopy !== key) return hostCopy;
+      const leaf = key.split(".").at(-1);
+      return fallback(`suite.commandPalette.${leaf === "recents" ? "recent" : leaf}`, values);
+    };
   }, [language, translate]);
   const dialogId = useId();
   const [selectedIndex, setSelectedIndex] = useState(0);

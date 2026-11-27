@@ -140,9 +140,7 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   return (
     <div className="px-4 py-2.5 bg-m3-sidebar/20 border-b border-m3-border/40 flex items-center justify-between gap-3 flex-wrap">
       <div className="flex items-center gap-2.5 flex-wrap">
-        <div className="flex items-center gap-2">
-          <ArrowUpDown className="w-4 h-4 text-m3-secondary shrink-0" />
-          <SpringDropdown
+        <SpringDropdown
             mode="single"
             options={sortOptions}
             selected={
@@ -163,9 +161,9 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
               }
             }}
             ariaLabel={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
+            startAdornment={<ArrowUpDown className="h-4 w-4" aria-hidden="true" />}
             className="h-10"
           />
-        </div>
 
         {(view === "explorer" || view === "songs" || view === "collection-detail") && (
           <button
@@ -328,17 +326,15 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
             </Button>
           </div>
         )}
-        <div className="flex items-center gap-2">
-          <LayoutGrid className="w-4 h-4 text-m3-primary shrink-0" />
-          <SpringDropdown
+        <SpringDropdown
             mode="single"
             options={densityOptions}
             selected={density}
             onChange={onDensityChange}
             ariaLabel={t("toolbar.density")}
+            startAdornment={<LayoutGrid className="h-4 w-4 text-m3-primary" aria-hidden="true" />}
             className="h-10"
           />
-        </div>
       </div>
     </div>
   );
