@@ -3,7 +3,16 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { AccountMenu, Button, Badge, useCan, AnyRoleGate, Can, usePresence } from "@hosanna/ui";
+import {
+  AccountMenu,
+  Button,
+  Badge,
+  useCan,
+  AnyRoleGate,
+  Can,
+  usePresence,
+  WorkspaceSidebar,
+} from "@hosanna/ui";
 import { isDemoMode } from "@/src/demo";
 import { navigateToAuthAccount, prefetchAuthAccount } from "@/src/lib/authUrl";
 import { useI18n } from "@/src/lib/i18n";
@@ -137,22 +146,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
   return (
     <>
-      {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-m3-text/40 backdrop-blur-sm z-40"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      <aside
+      <WorkspaceSidebar
         data-tour="sidebar"
         data-testid="sidebar"
-        className={`${
-          isSidebarOpen ? "flex absolute inset-y-0 left-0 z-50 bg-m3-sidebar shadow-lg" : "hidden"
-        } md:flex md:relative md:bg-m3-sidebar/30 ${
-          isSidebarCollapsed ? "md:w-20" : "md:w-64"
-        } w-72 border-r border-m3-border p-4 flex-col gap-1 select-none shrink-0 transition-[width] duration-[320ms] [transition-timing-function:cubic-bezier(.2,.8,.2,1)] z-30`}
+        open={isSidebarOpen}
+        collapsed={isSidebarCollapsed}
+        onDismiss={() => setIsSidebarOpen(false)}
         role="navigation"
       >
         <div
@@ -629,7 +628,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             />
           </div>
         )}
-      </aside>
+      </WorkspaceSidebar>
     </>
   );
 };

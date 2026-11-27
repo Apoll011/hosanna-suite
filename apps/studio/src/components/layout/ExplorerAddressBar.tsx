@@ -4,7 +4,15 @@
  */
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
-import { Button, Can, CanAny, InboxButton, Input, usePresence } from "@hosanna/ui";
+import {
+  Button,
+  Can,
+  CanAny,
+  InboxButton,
+  Input,
+  usePresence,
+  WorkspaceHeader,
+} from "@hosanna/ui";
 import {
   BarChart3,
   Calendar,
@@ -101,7 +109,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
     "flex items-center gap-2 font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer shrink-0";
 
   return (
-    <div className="relative p-3 sm:p-4 bg-m3-sidebar/40 border-b border-m3-border/50 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
+    <WorkspaceHeader>
       <div className="flex items-center gap-2 sm:gap-3 flex-1 w-full md:w-auto">
         <Button
           type="button"
@@ -549,6 +557,6 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
           </div>
         </CanAny>
       </div>
-    </div>
+    </WorkspaceHeader>
   );
 };

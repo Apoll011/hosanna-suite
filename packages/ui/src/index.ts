@@ -82,6 +82,13 @@ export {
   type SuiteAppLocalizable,
 } from "./suiteLabels";
 export { Surface, type SurfaceProps } from "./Surface";
+export {
+  WorkspaceFrame,
+  WorkspaceHeader,
+  WorkspaceMain,
+  WorkspaceSidebar,
+  WorkspaceSurface,
+} from "./WorkspaceShell";
 export { Tabs, type TabItem } from "./Tabs";
 export { usePresence } from "./usePresence";
 
