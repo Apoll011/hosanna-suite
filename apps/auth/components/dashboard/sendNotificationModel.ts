@@ -2,11 +2,19 @@ import type {
   CreateNotificationInput,
   NotificationChannel,
 } from "@/lib/services/notifications-api";
+import type { AppRole } from "@hosanna/auth";
 
 export type MentionTarget =
   | { kind: "all"; id: "all"; label: string }
   | { kind: "team"; id: string; label: string; memberCount?: number }
-  | { kind: "user"; id: string; label: string; email?: string; image?: string | null };
+  | {
+      kind: "user";
+      id: string;
+      label: string;
+      email?: string;
+      image?: string | null;
+      role?: string;
+    };
 
 export type ComposerPart =
   { t: "text"; s: string } | { t: "chip"; id: string; target: MentionTarget };
@@ -18,6 +26,7 @@ export type OrgMemberInput = {
     email?: string | null;
     image?: string | null;
   } | null;
+  role?: string;
 };
 
 export type OrgTeamInput = {
@@ -54,6 +63,7 @@ export function buildMentionCandidates(params: {
       label,
       email: member.user?.email ?? undefined,
       image: member.user?.image ?? null,
+      role: member.role,
     });
   }
 
@@ -137,34 +147,37 @@ export function buildNotificationPayloads(params: {
   text: string;
   targets: readonly MentionTarget[];
   channels: readonly NotificationChannel[];
+  roles?: readonly AppRole[];
+  type?: string;
+  href?: string;
 }): CreateNotificationInput[] {
   const trimmed = params.text.trim();
   if (!trimmed || params.targets.length === 0 || params.channels.length === 0) {
     return [];
   }
 
-  const singleLineShort = trimmed.length <= 120 && !trimmed.includes("\n");
-  const firstLine = trimmed.split("\n")[0] ?? trimmed;
-  const title = singleLineShort
-    ? trimmed
-    : firstLine.length > 120
-      ? `${firstLine.slice(0, 117)}…`
-      : firstLine;
-  const body = singleLineShort ? undefined : trimmed;
+  const [firstLine = trimmed, ...rest] = trimmed.split("\n");
+  const title = firstLine.length > 255 ? `${firstLine.slice(0, 252)}…` : firstLine;
+  const body = rest.join("\n").trim() || undefined;
 
   return params.targets.map((target) => {
     const base: CreateNotificationInput = {
-      type: "info",
+      type: params.type ?? "info",
       title,
       channels: [...params.channels],
       ...(body ? { body } : {}),
+      ...(params.href?.trim() ? { href: params.href.trim() } : {}),
     };
     if (target.kind === "all") {
       base.organizationId = params.organizationId;
     } else if (target.kind === "team") {
       base.teamId = target.id;
+      if (params.roles?.length) base.roles = [...params.roles];
     } else {
       base.userId = target.id;
+    }
+    if (target.kind === "all" && params.roles?.length) {
+      base.roles = [...params.roles];
     }
     return base;
   });
