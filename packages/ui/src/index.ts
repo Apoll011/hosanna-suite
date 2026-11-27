@@ -25,9 +25,11 @@ export {
 } from "./AppSwitcher";
 export { Badge, type BadgeProps } from "./Badge";
 export { Button, type ButtonProps } from "./Button";
+export { CheckboxList, type CheckboxListItem } from "./CheckboxList";
 export { cn, type ClassValue } from "./cn";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
+export { FileDrop, type FileDropProps } from "./FileDrop";
 export { GoogleTextField, type GoogleTextFieldProps } from "./GoogleTextField";
 export {
   InboxButton,
@@ -43,12 +45,14 @@ export {
 } from "./Inbox";
 export { AppleIcon, DiscordIcon, GitHubIcon, GoogleIcon, MicrosoftIcon } from "./icons/SocialIcons";
 export { Input, type InputProps } from "./Input";
+export { HoldButton, type HoldButtonProps } from "./HoldButton";
 export { LoadingBar, type LoadingBarProps } from "./LoadingBar";
 export { MenuThemeToggle, type MenuThemeToggleProps, type MenuThemeValue } from "./MenuThemeToggle";
 export { Modal, type ModalProps } from "./Modal";
 export { NotificationChatBox, type NotificationChatBoxProps } from "./NotificationChatBox";
 export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { Spinner, type SpinnerProps } from "./Spinner";
+export { SpringInput } from "./SpringInput";
 export {
   SpringDropdown,
   type SpringDropdownOption,

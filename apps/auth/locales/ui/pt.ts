@@ -216,6 +216,15 @@ export const pt = {
         emptyHint: "Crie coleções no Music para agrupar o repertório.",
         songsCount: "{count} músicas",
       },
+      collectionChecklist: {
+        title: "Lista de preparação",
+        description: "Pré-visualização de uma lista para preparar a coleção.",
+        keywords: "lista preparação coleção ensaio",
+        setlist: "Confirmar a lista de músicas",
+        keys: "Verificar os tons",
+        rehearsal: "Preparar o ensaio",
+        share: "Partilhar com a equipa",
+      },
       folders: {
         title: "Pastas",
         description: "Pastas principais da biblioteca de músicas.",

@@ -218,6 +218,15 @@ export const en: typeof pt = {
         emptyHint: "Create collections in Music to group your repertoire.",
         songsCount: "{count} songs",
       },
+      collectionChecklist: {
+        title: "Collection checklist",
+        description: "A sample checklist for preparing a collection.",
+        keywords: "checklist collection rehearsal prepare",
+        setlist: "Confirm the song list",
+        keys: "Check song keys",
+        rehearsal: "Prepare for rehearsal",
+        share: "Share with the team",
+      },
       folders: {
         title: "Folders",
         description: "Top folders in your song library.",

@@ -18,6 +18,7 @@ import {
   PageHeader,
   Spinner,
   Surface,
+  SpringInput,
   Tabs,
 } from "@hosanna/ui";
 import {
@@ -845,7 +846,7 @@ export function OrgMembersPage() {
           title={t("settings.members.inviteModalTitle")}
         >
           <form onSubmit={(e) => void handleInvite(e)} className="space-y-4 pt-2">
-            <Input
+            <SpringInput
               type="email"
               label={t("settings.members.emailLabel")}
               placeholder={t("settings.members.emailPlaceholder")}

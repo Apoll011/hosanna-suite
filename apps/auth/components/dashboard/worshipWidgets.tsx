@@ -3,6 +3,7 @@
 import { useI18n } from "@/lib/ui/i18n";
 import type { WidgetRendererProps } from "@hosanna/dashboard/react";
 import { Badge } from "@hosanna/ui";
+import { CheckboxList } from "@hosanna/ui";
 import {
   ArrowUpRight,
   Calendar,
@@ -1164,6 +1165,16 @@ export function CollectionsWidget({ instance }: WidgetRendererProps) {
       )}
     </>
   );
+}
+
+export function CollectionChecklistWidget() {
+  const { t } = useI18n();
+  return <CheckboxList title={t("home.widgets.collectionChecklist.title")} items={[
+    { id: "setlist", label: t("home.widgets.collectionChecklist.setlist"), checked: true },
+    { id: "keys", label: t("home.widgets.collectionChecklist.keys"), checked: true },
+    { id: "rehearsal", label: t("home.widgets.collectionChecklist.rehearsal") },
+    { id: "share", label: t("home.widgets.collectionChecklist.share") },
+  ]} />;
 }
 
 export function FoldersWidget({ instance }: WidgetRendererProps) {

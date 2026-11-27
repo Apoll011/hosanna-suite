@@ -272,6 +272,8 @@ On phone, a covering panel may **translate** instead of changing width — same 
 
 `prefers-reduced-motion: reduce` collapses durations to near zero. Do not substitute a flashier animation.
 
+Shared interaction primitives in `@hosanna/ui` include `SpringDropdown` for spring-positioned selection menus, `SpringInput` for focus feedback, `HoldButton` for deliberate destructive confirmation, `FileDrop` for file selection and drop targets, and `CheckboxList` for compact checklist presentation. They use the existing M3 palette and preserve native keyboard and file input behavior. Keep motion interruptible, short, and tied to user input; use the shared primitives instead of adding another local animation engine.
+
 ---
 
 ## Studio product patterns

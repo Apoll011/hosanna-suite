@@ -5,7 +5,7 @@
 
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
-import { Button, Input, Modal } from "@hosanna/ui";
+import { Button, HoldButton, Input, Modal } from "@hosanna/ui";
 import { AlertTriangle, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -152,15 +152,26 @@ export const BatchDeleteModal: React.FC<BatchDeleteModalProps> = ({
           <Button variant="ghost" onClick={onClose} disabled={isLoading}>
             {t("common.cancel")}
           </Button>
-          <Button
-            variant="danger"
-            isLoading={isLoading}
-            disabled={isConfirmDisabled}
-            onClick={handleConfirm}
-            icon={<Trash2 className="w-4 h-4" />}
-          >
-            {t("modals.deleteItems", { count: totalItems })}
-          </Button>
+          {requiresTypedConfirmation ? (
+            <HoldButton
+              disabled={isConfirmDisabled || isLoading}
+              onHoldComplete={() => void handleConfirm()}
+              holdingLabel={t("modals.deletePermanently")}
+              completeLabel={t("common.confirm")}
+            >
+              {t("modals.deleteItems", { count: totalItems })}
+            </HoldButton>
+          ) : (
+            <Button
+              variant="danger"
+              isLoading={isLoading}
+              disabled={isConfirmDisabled}
+              onClick={handleConfirm}
+              icon={<Trash2 className="w-4 h-4" />}
+            >
+              {t("modals.deleteItems", { count: totalItems })}
+            </Button>
+          )}
         </div>
       </div>
     </Modal>

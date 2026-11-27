@@ -218,6 +218,15 @@ export const es: typeof pt = {
         emptyHint: "Crea colecciones en Music para agrupar el repertorio.",
         songsCount: "{count} canciones",
       },
+      collectionChecklist: {
+        title: "Lista de preparación",
+        description: "Vista previa de una lista para preparar la colección.",
+        keywords: "lista preparación colección ensayo",
+        setlist: "Confirmar la lista de canciones",
+        keys: "Revisar los tonos",
+        rehearsal: "Preparar el ensayo",
+        share: "Compartir con el equipo",
+      },
       folders: {
         title: "Carpetas",
         description: "Carpetas principales de la biblioteca de canciones.",
