@@ -4,6 +4,8 @@
  */
 
 import { useSync } from "@/src/contexts/SyncContext";
+import { useAuth } from "@/src/contexts/AuthContext";
+import { getDatabase } from "@/src/db";
 import { useI18n } from "@/src/lib/i18n";
 import {
   createLocalImportSink,
@@ -17,6 +19,7 @@ import {
 } from "@/src/lib/import";
 import { track } from "@/src/lib/posthog";
 import React, { useCallback, useMemo, useState } from "react";
+import { useCan } from "@hosanna/ui";
 
 interface ActiveInteractiveSession {
   provider: SongImportProvider;
@@ -29,6 +32,10 @@ export function useSongImportController(options: {
   resolveFolderName?: () => string;
 }) {
   const { t } = useI18n();
+  const { hasAcceptedTrial } = useAuth();
+  const { granted: canCreateSong } = useCan("song.create");
+  const { granted: canCreateFolder } = useCan("folder.create");
+  const { granted: canCreateCollection } = useCan("collection.create");
   const { showToast, updateToast, removeToast } = useSync();
   const [isUploading, setIsUploading] = useState(false);
   const [session, setSession] = useState<ActiveInteractiveSession | null>(null);
@@ -98,6 +105,13 @@ export function useSongImportController(options: {
         const result = await provider.commit(session.data, confirmOptions, {
           songData: { folderId: options.folderId },
           sink,
+          db: await getDatabase(),
+          permissions: {
+            canCreateSong,
+            canCreateFolder,
+            canCreateCollection,
+            canWrite: hasAcceptedTrial !== false,
+          },
           onProgress: (event) => {
             setProgress({
               done: Math.round(event.done),
@@ -152,7 +166,19 @@ export function useSongImportController(options: {
         setIsImporting(false);
       }
     },
-    [options, removeToast, session, showToast, showToastImportResult, t, updateToast],
+    [
+      canCreateCollection,
+      canCreateFolder,
+      canCreateSong,
+      hasAcceptedTrial,
+      options,
+      removeToast,
+      session,
+      showToast,
+      showToastImportResult,
+      t,
+      updateToast,
+    ],
   );
 
   const handleFiles = useCallback(
@@ -244,6 +270,13 @@ export function useSongImportController(options: {
         const result = await songImportRegistry.importFiles(direct, {
           songData: { folderId: options.folderId },
           sink: createLocalImportSink(),
+          db: await getDatabase(),
+          permissions: {
+            canCreateSong,
+            canCreateFolder,
+            canCreateCollection,
+            canWrite: hasAcceptedTrial !== false,
+          },
           onProgress: (event) => {
             const next = describeImportProgress(event, t);
             updateToast(activeToastId, {
@@ -271,7 +304,18 @@ export function useSongImportController(options: {
         setIsUploading(false);
       }
     },
-    [options, removeToast, showToast, showToastImportResult, t, updateToast],
+    [
+      canCreateCollection,
+      canCreateFolder,
+      canCreateSong,
+      hasAcceptedTrial,
+      options,
+      removeToast,
+      showToast,
+      showToastImportResult,
+      t,
+      updateToast,
+    ],
   );
 
   const modal = useMemo(() => {

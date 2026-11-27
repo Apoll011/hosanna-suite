@@ -18,6 +18,10 @@
     "./notification-chat-box": {
       "types": "./src/NotificationChatBox.tsx",
       "default": "./src/NotificationChatBox.tsx"
+    },
+    "./spring-dropdown": {
+      "types": "./src/SpringDropdown.tsx",
+      "default": "./src/SpringDropdown.tsx"
     }
   },
   "scripts": {

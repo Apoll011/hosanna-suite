@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Song } from "@/src/types";
+import { HOSANNA_EXPORT_MAX_BYTES, parseHosannaExportJson } from "@hosanna/types";
+import { executeHosannaImport } from "./hosannaExport";
 import { readFileTextWithProgress } from "./readFile";
 import type { ProviderImportResult, SongImportContext, SongImportProvider } from "./types";
 
@@ -11,13 +12,13 @@ export class JsonImportProvider implements SongImportProvider {
   readonly id = "json";
   readonly name = "JSON Importer";
   readonly fileTypeName = "JSON";
-  readonly description = "Imports songs structured in JSON format";
+  readonly description = "Imports Hosanna export files";
   readonly supportedExtensions = [".json"];
 
   async import(files: File[], ctx: SongImportContext): Promise<ProviderImportResult> {
-    const songPayloads: Array<Partial<Song> & { title: string }> = [];
-    const nameSet = new Set<string>();
-    let ignoredCount = 0;
+    let created = 0;
+    let failed = 0;
+    let ignored = 0;
     const totalFiles = Math.max(1, files.length);
 
     for (let i = 0; i < files.length; i++) {
@@ -40,49 +41,27 @@ export class JsonImportProvider implements SongImportProvider {
           });
         });
 
-        const parsedJson = JSON.parse(fileText) as unknown;
-
-        if (typeof parsedJson === "object" && parsedJson !== null && !Array.isArray(parsedJson)) {
-          for (const [key, songs] of Object.entries(parsedJson as Record<string, unknown>)) {
-            if (!Array.isArray(songs)) continue;
-            const targetFolderId = key === "root" ? ctx.songData.folderId : key;
-
-            for (const item of songs as Array<Record<string, unknown>>) {
-              const title = String(item.title ?? "").trim();
-              if (!title || nameSet.has(title)) {
-                ignoredCount++;
-                continue;
-              }
-              songPayloads.push({
-                title,
-                content: String(item.content ?? ""),
-                tags: Array.isArray(item.tags) ? (item.tags as string[]) : [],
-                artist: String(item.artist ?? "Vários"),
-                ...ctx.songData,
-                folderId: (targetFolderId as string | null | undefined) ?? null,
-              });
-              nameSet.add(title);
-            }
-          }
-        } else if (Array.isArray(parsedJson)) {
-          for (const item of parsedJson as Array<Record<string, unknown>>) {
-            const title = String(item.title ?? "").trim();
-            if (!title || nameSet.has(title)) {
-              ignoredCount++;
-              continue;
-            }
-            songPayloads.push({
-              title,
-              content: String(item.content ?? ""),
-              tags: Array.isArray(item.tags) ? (item.tags as string[]) : [],
-              artist: String(item.artist ?? "Vários"),
-              ...ctx.songData,
-            });
-            nameSet.add(title);
-          }
-        } else {
-          ignoredCount++;
+        if (file.size > HOSANNA_EXPORT_MAX_BYTES) {
+          ignored++;
+          continue;
         }
+
+        const parsed = parseHosannaExportJson(fileText, file.size);
+        if (!("data" in parsed)) {
+          ignored++;
+          continue;
+        }
+
+        const result = await executeHosannaImport(ctx.db, parsed.data, {
+          targetFolderId: ctx.songData.folderId,
+          permissions: ctx.permissions,
+        });
+        created +=
+          result.foldersCreated +
+          result.songsCreated +
+          result.songsOverwritten +
+          result.collectionsCreated;
+        ignored += result.songsSkipped;
 
         ctx.onProgress?.({
           phase: "processing",
@@ -91,41 +70,11 @@ export class JsonImportProvider implements SongImportProvider {
           label: file.name,
         });
       } catch {
-        ignoredCount++;
+        failed++;
       }
     }
 
-    if (songPayloads.length === 0) {
-      return {
-        providerId: this.id,
-        fileTypeName: this.fileTypeName,
-        created: 0,
-        failed: 0,
-        ignored: ignoredCount || files.length,
-      };
-    }
-
-    try {
-      const result = await ctx.sink.createSongsBatch(songPayloads, {
-        onPrepareProgress: (done, total) => ctx.onProgress?.({ phase: "processing", done, total }),
-        onProgress: (done, total) => ctx.onProgress?.({ phase: "writing", done, total }),
-      });
-      return {
-        providerId: this.id,
-        fileTypeName: this.fileTypeName,
-        created: result.created.length,
-        failed: result.failed,
-        ignored: ignoredCount,
-      };
-    } catch {
-      return {
-        providerId: this.id,
-        fileTypeName: this.fileTypeName,
-        created: 0,
-        failed: songPayloads.length,
-        ignored: ignoredCount,
-      };
-    }
+    return { providerId: this.id, fileTypeName: this.fileTypeName, created, failed, ignored };
   }
 
   isActive(): boolean {

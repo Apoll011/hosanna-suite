@@ -49,6 +49,11 @@ export { Modal, type ModalProps } from "./Modal";
 export { NotificationChatBox, type NotificationChatBoxProps } from "./NotificationChatBox";
 export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { Spinner, type SpinnerProps } from "./Spinner";
+export {
+  SpringDropdown,
+  type SpringDropdownOption,
+  type SpringDropdownProps,
+} from "./SpringDropdown";
 export { SuiteAppIcon, type SuiteAppIconProps } from "./SuiteAppIcon";
 export {
   loadSuiteApps,

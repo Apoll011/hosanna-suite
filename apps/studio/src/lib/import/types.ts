@@ -8,6 +8,8 @@ import type { ComponentType } from "react";
 import type { ImportSink } from "./sink";
 import type { SheetMusicImportOptions, SheetMusicImportSession } from "./sheetMusicProvider";
 import type { SongbookBackupDocument, SongbookImportOptions } from "./songbook";
+import type { HosanaDatabase } from "@/src/db";
+import type { ImportPermissions } from "./hosannaExport";
 
 export type ImportProgressPhase = "reading" | "processing" | "writing";
 
@@ -23,6 +25,8 @@ export type ImportProgressCallback = (event: ImportProgressEvent) => void;
 export interface SongImportContext {
   songData: Partial<Song>;
   sink: ImportSink;
+  db: HosanaDatabase;
+  permissions: ImportPermissions;
   onProgress?: ImportProgressCallback;
 }
 

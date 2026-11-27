@@ -32,7 +32,6 @@ import {
   getFolderDescendantIds,
 } from "../components/explorer";
 import { HosannaCommandPalette } from "../components/HosannaCommandPalette";
-import { HosannaExportImportModal } from "../components/modals/HosannaExportImportModal";
 import {
   ActiveModal,
   AppSidebar,
@@ -761,11 +760,6 @@ export const MainLayout: React.FC = () => {
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [hosannaImportModal, setHosannaImportModal] = useState<{
-    open: boolean;
-    file: File | null;
-  }>({ open: false, file: null });
-
   const exportSelection = useCallback(
     async (selection: {
       folderIds?: Iterable<string>;
@@ -802,37 +796,7 @@ export const MainLayout: React.FC = () => {
 
   const handleIncomingFiles = useCallback(
     async (files: File[]) => {
-      const remaining: File[] = [];
-      let openedHosannaFile: File | null = null;
-
-      for (const file of files) {
-        if (file.name.toLowerCase().endsWith(".json") && !openedHosannaFile) {
-          try {
-            const text = await file.text();
-            const parsed = JSON.parse(text) as unknown;
-            if (
-              typeof parsed === "object" &&
-              parsed !== null &&
-              !Array.isArray(parsed) &&
-              (parsed as Record<string, unknown>).format === "hosanna-export"
-            ) {
-              openedHosannaFile = file;
-              continue;
-            }
-          } catch {
-            openedHosannaFile = file;
-            continue;
-          }
-        }
-        remaining.push(file);
-      }
-
-      if (openedHosannaFile) {
-        setHosannaImportModal({ open: true, file: openedHosannaFile });
-      }
-      if (remaining.length > 0) {
-        await processAndUploadFiles(remaining);
-      }
+      await processAndUploadFiles(files);
     },
     [processAndUploadFiles],
   );
@@ -1712,7 +1676,6 @@ export const MainLayout: React.FC = () => {
                 density={density}
                 onDensityChange={handleDensityChange}
                 onOpenFilterPanel={() => openModal("filter")}
-                onOpenHosannaImport={() => setHosannaImportModal({ open: true, file: null })}
                 collectionActions={collectionToolbarActions}
               />
             )}
@@ -1931,20 +1894,6 @@ export const MainLayout: React.FC = () => {
       />
 
       {songImportModal}
-
-      <HosannaExportImportModal
-        isOpen={hosannaImportModal.open}
-        initialFile={hosannaImportModal.file}
-        defaultTargetFolderId={currentFolderId}
-        folders={allFolders}
-        onClose={() => setHosannaImportModal({ open: false, file: null })}
-        onImported={async () => {
-          await invalidateSongsCache();
-          await invalidateCollectionsCache();
-          await foldersQuery.refetch();
-          await songsQuery.refetch();
-        }}
-      />
 
       <ExplorerModals
         activeModal={activeModal}
