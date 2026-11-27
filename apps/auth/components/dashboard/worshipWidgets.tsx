@@ -329,9 +329,7 @@ export function LibrarySummaryWidget({ instance }: WidgetRendererProps) {
             </span>
           </p>
 
-          <div
-            className={`grid gap-2 ${instance.w >= 5 || density === "expanded" ? "grid-cols-4" : "grid-cols-2"}`}
-          >
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,8rem),1fr))] gap-2">
             <div className="surface-inset px-2.5 py-2">
               <p className="text-caption truncate">{t("home.widgets.library.folders")}</p>
               <p className="mt-0.5 flex items-center gap-1 text-sm font-semibold tabular-nums text-m3-text">
@@ -345,22 +343,18 @@ export function LibrarySummaryWidget({ instance }: WidgetRendererProps) {
                 {songs.length > 0 ? Math.round((insights.withChords / songs.length) * 100) : 0}%
               </p>
             </div>
-            {instance.w >= 5 || density === "expanded" ? (
-              <>
-                <div className="surface-inset px-2.5 py-2">
-                  <p className="text-caption truncate">{t("home.widgets.library.withKey")}</p>
-                  <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
-                    {songs.length > 0 ? Math.round((insights.withKey / songs.length) * 100) : 0}%
-                  </p>
-                </div>
-                <div className="surface-inset px-2.5 py-2">
-                  <p className="text-caption truncate">{t("home.widgets.library.withTags")}</p>
-                  <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
-                    {songs.length > 0 ? Math.round((insights.withTags / songs.length) * 100) : 0}%
-                  </p>
-                </div>
-              </>
-            ) : null}
+            <div className="surface-inset px-2.5 py-2">
+              <p className="text-caption truncate">{t("home.widgets.library.withKey")}</p>
+              <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
+                {songs.length > 0 ? Math.round((insights.withKey / songs.length) * 100) : 0}%
+              </p>
+            </div>
+            <div className="surface-inset px-2.5 py-2">
+              <p className="text-caption truncate">{t("home.widgets.library.withTags")}</p>
+              <p className="mt-0.5 text-sm font-semibold tabular-nums text-m3-text">
+                {songs.length > 0 ? Math.round((insights.withTags / songs.length) * 100) : 0}%
+              </p>
+            </div>
           </div>
         </div>
       )}
