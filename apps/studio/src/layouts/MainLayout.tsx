@@ -6,6 +6,7 @@
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import { getPersonalSettings } from "@hosanna/auth";
+import { WorkspaceFrame, WorkspaceMain, WorkspaceSurface } from "@hosanna/ui";
 import { ConversionResult } from "@hosanna/chordpro";
 import {
   AI_LIBRARY_CHANGED_EVENT,
@@ -32,7 +33,6 @@ import {
   getFolderDescendantIds,
 } from "../components/explorer";
 import { HosannaCommandPalette } from "../components/HosannaCommandPalette";
-import { HosannaExportImportModal } from "../components/modals/HosannaExportImportModal";
 import {
   ActiveModal,
   AppSidebar,
@@ -761,11 +761,6 @@ export const MainLayout: React.FC = () => {
   const [expandedFolderIds, setExpandedFolderIds] = useState<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [hosannaImportModal, setHosannaImportModal] = useState<{
-    open: boolean;
-    file: File | null;
-  }>({ open: false, file: null });
-
   const exportSelection = useCallback(
     async (selection: {
       folderIds?: Iterable<string>;
@@ -802,37 +797,7 @@ export const MainLayout: React.FC = () => {
 
   const handleIncomingFiles = useCallback(
     async (files: File[]) => {
-      const remaining: File[] = [];
-      let openedHosannaFile: File | null = null;
-
-      for (const file of files) {
-        if (file.name.toLowerCase().endsWith(".json") && !openedHosannaFile) {
-          try {
-            const text = await file.text();
-            const parsed = JSON.parse(text) as unknown;
-            if (
-              typeof parsed === "object" &&
-              parsed !== null &&
-              !Array.isArray(parsed) &&
-              (parsed as Record<string, unknown>).format === "hosanna-export"
-            ) {
-              openedHosannaFile = file;
-              continue;
-            }
-          } catch {
-            openedHosannaFile = file;
-            continue;
-          }
-        }
-        remaining.push(file);
-      }
-
-      if (openedHosannaFile) {
-        setHosannaImportModal({ open: true, file: openedHosannaFile });
-      }
-      if (remaining.length > 0) {
-        await processAndUploadFiles(remaining);
-      }
+      await processAndUploadFiles(files);
     },
     [processAndUploadFiles],
   );
@@ -1625,7 +1590,7 @@ export const MainLayout: React.FC = () => {
 
   const layoutContent = (
     <>
-      <div className="h-dvh max-h-dvh w-full flex flex-row overflow-hidden bg-m3-bg">
+      <WorkspaceFrame>
         <AppSidebar
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
@@ -1656,7 +1621,7 @@ export const MainLayout: React.FC = () => {
           logout={logout}
         />
 
-        <div className="flex-1 min-w-0 flex flex-col p-2 sm:p-4 md:p-0 h-full overflow-hidden">
+        <WorkspaceMain>
           <input
             type="file"
             ref={fileInputRef}
@@ -1666,10 +1631,7 @@ export const MainLayout: React.FC = () => {
             className="hidden"
           />
 
-          <div
-            className="bg-m3-card border md:border-none border-m3-border rounded-xl md:rounded-none shadow-lg md:shadow-none overflow-hidden flex flex-col flex-1 h-full transition-colors duration-300"
-            role="main"
-          >
+          <WorkspaceSurface role="main">
             <ExplorerAddressBar
               view={view}
               isSidebarOpen={isSidebarOpen}
@@ -1712,7 +1674,6 @@ export const MainLayout: React.FC = () => {
                 density={density}
                 onDensityChange={handleDensityChange}
                 onOpenFilterPanel={() => openModal("filter")}
-                onOpenHosannaImport={() => setHosannaImportModal({ open: true, file: null })}
                 collectionActions={collectionToolbarActions}
               />
             )}
@@ -1759,6 +1720,7 @@ export const MainLayout: React.FC = () => {
                   handleDragOver,
                   handleDragLeave,
                   handleDrop,
+                  handleIncomingFiles,
                   isDraggingOver,
                   totalItemsCount,
                   currentFolderId,
@@ -1799,11 +1761,11 @@ export const MainLayout: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
-        </div>
+          </WorkspaceSurface>
+        </WorkspaceMain>
 
         <AiChatDock />
-      </div>
+      </WorkspaceFrame>
 
       <ToastContainer />
       <ProductTourController />
@@ -1931,20 +1893,6 @@ export const MainLayout: React.FC = () => {
       />
 
       {songImportModal}
-
-      <HosannaExportImportModal
-        isOpen={hosannaImportModal.open}
-        initialFile={hosannaImportModal.file}
-        defaultTargetFolderId={currentFolderId}
-        folders={allFolders}
-        onClose={() => setHosannaImportModal({ open: false, file: null })}
-        onImported={async () => {
-          await invalidateSongsCache();
-          await invalidateCollectionsCache();
-          await foldersQuery.refetch();
-          await songsQuery.refetch();
-        }}
-      />
 
       <ExplorerModals
         activeModal={activeModal}

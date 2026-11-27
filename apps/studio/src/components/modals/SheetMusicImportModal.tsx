@@ -17,7 +17,7 @@ import type {
 } from "@/src/lib/import/sheetMusicProvider";
 import type { InteractiveImportModalProps } from "@/src/lib/import/types";
 import { ChordProRenderer, parseChordPro } from "@hosanna/chordpro";
-import { Button, Input, Modal } from "@hosanna/ui";
+import { Button, Input, Modal, SpringDropdown, type SpringDropdownOption } from "@hosanna/ui";
 import { AlertTriangle, Check, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
@@ -142,6 +142,13 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
   const { t } = useI18n();
   const { foldersQuery } = useFolders();
   const folders = foldersQuery.data?.folders ?? [];
+  const folderOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => [
+      { id: "", label: t("forms.rootLevel") },
+      ...folders.map((folder) => ({ id: folder.id, label: folder.name })),
+    ],
+    [folders, t],
+  );
 
   const [job, setJob] = useState<SongImportJob | null>(null);
   const [pollError, setPollError] = useState<string | null>(null);
@@ -439,18 +446,14 @@ export const SheetMusicImportModal: React.FC<SheetMusicImportModalProps> = ({
               />
               <div className="flex flex-col gap-1.5">
                 <label className="text-label ml-0.5">{t("forms.folderCategory")}</label>
-                <select
-                  value={form.folderId}
-                  onChange={(e) => set("folderId")(e.currentTarget.value)}
-                  className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary hover:border-m3-primary/40"
-                >
-                  <option value="">{t("forms.rootLevel")}</option>
-                  {folders.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.name}
-                    </option>
-                  ))}
-                </select>
+                <SpringDropdown
+                  mode="single"
+                  options={folderOptions}
+                  selected={form.folderId}
+                  onChange={(folderId) => set("folderId")(folderId)}
+                  ariaLabel={t("forms.folderCategory")}
+                  className="h-11 w-full justify-between text-sm"
+                />
               </div>
             </div>
 

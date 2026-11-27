@@ -61,6 +61,7 @@ export const editor = ac.newRole({
 export const musician = ac.newRole({
   song: ["create", "access", "update", "import"],
   service: ["access", "update"],
+  folder: ["access"],
   collection: ["access"],
   agenda: ["access", "update"],
   export: ["pdf"],

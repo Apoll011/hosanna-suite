@@ -218,6 +218,15 @@ export const es: typeof pt = {
         emptyHint: "Crea colecciones en Music para agrupar el repertorio.",
         songsCount: "{count} canciones",
       },
+      collectionChecklist: {
+        title: "Lista de preparación",
+        description: "Vista previa de una lista para preparar la colección.",
+        keywords: "lista preparación colección ensayo",
+        setlist: "Confirmar la lista de canciones",
+        keys: "Revisar los tonos",
+        rehearsal: "Preparar el ensayo",
+        share: "Compartir con el equipo",
+      },
       folders: {
         title: "Carpetas",
         description: "Carpetas principales de la biblioteca de canciones.",
@@ -342,11 +351,18 @@ export const es: typeof pt = {
         description:
           "Notifica rápidamente a personas, equipos o @Todos por bandeja, correo y push.",
         keywords: "enviar notificación mencionar mensaje equipo todos bandeja correo push",
-        open: "Editor completo",
         placeholder: "Escribe un mensaje… Escribe @ para mencionar",
         hint: "Escribe @ para mencionar",
         send: "Enviar notificación",
         channelsLabel: "Canales de entrega",
+        typeLabel: "Tipo de notificación",
+        types: {
+          info: "Información",
+          organization: "Organización",
+          team: "Equipo",
+          security: "Seguridad",
+          billing: "Facturación",
+        },
         mentionList: "Sugerencias de mención",
         allTarget: "Todos",
         allBadge: "Organización",
@@ -859,6 +875,8 @@ export const es: typeof pt = {
       leaveDesc: "Salir de este espacio. Necesitarás una nueva invitación para volver.",
       deleteTitle: "Eliminar organización",
       deleteDesc: "Elimina permanentemente el espacio y todos los datos asociados.",
+      deleteExportRequired:
+        "Exporta una copia de seguridad de la organización para habilitar la eliminación.",
       deleteBtn: "Eliminar organización",
       deleteConfirmTitle: "¿Eliminar organización?",
       deleteConfirmText: 'Escribe "{name}" para confirmar la eliminación.',
@@ -936,6 +954,13 @@ export const es: typeof pt = {
   },
   account: {
     title: "Cuenta",
+    tabs: {
+      ariaLabel: "Secciones de la cuenta",
+      profile: "Perfil",
+      connections: "Cuentas asociadas",
+      sessions: "Sesiones e historial",
+      preferences: "Idioma y preferencias",
+    },
     subtitle: "Gestiona tu perfil, seguridad, notificaciones y sesiones de Hosanna.",
     signOut: "Cerrar sesión",
     danger: {
@@ -1019,7 +1044,6 @@ export const es: typeof pt = {
       members: "Miembros",
       teams: "Equipos",
       billing: "Facturación",
-      notifications: "Notificaciones",
       ai: "IA",
       regional: "Regional",
       activity: "Actividad",
@@ -1060,10 +1084,6 @@ export const es: typeof pt = {
     billing: {
       title: "Facturación",
       description: "Plan, facturas y métodos de pago.",
-    },
-    notifications: {
-      title: "Enviar notificación",
-      description: "Redacta y envía un aviso a la organización, a un equipo o a un miembro.",
     },
     ai: {
       title: "IA",
@@ -1106,6 +1126,7 @@ export const es: typeof pt = {
     active: "Activo",
     setActive: "Establecer como activo",
     membersTitle: "Personas del equipo",
+    addMemberTitle: "Añadir persona",
     membersDesc: "Elige personas que ya pertenezcan a esta organización.",
     chooseMember: "Seleccionar miembro",
     addMember: "Añadir",
@@ -1117,6 +1138,8 @@ export const es: typeof pt = {
     noMembersDesc: "Añade a alguien de la lista de miembros de la organización.",
     chooseTeam: "Elige un equipo para ver sus detalles",
     renameLabel: "Nuevo nombre",
+    renameTitle: "Renombrar equipo",
+    moreActions: "Más acciones del equipo",
     renamePlaceholder: "Nuevo nombre del equipo",
     rename: "Renombrar",
     delete: "Eliminar",

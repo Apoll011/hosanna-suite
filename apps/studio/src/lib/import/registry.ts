@@ -4,7 +4,9 @@
  */
 
 import { isTransientNetworkError } from "@hosanna/replication/replication";
+import { getDatabase } from "@/src/db";
 import { Song } from "@/src/types";
+import type { HosanaDatabase } from "@/src/db";
 import { createLocalImportSink, type ImportSink } from "./sink";
 import {
   ImportProgressCallback,
@@ -14,10 +16,13 @@ import {
   ProvidersMetadata,
   SongImportProvider,
 } from "./types";
+import type { ImportPermissions } from "./hosannaExport";
 
 export interface ImportFilesOptions {
   songData?: Partial<Song>;
   sink?: ImportSink;
+  db?: HosanaDatabase;
+  permissions?: ImportPermissions;
   onProgress?: ImportProgressCallback;
 }
 
@@ -136,6 +141,8 @@ export class SongImportRegistry {
     const options: ImportFilesOptions =
       "songData" in songDataOrOptions ||
       "sink" in songDataOrOptions ||
+      "db" in songDataOrOptions ||
+      "permissions" in songDataOrOptions ||
       "onProgress" in songDataOrOptions
         ? (songDataOrOptions as ImportFilesOptions)
         : { songData: songDataOrOptions as Partial<Song> };
@@ -143,6 +150,13 @@ export class SongImportRegistry {
     const songData = options.songData ?? {};
     const sink = options.sink ?? createLocalImportSink();
     const onProgress = options.onProgress;
+    const db = options.db ?? (await getDatabase());
+    const permissions = options.permissions ?? {
+      canCreateSong: false,
+      canCreateFolder: false,
+      canCreateCollection: false,
+      canWrite: false,
+    };
 
     const grouped = new Map<SongImportProvider, File[]>();
     const results: ProviderImportResult[] = [];
@@ -171,6 +185,8 @@ export class SongImportRegistry {
       const result = await provider.import(providerFiles, {
         songData,
         sink,
+        db,
+        permissions,
         onProgress,
       });
 

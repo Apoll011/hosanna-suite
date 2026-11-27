@@ -15,6 +15,7 @@ import React, { useEffect, useId, useMemo, useRef, useState, type ReactNode } fr
 import { cn } from "./cn";
 import { MenuThemeToggle, type MenuThemeValue } from "./MenuThemeToggle";
 import { sharedUiT } from "./sharedT";
+import { usePresence } from "./usePresence";
 
 export type AccountMenuUser = {
   name?: string | null;
@@ -160,6 +161,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
 
   const isControlled = openControlled !== undefined;
   const open = isControlled ? openControlled : openUncontrolled;
+  const panelMounted = usePresence(open);
   const setOpen = (next: boolean | ((prev: boolean) => boolean)) => {
     const value = typeof next === "function" ? next(open) : next;
     if (!isControlled) setOpenUncontrolled(value);
@@ -184,7 +186,10 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        rootRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+      }
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKey);
@@ -413,11 +418,13 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
           </div>
         </button>
 
-        {open ? (
+        {panelMounted ? (
           <div
             id={panelId}
             role="menu"
-            className="absolute bottom-full left-0 z-50 mb-2 w-[min(100vw-1.5rem,20rem)] overflow-visible rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_12px_40px_-12px_rgb(0_0_0_/0.35)] animate-in fade-in slide-in-from-bottom-2 duration-150"
+            aria-hidden={!open}
+            inert={!open}
+            className={`absolute bottom-full left-0 z-50 mb-2 w-[min(100vw-1.5rem,20rem)] overflow-visible rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_12px_40px_-12px_rgb(0_0_0_/0.35)] [--hosanna-enter-y:8px] ${open ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
           >
             {panelBody}
           </div>
@@ -453,11 +460,13 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
         </span>
       </button>
 
-      {open ? (
+      {panelMounted ? (
         <div
           id={panelId}
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-[min(100vw-1.5rem,20rem)] overflow-visible rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_12px_40px_-12px_rgb(0_0_0_/0.35)]"
+          aria-hidden={!open}
+          inert={!open}
+          className={`absolute right-0 z-50 mt-2 w-[min(100vw-1.5rem,20rem)] overflow-visible rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_12px_40px_-12px_rgb(0_0_0_/0.35)] [--hosanna-origin:top_right] ${open ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
         >
           {panelBody}
         </div>

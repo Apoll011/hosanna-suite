@@ -18,6 +18,7 @@ export const sharedPt = {
     loading: "A carregar…",
     expand: "Expandir",
     collapse: "Fechar",
+    closeNavigation: "Fechar navegação",
   },
   billing: {
     period: {
@@ -141,6 +142,21 @@ export const sharedPt = {
     },
   },
   suite: {
+    commandPalette: {
+      recent: "Recentes",
+      defaultSection: "Comandos",
+      submenu: "No menu",
+      searchSubmenu: "Pesquisar neste menu...",
+      searchPlaceholder: "Pesquisar comandos e espaço de trabalho...",
+      noResults: "Sem resultados",
+      noResultsDesc: 'Não encontramos nada para "{query}".',
+      navigate: "Navegar",
+      select: "Executar comando",
+      title: "Paleta de comandos",
+      clearSearch: "Limpar pesquisa",
+      open: "Abrir paleta de comandos",
+      search: "Pesquisar",
+    },
     comingSoon: "Em breve",
     switcher: {
       open: "Abrir seletor de aplicações",

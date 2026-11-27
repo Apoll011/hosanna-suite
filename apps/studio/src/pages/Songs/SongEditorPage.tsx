@@ -10,7 +10,14 @@ import { useEditorSettings } from "@/src/hooks/useEditorSettings";
 import { usePreviewSettings } from "@/src/hooks/usePreviewSettings";
 import { useI18n } from "@/src/lib/i18n";
 import { emitOnboardingEvent } from "@/src/lib/tour";
-import { Button, Can, Spinner, useCan } from "@hosanna/ui";
+import {
+  Button,
+  Can,
+  Spinner,
+  SpringDropdown,
+  useCan,
+  type SpringDropdownOption,
+} from "@hosanna/ui";
 
 import { Song } from "@/src/types";
 import {
@@ -85,7 +92,6 @@ export const SongEditorPage: React.FC = () => {
   const [showEditorSettings, setShowEditorSettings] = useState(false);
   const [showPreviewSettings, setShowPreviewSettings] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -96,6 +102,13 @@ export const SongEditorPage: React.FC = () => {
   } = useEditorSettings();
 
   const parsedSong = useMemo(() => parseChordPro(deferredContent), [deferredContent]);
+  const variantOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => [
+      { id: "", label: t("songEditor.defaultVariant") },
+      ...(parsedSong.variants ?? []).map((variant) => ({ id: variant.id, label: variant.name })),
+    ],
+    [parsedSong.variants, t],
+  );
 
   const directiveDefaults = useMemo(() => {
     const variant = selectedVariant
@@ -498,19 +511,14 @@ export const SongEditorPage: React.FC = () => {
             </span>
             <div className="flex items-center gap-2">
               {parsedSong.variants && parsedSong.variants.length > 0 && (
-                <select
-                  value={selectedVariant ?? ""}
-                  onChange={(event) => setSelectedVariant(event.target.value || null)}
-                  className="max-w-32 rounded-md border border-m3-border bg-m3-card px-1.5 py-1 text-[10px] text-m3-text"
-                  aria-label={t("songEditor.variant")}
-                >
-                  <option value="">{t("songEditor.defaultVariant")}</option>
-                  {parsedSong.variants.map((variant) => (
-                    <option key={variant.id} value={variant.id}>
-                      {variant.name}
-                    </option>
-                  ))}
-                </select>
+                <SpringDropdown
+                  mode="single"
+                  options={variantOptions}
+                  selected={selectedVariant ?? ""}
+                  onChange={(variant) => setSelectedVariant(variant || null)}
+                  ariaLabel={t("songEditor.variant")}
+                  className="h-8 max-w-32 text-[10px]"
+                />
               )}
               <button
                 onClick={() => setShowPreviewSettings(!showPreviewSettings)}
@@ -522,14 +530,15 @@ export const SongEditorPage: React.FC = () => {
             </div>
           </div>
 
-          {showPreviewSettings && (
+          {
             <ChordProPreviewSettings
+              isOpen={showPreviewSettings}
               settings={settings}
               updateSetting={updateSetting}
               resetSettings={resetSettings}
               supportsCapo={supportsCapo}
             />
-          )}
+          }
           <div
             className="hosanna-sheet flex-1 overflow-auto bg-m3-card relative"
             onClick={() => showPreviewSettings && setShowPreviewSettings(false)}

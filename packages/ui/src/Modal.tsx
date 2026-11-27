@@ -81,7 +81,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-m3-bg/75 backdrop-blur-sm overscroll-contain transition-opacity duration-200 ease-in-out ${
+      className={`hosanna-modal-scrim fixed inset-0 z-50 flex items-center justify-center p-4 bg-m3-bg/75 backdrop-blur-sm overscroll-contain transition-opacity duration-200 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] ${
         shown ? "opacity-100" : "opacity-0"
       }`}
       role="presentation"
@@ -96,7 +96,7 @@ export const Modal: React.FC<ModalProps> = ({
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className={`w-full ${maxWidthClasses[maxWidth]} bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-[min(90vh,720px)] outline-none transition-all duration-200 ease-in-out ${
+        className={`hosanna-modal-panel w-full ${maxWidthClasses[maxWidth]} bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-[min(90vh,720px)] outline-none transition-all duration-[220ms] [transition-timing-function:cubic-bezier(.2,.8,.2,1)] ${
           shown ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
         }`}
       >

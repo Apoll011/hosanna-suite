@@ -8,6 +8,7 @@ import { useI18n } from "@/lib/ui/i18n";
 import { parseUserAgent, type DeviceType } from "@/lib/account/parse-user-agent";
 import { Button, PageHeader, Spinner, Surface, useAnyRole } from "@hosanna/ui";
 import {
+  Activity,
   Globe,
   History,
   LogIn,
@@ -19,14 +20,6 @@ import {
   Tablet,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-
-const LOGIN_EVENT_TYPES = new Set([
-  "user_signed_in",
-  "user_signed_out",
-  "session_created",
-  "session_revoked",
-  "sessions_revoked_all",
-]);
 
 const DEVICE_ICONS: Record<DeviceType, typeof Globe> = {
   mobile: Smartphone,
@@ -43,8 +36,6 @@ type AuditEvent = {
   location?: { ipAddress?: string; city?: string; country?: string };
 };
 
-type OrgMemberRef = { userId: string; name: string; email: string };
-
 function readString(data: Record<string, unknown> | undefined, ...keys: string[]): string | null {
   if (!data) return null;
   for (const key of keys) {
@@ -54,49 +45,27 @@ function readString(data: Record<string, unknown> | undefined, ...keys: string[]
   return null;
 }
 
-/**
- * Sign-in events are user-scoped. Owners/admins query each member via userId
- * (same approach as Studio LoginHistorySection).
- */
-async function fetchOrganizationLoginEvents(
-  members: OrgMemberRef[],
+async function fetchOrganizationAuditEvents(
+  organizationId: string,
 ): Promise<{ events: AuditEvent[]; error: string | null }> {
-  if (members.length === 0) return { events: [], error: null };
-
-  const settled = await Promise.all(
-    members.map(async (member) => {
-      const result = await authClient.dash.getAllAuditLogs({
-        userId: member.userId,
-        eventType: "user_signed_in",
-        limit: 50,
-        offset: 0,
-      });
-      if (result.error) {
-        return { events: [] as AuditEvent[], error: result.error.message || null };
-      }
-      const events = ((result.data?.events ?? []) as AuditEvent[])
-        .filter((e) => LOGIN_EVENT_TYPES.has(e.eventType))
-        .map((e) => ({
-          ...e,
-          eventData: {
-            ...e.eventData,
-            userId: member.userId,
-            name: member.name || readString(e.eventData, "name"),
-            email: member.email || readString(e.eventData, "email", "identifier"),
-          },
-        }));
-      return { events, error: null as string | null };
-    }),
-  );
-
-  const errors = settled.map((s) => s.error).filter(Boolean);
-  const events = settled
-    .flatMap((s) => s.events)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-  if (events.length === 0 && errors.length === members.length) {
-    return { events: [], error: errors[0] };
+  const session = await authClient.getSession({ query: {} });
+  if (session.error || !session.data) {
+    return { events: [], error: session.error?.message || "Session unavailable" };
   }
+
+  const result = await authClient.dash.getAllAuditLogs({
+    session: session.data,
+    organizationId,
+    limit: 50,
+    offset: 0,
+  });
+  if (result.error) {
+    return { events: [], error: result.error.message || null };
+  }
+
+  const events = ((result.data?.events ?? []) as AuditEvent[]).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
   return { events, error: null };
 }
 
@@ -109,20 +78,13 @@ export function OrgActivityPage() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchLogs = useCallback(async () => {
-    if (!organization?.members) return;
+    if (!organization?.id) return;
     setIsLoading(true);
     setError(null);
     try {
-      const members: OrgMemberRef[] = [];
-      for (const m of organization.members) {
-        if (!m.userId) continue;
-        members.push({
-          userId: m.userId,
-          name: m.user?.name || "",
-          email: m.user?.email || "",
-        });
-      }
-      const { events: orgEvents, error: orgError } = await fetchOrganizationLoginEvents(members);
+      const { events: orgEvents, error: orgError } = await fetchOrganizationAuditEvents(
+        organization.id,
+      );
       if (orgError) throw new Error(orgError || t("loginHistory.loadError"));
       setEvents(orgEvents);
     } catch (err) {
@@ -131,7 +93,7 @@ export function OrgActivityPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [organization?.members, t]);
+  }, [organization?.id, t]);
 
   useEffect(() => {
     if (orgLoading || !organization?.id) return;
@@ -248,7 +210,8 @@ export function OrgActivityPage() {
                   log.eventType === "user_signed_out" ||
                   log.eventType === "session_revoked" ||
                   log.eventType === "sessions_revoked_all";
-                const EventIcon = isSignOut ? LogOut : LogIn;
+                const isSignIn = log.eventType === "user_signed_in";
+                const EventIcon = isSignOut ? LogOut : isSignIn ? LogIn : Activity;
                 const labelKey =
                   log.eventType === "user_signed_in"
                     ? "loginHistory.events.signedIn"
@@ -261,10 +224,10 @@ export function OrgActivityPage() {
                           : log.eventType === "sessions_revoked_all"
                             ? "loginHistory.events.sessionsRevokedAll"
                             : "loginHistory.events.other";
-                const deviceTitle =
-                  [info.client, info.os, info.device].filter(Boolean).join(" · ") ||
-                  ua ||
-                  t("settings.account.activeSessions.browserSession");
+                const eventLabel =
+                  labelKey === "loginHistory.events.other"
+                    ? log.eventType.replaceAll("_", " ")
+                    : t(labelKey);
                 const locationParts = [log.location?.city, log.location?.country].filter(Boolean);
 
                 return (
@@ -279,7 +242,7 @@ export function OrgActivityPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="inline-flex items-center gap-1 text-[11px] font-bold text-m3-text">
                           <EventIcon className="w-3 h-3 text-m3-secondary" />
-                          {t(labelKey)}
+                          {eventLabel}
                         </span>
                         <span className="text-[10px] text-m3-secondary tabular-nums">
                           {formatWhen(log.createdAt)}
@@ -293,21 +256,27 @@ export function OrgActivityPage() {
                           ) : null}
                         </p>
                       )}
-                      <p
-                        className="text-xs text-m3-secondary mt-0.5 truncate"
-                        title={ua ?? undefined}
-                      >
-                        {deviceTitle}
-                      </p>
-                      <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
-                        {t("loginHistory.meta", {
-                          ip: ip || t("settings.account.activeSessions.currentIp"),
-                          location:
-                            locationParts.length > 0
-                              ? locationParts.join(", ")
-                              : t("loginHistory.unknownLocation"),
-                        })}
-                      </p>
+                      {(ua || ip || locationParts.length > 0) && (
+                        <>
+                          {ua && (
+                            <p className="text-xs text-m3-secondary mt-0.5 truncate" title={ua}>
+                              {[info.client, info.os, info.device].filter(Boolean).join(" · ") ||
+                                ua}
+                            </p>
+                          )}
+                          {(ip || locationParts.length > 0) && (
+                            <p className="text-[10px] text-m3-secondary font-mono mt-0.5">
+                              {t("loginHistory.meta", {
+                                ip: ip || t("settings.account.activeSessions.currentIp"),
+                                location:
+                                  locationParts.length > 0
+                                    ? locationParts.join(", ")
+                                    : t("loginHistory.unknownLocation"),
+                              })}
+                            </p>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 );

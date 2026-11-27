@@ -5,7 +5,9 @@ import { ensureActiveOrganizationSession } from "@/lib/services/api";
 import { notificationsApi, type NotificationChannel } from "@/lib/services/notifications-api";
 import { useI18n } from "@/lib/ui/i18n";
 import type { WidgetRendererProps } from "@hosanna/dashboard/react";
-import { ArrowUp, Bell, Building2, CheckCircle2, Users } from "lucide-react";
+import { NotificationChatBox } from "@hosanna/ui/notification-chat-box";
+import { SpringDropdown, type SpringDropdownOption } from "@hosanna/ui/spring-dropdown";
+import { ArrowUp, Bell, Building2, CheckCircle2, Mail, Smartphone, Users } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -17,7 +19,6 @@ import {
   type KeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { ChannelSpringDropdown, type ChannelOption } from "./ChannelSpringDropdown";
 import {
   buildMentionCandidates,
   buildNotificationPayloads,
@@ -27,13 +28,7 @@ import {
   type ComposerPart,
   type MentionTarget,
 } from "./sendNotificationModel";
-import {
-  getWidgetDensity,
-  useOrganizationLoader,
-  useWidgetPreview,
-  WidgetHeader,
-  WidgetHeaderLink,
-} from "./shared";
+import { getWidgetDensity, useOrganizationLoader, useWidgetPreview } from "./shared";
 import {
   clamp,
   createSpring,
@@ -51,6 +46,8 @@ type TeamRow = {
 
 const MENTION_ROW_H = 42;
 const MENTION_PAD = 4;
+const NOTIFICATION_TYPES = ["info", "organization", "team", "security", "billing"] as const;
+type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 
 export function SendNotificationWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
@@ -89,6 +86,7 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
   const [query, setQuery] = useState<string | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [channels, setChannels] = useState<NotificationChannel[]>(["inbox"]);
+  const [notificationType, setNotificationType] = useState<NotificationType>("info");
   const [isSending, setIsSending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -408,6 +406,7 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
       text: serializedText,
       targets: mentionTargets,
       channels,
+      type: notificationType,
     });
     if (payloads.length === 0) return;
 
@@ -514,52 +513,50 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
     }
   };
 
-  const channelOptions = useMemo<ChannelOption[]>(
+  const channelOptions = useMemo<SpringDropdownOption<NotificationChannel>[]>(
     () => [
       {
         id: "inbox",
         label: t("home.widgets.sendNotification.channels.inbox"),
         dotColor: "#0f766e",
+        icon: <Bell className="h-3.5 w-3.5" />,
       },
       {
         id: "email",
         label: t("home.widgets.sendNotification.channels.email"),
         dotColor: "#0284c7",
+        icon: <Mail className="h-3.5 w-3.5" />,
       },
-      { id: "push", label: t("home.widgets.sendNotification.channels.push"), dotColor: "#d97706" },
+      {
+        id: "push",
+        label: t("home.widgets.sendNotification.channels.push"),
+        dotColor: "#d97706",
+        icon: <Smartphone className="h-3.5 w-3.5" />,
+      },
     ],
+    [t],
+  );
+  const notificationTypeOptions = useMemo<SpringDropdownOption<NotificationType>[]>(
+    () =>
+      NOTIFICATION_TYPES.map((type) => ({
+        id: type,
+        label: t(
+          `home.widgets.sendNotification.types.${type}` as "home.widgets.sendNotification.types.info",
+        ),
+      })),
     [t],
   );
 
   if (density === "compact") {
     return (
-      <div className="flex h-full items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          <Bell className="h-4 w-4 shrink-0 text-m3-primary" aria-hidden />
-          <span className="truncate text-sm font-medium text-m3-text">
-            {t("home.widgets.sendNotification.title")}
-          </span>
-        </div>
-        <WidgetHeaderLink
-          href="/account/organization/notifications"
-          label={t("home.widgets.sendNotification.open")}
-        />
-      </div>
+      <NotificationChatBox title={t("home.widgets.sendNotification.title")} compact>
+        <Bell className="ml-auto h-4 w-4 shrink-0 text-m3-primary" aria-hidden />
+      </NotificationChatBox>
     );
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <WidgetHeader
-        title={t("home.widgets.sendNotification.title")}
-        action={
-          <WidgetHeaderLink
-            href="/account/organization/notifications"
-            label={t("home.widgets.sendNotification.open")}
-          />
-        }
-      />
-
+    <NotificationChatBox title={t("home.widgets.sendNotification.title")}>
       <div className="flex min-h-0 flex-1 flex-col justify-between rounded-xl border border-m3-border bg-m3-sidebar/35 p-3">
         <div
           ref={edRef}
@@ -575,8 +572,8 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
           onClick={() => edRef.current?.focus()}
           className="relative min-h-[56px] flex-1 cursor-text overflow-y-auto whitespace-pre-wrap break-words text-sm leading-7 text-m3-text outline-none"
         >
-          {parts.length === 0 && query === null ? (
-            <span className="pointer-events-none text-m3-input">
+          {parts.length === 0 && query === null && !focused ? (
+            <span className="pointer-events-none absolute left-0 top-0 text-m3-input">
               {t("home.widgets.sendNotification.placeholder")}
             </span>
           ) : null}
@@ -616,12 +613,22 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
         </div>
 
         <div className="mt-2.5 flex flex-wrap items-center gap-2 pt-2 border-t border-m3-border/60">
-          <ChannelSpringDropdown
+          <SpringDropdown
+            mode="multiple"
             selected={channels}
             onChange={setChannels}
             options={channelOptions}
             ariaLabel={t("home.widgets.sendNotification.channelsLabel")}
             allLabel={t("home.widgets.sendNotification.channels.all")}
+          />
+
+          <SpringDropdown
+            mode="single"
+            selected={notificationType}
+            onChange={setNotificationType}
+            options={notificationTypeOptions}
+            ariaLabel={t("home.widgets.sendNotification.typeLabel")}
+            className="max-w-36"
           />
 
           <span className="min-w-0 flex-1 truncate text-xs text-m3-secondary">
@@ -746,6 +753,6 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
             document.body,
           )
         : null}
-    </div>
+    </NotificationChatBox>
   );
 }

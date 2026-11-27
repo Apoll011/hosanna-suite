@@ -23,6 +23,9 @@ async function getApps(_request: Request): Promise<Response> {
   } catch (err) {
     if (!(err instanceof AuthHttpError)) {
       console.error("[suite/apps]", err);
+    } else {
+      const apps = listAuthSuiteApps();
+      return Response.json({ apps });
     }
     return jsonError(err);
   }

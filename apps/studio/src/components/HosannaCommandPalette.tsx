@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
-import { useCan } from "@hosanna/ui";
+import { CommandPalette, CommandPaletteTrigger, useCan } from "@hosanna/ui";
 import {
   BarChart3,
   Calendar,
@@ -26,13 +26,12 @@ import {
 } from "lucide-react";
 import React, { useCallback, useMemo } from "react";
 import { CommandAction } from "../command-palette.types";
-import { CommandPaletteProvider, useCommandPalette } from "../contexts/CommandPaletteContext";
+import { CommandPaletteProvider } from "../contexts/CommandPaletteContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useRxDbSearch } from "../hooks/useRxDbSearch";
 import { ViewName } from "../layouts/view";
 import { useAiCommandPaletteActions } from "../logos/useAiCommandPaletteActions";
 import { ActiveModal } from "./layout";
-import { CommandPaletteModal } from "./modals/CommandPaletteModal";
 
 export interface HosannaCommandPaletteProps {
   children: React.ReactNode;
@@ -62,6 +61,7 @@ export interface HosannaCommandPaletteProps {
 }
 
 function InnerPalette(props: HosannaCommandPaletteProps) {
+  const { t, language } = useI18n();
   useAiCommandPaletteActions();
   const { isSearching } = useRxDbSearch({
     slugPrefix: props.slugPrefix,
@@ -73,7 +73,7 @@ function InnerPalette(props: HosannaCommandPaletteProps) {
     getFolderPathString: props.getFolderPathString,
   });
 
-  return <CommandPaletteModal isSearchingDb={isSearching} />;
+  return <CommandPalette isSearching={isSearching} language={language} />;
 }
 
 export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
@@ -368,7 +368,7 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
   ]);
 
   return (
-    <CommandPaletteProvider staticActions={staticActions}>
+    <CommandPaletteProvider staticActions={staticActions} storageKey="hosanna_cmd_recent_ids">
       <InnerPalette {...props} />
       {props.children}
     </CommandPaletteProvider>
@@ -378,17 +378,6 @@ export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {
 export const HosannaCommandPaletteTriggerButton: React.FC<{
   className?: string;
 }> = ({ className }) => {
-  const { togglePalette } = useCommandPalette();
-  return (
-    <button
-      onClick={togglePalette}
-      className={`flex items-center gap-2 px-3 py-2 bg-m3-card hover:bg-m3-hover border border-m3-border rounded-2xl text-xs font-medium text-m3-secondary hover:text-m3-text transition-all cursor-pointer shadow-xs ${className || ""}`}
-      title="Abrir Menu de Comandos (Ctrl+K / Cmd+K)"
-    >
-      <span className="hidden sm:inline font-semibold">Comandos</span>
-      <kbd className="px-1.5 py-0.5 rounded-md bg-m3-bg border border-m3-border text-[10px] font-mono font-bold text-m3-secondary">
-        ⌘K
-      </kbd>
-    </button>
-  );
+  const { language } = useI18n();
+  return <CommandPaletteTrigger language={language} className={className} />;
 };

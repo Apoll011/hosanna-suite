@@ -6,7 +6,7 @@
 import { useI18n } from "@/src/lib/i18n";
 import { Collection } from "@/src/types";
 import { compressImage } from "@/src/utils/settingsUtils";
-import { Button, Input, Modal } from "@hosanna/ui";
+import { Button, FileDrop, Input, Modal } from "@hosanna/ui";
 import {
   Check,
   ImageIcon,
@@ -54,7 +54,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [prevOpen, setPrevOpen] = useState(isOpen);
@@ -111,13 +110,6 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
     const file = e.target.files?.[0];
     if (file) await handleImageFile(file);
     e.target.value = "";
-  };
-
-  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) await handleImageFile(file);
   };
 
   const handleSave = async (e?: React.FormEvent) => {
@@ -269,35 +261,35 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
               </div>
             </div>
           ) : (
-            <div
-              onClick={() => imageInputRef.current?.click()}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setIsDragging(true);
+            <FileDrop
+              accept="image/*"
+              multiple={false}
+              disabled={isCompressing}
+              workingLabel={locale === "pt" ? "A preparar imagem…" : "Preparing image…"}
+              errorLabel={
+                locale === "pt"
+                  ? "Não foi possível preparar a imagem"
+                  : "Could not prepare the image"
+              }
+              onFiles={(files) => {
+                const file = files[0];
+                if (file) return handleImageFile(file);
               }}
-              onDragLeave={() => setIsDragging(false)}
-              onDrop={handleDrop}
-              className={`flex flex-col items-center justify-center gap-2 h-24 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
-                isDragging
-                  ? "border-m3-primary bg-m3-primary/10 dark:bg-m3-primary/10"
-                  : "border-m3-border dark:border-m3-border bg-m3-sidebar/60 dark:bg-m3-sidebar/60 hover:border-m3-primary hover:bg-m3-primary/10/60 dark:hover:bg-sky-950/20"
-              }`}
-            >
-              {isCompressing ? (
-                <Loader2 className="w-5 h-5 animate-spin text-m3-primary" />
-              ) : (
-                <>
-                  <UploadCloud
-                    className={`w-5 h-5 ${isDragging ? "text-m3-primary" : "text-m3-secondary"}`}
-                  />
-                  <span className="text-xs text-m3-secondary dark:text-m3-secondary text-center leading-relaxed">
-                    {locale === "pt"
-                      ? "Clique ou arraste uma imagem"
-                      : "Click or drag an image here"}
-                  </span>
-                </>
-              )}
-            </div>
+              title={
+                isCompressing
+                  ? locale === "pt"
+                    ? "A preparar imagem…"
+                    : "Preparing image…"
+                  : locale === "pt"
+                    ? "Adicionar imagem de capa"
+                    : "Add a cover image"
+              }
+              description={
+                locale === "pt"
+                  ? "Arraste uma imagem ou escolha um ficheiro"
+                  : "Drop an image here or choose a file"
+              }
+            />
           )}
 
           <input

@@ -973,6 +973,8 @@ export const es: typeof pt = {
     emptyRootDesc: "Aún no existen carpetas ni canciones en la raíz.",
     emptyFolderDesc: 'Aún no se han añadido canciones a la carpeta "{folder}".',
     dragOrClick: "Arrastre y suelte archivos aquí o haga clic para subir",
+    uploading: "Preparando archivos…",
+    uploadError: "No se pudieron preparar los archivos",
   },
   trashPage: {
     loading: "Cargando papelera...",

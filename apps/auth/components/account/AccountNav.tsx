@@ -10,7 +10,6 @@ import type { AppRole, PermissionString } from "@hosanna/auth";
 import { AnyRoleGate, Can, CanAny } from "@hosanna/ui";
 import {
   Activity,
-  Bell,
   Bot,
   Building2,
   CreditCard,
@@ -18,6 +17,7 @@ import {
   MapPin,
   User,
   Users,
+  UsersRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,18 +44,12 @@ const PERSONAL_ITEMS: NavItem[] = [
 const ORG_ITEMS: OrgNavItem[] = [
   { href: "/account/organization/profile", labelKey: "account.nav.profile", icon: Building2 },
   { href: "/account/organization/members", labelKey: "account.nav.members", icon: Users },
-  { href: "/account/organization/teams", labelKey: "account.nav.teams", icon: Users },
+  { href: "/account/organization/teams", labelKey: "account.nav.teams", icon: UsersRound },
   {
     href: "/account/organization/billing",
     labelKey: "account.nav.billing",
     icon: CreditCard,
     permission: "billing.access",
-  },
-  {
-    href: "/account/organization/notifications",
-    labelKey: "account.nav.notifications",
-    icon: Bell,
-    permission: "notification.sent",
   },
   {
     href: "/account/organization/ai",

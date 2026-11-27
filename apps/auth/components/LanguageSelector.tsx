@@ -3,6 +3,7 @@
 
 import { useI18n } from "@/lib/ui/i18n";
 import { LANGUAGES, type Language, type LanguageMeta } from "@hosanna/i18n";
+import { usePresence } from "@hosanna/ui";
 import { Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -17,6 +18,7 @@ export function LanguageSelector({
 }) {
   const { language, setPersonalLanguage } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
+  const panelMounted = usePresence(isOpen);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const current: LanguageMeta = LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
 
@@ -75,8 +77,12 @@ export function LanguageSelector({
         <span className="text-xs font-bold uppercase hidden sm:inline pr-0.5">{current.code}</span>
       </button>
 
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
+      {panelMounted && (
+        <div
+          aria-hidden={!isOpen}
+          inert={!isOpen}
+          className={`absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
+        >
           {LANGUAGES.map((lang) => {
             const isSelected = lang.code === language;
             return (

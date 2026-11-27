@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { Spinner, EmptyState, Can, CanAll, useCan } from "@hosanna/ui";
+import { Spinner, EmptyState, Can, CanAll, FileDrop, useCan } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
 import { FolderOpen, Upload } from "lucide-react";
@@ -37,6 +37,7 @@ interface FolderExplorerContext {
   handleDragOver: (e: React.DragEvent) => void;
   handleDragLeave: (e: React.DragEvent) => void;
   handleDrop: (e: React.DragEvent) => void;
+  handleIncomingFiles: (files: File[]) => Promise<void>;
   isDraggingOver: boolean;
   totalItemsCount: number;
   currentFolderId: string | null;
@@ -76,6 +77,7 @@ const DEFAULT_CONTEXT: FolderExplorerContext = {
   handleDragOver: () => {},
   handleDragLeave: () => {},
   handleDrop: () => {},
+  handleIncomingFiles: async () => {},
   isDraggingOver: false,
   totalItemsCount: 0,
   currentFolderId: null,
@@ -219,14 +221,16 @@ export const FoldersPage: React.FC = () => {
                   <span className="text-label">{t("common.or")}</span>
                 </CanAll>
                 <Can permission="song.import">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef?.current?.click()}
-                    className="text-sm font-medium text-m3-primary hover:underline flex items-center gap-1.5 cursor-pointer bg-m3-primary/10 px-4 py-2 rounded-md border border-m3-primary/25 hover:bg-m3-primary/15 transition-colors"
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>{t("foldersPage.dragOrClick")}</span>
-                  </button>
+                  <div className="w-full max-w-md">
+                    <FileDrop
+                      accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json,.pdf,.png,.jpg,.jpeg,.webp"
+                      title={t("commandPalette.uploadFiles")}
+                      description={t("foldersPage.dragOrClick")}
+                      workingLabel={t("foldersPage.uploading")}
+                      errorLabel={t("foldersPage.uploadError")}
+                      onFiles={context.handleIncomingFiles}
+                    />
+                  </div>
                 </Can>
               </div>
             )}

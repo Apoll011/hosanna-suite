@@ -63,6 +63,8 @@ const TRUSTED_ORIGINS = [
   "https://*.cursor.sh",
 ] as const;
 
+const CLOUD_MONTHLY_PRICE_ID = "price_1U8VA3RpLrnXO63sBlJexS4p";
+
 function resolveSecondaryStorage(
   option: AuthSecondaryStorage | null | undefined,
   redisUrl: string | undefined,
@@ -702,6 +704,59 @@ function createFullAuth(options: CreateAuthFullOptions): any {
                 );
               }
             }
+            if (!organization?.id || !user?.id) return;
+
+            try {
+              const existingOrganization = await prisma.organization.findUnique({
+                where: { id: organization.id },
+                select: { stripeCustomerId: true },
+              });
+              if (!existingOrganization) return;
+
+              const existingSubscription = await prisma.subscription.findFirst({
+                where: { referenceId: organization.id },
+                select: { id: true },
+              });
+              if (existingSubscription) return;
+
+              const customerId =
+                existingOrganization.stripeCustomerId ??
+                (
+                  await stripeClient.customers.create(
+                    {
+                      email: user.email,
+                      name: organization.name,
+                      metadata: {
+                        customerType: "organization",
+                        organizationId: organization.id,
+                      },
+                    },
+                    { idempotencyKey: `org-customer-${organization.id}` },
+                  )
+                ).id;
+
+              if (!existingOrganization.stripeCustomerId) {
+                await prisma.organization.update({
+                  where: { id: organization.id },
+                  data: { stripeCustomerId: customerId },
+                });
+              }
+
+              await stripeClient.subscriptions.create(
+                {
+                  customer: customerId,
+                  items: [{ price: CLOUD_MONTHLY_PRICE_ID }],
+                  trial_period_days: 14,
+                  trial_settings: {
+                    end_behavior: { missing_payment_method: "cancel" },
+                  },
+                  metadata: { hosannaTrialOrigin: "organization_creation" },
+                },
+                { idempotencyKey: `org-trial-${organization.id}` },
+              );
+            } catch (err) {
+              console.error("[auth] Failed to start organization trial:", err);
+            }
           },
           afterUpdateOrganization: async ({ organization }) => {
             if (organization && !organization.logo) {
@@ -799,7 +854,7 @@ function createFullAuth(options: CreateAuthFullOptions): any {
           plans: [
             {
               name: "cloud",
-              priceId: "price_1U8VA3RpLrnXO63sBlJexS4p",
+              priceId: CLOUD_MONTHLY_PRICE_ID,
               annualDiscountPriceId: "price_1UB1xcRpLrnXO63soQj5HG4Y",
               freeTrial: {
                 days: 14,
@@ -887,6 +942,35 @@ function createFullAuth(options: CreateAuthFullOptions): any {
               },
             },
           ],
+          onSubscriptionCreated: async ({ subscription, stripeSubscription, plan }) => {
+            if (stripeSubscription.metadata.hosannaTrialOrigin !== "organization_creation") return;
+
+            try {
+              const { churchName, recipients, locale } = await getOrgRecipientsWithLocale(
+                subscription.referenceId,
+                ["owner"],
+              );
+              await Promise.all(
+                recipients.map((recipient) =>
+                  emails.sendTrialStartedEmail(recipient.email, {
+                    first_name: recipient.name,
+                    church_name: churchName,
+                    plan: plan.name,
+                    locale,
+                  }),
+                ),
+              );
+              notifyOrg({
+                organizationId: subscription.referenceId,
+                roles: ["owner"],
+                type: "billing.trial_started",
+                title: t(defaultLocale, "notification.trial_started_title"),
+                description: t(defaultLocale, "notification.trial_started_description"),
+              });
+            } catch (err) {
+              console.error("[auth] Failed to notify org after card-less trial started:", err);
+            }
+          },
           getCheckoutSessionParams: async () => ({
             params: {
               allow_promotion_codes: true,

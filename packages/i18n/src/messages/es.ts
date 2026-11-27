@@ -20,6 +20,7 @@ export const sharedEs: typeof sharedPt = {
     loading: "Cargando…",
     expand: "Expandir",
     collapse: "Cerrar",
+    closeNavigation: "Cerrar navegación",
   },
   billing: {
     period: {
@@ -143,6 +144,21 @@ export const sharedEs: typeof sharedPt = {
     },
   },
   suite: {
+    commandPalette: {
+      recent: "Recientes",
+      defaultSection: "Comandos",
+      submenu: "En el menú",
+      searchSubmenu: "Buscar en este menú...",
+      searchPlaceholder: "Buscar comandos y espacio de trabajo...",
+      noResults: "Sin resultados",
+      noResultsDesc: 'No encontramos nada para "{query}".',
+      navigate: "Navegar",
+      select: "Ejecutar comando",
+      title: "Paleta de comandos",
+      clearSearch: "Borrar búsqueda",
+      open: "Abrir paleta de comandos",
+      search: "Buscar",
+    },
     comingSoon: "Próximamente",
     switcher: {
       open: "Abrir selector de aplicaciones",

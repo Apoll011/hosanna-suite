@@ -54,7 +54,7 @@ test("serializeComposerMessage deduplicates targets and collapses @All to organi
   ];
 
   const serialized = serializeComposerMessage(parts);
-  assert.equal(serialized.text, "Please @All bring an A4 paper @Noah");
+  assert.equal(serialized.text, "Please All bring an A4 paper Noah Kim");
   assert.equal(serialized.targets.length, 1);
   assert.equal(serialized.targets[0]?.kind, "all");
 });

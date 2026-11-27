@@ -10,7 +10,6 @@ import { Button, PageHeader, Spinner, Surface } from "@hosanna/ui";
 import {
   Activity,
   ArrowUpRight,
-  Bell,
   Bot,
   Building2,
   CreditCard,
@@ -46,12 +45,6 @@ const QUICK_LINKS: QuickLink[] = [
     labelKey: "account.nav.billing",
     descKey: "accountOrg.billing.description",
     icon: CreditCard,
-  },
-  {
-    href: "/account/organization/notifications",
-    labelKey: "account.nav.notifications",
-    descKey: "accountOrg.notifications.description",
-    icon: Bell,
   },
   {
     href: "/account/organization/ai",

@@ -62,3 +62,5 @@ skills-lock.json
 .github/agents/
 .github/hooks/
 .github/skills/
+
+env/

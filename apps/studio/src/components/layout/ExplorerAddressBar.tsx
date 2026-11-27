@@ -4,29 +4,31 @@
  */
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
-import { Button, Can, CanAny, InboxButton, Input } from "@hosanna/ui";
+import {
+  Button,
+  Can,
+  CanAny,
+  InboxButton,
+  usePresence,
+  WorkspaceAddressBar as SharedWorkspaceAddressBar,
+  type WorkspaceBreadcrumbItem,
+} from "@hosanna/ui";
 import {
   BarChart3,
   Calendar,
   Calendar1,
   CalendarPlus,
-  ChevronRight,
-  CornerLeftUp,
   FileText,
   Folder as FolderIcon,
   FolderOpen,
   FolderPlus,
   HardDrive,
-  HelpCircle,
   LibraryBig,
-  Menu,
   Music,
   Music2,
   Plus,
-  Search,
   Settings,
   Trash2Icon,
-  X,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
@@ -34,7 +36,6 @@ import { authClient } from "../../lib/authClient";
 
 import { AiChatToggle } from "@hosanna/logos-ai";
 import { emitOnboardingEvent } from "../../lib/tour";
-import { SearchSyntaxModal } from "../modals/SearchSyntaxModal";
 import { StudioAppSwitcher } from "../suite/StudioAppSwitcher";
 import { SyncStatusBadge } from "../SyncStatusBadge";
 import { ActiveModal } from "./ExplorerModals";
@@ -83,7 +84,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
   const { t, locale, language } = useI18n();
   const isDriveRoot = view === "explorer" && currentFolderId === null;
   const [isPlusMenuOpen, setIsPlusMenuOpen] = useState(false);
-  const [isSearchHelpOpen, setIsSearchHelpOpen] = useState(false);
+  const plusMenuMounted = usePresence(isPlusMenuOpen);
   const plusMenuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -95,329 +96,108 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const crumbCurrent = "flex items-center gap-2 font-semibold text-m3-primary shrink-0";
-  const crumbLink =
-    "flex items-center gap-2 font-medium text-m3-secondary hover:text-m3-text transition-colors cursor-pointer shrink-0";
+  const breadcrumbs: WorkspaceBreadcrumbItem[] = [
+    {
+      id: "home",
+      label: t("common.home"),
+      icon: <HardDrive className="h-4 w-4" />,
+      onSelect: () => onSelectFolder(null),
+      current: isDriveRoot,
+    },
+  ];
 
-  return (
-    <div className="relative p-3 sm:p-4 bg-m3-sidebar/40 border-b border-m3-border/50 flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
-      <div className="flex items-center gap-2 sm:gap-3 flex-1 w-full md:w-auto">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="md:hidden shrink-0 text-m3-primary border-m3-primary/30"
-          aria-label={t("sidebar.expand")}
-        >
-          <Menu className="w-4.5 h-4.5" />
-        </Button>
+  if (view === "explorer") {
+    folderBreadcrumbs.forEach((folder, index) =>
+      breadcrumbs.push({
+        id: folder.id,
+        label: folder.name,
+        icon:
+          index === folderBreadcrumbs.length - 1 ? (
+            <FolderOpen className="h-4 w-4" />
+          ) : (
+            <FolderIcon className="h-4 w-4 opacity-70" />
+          ),
+        onSelect: () => onSelectFolder(folder.id),
+        current: index === folderBreadcrumbs.length - 1,
+      }),
+    );
+  } else {
+    const current = (id: string, label: string, icon: React.ReactNode, onSelect?: () => void) =>
+      breadcrumbs.push({ id, label, icon, onSelect, current: !onSelect });
 
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={onNavigateBack}
-          disabled={isDriveRoot}
-          title={
-            view === "explorer"
-              ? currentFolderId === null
-                ? t("addressBar.atRootLevel")
-                : currentFolder?.parentId
-                  ? t("addressBar.upOneLevel")
-                  : t("addressBar.upToRoot")
-              : t("addressBar.back")
-          }
-          aria-label={
-            view === "explorer"
-              ? currentFolderId === null
-                ? t("addressBar.atRootLevel")
-                : currentFolder?.parentId
-                  ? t("addressBar.upOneLevel")
-                  : t("addressBar.upToRoot")
-              : t("addressBar.back")
-          }
-          className={`shrink-0 ${
-            isDriveRoot ? "text-m3-secondary/30" : "text-m3-primary border-m3-primary/30"
-          }`}
-        >
-          <CornerLeftUp className="w-4.5 h-4.5" />
-        </Button>
+    if (view === "songs") current("library", t("common.library"), <Music className="h-4 w-4" />);
+    if (view === "song-editor") {
+      songBreadcrumbs.forEach((folder) =>
+        current(folder.id, folder.name, <FolderIcon className="h-4 w-4 opacity-70" />, () => {
+          onSelectFolder(folder.id);
+          navigate(`${slugPrefix}/folders`);
+        }),
+      );
+      if (currentSong) current("song", currentSongFileName, <FileText className="h-4 w-4" />);
+    }
+    if (view === "services")
+      current("services", t("common.services"), <Calendar className="h-4 w-4" />);
+    if (view === "service-editor") {
+      current("services", t("common.services"), <Calendar className="h-4 w-4" />, () =>
+        navigate(`${slugPrefix}/services`),
+      );
+      if (currentService)
+        current("service", `${currentService.name}.service`, <Calendar className="h-4 w-4" />);
+    }
+    if (view === "settings")
+      current("settings", t("common.settings"), <Settings className="h-4 w-4" />);
+    if (view === "analytics")
+      current("analytics", t("common.analytics"), <BarChart3 className="h-4 w-4" />);
+    if (view === "agenda") current("agenda", t("common.agenda"), <Calendar1 className="h-4 w-4" />);
+    if (view === "calendar")
+      current("calendar", "Planning calendar", <Calendar1 className="h-4 w-4" />);
+    if (view === "trash") current("trash", t("common.trash"), <Trash2Icon className="h-4 w-4" />);
+    if (view === "collections")
+      current("collections", t("common.collections"), <LibraryBig className="h-4 w-4" />);
+    if (view === "collection-detail") {
+      current(
+        "collections",
+        t("common.collections"),
+        <LibraryBig className="h-4 w-4 opacity-70" />,
+        () => navigate(`${slugPrefix}/collections`),
+      );
+      if (currentCollectionName)
+        current("collection", currentCollectionName, <LibraryBig className="h-4 w-4" />);
+    }
+  }
 
-        <div className="flex-1 flex items-center gap-2 px-4 py-2.5 min-h-10 bg-m3-bg border border-m3-border rounded-md text-[13px] overflow-x-auto select-none hide-scrollbar shadow-sm min-w-0">
-          <button
-            onClick={() => {
-              onSelectFolder(null);
-            }}
-            className={`flex items-center gap-2 font-semibold transition-colors cursor-pointer shrink-0 ${
-              isDriveRoot ? "text-m3-primary" : "text-m3-secondary hover:text-m3-text"
-            }`}
-          >
-            <HardDrive
-              className={`w-4 h-4 ${isDriveRoot ? "text-m3-primary" : "text-m3-secondary"}`}
-            />
-            <span>{t("common.home")}</span>
-          </button>
+  const searchEnabled = [
+    "explorer",
+    "songs",
+    "services",
+    "collections",
+    "collection-detail",
+  ].includes(view);
+  const searchPlaceholder =
+    view === "services"
+      ? t("addressBar.searchServices")
+      : view === "songs"
+        ? t("addressBar.searchLibrary")
+        : view === "explorer"
+          ? t("addressBar.searchFolders")
+          : t("addressBar.searchCollections");
 
-          {view === "explorer" &&
-            folderBreadcrumbs.map((folder, index) => {
-              const isLast = index === folderBreadcrumbs.length - 1;
-              return (
-                <React.Fragment key={folder.id}>
-                  <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-                  {isLast ? (
-                    <div className={crumbCurrent}>
-                      <FolderOpen className="w-4 h-4" />
-                      <span>{folder.name}</span>
-                    </div>
-                  ) : (
-                    <button onClick={() => onSelectFolder(folder.id)} className={crumbLink}>
-                      <FolderIcon className="w-4 h-4 opacity-70" />
-                      <span>{folder.name}</span>
-                    </button>
-                  )}
-                </React.Fragment>
-              );
-            })}
+  const context =
+    view === "service-editor" && currentService ? (
+      <span className="ml-auto mr-2 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-m3-primary/20 bg-m3-primary/10 px-3 py-1 text-xs font-medium text-m3-primary">
+        <Calendar className="h-3.5 w-3.5" />
+        {new Date(currentService.date).toLocaleDateString(locale, {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </span>
+    ) : undefined;
 
-          {view === "songs" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Music className="w-4 h-4" />
-                <span>{t("common.library")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "song-editor" && (
-            <>
-              {songBreadcrumbs.map((folder) => (
-                <React.Fragment key={folder.id}>
-                  <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-                  <button
-                    onClick={() => {
-                      onSelectFolder(folder.id);
-                      navigate(`${slugPrefix}/folders`);
-                    }}
-                    className={crumbLink}
-                  >
-                    <FolderIcon className="w-4 h-4 opacity-70" />
-                    <span>{folder.name}</span>
-                  </button>
-                </React.Fragment>
-              ))}
-
-              {currentSong && (
-                <>
-                  <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-                  <div className={crumbCurrent}>
-                    <FileText className="w-4 h-4" />
-                    <span>{currentSongFileName}</span>
-                  </div>
-                </>
-              )}
-            </>
-          )}
-
-          {view === "services" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Calendar className="w-4 h-4" />
-                <span>{t("common.services")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "service-editor" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <button onClick={() => navigate(`${slugPrefix}/services`)} className={crumbLink}>
-                <Calendar className="w-4 h-4" />
-                <span>{t("common.services")}</span>
-              </button>
-              {currentService && (
-                <>
-                  <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-                  <div className={crumbCurrent}>
-                    <Calendar className="w-4 h-4" />
-                    <span>{currentService.name}.service</span>
-                  </div>
-                  <div
-                    className="ml-auto mr-2 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md
-                          px-3 py-0.8 text-xs font-medium
-                          bg-m3-primary/10 text-m3-primary
-                          border border-m3-primary/20"
-                  >
-                    <Calendar className="h-3.5 w-3.5" />
-                    <span>
-                      {new Date(currentService.date).toLocaleDateString(locale, {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                </>
-              )}
-            </>
-          )}
-
-          {view === "settings" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Settings className="w-4 h-4" />
-                <span>{t("common.settings")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "analytics" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <BarChart3 className="w-4 h-4" />
-                <span>{t("common.analytics")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "agenda" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Calendar1 className="w-4 h-4" />
-                <span>{t("common.agenda")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "calendar" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Calendar1 className="w-4 h-4" />
-                <span>Planning calendar</span>
-              </div>
-            </>
-          )}
-
-          {view === "trash" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <Trash2Icon className="w-4 h-4" />
-                <span>{t("common.trash")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "collections" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <div className={crumbCurrent}>
-                <LibraryBig className="w-4 h-4" />
-                <span>{t("common.collections")}</span>
-              </div>
-            </>
-          )}
-
-          {view === "collection-detail" && (
-            <>
-              <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-              <button onClick={() => navigate(`${slugPrefix}/collections`)} className={crumbLink}>
-                <LibraryBig className="w-4 h-4 opacity-70" />
-                <span>{t("common.collections")}</span>
-              </button>
-              {currentCollectionName && (
-                <>
-                  <ChevronRight className="w-3.5 h-3.5 text-m3-secondary/40 shrink-0" />
-                  <div className={crumbCurrent}>
-                    <LibraryBig className="w-4 h-4" />
-                    <span>{currentCollectionName}</span>
-                  </div>
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-
+  const actions = (
+    <>
       <div className="flex items-center gap-3 w-full md:w-auto overflow-visible hide-scrollbar pb-1 md:pb-0 justify-end">
-        {(view === "explorer" ||
-          view === "songs" ||
-          view === "services" ||
-          view === "collections" ||
-          view === "collection-detail") && (
-          <div data-tour="toolbar-search" className="relative w-full sm:w-64 min-w-0">
-            <Input
-              placeholder={
-                view === "services"
-                  ? t("addressBar.searchServices")
-                  : view === "songs"
-                    ? t("addressBar.searchLibrary")
-                    : view === "explorer"
-                      ? t("addressBar.searchFolders")
-                      : t("addressBar.searchCollections")
-              }
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") {
-                  onSearchChange("");
-                }
-              }}
-              icon={<Search className="w-4 h-4 text-m3-secondary" />}
-              className={`py-2.5 text-sm rounded-md ${
-                view === "services" ? (searchQuery ? "pr-9" : "") : searchQuery ? "pr-16" : "pr-9"
-              }`}
-            />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => onSearchChange("")}
-                  className="p-1.5 min-h-8 min-w-8 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-md cursor-pointer transition-colors"
-                  title={t("addressBar.clearSearch")}
-                  aria-label={t("addressBar.clearSearch")}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              )}
-              {(view === "explorer" || view === "songs") && (
-                <button
-                  type="button"
-                  onClick={() => setIsSearchHelpOpen(true)}
-                  className="p-1.5 min-h-8 min-w-8 text-m3-secondary hover:text-m3-primary hover:bg-m3-primary/10 rounded-md cursor-pointer transition-colors"
-                  title={
-                    locale === "pt"
-                      ? "Guia de sintaxe de pesquisa (Liqe / Lucene)"
-                      : "Search syntax guide (Liqe / Lucene)"
-                  }
-                  aria-label={
-                    locale === "pt"
-                      ? "Guia de sintaxe de pesquisa (Liqe / Lucene)"
-                      : "Search syntax guide (Liqe / Lucene)"
-                  }
-                >
-                  <HelpCircle className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-
-            {(view === "explorer" || view === "songs") && (
-              <SearchSyntaxModal
-                isOpen={isSearchHelpOpen}
-                onClose={() => setIsSearchHelpOpen(false)}
-                onApplyExample={(q) => onSearchChange(q)}
-              />
-            )}
-          </div>
-        )}
-
         <SyncStatusBadge className="shrink-0" showText={false} />
 
         <InboxButton client={authClient} language={language} className="shrink-0" />
@@ -451,10 +231,12 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             >
               <Plus className="w-5 h-5" />
             </Button>
-            {isPlusMenuOpen && (
+            {plusMenuMounted && (
               <div
                 data-tour="create-menu"
-                className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200"
+                aria-hidden={!isPlusMenuOpen}
+                inert={!isPlusMenuOpen}
+                className={`absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 [--hosanna-origin:top_right] ${isPlusMenuOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
               >
                 <div className="px-4 py-2 text-label">{t("addressBar.createNew")}</div>
                 <Can permission="song.create">
@@ -546,6 +328,40 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
           </div>
         </CanAny>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <SharedWorkspaceAddressBar
+      breadcrumbs={breadcrumbs}
+      breadcrumbLabel={t("sidebar.mainMenu")}
+      mobileMenuLabel={t("sidebar.mainMenu")}
+      onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+      backLabel={
+        view === "explorer"
+          ? currentFolderId === null
+            ? t("addressBar.atRootLevel")
+            : currentFolder?.parentId
+              ? t("addressBar.upOneLevel")
+              : t("addressBar.upToRoot")
+          : t("addressBar.back")
+      }
+      backDisabled={isDriveRoot}
+      onBack={onNavigateBack}
+      search={
+        searchEnabled
+          ? {
+              value: searchQuery,
+              placeholder: searchPlaceholder,
+              label: searchPlaceholder,
+              clearLabel: t("addressBar.clearSearch"),
+              onChange: onSearchChange,
+              tourId: "toolbar-search",
+            }
+          : undefined
+      }
+      context={context}
+      actions={actions}
+    />
   );
 };

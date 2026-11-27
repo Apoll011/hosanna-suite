@@ -146,7 +146,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
 
   return (
     <aside
-      className={`h-full w-full flex flex-col bg-m3-card overflow-hidden transition-opacity duration-200 ${
+      className={`logos-chat-panel h-full w-full flex flex-col bg-m3-card overflow-hidden transition-opacity duration-200 ${
         open ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
       // `inert` removes the hidden panel from tab order and the a11y tree.
@@ -158,7 +158,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         }
       }}
     >
-      <header className="flex items-center gap-2 pl-3 pr-2 py-2 border-b border-m3-border shrink-0">
+      <header className="logos-chat-header flex items-center gap-2 pl-3 pr-2 py-2 border-b border-m3-border shrink-0">
         <LogosMascot flat interactive size={40} mood={mood} />
         <div className="flex-1 min-w-0">
           <h2 className="text-sm font-semibold text-m3-text truncate m-0 leading-tight">
@@ -258,7 +258,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
               stickRef.current = true;
               scrollToBottom(true);
             }}
-            className="logos-msg-in absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full border border-m3-border bg-m3-card shadow-md px-3 py-1 text-[11.5px] text-m3-text hover:bg-m3-hover"
+            className="logos-popover logos-msg-in absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full border border-m3-border bg-m3-card px-3 py-1.5 text-[11.5px] text-m3-text hover:bg-m3-hover"
           >
             <ArrowDown className="w-3.5 h-3.5" />
             {t("ai.chat.jumpToLatest")}
@@ -266,7 +266,7 @@ export const AiChatPanel: React.FC<PanelProps> = ({ wide, onToggleWide }) => {
         )}
       </div>
 
-      <footer className="border-t border-m3-border px-2.5 pt-2 pb-2.5 shrink-0 space-y-2">
+      <footer className="logos-chat-footer border-t border-m3-border px-3 pt-2.5 pb-3 shrink-0 space-y-2">
         {!empty && chips.length > 0 && (
           <div
             className="flex gap-1.5 overflow-x-auto hide-scrollbar -mx-0.5 px-0.5"

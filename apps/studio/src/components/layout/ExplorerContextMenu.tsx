@@ -5,7 +5,7 @@
 
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Song } from "@/src/types";
-import { Badge, Can, CanAll } from "@hosanna/ui";
+import { Badge, Can, CanAll, ContextMenuSurface } from "@hosanna/ui";
 import {
   ArrowRightLeft,
   CheckSquare,
@@ -108,10 +108,13 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
   if (!contextMenu) return null;
 
   return (
-    <div
+    <ContextMenuSurface
       data-tour="explorer-context-menu"
-      style={{ top: contextMenu.y, left: contextMenu.x }}
-      className="fixed z-80 w-56 bg-m3-card border border-m3-border rounded-xl shadow-lg p-1.5 flex flex-col gap-0.5 text-xs select-none hosanna-enter"
+      x={contextMenu.x}
+      y={contextMenu.y}
+      ariaLabel={t("explorer.contextMenu.options")}
+      className="w-56 select-none"
+      onClose={onClose}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >
@@ -490,6 +493,6 @@ export const ExplorerContextMenu: React.FC<ExplorerContextMenuProps> = ({
           )}
         </>
       )}
-    </div>
+    </ContextMenuSurface>
   );
 };

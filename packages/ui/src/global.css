@@ -56,3 +56,266 @@
     animation: none;
   }
 }
+:root {
+  --hosanna-motion-menu: 260ms;
+  --hosanna-motion-surface: 220ms;
+  --hosanna-motion-feedback: 150ms;
+  --hosanna-ease-spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hosanna-hold-button {
+  position: relative;
+  display: inline-flex;
+  min-height: 40px;
+  min-width: 176px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--m3-danger) 28%, transparent);
+  border-radius: var(--radius-md, 10px);
+  padding: 0 16px;
+  background: color-mix(in srgb, var(--m3-danger) 8%, var(--m3-card));
+  color: var(--m3-danger);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+.hosanna-hold-button:focus-visible {
+  outline: 2px solid var(--m3-primary);
+  outline-offset: 2px;
+}
+.hosanna-hold-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.hosanna-hold-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  background: color-mix(in srgb, var(--m3-danger) 20%, transparent);
+}
+.hosanna-hold-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.hosanna-hold-button[data-complete] {
+  background: var(--m3-danger);
+  border-color: var(--m3-danger);
+  color: white;
+}
+.hosanna-hold-button[data-complete] .hosanna-hold-fill {
+  opacity: 0;
+}
+
+.hosanna-file-drop {
+  display: flex;
+  width: 100%;
+  min-height: 76px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--m3-border);
+  border-radius: var(--radius-lg, 14px);
+  padding: 12px 14px;
+  background: var(--m3-card);
+  color: var(--m3-text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 260ms var(--hosanna-ease-spring, ease);
+}
+.hosanna-file-drop:hover,
+.hosanna-file-drop.is-over {
+  border-color: var(--m3-primary);
+  background: color-mix(in srgb, var(--m3-primary) 7%, var(--m3-card));
+}
+.hosanna-file-drop.is-over {
+  transform: scale(1.01);
+}
+.hosanna-file-drop:focus-visible {
+  outline: 2px solid var(--m3-primary);
+  outline-offset: 2px;
+}
+.hosanna-file-drop:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.hosanna-file-drop-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  place-items: center;
+  border-radius: var(--radius-md, 10px);
+  background: color-mix(in srgb, var(--m3-primary) 11%, var(--m3-card));
+  color: var(--m3-primary);
+}
+.hosanna-file-drop-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+  font-size: 13px;
+}
+.hosanna-file-drop-copy strong {
+  font-weight: 600;
+}
+.hosanna-file-drop-copy span {
+  color: var(--m3-secondary);
+  font-size: 12px;
+}
+.hosanna-file-drop-end {
+  margin-inline-start: auto;
+  flex: none;
+  color: var(--m3-secondary);
+}
+
+.hosanna-spring-input {
+  position: relative;
+  display: block;
+}
+.hosanna-spring-input-track {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--m3-primary);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+.hosanna-spring-input:focus-within .hosanna-spring-input-track {
+  transform: scaleX(1);
+}
+
+.hosanna-surface-enter {
+  animation: hosanna-surface-enter var(--hosanna-motion-menu) var(--hosanna-ease-spring) both;
+  transform-origin: var(--hosanna-origin, center);
+}
+.hosanna-surface-exit {
+  animation: hosanna-surface-enter var(--hosanna-motion-feedback) cubic-bezier(0.4, 0, 1, 1) reverse
+    both;
+  pointer-events: none;
+}
+@keyframes hosanna-surface-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--hosanna-enter-y, 4px)) scale(0.975);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.hosanna-checklist {
+  border: 1px solid var(--m3-border);
+  border-radius: var(--radius-lg, 14px);
+  padding: 14px 16px 8px;
+  background: var(--m3-card);
+  color: var(--m3-text);
+}
+.hosanna-checklist header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.hosanna-checklist header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.hosanna-checklist header span {
+  color: var(--m3-secondary);
+  font-size: 11px;
+}
+.hosanna-checklist header strong {
+  color: var(--m3-text);
+  font-variant-numeric: tabular-nums;
+}
+.hosanna-checklist ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hosanna-checklist li {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+.hosanna-checklist-box {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--m3-border);
+  color: white;
+}
+.hosanna-checklist li[data-checked] .hosanna-checklist-box {
+  background: var(--m3-success);
+}
+.hosanna-checklist li > span {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+.hosanna-checklist li[data-checked] > span {
+  color: var(--m3-secondary);
+}
+.hosanna-checklist li[data-checked] > span::after {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: scaleX(1);
+  transform-origin: left;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hosanna-motion-menu: 1ms;
+    --hosanna-motion-surface: 1ms;
+    --hosanna-motion-feedback: 1ms;
+  }
+  .hosanna-hold-fill,
+  .hosanna-file-drop,
+  .hosanna-checklist *,
+  .hosanna-spring-input-track {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .hosanna-surface-enter {
+    animation: none !important;
+  }
+  .hosanna-surface-exit {
+    animation: none !important;
+  }
+  .hosanna-modal-scrim,
+  .hosanna-modal-panel {
+    transition-duration: 0.01ms !important;
+  }
+}

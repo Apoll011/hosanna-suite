@@ -2,6 +2,7 @@
 "use client";
 
 import { AccountCenter } from "@/components/account/AccountCenter";
+import { SendNotificationWidget } from "@/components/dashboard/SendNotificationWidget";
 import { useActiveOrganization, type OrgMember } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/ui/i18n";
@@ -17,6 +18,7 @@ import {
   PageHeader,
   Spinner,
   Surface,
+  SpringInput,
   Tabs,
 } from "@hosanna/ui";
 import {
@@ -691,54 +693,73 @@ export function OrgMembersPage() {
         />
 
         {subTab === "members" ? (
-          filteredMembers.length === 0 ? (
-            <p className="py-12 text-center text-sm text-m3-secondary">
-              {t("settings.members.noMembers")}
-            </p>
-          ) : (
-            <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
-              {filteredMembers.map((member) => {
-                const name =
-                  member.user?.name || member.user?.email || t("settings.members.memberRole");
-                const isSelf = user?.id === member.userId;
-                return (
-                  <button
-                    key={member.id}
-                    type="button"
-                    onClick={() => openMember(member)}
-                    className="w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 text-left hover:bg-m3-sidebar/50 transition-colors cursor-pointer"
-                  >
-                    <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center overflow-hidden shrink-0">
-                      {member.user?.image ? (
-                        <img
-                          src={member.user.image}
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        orgInitials(name)
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-m3-text truncate">
-                        {name}
-                        {isSelf ? (
-                          <span className="text-m3-secondary font-normal">
-                            {" "}
-                            · {t("settings.members.you")}
-                          </span>
-                        ) : null}
-                      </p>
-                      <p className="text-xs text-m3-secondary truncate">{member.user?.email}</p>
-                    </div>
-                    <Badge variant="neutral" size="sm" className="shrink-0">
-                      {roleLabel(member.role, t)}
-                    </Badge>
-                  </button>
-                );
-              })}
-            </div>
-          )
+          <div className="space-y-6">
+            {filteredMembers.length === 0 ? (
+              <p className="py-12 text-center text-sm text-m3-secondary">
+                {t("settings.members.noMembers")}
+              </p>
+            ) : (
+              <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
+                {filteredMembers.map((member) => {
+                  const name =
+                    member.user?.name || member.user?.email || t("settings.members.memberRole");
+                  const isSelf = user?.id === member.userId;
+                  return (
+                    <button
+                      key={member.id}
+                      type="button"
+                      onClick={() => openMember(member)}
+                      className="w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 text-left hover:bg-m3-sidebar/50 transition-colors cursor-pointer"
+                    >
+                      <div className="w-9 h-9 rounded-full bg-m3-primary/15 text-m3-primary text-xs font-semibold flex items-center justify-center overflow-hidden shrink-0">
+                        {member.user?.image ? (
+                          <img
+                            src={member.user.image}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          orgInitials(name)
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-m3-text truncate">
+                          {name}
+                          {isSelf ? (
+                            <span className="text-m3-secondary font-normal">
+                              {" "}
+                              · {t("settings.members.you")}
+                            </span>
+                          ) : null}
+                        </p>
+                        <p className="text-xs text-m3-secondary truncate">{member.user?.email}</p>
+                      </div>
+                      <Badge variant="neutral" size="sm" className="shrink-0">
+                        {roleLabel(member.role, t)}
+                      </Badge>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <Can permission="notification.sent">
+              <section
+                className="border-t border-m3-border pt-5"
+                aria-label={t("home.widgets.sendNotification.title")}
+              >
+                <SendNotificationWidget
+                  instance={{
+                    instanceId: "organization-members-notification-box",
+                    widget: "auth.send-notification",
+                    x: 0,
+                    y: 0,
+                    w: 12,
+                    h: 4,
+                  }}
+                />
+              </section>
+            </Can>
+          </div>
         ) : null}
 
         {subTab === "invites" ? (
@@ -825,7 +846,7 @@ export function OrgMembersPage() {
           title={t("settings.members.inviteModalTitle")}
         >
           <form onSubmit={(e) => void handleInvite(e)} className="space-y-4 pt-2">
-            <Input
+            <SpringInput
               type="email"
               label={t("settings.members.emailLabel")}
               placeholder={t("settings.members.emailPlaceholder")}

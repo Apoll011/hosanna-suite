@@ -4,8 +4,9 @@
  */
 
 import { Bell, Building2, CheckCheck, CreditCard, Info, Shield, Users, X } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 import { sharedUiT, type Language } from "./sharedT";
+import { usePresence } from "./usePresence";
 
 export type InboxNotification = {
   id: string;
@@ -238,7 +239,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
   };
 
   return (
-    <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-130 animate-in fade-in zoom-in-95 duration-200">
+    <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-130">
       <div className="p-4 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center font-bold">
@@ -277,20 +278,20 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
       <div className="flex border-b border-m3-border/60 text-xs px-2 pt-2 bg-m3-sidebar/30">
         <button
           onClick={() => setFilter("all")}
-          className={`px-3 py-1.5 font-bold rounded-t-lg transition-colors border-b-2 cursor-pointer ${
+          className={`relative px-3 py-1.5 font-bold rounded-t-lg transition-colors cursor-pointer ${
             filter === "all"
-              ? "border-m3-primary text-m3-primary bg-m3-card"
-              : "border-transparent text-m3-secondary hover:text-m3-text"
+              ? "text-m3-primary bg-m3-card after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-m3-primary"
+              : "text-m3-secondary hover:text-m3-text"
           }`}
         >
           {t("suite.inbox.all", { count: inbox.notifications.length })}
         </button>
         <button
           onClick={() => setFilter("unread")}
-          className={`px-3 py-1.5 font-bold rounded-t-lg transition-colors border-b-2 cursor-pointer ${
+          className={`relative px-3 py-1.5 font-bold rounded-t-lg transition-colors cursor-pointer ${
             filter === "unread"
-              ? "border-m3-primary text-m3-primary bg-m3-card"
-              : "border-transparent text-m3-secondary hover:text-m3-text"
+              ? "text-m3-primary bg-m3-card after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-m3-primary"
+              : "text-m3-secondary hover:text-m3-text"
           }`}
         >
           {t("suite.inbox.unread", { count: inbox.unreadCount })}
@@ -411,6 +412,8 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
 }) => {
   const t = sharedUiT(language);
   const [isOpen, setIsOpen] = useState(false);
+  const panelMounted = usePresence(isOpen);
+  const panelId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const inbox = useInbox(client, { pollInterval, pageSize, organizationId });
@@ -422,8 +425,17 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || !isOpen) return;
+      setIsOpen(false);
+      containerRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
 
   return (
     <div className={`relative inline-block ${className}`} ref={containerRef}>
@@ -432,6 +444,9 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
         className="relative p-2 text-m3-secondary hover:text-m3-text hover:bg-m3-hover rounded-xl transition-colors cursor-pointer focus:outline-none"
         title={t("suite.inbox.buttonTitle")}
         aria-label={t("suite.inbox.buttonTitle")}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
       >
         <Bell className="w-5 h-5" />
         {inbox.unreadCount > 0 && (
@@ -441,8 +456,13 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
         )}
       </button>
 
-      {isOpen && (
-        <div className="absolute right-0 top-12 z-50">
+      {panelMounted && (
+        <div
+          id={panelId}
+          className={`absolute right-0 top-12 z-50 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
+          aria-hidden={!isOpen}
+          inert={!isOpen}
+        >
           <InboxPanel
             inbox={inbox}
             language={language}

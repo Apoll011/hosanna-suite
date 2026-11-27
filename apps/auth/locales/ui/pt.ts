@@ -216,6 +216,15 @@ export const pt = {
         emptyHint: "Crie coleções no Music para agrupar o repertório.",
         songsCount: "{count} músicas",
       },
+      collectionChecklist: {
+        title: "Lista de preparação",
+        description: "Pré-visualização de uma lista para preparar a coleção.",
+        keywords: "lista preparação coleção ensaio",
+        setlist: "Confirmar a lista de músicas",
+        keys: "Verificar os tons",
+        rehearsal: "Preparar o ensaio",
+        share: "Partilhar com a equipa",
+      },
       folders: {
         title: "Pastas",
         description: "Pastas principais da biblioteca de músicas.",
@@ -340,11 +349,18 @@ export const pt = {
         description:
           "Notifique rapidamente pessoas, equipas ou @Todos por caixa de entrada, email e push.",
         keywords: "enviar notificação mencionar mensagem equipa todos caixa entrada email push",
-        open: "Compositor completo",
         placeholder: "Escreva uma mensagem… Digite @ para mencionar",
         hint: "Digite @ para mencionar",
         send: "Enviar notificação",
         channelsLabel: "Canais de entrega",
+        typeLabel: "Tipo de notificação",
+        types: {
+          info: "Informação",
+          organization: "Organização",
+          team: "Equipa",
+          security: "Segurança",
+          billing: "Faturação",
+        },
         mentionList: "Sugestões de menção",
         allTarget: "Todos",
         allBadge: "Organização",
@@ -856,6 +872,8 @@ export const pt = {
       leaveDesc: "Sair deste espaço. Precisará de um novo convite para voltar.",
       deleteTitle: "Eliminar organização",
       deleteDesc: "Apaga permanentemente o espaço e todos os dados associados.",
+      deleteExportRequired:
+        "Exporte uma cópia de segurança da organização para ativar a eliminação.",
       deleteBtn: "Eliminar organização",
       deleteConfirmTitle: "Eliminar organização?",
       deleteConfirmText: 'Escreva "{name}" para confirmar a eliminação.',
@@ -931,6 +949,13 @@ export const pt = {
   },
   account: {
     title: "Conta",
+    tabs: {
+      ariaLabel: "Secções da conta",
+      profile: "Perfil",
+      connections: "Contas associadas",
+      sessions: "Sessões e histórico",
+      preferences: "Idioma e preferências",
+    },
     subtitle: "Gerir o seu perfil, segurança, notificações e sessões Hosanna.",
     signOut: "Terminar sessão",
     danger: {
@@ -1015,7 +1040,6 @@ export const pt = {
       members: "Membros",
       teams: "Equipas",
       billing: "Faturação",
-      notifications: "Notificações",
       ai: "IA",
       regional: "Regional",
       activity: "Atividade",
@@ -1056,10 +1080,6 @@ export const pt = {
     billing: {
       title: "Faturação",
       description: "Plano, faturação e métodos de pagamento.",
-    },
-    notifications: {
-      title: "Enviar notificação",
-      description: "Compose e envie um aviso à organização, a uma equipa ou a um membro.",
     },
     ai: {
       title: "IA",
@@ -1102,6 +1122,7 @@ export const pt = {
     active: "Ativa",
     setActive: "Definir como ativa",
     membersTitle: "Pessoas nesta equipa",
+    addMemberTitle: "Adicionar pessoa",
     membersDesc: "Escolha membros que já pertencem a esta organização.",
     chooseMember: "Selecionar membro",
     addMember: "Adicionar",
@@ -1113,6 +1134,8 @@ export const pt = {
     noMembersDesc: "Adicione alguém da lista de membros da organização.",
     chooseTeam: "Escolha uma equipa para ver os detalhes",
     renameLabel: "Novo nome",
+    renameTitle: "Renomear equipa",
+    moreActions: "Mais ações da equipa",
     renamePlaceholder: "Novo nome da equipa",
     rename: "Renomear",
     delete: "Eliminar",

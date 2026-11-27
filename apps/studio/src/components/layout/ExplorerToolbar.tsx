@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Can, CanAny } from "@hosanna/ui";
+import { Button, Can, SpringDropdown, type SpringDropdownOption } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 
 import { Service } from "@/src/types";
@@ -18,9 +18,8 @@ import {
   Plus,
   Printer,
   Trash2,
-  Upload,
 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ViewName } from "../../layouts/view";
 
 export interface CollectionToolbarActions {
@@ -44,7 +43,6 @@ interface ExplorerToolbarProps {
   density: "comfortable" | "compact";
   onDensityChange: (d: "comfortable" | "compact") => void;
   onOpenFilterPanel: () => void;
-  onOpenHosannaImport?: () => void;
   collectionActions?: CollectionToolbarActions | null;
 }
 
@@ -68,10 +66,46 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   density,
   onDensityChange,
   onOpenFilterPanel,
-  onOpenHosannaImport,
   collectionActions = null,
 }) => {
   const { t } = useI18n();
+  const sortOptions = useMemo<SpringDropdownOption<string>[]>(() => {
+    if (view === "services") {
+      return [
+        { id: "updatedAt-desc", label: t("toolbar.dateDesc") },
+        { id: "updatedAt-asc", label: t("toolbar.dateAsc") },
+        { id: "title-asc", label: t("toolbar.nameAsc") },
+        { id: "title-desc", label: t("toolbar.nameDesc") },
+      ];
+    }
+    if (view === "collections") {
+      return [
+        { id: "number-asc", label: t("toolbar.songNumberAsc") },
+        { id: "number-desc", label: t("toolbar.songNumberDesc") },
+        { id: "title-asc", label: t("toolbar.nameAsc") },
+        { id: "title-desc", label: t("toolbar.nameDesc") },
+        { id: "updatedAt-asc", label: t("toolbar.dateAsc") },
+        { id: "updatedAt-desc", label: t("toolbar.dateDesc") },
+      ];
+    }
+    return [
+      { id: "number-asc", label: t("toolbar.numberAsc") },
+      { id: "number-desc", label: t("toolbar.numberDesc") },
+      { id: "title-asc", label: t("toolbar.nameAsc") },
+      { id: "title-desc", label: t("toolbar.nameDesc") },
+      { id: "artist-asc", label: t("toolbar.artistAsc") },
+      { id: "artist-desc", label: t("toolbar.artistDesc") },
+      { id: "updatedAt-asc", label: t("toolbar.dateAsc") },
+      { id: "updatedAt-desc", label: t("toolbar.dateDesc") },
+    ];
+  }, [t, view]);
+  const densityOptions = useMemo<SpringDropdownOption<"comfortable" | "compact">[]>(
+    () => [
+      { id: "comfortable", label: t("toolbar.comfortable") },
+      { id: "compact", label: t("toolbar.compact") },
+    ],
+    [t],
+  );
   const [isCollectionMenuOpen, setIsCollectionMenuOpen] = useState(false);
   const collectionMenuRef = useRef<HTMLDivElement>(null);
 
@@ -106,54 +140,30 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
   return (
     <div className="px-4 py-2.5 bg-m3-sidebar/20 border-b border-m3-border/40 flex items-center justify-between gap-3 flex-wrap">
       <div className="flex items-center gap-2.5 flex-wrap">
-        <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-md px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
-          <ArrowUpDown className="w-4 h-4 text-m3-secondary shrink-0" />
-          <select
-            value={`${sortBy}-${sortOrder}`}
-            onChange={(e) => {
-              const [sb, so] = e.target.value.split("-") as [
-                "title" | "artist" | "updatedAt" | "number",
-                "asc" | "desc",
-              ];
-              onSortChange(sb, so);
-            }}
-            className="bg-transparent font-medium text-m3-text cursor-pointer text-(length:--text-label)"
-            title={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
-          >
-            {view === "services" ? (
-              <>
-                <option value={`${sortBy !== "title" ? sortBy : "updatedAt"}-desc`}>
-                  {t("toolbar.dateDesc")}
-                </option>
-                <option value={`${sortBy !== "title" ? sortBy : "updatedAt"}-asc`}>
-                  {t("toolbar.dateAsc")}
-                </option>
-                <option value="title-asc">{t("toolbar.nameAsc")}</option>
-                <option value="title-desc">{t("toolbar.nameDesc")}</option>
-              </>
-            ) : view === "collections" ? (
-              <>
-                <option value="number-asc">{t("toolbar.songNumberAsc")}</option>
-                <option value="number-desc">{t("toolbar.songNumberDesc")}</option>
-                <option value="title-asc">{t("toolbar.nameAsc")}</option>
-                <option value="title-desc">{t("toolbar.nameDesc")}</option>
-                <option value="updatedAt-asc">{t("toolbar.dateAsc")}</option>
-                <option value="updatedAt-desc">{t("toolbar.dateDesc")}</option>
-              </>
-            ) : (
-              <>
-                <option value="number-asc">{t("toolbar.numberAsc")}</option>
-                <option value="number-desc">{t("toolbar.numberDesc")}</option>
-                <option value="title-asc">{t("toolbar.nameAsc")}</option>
-                <option value="title-desc">{t("toolbar.nameDesc")}</option>
-                <option value="artist-asc">{t("toolbar.artistAsc")}</option>
-                <option value="artist-desc">{t("toolbar.artistDesc")}</option>
-                <option value="updatedAt-asc">{t("toolbar.dateAsc")}</option>
-                <option value="updatedAt-desc">{t("toolbar.dateDesc")}</option>
-              </>
-            )}
-          </select>
-        </div>
+        <SpringDropdown
+          mode="single"
+          options={sortOptions}
+          selected={
+            view === "services" && sortBy === "title"
+              ? `updatedAt-${sortOrder}`
+              : `${sortBy}-${sortOrder}`
+          }
+          onChange={(value) => {
+            const [sortField, order] = value.split("-");
+            if (
+              (sortField === "title" ||
+                sortField === "artist" ||
+                sortField === "updatedAt" ||
+                sortField === "number") &&
+              (order === "asc" || order === "desc")
+            ) {
+              onSortChange(sortField, order);
+            }
+          }}
+          ariaLabel={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
+          startAdornment={<ArrowUpDown className="h-4 w-4" aria-hidden="true" />}
+          className="h-10"
+        />
 
         {(view === "explorer" || view === "songs" || view === "collection-detail") && (
           <button
@@ -198,21 +208,6 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
       </div>
 
       <div className="flex items-center gap-2.5">
-        {onOpenHosannaImport &&
-          (view === "explorer" || view === "collections" || view === "songs") && (
-            <CanAny permissions={["song.create", "folder.create", "collection.create"]}>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                icon={<Upload className="w-4 h-4" />}
-                onClick={onOpenHosannaImport}
-                data-tour="toolbar-import-export"
-              >
-                {t("common.import")}
-              </Button>
-            </CanAny>
-          )}
         {view === "collection-detail" && collectionActions && (
           <div ref={collectionMenuRef} className="relative shrink-0">
             <button
@@ -331,18 +326,15 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
             </Button>
           </div>
         )}
-        <div className="flex items-center gap-2 bg-m3-bg border border-m3-border rounded-md px-3 py-1.5 min-h-10 text-xs transition-colors hover:border-m3-primary/30">
-          <LayoutGrid className="w-4 h-4 text-m3-primary shrink-0" />
-          <select
-            value={density}
-            onChange={(e) => onDensityChange(e.target.value as "comfortable" | "compact")}
-            className="bg-transparent font-medium text-m3-text cursor-pointer text-(length:--text-label)"
-            title={t("toolbar.density")}
-          >
-            <option value="comfortable">{t("toolbar.comfortable")}</option>
-            <option value="compact">{t("toolbar.compact")}</option>
-          </select>
-        </div>
+        <SpringDropdown
+          mode="single"
+          options={densityOptions}
+          selected={density}
+          onChange={onDensityChange}
+          ariaLabel={t("toolbar.density")}
+          startAdornment={<LayoutGrid className="h-4 w-4 text-m3-primary" aria-hidden="true" />}
+          className="h-10"
+        />
       </div>
     </div>
   );

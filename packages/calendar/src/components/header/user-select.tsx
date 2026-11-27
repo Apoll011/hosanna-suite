@@ -3,55 +3,54 @@ import { useCalendar } from "../../contexts/calendar-context";
 
 import { AvatarGroup } from "../../ui/avatar-group";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
+import { SpringDropdown, type SpringDropdownOption } from "@hosanna/ui";
+import { useMemo } from "react";
 
 export function UserSelect() {
   const { users, selectedUserId, setSelectedUserId } = useCalendar();
+  const options = useMemo<SpringDropdownOption<string>[]>(
+    () => [
+      {
+        id: "all",
+        label: "All people",
+        icon: (
+          <AvatarGroup max={2}>
+            {users.map((user) => (
+              <Avatar key={user.id} className="size-5 text-[0.625rem]">
+                <AvatarImage
+                  src={user.avatarUrl ?? user.picturePath ?? undefined}
+                  alt={user.name}
+                />
+                <AvatarFallback className="text-[0.625rem]">{user.name[0] ?? "?"}</AvatarFallback>
+              </Avatar>
+            ))}
+          </AvatarGroup>
+        ),
+      },
+      ...users.map((user) => ({
+        id: user.id,
+        label: user.name,
+        icon: (
+          <Avatar className="size-5">
+            <AvatarImage src={user.avatarUrl ?? user.picturePath ?? undefined} alt={user.name} />
+            <AvatarFallback className="text-[0.625rem]">{user.name[0] ?? "?"}</AvatarFallback>
+          </Avatar>
+        ),
+      })),
+    ],
+    [users],
+  );
 
   if (!users || users.length === 0) return null;
 
   return (
-    <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-      <SelectTrigger className="flex-1 md:w-48">
-        <SelectValue placeholder="All assignees" />
-      </SelectTrigger>
-
-      <SelectContent align="end">
-        <SelectItem value="all">
-          <div className="flex items-center gap-1.5">
-            <AvatarGroup max={2}>
-              {users.map((user) => {
-                const avatar = user.avatarUrl ?? user.picturePath ?? undefined;
-                return (
-                  <Avatar key={user.id} className="size-5 text-[0.625rem]">
-                    <AvatarImage src={avatar} alt={user.name} />
-                    <AvatarFallback className="text-[0.625rem]">
-                      {user.name[0] ?? "?"}
-                    </AvatarFallback>
-                  </Avatar>
-                );
-              })}
-            </AvatarGroup>
-            <span>All people</span>
-          </div>
-        </SelectItem>
-
-        {users.map((user) => {
-          const avatar = user.avatarUrl ?? user.picturePath ?? undefined;
-          return (
-            <SelectItem key={user.id} value={user.id} className="flex-1">
-              <div className="flex items-center gap-2">
-                <Avatar className="size-5">
-                  <AvatarImage src={avatar} alt={user.name} />
-                  <AvatarFallback className="text-[0.625rem]">{user.name[0] ?? "?"}</AvatarFallback>
-                </Avatar>
-
-                <p className="truncate text-xs">{user.name}</p>
-              </div>
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
+    <SpringDropdown
+      mode="single"
+      options={options}
+      selected={selectedUserId}
+      onChange={setSelectedUserId}
+      ariaLabel="Filter calendar by assignee"
+      className="h-9 flex-1 md:w-48"
+    />
   );
 }

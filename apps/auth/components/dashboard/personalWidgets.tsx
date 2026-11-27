@@ -277,10 +277,7 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
               {t("home.widgets.inbox.unreadCount", { count: unreadCount })}
             </Badge>
           ) : (
-            <WidgetHeaderLink
-              href="/account/organization/notifications"
-              label={t("home.widgets.inbox.settings")}
-            />
+            <WidgetHeaderLink href="/account" label={t("home.widgets.inbox.settings")} />
           )
         }
       />

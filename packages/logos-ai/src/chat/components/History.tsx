@@ -63,14 +63,14 @@ export const AiChatHistory: React.FC<Props> = ({ threads, activeId, onOpen, onDe
         aria-haspopup="listbox"
         title={t("ai.chat.history")}
         aria-label={t("ai.chat.history")}
-        className={`p-1.5 rounded-md text-m3-secondary hover:bg-m3-hover hover:text-m3-text ${
+        className={`logos-icon-button p-2 rounded-lg text-m3-secondary hover:bg-m3-hover hover:text-m3-text ${
           open ? "bg-m3-hover text-m3-text" : ""
         }`}
       >
         <History className="w-4 h-4" />
       </button>
       {open && (
-        <div className="logos-msg-in absolute right-0 top-full mt-1.5 w-[min(300px,80vw)] max-h-80 overflow-auto rounded-lg border border-m3-border bg-m3-card shadow-xl p-1 z-20">
+        <div className="logos-popover logos-msg-in absolute right-0 top-full mt-2 w-[min(300px,80vw)] max-h-80 overflow-auto rounded-xl border border-m3-border bg-m3-card p-1.5 z-20">
           {threads.length === 0 ? (
             <p className="m-0 px-3 py-4 text-center text-[12px] text-m3-secondary">
               {t("ai.chat.historyEmpty")}

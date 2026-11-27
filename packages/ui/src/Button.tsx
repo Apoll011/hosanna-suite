@@ -25,7 +25,7 @@ export const Button: React.FC<ButtonProps> = React.memo(
     ...props
   }) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-semibold rounded-md transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary";
+      "inline-flex items-center justify-center font-semibold rounded-md transition-[color,background-color,border-color,transform,box-shadow] duration-150 active:scale-[.98] motion-reduce:active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-m3-primary";
 
     const variantStyles = {
       primary:

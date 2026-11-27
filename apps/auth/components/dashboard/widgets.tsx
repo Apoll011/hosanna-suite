@@ -5,6 +5,7 @@ export {
   AgendaCalendarWidget,
   AgendaWidget,
   CollectionsWidget,
+  CollectionChecklistWidget,
   FoldersWidget,
   LibraryHealthWidget,
   LibrarySummaryWidget,

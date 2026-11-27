@@ -6,7 +6,13 @@ import type {
 export type MentionTarget =
   | { kind: "all"; id: "all"; label: string }
   | { kind: "team"; id: string; label: string; memberCount?: number }
-  | { kind: "user"; id: string; label: string; email?: string; image?: string | null };
+  | {
+      kind: "user";
+      id: string;
+      label: string;
+      email?: string;
+      image?: string | null;
+    };
 
 export type ComposerPart =
   { t: "text"; s: string } | { t: "chip"; id: string; target: MentionTarget };
@@ -105,9 +111,7 @@ export function serializeComposerMessage(parts: readonly ComposerPart[]): {
   text: string;
   targets: MentionTarget[];
 } {
-  const raw = parts
-    .map((part) => (part.t === "text" ? part.s : chipDisplayText(part.target)))
-    .join("");
+  const raw = parts.map((part) => (part.t === "text" ? part.s : part.target.label)).join("");
   const text = raw.replace(/\s+/g, " ").trim();
 
   const chips = parts
@@ -137,24 +141,20 @@ export function buildNotificationPayloads(params: {
   text: string;
   targets: readonly MentionTarget[];
   channels: readonly NotificationChannel[];
+  type?: string;
 }): CreateNotificationInput[] {
   const trimmed = params.text.trim();
   if (!trimmed || params.targets.length === 0 || params.channels.length === 0) {
     return [];
   }
 
-  const singleLineShort = trimmed.length <= 120 && !trimmed.includes("\n");
-  const firstLine = trimmed.split("\n")[0] ?? trimmed;
-  const title = singleLineShort
-    ? trimmed
-    : firstLine.length > 120
-      ? `${firstLine.slice(0, 117)}…`
-      : firstLine;
-  const body = singleLineShort ? undefined : trimmed;
+  const [firstLine = trimmed, ...rest] = trimmed.split("\n");
+  const title = firstLine.length > 255 ? `${firstLine.slice(0, 252)}…` : firstLine;
+  const body = rest.join("\n").trim() || undefined;
 
   return params.targets.map((target) => {
     const base: CreateNotificationInput = {
-      type: "info",
+      type: params.type ?? "info",
       title,
       channels: [...params.channels],
       ...(body ? { body } : {}),

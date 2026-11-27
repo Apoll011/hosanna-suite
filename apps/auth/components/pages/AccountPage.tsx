@@ -14,7 +14,7 @@ import { compressImage } from "@/lib/account/compress-image";
 import { useI18n } from "@/lib/ui/i18n";
 import { clearCachedOrg } from "@/lib/organization/cache";
 import { clearCachedUser, writeCachedUser, toCachedUser } from "@/lib/session/cache";
-import { Button, GoogleTextField, Modal, PageHeader, Spinner, Surface } from "@hosanna/ui";
+import { Button, GoogleTextField, Modal, PageHeader, Spinner, Surface, Tabs } from "@hosanna/ui";
 import type { CachedAuthUser } from "@/lib/session/cache";
 import Link from "next/link";
 import {
@@ -27,9 +27,14 @@ import {
   PenLine,
   Save,
   Trash2,
+  Users,
+  Monitor,
+  Globe2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
+
+type AccountTab = "profile" | "connections" | "sessions" | "preferences";
 
 function initials(name?: string | null) {
   if (!name) return "U";
@@ -43,6 +48,7 @@ function initials(name?: string | null) {
 
 export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUser | null }) {
   const { t } = useI18n();
+  const [activeTab, setActiveTab] = useState<AccountTab>("profile");
   const router = useRouter();
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { user, setUser, isLoading, refresh, clear } = useAuthUser({ initialUser });
@@ -304,283 +310,327 @@ export function AccountPage({ initialUser = null }: { initialUser?: CachedAuthUs
         }
       />
 
-      <div className="space-y-6 pb-8">
-        <Surface>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-linear-to-tr from-sky-600 to-cyan-500 flex items-center justify-center font-semibold text-white text-xl overflow-hidden shadow-sm">
-                  {user.image ? (
-                    <img src={user.image} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <span>{initials(user.name)}</span>
-                  )}
-                </div>
-                <input
-                  ref={avatarInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => void handleAvatarChange(e)}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => avatarInputRef.current?.click()}
-                  disabled={isCompressingAvatar}
-                  className="absolute bottom-0 right-0 p-1.5 bg-m3-primary text-white rounded-full shadow-sm hover:bg-m3-primary-dark transition-colors cursor-pointer disabled:opacity-50"
-                  title={t("settings.account.profile.changeAvatarTitle")}
-                >
-                  <Camera className="w-3.5 h-3.5" />
-                </button>
-              </div>
-              <div className="min-w-0">
-                <h2 className="text-title text-m3-text truncate">
-                  {user.name || t("settings.account.user")}
-                </h2>
-                <p className="text-caption mt-0.5 truncate">{user.email}</p>
-              </div>
-            </div>
-            {user.image ? (
-              <button
-                type="button"
-                onClick={() => void handleRemoveAvatar()}
-                className="text-xs font-semibold text-m3-danger hover:opacity-80 flex items-center gap-1 self-start sm:self-center cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                {t("settings.account.profile.removeAvatar")}
-              </button>
-            ) : null}
-          </div>
-        </Surface>
+      <Tabs
+        aria-label={t("account.tabs.ariaLabel")}
+        value={activeTab}
+        onChange={(id) => setActiveTab(id as AccountTab)}
+        items={[
+          { id: "profile", label: t("account.tabs.profile") },
+          {
+            id: "connections",
+            label: t("account.tabs.connections"),
+            icon: <Users className="h-4 w-4" />,
+          },
+          {
+            id: "sessions",
+            label: t("account.tabs.sessions"),
+            icon: <Monitor className="h-4 w-4" />,
+          },
+          {
+            id: "preferences",
+            label: t("account.tabs.preferences"),
+            icon: <Globe2 className="h-4 w-4" />,
+          },
+        ]}
+        className="mb-6"
+      />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch">
-          <div className="flex flex-col gap-6 min-w-0">
+      <div className="space-y-6 pb-8">
+        {activeTab === "profile" ? (
+          <>
             <Surface>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-label">{t("settings.account.profile.displayName")}</span>
-                {!isEditingName ? (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="w-16 h-16 rounded-full bg-linear-to-tr from-sky-600 to-cyan-500 flex items-center justify-center font-semibold text-white text-xl overflow-hidden shadow-sm">
+                      {user.image ? (
+                        <img src={user.image} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{initials(user.name)}</span>
+                      )}
+                    </div>
+                    <input
+                      ref={avatarInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => void handleAvatarChange(e)}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => avatarInputRef.current?.click()}
+                      disabled={isCompressingAvatar}
+                      className="absolute bottom-0 right-0 p-1.5 bg-m3-primary text-white rounded-full shadow-sm hover:bg-m3-primary-dark transition-colors cursor-pointer disabled:opacity-50"
+                      title={t("settings.account.profile.changeAvatarTitle")}
+                    >
+                      <Camera className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-title text-m3-text truncate">
+                      {user.name || t("settings.account.user")}
+                    </h2>
+                    <p className="text-caption mt-0.5 truncate">{user.email}</p>
+                  </div>
+                </div>
+                {user.image ? (
                   <button
                     type="button"
-                    onClick={() => {
-                      setDraftName(user.name || "");
-                      setIsEditingName(true);
-                    }}
-                    className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+                    onClick={() => void handleRemoveAvatar()}
+                    className="text-xs font-semibold text-m3-danger hover:opacity-80 flex items-center gap-1 self-start sm:self-center cursor-pointer"
                   >
-                    <PenLine className="w-3.5 h-3.5" />
-                    {t("settings.account.profile.edit")}
+                    <Trash2 className="w-3.5 h-3.5" />
+                    {t("settings.account.profile.removeAvatar")}
                   </button>
                 ) : null}
               </div>
-              {isEditingName ? (
-                <div className="space-y-3 pt-1">
-                  <GoogleTextField
-                    label={t("settings.account.profile.displayName")}
-                    value={draftName}
-                    onChange={(e) => setDraftName(e.target.value)}
-                  />
-                  <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setIsEditingName(false)}>
-                      {t("common.cancel")}
-                    </Button>
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => void handleSaveName()}
-                      icon={<Save className="w-4 h-4" />}
-                    >
-                      {t("common.save")}
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-base font-semibold text-m3-text">{user.name || "—"}</p>
-              )}
             </Surface>
 
-            <Surface className="flex-1">
-              <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2 mb-4">
-                <Info className="w-4 h-4 text-m3-secondary" />
-                {t("settings.account.profile.accountInfo")}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-3 bg-m3-sidebar/60 rounded-xl border border-m3-border">
-                  <span className="text-label block mb-1">
-                    {t("settings.account.profile.userId")}
-                  </span>
-                  <p className="text-xs font-mono text-m3-text truncate">{user.id}</p>
-                </div>
-                <div className="p-3 bg-m3-sidebar/60 rounded-xl border border-m3-border">
-                  <span className="text-label block mb-1">
-                    {t("settings.account.profile.accountStatus")}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    {t("settings.account.profile.active")}
-                  </span>
-                </div>
-              </div>
-            </Surface>
-          </div>
-
-          <Surface className="h-full min-w-0 flex flex-col">
-            <div className="space-y-6 flex-1">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-label">{t("settings.account.profile.emailAddress")}</span>
-                  {!isEditingEmail ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDraftEmail(user.email || "");
-                        setIsEditingEmail(true);
-                      }}
-                      className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <PenLine className="w-3.5 h-3.5" />
-                      {t("settings.account.profile.changeEmail")}
-                    </button>
-                  ) : null}
-                </div>
-                {isEditingEmail ? (
-                  <div className="space-y-3 pt-1">
-                    <GoogleTextField
-                      type="email"
-                      label={t("settings.account.profile.emailAddress")}
-                      value={draftEmail}
-                      onChange={(e) => setDraftEmail(e.target.value)}
-                    />
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(false)}>
-                        {t("common.cancel")}
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => void handleSaveEmail()}
-                        icon={<Save className="w-4 h-4" />}
-                      >
-                        {t("settings.account.profile.saveEmail")}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-base font-semibold text-m3-text flex items-center gap-2">
-                    {user.email || "—"}
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  </p>
-                )}
-              </div>
-
-              <div className="border-t border-m3-border pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-label flex items-center gap-1.5">
-                    <Lock className="w-3.5 h-3.5 text-m3-primary" />
-                    {t("settings.account.profile.password")}
-                  </span>
-                  {!isEditingPassword ? (
-                    <button
-                      type="button"
-                      onClick={() => setIsEditingPassword(true)}
-                      className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <KeyRound className="w-3.5 h-3.5" />
-                      {t("settings.account.profile.changePassword")}
-                    </button>
-                  ) : null}
-                </div>
-                {isEditingPassword ? (
-                  <div className="space-y-4 pt-2">
-                    <GoogleTextField
-                      type="password"
-                      label={t("settings.account.profile.currentPassword")}
-                      value={draftOldPassword}
-                      onChange={(e) => setDraftOldPassword(e.target.value)}
-                      autoComplete="current-password"
-                    />
-                    <GoogleTextField
-                      type="password"
-                      label={t("settings.account.profile.newPassword")}
-                      value={draftNewPassword}
-                      onChange={(e) => setDraftNewPassword(e.target.value)}
-                      autoComplete="new-password"
-                    />
-                    <GoogleTextField
-                      type="password"
-                      label={t("settings.account.profile.confirmNewPassword")}
-                      value={draftConfirmPassword}
-                      onChange={(e) => setDraftConfirmPassword(e.target.value)}
-                      autoComplete="new-password"
-                    />
-                    <div className="flex justify-end gap-2 pt-1">
-                      <Button
-                        variant="outline"
-                        size="sm"
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-stretch">
+              <div className="flex flex-col gap-6 min-w-0">
+                <Surface>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-label">{t("settings.account.profile.displayName")}</span>
+                    {!isEditingName ? (
+                      <button
+                        type="button"
                         onClick={() => {
-                          setIsEditingPassword(false);
-                          setDraftOldPassword("");
-                          setDraftNewPassword("");
-                          setDraftConfirmPassword("");
+                          setDraftName(user.name || "");
+                          setIsEditingName(true);
                         }}
+                        className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
                       >
-                        {t("common.cancel")}
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => void handleSavePassword()}
-                        icon={<Save className="w-4 h-4" />}
-                      >
-                        {t("settings.account.profile.updatePassword")}
-                      </Button>
+                        <PenLine className="w-3.5 h-3.5" />
+                        {t("settings.account.profile.edit")}
+                      </button>
+                    ) : null}
+                  </div>
+                  {isEditingName ? (
+                    <div className="space-y-3 pt-1">
+                      <GoogleTextField
+                        label={t("settings.account.profile.displayName")}
+                        value={draftName}
+                        onChange={(e) => setDraftName(e.target.value)}
+                      />
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setIsEditingName(false)}>
+                          {t("common.cancel")}
+                        </Button>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => void handleSaveName()}
+                          icon={<Save className="w-4 h-4" />}
+                        >
+                          {t("common.save")}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-base font-semibold text-m3-text">{user.name || "—"}</p>
+                  )}
+                </Surface>
+
+                <Surface className="flex-1">
+                  <h3 className="text-sm font-semibold text-m3-text flex items-center gap-2 mb-4">
+                    <Info className="w-4 h-4 text-m3-secondary" />
+                    {t("settings.account.profile.accountInfo")}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="p-3 bg-m3-sidebar/60 rounded-xl border border-m3-border">
+                      <span className="text-label block mb-1">
+                        {t("settings.account.profile.userId")}
+                      </span>
+                      <p className="text-xs font-mono text-m3-text truncate">{user.id}</p>
+                    </div>
+                    <div className="p-3 bg-m3-sidebar/60 rounded-xl border border-m3-border">
+                      <span className="text-label block mb-1">
+                        {t("settings.account.profile.accountStatus")}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        {t("settings.account.profile.active")}
+                      </span>
                     </div>
                   </div>
-                ) : (
-                  <p className="text-base font-semibold text-m3-text">••••••••••••</p>
-                )}
+                </Surface>
               </div>
 
-              <div className="border-t border-m3-border pt-6">
-                <TwoFactorSection
-                  enabled={Boolean(user.twoFactorEnabled)}
-                  onRefresh={async () => {
-                    await syncUser();
-                  }}
-                  onToast={showToast}
-                />
+              <Surface className="h-full min-w-0 flex flex-col">
+                <div className="space-y-6 flex-1">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-label">
+                        {t("settings.account.profile.emailAddress")}
+                      </span>
+                      {!isEditingEmail ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDraftEmail(user.email || "");
+                            setIsEditingEmail(true);
+                          }}
+                          className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <PenLine className="w-3.5 h-3.5" />
+                          {t("settings.account.profile.changeEmail")}
+                        </button>
+                      ) : null}
+                    </div>
+                    {isEditingEmail ? (
+                      <div className="space-y-3 pt-1">
+                        <GoogleTextField
+                          type="email"
+                          label={t("settings.account.profile.emailAddress")}
+                          value={draftEmail}
+                          onChange={(e) => setDraftEmail(e.target.value)}
+                        />
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsEditingEmail(false)}
+                          >
+                            {t("common.cancel")}
+                          </Button>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => void handleSaveEmail()}
+                            icon={<Save className="w-4 h-4" />}
+                          >
+                            {t("settings.account.profile.saveEmail")}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-base font-semibold text-m3-text flex items-center gap-2">
+                        {user.email || "—"}
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="border-t border-m3-border pt-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-label flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-m3-primary" />
+                        {t("settings.account.profile.password")}
+                      </span>
+                      {!isEditingPassword ? (
+                        <button
+                          type="button"
+                          onClick={() => setIsEditingPassword(true)}
+                          className="text-xs font-semibold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <KeyRound className="w-3.5 h-3.5" />
+                          {t("settings.account.profile.changePassword")}
+                        </button>
+                      ) : null}
+                    </div>
+                    {isEditingPassword ? (
+                      <div className="space-y-4 pt-2">
+                        <GoogleTextField
+                          type="password"
+                          label={t("settings.account.profile.currentPassword")}
+                          value={draftOldPassword}
+                          onChange={(e) => setDraftOldPassword(e.target.value)}
+                          autoComplete="current-password"
+                        />
+                        <GoogleTextField
+                          type="password"
+                          label={t("settings.account.profile.newPassword")}
+                          value={draftNewPassword}
+                          onChange={(e) => setDraftNewPassword(e.target.value)}
+                          autoComplete="new-password"
+                        />
+                        <GoogleTextField
+                          type="password"
+                          label={t("settings.account.profile.confirmNewPassword")}
+                          value={draftConfirmPassword}
+                          onChange={(e) => setDraftConfirmPassword(e.target.value)}
+                          autoComplete="new-password"
+                        />
+                        <div className="flex justify-end gap-2 pt-1">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingPassword(false);
+                              setDraftOldPassword("");
+                              setDraftNewPassword("");
+                              setDraftConfirmPassword("");
+                            }}
+                          >
+                            {t("common.cancel")}
+                          </Button>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => void handleSavePassword()}
+                            icon={<Save className="w-4 h-4" />}
+                          >
+                            {t("settings.account.profile.updatePassword")}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-base font-semibold text-m3-text">••••••••••••</p>
+                    )}
+                  </div>
+
+                  <div className="border-t border-m3-border pt-6">
+                    <TwoFactorSection
+                      enabled={Boolean(user.twoFactorEnabled)}
+                      onRefresh={async () => {
+                        await syncUser();
+                      }}
+                      onToast={showToast}
+                    />
+                  </div>
+                </div>
+              </Surface>
+            </div>
+
+            <Surface className="space-y-4 border-rose-200/60 dark:border-rose-900/40">
+              <div>
+                <h3 className="text-sm font-semibold text-m3-danger">
+                  {t("account.danger.title")}
+                </h3>
+                <p className="text-xs text-m3-secondary mt-1">{t("account.danger.desc")}</p>
               </div>
-            </div>
-          </Surface>
-        </div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20">
+                <div>
+                  <p className="text-sm font-semibold text-m3-danger">
+                    {t("account.danger.deleteTitle")}
+                  </p>
+                  <p className="text-xs text-m3-secondary mt-0.5">
+                    {t("account.danger.deleteDesc")}
+                  </p>
+                </div>
+                <Button variant="outline" size="sm" onClick={() => void openDeleteModal()}>
+                  {t("account.danger.deleteBtn")}
+                </Button>
+              </div>
+            </Surface>
+          </>
+        ) : null}
 
-        <LanguagePreferencesSection onToast={showToast} />
+        {activeTab === "connections" ? <SocialAccountsSection onToast={showToast} /> : null}
 
-        <SocialAccountsSection onToast={showToast} />
-
-        <NotificationSettingsSection onToast={showToast} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
-          <ActiveSessionsSection onToast={showToast} />
-          <LoginHistorySection />
-        </div>
-
-        <Surface className="space-y-4 border-rose-200/60 dark:border-rose-900/40">
-          <div>
-            <h3 className="text-sm font-semibold text-m3-danger">{t("account.danger.title")}</h3>
-            <p className="text-xs text-m3-secondary mt-1">{t("account.danger.desc")}</p>
+        {activeTab === "sessions" ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 *:min-w-0 *:h-full">
+            <ActiveSessionsSection onToast={showToast} />
+            <LoginHistorySection />
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20">
-            <div>
-              <p className="text-sm font-semibold text-m3-danger">
-                {t("account.danger.deleteTitle")}
-              </p>
-              <p className="text-xs text-m3-secondary mt-0.5">{t("account.danger.deleteDesc")}</p>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => void openDeleteModal()}>
-              {t("account.danger.deleteBtn")}
-            </Button>
+        ) : null}
+
+        {activeTab === "preferences" ? (
+          <div className="space-y-6">
+            <LanguagePreferencesSection onToast={showToast} />
+            <NotificationSettingsSection onToast={showToast} />
           </div>
-        </Surface>
+        ) : null}
       </div>
 
       <Modal

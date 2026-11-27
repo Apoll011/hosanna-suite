@@ -224,14 +224,15 @@ const SongPreview: React.FC<{ element: ServiceElement; chrome?: boolean }> = ({
             </button>
           </div>
 
-          {showSettings && (
+          {
             <ChordProPreviewSettings
+              isOpen={showSettings}
               settings={settings}
               updateSetting={updateSetting}
               resetSettings={resetSettings}
               supportsCapo={supportsCapo}
             />
-          )}
+          }
         </>
       )}
 

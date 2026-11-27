@@ -73,6 +73,7 @@ describe("session-cache", () => {
       id: "u1",
       name: "Ada",
       email: "ada@example.com",
+      emailVerified: false,
       image: null,
       twoFactorEnabled: true,
       metadata: null,

@@ -6,12 +6,12 @@ This is not a new brand brief. It records what already ships. Prefer tokens and 
 
 **Source of truth**
 
-| Layer             | Where                                                                                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                               |
-| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `InboxButton`, `SuiteAppIcon`, …) |
-| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                                        |
-| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Inbox → Logos → App Switcher → AccountMenu                                                            |
+| Layer             | Where                                                                                                                                                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                                                                        |
+| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `InboxButton`, `NotificationChatBox`, `SpringDropdown`, `SuiteAppIcon`, …) |
+| Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                                                                                 |
+| Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Inbox → Logos → App Switcher → AccountMenu                                                                                                     |
 
 When Studio and Auth disagree, **Studio tokens win** and Auth should catch up — except Auth has no lyric/score surface, so it may omit `--font-lyric`.
 
@@ -190,6 +190,10 @@ Same object everywhere:
 
 Do not color “edit” sky and “move” green. Monochrome, then one danger row.
 
+### Logos AI
+
+Logos is the assistant's character and launcher mark. Keep its idle movement small and let mood changes carry the expression. The launcher uses the active app accent, not a separate gradient palette. Chat controls use the same card, border, radius, and focus tokens as the rest of the suite. Use the shared `logos-icon-button`, `logos-popover`, and `logos-composer-field` treatments for chat actions, menus, and the prompt surface. Motion settles quickly with a small scale or position change; reduced-motion settings suppress the mascot loops and component transitions.
+
 ---
 
 ## Navigation and hierarchy
@@ -259,7 +263,7 @@ Motion explains size or presence. No bounce, flash, or blocking the next click.
 | Panel open/close (editor panes, library beside order, sidebars) | **300ms** ease-in-out                                                       | Keep mounted; animate width/flex + opacity. Closed = width 0, opacity 0, no pointer events. Avoid `display: none` / `hidden` mid-animation |
 | Mode crossfade (Plan ↔ Read)                                    | ~300ms                                                                      | Both views mounted; ~4px travel                                                                                                            |
 | Expanding row body/notes                                        | ~300ms                                                                      | Animate height; keep content mounted                                                                                                       |
-| Menu enter                                                      | **180ms**                                                                   | `.hosanna-enter`                                                                                                                           |
+| Menu enter / exit                                               | **260ms / 150ms**                                                           | `usePresence` + `.hosanna-surface-enter` / `.hosanna-surface-exit`, anchored to the trigger edge                                           |
 | Dialog / toast                                                  | **200ms**                                                                   | Scrim fade + panel scale 0.98                                                                                                              |
 | Button / color hover                                            | ~150ms                                                                      | Color only                                                                                                                                 |
 | Theme flip (menu toggle or cross-app hydrate)                   | ~220ms View Transition (root crossfade); CSS fallback on `html`/`body` only | `runThemeTransition` — never universal `*` transitions (laggy / fights VT)                                                                 |
@@ -267,6 +271,14 @@ Motion explains size or presence. No bounce, flash, or blocking the next click.
 On phone, a covering panel may **translate** instead of changing width — same duration and easing, still mounted through close.
 
 `prefers-reduced-motion: reduce` collapses durations to near zero. Do not substitute a flashier animation.
+
+Shared interaction primitives in `@hosanna/ui` include `SpringDropdown` for spring-positioned selection menus, shared spring physics and presets in `motion.ts`, and `usePresence` for coordinated surface exit. Menus and popovers should animate in and out from their trigger edge, and become inert as soon as they begin closing. `SpringInput` provides focus feedback, `HoldButton` deliberate destructive confirmation, `FileDrop` file selection and drop feedback, and `CheckboxList` compact checklist presentation. They use the existing M3 palette and preserve native keyboard and file input behavior. Keep motion interruptible, short, and tied to user input; use the shared primitives instead of adding another local animation engine.
+
+### Workspace shell
+
+`@hosanna/ui` provides configurable `WorkspaceSidebar` and `WorkspaceAddressBar` components alongside `WorkspaceFrame`, `WorkspaceMain`, and `WorkspaceSurface`. Hosts supply app identity, logo, localized navigation items, permission-filtered links, per-view breadcrumbs and optional search configuration. Route changes, permissions, and app-specific sections remain host-owned. The shared shell owns responsive layout, navigation affordances, breadcrumb rendering, search controls, and motion.
+
+Use `SpringDropdown` for selection controls, including leading icons or text labels inside its trigger. Shared `ContextMenuSurface` and `CommandPalette` own their interaction surfaces and keyboard behavior. Hosts provide context actions and command definitions. Selection menus use the spring dropdown motion, while action and context menus use the shared anchored surface transition.
 
 ---
 

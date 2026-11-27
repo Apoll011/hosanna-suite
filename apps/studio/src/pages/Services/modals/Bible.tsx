@@ -5,9 +5,9 @@ import {
   secondsToDurationInput,
 } from "@/src/components/DurationField";
 import { useI18n } from "@/src/lib/i18n";
-import { Button, Modal } from "@hosanna/ui";
-import { BookOpen, Check, ChevronDown, Loader2, Search } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { Button, Modal, SpringDropdown, type SpringDropdownOption } from "@hosanna/ui";
+import { BookOpen, Check, Loader2, Search } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // API explicitly permits free web usage. It replaces the buggy NPM package.
 
@@ -364,6 +364,14 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
   const [duration, setDuration] = useState(secondsToDurationInput(initial?.duration));
 
   const [translations, setTranslations] = useState<Translation[]>(FALLBACK_TRANSLATIONS);
+  const translationOptions = useMemo<SpringDropdownOption<string>[]>(
+    () =>
+      translations.map((translation) => ({
+        id: translation.short_name,
+        label: `${translation.short_name} — ${translation.full_name}`,
+      })),
+    [translations],
+  );
   const [selectedTranslation, setSelectedTranslation] = useState("ARA");
   const [translationsLoading, setTranslationsLoading] = useState(false);
 
@@ -529,24 +537,20 @@ export const ScriptureModal: React.FC<ScriptureModalProps> = ({
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
             {t("serviceModals.bible.translationLabel")}
           </label>
-          <div className="relative">
-            <select
-              value={selectedTranslation}
-              onChange={(e) => {
-                setSelectedTranslation(e.target.value);
+          <div>
+            <SpringDropdown
+              mode="single"
+              options={translationOptions}
+              selected={selectedTranslation}
+              onChange={(translation) => {
+                setSelectedTranslation(translation);
                 setFetchedText(null);
                 setAccepted(false);
               }}
               disabled={translationsLoading}
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 appearance-none pr-8"
-            >
-              {translations.map((t) => (
-                <option key={t.short_name} value={t.short_name}>
-                  {t.short_name} — {t.full_name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              ariaLabel={t("serviceModals.bible.translationLabel")}
+              className="h-10 w-full justify-between"
+            />
           </div>
           {translationsLoading && (
             <p className="text-[11px] text-slate-400 flex items-center gap-1">

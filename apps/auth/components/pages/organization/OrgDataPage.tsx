@@ -456,6 +456,11 @@ export function OrgDataPage() {
                       {t("org.danger.deleteTitle")}
                     </p>
                     <p className="text-xs text-m3-secondary mt-0.5">{t("org.danger.deleteDesc")}</p>
+                    {!exportDownloaded ? (
+                      <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                        {t("org.danger.deleteExportRequired")}
+                      </p>
+                    ) : null}
                   </div>
                   <Button
                     variant="outline"
