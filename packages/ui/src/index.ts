@@ -99,6 +99,7 @@ export {
   WorkspaceFrame,
   WorkspaceHeader,
   WorkspaceMain,
+  WorkspaceNavItem,
   WorkspaceSidebar,
   WorkspaceSurface,
 } from "./WorkspaceShell";

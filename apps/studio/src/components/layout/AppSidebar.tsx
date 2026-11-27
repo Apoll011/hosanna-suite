@@ -11,6 +11,7 @@ import {
   AnyRoleGate,
   Can,
   usePresence,
+  WorkspaceNavItem,
   WorkspaceSidebar,
 } from "@hosanna/ui";
 import { isDemoMode } from "@/src/demo";
@@ -78,11 +79,6 @@ interface AppSidebarProps {
   logout: () => void;
 }
 
-const NAV_ACTIVE = "bg-m3-primary/10 text-m3-primary";
-const NAV_INACTIVE = "text-m3-secondary hover:bg-m3-hover hover:text-m3-text";
-const NAV_BASE =
-  "w-full flex items-center justify-between px-3 py-2 min-h-10 text-[13px] font-medium rounded-md transition-colors cursor-pointer group";
-
 export const AppSidebar: React.FC<AppSidebarProps> = ({
   isSidebarOpen,
   setIsSidebarOpen,
@@ -131,18 +127,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const collapseText = (extra = "") =>
-    `truncate transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden whitespace-nowrap ${
-      isSidebarCollapsed
-        ? "opacity-0 max-w-0 -translate-x-2 pointer-events-none"
-        : "opacity-100 max-w-35 translate-x-0"
-    } ${extra}`;
-
-  const collapseBadge = () =>
-    `transition-[opacity,max-width] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] overflow-hidden shrink-0 ${
-      isSidebarCollapsed ? "opacity-0 max-w-0 pointer-events-none" : "opacity-100 max-w-15"
-    }`;
 
   return (
     <>

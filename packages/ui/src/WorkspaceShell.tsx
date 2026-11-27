@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 import { cn } from "./cn";
 import { sharedUiT, type Language } from "./sharedT";
 import { usePresence } from "./usePresence";
@@ -61,6 +61,63 @@ export function WorkspaceSidebar({
         {children}
       </aside>
     </>
+  );
+}
+
+interface WorkspaceNavItemProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+  icon: ReactNode;
+  label: ReactNode;
+  active?: boolean;
+  collapsed?: boolean;
+  badge?: ReactNode;
+}
+
+export function WorkspaceNavItem({
+  icon,
+  label,
+  active = false,
+  collapsed = false,
+  badge,
+  className,
+  title,
+  ...props
+}: WorkspaceNavItemProps) {
+  return (
+    <button
+      {...props}
+      type={props.type ?? "button"}
+      title={title ?? (collapsed ? String(label) : undefined)}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "group flex min-h-10 w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium transition-[background-color,color,transform] duration-150 active:scale-[.99]",
+        active ? "bg-m3-primary/10 text-m3-primary" : "text-m3-secondary hover:bg-m3-hover hover:text-m3-text",
+        className,
+      )}
+    >
+      <span className="flex min-w-0 flex-1 items-center gap-3">
+        <span className={cn("flex h-5 w-5 shrink-0 items-center justify-center", active ? "text-m3-primary" : "text-m3-secondary group-hover:text-m3-text")}>
+          {icon}
+        </span>
+        <span
+          className={cn(
+            "truncate overflow-hidden whitespace-nowrap transition-[opacity,max-width,transform] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)]",
+            collapsed ? "pointer-events-none max-w-0 -translate-x-2 opacity-0" : "max-w-35 translate-x-0 opacity-100",
+          )}
+        >
+          {label}
+        </span>
+      </span>
+      {badge != null && (
+        <span
+          className={cn(
+            "shrink-0 overflow-hidden transition-[opacity,max-width] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)]",
+            collapsed ? "pointer-events-none max-w-0 opacity-0" : "max-w-15 opacity-100",
+          )}
+        >
+          {badge}
+        </span>
+      )}
+    </button>
   );
 }
 
