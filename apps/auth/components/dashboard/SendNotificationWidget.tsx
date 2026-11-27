@@ -5,7 +5,7 @@ import { ensureActiveOrganizationSession } from "@/lib/services/api";
 import { notificationsApi, type NotificationChannel } from "@/lib/services/notifications-api";
 import { useI18n } from "@/lib/ui/i18n";
 import type { WidgetRendererProps } from "@hosanna/dashboard/react";
-import { NotificationChatBox } from "@hosanna/ui";
+import { NotificationChatBox } from "@hosanna/ui/notification-chat-box";
 import { ArrowUp, Bell, Building2, CheckCircle2, Users } from "lucide-react";
 import {
   useCallback,
