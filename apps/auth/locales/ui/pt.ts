@@ -335,6 +335,31 @@ export const pt = {
         markRead: "Marcar como lida",
         settings: "Preferências",
       },
+      sendNotification: {
+        title: "Enviar notificação",
+        description:
+          "Notifique rapidamente pessoas, equipas ou @Todos por caixa de entrada, email e push.",
+        keywords: "enviar notificação mencionar mensagem equipa todos caixa entrada email push",
+        open: "Compositor completo",
+        placeholder: "Escreva uma mensagem… Digite @ para mencionar",
+        hint: "Digite @ para mencionar",
+        send: "Enviar notificação",
+        channelsLabel: "Canais de entrega",
+        mentionList: "Sugestões de menção",
+        allTarget: "Todos",
+        allBadge: "Organização",
+        teamBadge: "Equipa",
+        needMention: "Mencione @Todos, uma equipa ou uma pessoa",
+        sentPreview: "Enviada (pré-visualização)",
+        sentCount: "Enviada para {count}",
+        sendError: "Falha ao enviar notificação",
+        channels: {
+          inbox: "Caixa de entrada",
+          email: "Email",
+          push: "Push",
+          all: "Todos os canais",
+        },
+      },
     },
     nav: {
       account: "Conta",
@@ -823,7 +848,7 @@ export const pt = {
       acceptSuccess: "Acordo de Tratamento de Dados aceite com sucesso.",
       acceptError: "Não foi possível aceitar o acordo: {error}",
       subprocessorsNote:
-        "Consulte a lista pública de subcontratantes secundários em hosanna.live/legal/subprocessors.",
+        "Consulte a lista pública de subcontratantes secundários em hosanna.live/subprocessors.",
     },
     danger: {
       title: "Zona de perigo",

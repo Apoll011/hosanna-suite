@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import HeroCtas from "./HeroCtas";
 import HeroFooter from "./HeroFooter";
 import HeroHeader, { type NavItem } from "./HeroHeader";
@@ -10,10 +10,10 @@ import WebGLCanvas from "./WebGLCanvas";
 
 const dashboardUrl = `${import.meta.env.VITE_DASHBOARD_URL}/new`;
 
-export default function Hero() {
-  const { language, setLanguage, t } = useI18n();
-  const [activeNav, setActiveNav] = useState<NavItem>("features");
-  const [fontsReady, setFontsReady] = useState(false);
+export function useHeroSetup() {
+  const { t } = useI18n();
+  const [canvasReady, setCanvasReady] = useState(false);
+  const [assetsReady, setAssetsReady] = useState(false);
   const [splashRevealed, setSplashRevealed] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -27,7 +27,77 @@ export default function Hero() {
   });
   const impulseTriggerRef = useRef<((targetUv?: { x: number; y: number }) => void) | null>(null);
 
-  const heroReady = fontsReady && splashRevealed;
+  useEffect(() => {
+    let cancelled = false;
+
+    const waitForEagerImages = () => {
+      const eagerImages = Array.from(document.images).filter((img) => img.loading !== "lazy");
+      return Promise.all(
+        eagerImages.map((img) => {
+          if (img.complete) return Promise.resolve();
+          return new Promise<void>((resolve) => {
+            const done = () => {
+              img.removeEventListener("load", done);
+              img.removeEventListener("error", done);
+              resolve();
+            };
+            img.addEventListener("load", done, { once: true });
+            img.addEventListener("error", done, { once: true });
+          });
+        }),
+      );
+    };
+
+    Promise.all([document.fonts.ready.catch(() => undefined), waitForEagerImages()]).then(() => {
+      if (!cancelled) {
+        setAssetsReady(true);
+      }
+    });
+
+    const fallbackTimer = window.setTimeout(() => {
+      if (!cancelled) {
+        setAssetsReady(true);
+        setCanvasReady(true);
+      }
+    }, 2500);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(fallbackTimer);
+    };
+  }, []);
+
+  const contentReady = canvasReady && assetsReady;
+  const heroReady = contentReady && splashRevealed;
+
+  const headlineLines = [
+    t("landing.newHero.line1"),
+    t("landing.newHero.line2"),
+    t("landing.newHero.line3"),
+  ] as [string, string, string];
+
+  return {
+    headlineLines,
+    contentReady,
+    heroReady,
+    onCanvasReady: useCallback(() => setCanvasReady(true), []),
+    onSplashReveal: useCallback(() => setSplashRevealed(true), []),
+    impulseTriggerRef,
+  };
+}
+
+export default function Hero({ setup }: { setup?: ReturnType<typeof useHeroSetup> }) {
+  const { language, setLanguage } = useI18n();
+  const [activeNav, setActiveNav] = useState<NavItem>("features");
+  const internalSetup = useHeroSetup();
+  const {
+    headlineLines,
+    contentReady,
+    heroReady,
+    onCanvasReady,
+    onSplashReveal,
+    impulseTriggerRef,
+  } = setup ?? internalSetup;
 
   const navigate = useNavigate();
 
@@ -67,26 +137,28 @@ export default function Hero() {
     impulseTriggerRef.current?.({ x: 0.52, y: 0.48 });
   }, []);
 
-  const headlineLines = [
-    t("landing.newHero.line1"),
-    t("landing.newHero.line2"),
-    t("landing.newHero.line3"),
-  ] as [string, string, string];
-
   return (
     <section
       id="top"
       data-bg-theme="blue"
       className="relative h-screen min-h-140 w-full overflow-hidden bg-transparent text-white font-sans"
     >
-      <SplashScreen onReveal={() => setSplashRevealed(true)} />
+      <SplashScreen ready={contentReady} onReveal={onSplashReveal} />
       <h1 className="sr-only">{headlineLines.join(" ")}</h1>
-      <WebGLCanvas
-        headlineLines={headlineLines}
-        onFontsReady={() => setFontsReady(true)}
-        impulseTriggerRef={impulseTriggerRef}
+      {!setup && (
+        <WebGLCanvas
+          headlineLines={headlineLines}
+          ready={heroReady}
+          onFontsReady={onCanvasReady}
+          impulseTriggerRef={impulseTriggerRef}
+        />
+      )}
+      <HeroCtas
+        ready={heroReady}
+        language={language}
+        onStartClick={handleStartClick}
+        onDemoClick={handleDemoClick}
       />
-      <HeroCtas language={language} onStartClick={handleStartClick} onDemoClick={handleDemoClick} />
       <HeroHeader
         activeNav={activeNav}
         onSelectNav={handleSelectNav}

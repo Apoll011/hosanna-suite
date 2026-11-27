@@ -237,10 +237,7 @@ export function WidgetPreviewProvider({
           folders: [{ id: "tf1" }],
           services: [],
         },
-      },
-      replData: {
-        songs: mockSongs.map((s) => ({ id: s.id, title: s.title, artist: s.artist })),
-        services: [
+        "services-full": [
           {
             id: "past-1",
             date: addDaysYmd(-7),
@@ -268,20 +265,20 @@ export function WidgetPreviewProvider({
           {
             id: "c1",
             name: isPt ? "Ceia" : isEs ? "Santa Cena" : "Communion",
-            songIds: ["s1", "s3", "s4"],
+            songCount: 3,
           },
           {
             id: "c2",
             name: isPt ? "Acústico" : isEs ? "Acústico" : "Acoustic Set",
-            songIds: ["s2", "s3"],
+            songCount: 2,
           },
           {
             id: "c3",
             name: isPt ? "Favoritas" : isEs ? "Favoritas" : "All-Time Favorites",
-            songIds: ["s1", "s2", "s3", "s4", "s5"],
+            songCount: 5,
           },
         ],
-        agendaEvents: [
+        "agenda-events": [
           {
             id: "ag1",
             title: isPt ? "Ensaio Geral" : isEs ? "Ensayo General" : "Full Band Rehearsal",

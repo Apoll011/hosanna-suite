@@ -85,7 +85,7 @@ export function Dashboard({
                 </svg>
               </button>
             ) : null}
-            <div className={editable ? "pointer-events-none select-none" : undefined}>
+            <div className={editable ? "h-full pointer-events-none select-none" : "h-full"}>
               <WidgetErrorBoundary errorLabel={errorLabel}>
                 <Renderer instance={instance} />
               </WidgetErrorBoundary>

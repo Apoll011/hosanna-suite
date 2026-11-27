@@ -122,8 +122,10 @@ export const CollectionSchema = z
     id: z.string().uuid().describe("Collection unique UUID"),
     orgId: z.string().describe("Owning organization ID"),
     name: z.string().describe("Collection name"),
+    description: z.string().nullable().optional().describe("Collection description"),
     color: z.string().optional().describe("Collection color code"),
     icon: z.string().optional().describe("Collection icon"),
+    image: z.string().nullable().optional().describe("Collection cover image URL"),
     songCount: z.number().int().default(0).describe("Number of songs in this collection"),
     isDeleted: z.boolean().default(false).describe("Replication tombstone flag"),
     createdAt: z.string().datetime().describe("Creation timestamp (ISO 8601)"),
@@ -136,9 +138,20 @@ export const AgendaEventSchema = z
     id: z.string().uuid().describe("Event unique UUID"),
     orgId: z.string().describe("Owning organization ID"),
     title: z.string().describe("Event title"),
-    date: z.string().datetime().describe("Event start date/time (ISO 8601)"),
+    date: z.string().describe("Event date (YYYY-MM-DD)"),
+    time: z.string().describe("Event start time (HH:MM)"),
+    type: z.string().describe("Event type"),
+    durationMinutes: z.number().int().optional().describe("Duration in minutes"),
+    location: z.string().nullable().optional().describe("Event location"),
     notes: z.string().nullable().optional().describe("Event notes"),
     color: z.string().nullable().optional().describe("Event color theme"),
+    linkedServiceId: z
+      .string()
+      .uuid()
+      .nullable()
+      .optional()
+      .describe("Linked worship service UUID"),
+    responsibilities: z.array(z.any()).default([]).describe("Team responsibilities and assignees"),
     isDeleted: z.boolean().default(false).describe("Replication tombstone flag"),
     createdAt: z.string().datetime().describe("Creation timestamp (ISO 8601)"),
     updatedAt: z.string().datetime().describe("Last updated timestamp (ISO 8601)"),

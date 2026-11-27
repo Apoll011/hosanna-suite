@@ -2,6 +2,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import scrolledLogo from "@/assets/hosannalogofornavbar2.svg";
 import { useI18n } from "@/lib/i18n";
 import LanguageToggle, { FlagIcon, LANGUAGE_OPTIONS, type LanguageCode } from "./LanguageToggle";
 import TryPlayButton from "./TryPlayButton";
@@ -180,36 +181,6 @@ export default function HeroHeader({
     });
   };
 
-  // Fast downward entrance animation for logo, nav links, language toggle, and Try button
-  useEffect(() => {
-    if (!ready || !headerRef.current) return;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const items = headerRef.current.querySelectorAll("[data-header-item]");
-
-    if (prefersReducedMotion) {
-      gsap.set(items, { opacity: 1, y: 0, clearProps: "transform" });
-      return;
-    }
-
-    const tween = gsap.fromTo(
-      items,
-      { opacity: 0, y: -14 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.42,
-        stagger: 0.03,
-        delay: 0.04,
-        ease: "power3.out",
-        clearProps: "transform",
-      },
-    );
-
-    return () => {
-      tween.kill();
-    };
-  }, [ready]);
-
   // GSAP hamburger -> X morph and mobile drawer animation for Hero section
   useEffect(() => {
     const topBar = topBarRef.current;
@@ -275,10 +246,7 @@ export default function HeroHeader({
         >
           <div className="w-full flex items-center justify-between md:gap-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-4 px-4 py-4 md:px-6 md:py-5.5 lg:px-9 lg:py-7 font-sans">
             {/* Left: Brand logo mark + straight slash + Hosanna Studio wordmark */}
-            <div
-              data-header-item
-              className="lg:justify-self-start opacity-0 pointer-events-auto shrink-0"
-            >
+            <div className="lg:justify-self-start pointer-events-auto shrink-0">
               <Link
                 to="/"
                 hash="top"
@@ -324,7 +292,7 @@ export default function HeroHeader({
                 const isActive = getIsActive(id);
                 const target = getNavTarget(id);
                 return (
-                  <div key={id} data-header-item className="opacity-0">
+                  <div key={id}>
                     <Link
                       to={target.to}
                       hash={target.hash}
@@ -365,10 +333,7 @@ export default function HeroHeader({
             </nav>
 
             {/* Top-Right: Rounded language dropdown (PT/EN/ES) + Try button */}
-            <div
-              data-header-item
-              className="hidden md:flex lg:justify-self-end items-center md:gap-2 lg:gap-2.5 opacity-0 pointer-events-auto shrink-0"
-            >
+            <div className="hidden md:flex lg:justify-self-end items-center md:gap-2 lg:gap-2.5 pointer-events-auto shrink-0">
               <LanguageToggle
                 language={language}
                 onChangeLanguage={onChangeLanguage}
@@ -384,10 +349,7 @@ export default function HeroHeader({
             </div>
 
             {/* Mobile actions (compact language toggle + Try button + hamburger) (< 768px) */}
-            <div
-              data-header-item
-              className="md:hidden flex items-center gap-1.5 opacity-0 pointer-events-auto"
-            >
+            <div className="md:hidden flex items-center gap-1.5 pointer-events-auto">
               <LanguageToggle
                 language={language}
                 onChangeLanguage={onChangeLanguage}
@@ -546,30 +508,36 @@ export default function HeroHeader({
         onClick={toggleScrolledPanel}
         aria-label={scrolledPanelOpen ? "Close menu" : "Open menu"}
         aria-expanded={scrolledPanelOpen}
-        className={`fixed top-3 md:top-3.5 lg:top-4 right-4 md:right-6 lg:right-9 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 ${
+        className={`fixed right-4 md:right-6 lg:right-9 z-50 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#021433]/50 ${
           isScrolled
             ? "opacity-100 scale-100 pointer-events-auto translate-y-0"
             : "opacity-0 scale-75 pointer-events-none -translate-y-2"
         } ${
           scrolledPanelOpen
-            ? "bg-[#021433] hover:bg-[#03204e] text-white border border-[#021433]/30 shadow-xl"
-            : "bg-black/40 hover:bg-black/60 text-white backdrop-blur-md border border-white/25 shadow-lg"
+            ? "top-3.5 md:top-4 lg:top-4.5 w-8.5 h-8.5 md:w-9 md:h-9 bg-[#021433] hover:bg-[#03204e] text-white border border-[#021433]/30 shadow-md"
+            : "top-3 md:top-3.5 lg:top-4 w-11 h-11 md:w-12 md:h-12 bg-white hover:bg-slate-50 text-[#021433] border border-[#021433]/12 shadow-lg"
         }`}
       >
         <div className="relative w-5 h-5 flex items-center justify-center">
           <span
-            className={`absolute h-[1.75px] w-4.5 bg-white rounded-full transition-all duration-300 ease-in-out origin-center ${
-              scrolledPanelOpen ? "translate-y-0 rotate-45" : "-translate-y-1.5"
+            className={`absolute rounded-full transition-all duration-300 ease-in-out origin-center ${
+              scrolledPanelOpen
+                ? "h-[1.75px] w-3.5 bg-white translate-x-0 rotate-45"
+                : "h-3.5 w-0.5 bg-[#021433] -translate-x-1.75 rotate-0"
             }`}
           />
           <span
-            className={`absolute h-[1.75px] w-4.5 bg-white rounded-full transition-all duration-200 ease-in-out ${
-              scrolledPanelOpen ? "opacity-0 scale-x-0" : "opacity-100"
+            className={`absolute rounded-full transition-all duration-200 ease-in-out ${
+              scrolledPanelOpen
+                ? "h-[1.75px] w-3.5 bg-white translate-x-0 opacity-0 scale-0"
+                : "h-3.5 w-[1.5px] bg-[#021433] translate-x-1 opacity-100 scale-100"
             }`}
           />
           <span
-            className={`absolute h-[1.75px] w-4.5 bg-white rounded-full transition-all duration-300 ease-in-out origin-center ${
-              scrolledPanelOpen ? "translate-y-0 -rotate-45" : "translate-y-1.5"
+            className={`absolute rounded-full transition-all duration-300 ease-in-out origin-center ${
+              scrolledPanelOpen
+                ? "h-[1.75px] w-3.5 bg-white translate-x-0 -rotate-45"
+                : "h-3.5 w-[1.5px] bg-[#021433] translate-x-2 rotate-0"
             }`}
           />
         </div>
@@ -603,23 +571,14 @@ export default function HeroHeader({
               aria-label="Hosanna Studio home"
               className="inline-flex items-center gap-1.5 md:gap-1.75 lg:gap-2.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#021433]/60 rounded-sm"
             >
-              <img
-                src="/assets/logo_icon.png"
-                alt="Hosanna Studio"
-                aria-hidden="true"
-                className="h-4.5 md:h-5.5 lg:h-7 w-auto block shrink-0 select-none"
-                draggable={false}
-              />
-              <span
-                aria-hidden="true"
-                className="w-px h-2.5 md:h-3 lg:h-3.75 bg-[#021433]/30 shrink-0"
-              />
-              <img
-                src="/assets/wordmark_studio.svg"
-                alt="Hosanna Studio"
-                className="h-2.25 md:h-2.75 lg:h-3.5 w-auto block shrink-0 select-none brightness-0"
-                draggable={false}
-              />
+              <span className="h-4.5 md:h-5.5 lg:h-7 inline-flex items-center overflow-hidden">
+                <img
+                  src={scrolledLogo}
+                  alt="Hosanna Studio"
+                  className="h-30 md:h-37 lg:h-47 w-auto block shrink-0 select-none"
+                  draggable={false}
+                />
+              </span>
             </Link>
           </div>
 
@@ -671,7 +630,7 @@ export default function HeroHeader({
           </nav>
 
           {/* Right: Language toggle + Try button with breathing room for the floating ball */}
-          <div className="flex items-center gap-2 lg:gap-2.5 lg:justify-self-end pr-13 md:pr-15 lg:pr-16 shrink-0">
+          <div className="flex items-center gap-2 lg:gap-2.5 lg:justify-self-end pr-11 md:pr-12 lg:pr-12 shrink-0">
             <LanguageToggle
               language={language}
               onChangeLanguage={onChangeLanguage}

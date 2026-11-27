@@ -29,12 +29,12 @@ import {
   diffDaysFromToday,
   extractSongKey,
   formatServiceDate,
+  getListRowLimit,
   getWidgetDensity,
   SkeletonLine,
   todayYmdLocal,
   useMusicHomeUrl,
   useOrganizationData,
-  useReplicationCollection,
   WidgetEmptyBox,
   WidgetErrorBox,
   WidgetHeader,
@@ -467,7 +467,7 @@ export function LibraryHealthWidget({ instance }: WidgetRendererProps) {
   const songs = useMemo(() => value?.songs ?? [], [value?.songs]);
   const total = value?.total ?? 0;
   const health = useMemo(() => computeSongHealthInsights(songs), [songs]);
-  const criteriaLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 6);
+  const criteriaLimit = getListRowLimit(instance.h, "compact");
   const topMissing = health.missingCounts.slice(0, criteriaLimit);
 
   const tone =
@@ -624,15 +624,13 @@ type ReplServiceRow = {
   _deleted?: boolean;
 };
 
-type ReplSongRow = SongRow & { isDeleted?: boolean; _deleted?: boolean };
-
 function useSetlistStats() {
   const { t } = useI18n();
-  const songsRes = useReplicationCollection<ReplSongRow>("songs", 250);
-  const servicesRes = useReplicationCollection<ReplServiceRow>("services", 200);
+  const songsRes = useOrganizationData<SongsResponse>("songs-summary", "/songs?limit=150");
+  const servicesRes = useOrganizationData<ReplServiceRow[]>("services-full", "/services");
 
   const summary = useMemo(() => {
-    const songs = songsRes.value ?? [];
+    const songs = songsRes.value?.songs ?? [];
     const services = servicesRes.value ?? [];
     const today = todayYmdLocal();
 
@@ -703,7 +701,7 @@ export function MostPlayedSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { loading, error, summary } = useSetlistStats();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const rowLimit = getListRowLimit(instance.h, "normal");
   const showArtist = instance.w >= 3;
   const showBar = instance.w >= 5;
   const rows = summary.top.slice(0, rowLimit);
@@ -795,7 +793,7 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
   const { loading, error, summary } = useSetlistStats();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const rowLimit = getListRowLimit(instance.h, "normal");
   const showArtist = instance.w >= 3;
   const rows = summary.resting.slice(0, rowLimit);
 
@@ -893,13 +891,15 @@ export function RestingSongsWidget({ instance }: WidgetRendererProps) {
 export function RecentSongsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const rawLimit = typeof instance.config?.limit === "number" ? instance.config.limit : 5;
-  const maxForDensity = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
-  const limit = Math.min(rawLimit, maxForDensity);
+  const maxForDensity = getListRowLimit(instance.h, "normal");
+  const limit =
+    typeof instance.config?.limit === "number" && instance.config.limit !== 5
+      ? Math.min(instance.config.limit, maxForDensity)
+      : maxForDensity;
   const showArtist = instance.w >= 3;
   const { value, loading, error } = useOrganizationData<SongsResponse>(
     "songs-recent",
-    "/songs?limit=10",
+    "/songs?limit=20",
   );
   const songs = useMemo(() => (value?.songs ?? []).slice(0, limit), [value?.songs, limit]);
 
@@ -985,7 +985,7 @@ export function UpcomingServicesWidget({ instance }: WidgetRendererProps) {
     "/services?metadataOnly=true",
   );
   const today = todayYmdLocal();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "tall");
   const showDetails = instance.w >= 3;
   const upcoming = useMemo(
     () =>
@@ -1087,8 +1087,11 @@ type ReplCollectionRow = {
 export function CollectionsWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const { value, loading, error } = useReplicationCollection<ReplCollectionRow>("collections", 100);
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const { value, loading, error } = useOrganizationData<ReplCollectionRow[]>(
+    "collections",
+    "/collections",
+  );
+  const rowLimit = getListRowLimit(instance.h, "compact");
   const collections = useMemo(
     () =>
       [...(value ?? [])]
@@ -1173,7 +1176,7 @@ export function FoldersWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
   const musicUrl = useMusicHomeUrl();
   const { value, loading, error } = useOrganizationData<FolderRow[]>("folders-summary", "/folders");
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "compact");
   const folders = useMemo(
     () =>
       [...(value ?? [])]
@@ -1283,9 +1286,12 @@ export function AgendaWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
   const density = getWidgetDensity(instance);
-  const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 100);
+  const { value, loading, error } = useOrganizationData<ReplAgendaEvent[]>(
+    "agenda-events",
+    "/agenda-events",
+  );
   const today = todayYmdLocal();
-  const rowLimit = instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 10);
+  const rowLimit = getListRowLimit(instance.h, "tall");
   const showLocation = instance.w >= 4;
   const showAssignees = instance.w >= 3;
   const events = useMemo(
@@ -1410,7 +1416,10 @@ function buildAgendaMonthGrid(visibleMonth: Date): (Date | null)[] {
 export function AgendaCalendarWidget({ instance }: WidgetRendererProps) {
   const { t, locale } = useI18n();
   const musicUrl = useMusicHomeUrl();
-  const { value, loading, error } = useReplicationCollection<ReplAgendaEvent>("agendaEvents", 200);
+  const { value, loading, error } = useOrganizationData<ReplAgendaEvent[]>(
+    "agenda-events",
+    "/agenda-events",
+  );
   const todayIso = todayYmdLocal();
   const [visibleMonth, setVisibleMonth] = useState<Date>(() => {
     const now = new Date();

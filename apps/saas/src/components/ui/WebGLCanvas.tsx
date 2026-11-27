@@ -11,6 +11,7 @@ export type HeadlineLines = [string, string, string];
 interface WebGLCanvasProps {
   headlineLines?: HeadlineLines;
   showTextLayer?: boolean;
+  ready?: boolean;
   onFontsReady?: () => void;
   impulseTriggerRef?: React.MutableRefObject<
     ((targetUv?: { x: number; y: number }) => void) | null
@@ -499,6 +500,7 @@ const DEFAULT_HEADLINE: HeadlineLines = ["We bring clarity", "to every", "worshi
 export default function WebGLCanvas({
   headlineLines = DEFAULT_HEADLINE,
   showTextLayer = true,
+  ready = true,
   onFontsReady,
   impulseTriggerRef,
 }: WebGLCanvasProps) {
@@ -507,6 +509,7 @@ export default function WebGLCanvas({
   const lensCurrentRef = useRef({ x: 0.5, y: 0.465 });
   const onFontsReadyRef = useRef(onFontsReady);
   onFontsReadyRef.current = onFontsReady;
+  const entranceProgressRef = useRef<{ value: number }>({ value: ready ? 1 : 0 });
 
   const headlineLinesRef = useRef<HeadlineLines>(headlineLines);
   headlineLinesRef.current = headlineLines;
@@ -521,6 +524,28 @@ export default function WebGLCanvas({
   useEffect(() => {
     rebuildTexturesRef.current?.();
   }, [headlineLines]);
+
+  useEffect(() => {
+    if (!ready) return;
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      entranceProgressRef.current.value = 1;
+      return;
+    }
+
+    const tween = gsap.fromTo(
+      entranceProgressRef.current,
+      { value: 0 },
+      { value: 1, duration: 0.8, ease: "power3.out" },
+    );
+
+    return () => {
+      tween.kill();
+    };
+  }, [ready]);
 
   useEffect(() => {
     const container = mountRef.current;
@@ -642,6 +667,7 @@ export default function WebGLCanvas({
       uLineBounds: { value: new THREE.Vector4(0.65, 0.55, 0.45, 0.35) },
       uImpulse: { value: 0 },
       uScrollProgress: { value: 0 },
+      uEntranceProgress: { value: ready ? 1 : 0 },
       uReducedMotion: { value: prefersReducedMotion ? 1 : 0 },
     };
 
@@ -719,11 +745,14 @@ export default function WebGLCanvas({
       };
     }
 
+    let entranceStarted = false;
+    let readySignaled = false;
+
     const startEntrance = () => {
       if (disposed) return;
       rebuildTextTextures();
       textUniforms.uLineProgress.value.set(1, 1, 1);
-      onFontsReadyRef.current?.();
+      entranceStarted = true;
     };
 
     Promise.all([
@@ -774,6 +803,7 @@ export default function WebGLCanvas({
       );
       smoothedScroll += (scrollTarget - smoothedScroll) * Math.min(1.0, delta * 12.0);
       textUniforms.uScrollProgress.value = smoothedScroll;
+      textUniforms.uEntranceProgress.value = entranceProgressRef.current.value;
 
       // Lens radius smoothly collapses to 0 after scrolling away from the hero
       const heroVisibility = Math.max(0.0, 1.0 - smoothedScroll * 1.2);
@@ -813,6 +843,11 @@ export default function WebGLCanvas({
       }
 
       renderer.render(scene, camera);
+
+      if (entranceStarted && !readySignaled) {
+        readySignaled = true;
+        onFontsReadyRef.current?.();
+      }
 
       if (isSoftwareGl) {
         afterDraw(tick);
@@ -858,10 +893,6 @@ export default function WebGLCanvas({
   }, [stepLerp, setTargetUV, impulseTriggerRef, showTextLayer]);
 
   return (
-    <div
-      ref={mountRef}
-      className="fixed inset-0 z-0 h-full w-full pointer-events-none"
-      aria-hidden="true"
-    />
+    <div ref={mountRef} className="relative w-full h-full pointer-events-none" aria-hidden="true" />
   );
 }

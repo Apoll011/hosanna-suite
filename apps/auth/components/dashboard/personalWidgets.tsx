@@ -10,6 +10,7 @@ import { Bell, Check, ShieldCheck, ShieldOff, User } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import {
+  getListRowLimit,
   getWidgetDensity,
   SkeletonLine,
   useWidgetPreview,
@@ -106,7 +107,6 @@ export function SecurityWidget({ instance }: WidgetRendererProps) {
   const liveUser = useAuthUser({ requireAuth: false });
   const user = preview ? preview.user : liveUser.user;
   const isLoading = preview ? false : liveUser.isLoading;
-  const density = getWidgetDensity(instance);
   const [liveSessionCount, setLiveSessionCount] = useState<number | null>(null);
 
   useEffect(() => {
@@ -132,30 +132,6 @@ export function SecurityWidget({ instance }: WidgetRendererProps) {
   const twoFactorEnabled = Boolean(
     user && "twoFactorEnabled" in user && (user as { twoFactorEnabled?: boolean }).twoFactorEnabled,
   );
-
-  if (density === "compact" && user && !isLoading) {
-    return (
-      <Link href="/account" className="flex h-full items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          {twoFactorEnabled ? (
-            <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-500" aria-hidden />
-          ) : (
-            <ShieldOff className="h-4 w-4 shrink-0 text-m3-secondary" aria-hidden />
-          )}
-          <span className="truncate text-sm font-medium text-m3-text">
-            {twoFactorEnabled
-              ? t("home.widgets.security.twoFactorOn")
-              : t("home.widgets.security.twoFactorOff")}
-          </span>
-        </div>
-        {sessionCount !== null ? (
-          <Badge variant="neutral" size="sm" className="tabular-nums">
-            {sessionCount}
-          </Badge>
-        ) : null}
-      </Link>
-    );
-  }
 
   return (
     <>
@@ -288,10 +264,7 @@ export function InboxWidget({ instance }: WidgetRendererProps) {
     );
   }
 
-  const visibleItems = items.slice(
-    0,
-    instance.h <= 1 ? 2 : Math.min(Math.max(instance.h - 1, 2), 8),
-  );
+  const visibleItems = items.slice(0, getListRowLimit(instance.h, "normal"));
   const showBody = instance.h >= 3 && instance.w >= 3;
 
   return (

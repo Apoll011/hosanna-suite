@@ -82,8 +82,8 @@ export function GridstackAdapter({
   const options: GridStackOptions = useMemo(
     () => ({
       column: 12,
-      cellHeight: 96,
-      margin: 8,
+      cellHeight: 108,
+      margin: 6,
       float: false,
       children: layout.items
         .filter((item) => registry.get(item.widget) && renderers[item.widget])

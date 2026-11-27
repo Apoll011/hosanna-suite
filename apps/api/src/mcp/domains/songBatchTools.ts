@@ -27,7 +27,7 @@ export const songBatchToolFactory: LogosToolFactory = (factoryContext) => {
       name: "songs_move_many",
       description: `Move up to ${MAX_BATCH} songs to folders or the library root in one call. Each item requires songId and updatedAt.`,
       inputSchema: moveManySchema,
-      apps: ["music"],
+      apps: "suite",
       permission: "song.update",
       requiresEntitlement: true,
       execute: async (input) => {

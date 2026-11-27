@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { Router } from "express";
 
+import { agendaEventRouter } from "./agendaEvent.routes.js";
+import { collectionRouter } from "./collection.routes.js";
 import { cronRouter } from "./cron.routes.js";
 import { folderRouter } from "./folder.routes.js";
 import { healthRouter } from "./health.routes.js";
@@ -39,7 +41,9 @@ apiRouter.use("/replication", syncLimiter, replicationRouter);
 apiRouter.use("/songs/import", requireSubscription, apiLimiter, songImportRouter);
 apiRouter.use("/songs", requireSubscription, apiLimiter, songRouter);
 apiRouter.use("/folders", requireSubscription, apiLimiter, folderRouter);
+apiRouter.use("/collections", requireSubscription, apiLimiter, collectionRouter);
 apiRouter.use("/services", requireSubscription, apiLimiter, serviceRouter);
+apiRouter.use("/agenda-events", requireSubscription, apiLimiter, agendaEventRouter);
 apiRouter.use("/cifra", requireSubscription, apiLimiter, cifraRouter);
 apiRouter.use("/youtube", requireSubscription, apiLimiter, youtubeRouter);
 apiRouter.use("/ai", requireSubscription, aiChatLimiter, aiRouter);

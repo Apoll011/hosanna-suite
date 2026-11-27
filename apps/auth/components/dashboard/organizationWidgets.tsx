@@ -22,12 +22,12 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   getOrgCache,
+  getListRowLimit,
   getWidgetDensity,
   setOrgCache,
   SkeletonLine,
   useOrganizationData,
   useOrganizationLoader,
-  useReplicationCollection,
   useWidgetPreview,
   WidgetEmptyBox,
   WidgetErrorBox,
@@ -396,7 +396,7 @@ export function TeamsWidget({ instance }: WidgetRendererProps) {
   const value = preview ? { teams: preview.teams } : live.value;
   const loading = preview ? false : live.loading;
   const error = preview ? false : live.error;
-  const rowLimit = instance.h <= 1 ? 1 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const rowLimit = getListRowLimit(instance.h, "compact");
   const showAvatars = instance.w >= 4;
   const teams = (value?.teams ?? []).slice(0, rowLimit);
 
@@ -608,7 +608,7 @@ export function InvitationsWidget({ instance }: WidgetRendererProps) {
   const loading = preview ? false : live.loading;
   const error = preview ? false : live.error;
   const invites = value ?? [];
-  const rowLimit = instance.h <= 1 ? 1 : Math.min(Math.max(instance.h - 1, 2), 8);
+  const rowLimit = getListRowLimit(instance.h, "compact");
 
   if (density === "compact" && !loading && !error) {
     return (
@@ -699,14 +699,14 @@ export function WorkspaceUsageWidget({ instance }: WidgetRendererProps) {
     "/services?metadataOnly=true",
     canServices,
   );
-  const collections = useReplicationCollection<{
-    id: string;
-    isDeleted?: boolean;
-    _deleted?: boolean;
-  }>("collections", 100, canCollections);
-  const agenda = useReplicationCollection<{ id: string; isDeleted?: boolean; _deleted?: boolean }>(
-    "agendaEvents",
-    100,
+  const collections = useOrganizationData<{ id: string }[]>(
+    "collections",
+    "/collections",
+    canCollections,
+  );
+  const agenda = useOrganizationData<{ id: string }[]>(
+    "agenda-events",
+    "/agenda-events",
     canAgenda,
   );
 

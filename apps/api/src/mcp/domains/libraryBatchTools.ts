@@ -84,7 +84,7 @@ function batchDefinition<Schema extends z.ZodTypeAny>(
     name: options.name,
     description: options.description,
     inputSchema: options.inputSchema,
-    apps: ["music"],
+    apps: "suite",
     permission: options.permission,
     requiresEntitlement: true,
     execute: (input) => options.execute(options.inputSchema.parse(input), authInfo),

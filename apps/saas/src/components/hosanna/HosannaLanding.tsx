@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/useReveal";
-import { reopenCookieBanner } from "@/lib/consent";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
@@ -33,13 +32,18 @@ import {
   Users,
   WifiOff,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import Hero from "../ui/Hero";
+import { useEffect, useState } from "react";
+import { CurtainLayout, Footer } from "../ui/CurtainLayout";
+import Hero, { useHeroSetup } from "../ui/Hero";
 import HeroHeader from "../ui/HeroHeader";
 import { MigrationSection } from "../ui/MigrationSection";
+import { PricingCard } from "../ui/PricingCard";
 import { SectionHeader } from "../ui/SectionHeader";
 import { GetAppButton } from "../ui/StoreButton";
+import WebGLCanvas from "../ui/WebGLCanvas";
 import AppGallery from "./AppGallery";
+
+export { Footer };
 
 function _Logo({ className }: { className?: string }) {
   return (
@@ -381,6 +385,7 @@ function Pricing() {
   }, []);
   const price = annual ? annualCents / 100 : monthlyCents / 100;
   const unit = annual ? t("landing.pricing.perYearUnit") : t("landing.pricing.perMonthUnit");
+  const billingNote = `${annual ? t("landing.pricing.annualBilledNote") : t("landing.pricing.monthlyBilledNote")} · ${t("landing.pricing.unlimitedMusicians")}`;
 
   return (
     <section id="pricing" className="bg-transparent py-16 md:py-16 text-white font-sans">
@@ -389,92 +394,22 @@ function Pricing() {
           {t("landing.pricing.description")}
         </SectionHeader>
 
-        <div className="reveal mt-10 flex items-center justify-center">
-          <div className="relative flex w-full max-w-90 sm:max-w-100 items-center rounded-full bg-slate-900/80 border border-white/15 p-1 shadow-inner">
-            <div
-              className={cn(
-                "absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-cyan-400 shadow-md transition-transform duration-300 ease-out",
-                annual ? "translate-x-full" : "translate-x-0",
-              )}
-            />
-            <button
-              type="button"
-              onClick={() => setAnnual(false)}
-              className={cn(
-                "relative z-10 flex-1 py-2 px-3 text-center text-sm font-semibold transition-colors duration-200 cursor-pointer whitespace-nowrap rounded-full",
-                !annual ? "text-[#021433]" : "text-white/70 hover:text-white",
-              )}
-            >
-              {t("landing.pricing.monthly")}
-            </button>
-            <button
-              type="button"
-              onClick={() => setAnnual(true)}
-              className={cn(
-                "relative z-10 flex-1 py-2 px-3 text-center text-sm font-semibold transition-colors duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap rounded-full",
-                annual ? "text-[#021433]" : "text-white/70 hover:text-white",
-              )}
-            >
-              <span>{t("landing.pricing.annual")}</span>
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider shrink-0",
-                  annual
-                    ? "bg-[#021433]/15 text-[#021433]"
-                    : "bg-cyan-950/80 text-cyan-300 border border-cyan-500/30",
-                )}
-              >
-                {t("landing.pricing.discountBadge")}
-              </span>
-            </button>
-          </div>
-        </div>
-
         <div className="reveal mx-auto mt-12 max-w-2xl">
-          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl md:p-12">
-            <div className="relative">
-              <div className="font-display text-4xl font-semibold md:text-5xl text-[#021433]">
-                Hosanna
-              </div>
-              <p className="mt-2 text-slate-500">{t("landing.pricing.singlePlanDesc")}</p>
-
-              <div className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl font-semibold md:text-7xl text-[#0284c7]">
-                  {price}€
-                </span>
-                <span className="text-slate-500">{unit}</span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400">
-                {annual
-                  ? t("landing.pricing.annualBilledNote")
-                  : t("landing.pricing.monthlyBilledNote")}
-                {" · "}
-                {t("landing.pricing.unlimitedMusicians")}
-              </p>
-
-              <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-                {dict.landing.pricing.features.map((f: string) => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#0284c7]" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                asChild
-                size="lg"
-                className="mt-10 w-full rounded-full bg-[#021433] text-white font-semibold hover:bg-[#0284c7] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg py-6 text-lg"
-              >
-                <a href={`${dashboardUrl}/?plan=base&payment=${annual ? "yearly" : "monthly"}`}>
-                  {t("landing.pricing.ctaTry")} <ArrowRight className="ml-1 h-4 w-4" />
-                </a>
-              </Button>
-              <p className="mt-3 text-center text-xs text-slate-400">
-                {t("landing.pricing.freeTrialDays")}
-              </p>
-            </div>
-          </div>
+          <PricingCard
+            annual={annual}
+            onChangeAnnual={setAnnual}
+            price={price}
+            unit={unit}
+            monthlyLabel={t("landing.pricing.monthly")}
+            annualLabel={t("landing.pricing.annual")}
+            discountBadge={t("landing.pricing.discountBadge")}
+            planDescription={t("landing.pricing.singlePlanDesc")}
+            billingNote={billingNote}
+            features={dict.landing.pricing.features}
+            ctaLabel={t("landing.pricing.ctaTry")}
+            ctaHref={`${dashboardUrl}/?plan=base&payment=${annual ? "yearly" : "monthly"}`}
+            freeTrialLabel={t("landing.pricing.freeTrialDays")}
+          />
 
           <p className="reveal mt-6 text-center text-sm text-white/70">
             {t("landing.pricing.pricingClarification")}
@@ -518,7 +453,6 @@ function MobileApp() {
             </div>
           </div>
           <div className="relative reveal">
-            <div className="absolute -inset-10 bg-cyan-400/20 rounded-full blur-[100px] pointer-events-none" />
             <img
               src={mobileImg}
               alt="Hosanna Mobile App"
@@ -681,7 +615,7 @@ function FinalCTA() {
   const { t } = useI18n();
 
   return (
-    <section className="relative overflow-hidden bg-transparent py-16 md:py-24 text-white font-sans">
+    <section className="relative overflow-hidden bg-transparent min-h-[75vh] md:min-h-[85vh] flex items-center py-20 md:py-28 text-white font-sans">
       <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
         <h2 className="reveal font-display text-4xl leading-tight tracking-tight md:text-6xl text-white">
           {t("landing.finalCta.title")}
@@ -713,213 +647,40 @@ function FinalCTA() {
   );
 }
 
-export function Footer() {
-  const { t } = useI18n();
-  const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
-
-  const colInfo = [
-    { label: t("landing.footer.features"), href: "/#features", isInternal: false },
-    { label: t("landing.footer.chordproGuide"), href: "/chordpro", isInternal: true },
-    { label: t("landing.footer.pricing"), href: "/#pricing", isInternal: false },
-    { label: t("landing.nav.about"), href: "/about", isInternal: true },
-    { label: t("landing.footer.downloadApp"), href: "/#mobile", isInternal: false },
-    { label: t("landing.footer.openSource"), href: "/#open-source", isInternal: false },
-  ];
-
-  const colSocial = [
-    { label: "GitHub", href: githubAppUrl },
-    { label: "Instagram", href: "https://www.instagram.com/hosanna.songbook" },
-    { label: "Blog", href: "https://blog.hosanna.live" },
-  ];
-
-  const colNav = [
-    { label: t("common.backToHome"), href: "/", isInternal: true },
-    { label: t("landing.nav.about"), href: "/about", isInternal: true },
-    { label: t("landing.footer.chordproGuide"), href: "/chordpro", isInternal: true },
-    { label: t("landing.footer.contact"), href: "/contact", isInternal: true },
-    { label: t("landing.footer.termsOfService"), href: "/terms", isInternal: true },
-    { label: t("landing.footer.privacyPolicy"), href: "/privacy", isInternal: true },
-    { label: t("landing.footer.subprocessors"), href: "/subprocessors", isInternal: true },
-    {
-      label: t("cookieConsent.cookieSettings"),
-      onClick: () => reopenCookieBanner(),
-      isAction: true,
-    },
-  ];
-
-  return (
-    <footer className="relative z-30 bg-white text-[#021433] pt-20 pb-12 shadow-[0_-25px_60px_rgba(0,0,0,0.35)] border-t border-slate-200/80">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          <div className="lg:col-span-5 flex flex-col items-start">
-            <Link
-              to="/"
-              hash="top"
-              className="inline-block transition-transform hover:scale-105 mb-6"
-            >
-              <img
-                src={logo}
-                alt="Hosanna Studio"
-                className="w-12 h-12 rounded-xl object-contain shadow-sm"
-              />
-            </Link>
-            <h3 className="font-display text-2xl sm:text-3xl font-bold text-[#021433] leading-snug tracking-tight">
-              Música para a igreja.
-              <br />
-              Simples, moderno e fiável.
-            </h3>
-            <p className="mt-3 text-sm sm:text-base text-slate-500 leading-relaxed max-w-sm">
-              {t("landing.footer.tagline")}
-            </p>
-            <a
-              href="mailto:hosanna.songbook@gmail.com"
-              className="inline-flex items-center gap-2 mt-6 text-base font-semibold text-[#0284c7] hover:text-[#0369a1] transition-colors group"
-            >
-              hosanna.songbook@gmail.com
-              <span className="transition-transform group-hover:translate-x-1 font-bold">→</span>
-            </a>
-          </div>
-
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-10">
-            <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-slate-400 font-sans">
-                {t("landing.footer.colProduct")}
-              </div>
-              <ul className="mt-6 space-y-3.5 text-sm font-sans">
-                {colInfo.map((link) => (
-                  <li key={link.label}>
-                    {link.isInternal ? (
-                      <Link
-                        to={link.href}
-                        className="text-slate-600 transition-colors hover:text-[#0284c7] font-medium"
-                      >
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={link.href}
-                        className="text-slate-600 transition-colors hover:text-[#0284c7] font-medium"
-                      >
-                        {link.label}
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-slate-400 font-sans">
-                {t("landing.footer.colSupport")}
-              </div>
-              <ul className="mt-6 space-y-3.5 text-sm font-sans">
-                {colSocial.map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-[#0284c7] font-medium group"
-                    >
-                      {item.label}
-                      <span className="text-xs text-slate-400 group-hover:text-[#0284c7] transition-colors">
-                        ↗
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-slate-400 font-sans">
-                Navegação
-              </div>
-              <ul className="mt-6 space-y-3.5 text-sm font-sans">
-                {colNav.map((link) => {
-                  const isActive = "href" in link && link.href === currentPath;
-                  return (
-                    <li key={link.label} className="relative flex items-center">
-                      {"isAction" in link && link.isAction ? (
-                        <button
-                          type="button"
-                          onClick={link.onClick}
-                          className="text-left text-slate-600 transition-colors hover:text-[#0284c7] font-medium cursor-pointer"
-                        >
-                          {link.label}
-                        </button>
-                      ) : (
-                        <Link
-                          to={link.href}
-                          className={cn(
-                            "flex items-center transition-colors font-medium",
-                            isActive
-                              ? "text-[#0284c7] font-bold"
-                              : "text-slate-600 hover:text-[#0284c7]",
-                          )}
-                        >
-                          {isActive && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#0284c7] inline-block mr-2 shrink-0 shadow-[0_0_6px_rgba(2,132,199,0.6)]" />
-                          )}
-                          {link.label}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16 pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div>
-            © {new Date().getFullYear()} Hosanna Studio. {t("landing.footer.copyright")}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-full border border-slate-300 text-xs font-bold uppercase tracking-wider text-[#021433] hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-slate-50 transition-all cursor-pointer shadow-sm active:scale-95"
-            aria-label="Voltar ao topo"
-          >
-            TOP ↑
-          </button>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 export function HosannaLanding() {
   useReveal();
-  const rootRef = useRef<HTMLDivElement>(null);
+  const heroSetup = useHeroSetup();
+
   return (
-    <div
-      ref={rootRef}
-      className="min-h-screen bg-transparent font-sans text-foreground antialiased relative z-10"
+    <CurtainLayout
+      className="text-foreground"
+      canvas={
+        <WebGLCanvas
+          headlineLines={heroSetup.headlineLines}
+          ready={heroSetup.heroReady}
+          onFontsReady={heroSetup.onCanvasReady}
+          impulseTriggerRef={heroSetup.impulseTriggerRef}
+        />
+      }
     >
-      <main>
-        <Hero />
-        <Problem />
-        <TwoApps />
-        <Organize />
-        <AppGallery />
-        <MigrationSection />
-        <HowItWorks />
-        <LiveWorship />
-        <AnySize />
-        <ExportSection />
-        <Pricing />
-        <MobileApp />
-        <Vision />
-        <OpenSource />
-        <SupportTheMission />
-        <Roadmap />
-        <FAQ />
-        <FinalCTA />
-      </main>
-      <Footer />
-    </div>
+      <Hero setup={heroSetup} />
+      <Problem />
+      <TwoApps />
+      <Organize />
+      <AppGallery />
+      <MigrationSection />
+      <HowItWorks />
+      <LiveWorship />
+      <AnySize />
+      <ExportSection />
+      <Pricing />
+      <MobileApp />
+      <Vision />
+      <OpenSource />
+      <SupportTheMission />
+      <Roadmap />
+      <FAQ />
+      <FinalCTA />
+    </CurtainLayout>
   );
 }

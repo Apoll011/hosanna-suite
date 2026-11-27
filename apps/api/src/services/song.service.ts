@@ -59,7 +59,7 @@ export class SongService {
 
   async list(query: ListQuery) {
     const page = Math.max(1, Number(query.page) || 1);
-    const limit = Math.min(Math.max(Number(query.limit) || 20, 1), 100);
+    const limit = Math.min(Math.max(Number(query.limit) || 20, 1), 250);
     const sortBy = query.sortBy ?? "title";
     const sortOrder = query.sortOrder ?? "asc";
 

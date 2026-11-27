@@ -10,6 +10,7 @@ export type CachedAuthUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  emailVerified?: boolean;
   twoFactorEnabled?: boolean;
   /** Better Auth user.metadata JSON (personal-settings blob). */
   metadata?: string | null;
@@ -108,6 +109,7 @@ export function toCachedUser(user: {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  emailVerified?: boolean | null;
   twoFactorEnabled?: boolean | null;
   metadata?: string | null;
 }): CachedAuthUser {
@@ -116,6 +118,7 @@ export function toCachedUser(user: {
     name: user.name ?? null,
     email: user.email ?? null,
     image: user.image ?? null,
+    emailVerified: Boolean(user.emailVerified),
     twoFactorEnabled: Boolean(user.twoFactorEnabled),
     metadata: user.metadata ?? null,
   };

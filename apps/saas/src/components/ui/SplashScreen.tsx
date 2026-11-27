@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 interface SplashScreenProps {
+  ready: boolean;
   onReveal?: () => void;
-  durationMs?: number;
+  fallbackTimeoutMs?: number;
 }
 
 const SESSION_KEY = "hosanna_splash_seen";
@@ -18,12 +19,18 @@ const hasSeenSplash = () => {
   }
 };
 
-export default function SplashScreen({ onReveal, durationMs = 3000 }: SplashScreenProps) {
+export default function SplashScreen({
+  ready,
+  onReveal,
+  fallbackTimeoutMs = 2500,
+}: SplashScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const brandRef = useRef<HTMLDivElement>(null);
   const [destroyed, setDestroyed] = useState(() => hasSeenSplash());
   const onRevealRef = useRef(onReveal);
   onRevealRef.current = onReveal;
+  const revealedRef = useRef(false);
+  const breatheTweenRef = useRef<gsap.core.Tween | null>(null);
 
   useEffect(() => {
     const prefersReducedMotion =
@@ -31,7 +38,12 @@ export default function SplashScreen({ onReveal, durationMs = 3000 }: SplashScre
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (hasSeenSplash() || prefersReducedMotion) {
-      onRevealRef.current?.();
+      if (!revealedRef.current) {
+        revealedRef.current = true;
+        (window as Window & { __hosannaSplashRevealed?: boolean }).__hosannaSplashRevealed = true;
+        window.dispatchEvent(new Event("hosanna:splash-revealed"));
+        onRevealRef.current?.();
+      }
       setDestroyed(true);
       return;
     }
@@ -46,43 +58,66 @@ export default function SplashScreen({ onReveal, durationMs = 3000 }: SplashScre
     const brand = brandRef.current;
     if (!container || !brand) return;
 
-    // Initial polish: soft entrance for brand identity
-    gsap.fromTo(
+    const enterTween = gsap.fromTo(
       brand,
       { opacity: 0, scale: 0.96 },
-      { opacity: 1, scale: 1, duration: 0.75, ease: "power2.out" },
+      { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" },
     );
 
-    // Subtle ambient breathing during the hold
     const breatheTween = gsap.to(brand, {
       scale: 1.018,
       duration: 2.2,
       repeat: -1,
       yoyo: true,
       ease: "sine.inOut",
-      delay: 0.75,
+      delay: 0.5,
     });
+    breatheTweenRef.current = breatheTween;
 
-    // At the 4-second mark, smoothly fade out and trigger the hero reveal
-    const timer = setTimeout(() => {
+    return () => {
+      enterTween.kill();
+      breatheTween.kill();
+      breatheTweenRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (destroyed || revealedRef.current) return;
+
+    const triggerReveal = () => {
+      if (revealedRef.current) return;
+      revealedRef.current = true;
+      (window as Window & { __hosannaSplashRevealed?: boolean }).__hosannaSplashRevealed = true;
+      window.dispatchEvent(new Event("hosanna:splash-revealed"));
       onRevealRef.current?.();
+
+      const container = containerRef.current;
+      if (!container) {
+        setDestroyed(true);
+        return;
+      }
 
       gsap.to(container, {
         opacity: 0,
-        duration: 0.65,
+        duration: 0.45,
         ease: "power2.inOut",
         onComplete: () => {
-          breatheTween.kill();
+          breatheTweenRef.current?.kill();
           setDestroyed(true);
         },
       });
-    }, durationMs);
-
-    return () => {
-      clearTimeout(timer);
-      breatheTween.kill();
     };
-  }, [durationMs]);
+
+    if (ready) {
+      triggerReveal();
+      return;
+    }
+
+    const fallbackTimer = window.setTimeout(triggerReveal, fallbackTimeoutMs);
+    return () => {
+      window.clearTimeout(fallbackTimer);
+    };
+  }, [ready, destroyed, fallbackTimeoutMs]);
 
   if (destroyed) return null;
 

@@ -85,5 +85,5 @@
     "tsx": "^4.23.15"
   },
   "prettier": "@hosanna/config/prettier",
-  "version": "2.1.0"
+  "version": "2.2.0"
 }
