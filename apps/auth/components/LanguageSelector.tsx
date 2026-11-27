@@ -76,7 +76,7 @@ export function LanguageSelector({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 hosanna-surface-enter [--hosanna-origin:top_right]">
           {LANGUAGES.map((lang) => {
             const isSelected = lang.code === language;
             return (

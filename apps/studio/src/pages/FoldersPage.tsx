@@ -37,6 +37,7 @@ interface FolderExplorerContext {
   handleDragOver: (e: React.DragEvent) => void;
   handleDragLeave: (e: React.DragEvent) => void;
   handleDrop: (e: React.DragEvent) => void;
+  handleIncomingFiles: (files: File[]) => Promise<void>;
   isDraggingOver: boolean;
   totalItemsCount: number;
   currentFolderId: string | null;
@@ -76,6 +77,7 @@ const DEFAULT_CONTEXT: FolderExplorerContext = {
   handleDragOver: () => {},
   handleDragLeave: () => {},
   handleDrop: () => {},
+  handleIncomingFiles: async () => {},
   isDraggingOver: false,
   totalItemsCount: 0,
   currentFolderId: null,
@@ -224,14 +226,7 @@ export const FoldersPage: React.FC = () => {
                       accept=".pro,.chordpro,.txt,.chopro,.sbpbackup,.json,.pdf,.png,.jpg,.jpeg,.webp"
                       title={t("commandPalette.uploadFiles")}
                       description={t("foldersPage.dragOrClick")}
-                      onFiles={(files) => {
-                        const input = fileInputRef.current;
-                        if (!input) return;
-                        const transfer = new DataTransfer();
-                        files.forEach((file) => transfer.items.add(file));
-                        input.files = transfer.files;
-                        input.dispatchEvent(new Event("change", { bubbles: true }));
-                      }}
+                      onFiles={context.handleIncomingFiles}
                     />
                   </div>
                 </Can>

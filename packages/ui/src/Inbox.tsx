@@ -238,7 +238,7 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
   };
 
   return (
-    <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-130 animate-in fade-in zoom-in-95 duration-200">
+    <div className="w-80 sm:w-96 bg-m3-card border border-m3-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-130 hosanna-surface-enter [--hosanna-origin:top_right]">
       <div className="p-4 border-b border-m3-border/60 flex items-center justify-between bg-m3-sidebar/50">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center font-bold">

@@ -239,7 +239,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
           {organization && isOrgMenuOpen && (
             <div
-              className={`absolute top-full mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150 ${
+              className={`absolute top-full mt-2 z-50 bg-m3-card border border-m3-border rounded-xl shadow-lg p-2 space-y-1 hosanna-surface-enter [--hosanna-origin:top_left] ${
                 isSidebarCollapsed ? "left-0 w-64" : "left-0 right-0"
               }`}
               role="menu"

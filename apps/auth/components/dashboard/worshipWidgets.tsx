@@ -1169,12 +1169,17 @@ export function CollectionsWidget({ instance }: WidgetRendererProps) {
 
 export function CollectionChecklistWidget() {
   const { t } = useI18n();
-  return <CheckboxList title={t("home.widgets.collectionChecklist.title")} items={[
-    { id: "setlist", label: t("home.widgets.collectionChecklist.setlist"), checked: true },
-    { id: "keys", label: t("home.widgets.collectionChecklist.keys"), checked: true },
-    { id: "rehearsal", label: t("home.widgets.collectionChecklist.rehearsal") },
-    { id: "share", label: t("home.widgets.collectionChecklist.share") },
-  ]} />;
+  return (
+    <CheckboxList
+      title={t("home.widgets.collectionChecklist.title")}
+      items={[
+        { id: "setlist", label: t("home.widgets.collectionChecklist.setlist"), checked: true },
+        { id: "keys", label: t("home.widgets.collectionChecklist.keys"), checked: true },
+        { id: "rehearsal", label: t("home.widgets.collectionChecklist.rehearsal") },
+        { id: "share", label: t("home.widgets.collectionChecklist.share") },
+      ]}
+    />
+  );
 }
 
 export function FoldersWidget({ instance }: WidgetRendererProps) {

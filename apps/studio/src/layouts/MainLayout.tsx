@@ -1722,6 +1722,7 @@ export const MainLayout: React.FC = () => {
                   handleDragOver,
                   handleDragLeave,
                   handleDrop,
+                  handleIncomingFiles,
                   isDraggingOver,
                   totalItemsCount,
                   currentFolderId,

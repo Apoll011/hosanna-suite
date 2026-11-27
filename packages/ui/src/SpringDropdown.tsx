@@ -3,6 +3,15 @@
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  clamp,
+  createSpring,
+  prefersReducedMotion,
+  springPresets,
+  stepSpring,
+  tuneSpring,
+  type SpringValue,
+} from "./motion";
 
 export type SpringDropdownOption<T extends string> = {
   id: T;
@@ -31,38 +40,9 @@ export type SpringDropdownProps<T extends string> =
       allLabel?: never;
     });
 
-type SpringState = { x: number; v: number; t: number; k: number; c: number };
-
 const ROW_HEIGHT = 38;
 const MENU_PADDING = 5;
 const MENU_GAP = 6;
-
-function createSpring(x: number, k: number, c: number): SpringState {
-  return { x, v: 0, t: x, k, c };
-}
-
-function tuneSpring(spring: SpringState, k: number, c: number, reducedMotion: boolean) {
-  spring.k = k;
-  spring.c = reducedMotion ? 2 * Math.sqrt(k) : c;
-}
-
-function stepSpring(spring: SpringState, dt: number) {
-  const acceleration = -spring.k * (spring.x - spring.t) - spring.c * spring.v;
-  spring.v += acceleration * dt;
-  spring.x += spring.v * dt;
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
 
 export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) {
   const { options, ariaLabel, className = "" } = props;
@@ -84,27 +64,27 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
 
   const menuHeight = MENU_PADDING * 2 + ROW_HEIGHT * options.length;
   const springsRef = useRef<{
-    height: SpringState;
-    chevron: SpringState;
-    opacity: SpringState;
-    trigger: SpringState;
-    highlightTop: SpringState;
-    highlightBottom: SpringState;
-    highlightOpacity: SpringState;
-    options: { opacity: SpringState; selected: SpringState }[];
+    height: SpringValue;
+    chevron: SpringValue;
+    opacity: SpringValue;
+    trigger: SpringValue;
+    highlightTop: SpringValue;
+    highlightBottom: SpringValue;
+    highlightOpacity: SpringValue;
+    options: { opacity: SpringValue; selected: SpringValue }[];
   } | null>(null);
 
   if (!springsRef.current) {
     springsRef.current = {
-      height: createSpring(0, 300, 23),
+      height: createSpring(0, ...springPresets.menu),
       chevron: createSpring(0, 300, 18),
-      opacity: createSpring(0, 400, 34),
+      opacity: createSpring(0, ...springPresets.feedback),
       trigger: createSpring(1, 500, 18),
-      highlightTop: createSpring(MENU_PADDING, 620, 36),
-      highlightBottom: createSpring(MENU_PADDING + ROW_HEIGHT, 620, 36),
-      highlightOpacity: createSpring(0, 400, 32),
+      highlightTop: createSpring(MENU_PADDING, ...springPresets.highlightLead),
+      highlightBottom: createSpring(MENU_PADDING + ROW_HEIGHT, ...springPresets.highlightLead),
+      highlightOpacity: createSpring(0, ...springPresets.feedback),
       options: options.map((option) => ({
-        opacity: createSpring(0, 300, 24),
+        opacity: createSpring(0, ...springPresets.surface),
         selected: createSpring(selected.includes(option.id) ? 1 : 0, 260, 26),
       })),
     };
@@ -155,8 +135,8 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
         springs.highlightTop.v = springs.highlightBottom.v = 0;
       } else {
         const movingDown = index > hoveredIndexRef.current;
-        tuneSpring(movingDown ? springs.highlightBottom : springs.highlightTop, 620, 36, reduced);
-        tuneSpring(movingDown ? springs.highlightTop : springs.highlightBottom, 200, 20, reduced);
+        tuneSpring(movingDown ? springs.highlightBottom : springs.highlightTop, ...springPresets.highlightLead, reduced);
+        tuneSpring(movingDown ? springs.highlightTop : springs.highlightBottom, ...springPresets.highlightTrail, reduced);
         springs.highlightTop.t = top;
         springs.highlightBottom.t = top + ROW_HEIGHT;
       }
@@ -172,7 +152,7 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
     if (!springs) return;
     openRef.current = open;
     const reduced = prefersReducedMotion();
-    tuneSpring(springs.height, 300, 23, reduced);
+    tuneSpring(springs.height, ...springPresets.menu, reduced);
     tuneSpring(springs.chevron, 300, 18, reduced);
     tuneSpring(springs.opacity, 400, 34, reduced);
     springs.height.t = open ? menuHeight : 0;

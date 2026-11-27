@@ -39,7 +39,7 @@ export const EditorSettingsPanel: React.FC<EditorSettingsPanelProps> = ({
   };
 
   return (
-    <div className="absolute right-2 top-11 w-80 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl p-4 z-50 space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+    <div className="absolute right-2 top-11 w-80 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl p-4 z-50 space-y-4 hosanna-surface-enter [--hosanna-origin:top_right]">
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-[10px] font-black uppercase tracking-widest text-m3-primary">
           {t("misc.editorSettings.title")}

@@ -454,7 +454,7 @@ export const ExplorerAddressBar: React.FC<ExplorerAddressBarProps> = ({
             {isPlusMenuOpen && (
               <div
                 data-tour="create-menu"
-                className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200"
+                className="absolute right-0 top-full mt-3 w-64 bg-m3-card border border-m3-border rounded-xl shadow-lg z-50 p-2 space-y-1 hosanna-surface-enter [--hosanna-origin:top_right]"
               >
                 <div className="px-4 py-2 text-label">{t("addressBar.createNew")}</div>
                 <Can permission="song.create">

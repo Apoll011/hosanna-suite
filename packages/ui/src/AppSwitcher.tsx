@@ -212,7 +212,7 @@ export const AppSwitcher: React.FC<AppSwitcherProps> = ({
           id={panelId}
           role="dialog"
           aria-label={openLabel}
-          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_16px_48px_-16px_rgb(0_0_0_/0.4)]"
+          className="absolute right-0 z-50 mt-2 w-[min(100vw-2rem,22rem)] overflow-hidden rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_16px_48px_-16px_rgb(0_0_0_/0.4)] hosanna-surface-enter [--hosanna-origin:top_right]"
         >
           <div className="flex items-center justify-between gap-2 border-b border-m3-border/60 px-4 py-3">
             <p className="text-sm font-semibold tracking-tight text-m3-text">{greeting}</p>

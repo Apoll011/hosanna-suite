@@ -417,7 +417,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({
           <div
             id={panelId}
             role="menu"
-            className="absolute bottom-full left-0 z-50 mb-2 w-[min(100vw-1.5rem,20rem)] overflow-visible rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_12px_40px_-12px_rgb(0_0_0_/0.35)] animate-in fade-in slide-in-from-bottom-2 duration-150"
+            className="absolute bottom-full left-0 z-50 mb-2 w-[min(100vw-1.5rem,20rem)] overflow-visible rounded-2xl border border-m3-border/70 bg-m3-card shadow-[0_12px_40px_-12px_rgb(0_0_0_/0.35)] hosanna-surface-enter [--hosanna-enter-y:8px]"
           >
             {panelBody}
           </div>

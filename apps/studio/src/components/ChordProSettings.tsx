@@ -25,7 +25,7 @@ export const ChordProPreviewSettings: React.FC<{
   };
 
   return (
-    <div className="absolute right-2 top-11 w-64 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl z-40 p-4 space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+    <div className="absolute right-2 top-11 w-64 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl z-40 p-4 space-y-4 hosanna-surface-enter [--hosanna-origin:top_right]">
       <div className="border-b border-m3-border/30 pb-2 flex items-center justify-between">
         <span className="text-xs font-bold text-m3-text uppercase tracking-wider">
           {t("misc.chordproSettings.title")}

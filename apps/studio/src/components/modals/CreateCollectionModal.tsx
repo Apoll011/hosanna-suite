@@ -265,9 +265,24 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
               accept="image/*"
               multiple={false}
               disabled={isCompressing}
-              onFiles={(files) => { const file = files[0]; if (file) void handleImageFile(file); }}
-              title={isCompressing ? (locale === "pt" ? "A preparar imagem…" : "Preparing image…") : (locale === "pt" ? "Adicionar imagem de capa" : "Add a cover image")}
-              description={locale === "pt" ? "Arraste uma imagem ou escolha um ficheiro" : "Drop an image here or choose a file"}
+              onFiles={(files) => {
+                const file = files[0];
+                if (file) void handleImageFile(file);
+              }}
+              title={
+                isCompressing
+                  ? locale === "pt"
+                    ? "A preparar imagem…"
+                    : "Preparing image…"
+                  : locale === "pt"
+                    ? "Adicionar imagem de capa"
+                    : "Add a cover image"
+              }
+              description={
+                locale === "pt"
+                  ? "Arraste uma imagem ou escolha um ficheiro"
+                  : "Drop an image here or choose a file"
+              }
             />
           )}
 

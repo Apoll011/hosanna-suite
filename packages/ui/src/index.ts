@@ -54,6 +54,15 @@ export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { Spinner, type SpinnerProps } from "./Spinner";
 export { SpringInput } from "./SpringInput";
 export {
+  clamp,
+  createSpring,
+  prefersReducedMotion,
+  springPresets,
+  stepSpring,
+  tuneSpring,
+  type SpringValue,
+} from "./motion";
+export {
   SpringDropdown,
   type SpringDropdownOption,
   type SpringDropdownProps,

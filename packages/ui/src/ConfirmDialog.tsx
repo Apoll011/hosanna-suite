@@ -55,7 +55,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
-        className="w-full max-w-sm surface shadow-float-lg p-5 space-y-4 animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-sm surface shadow-float-lg p-5 space-y-4 hosanna-surface-enter"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-3">
