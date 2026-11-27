@@ -849,8 +849,7 @@ export const en: typeof pt = {
       acceptBtn: "Accept agreement",
       acceptSuccess: "Data Processing Agreement accepted successfully.",
       acceptError: "Failed to accept agreement: {error}",
-      subprocessorsNote:
-        "Review the public sub-processors list at hosanna.live/legal/subprocessors.",
+      subprocessorsNote: "Review the public sub-processors list at hosanna.live/subprocessors.",
     },
     danger: {
       title: "Danger zone",

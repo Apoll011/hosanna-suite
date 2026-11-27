@@ -339,7 +339,8 @@ export const es: typeof pt = {
       },
       sendNotification: {
         title: "Enviar notificación",
-        description: "Notifica rápidamente a personas, equipos o @Todos por bandeja, correo y push.",
+        description:
+          "Notifica rápidamente a personas, equipos o @Todos por bandeja, correo y push.",
         keywords: "enviar notificación mencionar mensaje equipo todos bandeja correo push",
         open: "Editor completo",
         placeholder: "Escribe un mensaje… Escribe @ para mencionar",
@@ -850,7 +851,7 @@ export const es: typeof pt = {
       acceptSuccess: "Acuerdo de Tratamiento de Datos aceptado con éxito.",
       acceptError: "No se pudo aceptar el acuerdo: {error}",
       subprocessorsNote:
-        "Consulte la lista pública de subencargados en hosanna.live/legal/subprocessors.",
+        "Consulte la lista pública de subencargados en hosanna.live/subprocessors.",
     },
     danger: {
       title: "Zona de peligro",

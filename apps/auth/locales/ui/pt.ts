@@ -337,7 +337,8 @@ export const pt = {
       },
       sendNotification: {
         title: "Enviar notificação",
-        description: "Notifique rapidamente pessoas, equipas ou @Todos por caixa de entrada, email e push.",
+        description:
+          "Notifique rapidamente pessoas, equipas ou @Todos por caixa de entrada, email e push.",
         keywords: "enviar notificação mencionar mensagem equipa todos caixa entrada email push",
         open: "Compositor completo",
         placeholder: "Escreva uma mensagem… Digite @ para mencionar",
@@ -847,7 +848,7 @@ export const pt = {
       acceptSuccess: "Acordo de Tratamento de Dados aceite com sucesso.",
       acceptError: "Não foi possível aceitar o acordo: {error}",
       subprocessorsNote:
-        "Consulte a lista pública de subcontratantes secundários em hosanna.live/legal/subprocessors.",
+        "Consulte a lista pública de subcontratantes secundários em hosanna.live/subprocessors.",
     },
     danger: {
       title: "Zona de perigo",

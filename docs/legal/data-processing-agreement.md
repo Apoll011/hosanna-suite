@@ -147,7 +147,7 @@ The Church grants Hosanna general written authorization to engage Sub-processors
 ### 5.2 Current sub-processors
 
 Hosanna's approved Sub-processors are published and maintained at:  
-`https://hosanna.live/legal/subprocessors` (and documented in Annex II).
+`https://hosanna.live/subprocessors` (and documented in Annex II).
 
 ### 5.3 Notification of changes and right to object
 
@@ -243,4 +243,4 @@ The following Sub-processors are authorized as of the date of this agreement:
 | **Redis Cloud (Redis Inc.)**     | Authentication cache, session stores, and rate-limiting counters | Transient session tokens, rate-limit keys, and cache entries                                  | `eu-west-3`, Paris, France          | EU-US Data Privacy Framework / SCCs |
 | **Stripe Payments Europe, Ltd.** | Billing and payment processing for paid subscriptions            | Customer billing contact name, email, billing address, and transaction metadata               | Ireland / Global                    | Direct EU entity / SCCs             |
 
-The authoritative live list of Sub-processors is maintained at: `https://hosanna.live/legal/subprocessors`.
+The authoritative live list of Sub-processors is maintained at: `https://hosanna.live/subprocessors`.
