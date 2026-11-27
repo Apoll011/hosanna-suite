@@ -266,7 +266,11 @@ export const CreateCollectionModal: React.FC<CreateCollectionModalProps> = ({
               multiple={false}
               disabled={isCompressing}
               workingLabel={locale === "pt" ? "A preparar imagem…" : "Preparing image…"}
-              errorLabel={locale === "pt" ? "Não foi possível preparar a imagem" : "Could not prepare the image"}
+              errorLabel={
+                locale === "pt"
+                  ? "Não foi possível preparar a imagem"
+                  : "Could not prepare the image"
+              }
               onFiles={(files) => {
                 const file = files[0];
                 if (file) return handleImageFile(file);

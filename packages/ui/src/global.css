@@ -205,7 +205,8 @@
   transform-origin: var(--hosanna-origin, center);
 }
 .hosanna-surface-exit {
-  animation: hosanna-surface-enter var(--hosanna-motion-feedback) cubic-bezier(.4, 0, 1, 1) reverse both;
+  animation: hosanna-surface-enter var(--hosanna-motion-feedback) cubic-bezier(0.4, 0, 1, 1) reverse
+    both;
   pointer-events: none;
 }
 @keyframes hosanna-surface-enter {

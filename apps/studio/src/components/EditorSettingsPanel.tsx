@@ -3,7 +3,7 @@ import { TranslationKey, useI18n } from "@/src/lib/i18n";
 import { RotateCcw, X } from "lucide-react";
 import React from "react";
 import { EDITOR_THEMES, useEditorSettings } from "../hooks/useEditorSettings";
-import { Button } from "@hosanna/ui";
+import { Button, usePresence } from "@hosanna/ui";
 export interface EditorSettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -24,8 +24,9 @@ export const EditorSettingsPanel: React.FC<EditorSettingsPanelProps> = ({
   const updateSetting = propUpdateSetting ?? hookState.updateSetting;
   const resetSettings = propResetSettings ?? hookState.resetSettings;
   const { t } = useI18n();
+  const panelMounted = usePresence(isOpen);
 
-  if (!isOpen) return null;
+  if (!panelMounted) return null;
 
   const getThemeLabel = (themeValue: string, defaultLabel: string) => {
     try {
@@ -39,7 +40,11 @@ export const EditorSettingsPanel: React.FC<EditorSettingsPanelProps> = ({
   };
 
   return (
-    <div className="absolute right-2 top-11 w-80 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl p-4 z-50 space-y-4 hosanna-surface-enter [--hosanna-origin:top_right]">
+    <div
+      aria-hidden={!isOpen}
+      inert={!isOpen}
+      className={`absolute right-2 top-11 w-80 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl p-4 z-50 space-y-4 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
+    >
       <div className="flex items-center justify-between mb-1">
         <h3 className="text-[10px] font-black uppercase tracking-widest text-m3-primary">
           {t("misc.editorSettings.title")}

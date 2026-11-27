@@ -3,18 +3,21 @@ import { useI18n } from "@/src/lib/i18n";
 import { instrumentRegistry } from "@hosanna/chordpro";
 import { Eye, EyeOff, Minus, Plus, RotateCcw } from "lucide-react";
 import { usePreviewSettings } from "../hooks/usePreviewSettings";
+import { usePresence } from "@hosanna/ui";
 
 export const ChordProPreviewSettings: React.FC<{
   settings: ReturnType<typeof usePreviewSettings>["settings"];
   updateSetting: ReturnType<typeof usePreviewSettings>["updateSetting"];
   resetSettings: ReturnType<typeof usePreviewSettings>["resetSettings"];
   supportsCapo?: boolean;
-}> = ({ settings, updateSetting, resetSettings, supportsCapo }) => {
+  isOpen: boolean;
+}> = ({ settings, updateSetting, resetSettings, supportsCapo, isOpen }) => {
   const { t } = useI18n();
   const { showChords, transposeVal, capoVal = 0, fontSize, instrument, showDiagrams } = settings;
   const availableInstruments = instrumentRegistry.list();
   const effectiveSupportsCapo =
     supportsCapo ?? instrumentRegistry.get(instrument)?.supportsCapo ?? false;
+  const panelMounted = usePresence(isOpen);
 
   const handleTranspose = (delta: number) => {
     updateSetting("transposeVal", transposeVal + delta);
@@ -24,8 +27,14 @@ export const ChordProPreviewSettings: React.FC<{
     updateSetting("capoVal", Math.max(0, Math.min(11, capoVal + delta)));
   };
 
+  if (!panelMounted) return null;
+
   return (
-    <div className="absolute right-2 top-11 w-64 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl z-40 p-4 space-y-4 hosanna-surface-enter [--hosanna-origin:top_right]">
+    <div
+      aria-hidden={!isOpen}
+      inert={!isOpen}
+      className={`absolute right-2 top-11 w-64 bg-m3-card dark:bg-m3-dark-card border border-m3-border dark:border-m3-dark-border rounded-xl shadow-2xl z-40 p-4 space-y-4 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
+    >
       <div className="border-b border-m3-border/30 pb-2 flex items-center justify-between">
         <span className="text-xs font-bold text-m3-text uppercase tracking-wider">
           {t("misc.chordproSettings.title")}

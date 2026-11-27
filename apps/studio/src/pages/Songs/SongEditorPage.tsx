@@ -522,14 +522,15 @@ export const SongEditorPage: React.FC = () => {
             </div>
           </div>
 
-          {showPreviewSettings && (
+          {
             <ChordProPreviewSettings
+              isOpen={showPreviewSettings}
               settings={settings}
               updateSetting={updateSetting}
               resetSettings={resetSettings}
               supportsCapo={supportsCapo}
             />
-          )}
+          }
           <div
             className="hosanna-sheet flex-1 overflow-auto bg-m3-card relative"
             onClick={() => showPreviewSettings && setShowPreviewSettings(false)}

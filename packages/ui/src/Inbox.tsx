@@ -457,7 +457,12 @@ export const InboxButton: React.FC<InboxButtonProps> = ({
       </button>
 
       {panelMounted && (
-        <div id={panelId} className={`absolute right-0 top-12 z-50 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`} aria-hidden={!isOpen} inert={!isOpen}>
+        <div
+          id={panelId}
+          className={`absolute right-0 top-12 z-50 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
+          aria-hidden={!isOpen}
+          inert={!isOpen}
+        >
           <InboxPanel
             inbox={inbox}
             language={language}

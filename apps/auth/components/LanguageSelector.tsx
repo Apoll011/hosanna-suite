@@ -78,7 +78,11 @@ export function LanguageSelector({
       </button>
 
       {panelMounted && (
-        <div aria-hidden={!isOpen} inert={!isOpen} className={`absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}>
+        <div
+          aria-hidden={!isOpen}
+          inert={!isOpen}
+          className={`absolute right-0 mt-2 w-44 origin-top-right rounded-xl border border-m3-border bg-m3-card p-1.5 shadow-lg z-50 [--hosanna-origin:top_right] ${isOpen ? "hosanna-surface-enter" : "hosanna-surface-exit"}`}
+        >
           {LANGUAGES.map((lang) => {
             const isSelected = lang.code === language;
             return (
