@@ -152,6 +152,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
         open={isSidebarOpen}
         collapsed={isSidebarCollapsed}
         onDismiss={() => setIsSidebarOpen(false)}
+        language={language}
         role="navigation"
       >
         <div

@@ -4,6 +4,7 @@
  */
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { SpringDropdown, type SpringDropdownOption } from "@hosanna/ui";
 import React, { useMemo } from "react";
 import { useI18n } from "@/src/lib/i18n";
 
@@ -57,6 +58,13 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         : Math.min(page * effectivePerPage, totalItems);
 
   const visiblePages = useMemo(() => getVisiblePages(page, totalPages), [page, totalPages]);
+  const pageSizeDropdownOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => [
+      ...pageSizeOptions.map((size) => ({ id: String(size), label: String(size) })),
+      { id: "0", label: t("table.all", { count: totalItems }) },
+    ],
+    [pageSizeOptions, t, totalItems],
+  );
 
   return (
     <div
@@ -76,21 +84,16 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           )}
         </span>
 
-        <div className="flex items-center gap-1.5 bg-m3-card border border-m3-border rounded-xl px-2.5 py-1 shadow-sm">
+        <div className="flex items-center gap-1.5">
           <span className="text-label">{t("table.display")}</span>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-            className="bg-transparent font-bold text-m3-text focus:outline-none cursor-pointer text-xs"
-            aria-label={t("table.display")}
-          >
-            {pageSizeOptions.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-            <option value={0}>{t("table.all", { count: totalItems })}</option>
-          </select>
+          <SpringDropdown
+            mode="single"
+            options={pageSizeDropdownOptions}
+            selected={String(itemsPerPage)}
+            onChange={(size) => onItemsPerPageChange(Number(size))}
+            ariaLabel={t("table.display")}
+            className="font-bold"
+          />
         </div>
       </div>
 

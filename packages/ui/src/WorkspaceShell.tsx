@@ -1,5 +1,7 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "./cn";
+import { sharedUiT, type Language } from "./sharedT";
+import { usePresence } from "./usePresence";
 
 type WorkspaceFrameProps = HTMLAttributes<HTMLDivElement>;
 
@@ -16,6 +18,7 @@ interface WorkspaceSidebarProps extends HTMLAttributes<HTMLElement> {
   open: boolean;
   collapsed: boolean;
   onDismiss: () => void;
+  language?: Language;
   children: ReactNode;
 }
 
@@ -23,18 +26,24 @@ export function WorkspaceSidebar({
   open,
   collapsed,
   onDismiss,
+  language,
   className,
   children,
   ...props
 }: WorkspaceSidebarProps) {
+  const mounted = usePresence(open, 240);
+  const t = sharedUiT(language);
   return (
     <>
-      {open && (
+      {mounted && (
         <button
           type="button"
-          aria-label="Close navigation"
+          aria-label={t("common.closeNavigation")}
           onClick={onDismiss}
-          className="fixed inset-0 z-40 bg-m3-text/40 backdrop-blur-sm md:hidden"
+          className={cn(
+            "fixed inset-0 z-40 bg-m3-text/40 backdrop-blur-sm transition-opacity duration-200 md:hidden",
+            open ? "opacity-100" : "pointer-events-none opacity-0",
+          )}
         />
       )}
       <aside
@@ -43,8 +52,8 @@ export function WorkspaceSidebar({
         data-collapsed={collapsed || undefined}
         className={cn(
           "w-72 shrink-0 select-none flex-col gap-1 border-r border-m3-border p-4 transition-[width] duration-[320ms] [transition-timing-function:cubic-bezier(.2,.8,.2,1)]",
-          open ? "absolute inset-y-0 left-0 z-50 flex bg-m3-sidebar shadow-lg" : "hidden",
-          "md:relative md:z-30 md:flex md:bg-m3-sidebar/30",
+          "absolute inset-y-0 left-0 z-50 flex bg-m3-sidebar shadow-lg transition-[transform,opacity,width] duration-[320ms] [transition-timing-function:cubic-bezier(.2,.8,.2,1)] md:relative md:z-30 md:translate-x-0 md:opacity-100 md:pointer-events-auto md:bg-m3-sidebar/30 md:shadow-none",
+          open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0 pointer-events-none",
           collapsed ? "md:w-20" : "md:w-64",
           className,
         )}

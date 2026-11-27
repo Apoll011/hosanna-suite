@@ -3,7 +3,8 @@ import { useI18n } from "@/src/lib/i18n";
 import { instrumentRegistry } from "@hosanna/chordpro";
 import { Eye, EyeOff, Minus, Plus, RotateCcw } from "lucide-react";
 import { usePreviewSettings } from "../hooks/usePreviewSettings";
-import { usePresence } from "@hosanna/ui";
+import { SpringDropdown, usePresence, type SpringDropdownOption } from "@hosanna/ui";
+import { useMemo } from "react";
 
 export const ChordProPreviewSettings: React.FC<{
   settings: ReturnType<typeof usePreviewSettings>["settings"];
@@ -14,7 +15,10 @@ export const ChordProPreviewSettings: React.FC<{
 }> = ({ settings, updateSetting, resetSettings, supportsCapo, isOpen }) => {
   const { t } = useI18n();
   const { showChords, transposeVal, capoVal = 0, fontSize, instrument, showDiagrams } = settings;
-  const availableInstruments = instrumentRegistry.list();
+  const instrumentOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => instrumentRegistry.list().map((profile) => ({ id: profile.id, label: profile.displayName })),
+    [],
+  );
   const effectiveSupportsCapo =
     supportsCapo ?? instrumentRegistry.get(instrument)?.supportsCapo ?? false;
   const panelMounted = usePresence(isOpen);
@@ -160,18 +164,14 @@ export const ChordProPreviewSettings: React.FC<{
               <span className="text-[10px] font-bold text-m3-secondary uppercase">
                 {t("misc.chordproSettings.instrument")}
               </span>
-              <select
-                value={instrument}
-                onChange={(event) => updateSetting("instrument", event.target.value)}
-                className="max-w-36 rounded-md border border-m3-border bg-m3-sidebar px-2 py-1 text-[10px] font-bold text-m3-text"
-                aria-label={t("misc.chordproSettings.instrument")}
-              >
-                {availableInstruments.map((profile) => (
-                  <option key={profile.id} value={profile.id}>
-                    {profile.displayName}
-                  </option>
-                ))}
-              </select>
+              <SpringDropdown
+                mode="single"
+                options={instrumentOptions}
+                selected={instrument}
+                onChange={(value) => updateSetting("instrument", value)}
+                className="max-w-36 text-[10px]"
+                ariaLabel={t("misc.chordproSettings.instrument")}
+              />
             </div>
           </div>
         </>

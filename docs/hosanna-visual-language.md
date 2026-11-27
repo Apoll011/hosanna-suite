@@ -274,6 +274,10 @@ On phone, a covering panel may **translate** instead of changing width — same 
 
 Shared interaction primitives in `@hosanna/ui` include `SpringDropdown` for spring-positioned selection menus, shared spring physics and presets in `motion.ts`, and `usePresence` for coordinated surface exit. Menus and popovers should animate in and out from their trigger edge, and become inert as soon as they begin closing. `SpringInput` provides focus feedback, `HoldButton` deliberate destructive confirmation, `FileDrop` file selection and drop feedback, and `CheckboxList` compact checklist presentation. They use the existing M3 palette and preserve native keyboard and file input behavior. Keep motion interruptible, short, and tied to user input; use the shared primitives instead of adding another local animation engine.
 
+### Workspace shell
+
+`@hosanna/ui` provides `WorkspaceFrame`, `WorkspaceSidebar`, `WorkspaceMain`, `WorkspaceSurface`, and `WorkspaceHeader` as composable suite chrome. These own responsive layout and motion while each app supplies its own navigation, breadcrumb, toolbar, and page content. Keep app-specific routes and product navigation in the host app. Selection controls should use `SpringDropdown` so opening, option highlighting, and selection feedback share the same spring language; action menus and context menus retain menu semantics and use the shared surface transitions.
+
 ---
 
 ## Studio product patterns

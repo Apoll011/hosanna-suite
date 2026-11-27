@@ -20,6 +20,7 @@ export const sharedEn: typeof sharedPt = {
     loading: "Loading…",
     expand: "Expand",
     collapse: "Collapse",
+    closeNavigation: "Close navigation",
   },
   billing: {
     period: {

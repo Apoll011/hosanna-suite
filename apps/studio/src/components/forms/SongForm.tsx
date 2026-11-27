@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { Button, Input } from "@hosanna/ui";
+import { Button, Input, SpringDropdown, type SpringDropdownOption } from "@hosanna/ui";
 import { useI18n } from "@/src/lib/i18n";
 import { Folder } from "@/src/types";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface SongFormData {
   title: string;
@@ -65,6 +65,13 @@ export const SongForm: React.FC<SongFormProps> = ({
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const folderOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => [
+      { id: "", label: t("forms.rootLevel") },
+      ...folders.map((folder) => ({ id: folder.id, label: folder.name })),
+    ],
+    [folders, t],
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -125,20 +132,18 @@ export const SongForm: React.FC<SongFormProps> = ({
 
       <div className="flex flex-col gap-1.5">
         <label className="text-label ml-0.5">{t("forms.folderCategory")}</label>
-        <select
-          name="folderId"
-          value={formData.folderId}
-          onChange={handleChange}
+        <SpringDropdown
+          mode="single"
+          options={folderOptions}
+          selected={formData.folderId}
+          onChange={(folderId) => {
+            setFormData((current) => ({ ...current, folderId }));
+            setErrors((current) => ({ ...current, folderId: "" }));
+          }}
+          ariaLabel={t("forms.folderCategory")}
           disabled={isLoading}
-          className="w-full rounded-md border border-m3-border bg-m3-card text-m3-text text-sm px-3.5 py-2.5 min-h-10 transition-colors focus:outline-none focus:ring-2 focus:ring-m3-primary/25 focus:border-m3-primary hover:border-m3-primary/40 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <option value="">{t("forms.rootLevel")}</option>
-          {folders.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name}
-            </option>
-          ))}
-        </select>
+          className="h-11 w-full justify-between text-sm"
+        />
       </div>
 
       <Input

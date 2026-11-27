@@ -24,6 +24,7 @@ type SpringDropdownBase<T extends string> = {
   options: readonly SpringDropdownOption<T>[];
   ariaLabel: string;
   className?: string;
+  disabled?: boolean;
 };
 
 export type SpringDropdownProps<T extends string> =
@@ -45,7 +46,7 @@ const MENU_PADDING = 5;
 const MENU_GAP = 6;
 
 export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) {
-  const { options, ariaLabel, className = "" } = props;
+  const { options, ariaLabel, className = "", disabled = false } = props;
   const multiple = props.mode === "multiple";
   const selected = multiple ? props.selected : [props.selected];
   const selectedKey = selected.join("\u0000");
@@ -89,6 +90,17 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
       })),
     };
   }
+
+  const optionSprings = springsRef.current.options;
+  while (optionSprings.length < options.length) {
+    const index = optionSprings.length;
+    const option = options[index];
+    optionSprings.push({
+      opacity: createSpring(0, ...springPresets.surface),
+      selected: createSpring(option && selected.includes(option.id) ? 1 : 0, 260, 26),
+    });
+  }
+  optionSprings.length = options.length;
 
   const positionMenu = useCallback(() => {
     const trigger = triggerRef.current;
@@ -293,6 +305,7 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
       <button
         ref={triggerRef}
         type="button"
+        disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
@@ -317,7 +330,7 @@ export function SpringDropdown<T extends string>(props: SpringDropdownProps<T>) 
             setOpen(false);
           }
         }}
-        className={`inline-flex h-8 min-w-0 items-center gap-2 rounded-lg border border-m3-border bg-m3-card px-2.5 text-xs font-medium text-m3-text shadow-xs transition-colors hover:bg-m3-hover focus-visible:outline-2 focus-visible:outline-m3-primary cursor-pointer select-none ${className}`}
+        className={`inline-flex h-8 min-w-0 items-center gap-2 rounded-lg border border-m3-border bg-m3-card px-2.5 text-xs font-medium text-m3-text shadow-xs transition-colors hover:bg-m3-hover focus-visible:outline-2 focus-visible:outline-m3-primary disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none ${className}`}
       >
         {props.mode === "multiple" ? (
           <span className="flex shrink-0 items-center -space-x-1">

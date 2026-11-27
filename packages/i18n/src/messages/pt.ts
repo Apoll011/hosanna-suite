@@ -18,6 +18,7 @@ export const sharedPt = {
     loading: "A carregar…",
     expand: "Expandir",
     collapse: "Fechar",
+    closeNavigation: "Fechar navegação",
   },
   billing: {
     period: {

@@ -20,6 +20,7 @@ export const sharedEs: typeof sharedPt = {
     loading: "Cargando…",
     expand: "Expandir",
     collapse: "Cerrar",
+    closeNavigation: "Cerrar navegación",
   },
   billing: {
     period: {

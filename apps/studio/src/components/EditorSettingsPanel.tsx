@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { TranslationKey, useI18n } from "@/src/lib/i18n";
 import { RotateCcw, X } from "lucide-react";
-import React from "react";
+import React, { useMemo } from "react";
 import { EDITOR_THEMES, useEditorSettings } from "../hooks/useEditorSettings";
-import { Button, usePresence } from "@hosanna/ui";
+import { Button, SpringDropdown, usePresence, type SpringDropdownOption } from "@hosanna/ui";
 export interface EditorSettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -25,19 +25,25 @@ export const EditorSettingsPanel: React.FC<EditorSettingsPanelProps> = ({
   const resetSettings = propResetSettings ?? hookState.resetSettings;
   const { t } = useI18n();
   const panelMounted = usePresence(isOpen);
-
-  if (!panelMounted) return null;
-
   const getThemeLabel = (themeValue: string, defaultLabel: string) => {
     try {
       const key = `misc.editorSettings.themes.${themeValue}` as TranslationKey;
       const translated = t(key);
       if (translated && translated !== key) return translated;
     } catch {
-      // fallback
+      return defaultLabel;
     }
     return defaultLabel;
   };
+  const themeOptions = useMemo<SpringDropdownOption<string>[]>(
+    () => EDITOR_THEMES.map((theme) => ({
+      id: theme.value,
+      label: getThemeLabel(theme.value, theme.label),
+    })),
+    [t],
+  );
+
+  if (!panelMounted) return null;
 
   return (
     <div
@@ -61,17 +67,14 @@ export const EditorSettingsPanel: React.FC<EditorSettingsPanelProps> = ({
         <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
           {t("misc.editorSettings.theme")}
         </label>
-        <select
-          value={settings.theme}
-          onChange={(e) => updateSetting("theme", e.target.value)}
-          className="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 cursor-pointer"
-        >
-          {EDITOR_THEMES.map((th) => (
-            <option key={th.value} value={th.value}>
-              {getThemeLabel(th.value, th.label)}
-            </option>
-          ))}
-        </select>
+        <SpringDropdown
+          mode="single"
+          options={themeOptions}
+          selected={settings.theme}
+          onChange={(value) => updateSetting("theme", value)}
+          ariaLabel={t("misc.editorSettings.theme")}
+          className="h-10 w-full justify-between text-xs"
+        />
       </div>
 
       <div className="space-y-1.5">

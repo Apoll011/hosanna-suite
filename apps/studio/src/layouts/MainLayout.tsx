@@ -6,6 +6,7 @@
 import { useI18n } from "@/src/lib/i18n";
 import { Folder, Service, Song } from "@/src/types";
 import { getPersonalSettings } from "@hosanna/auth";
+import { WorkspaceFrame, WorkspaceMain, WorkspaceSurface } from "@hosanna/ui";
 import { ConversionResult } from "@hosanna/chordpro";
 import {
   AI_LIBRARY_CHANGED_EVENT,
@@ -1589,7 +1590,7 @@ export const MainLayout: React.FC = () => {
 
   const layoutContent = (
     <>
-      <div className="h-dvh max-h-dvh w-full flex flex-row overflow-hidden bg-m3-bg">
+      <WorkspaceFrame>
         <AppSidebar
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
@@ -1620,7 +1621,7 @@ export const MainLayout: React.FC = () => {
           logout={logout}
         />
 
-        <div className="flex-1 min-w-0 flex flex-col p-2 sm:p-4 md:p-0 h-full overflow-hidden">
+        <WorkspaceMain>
           <input
             type="file"
             ref={fileInputRef}
@@ -1630,10 +1631,7 @@ export const MainLayout: React.FC = () => {
             className="hidden"
           />
 
-          <div
-            className="bg-m3-card border md:border-none border-m3-border rounded-xl md:rounded-none shadow-lg md:shadow-none overflow-hidden flex flex-col flex-1 h-full transition-colors duration-300"
-            role="main"
-          >
+          <WorkspaceSurface role="main">
             <ExplorerAddressBar
               view={view}
               isSidebarOpen={isSidebarOpen}
@@ -1763,11 +1761,11 @@ export const MainLayout: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
-        </div>
+          </WorkspaceSurface>
+        </WorkspaceMain>
 
         <AiChatDock />
-      </div>
+      </WorkspaceFrame>
 
       <ToastContainer />
       <ProductTourController />
