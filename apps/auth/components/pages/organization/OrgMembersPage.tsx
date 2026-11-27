@@ -2,6 +2,7 @@
 "use client";
 
 import { AccountCenter } from "@/components/account/AccountCenter";
+import { SendNotificationWidget } from "@/components/dashboard/SendNotificationWidget";
 import { useActiveOrganization, type OrgMember } from "@/hooks/useActiveOrganization";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/ui/i18n";
@@ -691,13 +692,14 @@ export function OrgMembersPage() {
         />
 
         {subTab === "members" ? (
-          filteredMembers.length === 0 ? (
-            <p className="py-12 text-center text-sm text-m3-secondary">
-              {t("settings.members.noMembers")}
-            </p>
-          ) : (
-            <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
-              {filteredMembers.map((member) => {
+          <div className="space-y-6">
+            {filteredMembers.length === 0 ? (
+              <p className="py-12 text-center text-sm text-m3-secondary">
+                {t("settings.members.noMembers")}
+              </p>
+            ) : (
+              <div className="divide-y divide-m3-border/50 border border-m3-border rounded-xl overflow-hidden bg-m3-card w-full">
+                {filteredMembers.map((member) => {
                 const name =
                   member.user?.name || member.user?.email || t("settings.members.memberRole");
                 const isSelf = user?.id === member.userId;
@@ -736,9 +738,24 @@ export function OrgMembersPage() {
                     </Badge>
                   </button>
                 );
-              })}
-            </div>
-          )
+                })}
+              </div>
+            )}
+            <Can permission="notification.sent">
+              <section className="border-t border-m3-border pt-5" aria-label={t("home.widgets.sendNotification.title")}>
+                <SendNotificationWidget
+                  instance={{
+                    instanceId: "organization-members-notification-box",
+                    widget: "auth.send-notification",
+                    x: 0,
+                    y: 0,
+                    w: 12,
+                    h: 4,
+                  }}
+                />
+              </section>
+            </Can>
+          </div>
         ) : null}
 
         {subTab === "invites" ? (

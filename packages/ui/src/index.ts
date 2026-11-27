@@ -46,6 +46,7 @@ export { Input, type InputProps } from "./Input";
 export { LoadingBar, type LoadingBarProps } from "./LoadingBar";
 export { MenuThemeToggle, type MenuThemeToggleProps, type MenuThemeValue } from "./MenuThemeToggle";
 export { Modal, type ModalProps } from "./Modal";
+export { NotificationChatBox, type NotificationChatBoxProps } from "./NotificationChatBox";
 export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { Spinner, type SpinnerProps } from "./Spinner";
 export { SuiteAppIcon, type SuiteAppIconProps } from "./SuiteAppIcon";

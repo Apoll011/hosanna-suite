@@ -9,7 +9,7 @@ This is not a new brand brief. It records what already ships. Prefer tokens and 
 | Layer             | Where                                                                                                                                                              |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | CSS tokens        | `apps/studio/src/index.css`, mirrored in `apps/auth/app/globals.css`                                                                                               |
-| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `InboxButton`, `SuiteAppIcon`, …) |
+| Shared primitives | `packages/ui` (`Button`, `Input`, `Badge`, `Tabs`, `Modal`, `EmptyState`, `PageHeader`, `Surface`, `AppSwitcher`, `AccountMenu`, `InboxButton`, `NotificationChatBox`, `SuiteAppIcon`, …) |
 | Workspace chrome  | Studio `AppSidebar`, explorer menus/toolbars, service Plan/Read, address-bar suite controls                                                                        |
 | Account / hub     | Auth home (`/home`), `AccountNav` / account layouts, header: Inbox → Logos → App Switcher → AccountMenu                                                            |
 

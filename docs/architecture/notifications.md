@@ -31,7 +31,7 @@ flowchart TB
 ```
 
 1. **Target** resolves to a unique set of `userId`s.
-2. For each user, **channels** are computed from the type catalog, optional request overrides, preferences, and quiet hours (forced security channels cannot be turned off).
+2. An explicit channel selection takes precedence over user channel preferences; omitted channels use the type catalog and preferences. Quiet hours suppress push and email only when channels are not explicitly selected. Forced security channels cannot be turned off.
 3. Each enabled channel delivers independently; failures are logged per channel.
 
 ## Channels
@@ -73,7 +73,7 @@ Examples:
 
 Resolution order: type-specific → category → global → catalog defaults. Quiet hours suppress **push and email** only (inbox still created).
 
-UI: personal prefs on **`/account`** (`NotificationSettingsSection`); org broadcast tools on auth org notifications + Studio settings.
+UI: personal preferences on **`/account`** (`NotificationSettingsSection`); the mention-aware organization sender is shared from `@hosanna/ui` and appears in the Auth dashboard widget and Members tab.
 
 ## Push reliability (PushDevice)
 

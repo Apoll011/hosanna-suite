@@ -10,7 +10,6 @@ import type { AppRole, PermissionString } from "@hosanna/auth";
 import { AnyRoleGate, Can, CanAny } from "@hosanna/ui";
 import {
   Activity,
-  Bell,
   Bot,
   Building2,
   CreditCard,
@@ -50,12 +49,6 @@ const ORG_ITEMS: OrgNavItem[] = [
     labelKey: "account.nav.billing",
     icon: CreditCard,
     permission: "billing.access",
-  },
-  {
-    href: "/account/organization/notifications",
-    labelKey: "account.nav.notifications",
-    icon: Bell,
-    permission: "notification.sent",
   },
   {
     href: "/account/organization/ai",

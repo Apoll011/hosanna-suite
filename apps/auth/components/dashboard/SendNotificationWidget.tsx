@@ -3,8 +3,10 @@
 import { useActiveOrganization } from "@/hooks/useActiveOrganization";
 import { ensureActiveOrganizationSession } from "@/lib/services/api";
 import { notificationsApi, type NotificationChannel } from "@/lib/services/notifications-api";
+import type { AppRole } from "@hosanna/auth";
 import { useI18n } from "@/lib/ui/i18n";
 import type { WidgetRendererProps } from "@hosanna/dashboard/react";
+import { NotificationChatBox } from "@hosanna/ui";
 import { ArrowUp, Bell, Building2, CheckCircle2, Users } from "lucide-react";
 import {
   useCallback,
@@ -31,8 +33,6 @@ import {
   getWidgetDensity,
   useOrganizationLoader,
   useWidgetPreview,
-  WidgetHeader,
-  WidgetHeaderLink,
 } from "./shared";
 import {
   clamp,
@@ -51,6 +51,7 @@ type TeamRow = {
 
 const MENTION_ROW_H = 42;
 const MENTION_PAD = 4;
+const TARGET_ROLES: AppRole[] = ["owner", "admin", "teamLeader", "editor", "musician", "member", "guest"];
 
 export function SendNotificationWidget({ instance }: WidgetRendererProps) {
   const { t } = useI18n();
@@ -89,6 +90,9 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
   const [query, setQuery] = useState<string | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [channels, setChannels] = useState<NotificationChannel[]>(["inbox"]);
+  const [roles, setRoles] = useState<AppRole[]>([]);
+  const [notificationType, setNotificationType] = useState("info");
+  const [href, setHref] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [focused, setFocused] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -125,8 +129,16 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
   }, []);
 
   const filtered = useMemo(
-    () => (query === null ? [] : filterMentionCandidates(candidates, query)),
-    [candidates, query],
+    () =>
+      query === null
+        ? []
+        : filterMentionCandidates(candidates, query).filter(
+            (candidate) =>
+              candidate.kind !== "user" ||
+              roles.length === 0 ||
+              (candidate.role && roles.some((role) => role === candidate.role)),
+          ),
+    [candidates, query, roles],
   );
   const menuOpen = query !== null && filtered.length > 0;
 
@@ -408,6 +420,9 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
       text: serializedText,
       targets: mentionTargets,
       channels,
+      roles,
+      type: notificationType,
+      href,
     });
     if (payloads.length === 0) return;
 
@@ -533,33 +548,14 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
 
   if (density === "compact") {
     return (
-      <div className="flex h-full items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          <Bell className="h-4 w-4 shrink-0 text-m3-primary" aria-hidden />
-          <span className="truncate text-sm font-medium text-m3-text">
-            {t("home.widgets.sendNotification.title")}
-          </span>
-        </div>
-        <WidgetHeaderLink
-          href="/account/organization/notifications"
-          label={t("home.widgets.sendNotification.open")}
-        />
-      </div>
+      <NotificationChatBox title={t("home.widgets.sendNotification.title")} compact>
+        <Bell className="ml-auto h-4 w-4 shrink-0 text-m3-primary" aria-hidden />
+      </NotificationChatBox>
     );
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <WidgetHeader
-        title={t("home.widgets.sendNotification.title")}
-        action={
-          <WidgetHeaderLink
-            href="/account/organization/notifications"
-            label={t("home.widgets.sendNotification.open")}
-          />
-        }
-      />
-
+    <NotificationChatBox title={t("home.widgets.sendNotification.title")}>
       <div className="flex min-h-0 flex-1 flex-col justify-between rounded-xl border border-m3-border bg-m3-sidebar/35 p-3">
         <div
           ref={edRef}
@@ -575,8 +571,8 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
           onClick={() => edRef.current?.focus()}
           className="relative min-h-[56px] flex-1 cursor-text overflow-y-auto whitespace-pre-wrap break-words text-sm leading-7 text-m3-text outline-none"
         >
-          {parts.length === 0 && query === null ? (
-            <span className="pointer-events-none text-m3-input">
+          {parts.length === 0 && query === null && !focused ? (
+            <span className="pointer-events-none absolute left-0 top-0 text-m3-input">
               {t("home.widgets.sendNotification.placeholder")}
             </span>
           ) : null}
@@ -614,6 +610,73 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
             />
           ) : null}
         </div>
+
+        <div className="mt-2 flex flex-wrap items-center gap-1.5" aria-label={t("settings.notifications.recipient.rolesFilter")}>
+          <span className="mr-1 text-[11px] font-medium text-m3-secondary">
+            {t("settings.notifications.recipient.rolesFilter")}
+          </span>
+          {TARGET_ROLES.map((role) => {
+            const label =
+              role === "owner"
+                ? t("settings.roles.owner")
+                : role === "admin"
+                  ? t("settings.roles.admin")
+                  : role === "teamLeader"
+                    ? t("settings.roles.teamLeader")
+                    : role === "editor"
+                      ? t("settings.roles.editor")
+                      : role === "musician"
+                        ? t("settings.roles.musician")
+                        : role === "guest"
+                          ? t("settings.roles.guest")
+                          : t("settings.roles.member");
+            const active = roles.includes(role);
+            return (
+              <button
+                key={role}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setRoles((current) => active ? current.filter((item) => item !== role) : [...current, role])}
+                className={`rounded-md border px-2 py-1 text-[11px] font-medium transition-colors ${active ? "border-m3-primary bg-m3-primary text-white" : "border-m3-border text-m3-secondary hover:border-m3-primary/40"}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <details className="mt-1 text-xs text-m3-secondary">
+          <summary className="w-fit cursor-pointer select-none py-1 font-medium text-m3-text">
+            {t("settings.notifications.content.typeLabel")} · {t("settings.notifications.delivery.title")}
+          </summary>
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <label className="flex flex-col gap-1">
+              <span>{t("settings.notifications.content.typeLabel")}</span>
+              <select
+                value={notificationType}
+                onChange={(event) => setNotificationType(event.target.value)}
+                className="min-h-9 rounded-md border border-m3-border bg-m3-card px-2 text-sm text-m3-text"
+              >
+                {(["info", "organization", "team", "security", "billing"] as const).map((type) => (
+                  <option key={type} value={type}>
+                    {type === "info" ? t("settings.notifications.content.types.info") : type === "organization" ? t("settings.notifications.content.types.organization") : type === "team" ? t("settings.notifications.content.types.team") : type === "security" ? t("settings.notifications.content.types.security") : t("settings.notifications.content.types.billing")}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1">
+              <span>{t("settings.notifications.content.linkLabel")}</span>
+              <input
+                type="url"
+                value={href}
+                maxLength={2048}
+                onChange={(event) => setHref(event.target.value)}
+                placeholder={t("settings.notifications.content.linkPlaceholder")}
+                className="min-h-9 rounded-md border border-m3-border bg-m3-card px-2 text-sm text-m3-text placeholder:text-m3-input"
+              />
+            </label>
+          </div>
+        </details>
 
         <div className="mt-2.5 flex flex-wrap items-center gap-2 pt-2 border-t border-m3-border/60">
           <ChannelSpringDropdown
@@ -746,6 +809,6 @@ export function SendNotificationWidget({ instance }: WidgetRendererProps) {
             document.body,
           )
         : null}
-    </div>
+    </NotificationChatBox>
   );
 }
