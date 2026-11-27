@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { Footer, Nav } from "@/components/hosanna/HosannaLanding";
-import WebGLCanvas from "@/components/ui/WebGLCanvas";
+import { Nav } from "@/components/hosanna/HosannaLanding";
+import { CurtainLayout } from "@/components/ui/CurtainLayout";
 import { useI18n, type Language } from "@/lib/i18n";
 
 const pageCopy: Record<
@@ -62,55 +62,51 @@ export function Component() {
   const copy = pageCopy[language];
 
   return (
-    <>
-      <WebGLCanvas showTextLayer={false} />
-      <div className="relative z-10 min-h-screen bg-transparent font-sans text-white antialiased selection:bg-cyan-400/20">
-        <Nav />
-        <section className="relative overflow-hidden bg-transparent pb-12 pt-52 text-white md:pt-60">
-          <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
-            <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
-              {copy.heading}
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
-              {copy.subtitle}
-            </p>
-          </div>
-        </section>
+    <CurtainLayout className="text-white selection:bg-cyan-400/20">
+      <Nav />
+      <section className="relative overflow-hidden bg-transparent pb-12 pt-52 text-white md:pt-60">
+        <div className="relative mx-auto max-w-3xl px-5 text-center md:px-8">
+          <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
+            {copy.heading}
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
+            {copy.subtitle}
+          </p>
+        </div>
+      </section>
 
-        <section className="bg-transparent py-12 md:py-16">
-          <div className="mx-auto max-w-5xl px-5 md:px-8">
-            <p className="mb-6 text-sm text-white/60">{copy.lastUpdated}</p>
-            <div className="grid gap-5 md:grid-cols-2">
-              {subprocessors.map((provider) => (
-                <article
-                  key={provider.name}
-                  className="rounded-3xl border border-white/15 bg-slate-900/60 p-7 text-white shadow-2xl backdrop-blur-md md:p-9"
-                >
-                  <h2 className="font-display text-2xl text-white">{provider.name}</h2>
-                  <dl className="mt-5 space-y-4 text-sm leading-relaxed">
-                    <div>
-                      <dt className="font-semibold text-white">Purpose</dt>
-                      <dd className="mt-1 text-white/75">{provider.purpose}</dd>
-                    </div>
-                    <div>
-                      <dt className="font-semibold text-white">Data processed</dt>
-                      <dd className="mt-1 text-white/75">{provider.data}</dd>
-                    </div>
-                    <div>
-                      <dt className="font-semibold text-white">Configured region</dt>
-                      <dd className="mt-1 text-white/75">{provider.region}</dd>
-                    </div>
-                  </dl>
-                </article>
-              ))}
-            </div>
-            <p className="mt-8 rounded-2xl border border-white/10 bg-slate-900/40 p-5 text-sm leading-relaxed text-white/70">
-              {copy.regionNote}
-            </p>
+      <section className="bg-transparent py-12 md:py-16">
+        <div className="mx-auto max-w-5xl px-5 md:px-8">
+          <p className="mb-6 text-sm text-white/60">{copy.lastUpdated}</p>
+          <div className="grid gap-5 md:grid-cols-2">
+            {subprocessors.map((provider) => (
+              <article
+                key={provider.name}
+                className="rounded-3xl border border-white/15 bg-slate-900/60 p-7 text-white shadow-2xl backdrop-blur-md md:p-9"
+              >
+                <h2 className="font-display text-2xl text-white">{provider.name}</h2>
+                <dl className="mt-5 space-y-4 text-sm leading-relaxed">
+                  <div>
+                    <dt className="font-semibold text-white">Purpose</dt>
+                    <dd className="mt-1 text-white/75">{provider.purpose}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold text-white">Data processed</dt>
+                    <dd className="mt-1 text-white/75">{provider.data}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-semibold text-white">Configured region</dt>
+                    <dd className="mt-1 text-white/75">{provider.region}</dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
           </div>
-        </section>
-        <Footer />
-      </div>
-    </>
+          <p className="mt-8 rounded-2xl border border-white/10 bg-slate-900/40 p-5 text-sm leading-relaxed text-white/70">
+            {copy.regionNote}
+          </p>
+        </div>
+      </section>
+    </CurtainLayout>
   );
 }

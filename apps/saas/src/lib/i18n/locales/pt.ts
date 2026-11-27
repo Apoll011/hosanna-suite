@@ -379,6 +379,7 @@ export const pt = {
     footer: {
       tagline: "Repertório ChordPro e planeamento de louvor para igrejas, Studio + app móvel.",
       colProduct: "Produto",
+      colNavigation: "Navegação",
       colSupport: "Suporte",
       colLegal: "Legal",
       blog: "Blog",
@@ -640,15 +641,23 @@ export const pt = {
   cookieConsent: {
     title: "Privacidade e Cookies",
     description: "Utilizamos dois tipos de cookies neste website:",
-    essentialTitle: "Cookies essenciais",
+    compactSummary:
+      "Usamos cookies essenciais para segurança e um cookie opcional de métricas (PostHog). Nunca vendemos seus dados.",
+    viewDetails: "Ver detalhes",
+    hideDetails: "Ocultar detalhes",
+    essentialTitle: "Essenciais",
+    essentialShort: "autenticação e segurança (sempre ativo)",
     essentialDesc:
       "Utilizados para autenticação e funcionamento seguro da plataforma. Estão sempre ativos e não podem ser desativados.",
-    analyticsTitle: "Cookie opcional",
+    analyticsTitle: "Analítica (PostHog)",
+    analyticsShort: "métricas anónimas de uso (opcional)",
     analyticsDesc:
       "Um único cookie de métricas anónimas (PostHog) para nos ajudar a melhorar o Hosanna. Desativado por defeito.",
     noSellNotice: "Nunca vendemos os seus dados para marketing nem para qualquer outro fim.",
     acceptAnalytics: "Aceitar analítica",
     essentialOnly: "Apenas essenciais",
+    acceptedConfirm: "Analítica ativada",
+    essentialConfirm: "Apenas cookies essenciais",
     cookieSettings: "Definições de cookies",
   },
 };

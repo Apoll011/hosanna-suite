@@ -1,0 +1,230 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+
+.hosanna-cookie-banner {
+  position: relative;
+  border-radius: 24px;
+  background: #ffffff;
+  color: #021433;
+  box-shadow:
+    0 20px 44px -12px rgba(2, 20, 51, 0.28),
+    0 4px 16px -4px rgba(2, 20, 51, 0.14),
+    0 0 0 1px rgba(2, 20, 51, 0.08);
+  will-change: transform, width, height, opacity;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  --orange: #ff9f0a;
+  --yellow: #ffd23f;
+  --white: #ffffff;
+  --black: #000000;
+  --dough: color-mix(in srgb, var(--orange) 60%, var(--yellow));
+  --chip: color-mix(in srgb, var(--orange) 36%, var(--black));
+}
+
+.hosanna-cookie-banner.is-entering {
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+  pointer-events: none;
+}
+
+.hosanna-cookie-banner.is-dismissing {
+  opacity: 0;
+  transform: scale(0.96);
+  pointer-events: none;
+}
+
+.hosanna-cookie-banner .body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(420px, calc(100vw - 24px));
+  padding: 20px;
+  will-change: opacity, transform;
+}
+
+.hosanna-cookie-banner .top {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.hosanna-cookie-banner .plate {
+  position: relative;
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+
+.hosanna-cookie-banner .cookie {
+  position: absolute;
+  inset: 0;
+  width: 64px;
+  height: 64px;
+  overflow: visible;
+  will-change: transform;
+}
+
+.hosanna-cookie-banner .d0 {
+  stop-color: color-mix(in srgb, var(--dough) 62%, var(--white));
+}
+
+.hosanna-cookie-banner .d1 {
+  stop-color: var(--dough);
+}
+
+.hosanna-cookie-banner .d2 {
+  stop-color: color-mix(in srgb, var(--dough) 80%, var(--chip));
+}
+
+.hosanna-cookie-banner .c0 {
+  stop-color: color-mix(in srgb, var(--chip) 72%, var(--dough));
+}
+
+.hosanna-cookie-banner .c1 {
+  stop-color: color-mix(in srgb, var(--chip) 78%, var(--black));
+}
+
+.hosanna-cookie-banner .n0 {
+  stop-color: color-mix(in srgb, var(--dough) 74%, var(--chip));
+}
+
+.hosanna-cookie-banner .n1 {
+  stop-color: color-mix(in srgb, var(--dough) 74%, var(--chip));
+  stop-opacity: 0;
+}
+
+.hosanna-cookie-banner .edge {
+  fill: color-mix(in srgb, var(--dough) 58%, var(--chip));
+}
+
+.hosanna-cookie-banner .dough {
+  fill: url(#cookie-dough);
+}
+
+.hosanna-cookie-banner .dent {
+  fill: url(#cookie-dent);
+}
+
+.hosanna-cookie-banner .chips circle {
+  fill: url(#cookie-chip);
+}
+
+.hosanna-cookie-banner .keep {
+  fill: #ffffff;
+}
+
+.hosanna-cookie-banner #bites circle {
+  fill: #000000;
+}
+
+.hosanna-cookie-banner .crumbs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.hosanna-cookie-banner .crumbs i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px;
+  border-radius: 2px;
+  background: var(--dough);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.hosanna-cookie-banner .crumbs i:nth-child(3n) {
+  background: var(--chip);
+}
+
+.hosanna-cookie-banner .copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.hosanna-cookie-banner .row {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.hosanna-cookie-banner .btn {
+  flex: 1;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  will-change: transform;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  padding: 0 14px;
+  transition: background-color 0.15s ease;
+}
+
+.hosanna-cookie-banner .no {
+  background: rgba(2, 20, 51, 0.08);
+  color: #021433;
+}
+
+.hosanna-cookie-banner .no:hover {
+  background: rgba(2, 20, 51, 0.14);
+}
+
+.hosanna-cookie-banner .yes {
+  background: #021433;
+  color: #ffffff;
+}
+
+.hosanna-cookie-banner .yes:hover {
+  background: #042052;
+}
+
+.hosanna-cookie-banner .done {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px 0 14px;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: #021433;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hosanna-cookie-banner .done svg {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(2, 20, 51, 0.14);
+  flex: none;
+}
+
+.hosanna-cookie-banner .done.is-yes svg {
+  background: #34d17a;
+}
+
+.hosanna-cookie-banner .done path {
+  fill: none;
+  stroke: #021433;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+}
+
+.hosanna-cookie-banner .done.is-yes path {
+  stroke: #04140a;
+}

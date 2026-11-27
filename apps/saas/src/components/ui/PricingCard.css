@@ -1,0 +1,131 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+
+.hosanna-plan-card {
+  padding: 10px;
+  border-radius: 28px;
+  background: #ffffff;
+  color: #021433;
+  border: 1px solid #e2e8f0;
+}
+
+.hosanna-plan-card .seg {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(2, 20, 51, 0.05);
+}
+
+.hosanna-plan-card .seg button {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  height: 40px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #64748b;
+  transition: color 0.25s;
+}
+
+.hosanna-plan-card .seg button[aria-checked="true"] {
+  color: #021433;
+  font-weight: 600;
+}
+
+.hosanna-plan-card .hl {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  height: 40px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(2, 20, 51, 0.08);
+  will-change: transform, width;
+  pointer-events: none;
+}
+
+.hosanna-plan-card .save {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(52, 209, 122, 0.14);
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+  transform-origin: 100% 50%;
+  will-change: transform, opacity;
+  white-space: nowrap;
+}
+
+.hosanna-plan-card .num {
+  display: inline-flex;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 56px;
+  height: 56px;
+}
+
+.hosanna-plan-card .rc {
+  display: inline-block;
+  height: 56px;
+  overflow: hidden;
+  width: 0.62em;
+  will-change: width, opacity;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+}
+
+.hosanna-plan-card .rs {
+  display: block;
+  will-change: transform;
+}
+
+.hosanna-plan-card .rs i {
+  display: block;
+  height: 56px;
+  line-height: 56px;
+  font-style: normal;
+  text-align: center;
+}
+
+.hosanna-plan-card .roll-line {
+  position: relative;
+  height: 22px;
+  overflow: hidden;
+}
+
+.hosanna-plan-card .roll-line span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 22px;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+.hosanna-plan-card .cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 50px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: #021433;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 16px;
+  will-change: transform;
+  transition: background-color 0.2s ease;
+}
+
+.hosanna-plan-card .cta:hover {
+  background: #0284c7;
+}

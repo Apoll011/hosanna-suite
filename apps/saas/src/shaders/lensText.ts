@@ -49,9 +49,10 @@ export const lensTextFragmentShader = /* glsl */ `
   uniform vec3 uLineProgress;
   uniform vec4 uLineBounds; // (line1Top, line12Mid, line23Mid, line3Bot) in UV [0..1]
   uniform float uScrollProgress;
+  uniform float uEntranceProgress;
   uniform float uReducedMotion;
 
-  vec4 sampleMaskedEnglish(vec2 uv) {
+  vec4 sampleMaskedBand(sampler2D texSampler, vec2 uv) {
     float top1 = uLineBounds.x;
     float mid12 = uLineBounds.y;
     float mid23 = uLineBounds.z;
@@ -85,63 +86,29 @@ export const lensTextFragmentShader = /* glsl */ `
     float offsetY = (1.0 - prog) * bandH * 1.05;
 
     float peakOffset = 0.07;
+    float entrancePeak = 0.075;
+    float entranceOffset = (uReducedMotion > 0.5) ? 0.0 : (driftDir * entrancePeak * (1.0 - uEntranceProgress));
+    float entranceAlpha = (uReducedMotion > 0.5) ? 1.0 : smoothstep(0.0, 0.45, uEntranceProgress);
+
     float splitOffset = (uReducedMotion > 0.5) ? 0.0 : (driftDir * peakOffset * uScrollProgress);
     float scrollAlpha = clamp(1.0 - uScrollProgress * 1.25, 0.0, 1.0);
 
-    vec2 shiftedUv = vec2(uv.x + splitOffset, uv.y - offsetY);
+    vec2 shiftedUv = vec2(uv.x + splitOffset + entranceOffset, uv.y - offsetY);
 
     // Clip strictly inside the line's horizontal and vertical mask window
     float vMask = step(bandMin, shiftedUv.y) * step(shiftedUv.y, bandMax);
     float hMask = step(0.0, shiftedUv.x) * step(shiftedUv.x, 1.0);
-    vec4 tex = texture2D(uEnglishTex, clamp(shiftedUv, 0.0, 1.0));
+    vec4 tex = texture2D(texSampler, clamp(shiftedUv, 0.0, 1.0));
     float fade = smoothstep(0.0, 0.18, prog);
-    return vec4(tex.rgb, tex.a * vMask * hMask * fade * scrollAlpha);
+    return vec4(tex.rgb, tex.a * vMask * hMask * fade * entranceAlpha * scrollAlpha);
+  }
+
+  vec4 sampleMaskedEnglish(vec2 uv) {
+    return sampleMaskedBand(uEnglishTex, uv);
   }
 
   vec4 sampleMaskedJapanese(vec2 uv) {
-    float top1 = uLineBounds.x;
-    float mid12 = uLineBounds.y;
-    float mid23 = uLineBounds.z;
-    float bot3 = uLineBounds.w;
-
-    float prog = 0.0;
-    float bandMin = 0.0;
-    float bandMax = 0.0;
-    float driftDir = 0.0;
-
-    if (uv.y <= top1 && uv.y > mid12) {
-      prog = uLineProgress.x;
-      bandMin = mid12;
-      bandMax = top1;
-      driftDir = 1.0;
-    } else if (uv.y <= mid12 && uv.y > mid23) {
-      prog = uLineProgress.y;
-      bandMin = mid23;
-      bandMax = mid12;
-      driftDir = -1.0;
-    } else if (uv.y <= mid23 && uv.y >= bot3) {
-      prog = uLineProgress.z;
-      bandMin = bot3;
-      bandMax = mid23;
-      driftDir = 1.0;
-    } else {
-      return vec4(0.0);
-    }
-
-    float bandH = bandMax - bandMin;
-    float offsetY = (1.0 - prog) * bandH * 1.05;
-
-    float peakOffset = 0.07;
-    float splitOffset = (uReducedMotion > 0.5) ? 0.0 : (driftDir * peakOffset * uScrollProgress);
-    float scrollAlpha = clamp(1.0 - uScrollProgress * 1.25, 0.0, 1.0);
-
-    vec2 shiftedUv = vec2(uv.x + splitOffset, uv.y - offsetY);
-
-    float vMask = step(bandMin, shiftedUv.y) * step(shiftedUv.y, bandMax);
-    float hMask = step(0.0, shiftedUv.x) * step(shiftedUv.x, 1.0);
-    vec4 tex = texture2D(uJapaneseTex, clamp(shiftedUv, 0.0, 1.0));
-    float fade = smoothstep(0.0, 0.18, prog);
-    return vec4(tex.rgb, tex.a * vMask * hMask * fade * scrollAlpha);
+    return sampleMaskedBand(uJapaneseTex, uv);
   }
 
   void main() {

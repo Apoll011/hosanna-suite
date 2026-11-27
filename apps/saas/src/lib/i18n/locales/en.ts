@@ -375,6 +375,7 @@ export const en: typeof import("./pt").pt = {
     footer: {
       tagline: "ChordPro songbook and worship planning for churches, Studio + mobile app.",
       colProduct: "Product",
+      colNavigation: "Navigation",
       colSupport: "Support",
       colLegal: "Legal",
       blog: "Blog",
@@ -634,15 +635,23 @@ export const en: typeof import("./pt").pt = {
   cookieConsent: {
     title: "Privacy and Cookies",
     description: "There are two types of cookies on this website:",
-    essentialTitle: "Essential cookies",
+    compactSummary:
+      "We use essential cookies for security and an optional PostHog analytics cookie. We never sell your data.",
+    viewDetails: "Details",
+    hideDetails: "Hide details",
+    essentialTitle: "Essential",
+    essentialShort: "authentication and security (always on)",
     essentialDesc:
       "Used for authentication and keeping your session secure. Always on, cannot be disabled.",
-    analyticsTitle: "Optional cookie",
+    analyticsTitle: "Analytics (PostHog)",
+    analyticsShort: "anonymous usage metrics (optional)",
     analyticsDesc:
       "A single analytics cookie (PostHog) to help us improve Hosanna. Off by default.",
     noSellNotice: "We never sell user data for marketing or anything else.",
     acceptAnalytics: "Accept analytics",
     essentialOnly: "Essential only",
+    acceptedConfirm: "Analytics enabled",
+    essentialConfirm: "Essential cookies only",
     cookieSettings: "Cookie settings",
   },
 };

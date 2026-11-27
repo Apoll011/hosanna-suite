@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import { motion, useReducedMotion } from "motion/react";
 import type { LanguageCode } from "./LanguageToggle";
 
 interface HeroCtasProps {
+  ready: boolean;
   language: LanguageCode;
   onStartClick: () => void;
   onDemoClick: () => void;
@@ -15,12 +17,57 @@ const CTA_COPY: Record<LanguageCode, { start: string; demo: string }> = {
   es: { start: "Empezar Ahora", demo: "Ver Demo" },
 };
 
-export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCtasProps) {
+export default function HeroCtas({ ready, language, onStartClick, onDemoClick }: HeroCtasProps) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [primaryPressed, setPrimaryPressed] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const leftEnterRef = useRef<HTMLDivElement>(null);
+  const rightEnterRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const copy = CTA_COPY[language];
+
+  useEffect(() => {
+    if (!ready) return;
+    const leftEl = leftEnterRef.current;
+    const rightEl = rightEnterRef.current;
+    if (!leftEl || !rightEl) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      gsap.set([leftEl, rightEl], { opacity: 1, x: 0, clearProps: "transform" });
+      return;
+    }
+
+    const leftTween = gsap.fromTo(
+      leftEl,
+      { opacity: 0, x: -72 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.65,
+        delay: 0.06,
+        ease: "power3.out",
+        clearProps: "transform",
+      },
+    );
+    const rightTween = gsap.fromTo(
+      rightEl,
+      { opacity: 0, x: 72 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.65,
+        delay: 0.06,
+        ease: "power3.out",
+        clearProps: "transform",
+      },
+    );
+
+    return () => {
+      leftTween.kill();
+      rightTween.kill();
+    };
+  }, [ready]);
 
   useEffect(() => {
     let ticking = false;
@@ -68,6 +115,10 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
         style={{ pointerEvents: ctaOpacity < 0.05 ? "none" : "auto" }}
       >
         {/* Primary CTA (Left): Moves left & fades out on scroll */}
+        <div
+          ref={leftEnterRef}
+          className="opacity-0 will-change-transform"
+        >
         <div
           className="relative inline-flex will-change-transform"
           style={{
@@ -125,8 +176,13 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
             </svg>
           </motion.button>
         </div>
+        </div>
 
         {/* Secondary CTA (Right): Moves right & fades out on scroll */}
+        <div
+          ref={rightEnterRef}
+          className="opacity-0 will-change-transform"
+        >
         <div
           className="will-change-transform"
           style={{
@@ -154,6 +210,7 @@ export default function HeroCtas({ language, onStartClick, onDemoClick }: HeroCt
               <path d="M7.2 5.45c0-1.08 1.18-1.74 2.1-1.18l10.2 6.2c.89.54.89 1.82 0 2.36l-10.2 6.2c-.92.56-2.1-.1-2.1-1.18V5.45z" />
             </svg>
           </motion.button>
+        </div>
         </div>
       </div>
     </div>

@@ -76,14 +76,15 @@ export default function HeroFooter({ ready, language, onScrollClick }: HeroFoote
 
     const tween = gsap.fromTo(
       items,
-      { opacity: 0, y: 14 },
+      { opacity: 0, y: 22 },
       {
         opacity: 1,
         y: 0,
-        duration: 0.42,
-        stagger: 0.03,
+        duration: 0.55,
+        stagger: 0.05,
         delay: 0.04,
         ease: "power3.out",
+        clearProps: "transform",
       },
     );
 
