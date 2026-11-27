@@ -377,7 +377,7 @@ export function OrgDataPage() {
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-m3-border/60">
             <a
-              href="https://hosanna.live/legal/subprocessors"
+              href="https://hosanna.live/subprocessors"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs text-m3-secondary hover:text-m3-primary transition-colors"

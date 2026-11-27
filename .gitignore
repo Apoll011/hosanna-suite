@@ -56,3 +56,9 @@ skills-lock.json
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+.aws
+.codex
+.github/agents/
+.github/hooks/
+.github/skills/

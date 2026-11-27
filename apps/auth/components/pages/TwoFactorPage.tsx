@@ -2,20 +2,14 @@
 "use client";
 
 import { AuthLayout } from "@/components/AuthLayout";
+import { OtpCodeInput } from "@/components/OtpCodeInput";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/ui/i18n";
 import { redirectAfterSuccessfulAuth } from "@/lib/auth/redirect";
 import { KeyRound, MailCheck, RefreshCw, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import {
-  useRef,
-  useState,
-  type FormEvent,
-  type KeyboardEvent,
-  type ChangeEvent,
-  type ClipboardEvent,
-} from "react";
+import { useState, type FormEvent } from "react";
 import { Button, GoogleTextField } from "@hosanna/ui";
 
 type TwoFactorMethod = "totp" | "otp" | "backup";
@@ -29,6 +23,7 @@ export function TwoFactorPage() {
   const [backupCode, setBackupCode] = useState("");
   const [trustDevice, setTrustDevice] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [otpSentMsg, setOtpSentMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -50,6 +45,7 @@ export function TwoFactorPage() {
     setMethod(newMethod);
     setCode("");
     setBackupCode("");
+    setIsVerified(false);
     setErrorMsg("");
     setOtpSentMsg("");
     if (newMethod === "otp") {
@@ -91,6 +87,8 @@ export function TwoFactorPage() {
         setErrorMsg(error.message || t("settings.twoFactor.codeInvalid"));
         return;
       }
+      setIsVerified(true);
+      await new Promise((r) => setTimeout(r, 700));
     } else {
       if (!code.trim() || code.trim().length < 6) {
         setErrorMsg(t("settings.twoFactor.codeRequired"));
@@ -106,6 +104,8 @@ export function TwoFactorPage() {
         setErrorMsg(error.message || t("settings.twoFactor.codeInvalid"));
         return;
       }
+      setIsVerified(true);
+      await new Promise((r) => setTimeout(r, 700));
     }
 
     await redirectAfterSuccessfulAuth(searchParams);
@@ -163,7 +163,14 @@ export function TwoFactorPage() {
             autoFocus
           />
         ) : (
-          <OtpInput value={code} onChange={setCode} />
+          <OtpCodeInput
+            value={code}
+            onChange={setCode}
+            verified={isVerified}
+            disabled={isLoading || isVerified}
+            ariaLabel={t("settings.twoFactor.verificationCodeLabel")}
+            verifiedLabel={t("settings.twoFactor.codeVerified")}
+          />
         )}
 
         {method === "otp" && (
@@ -206,74 +213,5 @@ export function TwoFactorPage() {
         </div>
       </form>
     </AuthLayout>
-  );
-}
-
-function OtpInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const length = 6;
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const digits = value.padEnd(length, "").split("").slice(0, length);
-
-  const handleKey = (i: number, e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace") {
-      e.preventDefault();
-      const currentDigits = [...digits];
-      if (currentDigits[i]) {
-        currentDigits[i] = "";
-        onChange(currentDigits.join("").trimEnd());
-      } else if (i > 0) {
-        currentDigits[i - 1] = "";
-        onChange(currentDigits.join("").trimEnd());
-        inputRefs.current[i - 1]?.focus();
-      }
-    } else if (e.key === "ArrowLeft" && i > 0) {
-      inputRefs.current[i - 1]?.focus();
-    } else if (e.key === "ArrowRight" && i < length - 1) {
-      inputRefs.current[i + 1]?.focus();
-    }
-  };
-
-  const handleChange = (i: number, e: ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/\D/g, "");
-    if (!raw) {
-      const nextDigits = [...digits];
-      nextDigits[i] = "";
-      onChange(nextDigits.join(""));
-      return;
-    }
-    const char = raw.slice(-1);
-    const nextDigits = [...digits];
-    nextDigits[i] = char;
-    onChange(nextDigits.join(""));
-    if (i < length - 1) inputRefs.current[i + 1]?.focus();
-  };
-
-  const handlePaste = (e: ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, length);
-    onChange(pasted);
-    inputRefs.current[Math.min(pasted.length, length - 1)]?.focus();
-  };
-
-  return (
-    <div className="flex gap-2 sm:gap-3 justify-center my-2" onPaste={handlePaste}>
-      {Array.from({ length }).map((_, i) => (
-        <input
-          key={i}
-          ref={(el) => {
-            inputRefs.current[i] = el;
-          }}
-          type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          maxLength={1}
-          value={digits[i] && digits[i] !== " " ? digits[i] : ""}
-          onChange={(e) => handleChange(i, e)}
-          onKeyDown={(e) => handleKey(i, e)}
-          onFocus={(e) => e.target.select()}
-          className="w-11 sm:w-12 h-14 text-center text-lg sm:text-xl font-medium rounded-xl border border-m3-border bg-transparent text-m3-text focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/25 focus:outline-none transition-all"
-        />
-      ))}
-    </div>
   );
 }

@@ -337,6 +337,31 @@ export const es: typeof pt = {
         markRead: "Marcar como leída",
         settings: "Preferencias",
       },
+      sendNotification: {
+        title: "Enviar notificación",
+        description:
+          "Notifica rápidamente a personas, equipos o @Todos por bandeja, correo y push.",
+        keywords: "enviar notificación mencionar mensaje equipo todos bandeja correo push",
+        open: "Editor completo",
+        placeholder: "Escribe un mensaje… Escribe @ para mencionar",
+        hint: "Escribe @ para mencionar",
+        send: "Enviar notificación",
+        channelsLabel: "Canales de entrega",
+        mentionList: "Sugerencias de mención",
+        allTarget: "Todos",
+        allBadge: "Organización",
+        teamBadge: "Equipo",
+        needMention: "Menciona a @Todos, un equipo o una persona",
+        sentPreview: "Enviada (vista previa)",
+        sentCount: "Enviada a {count}",
+        sendError: "Error al enviar la notificación",
+        channels: {
+          inbox: "Bandeja",
+          email: "Correo",
+          push: "Push",
+          all: "Todos los canales",
+        },
+      },
     },
     nav: {
       account: "Cuenta",
@@ -826,7 +851,7 @@ export const es: typeof pt = {
       acceptSuccess: "Acuerdo de Tratamiento de Datos aceptado con éxito.",
       acceptError: "No se pudo aceptar el acuerdo: {error}",
       subprocessorsNote:
-        "Consulte la lista pública de subencargados en hosanna.live/legal/subprocessors.",
+        "Consulte la lista pública de subencargados en hosanna.live/subprocessors.",
     },
     danger: {
       title: "Zona de peligro",
