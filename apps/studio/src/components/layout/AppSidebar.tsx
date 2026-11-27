@@ -297,7 +297,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const folderContent = showFolderTree ? (
     <div
-      className={`flex min-h-0 flex-1 flex-col overflow-hidden transition-[opacity,max-height] duration-300 [transition-timing-function:cubic-bezier(.2,.8,.2,1)] ${isSidebarCollapsed ? "pointer-events-none max-h-0 opacity-0" : "max-h-full opacity-100"}`}
+      className={`flex min-h-0 flex-1 flex-col overflow-hidden transition-[opacity,max-height] duration-300 ease-[cubic-bezier(.2,.8,.2,1)] ${isSidebarCollapsed ? "pointer-events-none max-h-0 opacity-0" : "max-h-full opacity-100"}`}
     >
       <div className="mt-6 shrink-0 whitespace-nowrap px-3 py-2 text-label">
         {t("sidebar.foldersCount", { count: allFolders.length })}

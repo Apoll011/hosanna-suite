@@ -85,14 +85,14 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         </span>
 
         <SpringDropdown
-            mode="single"
-            options={pageSizeDropdownOptions}
-            selected={String(itemsPerPage)}
-            onChange={(size) => onItemsPerPageChange(Number(size))}
-            ariaLabel={t("table.display")}
-            startAdornment={<span>{t("table.display")}</span>}
-            className="font-bold"
-          />
+          mode="single"
+          options={pageSizeDropdownOptions}
+          selected={String(itemsPerPage)}
+          onChange={(size) => onItemsPerPageChange(Number(size))}
+          ariaLabel={t("table.display")}
+          startAdornment={<span>{t("table.display")}</span>}
+          className="font-bold"
+        />
       </div>
 
       {totalPages > 1 && (

@@ -36,10 +36,11 @@ export const EditorSettingsPanel: React.FC<EditorSettingsPanelProps> = ({
     return defaultLabel;
   };
   const themeOptions = useMemo<SpringDropdownOption<string>[]>(
-    () => EDITOR_THEMES.map((theme) => ({
-      id: theme.value,
-      label: getThemeLabel(theme.value, theme.label),
-    })),
+    () =>
+      EDITOR_THEMES.map((theme) => ({
+        id: theme.value,
+        label: getThemeLabel(theme.value, theme.label),
+      })),
     [t],
   );
 

@@ -16,7 +16,8 @@ export const ChordProPreviewSettings: React.FC<{
   const { t } = useI18n();
   const { showChords, transposeVal, capoVal = 0, fontSize, instrument, showDiagrams } = settings;
   const instrumentOptions = useMemo<SpringDropdownOption<string>[]>(
-    () => instrumentRegistry.list().map((profile) => ({ id: profile.id, label: profile.displayName })),
+    () =>
+      instrumentRegistry.list().map((profile) => ({ id: profile.id, label: profile.displayName })),
     [],
   );
   const effectiveSupportsCapo =

@@ -73,12 +73,7 @@ function InnerPalette(props: HosannaCommandPaletteProps) {
     getFolderPathString: props.getFolderPathString,
   });
 
-  return (
-    <CommandPalette
-      isSearching={isSearching}
-      language={language}
-    />
-  );
+  return <CommandPalette isSearching={isSearching} language={language} />;
 }
 
 export function HosannaCommandPalette(props: HosannaCommandPaletteProps) {

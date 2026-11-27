@@ -278,20 +278,20 @@ export const InboxPanel: React.FC<InboxPanelProps> = ({
       <div className="flex border-b border-m3-border/60 text-xs px-2 pt-2 bg-m3-sidebar/30">
         <button
           onClick={() => setFilter("all")}
-          className={`px-3 py-1.5 font-bold rounded-t-lg transition-colors border-b-2 cursor-pointer ${
+          className={`relative px-3 py-1.5 font-bold rounded-t-lg transition-colors cursor-pointer ${
             filter === "all"
-              ? "border-m3-primary text-m3-primary bg-m3-card"
-              : "border-transparent text-m3-secondary hover:text-m3-text"
+              ? "text-m3-primary bg-m3-card after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-m3-primary"
+              : "text-m3-secondary hover:text-m3-text"
           }`}
         >
           {t("suite.inbox.all", { count: inbox.notifications.length })}
         </button>
         <button
           onClick={() => setFilter("unread")}
-          className={`px-3 py-1.5 font-bold rounded-t-lg transition-colors border-b-2 cursor-pointer ${
+          className={`relative px-3 py-1.5 font-bold rounded-t-lg transition-colors cursor-pointer ${
             filter === "unread"
-              ? "border-m3-primary text-m3-primary bg-m3-card"
-              : "border-transparent text-m3-secondary hover:text-m3-text"
+              ? "text-m3-primary bg-m3-card after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-m3-primary"
+              : "text-m3-secondary hover:text-m3-text"
           }`}
         >
           {t("suite.inbox.unread", { count: inbox.unreadCount })}

@@ -141,29 +141,29 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
     <div className="px-4 py-2.5 bg-m3-sidebar/20 border-b border-m3-border/40 flex items-center justify-between gap-3 flex-wrap">
       <div className="flex items-center gap-2.5 flex-wrap">
         <SpringDropdown
-            mode="single"
-            options={sortOptions}
-            selected={
-              view === "services" && sortBy === "title"
-                ? `updatedAt-${sortOrder}`
-                : `${sortBy}-${sortOrder}`
+          mode="single"
+          options={sortOptions}
+          selected={
+            view === "services" && sortBy === "title"
+              ? `updatedAt-${sortOrder}`
+              : `${sortBy}-${sortOrder}`
+          }
+          onChange={(value) => {
+            const [sortField, order] = value.split("-");
+            if (
+              (sortField === "title" ||
+                sortField === "artist" ||
+                sortField === "updatedAt" ||
+                sortField === "number") &&
+              (order === "asc" || order === "desc")
+            ) {
+              onSortChange(sortField, order);
             }
-            onChange={(value) => {
-              const [sortField, order] = value.split("-");
-              if (
-                (sortField === "title" ||
-                  sortField === "artist" ||
-                  sortField === "updatedAt" ||
-                  sortField === "number") &&
-                (order === "asc" || order === "desc")
-              ) {
-                onSortChange(sortField, order);
-              }
-            }}
-            ariaLabel={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
-            startAdornment={<ArrowUpDown className="h-4 w-4" aria-hidden="true" />}
-            className="h-10"
-          />
+          }}
+          ariaLabel={view === "services" ? t("toolbar.sortServices") : t("toolbar.sortFiles")}
+          startAdornment={<ArrowUpDown className="h-4 w-4" aria-hidden="true" />}
+          className="h-10"
+        />
 
         {(view === "explorer" || view === "songs" || view === "collection-detail") && (
           <button
@@ -327,14 +327,14 @@ export const ExplorerToolbar: React.FC<ExplorerToolbarProps> = ({
           </div>
         )}
         <SpringDropdown
-            mode="single"
-            options={densityOptions}
-            selected={density}
-            onChange={onDensityChange}
-            ariaLabel={t("toolbar.density")}
-            startAdornment={<LayoutGrid className="h-4 w-4 text-m3-primary" aria-hidden="true" />}
-            className="h-10"
-          />
+          mode="single"
+          options={densityOptions}
+          selected={density}
+          onChange={onDensityChange}
+          ariaLabel={t("toolbar.density")}
+          startAdornment={<LayoutGrid className="h-4 w-4 text-m3-primary" aria-hidden="true" />}
+          className="h-10"
+        />
       </div>
     </div>
   );
