@@ -101,6 +101,10 @@ export {
   WorkspaceMain,
   WorkspaceNavItem,
   WorkspaceSidebar,
+  type WorkspaceAddressBarProps,
+  type WorkspaceAddressSearch,
+  type WorkspaceBreadcrumbItem,
+  type WorkspaceSidebarItem,
   WorkspaceSurface,
 } from "./WorkspaceShell";
 export { Tabs, type TabItem } from "./Tabs";
