@@ -22,6 +22,10 @@
     "./spring-dropdown": {
       "types": "./src/SpringDropdown.tsx",
       "default": "./src/SpringDropdown.tsx"
+    },
+    "./css": {
+      "types": "./src/global.css.d.ts",
+      "default": "./src/global.css"
     }
   },
   "scripts": {
