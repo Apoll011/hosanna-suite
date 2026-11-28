@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import type { CSSProperties, ReactNode } from "react";
-import type { Metadata, Viewport } from "next";
 import { getSuiteAppAccent, suiteAppAccentCssVars } from "@hosanna/auth";
+import type { Metadata, Viewport } from "next";
+import type { CSSProperties, ReactNode } from "react";
 
 import { AppProviders } from "@/components/providers";
 import { AUTH_THEME_BOOT_SCRIPT, THEME_BG } from "@/lib/ui/theme-boot";
 
+import "@hosanna/ui/css";
 import "./globals.css";
 
 const AUTH_ACCENT = getSuiteAppAccent("auth");
